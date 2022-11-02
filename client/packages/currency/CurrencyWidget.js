@@ -90,7 +90,6 @@ export const saveCurrencyHistory = async (date = null) => {
    
      const _currencyObj = await FxGlobalFunctions.loadDefaultCurrency(currencyCode);
     
-   
      const currencyObj = {
        type: "TCurrency",
        fields: {

@@ -1,4 +1,5 @@
 <template name="generalledger">
+  {{> vs1_report_template}}
     <div style="margin-top: -24px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
@@ -172,7 +173,7 @@
                                     table tr .text-danger a {
                                         color: #e74a3b !important;
                                     }
-                                    
+
                                     .customDoubleTableHeading + tr th {
                                         border-right: 1px solid #cbcbcb !important;
                                     }
@@ -180,7 +181,7 @@
                                         border-right: none !important;
                                     }
                                     table.tableExportDetailDiv th {
-                                        max-width: 190px !important; 
+                                        max-width: 190px !important;
                                     }
                                     .swal2-popup.swal2-modal {
                                         padding-bottom: 25px !important;
@@ -233,7 +234,7 @@
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
-                                                  
+
                                                 </tr>
                                             {{/if}}
                                         </thead>
@@ -262,7 +263,7 @@
                                                                 {{#each subItem in item.dataArr}}
                                                                     {{#if isOnlyDefaultActive }}
                                                                         {{#if isObject subItem}}
-                                                                    
+
                                                                             {{#if currencyList}}
                                                                                 {{#each c in currencyList }}
                                                                                     {{# if c.active}}
@@ -291,15 +292,15 @@
                                                                                 <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{subItem}}</a>
                                                                             </td>
                                                                         {{/if}}
-                                                                        
 
-                                                    
+
+
                                                                     {{/if}}
                                                                 {{/each}}
-                                                            
+
                                                             </tr>
 
-                                                        
+
                                                         {{/each}}
 
                                                         {{#each total in recordItem.total}}
@@ -312,7 +313,7 @@
                                                                                     {{#each c in currencyList }}
                                                                                         {{# if c.active}}
 
-                                                                                
+
                                                                                             <td currency="{{c.code}}" currency-id="{{c.id}}" class="1111111 Total1Indented MenuLeft TotalField rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
                                                                                                 <span class="table-cells">
                                                                                                     <strong>{{convertAmount subItem.value c}}</strong>
@@ -322,7 +323,7 @@
                                                                                     {{/each}}
                                                                                 {{/if}}
                                                                             {{else}}
-                                                                                
+
                                                                                 <td class="222222 Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem}} text-danger {{/if}}">
                                                                                     <span class="table-cells">
                                                                                         <strong>{{subItem}}</strong>
@@ -333,14 +334,14 @@
 
                                                                     {{else}}
                                                                         {{#if isObject subItem}}
-                                                                           
+
                                                                             <td class="333333 Total1Indented MenuLeft TotalField rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
                                                                                 <span class="table-cells">
                                                                                     <strong>{{subItem.value}}</strong>
                                                                                 </span>
                                                                             </td>
                                                                         {{else}}
-                                                                            
+
                                                                             <td class="4444444 Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem}} text-danger {{/if}}">
                                                                                 <span class="table-cells">
                                                                                     <strong>{{subItem}}</strong>
@@ -349,7 +350,7 @@
                                                                         {{/if}}
 
                                                                     {{/if}}
-                                                                   
+
                                                                 {{/each}}
                                                             </tr>
                                                         {{/each}}
@@ -359,7 +360,7 @@
                                             {{#if grandrecords}}
                                                 <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
                                                     {{#each subItem in grandrecords}}
-                                                        
+
                                                             {{#if isOnlyDefaultActive }}
 
                                                                     {{#if isObject subItem}}
@@ -367,24 +368,24 @@
                                                                             {{#each c in currencyList }}
                                                                                 {{# if c.active}}
                                                                                     <td class="55555555 rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}" currency="{{c.code}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
-                                                                        
+
                                                                                 {{/if}}
                                                                             {{/each}}
                                                                         {{/if}}
                                                                     {{else}}
                                                                         <td class="6666666 {{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
-                                                                    
+
 
                                                                     {{/if}}
 
                                                             {{else}}
                                                                 {{#if isObject subItem}}
                                                                     <td class="77777777 rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">{{subItem.value}}</td>
-                                                                    
+
                                                                 {{else}}
                                                                     <td class="8888888 {{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
-                                                                    
-                                                                    
+
+
                                                                 {{/if}}
 
                                                             {{/if}}

@@ -199,6 +199,7 @@ Template.timesheetdetail.onRendered(function () {
       date = aWeekAgo.add("1", "day");
       days.push({
         index: i,
+        dayIndex: date.day(),
         dateObject: date.toDate(),
         date: date.format("ddd DD MMM"),
         defaultValue: await this.loadHours(date.toDate())
@@ -225,10 +226,16 @@ Template.timesheetdetail.onRendered(function () {
 
   //  }
 
-  this.duplicateFirstLine = () => {
+  this.duplicateFirstLine = (isNew = false) => {
     let template = document.querySelector("#tblTimeSheetInner tbody tr.template");
     let clonedTr = template.cloneNode(true);
     clonedTr.removeAttribute("class");
+    if (isNew) {
+      clonedTr.querySelectorAll("input.hours").forEach(input => {
+        input.value = 0;
+      });
+    }
+
     $("#tblTimeSheetInner tbody").find("tr:last").prev().after(clonedTr);
   };
 
@@ -273,13 +280,40 @@ Template.timesheetdetail.onRendered(function () {
     await this.rateTypes.set(rates);
   };
 
+  const buildSumOfDailyHours = (lines = []) => {
+    let filteredByDay = [];
+    let dailyTotals = [];
+
+    lines.forEach(line => line.dailyHours.forEach((dailyHour, index) => {
+      if (!filteredByDay[index]) {
+        filteredByDay[index] = [];
+      }
+      filteredByDay[index].push(dailyHour);
+    }));
+
+
+    filteredByDay.forEach((dailyHours) => {
+      let total = {
+        hours: 0,
+        dailyHours: dailyHours
+      };
+      dailyHours.forEach((dailyHour) => {
+        total.date = dailyHour.date;
+        total.hours += dailyHour.hours;
+      });
+      dailyTotals.push(total);
+    })
+
+    return dailyTotals;
+  };
+
   this.buildNewObject = () => {
     // Here we will build the object to save
     const trs = $("#tblTimeSheetInner tbody").find("tr:not(.template)");
 
     const matchDateIndex = index => {
       let earningsDays = this.earningDays.get();
-      return earningsDays.find(earningDay => earningDay.index == index);
+      return earningsDays.find(earningDay => earningDay.dayIndex == index);
     };
 
     const matchedDay = dayName => {
@@ -297,7 +331,7 @@ Template.timesheetdetail.onRendered(function () {
     };
 
     const buildHourObject = (input, earningsRateName) => {
-      const date = matchDateIndex($(input).attr("date")).dateObject;
+      const date = matchDateIndex($(input).attr("date-index")).dateObject;
       const hours = parseFloat($(input).val());
 
       const overtimes = this.overtimes.get();
@@ -314,8 +348,7 @@ Template.timesheetdetail.onRendered(function () {
         // return o.rateType.Description == earningsRateName;
       });
 
-
-      return {
+      const obj = {
         date: date,
         hours: hours,
         ...(
@@ -325,6 +358,8 @@ Template.timesheetdetail.onRendered(function () {
           }
           : {})
       };
+
+      return obj;
     };
 
     const buildEarningsLines = trs => {
@@ -372,7 +407,8 @@ Template.timesheetdetail.onRendered(function () {
       // We save the table data
       const objToSave = {
         timeSheetId: id,
-        dailyHours: earningLines
+        earningLines: earningLines,
+        total: buildSumOfDailyHours(earningLines),
       };
 
       await this._saveTimeSheetDetails(objToSave);
@@ -427,7 +463,8 @@ Template.timesheetdetail.onRendered(function () {
     // We save the table data
     const objToSave = {
       timeSheetId: id,
-      dailyHours: earningLines
+      earningLines: earningLines,
+      total: buildSumOfDailyHours(earningLines),
     };
 
     await this._saveTimeSheetDetails(objToSave);
@@ -453,7 +490,7 @@ Template.timesheetdetail.onRendered(function () {
       const timesheet = await this.timesheet.get();
       const hours = await this.calculateWeeklyHours();
       const earningLines = this.buildNewObject();
-
+      
       let objectDataConverted = {
         type: erpObject.TTimeSheet,
         fields: {
@@ -468,8 +505,10 @@ Template.timesheetdetail.onRendered(function () {
       // We save the table data
       const objToSave = {
         timeSheetId: id,
-        dailyHours: earningLines
+        earningLines: earningLines,
+        total: buildSumOfDailyHours(earningLines),
       };
+     
 
       await this._saveTimeSheetDetails(objToSave);
 
@@ -509,7 +548,8 @@ Template.timesheetdetail.onRendered(function () {
     // We save the table data
     const objToSave = {
       timeSheetId: id,
-      dailyHours: earningLines
+      earningLines: earningLines,
+      total: buildSumOfDailyHours(earningLines),
     };
 
     await this._saveTimeSheetDetails(objToSave);
@@ -616,6 +656,42 @@ Template.timesheetdetail.onRendered(function () {
     } catch (e) {}
   };
 
+  this.calculateTotalHours = () => {
+    const earningsDays = this.earningDays.get();
+    const hourInputs = $("#tblTimeSheetInner tbody tr:not(.template)").find("input.hours");
+    let dailyHours = [];
+
+    $(hourInputs).each((index, hourInput) => {
+      dailyHours.push({
+        dayIndex: parseInt($(hourInput).attr("date-index")),
+        hours: parseFloat($(hourInput).val()),
+        day: earningsDays.find(e => e.dayIndex == parseInt($(hourInput).attr("date-index")))
+      });
+    });
+    let _dailyHours = [];
+
+    dailyHours.forEach(current => {
+      if (!_dailyHours[current.dayIndex]) {
+        _dailyHours[current.dayIndex] = [];
+      }
+      _dailyHours[current.dayIndex].push(current);
+    });
+
+    _dailyHours.forEach((dailyHours, index) => {
+      const sum = (dailyHours = []) => {
+        let totalHours = 0;
+        dailyHours.forEach(dailyHour => {
+          totalHours += dailyHour.hours;
+        });
+        return totalHours;
+      };
+
+      $(`#tblTimeSheetInner tfoot tr.total .daily-total[date-index=${index}]`).text(sum(dailyHours));
+    });
+
+    return _dailyHours;
+  };
+
   this.initPage = async (refresh = false) => {
     LoadingOverlay.show();
 
@@ -643,6 +719,10 @@ Template.timesheetdetail.onRendered(function () {
         this.duplicateFirstLine();
       }, 300);
     }
+
+    setTimeout(() => {
+      this.calculateTotalHours();
+    }, 300);
 
     Datehandler.defaultDatePicker();
     LoadingOverlay.hide();
@@ -672,7 +752,8 @@ Template.timesheetdetail.events({
     //  </tr>
     //     `);
 
-    ui.duplicateFirstLine();
+    ui.duplicateFirstLine(true);
+    ui.calculateTotalHours();
   },
   "click .btnDeleteRow": function (e) {
     playDeleteAudio();
@@ -708,6 +789,9 @@ Template.timesheetdetail.events({
 
   "change input.hours": (e, ui) => {
     ui.calculateWeeklyHours();
+  },
+  "change #tblTimeSheetInner tbody tr:not(.template) input.hours": (e, ui) => {
+    ui.calculateTotalHours();
   }
 });
 

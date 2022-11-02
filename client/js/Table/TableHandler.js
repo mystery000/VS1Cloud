@@ -117,36 +117,48 @@ export default class TableHandler {
     }
   }
 
-  static getDefaultTableConfiguration(selector = null) {
+  static getDefaultTableConfiguration(selector = null, options = {
+    pageLength: 25,
+    initialReportDatatableLoad,
+    showPlusButton: true,
+    showSearchButton: true,
+    info: true,
+    responsive: true,
+    select: true,
+    destroy: true,
+    colReorder: true,
+  }) {
     return {
       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-      pageLength: initialDatatableLoad,
+      pageLength: options.pageLength || 25,
+      paging: true,
       colReorder: {
         fixedColumnsLeft: 1
       },
-      bLengthChange: false,
-      lengthMenu: [
-        [
-          initialReportDatatableLoad, -1
-        ],
-        [
-          initialReportDatatableLoad, "All"
-        ]
-      ],
-      info: true,
-      responsive: true,
-      select: true,
-      destroy: true,
-      colReorder: true,
+      // lengthChange: false,
+      // lengthMenu: [
+      //   [
+      //     initialReportDatatableLoad, -1
+      //   ],
+      //   [
+      //     initialReportDatatableLoad, "All"
+      //   ]
+      // ],
+      info: options.info || true,
+      responsive: options.responsive || true,
+      select: options.select || true,
+      destroy: options.destroy || true,
+      colReorder: options.colReorder || true,
       language: {
         search: "",
         searchPlaceholder: "Search List..."
       },
       fnInitComplete: function () {
-        $(`<button class='btn btn-primary refresh-${selector}' type='button' id='refresh-${selector}' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>`).insertAfter(`#${selector}_filter`);
-        $(`<button class='btn btn-primary add-${selector}' data-dismiss='modal' data-toggle='modal' data-target='#add-${selector}_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>`).insertAfter(`#${selector}_filter`);
-
-      }
-    };
+        if (options.showSearchButton) 
+          $(`<button class='btn btn-primary refresh-${selector}' type='button' id='refresh-${selector}' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>`).insertAfter(`#${selector}_filter`);
+        if (options.showPlusButton) 
+          $(`<button class='btn btn-primary add-${selector}' data-dismiss='modal' data-toggle='modal' data-target='#add-${selector}_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>`).insertAfter(`#${selector}_filter`);
+        }
+      };
   }
 }

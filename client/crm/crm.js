@@ -518,7 +518,7 @@ Template.crmoverview.onRendered(function () {
     let colID = table.find(".colID").text();
     let colType = table.find(".colType").text();
 
-    if (colType != 'Prospect' && colType != 'Customer') {
+    //if (colType != 'Prospect' && colType != 'Customer') {
       colType = colType == 'Customer / Supplier' ? 'Supplier' : colType;
       colType = colType == 'Customer / Prospect / Supplier' ? 'Supplier' : colType;
       $('#customerListModal').modal('toggle');
@@ -530,10 +530,10 @@ Template.crmoverview.onRendered(function () {
 
       $('#contactID').val(colID)
       $('#contactType').val(colType)
-    } else {
-      swal("Please select valid type of contact", "", "error");
-      return false;
-    }
+    //} else {
+    //  swal("Please select valid type of contact", "", "error");
+    //  return false;
+    //}
 
   });
   $(document).on("click", "#tblEmployeelist tbody tr", function (e) {

@@ -65,11 +65,11 @@ Template.contactlistpop.onRendered(function () {
         location.reload();
     }
 
-    templateObject.getContacts = function () {
+    templateObject.getContacts = function (viewDeleted = false) {
       var customerpage = 0;
         getVS1Data('TERPCombinedContactsVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getAllContactCombineVS1(initialDataLoad, 0).then(function (data) {
+                sideBarService.getAllContactCombineVS1(initialDataLoad, 0, viewDeleted).then(function (data) {
                     addVS1Data('TERPCombinedContactsVS1', JSON.stringify(data));
                     let lineItems = [];
                     let lineItemObj = {};
@@ -388,7 +388,12 @@ Template.contactlistpop.onRendered(function () {
                                 }, 100);
                             },
                             "fnInitComplete": function (oSettings) {
-                                $("<button class='btn btn-primary btnAddNewCustomer' data-dismiss='modal' data-toggle='modal' data-target='#addCustomerModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblContactlist_filter");
+                                // $("<button class='btn btn-primary btnAddNewCustomer' data-dismiss='modal' data-toggle='modal' data-target='#addCustomerModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblContactlist_filter");
+                                if(data.Params.Search.replace(/\s/g, "") == ""){
+                                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#tblContactlist_filter');
+                                  }else{
+                                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#tblContactlist_filter');
+                                  }
                                 $("<button class='btn btn-primary btnRefreshContact' type='button' id='btnRefreshContact' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblContactlist_filter");
 
                                 let urlParametersPage = FlowRouter.current().queryParams.page;
@@ -396,6 +401,12 @@ Template.contactlistpop.onRendered(function () {
                                     this.fnPageChange('last');
                                 }
 
+                            },
+
+                            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                                let countTableData = data.Params.Count || 0; //get count from API data
+                
+                                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                             }
 
                         }).on('page', function () {
@@ -404,6 +415,7 @@ Template.contactlistpop.onRendered(function () {
                             }, 100);
                             let draftRecord = templateObject.custdatatablerecords.get();
                             templateObject.custdatatablerecords.set(draftRecord);
+                            $('.fullScreenSpin').css('display', 'none')
                         }).on('column-reorder', function () {
 
                         }).on('length.dt', function (e, settings, len) {
@@ -775,7 +787,11 @@ Template.contactlistpop.onRendered(function () {
                         },
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function (oSettings) {
-                            $("<button class='btn btn-primary btnAddNewCustomer' data-dismiss='modal' data-toggle='modal' data-target='#addCustomerModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblContactlist_filter");
+                            if(data.Params.Search.replace(/\s/g, "") == ""){
+                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#tblContactlist_filter');
+                              }else{
+                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#tblContactlist_filter');
+                              }
                             $("<button class='btn btn-primary btnRefreshContact' type='button' id='btnRefreshContact' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblContactlist_filter");
 
                             let urlParametersPage = FlowRouter.current().queryParams.page;
@@ -783,6 +799,11 @@ Template.contactlistpop.onRendered(function () {
                                 this.fnPageChange('last');
                             }
 
+                        },
+                        "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                            let countTableData = data.Params.Count || 0; //get count from API data
+            
+                            return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                         }
 
                     }).on('page', function () {
@@ -791,6 +812,7 @@ Template.contactlistpop.onRendered(function () {
                         }, 100);
                         let draftRecord = templateObject.custdatatablerecords.get();
                         templateObject.custdatatablerecords.set(draftRecord);
+                        $('.fullScreenSpin').css('display', 'none')
                     }).on('column-reorder', function () {
 
                     }).on('length.dt', function (e, settings, len) {
@@ -839,7 +861,7 @@ Template.contactlistpop.onRendered(function () {
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
             }
         }).catch(function (err) {
-            sideBarService.getAllContactCombineVS1(initialDataLoad, 0).then(function (data) {
+            sideBarService.getAllContactCombineVS1(initialDataLoad, 0, viewDeleted).then(function (data) {
             // sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0).then(function (data) {
                 addVS1Data('TERPCombinedContactsVS1', JSON.stringify(data));
 
@@ -1160,7 +1182,12 @@ Template.contactlistpop.onRendered(function () {
                         },
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function (oSettings) {
-                            $("<button class='btn btn-primary btnAddNewCustomer' data-dismiss='modal' data-toggle='modal' data-target='#addCustomerModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblContactlist_filter");
+                            // $("<button class='btn btn-primary btnAddNewCustomer' data-dismiss='modal' data-toggle='modal' data-target='#addCustomerModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblContactlist_filter");
+                            if(data.Params.Search.replace(/\s/g, "") == ""){
+                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#tblContactlist_filter');
+                              }else{
+                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#tblContactlist_filter');
+                              }
                             $("<button class='btn btn-primary btnRefreshContact' type='button' id='btnRefreshContact' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblContactlist_filter");
 
                             let urlParametersPage = FlowRouter.current().queryParams.page;
@@ -1168,6 +1195,11 @@ Template.contactlistpop.onRendered(function () {
                                 this.fnPageChange('last');
                             }
 
+                        },
+                        "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                            let countTableData = data.Params.Count || 0; //get count from API data
+            
+                            return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                         }
 
                     }).on('page', function () {
@@ -1176,6 +1208,7 @@ Template.contactlistpop.onRendered(function () {
                         }, 100);
                         let draftRecord = templateObject.custdatatablerecords.get();
                         templateObject.custdatatablerecords.set(draftRecord);
+                        $('.fullScreenSpin').css('display', 'none')
                     }).on('column-reorder', function () {
 
                     }).on('length.dt', function (e, settings, len) {
@@ -1254,7 +1287,33 @@ Template.contactlistpop.events({
           $('#tblContactlist_filter .form-control-sm').val('');
         }, 1000);
     },
+
+    "click .btnViewDeleted": async function (e) {
+        $(".fullScreenSpin").css("display", "inline-block");
+        e.stopImmediatePropagation();
+        const templateObject = Template.instance();
+        $('.btnViewDeleted').css('display','none');
+        $('.btnHideDeleted').css('display','inline-block');
+          await clearData('TERPCombinedContactsVS1');
+          templateObject.getContacts(true);
+          $(".fullScreenSpin").css("display", "none");
+  
+      },
+
+      "click .btnHideDeleted": async function (e) {
+        $(".fullScreenSpin").css("display", "inline-block");
+        e.stopImmediatePropagation();
+        let templateObject = Template.instance();
+   
+        $('.btnHideDeleted').css('display','none');
+        $('.btnViewDeleted').css('display','inline-block');
+  
+          await clearData('TERPCombinedContactsVS1');
+          templateObject.getContacts(false);
+          $(".fullScreenSpin").css("display", "none");
+      },
     'click .btnRefreshContact': function (event) {
+        $(".btnRefreshContact").removeClass("btnSearchAlert");
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         const contactList = [];
@@ -1267,7 +1326,7 @@ Template.contactlistpop.events({
         let dataSearchName = $('#tblContactlist_filter input').val();
 
         if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getAllContactCombineVS1ByName(dataSearchName).then(function (data) {
+            sideBarService.getAllContactOverviewVS1ByName(dataSearchName.toLowerCase()).then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
                 let clienttype = '';
@@ -1276,15 +1335,13 @@ Template.contactlistpop.events({
                 let isEmployee = false;
                 let issupplier = false;
                 if (data.terpcombinedcontactsvs1.length > 0) {
-
-
                     for (let i = 0; i < data.terpcombinedcontactsvs1.length; i++) {
-
+                        
                             isprospect = data.terpcombinedcontactsvs1[i].isprospect;
                             iscustomer = data.terpcombinedcontactsvs1[i].iscustomer;
                             isEmployee = data.terpcombinedcontactsvs1[i].isEmployee;
                             issupplier = data.terpcombinedcontactsvs1[i].issupplier;
-
+                            console.log(i, isprospect, iscustomer, isEmployee, issupplier)
                             if((isprospect == true) && (iscustomer == true) && (isEmployee == true) && (issupplier == true)){
                                 clienttype = "Customer / Employee / Prospect / Supplier";
                             }else if((isprospect == true) && (iscustomer ==true) && (issupplier ==true)){
@@ -1359,10 +1416,11 @@ Template.contactlistpop.events({
                     datatable.clear();
                     datatable.rows.add(splashArrayContactList);
                     datatable.draw(false);
+                    $('#tblContactList_wrapper .dataTables_info').html('Showing 1 to ' + data.terpcombinedcontactsvs1.length + ' of ' + data.terpcombinedcontactsvs1.length + ' entries');
 
                     $('.fullScreenSpin').css('display', 'none');
                 } else {
-
+                    console.log('contact does not exist')
                     $('.fullScreenSpin').css('display', 'none');
                     $('#contactListModal').modal('toggle');
                     swal({
@@ -1386,105 +1444,113 @@ Template.contactlistpop.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         } else {
-            sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0).then(function (data) {
-                let lineItems = [];
-                let lineItemObj = {};
-                for (let i = 0; i < data.terpcombinedcontactsvs1.length; i++) {
-                    let arBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].fields.ARBalance) || 0.00;
-                    let creditBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].fields.CreditBalance) || 0.00;
-                    let balance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].fields.Balance) || 0.00;
-                    let creditLimit = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].fields.CreditLimit) || 0.00;
-                    let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].fields.SalesOrderBalance) || 0.00;
-                    var dataList = {
-                        id: data.terpcombinedcontactsvs1[i].fields.ID || '',
-                        clientName: data.terpcombinedcontactsvs1[i].fields.ClientName || '',
-                        company: data.terpcombinedcontactsvs1[i].fields.Companyname || '',
-                        contactname: data.terpcombinedcontactsvs1[i].fields.ContactName || '',
-                        phone: data.terpcombinedcontactsvs1[i].fields.Phone || '',
-                        arbalance: arBalance || 0.00,
-                        creditbalance: creditBalance || 0.00,
-                        balance: balance || 0.00,
-                        creditlimit: creditLimit || 0.00,
-                        salesorderbalance: salesOrderBalance || 0.00,
-                        email: data.terpcombinedcontactsvs1[i].fields.Email || '',
-                        job: data.terpcombinedcontactsvs1[i].fields.JobName || '',
-                        accountno: data.terpcombinedcontactsvs1[i].fields.AccountNo || '',
-                        clientno: data.terpcombinedcontactsvs1[i].fields.ClientNo || '',
-                        jobtitle: data.terpcombinedcontactsvs1[i].fields.JobTitle || '',
-                        notes: data.terpcombinedcontactsvs1[i].fields.Notes || '',
-                        state: data.terpcombinedcontactsvs1[i].fields.State || '',
-                        country: data.terpcombinedcontactsvs1[i].fields.Country || '',
-                        street: data.terpcombinedcontactsvs1[i].fields.Street || ' ',
-                        street2: data.terpcombinedcontactsvs1[i].fields.Street2 || ' ',
-                        street3: data.terpcombinedcontactsvs1[i].fields.Street3 || ' ',
-                        suburb: data.terpcombinedcontactsvs1[i].fields.Suburb || ' ',
-                        postcode: data.terpcombinedcontactsvs1[i].fields.Postcode || ' '
-                    };
+            $('.fullScreenSpin').css('display', 'none');
+            templateObject.getContacts();
+            // sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0).then(function (data) {
+            //     let lineItems = [];
+            //     let lineItemObj = {};
+            //     for (let i = 0; i < data.terpcombinedcontactsvs1.length; i++) {
+            //         let arBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].fields.ARBalance) || 0.00;
+            //         let creditBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].fields.CreditBalance) || 0.00;
+            //         let balance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].fields.Balance) || 0.00;
+            //         let creditLimit = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].fields.CreditLimit) || 0.00;
+            //         let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].fields.SalesOrderBalance) || 0.00;
+            //         var dataList = {
+            //             id: data.terpcombinedcontactsvs1[i].fields.ID || '',
+            //             clientName: data.terpcombinedcontactsvs1[i].fields.ClientName || '',
+            //             company: data.terpcombinedcontactsvs1[i].fields.Companyname || '',
+            //             contactname: data.terpcombinedcontactsvs1[i].fields.ContactName || '',
+            //             phone: data.terpcombinedcontactsvs1[i].fields.Phone || '',
+            //             arbalance: arBalance || 0.00,
+            //             creditbalance: creditBalance || 0.00,
+            //             balance: balance || 0.00,
+            //             creditlimit: creditLimit || 0.00,
+            //             salesorderbalance: salesOrderBalance || 0.00,
+            //             email: data.terpcombinedcontactsvs1[i].fields.Email || '',
+            //             job: data.terpcombinedcontactsvs1[i].fields.JobName || '',
+            //             accountno: data.terpcombinedcontactsvs1[i].fields.AccountNo || '',
+            //             clientno: data.terpcombinedcontactsvs1[i].fields.ClientNo || '',
+            //             jobtitle: data.terpcombinedcontactsvs1[i].fields.JobTitle || '',
+            //             notes: data.terpcombinedcontactsvs1[i].fields.Notes || '',
+            //             state: data.terpcombinedcontactsvs1[i].fields.State || '',
+            //             country: data.terpcombinedcontactsvs1[i].fields.Country || '',
+            //             street: data.terpcombinedcontactsvs1[i].fields.Street || ' ',
+            //             street2: data.terpcombinedcontactsvs1[i].fields.Street2 || ' ',
+            //             street3: data.terpcombinedcontactsvs1[i].fields.Street3 || ' ',
+            //             suburb: data.terpcombinedcontactsvs1[i].fields.Suburb || ' ',
+            //             postcode: data.terpcombinedcontactsvs1[i].fields.Postcode || ' '
+            //         };
 
-                    dataTableList.push(dataList);
-                    var dataListContact = [
-                        data.terpcombinedcontactsvs1[i].fields.ClientName || '-',
-                        data.terpcombinedcontactsvs1[i].fields.JobName || '',
-                        data.terpcombinedcontactsvs1[i].fields.Phone || '',
-                        arBalance || 0.00,
-                        creditBalance || 0.00,
-                        balance || 0.00,
-                        creditLimit || 0.00,
-                        salesOrderBalance || 0.00,
-                        data.terpcombinedcontactsvs1[i].fields.Country || '',
-                        data.terpcombinedcontactsvs1[i].fields.State || '',
-                        data.terpcombinedcontactsvs1[i].fields.Street2 || '',
-                        data.terpcombinedcontactsvs1[i].fields.Street || '',
-                        data.terpcombinedcontactsvs1[i].fields.Postcode || '',
-                        data.terpcombinedcontactsvs1[i].fields.Email || '',
-                        data.terpcombinedcontactsvs1[i].fields.AccountNo || '',
-                        data.terpcombinedcontactsvs1[i].fields.ClientNo || '',
-                        data.terpcombinedcontactsvs1[i].fields.JobTitle || '',
-                        data.terpcombinedcontactsvs1[i].fields.Notes || '',
-                        data.terpcombinedcontactsvs1[i].fields.ID || '',
-                        data.terpcombinedcontactsvs1[i].fields.ClientTypeName || 'Default',
-                        data.terpcombinedcontactsvs1[i].fields.Discount || 0,
-                        data.terpcombinedcontactsvs1[i].fields.TermsName || '',
-                        data.terpcombinedcontactsvs1[i].fields.FirstName || '',
-                        data.terpcombinedcontactsvs1[i].fields.LastName || '',
-                        data.terpcombinedcontactsvs1[i].fields.TaxCodeName || 'E'
-                    ];
+            //         dataTableList.push(dataList);
+            //         var dataListContact = [
+            //             data.terpcombinedcontactsvs1[i].fields.ClientName || '-',
+            //             data.terpcombinedcontactsvs1[i].fields.JobName || '',
+            //             data.terpcombinedcontactsvs1[i].fields.Phone || '',
+            //             arBalance || 0.00,
+            //             creditBalance || 0.00,
+            //             balance || 0.00,
+            //             creditLimit || 0.00,
+            //             salesOrderBalance || 0.00,
+            //             data.terpcombinedcontactsvs1[i].fields.Country || '',
+            //             data.terpcombinedcontactsvs1[i].fields.State || '',
+            //             data.terpcombinedcontactsvs1[i].fields.Street2 || '',
+            //             data.terpcombinedcontactsvs1[i].fields.Street || '',
+            //             data.terpcombinedcontactsvs1[i].fields.Postcode || '',
+            //             data.terpcombinedcontactsvs1[i].fields.Email || '',
+            //             data.terpcombinedcontactsvs1[i].fields.AccountNo || '',
+            //             data.terpcombinedcontactsvs1[i].fields.ClientNo || '',
+            //             data.terpcombinedcontactsvs1[i].fields.JobTitle || '',
+            //             data.terpcombinedcontactsvs1[i].fields.Notes || '',
+            //             data.terpcombinedcontactsvs1[i].fields.ID || '',
+            //             data.terpcombinedcontactsvs1[i].fields.ClientTypeName || 'Default',
+            //             data.terpcombinedcontactsvs1[i].fields.Discount || 0,
+            //             data.terpcombinedcontactsvs1[i].fields.TermsName || '',
+            //             data.terpcombinedcontactsvs1[i].fields.FirstName || '',
+            //             data.terpcombinedcontactsvs1[i].fields.LastName || '',
+            //             data.terpcombinedcontactsvs1[i].fields.TaxCodeName || 'E'
+            //         ];
 
-                    splashArrayContactList.push(dataListContact);
+            //         splashArrayContactList.push(dataListContact);
 
-                    // var customerrecordObj = {
-                    //     customerid: data.terpcombinedcontactsvs1[i].fields.ID || ' ',
-                    //     firstname: data.terpcombinedcontactsvs1[i].fields.FirstName || ' ',
-                    //     lastname: data.terpcombinedcontactsvs1[i].fields.LastName || ' ',
-                    //     customername: data.terpcombinedcontactsvs1[i].fields.ClientName || ' ',
-                    //     customeremail: data.terpcombinedcontactsvs1[i].fields.Email || ' ',
-                    //     street: data.terpcombinedcontactsvs1[i].fields.Street || ' ',
-                    //     street2: data.terpcombinedcontactsvs1[i].fields.Street2 || ' ',
-                    //     street3: data.terpcombinedcontactsvs1[i].fields.Street3 || ' ',
-                    //     suburb: data.terpcombinedcontactsvs1[i].fields.Suburb || ' ',
-                    //     statecode: data.terpcombinedcontactsvs1[i].fields.State + ' ' + data.terpcombinedcontactsvs1[i].fields.Postcode || ' ',
-                    //     country: data.terpcombinedcontactsvs1[i].fields.Country || ' ',
-                    //     termsName: datadata.terpcombinedcontactsvs1[i].fields.TermsName || '',
-                    //     taxCode: data.terpcombinedcontactsvs1[i].fields.TaxCodeName || '',
-                    //     clienttypename: data.terpcombinedcontactsvs1[i].fields.ClientTypeName || 'Default'
-                    // };
-                    // clientList.push(customerrecordObj);
-                    //}
-                }
-                var datatable = $('#tblContactlist').DataTable();
-                datatable.clear();
-                datatable.rows.add(splashArrayContactList);
-                datatable.draw(false);
+            //         // var customerrecordObj = {
+            //         //     customerid: data.terpcombinedcontactsvs1[i].fields.ID || ' ',
+            //         //     firstname: data.terpcombinedcontactsvs1[i].fields.FirstName || ' ',
+            //         //     lastname: data.terpcombinedcontactsvs1[i].fields.LastName || ' ',
+            //         //     customername: data.terpcombinedcontactsvs1[i].fields.ClientName || ' ',
+            //         //     customeremail: data.terpcombinedcontactsvs1[i].fields.Email || ' ',
+            //         //     street: data.terpcombinedcontactsvs1[i].fields.Street || ' ',
+            //         //     street2: data.terpcombinedcontactsvs1[i].fields.Street2 || ' ',
+            //         //     street3: data.terpcombinedcontactsvs1[i].fields.Street3 || ' ',
+            //         //     suburb: data.terpcombinedcontactsvs1[i].fields.Suburb || ' ',
+            //         //     statecode: data.terpcombinedcontactsvs1[i].fields.State + ' ' + data.terpcombinedcontactsvs1[i].fields.Postcode || ' ',
+            //         //     country: data.terpcombinedcontactsvs1[i].fields.Country || ' ',
+            //         //     termsName: datadata.terpcombinedcontactsvs1[i].fields.TermsName || '',
+            //         //     taxCode: data.terpcombinedcontactsvs1[i].fields.TaxCodeName || '',
+            //         //     clienttypename: data.terpcombinedcontactsvs1[i].fields.ClientTypeName || 'Default'
+            //         // };
+            //         // clientList.push(customerrecordObj);
+            //         //}
+            //     }
+            //     var datatable = $('#tblContactlist').DataTable();
+            //     datatable.clear();
+            //     datatable.rows.add(splashArrayContactList);
+            //     datatable.draw(false);
 
-                $('.fullScreenSpin').css('display', 'none');
+            //     $('.fullScreenSpin').css('display', 'none');
 
 
-            }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
+            // }).catch(function (err) {
+            //     $('.fullScreenSpin').css('display', 'none');
+            // });
         }
     },
     'keyup #tblContactlist_filter input': function (event) {
+
+    if ($(event.target).val() != "") {
+        $(".btnRefreshContact").addClass("btnSearchAlert");
+        } else {
+        $(".btnRefreshContact").removeClass("btnSearchAlert");
+        }
       if (event.keyCode == 13) {
          $(".btnRefreshContact").trigger("click");
       }

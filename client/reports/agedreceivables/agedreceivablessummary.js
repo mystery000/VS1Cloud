@@ -718,6 +718,7 @@ Template.agedreceivablessummary.onRendered(()=>{
         //templateObject.getAgedReceivableReports(formatDateFrom,formatDateTo,false);
         var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth()+1) + "/" + dateTo.getFullYear();
         //templateObject.dateAsAt.set(formatDate);
+        localStorage.setItem('VS1AgedReceivableSummary_Report', '');
         if(($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")){
           templateObject.getAgedReceivableReports('','',true);
           templateObject.dateAsAt.set('Current Date');
@@ -738,7 +739,7 @@ Template.agedreceivablessummary.onRendered(()=>{
 
         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth()+1) + "-" + dateFrom.getDate();
         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth()+1) + "-" + dateTo.getDate();
-
+        localStorage.setItem('VS1AgedReceivableSummary_Report', '');
         //templateObject.getAgedReceivableReports(formatDateFrom,formatDateTo,false);
         var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth()+1) + "/" + dateTo.getFullYear();
         //templateObject.dateAsAt.set(formatDate);

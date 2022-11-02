@@ -245,7 +245,7 @@ a.btnOpenSettings, .btn-link.dropdown-toggle, .btnoptionsmodal {
 }
 
 .text-gray-400 {
-    color: #ffffff !important;
+    /* color: #ffffff !important; */
 }
 
 .dataTables_wrapper .dt-buttons{
@@ -371,6 +371,11 @@ overflow-y: auto;
 }
 
 #myInventoryModal > .modal-dialog > .modal-content > .modal-body {
+    max-height: 500px !important;
+    overflow-x: scroll !important;
+}
+
+.divDisplaySettings > .modal-dialog > .modal-content > .modal-body {
     max-height: 500px !important;
     overflow-x: scroll !important;
 }

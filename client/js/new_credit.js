@@ -4333,7 +4333,7 @@ Template.creditcard.onRendered(() => {
 
 
         }
-
+        let file = "credit.pdf";
         var opt = {
             margin: 0,
             filename: file,

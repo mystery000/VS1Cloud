@@ -4513,7 +4513,7 @@ Template.new_quote.onRendered(() => {
         }, 500);
     }
 
-    const exportSalesToPdf = async function (template_title,number) {
+    templateObject.exportSalesToPdf = async function (template_title,number) {
         if(template_title == 'Quotes' && number == 1) {
             exportSalesToPdf1();
         } else {
@@ -6839,6 +6839,7 @@ Template.new_quote.events({
 
     },
     'click .printConfirm':async function (event) {
+        const templateObject = Template.instance();
         playPrintAudio();
         setTimeout(async function(){
         const printTemplate = [];
@@ -6995,7 +6996,7 @@ Template.new_quote.events({
                     }
 
 
-                    let result = await exportSalesToPdf(printTemplate[i],template_number);
+                    let result = await templateObject.exportSalesToPdf(printTemplate[i],template_number);
                     if(result == true)
                     {
 

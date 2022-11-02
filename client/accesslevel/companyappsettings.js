@@ -73,6 +73,7 @@ Template.companyappsettings.events({
         $('#employeeListModal').modal('toggle');
       // result.dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
       } else if (result.dismiss === 'cancel') {
+        $('.modal-backdrop').css('display','none');
         FlowRouter.go('/employeescard?addvs1user=true');
       }
     })

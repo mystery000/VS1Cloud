@@ -78,7 +78,6 @@ function buildSubAccountJson( $sortContainer ){
 }
 
 Template.newprofitandloss.onRendered(function () {
-  let taxRateService = new TaxRateService();
   LoadingOverlay.show();
   const templateObject = Template.instance();
   const deptrecords = [];

@@ -102,7 +102,7 @@ Template.non_transactional_list.onRendered(function() {
             { index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "80" },
             { index: 8, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "120" },
             { index: 9, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "120" },
-            { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+            { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             { index: 11, label: 'Address', class: 'colAddress', active: true, display: true, width: "" },
             { index: 12, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120" },
             { index: 13, label: 'State', class: 'colState', active: false, display: true, width: "120" },
@@ -134,7 +134,7 @@ Template.non_transactional_list.onRendered(function() {
               { index: 16, label: 'Header', class: 'colIsHeader', active: false, display: true, width: "60" },
               { index: 17, label: 'Use Receipt Claim', class: 'colUseReceiptClaim', active: false, display: true, width: "60" },
               { index: 18, label: 'Category', class: 'colExpenseCategory', active: false, display: true, width: "80" },
-              { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+              { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ];
         }
       else if(currenttablename == "tblClienttypeList") { //Do Something Here
@@ -142,7 +142,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 0, label: '#ID', class: 'colClientTypeID', active: false, display: true, width: "10" },
                 { index: 1, label: 'Type Name', class: 'colTypeName', active: true, display: true, width: "200" },
                 { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-                { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+                { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
               ];
           }
           else if(currenttablename == "tblLeadStatusList") { //Done Something Here
@@ -151,7 +151,7 @@ Template.non_transactional_list.onRendered(function() {
                     { index: 1, label: 'Lead Status Name', class: 'colStatusName', active: true, display: true, width: "200" },
                     { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
                     { index: 3, label: 'Expected Quantity per Month', class: 'colQuantity', active: true, display: true, width: "200" },
-                    { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+                    { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
                   ];
               }
     templateObject.reset_data.set(reset_data);
@@ -170,6 +170,7 @@ Template.non_transactional_list.onRendered(function() {
     templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
+
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
@@ -187,9 +188,9 @@ Template.non_transactional_list.onRendered(function() {
              }
            }
          };
-          // handle process here
         }
       });
+
     } catch (error) {
     }
     return;
@@ -1386,7 +1387,6 @@ Template.non_transactional_list.onRendered(function() {
     });
   }
   templateObject.displayClientTypeListData = async function (data) {
-      console.log(data);
     var splashArrayClientTypeList = new Array();
     let lineItems = [];
     let lineItemObj = {};
@@ -1645,7 +1645,6 @@ Template.non_transactional_list.onRendered(function() {
     });
   }
   templateObject.displayLeadStatusListData = async function (data) {
-      console.log(data);
     var splashArrayLeadStatusList = new Array();
     let lineItems = [];
     let lineItemObj = {};
@@ -1897,7 +1896,7 @@ Template.non_transactional_list.onRendered(function() {
   }else if(currenttablename == "tblLeadStatusList"){
     templateObject.getLeadStatusData();
   }
-
+  tableResize();
 });
 
 Template.non_transactional_list.events({
@@ -1988,7 +1987,6 @@ Template.non_transactional_list.events({
     let currenttablename = await templateObject.tablename.get()||'';
       //reset_data[9].display = false;
       reset_data = reset_data.filter(redata => redata.display);
-
     $(".displaySettings").each(function (index) {
       let $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -1998,14 +1996,14 @@ Template.non_transactional_list.events({
         $(title).html(reset_data[index].label);
 
       if (reset_data[index].active) {
-        $('.col' + reset_data[index].class).addClass('showColumn');
-        $('.col' + reset_data[index].class).removeClass('hiddenColumn');
+        $('.' + reset_data[index].class).addClass('showColumn');
+        $('.' + reset_data[index].class).removeClass('hiddenColumn');
       } else {
-        $('.col' + reset_data[index].class).addClass('hiddenColumn');
-        $('.col' + reset_data[index].class).removeClass('showColumn');
+        $('.' + reset_data[index].class).addClass('hiddenColumn');
+        $('.' + reset_data[index].class).removeClass('showColumn');
       }
       $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
-      $(".col" + reset_data[index].class).css('width', reset_data[index].width);
+      $("." + reset_data[index].class).css('width', reset_data[index].width);
     });
   },
   "click .saveTable": async function(event) {

@@ -532,7 +532,7 @@ Template.basreturn.onRendered(function() {
                         templateObject.selTaxList(15);
                         templateObject.selTaxList(18);
 
-                        var gst5cost = parseFloat($("#gst3cost").val()) + parseFloat($("#gst3cost").val());
+                        var gst5cost = parseFloat($("#gst3cost").val()) + parseFloat($("#gst4cost").val());
                         $("#gst5cost").val(gst5cost);
                         $("#prt_gst5cost").html("$" + gst5cost);
                         var gst6cost = parseFloat($("#gst1cost").val()) + parseFloat($("#gst2cost").val()) + gst5cost;
@@ -2134,7 +2134,7 @@ Template.basreturn.events({
         let gstPanID = $(event.target).attr('id').split("-")[1];
         Template.instance().selTaxList(gstPanID);
 
-        var gst5cost = parseFloat($("#gst3cost").val()) + parseFloat($("#gst3cost").val());
+        var gst5cost = parseFloat($("#gst3cost").val()) + parseFloat($("#gst4cost").val());
         $("#gst5cost").val(gst5cost);
         $("#prt_gst5cost").html("$" + gst5cost);
         var gst6cost = parseFloat($("#gst1cost").val()) + parseFloat($("#gst2cost").val()) + gst5cost;

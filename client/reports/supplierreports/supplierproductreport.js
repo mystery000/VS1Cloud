@@ -49,7 +49,7 @@ Template.supplierproductreport.onRendered(() => {
     $('.edtReportDates').attr('disabled', false)
     if( ignoreDate == true ){
       $('.edtReportDates').attr('disabled', true);
-      templateObject.dateAsAt.set("Current Date");
+      templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
     }
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
@@ -238,14 +238,12 @@ Template.supplierproductreport.onRendered(() => {
         ignoreDate: true
       };
     }
-    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    templateObject.dateAsAt.set(moment(dateFrom).format('DD/MM/YYYY'));
     $('.edtReportDates').attr('disabled', false)
     if( ignoreDate == true ){
       $('.edtReportDates').attr('disabled', true);
-      templateObject.dateAsAt.set("Current Date");
+      templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
     }
-    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
   }
   
 
@@ -465,7 +463,7 @@ Template.supplierproductreport.events({
     localStorage.setItem("VS1SupplierProduct_Report", "");
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
-    templateObject.dateAsAt.set("Current Date");
+    templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
     templateObject.setReportOptions(true);
   },
 

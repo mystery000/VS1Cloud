@@ -1442,7 +1442,7 @@
                                                             <input type="hidden" style="width: 100%; display:none;"
                                                                 id="customerSelectLineID" name="customerSelectLineID" readonly>
                                                             <div class="row">
-                                                                <div class="col-12 contactcheckboxcol"
+                                                                <div class="col-7 col-md-8 contactcheckboxcol d-flex align-items-center justify-content-start"
                                                                     style="padding: 16px 32px 0px 32px; display: inline-flex;">
                                                                     <div class="custom-control custom-switch" style="width: 155px;">
                                                                         <input class="custom-control-input" type="checkbox"
@@ -1466,7 +1466,10 @@
                                                                             style="cursor: pointer;">All Suppliers</label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="mt-3 px-5 py-3 col-12 contactlistcol">
+                                                                <div class="col-5 col-md-4 d-xl-flex justify-content-xl-end align-items-center" style="padding-top: 16px; padding-right: 32px;">
+                                                                    {{> export_import_print_display_button}}
+                                                                </div>
+                                                                <div class="col-12 contactlistcol">
                                                                     {{> contactlistpop}}
                                                                         <!-- {{> non_transactional_list}} -->
                                                                 </div>

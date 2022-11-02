@@ -106,16 +106,12 @@ Template.payrollhistoryreport.onRendered(() => {
     $('.edtReportDates').attr('disabled', false)
     if( ignoreDate == true ){
       $('.edtReportDates').attr('disabled', true);
-      templateObject.dateAsAt.set("Current Date");
+      templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
     }
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
-    // await templateObject.getPayHistory(
-    //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-    //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
-    //   ignoreDate
-    // );
+    await templateObject.getPayHistory( defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate );
   };
   templateObject.getPayHistory = async (dateFrom, dateTo, ignoreDate = false) => {
     LoadingOverlay.show();
@@ -342,11 +338,13 @@ Template.payrollhistoryreport.events({
     }
   },
   "change .edtReportDates": async function () {
-    LoadingOverlay.hide();
+    $(".fullScreenSpin").css("display", "block");
+    console.log('testing goes here')
     localStorage.setItem('VS1PayrollHistory_Report', '');
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    localStorage.setItem('VS1PayrollHistory_Report', '');
     await templateObject.setReportOptions(false, dateFrom, dateTo);
     $(".fullScreenSpin").css("display", "none");
   },

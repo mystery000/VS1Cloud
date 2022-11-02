@@ -493,9 +493,10 @@ Template.customerdetailsreport.helpers({
     return Template.instance().records.get();
   },
   redirectionType(item) {
+    // return '/customerscard?id=' + item.SaleID;
     if(item.type === 'PO') {
       return '#noInfoFound';
-      return '/purchaseordercard?id=' + item.SaleID;
+      return '/customerscard?id=' + item.SaleID;
     } else if (item.type === 'Invoice') {
       return '#noInfoFound';
       return '/invoicecard?id=' + item.SaleID;
