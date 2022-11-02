@@ -386,6 +386,64 @@ Template.timesheetdetail.onRendered(function () {
     return buildEarningsLines(trs);
   };
 
+  this.generateHourlyRates = (totals) => {
+    const overtimeRules = this.overtimes.get();
+
+    const isWeekend = (total) => {
+      // Saturday is 5, Sunday is 6
+      console.log('day index', moment(total.date).day());
+      return [6,0].includes(moment(total.date).day());
+    } 
+
+    const findRightOvertimeRule  = (total) => {
+      console.log('day name', moment(total.date).format("dddd"));
+      console.log('overtimes', overtimeRules);
+      // if is weekend, get the mataching day rule
+      if(isWeekend(total)){
+        console.log("is week end ?", moment(total.date).format("dddd").toUpperCase(), true, overtimeRules.find(o => o.day.toUpperCase() == moment(total.date).format("dddd").toUpperCase()));
+        //return overtimeRules.find(o => o.day.toUpperCase() == moment(total.date).format("dddd").toUpperCase());
+      }
+      // else going to filter by Hourly Rate types
+      let inWeekRules = overtimeRules.filter(o => o.rateType.Description == "Hourly Rate");
+      console.log("in weeks rules", inWeekRules);
+      
+
+      // once filtered, sort them by hours
+      inWeekRules = inWeekRules.sort((a, b) => a.hours > b.hours);
+      console.log("Sorted rules", inWeekRules);
+
+
+      // once sorted
+      // while hoursCredit is > 0, apply the correct overtime rule until it finishes
+      let hoursCredit = total.hours;
+
+      while(hoursCredit > 0) {
+        // find the right overtime rule
+        // for more than 8 hours
+
+        // then for more than 12 hours
+        // you can do this by comparing the necessity of the rule inside of a foreach
+
+
+      } 
+
+
+      
+    }
+    
+
+    totals.forEach((total) => {
+      const hours = total.hours; // total hours
+      // Step 1 : We need to take the right rule
+      // For exmaple the min hours of overtimes
+      // and to check if we are a weekend or not
+      const rule = findRightOvertimeRule(total);
+
+    })
+
+    console.log('totals', totals, overtimeRules);
+  }
+
   this.approveTimeSheet = async () => {
     try {
       LoadingOverlay.show();
@@ -490,7 +548,10 @@ Template.timesheetdetail.onRendered(function () {
       const timesheet = await this.timesheet.get();
       const hours = await this.calculateWeeklyHours();
       const earningLines = this.buildNewObject();
-      
+      const total = buildSumOfDailyHours(earningLines);
+      this.generateHourlyRates(total);
+
+      debugger;
       let objectDataConverted = {
         type: erpObject.TTimeSheet,
         fields: {
@@ -502,11 +563,14 @@ Template.timesheetdetail.onRendered(function () {
       };
       await contactService.saveTimeSheetUpdate(objectDataConverted);
 
+     
+
       // We save the table data
       const objToSave = {
         timeSheetId: id,
         earningLines: earningLines,
-        total: buildSumOfDailyHours(earningLines),
+        total: total,
+        // dailyEarnings: generateHourlyRates(total)
       };
      
 
