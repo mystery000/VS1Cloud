@@ -2274,9 +2274,9 @@ Template.employeescard.onRendered(function () {
               },
             }
           );
-    
+
           data = data.response;
-    
+
           let employees = data.temployee.map((e) => e.fields);
 
           await templateObject.employees.set(employees);
@@ -4417,7 +4417,7 @@ Template.employeescard.onRendered(function () {
                 } else if (result.dismiss === 'cancel') {}
 
             }
-        
+
         } else {
             LoadingOverlay.hide(0);
             const result =  await swal({
@@ -4433,7 +4433,7 @@ Template.employeescard.onRendered(function () {
             } else if (result.dismiss === 'cancel') {}
         }
 
-        
+
         $('#deleteEmployeeModal').modal('toggle');
 
     }
@@ -8074,7 +8074,7 @@ Template.employeescard.events({
             let employeePaySettings = {
                 type: 'TEmployeepaysettings',
                 fields: {
-                    ID: ePaySettings.ID,
+                    ID: ePaySettings.ID||0,
                     Employeeid: parseInt(employeeID),
                     Payperiod: EdtPayPeriod,
                     FirstPayDate: moment(FirstPayDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
@@ -8083,6 +8083,7 @@ Template.employeescard.events({
                         fields: {
                             ID: parseInt(employeeID),
                             TFN: TaxFileNumber,
+                            TaxScaleID:0,
                             TaxFreeThreshold: TaxFreeThreshold,
                             CgtExempt: ( Exemption )? parseInt(Exemption): 0,
                             BasisOfPayment: EmploymentBasis,
@@ -10154,7 +10155,7 @@ Template.employeescard.events({
         }
     },
     'click .btnDeleteEmployee': (e, ui) => {
-        
+
         ui.deactivateEmployee();
         // playDeleteAudio();
         // LoadingOverlay.show();

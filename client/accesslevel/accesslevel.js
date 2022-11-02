@@ -81,7 +81,7 @@ if(oPost.readyState == 4 && oPost.status == 200) {
 
         }
         });
-          
+
       }
 
   }else if(oPost.readyState == 4 && oPost.status == 403){
@@ -94,7 +94,7 @@ showCancelButton: false,
 confirmButtonText: 'Try Again'
 }).then((result) => {
 if (result.value) {
-  
+
 } else if (result.dismiss === 'cancel') {
 
 }
@@ -120,7 +120,7 @@ if (result.value) {
 }
   };
 
-  
+
   });
 
   Template.registerHelper('equals', function (a, b) {
@@ -205,30 +205,30 @@ Template.accesslevel.events({
       let templateObject = Template.instance();
       let tempInstance = Template.instance();
       templateObject.$("#STEmployeeName").trigger("focus");
-      
-      
+
+
   },
   'change #sltEmploy22222eeName': function (event) {
       let templateObject = Template.instance();
       let employeeName = $(event.target).val();
       let employeeID = $('option:selected', event.target).attr('mytag');
-      
-      
+
+
       if(employeeID){
        templateObject.accessgrouprecord.set('');
        templateObject.getTableData(employeeID);
-       
+
      }
-      
+
 
   },
   'click .inactiveLicence': function (event) {
 
     var targetID = '';
     var $cell= $(event.target).closest('td');
-    var targetID = $(event.target).closest('tr').attr('id'); 
+    var targetID = $(event.target).closest('tr').attr('id');
 
-   
+
 let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
 let isInventoryLicence = Session.get('CloudInventoryLicence');
 let isManufacturingLicence = Session.get('CloudManufacturingLicence');
@@ -251,7 +251,7 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
 
 
 
-    
+
       let accessDesc = $("#"+targetID+"_accessDesc").val();
       $('.upgModule').html(accessDesc);
       $('#upgradeModal').modal('toggle');
@@ -259,8 +259,8 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
 
   },
   'click #tblAccessLevel tbody tr td': function (event) {
-  
-    
+
+
     var targetID = '';
     var $cell= $(event.target).closest('td');
 
@@ -269,11 +269,11 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
          targetID = event.target.name;
 
 
-         
-         
-         
-         
-         
+
+
+
+
+
          if($cell.index() == 1){
            $("."+targetID+"_noaccess").css('opacity','1');
            $("."+targetID+"_readonly").css('opacity','1');
@@ -316,7 +316,7 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
        Meteor._reload.reload();
      },
      'click .chkSettings': function (event) {
-       
+
        if($(event.target).is(':checked')){
          $(event.target).val(1);
        }else{
@@ -324,12 +324,12 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
        }
      },
      'click .chkSettings.chkInventory': function (event) {
-       
+
        if($(event.target).is(':checked')){
-         
+
          swal('PLEASE NOTE', 'If Inventory tracking is turned on it cannot be disabled in the future.', 'info');
        }else{
-         
+
        }
      },
      'click .btnGlobalSaveNOT': function () {
@@ -338,22 +338,22 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
        let templateObject = Template.instance();
        let accesslevelService = new AccessLevelService();
         var erpGet = erpDb();
-       
+
        let empInputValue = templateObject.$("#sltEmployeeName").val();
 
        if(empInputValue === "All"){
 
        }else{
-       
+
        let employeeID = $("#sltEmployeeName").find('option:selected').attr('mytag');
-       
-        
+
+
        var loggedEmpName = localStorage.getItem('mySession');
        let empLoggedID = Session.get('mySessionEmployeeLoggedID');
        let isSidePanelID = '';
        let isTopPanelID = '';
 
-      
+
        let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
        let isInventoryLicence = Session.get('CloudInventoryLicence');
        let isManufacturingLicence = Session.get('CloudManufacturingLicence');
@@ -365,15 +365,15 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
        let isMainLicence = Session.get('CloudMainLicence');
        let isDashboardLicence = Session.get('CloudDashboardLicence');
 
-          
+
        let isAccountsLicence = Session.get('CloudAccountsLicence');
        let isContactsLicence = Session.get('CloudContactsLicence');
        let isExpenseClaimsLicence = Session.get('CloudExpenseClaimsLicence');
        let isPaymentsLicence = Session.get('CloudPaymentsLicence');
        let isReportsLicence = Session.get('CloudReportsLicence');
        let isSettingsLicence = Session.get('CloudSettingsLicence');
-         
-      
+
+
 
        if(employeeID){
          $('.fullScreenSpin').css('display','inline-block');
@@ -456,13 +456,13 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                     Session.setPersistent('CloudDashboardModule', isDashboard);
                   }
 
-                  
-                  
-                  
-                  
-                  
-                  
-                  
+
+
+
+
+
+
+
 
                   if((radioValue == 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                     isInventory = true;
@@ -575,29 +575,29 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                     Session.setPersistent('CloudSettingsModule', isSettings);
                   }
 
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                   }
                 }).catch(function (err) {
-                    
+
                     swal({
                     title: 'Oooops...',
                     text: err,
@@ -606,7 +606,7 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                     confirmButtonText: 'Try Again'
                     }).then((result) => {
                     if (result.value) {
-                      
+
                     } else if (result.dismiss === 'cancel') {
 
                     }
@@ -681,13 +681,13 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                       Session.setPersistent('CloudDashboardModule', isDashboard);
                     }
 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
+
+
+
+
+
+
 
                     if((radioValue == 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                       isInventory = true;
@@ -800,29 +800,29 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                       Session.setPersistent('CloudSettingsModule', isSettings);
                     }
 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     }
                   }).catch(function (err) {
-                      
+
                       swal({
                       title: 'Oooops...',
                       text: err,
@@ -831,7 +831,7 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                       confirmButtonText: 'Try Again'
                       }).then((result) => {
                       if (result.value) {
-                        
+
                       } else if (result.dismiss === 'cancel') {
 
                       }
@@ -845,7 +845,7 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
        }
 
        setTimeout(function () {
-           
+
            $('.fullScreenSpin').css('display','none');
        }, 5000);
 
@@ -876,19 +876,19 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
       setTimeout(function(){
        let templateObject = Template.instance();
        let accesslevelService = new AccessLevelService();
-       
+
        let empInputValue = templateObject.$("#sltEmployeeName").val();
 
-       
+
        let employeeID = $("#sltEmployeeName").find('option:selected').attr('mytag');
-       
-        
+
+
        var loggedEmpName = localStorage.getItem('mySession');
        let empLoggedID = Session.get('mySessionEmployeeLoggedID');
        let isSidePanelID = '';
        let isTopPanelID = '';
 
-      
+
        let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
        let isInventoryLicence = Session.get('CloudInventoryLicence');
        let isManufacturingLicence = Session.get('CloudManufacturingLicence');
@@ -900,15 +900,15 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
        let isMainLicence = Session.get('CloudMainLicence');
        let isDashboardLicence = Session.get('CloudDashboardLicence');
 
-          
+
        let isAccountsLicence = Session.get('CloudAccountsLicence');
        let isContactsLicence = Session.get('CloudContactsLicence');
        let isExpenseClaimsLicence = Session.get('CloudExpenseClaimsLicence');
        let isPaymentsLicence = Session.get('CloudPaymentsLicence');
        let isReportsLicence = Session.get('CloudReportsLicence');
        let isSettingsLicence = Session.get('CloudSettingsLicence');
-         
-      
+
+
 
        if(employeeID){
          $('.fullScreenSpin').css('display','inline-block');
@@ -990,13 +990,13 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                     Session.setPersistent('CloudDashboardModule', isDashboard);
                   }
 
-                  
-                  
-                  
-                  
-                  
-                  
-                  
+
+
+
+
+
+
+
 
                   if((radioValue == 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                     isInventory = true;
@@ -1109,29 +1109,29 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                     Session.setPersistent('CloudSettingsModule', isSettings);
                   }
 
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                   }
                 }).catch(function (err) {
-                    
+
                     swal({
                     title: 'Oooops...',
                     text: err,
@@ -1215,13 +1215,13 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                       Session.setPersistent('CloudDashboardModule', isDashboard);
                     }
 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
+
+
+
+
+
+
 
                     if((radioValue == 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                       isInventory = true;
@@ -1334,29 +1334,29 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                       Session.setPersistent('CloudSettingsModule', isSettings);
                     }
 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     }
                   }).catch(function (err) {
-                      
+
                       swal({
                       title: 'Oooops...',
                       text: err,
@@ -1388,14 +1388,14 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
         return false;
      },
      'click .btnBack':function(event){
-       playCancelAudio(); 
+       playCancelAudio();
        event.preventDefault();
        setTimeout(function(){
         history.back(1);
        }, delayTimeAfterSound);
      },
      'click .btnAddVS1User':function(event){
-      
+
       swal({
         title: 'Is this an existing Employee?',
         text: '',
@@ -1407,14 +1407,14 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
         if (result.value) {
           swal("Please select the employee from the list below.", "", "info");
           $('#employeeListModal').modal('toggle');
-        
+
         } else if (result.dismiss === 'cancel') {
           FlowRouter.go('/employeescard?addvs1user=true');
         }
       })
      },
      'click .essentialsdiv .chkSettings': function (event) {
-       
+
        if($(event.target).is(':checked')){
          $(event.target).val(1);
          $('#upgradeModal').modal('toggle');

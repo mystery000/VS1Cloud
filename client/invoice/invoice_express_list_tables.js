@@ -8,6 +8,10 @@ import { UtilityService } from "../utility-service";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import { OrganisationService } from "../js/organisation-service";
+import CachedHttp from "../lib/global/CachedHttp";
+import erpObject from "../lib/global/erp-objects";
+import TableHandler from "../js/Table/TableHandler";
+import LoadingOverlay from "../LoadingOverlay";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -205,6 +209,464 @@ Template.invoicelist.onRendered(function () {
   templateObject.resetData = function (dataVal) {
     location.reload();
   };
+
+  templateObject.loadInvoices = async (refresh = false) => {
+    var currentBeginDate = new Date();
+    var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+    let fromDateMonth = currentBeginDate.getMonth() + 1;
+    let fromDateDay = currentBeginDate.getDate();
+    if (currentBeginDate.getMonth() + 1 < 10) {
+      fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
+    } else {
+      fromDateMonth = currentBeginDate.getMonth() + 1;
+    }
+
+    if (currentBeginDate.getDate() < 10) {
+      fromDateDay = "0" + currentBeginDate.getDate();
+    }
+    var toDate =
+      currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
+    let prevMonth11Date = moment()
+      .subtract(reportsloadMonths, "months")
+      .format("YYYY-MM-DD");
+
+
+      let data = await CachedHttp.get(erpObject.TInvoiceList, async () => {
+        return await sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate,true,initialReportLoad,0);
+      }, {
+        forceOverride: refresh,
+        validate: (cachedResponse) => {
+          return true;
+        }
+      });
+      data = data.response;
+
+      for (let i = 0; i < data.tinvoicelist.length; i++) {
+        let totalAmountEx =
+          utilityService.modifynegativeCurrencyFormat(
+            data.tinvoicelist[i].TotalAmount
+          ) || 0.0;
+        let totalTax =
+          utilityService.modifynegativeCurrencyFormat(
+            data.tinvoicelist[i].TotalTax
+          ) || 0.0;
+        // Currency+''+data.tinvoiceex[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+        let totalAmount =
+          utilityService.modifynegativeCurrencyFormat(
+            data.tinvoicelist[i].TotalAmountInc
+          ) || 0.0;
+        let totalPaid =
+          utilityService.modifynegativeCurrencyFormat(
+            data.tinvoicelist[i].Payment
+          ) || 0.0;
+        let totalOutstanding =
+          utilityService.modifynegativeCurrencyFormat(
+            data.tinvoicelist[i].Balance
+          ) || 0.0;
+        let salestatus = data.tinvoicelist[i].QuoteStatus || "";
+        if (data.tinvoicelist[i].Deleted == true) {
+          salestatus = "Deleted";
+        } else if (data.tinvoicelist[i].CustomerName == "") {
+          salestatus = "Deleted";
+        }
+
+        var dataList = {
+          id: data.tinvoicelist[i].SaleID || "",
+          apptid: data.tinvoicelist[i].AppointID || 0,
+          employee: data.tinvoicelist[i].EmployeeName || "",
+          sortdate:
+            data.tinvoicelist[i].SaleDate != ""
+              ? moment(data.tinvoicelist[i].SaleDate).format(
+                  "YYYY/MM/DD"
+                )
+              : data.tinvoicelist[i].SaleDate,
+          saledate:
+            data.tinvoicelist[i].SaleDate != ""
+              ? moment(data.tinvoicelist[i].SaleDate).format(
+                  "DD/MM/YYYY"
+                )
+              : data.tinvoicelist[i].SaleDate,
+          duedate:
+            data.tinvoicelist[i].DueDate != ""
+              ? moment(data.tinvoicelist[i].DueDate).format(
+                  "DD/MM/YYYY"
+                )
+              : data.tinvoicelist[i].DueDate,
+          customername: data.tinvoicelist[i].CustomerName || "",
+          totalamountex: totalAmountEx || 0.0,
+          totaltax: totalTax || 0.0,
+          totalamount: totalAmount || 0.0,
+          totalpaid: totalPaid || 0.0,
+          totaloustanding: totalOutstanding || 0.0,
+          salestatus: salestatus || "",
+          ponumber: data.tinvoicelist[i].PONumber || "",
+          referenceno: data.tinvoicelist[i].ReferenceNo || "",
+          custfield1: data.tinvoicelist[i].SaleCustField1 || "",
+          custfield2: data.tinvoicelist[i].SaleCustField2 || "",
+          custfield3: data.tinvoicelist[i].SaleCustField3 || "",
+          comments: data.tinvoicelist[i].Comments || "",
+          // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
+        };
+
+        //if (data.tinvoiceex[i].fields.Deleted == false && data.tinvoiceex[i].fields.CustomerName.replace(/\s/g, '') != '') {
+        dataTableList.push(dataList);
+        //}
+
+        //}
+      }
+
+      templateObject.datatablerecords.set(dataTableList);
+
+      if (templateObject.datatablerecords.get()) {
+        Meteor.call(
+          "readPrefMethod",
+          Session.get("mycloudLogonID"),
+          "tblInvoicelist",
+          function (error, result) {
+            if (error) {
+            } else {
+              if (result) {
+                for (let i = 0; i < result.customFields.length; i++) {
+                  let customcolumn = result.customFields;
+                  let columData = customcolumn[i].label;
+                  let columHeaderUpdate = customcolumn[
+                    i
+                  ].thclass.replace(/ /g, ".");
+                  let hiddenColumn = customcolumn[i].hidden;
+                  let columnClass = columHeaderUpdate.split(".")[1];
+                  let columnWidth = customcolumn[i].width;
+                  let columnindex = customcolumn[i].index + 1;
+
+                  if (hiddenColumn == true) {
+                    $("." + columnClass + "").addClass("hiddenColumn");
+                    $("." + columnClass + "").removeClass("showColumn");
+                  } else if (hiddenColumn == false) {
+                    $("." + columnClass + "").removeClass(
+                      "hiddenColumn"
+                    );
+                    $("." + columnClass + "").addClass("showColumn");
+                  }
+                }
+              }
+            }
+          }
+        );
+
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      }
+
+      setTimeout(function () {
+        $("#tblInvoicelist")
+          .DataTable({
+            ...TableHandler.getDefaultTableConfiguration("tblInvoicelist"),
+            columnDefs: [
+              {
+                type: "date",
+                targets: 0,
+              },
+            ],
+            //sDom: "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            buttons: [
+              {
+                extend: "excelHtml5",
+                text: "",
+                download: "open",
+                className: "btntabletocsv hiddenColumn",
+                filename: "Invoice List excel - " + moment().format(),
+                orientation: "portrait",
+                exportOptions: {
+                  columns: ":visible",
+                  format: {
+                    body: function (data, row, column) {
+                      if (data.includes("</span>")) {
+                        var res = data.split("</span>");
+                        data = res[1];
+                      }
+
+                      return column === 1
+                        ? data.replace(/<.*?>/gi, "")
+                        : data;
+                    },
+                  },
+                },
+              },
+              {
+                extend: "print",
+                download: "open",
+                className: "btntabletopdf hiddenColumn",
+                text: "",
+                title: "Invoice List",
+                filename: "Invoice List - " + moment().format(),
+                exportOptions: {
+                  columns: ":visible",
+                  stripHtml: false,
+                },
+              },
+            ],
+            // select: true,
+            // destroy: true,
+            // colReorder: true,
+            // // bStateSave: true,
+            // // rowId: 0,
+            pageLength: initialDatatableLoad,
+            bLengthChange: false,
+            // info: true,
+            // responsive: true,
+            order: [
+              [0, "desc"],
+              [2, "desc"],
+            ],
+            action: function () {
+              $("#tblInvoicelist").DataTable().ajax.reload();
+            },
+            // fnDrawCallback: function (oSettings) {
+            //   let checkurlIgnoreDate =
+            //     FlowRouter.current().queryParams.ignoredate;
+
+            //   $(".paginate_button.page-item").removeClass("disabled");
+            //   $("#tblInvoicelist_ellipsis").addClass("disabled");
+
+            //   if (oSettings._iDisplayLength == -1) {
+            //     if (oSettings.fnRecordsDisplay() > 150) {
+            //       $(".paginate_button.page-item.previous").addClass(
+            //         "disabled"
+            //       );
+            //       $(".paginate_button.page-item.next").addClass(
+            //         "disabled"
+            //       );
+            //     }
+            //   } else {
+            //   }
+            //   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+            //     $(".paginate_button.page-item.next").addClass(
+            //       "disabled"
+            //     );
+            //   }
+
+            //   $(
+            //     ".paginate_button.next:not(.disabled)",
+            //     this.api().table().container()
+            //   ).on("click", function () {
+            //     $(".fullScreenSpin").css("display", "inline-block");
+            //     let dataLenght = oSettings._iDisplayLength;
+            //     var dateFrom = new Date(
+            //       $("#dateFrom").datepicker("getDate")
+            //     );
+            //     var dateTo = new Date(
+            //       $("#dateTo").datepicker("getDate")
+            //     );
+
+            //     let formatDateFrom =
+            //       dateFrom.getFullYear() +
+            //       "-" +
+            //       (dateFrom.getMonth() + 1) +
+            //       "-" +
+            //       dateFrom.getDate();
+            //     let formatDateTo =
+            //       dateTo.getFullYear() +
+            //       "-" +
+            //       (dateTo.getMonth() + 1) +
+            //       "-" +
+            //       dateTo.getDate();
+            //     if (data.Params.IgnoreDates == true) {
+            //       sideBarService
+            //         .getAllTInvoiceListData(
+            //           formatDateFrom,
+            //           formatDateTo,
+            //           true,
+            //           initialDatatableLoad,
+            //           oSettings.fnRecordsDisplay()
+            //         )
+            //         .then(function (dataObjectnew) {
+            //           getVS1Data("TInvoiceList")
+            //             .then(function (dataObjectold) {
+            //               if (dataObjectold.length == 0) {
+            //               } else {
+            //                 let dataOld = JSON.parse(
+            //                   dataObjectold[0].data
+            //                 );
+
+            //                 var thirdaryData = $.merge(
+            //                   $.merge([], dataObjectnew.tinvoicelist),
+            //                   dataOld.tinvoicelist
+            //                 );
+            //                 let objCombineData = {
+            //                   Params: dataOld.Params,
+            //                   tinvoicelist: thirdaryData,
+            //                 };
+
+            //                 addVS1Data(
+            //                   "TInvoiceList",
+            //                   JSON.stringify(objCombineData)
+            //                 )
+            //                   .then(function (datareturn) {
+            //                     templateObject.resetData(
+            //                       objCombineData
+            //                     );
+            //                     $(".fullScreenSpin").css(
+            //                       "display",
+            //                       "none"
+            //                     );
+            //                   })
+            //                   .catch(function (err) {
+            //                     $(".fullScreenSpin").css(
+            //                       "display",
+            //                       "none"
+            //                     );
+            //                   });
+            //               }
+            //             })
+            //             .catch(function (err) {});
+            //         })
+            //         .catch(function (err) {
+            //           $(".fullScreenSpin").css("display", "none");
+            //         });
+            //     } else {
+            //       sideBarService
+            //         .getAllTInvoiceListData(
+            //           formatDateFrom,
+            //           formatDateTo,
+            //           false,
+            //           initialDatatableLoad,
+            //           oSettings.fnRecordsDisplay()
+            //         )
+            //         .then(function (dataObjectnew) {
+            //           getVS1Data("TInvoiceList")
+            //             .then(function (dataObjectold) {
+            //               if (dataObjectold.length == 0) {
+            //               } else {
+            //                 let dataOld = JSON.parse(
+            //                   dataObjectold[0].data
+            //                 );
+
+            //                 var thirdaryData = $.merge(
+            //                   $.merge([], dataObjectnew.tinvoicelist),
+            //                   dataOld.tinvoicelist
+            //                 );
+            //                 let objCombineData = {
+            //                   Params: dataOld.Params,
+            //                   tinvoicelist: thirdaryData,
+            //                 };
+
+            //                 addVS1Data(
+            //                   "TInvoiceList",
+            //                   JSON.stringify(objCombineData)
+            //                 )
+            //                   .then(function (datareturn) {
+            //                     templateObject.resetData(
+            //                       objCombineData
+            //                     );
+            //                     $(".fullScreenSpin").css(
+            //                       "display",
+            //                       "none"
+            //                     );
+            //                   })
+            //                   .catch(function (err) {
+            //                     $(".fullScreenSpin").css(
+            //                       "display",
+            //                       "none"
+            //                     );
+            //                   });
+            //               }
+            //             })
+            //             .catch(function (err) {});
+            //         })
+            //         .catch(function (err) {
+            //           $(".fullScreenSpin").css("display", "none");
+            //         });
+            //     }
+            //   });
+
+            //   setTimeout(function () {
+            //     MakeNegative();
+            //   }, 100);
+            // },
+            // language: { search: "",searchPlaceholder: "Search List..." },
+            fnInitComplete: function () {
+              this.fnPageChange("last");
+              if (data.Params.Search.replace(/\s/g, "") == "") {
+                $(
+                  "<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>"
+                ).insertAfter("#tblInvoicelist_filter");
+              } else {
+                $(
+                  "<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>"
+                ).insertAfter("#tblInvoicelist_filter");
+              }
+              $(
+                "<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+              ).insertAfter("#tblInvoicelist_filter");
+              $(".myvarFilterForm").appendTo(".colDateFilter");
+            },
+            fnInfoCallback: function (
+              oSettings,
+              iStart,
+              iEnd,
+              iMax,
+              iTotal,
+              sPre
+            ) {
+              let countTableData = data.Params.Count || 0; //get count from API data
+
+              return (
+                "Showing " +
+                iStart +
+                " to " +
+                iEnd +
+                " of " +
+                countTableData
+              );
+            },
+          })
+          .on("page", function () {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+            let draftRecord = templateObject.datatablerecords.get();
+            templateObject.datatablerecords.set(draftRecord);
+          })
+          .on("column-reorder", function () {})
+          .on("length.dt", function (e, settings, len) {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+          });
+
+        // $('#tblInvoicelist').DataTable().column( 0 ).visible( true );
+        $(".fullScreenSpin").css("display", "none");
+      }, 0);
+
+      $("#tblInvoicelist tbody").on("click", "tr", function () {
+        var listData = $(this).closest("tr").attr("id");
+        var apptId = $(this).closest("tr").attr("apptid");
+        var checkDeleted =
+          $(this).closest("tr").find(".colStatus").text() || "";
+        if (listData) {
+          if (checkDeleted == "Deleted") {
+            swal(
+              "You Cannot View This Transaction",
+              "Because It Has Been Deleted",
+              "info"
+            );
+          } else {
+            // let apptId = FlowRouter.current().queryParams.apptId;
+            if(parseInt(apptId) > 0){
+              FlowRouter.go(
+                  "/invoicecard?id=" + listData + "&apptId=" + apptId
+              );
+            }
+            else{
+              FlowRouter.go(
+                  "/invoicecard?id=" + listData
+              );
+            }
+          }
+        }
+      });
+
+  }
 
   templateObject.getAllInvoiceData = function () {
     var currentBeginDate = new Date();
@@ -1678,7 +2140,7 @@ Template.invoicelist.onRendered(function () {
     //   });
   };
 
-  templateObject.getAllInvoiceData();
+  // templateObject.getAllInvoiceData();
   templateObject.getAllFilterInvoiceData = function (
     fromDate,
     toDate,
@@ -1727,6 +2189,15 @@ Template.invoicelist.onRendered(function () {
     }
   }
   tableResize();
+
+  templateObject.initPage = async (refresh = false) => {
+    LoadingOverlay.show();
+    await templateObject.loadInvoices(refresh);
+
+    LoadingOverlay.hide();
+  }
+
+  templateObject.initPage();
 });
 
 Template.invoicelist.events({
@@ -1743,7 +2214,9 @@ Template.invoicelist.events({
       $(".btnRefreshInvoiceList").trigger("click");
     }
   },
-  "click .btnRefreshInvoiceList": function (event) {
+  "click .btnRefreshInvoiceList": function (event, ui) {
+    ui.initPage(true);
+
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
     let tableProductList;

@@ -16,6 +16,10 @@ Template.export_import_print_display_button.events({
           currenttablename = "tblEmployeelist";
         }else if (url.includes("/accountsoverview")) {
           currenttablename = "tblAccountOverview";
+        }else if (url.includes("/clienttypesettings")) {
+          currenttablename = "tblClienttypeList";
+        }else if (url.includes("/leadstatussettings")) {
+          currenttablename = "tblLeadStatusList";
         };
 
         let getTableName = currenttablename||'';

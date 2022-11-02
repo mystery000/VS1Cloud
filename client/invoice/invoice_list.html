@@ -335,7 +335,7 @@
                         <table id="tblInvoicelist" name="tblInvoicelist" style="width:100%; margin-top: 0px !important;" class="dataTable table table-hover table-striped table-bordered tblInvoicelist">
                             <thead>
                                 <tr class="dnd-moved">
-                                    <th class="th colSortDate hiddenColumn">id</th>
+                                    <!-- <th class="th colSortDate hiddenColumn">id</th> -->
                                     {{#each displayfield in displayfields}}
                                       {{#if displayfield.display}}
                                       <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">

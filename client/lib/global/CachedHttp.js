@@ -86,6 +86,7 @@ class CachedHttp {
         return;
       } catch (e) {
         // handled error
+        this.logger(e);
       }
     };
 
@@ -96,7 +97,7 @@ class CachedHttp {
         return localStorage.setItem(endPointName, _data);
       } catch (e) {
         // handle error
-        //this.logger(e);
+        this.logger(e);
       }
     };
 
@@ -133,6 +134,7 @@ class CachedHttp {
         return _response;
       } catch (e) {
         // Handle error
+        this.logger(e);
         return await onError();
       }
     };

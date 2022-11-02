@@ -543,26 +543,28 @@ Template.myTasksWidget.onRendered(function () {
         $("#employeeListModal").modal();
     });
     $(document).on("click", "#tblContactlist tbody tr", function (e) {
-        var table = $(this);
-        let colClientName = table.find(".colClientName").text();
-        let colID = table.find(".colID").text();
-        let colType = table.find(".colType").text();
-
-        if (colType == 'Lead' || colType == 'Customer' || colType == 'Supplier' || colType == 'Employee' || colType == 'Customer / Supplier') {
-            colType = colType == 'Customer / Supplier' ? 'Customer' : colType;
-            $('#customerListModal').modal('toggle');
-
-            // for add modal
-            $('#add_contact_name').val(colClientName);
-            // for edit modal
-            $('#crmSelectLeadList').val(colClientName);
-
-            $('#contactID').val(colID)
-            $('#contactType').val(colType)
-        } else {
-            swal("Please select valid type of contact", "", "error");
-            return false;
-        }
+      var table = $(this);
+      let colClientName = table.find(".colClientName").text();
+      let colID = table.find(".colID").text();
+      let colType = table.find(".colType").text();
+  
+      //if (colType != 'Prospect' && colType != 'Customer') {
+        colType = colType == 'Customer / Supplier' ? 'Supplier' : colType;
+        colType = colType == 'Customer / Prospect / Supplier' ? 'Supplier' : colType;
+        $('#customerListModal').modal('toggle');
+  
+        // for add modal
+        $('#add_contact_name').val(colClientName);
+        // for edit modal
+        $('#crmEditSelectLeadList').val(colClientName);
+  
+        $('#contactID').val(colID)
+        $('#contactType').val(colType)
+      //} else {
+      //  swal("Please select valid type of contact", "", "error");
+      //  return false;
+      //}
+  
     });
 
     $(document).on("click", "#tblEmployeelist tbody tr", function (e) {

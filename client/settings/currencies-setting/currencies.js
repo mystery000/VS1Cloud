@@ -9,6 +9,7 @@ import FxApi from "./FxApi";
 import LoadingOverlay from "../../LoadingOverlay";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
+import TableHandler from "../../js/Table/TableHandler";
 
 let sideBarService = new SideBarService();
 
@@ -64,6 +65,7 @@ Template.currenciessettings.onRendered(function () {
     }, {
       useIndexDb: true,
       useLocalStorage: false,
+      forceOverride: refresh,
       validate: (cachedResponse) => {
         if(fromRemote == true || refresh == true) {
           return false;
@@ -136,6 +138,7 @@ Template.currenciessettings.onRendered(function () {
 
       setTimeout(() => {
         $("#currencyLists").DataTable({
+          ...TableHandler.getDefaultTableConfiguration('currencyLists', {showPlusButton: false, showSearchButton: true}),
           columnDefs: [
             {
               type: "date",
@@ -145,7 +148,8 @@ Template.currenciessettings.onRendered(function () {
               targets: -1
             }
           ],
-          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+          
+          //sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
           buttons: [
             {
               extend: "excelHtml5",
@@ -169,20 +173,14 @@ Template.currenciessettings.onRendered(function () {
               }
             }
           ],
-          select: true,
-          destroy: true,
-          colReorder: true,
-          colReorder: {
-            fixedColumnsRight: 1
-          },
-          // bStateSave: true,
-          // rowId: 0,
-          pageLength: 25,
-          paging: true,
-          //                      "scrollY": "400px",
-          //                      "scrollCollapse": true,
-          info: true,
-          responsive: true,
+          // select: true,
+          // destroy: true,
+          // colReorder: true,
+          // colReorder: {
+          //   fixedColumnsRight: 1
+          // },
+          // info: true,
+          // responsive: true,
           order: [
             [0, "asc"]
           ],
@@ -1012,6 +1010,11 @@ Template.currenciessettings.events({
   "click #exportbtn": function () {
     LoadingOverlay.show();
     jQuery("#currencyLists_wrapper .dt-buttons .btntabletocsv").click();
+    LoadingOverlay.hide();
+  },
+  'click .printConfirm': function(event) {
+    LoadingOverlay.show();
+    jQuery('#currencyLists_wrapper .dt-buttons .btntabletopdf').click();
     LoadingOverlay.hide();
   },
   "click .btnRefresh":  (e, ui) => {

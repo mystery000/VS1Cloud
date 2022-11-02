@@ -219,22 +219,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{#if datatablerecords}}
-                                {{#each item in datatablerecords}}
-                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                {{#if bills}}
+                                {{#each item in bills}}
+                                <tr class="dnd-moved" id="{{item.PurchaseOrderID}}" style="cursor: pointer;">
 
-                                    <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
-                                    <td contenteditable="false" class="colOrderDate {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" ><span style="display:none;">{{item.sortdate}}</span>{{item.orderdate}}</td>
-                                    <td contenteditable="false" class="colPurchaseNo {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.id}}</td>
-                                    <td contenteditable="false" class="colSupplier {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}" >{{item.suppliername}}</td>
-                                    <td contenteditable="false" class="colAmountEx {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totalamountex}}</td>
-                                    <td contenteditable="false" class="colTax {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totaltax}}</td>
-                                    <td contenteditable="false" class="colAmount {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totalamount}}</td>
-                                    <td contenteditable="false" class="colPaid {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totalpaid}}</td>
-                                    <td contenteditable="false" class="colBalanceOutstanding {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totaloustanding}}</td>
-                                    <td contenteditable="false" class="colStatus {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.orderstatus}}</td>
-                                    <td contenteditable="false" class="colEmployee {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">{{item.employee}}</td>
-                                    <td contenteditable="false" class="colComments {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}" >{{item.comments}}</td>
+                                    <td contenteditable="false" class="colSortDate hiddenColumn">{{item.OrderDate}}</td>
+                                    <td contenteditable="false" class="colOrderDate {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" >{{ formatDate item.OrderDate}}</td>
+                                    <td contenteditable="false" class="colPurchaseNo {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.PurchaseOrderID}}</td>
+                                    <td contenteditable="false" class="colSupplier {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}" >{{item.SupplierName}}</td>
+                                    <td contenteditable="false" class="colAmountEx {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{ formatPrice item.TotalAmountEx}}</td>
+                                    <td contenteditable="false" class="colTax {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{ formatPrice item.TotalTax}}</td>
+                                    <td contenteditable="false" class="colAmount {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{ formatPrice item.TotalAmount}}</td>
+                                    <td contenteditable="false" class="colPaid {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{ formatPrice item.Payment}}</td>
+                                    <td contenteditable="false" class="colBalanceOutstanding {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{ formatPrice item.Balance}}</td>
+                                    <td contenteditable="false" class="colStatus {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.OrderStatus}}</td>
+                                    <td contenteditable="false" class="colEmployee {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">{{item.EmployeeName}}</td>
+                                    <td contenteditable="false" class="colComments {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}" >{{item.Comments}}</td>
                                 </tr>
                                 {{/each}}
                                 {{/if}}

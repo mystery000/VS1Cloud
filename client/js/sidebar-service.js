@@ -2813,6 +2813,43 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TLeadStatusType, options);
   }
 
+  getLeadStatusDataList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"Description asc"',
+            select: "[Active]=true",
+        };
+      } else {
+        options = {
+          orderby: '"Description asc"',
+          ListType: "Detail",
+          select: "[Active]=true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"Description asc"',
+        };
+      } else {
+        options = {
+            orderby: '"Description asc"',
+            ListType: "Detail",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TLeadStatusType, options);
+  }
+
   getShippingMethodData() {
     let options = {
       PropertyList: "ID,ShippingMethod",
@@ -3257,6 +3294,43 @@ export class SideBarService extends BaseService {
       ListType: "Detail",
       select: "[Active]=true",
     };
+    return this.getList(this.ERPObjects.TClientType, options);
+  }
+
+  getClientTypeDataList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"TypeName asc"',
+            select: "[Active]=true",
+        };
+      } else {
+        options = {
+          orderby: '"TypeName asc"',
+          ListType: "Detail",
+          select: "[Active]=true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"TypeName asc"',
+        };
+      } else {
+        options = {
+            orderby: '"TypeName asc"',
+            ListType: "Detail",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
     return this.getList(this.ERPObjects.TClientType, options);
   }
 
