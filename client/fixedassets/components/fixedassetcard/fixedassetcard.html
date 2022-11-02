@@ -452,4 +452,25 @@
 
     </form>
   </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="fixedAssetTypeListModal">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
+      <div class="modal-content customerListContent">
+        <div class="modal-header">
+          <h4>Fixed Asset Type List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
+          {{> fixedassettypelistpop}}
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="fixedAssetTypeModal">
+    {{ >fixedassettypepopup}}
+  </div>
 </template>
