@@ -98,8 +98,8 @@ export default class PayrollSettingsOvertimes {
         hourlyMultiplier: 2,
         //hours: 9.5,
         rateTypeId: 1,
-        rule: "Saturday",
-        day: "Saturday",
+        rule: "Weekend (Saturday)",
+        day: "saturday",
         searchByRuleName: true
       }),
       new PayrollSettingsOvertimes({
@@ -109,8 +109,8 @@ export default class PayrollSettingsOvertimes {
         hourlyMultiplier: 3,
         //hours: 9.5,
         rateTypeId: 1,
-        rule: "Sunday",
-        day: "Sunday",
+        rule: "Weekend (Sunday)",
+        day: "sunday",
         searchByRuleName: true,
       })
     ];
