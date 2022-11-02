@@ -614,6 +614,8 @@ Template.salesoverview.onRendered(function () {
             $("#dateTo").attr("readonly", true);
             //FlowRouter.go("/salesoverview?ignoredate=true");
           } else {
+            $("#dateFrom").attr("readonly", false);
+            $("#dateTo").attr("readonly", false);
             $("#dateFrom").val(data.Params.DateFrom != ""? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
             $("#dateTo").val(data.Params.DateTo != ""? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
           }
@@ -1419,6 +1421,8 @@ Template.salesoverview.onRendered(function () {
       $("#dateFrom").attr("readonly", true);
       $("#dateTo").attr("readonly", true);
     } else {
+      $("#dateFrom").attr("readonly", false);
+      $("#dateTo").attr("readonly", false);
       $("#dateFrom").val(urlParametersDateFrom != "" ? moment(urlParametersDateFrom).format("DD/MM/YYYY"): urlParametersDateFrom);
       $("#dateTo").val(urlParametersDateTo != ""? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
     }

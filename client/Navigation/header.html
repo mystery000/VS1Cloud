@@ -13,7 +13,7 @@
         margin: 14px;
         margin-right: 0px;
       }
-      
+
         @media (min-width: 768px) {
             .sidebar {
                 width: 0 !important;
@@ -284,6 +284,8 @@
                     <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small" id="logged_user"></span><img
                                 class="border rounded-circle img-profile" src="img/avatar.png"></a>
                         <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
+                            <a class="dropdown-item accountantDatabases" role="presentation" href="#" id="accountantDatabases" name="accountantDatabases">
+                              <i class="fa fa-database fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Database</a>
                             {{#if isCloudUserPass}}
                                 <a class="dropdown-item userprofileclick" role="presentation" href="#" id="userprofileclick" name="userprofileclick">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a>
@@ -342,7 +344,7 @@
                 $('.fullScreenSpin').css('display', 'inline-block');
                 let values = [];
                 // let basedOnTypeStorages = Object.keys(localStorage);
-             
+
 
                 const getLogoutEmails = async() => {
                     return new Promise (async(resolve, reject)=>{
@@ -373,7 +375,7 @@
                         }).catch(function(){
                             resolve()
                         })
-                    
+
                     })
                 }
                 await getLogoutEmails();
@@ -424,8 +426,8 @@
                         }).catch(function(){
                             resolve()
                         })
-                    
-                    
+
+
                     })
                     }
                 await getLogoutEmails();
@@ -838,7 +840,7 @@
             </div>
         </div>
     </div>
-
+    {{> vs1_databasepopup}}
     <!-- Start Help View Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpGlobalSearch">
         <div class="modal-dialog modal-sm" role="document">
