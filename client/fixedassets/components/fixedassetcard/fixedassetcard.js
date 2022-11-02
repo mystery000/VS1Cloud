@@ -14,6 +14,7 @@ Template.fixedassetcard.onRendered(function () {
   $('#editBankAccount').editableSelect();
   $('#edtDepreciationAssetAccount').editableSelect();
   $('#edtDepreciationExpenseAccount').editableSelect();
+  $('#edtSalvageValueType').editableSelect();
 
   $("#date-input,#edtDateofPurchase, #edtDateRegisterRenewal, #edtDateRenewal, #edtDescriptionStartDate, #edtNextTimeDate, #edtLastTimeDate").datepicker({
     showOn: 'button',
