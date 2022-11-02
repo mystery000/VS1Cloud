@@ -1,106 +1,129 @@
 <template name="paymentoverviewcards">
-    <div class="col-md-6 col-xl-3 mb-4 card-visibility hideelement paymentCard1"  card-id="0" id="paymentCard1"  data-default-position="0" position="0" chartgroup="PaymentOverview" card-active="true" card-key="paymentoverview-customers-outstanding-invoices">
-        <div class="card shadow border-left-info customCardMainDiv">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body customerAwaitingPayment" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <a href="/customerawaitingpayments" class="col mr-2">
-                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">All Outstanding Invoices</span></div>
-                        <div class="text-dark font-weight-bold h5 mb-0 mr-3">
-                            <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
-                                <span style="color: rgb(221,223,235)!important;"><span class="invoiceOutstandingAmt" id="invoiceOutstandingAmt" name="invoiceOutstandingAmt">0</span></span>
-                            </span>
-                        </div>
-                        <div class="text-dark font-weight-bold h5 mb-0">
-                            <span style="font-size: 16px;color: rgb(221,223,235);"><span class="customerAwaitingPayment">
-                                <span class="invoiceOutstandingQTY" id="invoiceOutstandingQTY" name="invoiceOutstandingQTY">0</span> Awaiting</span>
-                            </span>
-                        </div>
-                    </a>
-                    <div class="col-auto"><i class="far fa-clock fa-2x text-gray-300"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xl-3 mb-4 card-visibility hideelement paymentCard2"  card-id="0" id="paymentCard2" data-default-position="1" position="1" chartgroup="PaymentOverview" card-active="true" card-key="paymentoverview-customers-overdue">
-        <div class="card shadow border-left-warning customCardMainDiv">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body customerOverdue" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <a href="/overduecustomerawaitingpayments" class="col mr-2">
-                        <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Overdue Invoices</span></div>
-                        <div class="text-dark font-weight-bold h5 mb-0 mr-3">
-                            <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
-                                <span style="color: rgb(221,223,235)!important;" class="customerOverdue"><span class="invoiceOverDueAmt" id="invoiceOverDueAmt" name="invoiceOverDueAmt">0</span></span>
-                            </span>
-                        </div>
-                        <div class="text-dark font-weight-bold h5 mb-0">
-                            <span style="font-size: 16px;color: rgb(221,223,235);">
-                                <span class="customerOverdue"><span class="invoiceOverDueQTY" id="invoiceOverDueQTY" name="invoiceOverDueQTY">0</span> Overdue</span>
-                            </span>
-                        </div>
-                    </a>
-                    <div class="col-auto"><i class="fas fa-clock fa-2x text-gray-300"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xl-3 mb-4 card-visibility hideelement paymentCard3"  card-id="0" id="paymentCard3" data-default-position="2" position="2" chartgroup="PaymentOverview" card-active="true" card-key="paymentoverview-suppliers-outstanding-expenses">
-        <div class="card shadow border-left-info customCardMainDiv">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body supplierAwaitingPayment" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <a href="/supplierawaitingpurchaseorder" class="col mr-2">
-                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">All Outstanding Payments</span></div>
-                        <div class="text-dark font-weight-bold h5 mb-0 mr-3">
-                            <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
-                                <span style="color: rgb(221,223,235)!important;" class="supplierAwaitingPayment"><span class="SuppOutstandingAmt" id="SuppOutstandingAmt" name="SuppOutstandingAmt">0</span></span>
-                            </span>
-                        </div>
-                        <div class="text-dark font-weight-bold h5 mb-0">
-                            <span style="font-size: 16px;color: rgb(221,223,235);">
-                                <span class="supplierAwaitingPayment"><span class="SuppOutstandingQTY" id="SuppOutstandingQTY" name="SuppOutstandingQTY">0</span> Awaiting</span>
-                            </span>
-                        </div>
-                    </a>
-                    <div class="col-auto"><i class="far fa-clock fa-2x text-gray-300"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xl-3 mb-4 card-visibility hideelement paymentCard3"  card-id="0" id="paymentCard3" data-default-position="3" position="3" chartgroup="PaymentOverview" card-active="true" card-key="paymentoverview-suppliers-overdue">
-        <div class="card shadow border-left-warning customCardMainDiv">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body supplierOverdue" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <a href="/overduesupplierawaiting" class="col mr-2">
-                        <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Overdue Payments</span></div>
-                        <div class="text-dark font-weight-bold h5 mb-0 mr-3">
-                            <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
-                                <span style="color: rgb(221,223,235)!important;" class="supplierOverdue"><span class="suppOverdueAmount" id="suppOverdueAmount" name="suppOverdueAmount">0</span></span>
-                            </span>
-                        </div>
-                        <div class="text-dark font-weight-bold h5 mb-0">
-                            <span style="font-size: 16px;color: rgb(221,223,235);">
-                                <span class="supplierOverdue"><span class="suppOverdueQTY" id="suppOverdueQTY" name="suppOverdueQTY">0</span> Overdue</span>
-                            </span>
-                        </div>
-                    </a>
-                    <div class="col-auto"><i class="far fa-clock fa-2x text-gray-300"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- All Outstanding Invoices -->
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCard1"
+        chartGroup="PaymentOverview" 
+        defaultPosition=0
+        position=0
+        cardActive=true
+        cardKey="paymentoverview-customers-outstanding-invoices"
+        highlightColor="info"
+    }}
+        {{> kpiCardTitle 
+            title="All Outstanding Invoices"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                href="/customerawaitingpayments"
+                id="invoiceOutstandingAmt"
+                name="invoiceOutstandingAmt"
+                subValueId="invoiceOutstandingQTY"
+                subValueName="invoiceOutstandingQTY"
+                subText="Awaiting"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Overdue Invoices -->
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCard2"
+        chartGroup="PaymentOverview" 
+        defaultPosition=1
+        position=1
+        cardActive=true
+        cardKey="paymentoverview-customers-overdue"
+        highlightColor="warning"
+    }}
+        {{> kpiCardTitle 
+            title="Overdue Invoices"
+            size="small"
+            color="warning"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                href="/overduecustomerawaitingpayments"
+                id="invoiceOverDueAmt"
+                name="invoiceOverDueAmt"
+                subValueId="invoiceOverDueQTY"
+                subValueName="invoiceOverDueQTY"
+                subText="Overdue"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- All Outstanding Payments -->
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCard3"
+        chartGroup="PaymentOverview" 
+        defaultPosition=2
+        position=2
+        cardActive=true
+        cardKey="paymentoverview-suppliers-outstanding-expenses"
+        highlightColor="info"
+    }}
+        {{> kpiCardTitle 
+            title="All Outstanding Payments"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                href="/supplierawaitingpurchaseorder"
+                id="SuppOutstandingAmt"
+                name="SuppOutstandingAmt"
+                subValueId="SuppOutstandingQTY"
+                subValueName="SuppOutstandingQTY"
+                subText="Overdue"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Overdue Payments -->
+    {{# kpiCard md=6 xl=3
+        cardID=0
+        id="paymentCard3"
+        chartGroup="PaymentOverview" 
+        defaultPosition=3
+        position=3
+        cardActive=true
+        cardKey="paymentoverview-suppliers-overdue"
+        highlightColor="warning"
+    }}
+        {{> kpiCardTitle 
+            title="Overdue Payments"
+            size="small"
+            color="warning"
+            textTransform="uppercase"
+            align=""
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                href="/overduesupplierawaiting"
+                id="suppOverdueAmount"
+                name="suppOverdueAmount"
+                subValueId="suppOverdueQTY"
+                subValueName="suppOverdueQTY"
+                subText="Overdue"
+                iconName="fa-clock"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
 </template>

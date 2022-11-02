@@ -127,18 +127,19 @@
     </style>
     <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}" style="min-width: 100%;">
         <!-- New Charts -->
-        <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="0" data-default-class="col-md-6" id="bankaccountschartcol" key="dashboard__bank_accountschart">
-            {{> bankaccountschart}}
-        </div>
-        <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="1" data-default-class="col-md-6" id="mytaskschartcol" key="dashboard__my_tasks">
-            {{> mytaskswidgetchart}}
-        </div>
-        <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="2" data-default-class="col-md-8" id="monthylprofiteandlosscol" key="dashboard__monthyl_profit_and_loss">
-            {{> monthlyprofitandloss}}
-        </div>
-        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="2" data-default-class="col-md-4" key="dsmcharts__my_tasks">
-            {{> mytaskswidgetchart}}
-        </div>
+        
+        {{> bankaccountschart 
+            md=6 defaultPosition=0 key="dashboard__bank_accountschart" }}
+
+        {{> mytaskswidgetchart
+            md=6 defaultPosition=1 key="dashboard__my_tasks" }}
+        
+        {{> monthlyprofitandloss
+            md=8 defaultPosition=2 key="dashboard__monthyl_profit_and_loss"}}
+        
+        {{> mytaskswidgetchart
+            md=4 defaultPosition=2 key="dsmcharts__my_tasks" }}
+            
         <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="2" data-default-class="col-md-4" key="dscharts__my_tasks">
             {{> mytaskswidgetchart}}
         </div>
