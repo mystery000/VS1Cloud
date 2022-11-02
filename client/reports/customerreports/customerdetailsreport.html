@@ -217,11 +217,11 @@
                                                 <th>Name</th>
                                                 <th>Phone</th>
                                                 <th>Type</th>
-                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total (Ex)</th>
-                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total (Inc)</th>
-                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Gross Profit</th>
-                                                <th class="text-center{{countActive currencyList}}">Margin</th>
-                                                <th>Address</th>
+                                                <!-- <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total (Ex)</th> -->
+                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total</th>
+                                                <!-- <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Gross Profit</th> -->
+                                                <th class="text-center {{countActive currencyList}}">Margin</th>
+                                                <th style="width: 200px;">Address</th>
                                                 <th>City</th>
                                                 <th>ZIP</th>
                                                 <th>State</th>
@@ -237,7 +237,7 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                                <!-- <th class="text-right" active="{{ c.active }}">{{ c.code }}</th> -->
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -253,13 +253,13 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                                <!-- <th class="text-right" active="{{ c.active }}">{{ c.code }}</th> -->
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
 
-                                                    <th></th>
-                                                    <th></th>
+                                                    <th class="text-center"></th>
+                                                    <th style="width: 200px;"></th>
                                                     <th></th>
                                                     <th></th>
                                                     <th></th>
@@ -279,7 +279,7 @@
                                                             {{#if currencyList}}
                                                                 {{#each c in currencyList }}
                                                                     {{# if c.active}}
-                                                                        <td></td>
+                                                                        <!-- <td></td> -->
                                                                     {{/if}}
                                                                 {{/each}}
                                                                 {{#each c in currencyList }}
@@ -289,18 +289,18 @@
                                                                 {{/each}}
                                                                 {{#each c in currencyList }}
                                                                     {{# if c.active}}
-                                                                        <td></td>
+                                                                        <!-- <td></td> -->
                                                                     {{/if}}
                                                                 {{/each}}
                                                             {{/if}}
                                                         {{else}}
+                                                            <!-- <td></td> -->
                                                             <td></td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            <!-- <td></td> -->
                                                         {{/if}}
                                                          <td></td>
-                                                         <td>{{ value.Address }}</td>
-                                                         <td>{{ value.Address_2 }}</td>
+                                                         <td style="width: 200px;">{{ value.Address }}</td>
+                                                         <td>{{ value.Suburb }}</td>
                                                          <td>{{ value.Postcode }}</td>
                                                          <td>{{ value.State }}</td>
                                                     </tr>
@@ -314,7 +314,7 @@
                                                                     {{#if currencyList}}
                                                                         {{#each c in currencyList }}
                                                                             {{# if c.active}}
-                                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.Total_Amount_Ex}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Total_Amount_Ex c}}</a></td>
+                                                                                <!-- <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.Total_Amount_Ex}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Total_Amount_Ex c}}</a></td> -->
                                                                             {{/if}}
                                                                         {{/each}}
                                                                         {{#each c in currencyList }}
@@ -324,17 +324,17 @@
                                                                         {{/each}}
                                                                         {{#each c in currencyList }}
                                                                             {{# if c.active}}
-                                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.Gross_Profit}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Gross_Profit c}}</a></td>
+                                                                                <!-- <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.Gross_Profit}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Gross_Profit c}}</a></td> -->
                                                                             {{/if}}
                                                                         {{/each}}
                                                                     {{/if}}
                                                                 {{else}}
-                                                                    <td class="text-right {{#if isNegativeAmount item.Total_Amount_Ex}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Total_Amount_Ex }}</a></td>
+                                                                    <!-- <td class="text-right {{#if isNegativeAmount item.Total_Amount_Ex}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Total_Amount_Ex }}</a></td> -->
                                                                     <td class="text-right {{#if isNegativeAmount item.Total_Amount_Inc}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Total_Amount_Inc }}</a></td>
-                                                                    <td class="text-right {{#if isNegativeAmount item.Gross_Profit}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Gross_Profit }}</a></td>
+                                                                    <!-- <td class="text-right {{#if isNegativeAmount item.Gross_Profit}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Gross_Profit }}</a></td> -->
                                                                 {{/if}}
-                                                                <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">0</a></td>
-                                                                <td></td>
+                                                                <td class="text-center text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">0</a></td>
+                                                                <td style="width: 200px;"></td>
                                                                 <td></td>
                                                                 <td></td>
                                                                 <td></td>
@@ -350,7 +350,7 @@
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right">{{ convertAmount value.TotalEx c}}</td>
+                                                                            <!-- <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right">{{ convertAmount value.TotalEx c}}</td> -->
                                                                         {{/if}}
                                                                     {{/each}}
                                                                     {{#each c in currencyList }}
@@ -360,16 +360,16 @@
                                                                     {{/each}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right">{{ convertAmount value.TotalGrossProfit c}}</td>
+                                                                            <!-- <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right">{{ convertAmount value.TotalGrossProfit c}}</td> -->
                                                                         {{/if}}
                                                                     {{/each}}
                                                                 {{/if}}
                                                             {{else}}
-                                                                <td class="text-right">{{ formatPrice value.TotalEx }}</td>
+                                                                <!-- <td class="text-right">{{ formatPrice value.TotalEx }}</td> -->
                                                                 <td class="text-right">{{ formatPrice value.TotalInc }}</td>
-                                                                <td class="text-right">{{ formatPrice value.TotalGrossProfit }}</td>
+                                                                <!-- <td class="text-right">{{ formatPrice value.TotalGrossProfit }}</td> -->
                                                             {{/if}}
-                                                            <td class="text-right">0</td>
+                                                            <td class="text-center">0</td>
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>

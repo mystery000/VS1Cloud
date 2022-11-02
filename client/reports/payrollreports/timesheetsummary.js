@@ -116,7 +116,7 @@ Template.timesheetsummary.onRendered(() => {
       let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
       let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
       let ignoreDate = options.ignoreDate || false;
-      let data = await reportService.getTimeSheetEntry( dateFrom, dateTo, ignoreDate, '1 month');
+      data = await reportService.getTimeSheetEntry( dateFrom, dateTo, ignoreDate, '1 month');
       if( data.ttimesheetentry.length > 0 ){
         localStorage.setItem('VS1TimesheetSummary_Report', JSON.stringify(data)||'');
       }
