@@ -234,6 +234,19 @@ Template.newsidenav.onRendered(function() {
         setTimeout(function() {
             var currentLoc = FlowRouter.current().route.path;
 
+            if(Session.get("ERPLoggedCountry") == "Australia"){
+              $("#sidenavbasreturnlist").parent().show();
+              $("#sidenavbasreturn").parent().show();
+              $("#sidenavvatreturnlist").parent().hide();
+              $("#sidenavvatreturn").parent().hide();
+            }
+            else if(Session.get("ERPLoggedCountry") == "South Africa"){
+              $("#sidenavbasreturnlist").parent().hide();
+              $("#sidenavbasreturn").parent().hide();
+              $("#sidenavvatreturnlist").parent().show();
+              $("#sidenavvatreturn").parent().show();
+            }
+            
             if (currentLoc == "/dashboard") {
                 $('#sidenavaccounts').removeClass('active');
                 $('#sidenavbanking').removeClass('active');

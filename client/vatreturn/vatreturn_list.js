@@ -69,7 +69,7 @@ Template.vatreturnlist.onRendered(function() {
 
     templateObject.getAllBasReturnData = function() {
 
-        getVS1Data('TBasReturn').then(function(dataObject) {
+        getVS1Data('TVatReturn').then(function(dataObject) {
             if (dataObject.length == 0) {
                 // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                 //     let lineItems = [];
