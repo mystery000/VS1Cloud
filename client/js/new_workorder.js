@@ -366,7 +366,7 @@ Template.new_workorder.events({
         playSaveAudio();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         let record = templateObject.workorderrecord.get();
         let temp = JSON.parse(JSON.stringify(record));
         temp = {...temp, isStarted: true}
@@ -392,7 +392,7 @@ Template.new_workorder.events({
         objDetail.ID = objDetail.SalesOrderID+ "_" + (workorders.length + 1).toString();
         workorders = [...workorders, objDetail];
         localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-        
+
 
         let bomStructure = templateObject.bomStructure.get();
 
@@ -474,7 +474,7 @@ Template.new_workorder.events({
                         })
                     })
 
-                    
+
                 }
 
             }
@@ -491,8 +491,8 @@ Template.new_workorder.events({
         }).then ((result)=>{
             FlowRouter.go('/workorderlist')
         });
-       
-        
+
+
     }, delayTimeAfterSound);
     },
 
@@ -644,7 +644,7 @@ Template.new_workorder.helpers({
     quantityBuild: ()=> {
         return Template.instance().quantityBuild.get()
     },
-    
+
 })
 
 Template.new_workorder.events({
@@ -1075,7 +1075,7 @@ Template.new_workorder.events({
                     if($(productRows[0]).find('.btn-product-build').length > 0) {
                         objectDetail.isBuild = true;
                     }
-                    
+
                 // }
                 objDetails.subs.push(objectDetail);
             }
@@ -1096,7 +1096,7 @@ Template.new_workorder.events({
         //     //global save action
         //     templateObject.bomStructure.set(finalStructure);
         //     swal('BOM Settings Successfully Saved', '', 'success');
-           
+
         //     let productContents = $('#BOMSetupModal').find('.product-content');
         //     for (let l = 1; l < productContents.length -1; l++) {
         //         $(productContents[l]).remove()
@@ -1109,7 +1109,6 @@ Template.new_workorder.events({
             //         let targetButton = buildButtons[n];
             //         let subProductName = $(targetButton).closest('div.productRow').find('.edtProductName').val();
             //         let tempLine = JSON.parse(JSON.stringify(currentRecord.line))
-            //         console.log(parseFloat($(targetButton).closest('div.productRow').find('.edtQuantity').val()))
             //         tempLine.fields.Qty = currentRecord.line.fields.Qty * (parseFloat($(targetButton).closest('div.productRow').find('.edtQuantity').val()))||1;
             //         let objDetail = {
             //             ID: templateObject.salesOrderId.get() + '_' + (count + n + 1).toString(),
@@ -1226,7 +1225,7 @@ Template.new_workorder.events({
         $('.fullScreenSpin').css('display', 'inline-block')
         let workorders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): [];
         let currentworkorder;
-       
+
         let workorderindex = workorders.findIndex(order => {
             return order.SalesOrderID == templateObject.salesOrderId.get() && order.Line.fields.ProductName == templateObject.workorderrecord.get().line.fields.ProductName;
         })
@@ -1298,7 +1297,7 @@ Template.new_workorder.events({
                                 type: 'TProduct',
                                 fields: {
                                     ...data.fields,
-                                    TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.Line.fields.Qty * subs[j].qty)  
+                                    TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.Line.fields.Qty * subs[j].qty)
                                 }
                             }).then(function(){
                                 $('.fullScreenSpin').css('display', 'none')

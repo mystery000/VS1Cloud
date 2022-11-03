@@ -112,13 +112,10 @@ Template.fixedassetlisttable.onRendered(function () {
 
   templateObject.getFixedAssetsList = function () {
     getVS1Data("TFixedAssets").then(function (dataObject) {
-      console.log('getFixedAssetsList...', dataObject, dataObject.length)
       if (dataObject.length == 0) {
         fixedAssetService.getTFixedAssetsList().then(function (data) {
-          console.log('getFixedAssetsList---', data)
           setFixedAssetsList(data);
         }).catch(function (err) {
-          console.log(err)
           $(".fullScreenSpin").css("display", "none");
         });
       } else {

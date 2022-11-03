@@ -2640,6 +2640,43 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TDeptClass, options);
   }
 
+  getDepartmentDataList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"Description asc"',
+            select: "[Active]=true",
+        };
+      } else {
+        options = {
+          orderby: '"Description asc"',
+          ListType: "Detail",
+          select: "[Active]=true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"Description asc"',
+        };
+      } else {
+        options = {
+            orderby: '"Description asc"',
+            ListType: "Detail",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TDeptClass, options);
+  }
+
   getTripGroup() {
     let options = {
       PropertyList:"ID,TripName,Description,Active",

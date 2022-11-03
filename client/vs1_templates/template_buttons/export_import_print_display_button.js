@@ -20,6 +20,8 @@ Template.export_import_print_display_button.events({
           currenttablename = "tblClienttypeList";
         }else if (url.includes("/leadstatussettings")) {
           currenttablename = "tblLeadStatusList";
+        }else if (url.includes("/departmentSettings")) {
+          currenttablename = "tblDepartmentList";
         };
 
         let getTableName = currenttablename||'';

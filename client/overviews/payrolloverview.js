@@ -100,7 +100,7 @@ Template.payrolloverview.onRendered(function () {
   templateObject.loadDraftPayrun = async () => {
 
     let payRunsHistory = PayRun.fromList(await templateObject.payRuns.get());
-   
+
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
 
     templateObject.draftPayRunRecords.set(payRunsHistory);
@@ -4352,7 +4352,6 @@ Template.payrolloverview.events({
     // return;
    // const templateObject = Template.instance();
     let checkIncludeAllProducts = templateObject.includeAllProducts.get();
-    console.log("===========", Session.get("mySessionEmployee"));
     $("#clock_employee_name").val(Session.get("mySessionEmployee"));
     $("#sltJob").val("");
     $("#product-list").val("");
@@ -6786,8 +6785,8 @@ Template.payrolloverview.events({
     // const id = $(e.currentTarget).attr('calendar-id');
     // window.location.href = `/payrundetails?cid=${id}`;
 
-   
-   
+
+
   },
 
   "change .employee-select": (e, ui) => {

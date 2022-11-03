@@ -157,7 +157,6 @@ Template.vatreturn.onRendered(function() {
         }
 
         getVS1Data('TVatReturn').then(function(dataObject) {
-            console.log("dataObject=", dataObject);
             if (dataObject.length == 0) {
                 // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                 //     let lineItems = [];
@@ -351,7 +350,6 @@ Template.vatreturn.onRendered(function() {
                 $('.fullScreenSpin').css('display', 'none');
             }
         }).catch(function(err) {
-            console.log("err=", err);
             // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
             //     let lineItems = [];
             //     let lineItemObj = {};
@@ -1849,7 +1847,7 @@ Template.vatreturn.onRendered(function() {
                     $("#tax11cost").attr("disabled", "disabled");
                 }
             });
-            
+
             $(document).on("click", "#vatreturnCategory2", function(e) {
                 if ($("#vatreturnCategory2").prop('checked') == true) {
                     document.getElementById("tax14").setAttribute("href", "#taxCode14option");
@@ -2992,7 +2990,7 @@ Template.vatreturn.events({
         setTimeout(function(){
             $('.fullScreenSpin').css('display', 'inline-block');
             let taxRateList = templateObject.taxRateList.get();
-            
+
             let dataArray = [];
             let description = $('#description').val();
             let departmentId = "all";
@@ -3348,7 +3346,7 @@ Template.vatreturn.events({
                 //             tab3tax38: {
                 //                 amount: tax38cost,
                 //             },
-                //         },                        
+                //         },
                 //     }
 
                 //     if (templateObject.getId.get()) {
