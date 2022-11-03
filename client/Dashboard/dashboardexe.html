@@ -183,12 +183,16 @@
             padding: 0px;
         }
 
+        .panelLeftDiv {
+            background-color: #f7c544 !important;
+        }
+
         .panelLeftSpan1 {
             text-align: right;
             padding-right: 10px;
             font-weight: bold;
             font-size: 16px;
-            color: #1cc88a;
+            color: #f7c544; /*1cc88a*/
         }
 
         .panelLeftSpan2 {
@@ -361,7 +365,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnCashReceived"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{cashReceivedPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashReceivedPerc1}}%; margin-left: -{{cashReceivedPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{cashReceivedPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashReceivedPerc1}}%; margin-left: -{{cashReceivedPerc1}}%;">
                                             <span class="panelLeftSpan2 spnCashReceived"></span>
                                         </div>
                                     </div>
@@ -391,7 +395,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnCashSpent"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{cashSpentPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashSpentPerc1}}%; margin-left: -{{cashSpentPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{cashSpentPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashSpentPerc1}}%; margin-left: -{{cashSpentPerc1}}%;">
                                             <span class="panelLeftSpan2 spnCashSpent"></span>
                                         </div>
                                     </div>
@@ -421,7 +425,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnCashSurplus"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{cashSurplusPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashSurplusPerc1}}%; margin-left: -{{cashSurplusPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{cashSurplusPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{cashSurplusPerc1}}%; margin-left: -{{cashSurplusPerc1}}%;">
                                             <span class="panelLeftSpan2 spnCashSurplus"></span>
                                         </div>
                                     </div>
@@ -451,7 +455,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnBankBalance"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{bankBalancePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{bankBalancePerc1}}%; margin-left: -{{bankBalancePerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{bankBalancePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{bankBalancePerc1}}%; margin-left: -{{bankBalancePerc1}}%;">
                                             <span class="panelLeftSpan2 spnBankBalance"></span>
                                         </div>
                                     </div>
@@ -528,7 +532,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnTotalSales"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{totalSalesPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalSalesPerc1}}%; margin-left: -{{totalSalesPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalSalesPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalSalesPerc1}}%; margin-left: -{{totalSalesPerc1}}%;">
                                             <span class="panelLeftSpan2 spnTotalSales"></span>
                                         </div>
                                     </div>
@@ -558,7 +562,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnGrossProfit"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{grossProfitPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{grossProfitPerc1}}%; margin-left: -{{grossProfitPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{grossProfitPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{grossProfitPerc1}}%; margin-left: -{{grossProfitPerc1}}%;">
                                             <span class="panelLeftSpan2 spnGrossProfit"></span>
                                         </div>
                                     </div>
@@ -588,7 +592,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnTotalExpense"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{totalExpensePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalExpensePerc1}}%; margin-left: -{{totalExpensePerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalExpensePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalExpensePerc1}}%; margin-left: -{{totalExpensePerc1}}%;">
                                             <span class="panelLeftSpan2 spnTotalExpense"></span>
                                         </div>
                                     </div>
@@ -618,7 +622,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnTotalnetincome"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{nettProfitPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{nettProfitPerc1}}%; margin-left: -{{nettProfitPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{nettProfitPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{nettProfitPerc1}}%; margin-left: -{{nettProfitPerc1}}%;">
                                             <span class="panelLeftSpan2 spnTotalnetincome"></span>
                                         </div>
                                     </div>
@@ -695,7 +699,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnGrossProfitMargin"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{grossProfitMarginPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{grossProfitMarginPerc1}}%; margin-left: -{{grossProfitMarginPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{grossProfitMarginPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{grossProfitMarginPerc1}}%; margin-left: -{{grossProfitMarginPerc1}}%;">
                                             <span class="panelLeftSpan2 spnGrossProfitMargin"></span>
                                         </div>
                                     </div>
@@ -725,7 +729,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnNetProfitMargin"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{netProfitMarginPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{netProfitMarginPerc1}}%; margin-left: -{{netProfitMarginPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{netProfitMarginPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{netProfitMarginPerc1}}%; margin-left: -{{netProfitMarginPerc1}}%;">
                                             <span class="panelLeftSpan2 spnNetProfitMargin"></span>
                                         </div>
                                     </div>
@@ -755,7 +759,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnReturnInvest"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{returnOnInvestmentPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{returnOnInvestmentPerc1}}%; margin-left: -{{returnOnInvestmentPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{returnOnInvestmentPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{returnOnInvestmentPerc1}}%; margin-left: -{{returnOnInvestmentPerc1}}%;">
                                             <span class="panelLeftSpan2 spnReturnInvest"></span>
                                         </div>
                                     </div>
@@ -842,7 +846,7 @@
                                     <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                         <span class="panelLeftSpan1 spnTotalAgedReceivables"></span>
                                     </div>
-                                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{totalAgedReceivablesPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalAgedReceivablesPerc1}}%; margin-left: -{{totalAgedReceivablesPerc1}}%;">
+                                    <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalAgedReceivablesPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalAgedReceivablesPerc1}}%; margin-left: -{{totalAgedReceivablesPerc1}}%;">
                                         <span class="panelLeftSpan2 spnTotalAgedReceivables"></span>
                                     </div>
                                 </div>
@@ -872,7 +876,7 @@
                                     <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                         <span class="panelLeftSpan1 spnTotalAgedPayables"></span>
                                     </div>
-                                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{totalAgedPayablesPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalAgedPayablesPerc1}}%; margin-left: -{{totalAgedPayablesPerc1}}%;">
+                                    <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalAgedPayablesPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalAgedPayablesPerc1}}%; margin-left: -{{totalAgedPayablesPerc1}}%;">
                                         <span class="panelLeftSpan2 spnTotalAgedPayables"></span>
                                     </div>
                                 </div>
@@ -902,7 +906,7 @@
                                     <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                         <span class="panelLeftSpan1 spnTotalNettAssets"></span>
                                     </div>
-                                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{totalNettAssetsPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalNettAssetsPerc1}}%; margin-left: -{{totalNettAssetsPerc1}}%;">
+                                    <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalNettAssetsPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalNettAssetsPerc1}}%; margin-left: -{{totalNettAssetsPerc1}}%;">
                                         <span class="panelLeftSpan2 spnTotalNettAssets"></span>
                                     </div>
                                 </div>
@@ -989,7 +993,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnTotalInvoiceCount"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{totalInvoiceCountPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalInvoiceCountPerc1}}%; margin-left: -{{totalInvoiceCountPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalInvoiceCountPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalInvoiceCountPerc1}}%; margin-left: -{{totalInvoiceCountPerc1}}%;">
                                             <span class="panelLeftSpan2 spnTotalInvoiceCount"></span>
                                         </div>
                                     </div>
@@ -1019,7 +1023,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnAverageInvoiceValue"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{averageInvoiceValuePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{averageInvoiceValuePerc1}}%; margin-left: -{{averageInvoiceValuePerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{averageInvoiceValuePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{averageInvoiceValuePerc1}}%; margin-left: -{{averageInvoiceValuePerc1}}%;">
                                             <span class="panelLeftSpan2 spnAverageInvoiceValue"></span>
                                         </div>
                                     </div>
@@ -1049,7 +1053,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnTotalInvoiceValue"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{totalInvoiceValuePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalInvoiceValuePerc1}}%; margin-left: -{{totalInvoiceValuePerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{totalInvoiceValuePerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{totalInvoiceValuePerc1}}%; margin-left: -{{totalInvoiceValuePerc1}}%;">
                                             <span class="panelLeftSpan2 spnTotalInvoiceValue"></span>
                                         </div>
                                     </div>
@@ -1136,7 +1140,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnAverageDebtors"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{avgDebtorsPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{avgDebtorsPerc1}}%; margin-left: -{{avgDebtorsPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{avgDebtorsPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{avgDebtorsPerc1}}%; margin-left: -{{avgDebtorsPerc1}}%;">
                                             <span class="panelLeftSpan2 spnAverageDebtors"></span>
                                         </div>
                                     </div>
@@ -1166,7 +1170,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnAverageCreditors"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{avgCreditorsPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{avgCreditorsPerc1}}%; margin-left: -{{avgCreditorsPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{avgCreditorsPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{avgCreditorsPerc1}}%; margin-left: -{{avgCreditorsPerc1}}%;">
                                             <span class="panelLeftSpan2 spnAverageCreditors"></span>
                                         </div>
                                     </div>
@@ -1196,7 +1200,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnShortTermCash"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{shortTermCashPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{shortTermCashPerc1}}%; margin-left: -{{shortTermCashPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{shortTermCashPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{shortTermCashPerc1}}%; margin-left: -{{shortTermCashPerc1}}%;">
                                             <span class="panelLeftSpan2 spnShortTermCash"></span>
                                         </div>
                                     </div>
@@ -1226,7 +1230,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnCurrentAsset"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{currentAssetPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{currentAssetPerc1}}%; margin-left: -{{currentAssetPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{currentAssetPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{currentAssetPerc1}}%; margin-left: -{{currentAssetPerc1}}%;">
                                             <span class="panelLeftSpan2 spnCurrentAsset"></span>
                                         </div>
                                     </div>
@@ -1256,7 +1260,7 @@
                                         <div class="progress-bar panelOverlapDiv" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                             <span class="panelLeftSpan1 spnTermAsset"></span>
                                         </div>
-                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{termAssetPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{termAssetPerc1}}%; margin-left: -{{termAssetPerc1}}%;">
+                                        <div class="progress-bar bg-success panelLeftDiv progress-bar-striped progress-bar-animated" aria-valuenow="{{termAssetPerc1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{termAssetPerc1}}%; margin-left: -{{termAssetPerc1}}%;">
                                             <span class="panelLeftSpan2 spnTermAsset"></span>
                                         </div>
                                     </div>

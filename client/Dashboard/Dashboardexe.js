@@ -214,8 +214,9 @@ Template.dashboardexe.onRendered(function () {
     });
   });
   let varianceRed = "#ff420e";
-  let varianceGreen = "#1cc88a"; //#579D1C
-
+  let varianceGreen = "#1cc88a"; //#579d1c
+  let panelLeftYellow = "#f7c544"; //#1cc88a
+  let panelRightBlue = "#00a3d3";
   let minPerc = 0;
 
   let cashReceived = [0, 0];
@@ -623,11 +624,11 @@ Template.dashboardexe.onRendered(function () {
       else
         $('.' + fieldSelector).html(utilityService.modifynegativeCurrencyFormat(fieldVal));
       if (fieldSide == "left") {
-        $('.panelLeftSpan1.' + fieldSelector).css('color', '#1cc88a');
+        $('.panelLeftSpan1.' + fieldSelector).css('color', panelLeftYellow);
         $('.panelLeftSpan2.' + fieldSelector).css('color', 'white');
       }
       if (fieldSide == "right") {
-        $('.panelRightSpan1.' + fieldSelector).css('color', '#00a3d3');
+        $('.panelRightSpan1.' + fieldSelector).css('color', panelRightBlue);
         $('.panelRightSpan2.' + fieldSelector).css('color', 'white');
       }
     } else {

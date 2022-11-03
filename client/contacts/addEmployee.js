@@ -10156,14 +10156,9 @@ Template.employeescard.events({
         }
     },
     'click .btnDeleteEmployee': (e, ui) => {
-<<<<<<< HEAD
-        playDeleteAudio();
-        setTimeout(function(){
-=======
-
->>>>>>> 43aac4140e424fc4edd134f92a5e17479936ea71
-        ui.deactivateEmployee();
-    }, delayTimeAfterSound);
+        let templateObject = Template.instance();
+        templateObject.deactivateEmployee();
+        
         // LoadingOverlay.show();
         // let templateObject = Template.instance();
         // let contactService2 = new ContactService();
