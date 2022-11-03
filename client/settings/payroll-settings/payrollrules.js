@@ -22308,7 +22308,6 @@ Template.payrollrules.events({
     //  "show.bs.modal #select-ratetype-modal": (e, ui) => {
     // },
     'change #overtimeRateType': (e, ui) => {
-        console.log('changed', e);
         let evalue = $(e.currentTarget).val();
 
         switch(evalue) {

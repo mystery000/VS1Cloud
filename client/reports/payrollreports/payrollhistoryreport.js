@@ -128,8 +128,8 @@ Template.payrollhistoryreport.onRendered(() => {
       useLocalStorage: false,
       validate: (cachedResponse) => {
         if(cachedResponse.response.Params) {
-          if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
-          && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+          if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom)
+          && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
           && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
             return true;
           }
@@ -138,7 +138,7 @@ Template.payrollhistoryreport.onRendered(() => {
         return false;
       }
     })
-    
+
     data = data.response;
     if (!localStorage.getItem('VS1PayrollHistory_Report')) {
       const options = await templateObject.reportOptions.get();
@@ -155,8 +155,8 @@ Template.payrollhistoryreport.onRendered(() => {
     let paySlipReport = [];
     if( data.tpayhistory.length > 0 ){
         let employeeGroups = [];
-        // employeeGroups = await objectGrouping(data.tpayhistory, "Employeeid");   
-        for (const item of data.tpayhistory) {   
+        // employeeGroups = await objectGrouping(data.tpayhistory, "Employeeid");
+        for (const item of data.tpayhistory) {
 
             let employeeExist = employeeGroups.filter((subitem) => {
                 if( subitem.ID == item.fields.Employeeid ){
@@ -200,10 +200,10 @@ Template.payrollhistoryreport.onRendered(() => {
             item.TotalNet += TotalNet;
             return item;
         });
-        
+
     }
-  
-    templateObject.records.set(paySlipReport);    
+
+    templateObject.records.set(paySlipReport);
     LoadingOverlay.hide();
   };
 
@@ -211,8 +211,8 @@ Template.payrollhistoryreport.onRendered(() => {
   templateObject.initDate();
   templateObject.initUploadedImage();
   templateObject.getPayHistory(
-    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-    GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
     );
 
@@ -339,7 +339,6 @@ Template.payrollhistoryreport.events({
   },
   "change .edtReportDates": async function () {
     $(".fullScreenSpin").css("display", "block");
-    console.log('testing goes here')
     localStorage.setItem('VS1PayrollHistory_Report', '');
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
@@ -358,8 +357,8 @@ Template.payrollhistoryreport.events({
     // $(".fullScreenSpin").css("display", "none");
 
     templateObject.getPayHistory(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
       );
     templateObject.dateAsAt.set(moment(endDate).format('DD/MM/YYYY'));
@@ -375,8 +374,8 @@ Template.payrollhistoryreport.events({
     // $(".fullScreenSpin").css("display", "none");
 
     templateObject.getPayHistory(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
       );
     templateObject.dateAsAt.set(moment(endDate).format('DD/MM/YYYY'));
@@ -412,8 +411,8 @@ Template.payrollhistoryreport.events({
     // $(".fullScreenSpin").css("display", "none");
 
     templateObject.getPayHistory(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
       );
       var newdate = $("#dateTo").val();
@@ -436,12 +435,12 @@ Template.payrollhistoryreport.events({
     "click .currency-modal-save": (e) => {
       //$(e.currentTarget).parentsUntil(".modal").modal("hide");
       LoadingOverlay.show();
-  
+
       let templateObject = Template.instance();
-  
+
       // Get all currency list
       let _currencyList = templateObject.currencyList.get();
-  
+
       // Get all selected currencies
       const currencySelected = $(".currency-selector-js:checked");
       let _currencySelectedList = [];
@@ -460,7 +459,7 @@ Template.payrollhistoryreport.events({
         _currency.active = true;
         _currencySelectedList.push(_currency);
       }
-  
+
       _currencyList.forEach((value, index) => {
         if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
           _currencyList[index].active = _currencySelectedList.find(
@@ -470,17 +469,17 @@ Template.payrollhistoryreport.events({
           _currencyList[index].active = false;
         }
       });
-  
+
       _currencyList = _currencyList.sort((a, b) => {
         if (a.code == defaultCurrencyCode) {
           return -1;
         }
         return 1;
       });
-  
+
       // templateObject.activeCurrencyList.set(_activeCurrencyList);
       templateObject.currencyList.set(_currencyList);
-  
+
       LoadingOverlay.hide();
     },
     "click [href='#noInfoFound']": function () {
