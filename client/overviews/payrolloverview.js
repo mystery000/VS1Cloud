@@ -4352,7 +4352,8 @@ Template.payrolloverview.events({
     // return;
    // const templateObject = Template.instance();
     let checkIncludeAllProducts = templateObject.includeAllProducts.get();
-    $("#employee_name").val(Session.get("mySessionEmployee"));
+    console.log("===========", Session.get("mySessionEmployee"));
+    $("#clock_employee_name").val(Session.get("mySessionEmployee"));
     $("#sltJob").val("");
     $("#product-list").val("");
     $("#edtProductCost").val(0);

@@ -2036,6 +2036,11 @@ Template.header.events({
     'click .userprofileclick': function(event) {
         window.open('/employeescard?id=' + Session.get('mySessionEmployeeLoggedID'), '_self');
     },
+    'click .accountantDatabases': function(event) {
+      $('.databaseSelectModal').modal('toggle');
+      $('.modal-backdrop').css('display', 'none');
+        // window.open('/employeescard?id=' + Session.get('mySessionEmployeeLoggedID'), '_self');
+    },
     'click .btnRefreshSearch': function(event) {
         let templateObject = Template.instance();
         templateObject.searchdatatablerecords.set('');

@@ -3336,6 +3336,7 @@ Template.appointments.onRendered(function () {
                   closebalance: "",
                   rate: data.tappointmentex[i].fields.Rate || 1,
                   product: data.tappointmentex[i].fields.ProductDesc || "",
+                  extraProducts: data.tappointmentex[i].fields.ExtraProducts || "",
                   finished: data.tappointmentex[i].fields.Status || "",
                   //employee: data.tappointmentex[i].EndTime != '' ? moment(data.tappointmentex[i].EndTime).format("DD/MM/YYYY") : data.tappointmentex[i].EndTime,
                   notes: data.tappointmentex[i].fields.Notes || "",
@@ -3466,6 +3467,14 @@ Template.appointments.onRendered(function () {
                   // } else {
                   //     $('#product-list').prop('selectedIndex', -1);
                   // }
+
+                  if(result[0].extraProducts != ""){
+                    let extraProducts = result[0].extraProducts.split(":");
+                    extraProducts.forEach((item) => {
+                      $("#productCheck-"+item).prop("checked", true);
+                    });
+                    $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
+                  }
 
                   document.getElementById("employee_name").value =
                     result[0].employeename;
@@ -8851,7 +8860,7 @@ Template.appointments.onRendered(function () {
       $("#event-modal").modal();
   });
   
-  $(document).on("click", "#addExtraProduct", function (e) {
+  $(document).on("click", ".addExtraProduct", function (e) {
     $("#productListModal1").modal("toggle");
     // var targetID = $(event.target).closest("tr").attr("id");
     // $("#selectLineID").val(targetID);
@@ -16984,7 +16993,7 @@ Template.appointments.events({
             TrainerName: employeeName,
             Notes: notes,
             ProductDesc: selectedProduct,
-            // ExtraProducts: selectedExtraProduct,
+            ExtraProducts: selectedExtraProduct,
             Attachments: uploadedItems,
             Status: status,
             CUSTFLD12: messageSid || "",
@@ -17012,7 +17021,7 @@ Template.appointments.events({
             TrainerName: employeeName,
             Notes: notes,
             ProductDesc: selectedProduct,
-            // ExtraProducts: selectedExtraProduct,
+            ExtraProducts: selectedExtraProduct,
             Attachments: uploadedItems,
             Status: status,
             CUSTFLD12: messageSid || "",
@@ -17497,10 +17506,10 @@ Template.appointments.events({
       });
 
       if(productFees != ""){
-          $("#addExtraProduct").removeClass("btn-primary").addClass("btn-success");
+          $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
       }
       else{
-          $("#addExtraProduct").removeClass("btn-success").addClass("btn-primary");
+          $(".addExtraProduct").removeClass("btn-success").addClass("btn-primary");
       }
 
       templateObject.productFees.set(productFees);

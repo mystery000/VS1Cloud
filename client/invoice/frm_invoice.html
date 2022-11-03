@@ -678,14 +678,14 @@
 
                                     </div>
                                 </div>
-
-                                {{#if isCurrencyEnable}}
-                                    {{> CurrencyWidget rate="sell" row="true"}}
-                                {{/if}}
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3">
                                 <div class="row">
-                                    
+                                    {{#if isCurrencyEnable}}
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        {{> CurrencyWidget rate="sell"}}
+                                    </div>
+                                    {{/if}}
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                         <div class="row">
                                             <div class="col-12">
@@ -1175,7 +1175,7 @@
                                     {{#each item in invoicerecord.LineItems}}
                                     <tr class="dnd-moved" id={{item.lineID}}>
                                       <td contenteditable="false" class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}"><input
-                                          class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}"></td>
+                                          class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}" itemid="{{item.itemID}}"></td>
                                       <td contenteditable="true"
                                         class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
                                         {{item.description}}</td>

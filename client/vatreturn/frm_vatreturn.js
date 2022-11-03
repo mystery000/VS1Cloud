@@ -2090,12 +2090,12 @@ Template.vatreturn.helpers({
 });
 
 Template.vatreturn.events({
-    "click #loadBasOption": (e) => {
+    "click #loadVatOption": (e) => {
         if ($("#allDepart").prop('checked') == false && $('#sltDepartment').val() == "") {
             swal('Department cannot be blank!', '', 'warning');
         }
         else{
-            $("#basoptionmodal").modal("toggle");
+            $("#vatoptionmodal").modal("toggle");
         }
     },
     // "click #allDepart": (e) => {
@@ -2366,8 +2366,8 @@ Template.vatreturn.events({
         if (parseFloat($("#" + getID).val()) > 0) {
             if (!templateObject.getId.get()) {
                 swal({
-                    title: 'BAS Return Details',
-                    text: "You must save it to go to the BAS Return Details page.\r\nDo you want to save the data?",
+                    title: 'VAT Return Details',
+                    text: "You must save it to go to the VAT Return Details page.\r\nDo you want to save the data?",
                     type: 'question',
                     showCancelButton: true,
                     confirmButtonText: 'Yes'
@@ -2577,23 +2577,23 @@ Template.vatreturn.events({
                         let credits9cost = $('#credits9cost').val();
 
                         if (description == "") {
-                            swal('BAS Return Description cannot be blank!', '', 'warning');
+                            swal('VAT Return Description cannot be blank!', '', 'warning');
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
-                            getVS1Data('TBasReturn').then(function(dataObject) {
+                            getVS1Data('TVatReturn').then(function(dataObject) {
                                 if (dataObject.length > 0) {
                                     dataArray = JSON.parse(dataObject[0].data);
                                 }
                             });
 
                             setTimeout(function() {
-                                let basnumber = (dataArray.length) ? (parseInt(dataArray[0].basNumber) + 1) : 1;
+                                let vatnumber = (dataArray.length) ? (parseInt(dataArray[0].basNumber) + 1) : 1;
                                 let jsonObj = {
-                                    basNumber: basnumber,
+                                    vatNumber: vatnumber,
                                     description: description,
                                     departmentId: departmentId,
                                     accountingMethod: accountingMethod,
-                                    basReturnTab1: {
+                                    vatReturnTab1: {
                                         datemethod: datemethod,
                                         startDate: startDate,
                                         endDate: endDate,
@@ -2669,7 +2669,7 @@ Template.vatreturn.events({
                                             amount: gst20cost,
                                         },
                                     },
-                                    basReturnTab2: {
+                                    vatReturnTab2: {
                                         datemethod: datemethodT2,
                                         startDate: startDateT2,
                                         endDate: endDateT2,
@@ -2718,7 +2718,7 @@ Template.vatreturn.events({
                                             reason: reasonF4
                                         },
                                     },
-                                    basReturnTab3: {
+                                    vatReturnTab3: {
                                         datemethod: datemethodT3,
                                         startDate: startDateT3,
                                         endDate: endDateT3,
@@ -2747,7 +2747,7 @@ Template.vatreturn.events({
                                             accounts: t3accounts1
                                         },
                                     },
-                                    basReturnTab4: {
+                                    vatReturnTab4: {
                                         tab41A: {
                                             amount: debits1cost
                                         },
@@ -2813,9 +2813,9 @@ Template.vatreturn.events({
 
                                 if (templateObject.getId.get()) {
                                     dataArray.forEach((item, j) => {
-                                        if (item.basNumber == templateObject.getId.get()) {
+                                        if (item.vatNumber == templateObject.getId.get()) {
                                             dataArray[j] = jsonObj;
-                                            dataArray[j].basNumber = templateObject.getId.get();
+                                            dataArray[j].vatNumber = templateObject.getId.get();
                                         }
                                     });
                                 } else {
@@ -2826,21 +2826,21 @@ Template.vatreturn.events({
 
                                 addVS1Data('TBasReturn', JSON.stringify(dataArray)).then(function(datareturn) {
                                     if (getID == "gst1cost") {
-                                        FlowRouter.go("/basreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G1");
+                                        FlowRouter.go("/vatreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G1");
                                     } else if (getID == "gst2cost") {
-                                        FlowRouter.go("/basreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G2");
+                                        FlowRouter.go("/vatreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G2");
                                     } else if (getID == "gst3cost") {
-                                        FlowRouter.go("/basreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G3");
+                                        FlowRouter.go("/vatreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G3");
                                     } else if (getID == "gst4cost") {
-                                        FlowRouter.go("/basreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G4");
+                                        FlowRouter.go("/vatreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G4");
                                     } else if (getID == "gst7cost") {
-                                        FlowRouter.go("/basreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G7");
+                                        FlowRouter.go("/vatreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G7");
                                     } else if (getID == "gst10cost") {
-                                        FlowRouter.go("/basreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G10");
+                                        FlowRouter.go("/vatreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G10");
                                     } else if (getID == "gst11cost") {
-                                        FlowRouter.go("/basreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G11");
+                                        FlowRouter.go("/vatreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G11");
                                     } else if (getID == "gst13cost") {
-                                        FlowRouter.go("/basreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G13");
+                                        FlowRouter.go("/vatreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G13");
                                     } else if (getID == "gst14cost") {
                                         FlowRouter.go("/basreturntransactionlist?basreturnid=" + templateObject.getId.get() + "&transactionitem=G14");
                                     } else if (getID == "gst15cost") {
@@ -2961,10 +2961,10 @@ Template.vatreturn.events({
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
-        $(".printBasReturn").show();
+        $(".printVatReturn").show();
         $("a").attr("href", "/");
-        document.title = "BAS Return";
-        $(".printBasReturn").print({
+        document.title = "VAT Return";
+        $(".printVatReturn").print({
             title: document.title + " | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
             mediaPrint: false,
@@ -2972,7 +2972,7 @@ Template.vatreturn.events({
 
         setTimeout(function() {
             $("a").attr("href", "#");
-            $(".printBasReturn").hide();
+            $(".printVatReturn").hide();
         }, 100);
     },
     'click .btnRemove': function(event) {
@@ -3013,24 +3013,24 @@ Template.vatreturn.events({
 
         if (templateObject.getId.get()) {
             swal({
-                title: 'Delete BAS Return',
-                text: "Are you sure you want to Delete this BAS Return?",
+                title: 'Delete VAT Return',
+                text: "Are you sure you want to Delete this VAT Return?",
                 type: 'info',
                 showCancelButton: true,
                 confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.value) {
                     $('.fullScreenSpin').css('display', 'inline-block');
-                    getVS1Data('TBasReturn').then(function(dataObject) {
+                    getVS1Data('TVatReturn').then(function(dataObject) {
                         if (dataObject.length > 0) {
                             let dataArray = JSON.parse(dataObject[0].data);
                             dataArray.forEach((item, j) => {
-                                if (item.basNumber == templateObject.getId.get()) {
+                                if (item.vatNumber == templateObject.getId.get()) {
                                     dataArray.splice(j, 1);
                                 }
                             });
-                            addVS1Data('TBasReturn', JSON.stringify(dataArray)).then(function(datareturn) {
-                                FlowRouter.go('/basreturnlist');
+                            addVS1Data('TVatReturn', JSON.stringify(dataArray)).then(function(datareturn) {
+                                FlowRouter.go('/vatreturnlist');
                                 $('.modal-backdrop').css('display', 'none');
                                 $('.fullScreenSpin').css('display', 'none');
                             }).catch(function(err) {
@@ -3269,24 +3269,24 @@ Template.vatreturn.events({
 
             if (description === '') {
                 // Bert.alert('<strong>WARNING:</strong> BAS Return Description cannot be blank!', 'warning');
-                swal('BAS Return Description cannot be blank!', '', 'warning');
+                swal('VAT Return Description cannot be blank!', '', 'warning');
                 $('.fullScreenSpin').css('display', 'none');
                 e.preventDefault();
             } else {
-                getVS1Data('TBasReturn').then(function(dataObject) {
+                getVS1Data('TVatReturn').then(function(dataObject) {
                     if (dataObject.length > 0) {
                         dataArray = JSON.parse(dataObject[0].data);
                     }
                 });
 
                 setTimeout(function() {
-                    let basnumber = (dataArray.length) ? (parseInt(dataArray[0].basNumber) + 1) : 1;
+                    let vatnumber = (dataArray.length) ? (parseInt(dataArray[0].basNumber) + 1) : 1;
                     let jsonObj = {
-                        basNumber: basnumber,
+                        vatNumber: vatnumber,
                         description: description,
                         departmentId: departmentId,
                         accountingMethod: accountingMethod,
-                        basReturnTab1: {
+                        vatReturnTab1: {
                             datemethod: datemethod,
                             startDate: startDate,
                             endDate: endDate,
@@ -3515,9 +3515,9 @@ Template.vatreturn.events({
                         dataArray.unshift(jsonObj);
                     }
 
-                    addVS1Data('TBasReturn', JSON.stringify(dataArray)).then(function(datareturn) {
+                    addVS1Data('TVatReturn', JSON.stringify(dataArray)).then(function(datareturn) {
                         $('.fullScreenSpin').css('display', 'none');
-                        FlowRouter.go('/basreturnlist');
+                        FlowRouter.go('/vatreturnlist');
                     }).catch(function(err) {
                         $('.fullScreenSpin').css('display', 'none');
                     });

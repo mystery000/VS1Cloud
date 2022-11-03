@@ -142,7 +142,7 @@ Template.generalledger.onRendered(() => {
               recordObj.dataArr = [
                 "",
                 data.tgeneralledgerreport[i].ACCOUNTNUMBER,
-                
+
                 // data.tgeneralledgerreport[i].MEMO || "-",
                 // moment(data.tgeneralledgerreport[i].DATE).format("DD MMM YYYY") || '-',
                 data.tgeneralledgerreport[i].DATE != ""? moment(data.tgeneralledgerreport[i].DATE).format("DD/MM/YYYY"): data.tgeneralledgerreport[i].DATE,
@@ -362,7 +362,7 @@ Template.generalledger.onRendered(() => {
       let data = JSON.parse(localStorage.getItem("VS1GeneralLedger_Report"));
       let totalRecord = [];
       let grandtotalRecord = [];
-      
+
       if (data.tgeneralledgerreport.length) {
         let records = [];
         let allRecords = [];
@@ -388,7 +388,7 @@ Template.generalledger.onRendered(() => {
           recordObj.dataArr = [
             "",
             data.tgeneralledgerreport[i].ACCOUNTNUMBER,
-            
+
             // data.tgeneralledgerreport[i].MEMO || "-",
             // moment(data.tgeneralledgerreport[i].DATE).format("DD MMM YYYY") || '-',
             data.tgeneralledgerreport[i].DATE != ""
@@ -435,7 +435,7 @@ Template.generalledger.onRendered(() => {
           //   }
 
           records.push(recordObj);
-          
+
         }
         records = _.sortBy(records, "AccountName");
         records = _.groupBy(records, "AccountName");
@@ -540,7 +540,7 @@ Template.generalledger.onRendered(() => {
           iterator += 1;
         }
 
-        
+
         templateObject.records.set(totalRecord);
         templateObject.grandrecords.set(grandval);
 
