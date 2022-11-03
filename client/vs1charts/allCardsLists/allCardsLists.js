@@ -243,8 +243,8 @@ Template.allCardsLists.events({
     "click .editCardBtn": async function (e) {
         playSaveAudio();
         e.preventDefault();
-        setTimeout(async function(){
         let templateObject = Template.instance();
+        setTimeout(async function(){
         $(".card-visibility").removeClass('hideelement');
         if( $('.editCardBtn').find('i').hasClass('fa-cog') ){
             $('.cardShowBtn').removeClass('hideelement');
@@ -330,8 +330,8 @@ Template.allCardsLists.events({
     "click .cancelCards": async function(e){
         playCancelAudio();
         e.preventDefault();
-        setTimeout(async function(){
         let templateObject = Template.instance();
+        setTimeout(async function(){
         $(".fullScreenSpin").css("display", "block");
         $('.cardShowBtn').addClass('hideelement');
         $('.actionButtonCardsTop').addClass('hideelement');
