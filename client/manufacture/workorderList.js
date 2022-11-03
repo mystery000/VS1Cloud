@@ -589,9 +589,11 @@ Template.workorderlist.events({
 
         'click .workorderList .printConfirm': function() {
             playPrintAudio();
+            setTimeout(function(){
             $('.fullScreenSpin').css('display', 'inline-block');
             jQuery('#tblWorkorderList_wrapper .dt-buttons .btntabletopdf').click();
             $('.fullScreenSpin').css('display', 'none');
+        }, delayTimeAfterSound);
         },
 
         'click .workorderList #btnNewWorkorder': function (e) {

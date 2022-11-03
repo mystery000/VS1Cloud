@@ -15393,6 +15393,7 @@ Template.payrollrules.events({
 
    'click .btnSaveAllowance':function(){
     playSaveAudio();
+    setTimeout(function(){
      let templateObject = Template.instance();
      LoadingOverlay.show();
      let taxRateService = new TaxRateService();
@@ -15679,11 +15680,12 @@ Template.payrollrules.events({
 
 
      }
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnSaveRatePOP': (e, templateObject) => {
         playSaveAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
         let taxRateService = new TaxRateService();
 
@@ -15859,10 +15861,12 @@ Template.payrollrules.events({
 
 
         }
+    }, delayTimeAfterSound);
     },
 
     'click .btnSaveGroup':function(){
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         LoadingOverlay.show();
         let taxRateService = new TaxRateService();
@@ -16044,11 +16048,12 @@ Template.payrollrules.events({
 
 
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnSavefund':function(){
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         LoadingOverlay.show();
 
@@ -16230,12 +16235,12 @@ Template.payrollrules.events({
 
 
         }
-
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnSaveDeduction': function(){
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         LoadingOverlay.show();
         let deductionName = $('#edtDeductionName').val()||'';
@@ -16527,6 +16532,7 @@ Template.payrollrules.events({
 
 
         }
+    }, delayTimeAfterSound);
     },
 
 
@@ -16787,6 +16793,7 @@ Template.payrollrules.events({
 
    'click .btnSaveDefaultTax': (e, templateObject) => {
         playSaveAudio();
+        setTimeout(function(){
         templateObject.saveOvertimes();
 
         LoadingOverlay.show();
@@ -16934,10 +16941,12 @@ Template.payrollrules.events({
 
 
          }
-
-    },
+        }, delayTimeAfterSound);
+        },
 
     'click .saveSuperannuation': function(e){
+        playSaveAudio();
+        setTimeout(function(){
         let taxRateService = new TaxRateService();
         let templateObject = Template.instance();
         LoadingOverlay.show();
@@ -17400,10 +17409,7 @@ Template.payrollrules.events({
 
 
          }
-
-
-
-
+        }, delayTimeAfterSound);
     },
 
    'click .newreiumbursement': function(){
@@ -19591,6 +19597,7 @@ Template.payrollrules.events({
     'click .btnSaveAccountPOP':function()
     {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         LoadingOverlay.show();
         let taxRateService = new TaxRateService();
@@ -19760,15 +19767,9 @@ Template.payrollrules.events({
                 swal('Account is not selected to edit!', '', 'warning');
                 e.preventDefault();
             }
-
-
-
-
-
          }
-
-
-    },
+        }, delayTimeAfterSound);
+        },
 
     'change #edtFundType':function(){
 
@@ -19826,6 +19827,7 @@ Template.payrollrules.events({
     },
     'click .btnDeleteAllowance': function () {
       playDeleteAudio();
+      setTimeout(function(){
       let taxRateService = new TaxRateService();
       let allowanceId = $('#selectDeleteLineID').val()||0;
       LoadingOverlay.show();
@@ -19894,11 +19896,12 @@ Template.payrollrules.events({
             });
 
       });
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteCalender': function () {
         playDeleteAudio();
+        setTimeout(function(){
         let taxRateService = new TaxRateService();
         let calenderid = $('#selectColDeleteLineID').val()||0;
         let calendername = $('#selectCalenderName').val()||0;
@@ -19982,13 +19985,12 @@ Template.payrollrules.events({
 
 
         }
-
-
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteLeave': function () {
         playDeleteAudio();
+        setTimeout(function(){
         let taxRateService = new TaxRateService();
         let LeaveId = $('#selectLeaveDeleteLineID').val()||0;
         let LeaveName = $('#selectLeaveName').val()||0;
@@ -20154,13 +20156,12 @@ Template.payrollrules.events({
 
 
         }
-
-
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteHoliday': function () {
         playDeleteAudio();
+        setTimeout(function(){
         let taxRateService = new TaxRateService();
         let holidayid = $('#selectholidayDeleteLineID').val()||0;
         let holidayname = $('#selectholidayName').val()||0;
@@ -20244,12 +20245,13 @@ Template.payrollrules.events({
             }
             });
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteEarnings':function()
     {
         playDeleteAudio();
+        setTimeout(function(){
         let taxRateService = new TaxRateService();
         let earningid = $('#earningdeletename').val()||0;
         let type = $('#earningdeletetype').val()||0;
@@ -20734,13 +20736,12 @@ Template.payrollrules.events({
 
 
         }
-
-
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteSuperannuation': function () {
         playDeleteAudio();
+        setTimeout(function(){
         let taxRateService = new TaxRateService();
         let superannutionid = $('#selectSuperannuationDeleteLineID').val()||0;
         let superannutionname = $('#selectSuperannuationName').val()||0;
@@ -20827,11 +20828,12 @@ Template.payrollrules.events({
                 }
                });
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteReimsument': function () {
         playDeleteAudio();
+        setTimeout(function(){
         let taxRateService = new TaxRateService();
         let reid = $('#selectColReiDeleteLineID').val()||0;
         let ReiName = $('#seleclReiName').val()||0;
@@ -20911,13 +20913,12 @@ Template.payrollrules.events({
                 }
             });
         }
-
-
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteDeduction': function () {
         playDeleteAudio();
+        setTimeout(function(){
         let taxRateService = new TaxRateService();
         let deductionID = $('#selectDeleteLineID').val()||0;
         let deductionAccountID = $('#selectAccountid').val()||0;
@@ -20996,8 +20997,8 @@ Template.payrollrules.events({
             });
 
          });
-
-    },
+        }, delayTimeAfterSound);
+        },
 
 
     'click .btnAddNewDeduction': function(event) {

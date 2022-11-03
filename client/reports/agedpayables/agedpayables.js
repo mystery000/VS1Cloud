@@ -817,6 +817,7 @@ Template.agedpayables.events({
     },
     'click .btnPrintReport': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -851,7 +852,8 @@ Template.agedpayables.events({
         $(".printReport").print({
             title: document.title + " | Aged Payables | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
-        })
+        });
+    }, delayTimeAfterSound);
     },
     'click .btnExportReport': function () {
         $('.fullScreenSpin').css('display', 'inline-block');

@@ -117,11 +117,13 @@ Template.lotnumberpop.events({
     },
     'click .btnPrint': async function(event) {
         playPrintAudio();
+        setTimeout(function(){
         const rowNumber = $('#lotNumberModal').attr('data-row');
         const productName = $(`table tbody tr:nth-child(${rowNumber}) td.colProductName input`).val();
         $('.tblLNlist').print({
             title: productName + " - Lot Numbers"
         });
+    }, delayTimeAfterSound);
     },
     'click .btnSelect': async function() {
         const lotList = await sideBarService.getAllSerialNumber();
@@ -153,6 +155,7 @@ Template.lotnumberpop.events({
     },
     'click .btnDelete': function() {
         playDeleteAudio();
+        setTimeout(function(){
         autofilled = false;
         const rowNumber = $('#lotNumberModal').attr('data-row');
         $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-lotnumbers', '');
@@ -191,6 +194,7 @@ Template.lotnumberpop.events({
             changeYear: true,
             yearRange: "-90:+10",
         });
+    }, delayTimeAfterSound);
     },
     'click .btnAutoFill': async function(event) {
         let startLotnum = Number($('#first-lot-number').text());

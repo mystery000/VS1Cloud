@@ -1009,6 +1009,7 @@ Template.newprofitandloss.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -1051,6 +1052,7 @@ Template.newprofitandloss.events({
         stripHtml: false,
       },
     });
+  }, delayTimeAfterSound);
   },
   "click .btnExportReportProfit": function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -1111,6 +1113,7 @@ Template.newprofitandloss.events({
   //custom selection period number
   "click .btnSaveComparisonPeriods": async function (event) {
     playSaveAudio();
+    setTimeout(async function(){
     let periods = $("#comparisonPeriodNum").val();
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
@@ -1121,6 +1124,7 @@ Template.newprofitandloss.events({
     }
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getProfitandLossReports();
+  }, delayTimeAfterSound);
   },
 
   // Current Month

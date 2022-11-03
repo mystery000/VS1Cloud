@@ -902,6 +902,7 @@ Template.addaccountpop.events({
     },
     'click .btnDeleteAccount': function () {
         playDeleteAudio();
+        setTimeout(function(){
         swal({
             title: 'Delete Account',
             text: "Are you sure you want to Delete Account?",
@@ -954,6 +955,7 @@ Template.addaccountpop.events({
 
             } else {}
         });
+    }, delayTimeAfterSound);
     }
 })
 

@@ -1729,9 +1729,11 @@ Template.accountsoverview.events({
     },
     "click .printConfirm": function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $(".fullScreenSpin").css("display", "inline-block");
         jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletopdf").click();
         $(".fullScreenSpin").css("display", "none");
+    }, delayTimeAfterSound);
     },
     "click .templateDownload": function() {
         let utilityService = new UtilityService();
@@ -2118,6 +2120,7 @@ Template.accountsoverview.events({
     },
     "click .btnDeleteAccount": function() {
         playDeleteAudio();
+        setTimeout(function(){
         swal({
             title: "Delete Account",
             text: "Are you sure you want to Delete Account?",
@@ -2177,6 +2180,7 @@ Template.accountsoverview.events({
                 }
             } else {}
         });
+    }, delayTimeAfterSound);
     },
     'click #tblCategory tbody tr': function(e) {
         let category = $(e.target).closest('tr').find(".colReceiptCategory").text() || '';

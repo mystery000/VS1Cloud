@@ -122,6 +122,7 @@ Template.serialnumberpop.events({
     },
     'click .btnDelete': function() {
         playDeleteAudio();
+        setTimeout(function(){
         autofilled = false;
         const rowNumber = $('#serialNumberModal').attr('data-row');
         $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-serialnumbers', '');
@@ -139,14 +140,17 @@ Template.serialnumberpop.events({
         '    <td contenteditable="true" class="lineSerialnumbers" id="first-serial-number"></td>' +
         '</tr>';
         $('#tblSeriallist tbody').html(defaultRow);
+    }, delayTimeAfterSound);
     },
     'click .btnPrint': async function(event) {
         playPrintAudio();
+        setTimeout(function(){
         const rowNumber = $('#serialNumberModal').attr('data-row');
         const productName = $(`table tbody tr:nth-child(${rowNumber}) td.colProductName input`).val();
         $('.tblSNlist').print({
             title: productName + " - Serial Numbers"
         });
+    }, delayTimeAfterSound);
     },
     'click .btnAutoFill': async function(event) {
         let startSerialnum = Number($('#first-serial-number').text());

@@ -464,6 +464,7 @@ Template.exeprofitabilityreport.events({
     },
     "click .btnPrintReport": function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $("a").attr("href", "/");
         document.title = "Profitability (Executive) Report";
         $(".printReport").print({
@@ -475,6 +476,7 @@ Template.exeprofitabilityreport.events({
         setTimeout(function () {
             $("a").attr("href", "#");
         }, 100);
+    }, delayTimeAfterSound);
     },
     "click .btnExportReport": function () {
         LoadingOverlay.show();

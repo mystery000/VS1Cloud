@@ -58,6 +58,7 @@ Template.yoodledeveloper.events({
   },
   'click #saveYoodleDeveloperSettings': async function(){
     playSaveAudio();
+    setTimeout(async function(){
     $('.fullScreenSpin').css('display','block');
     let settingObject = [];
     const templateObject = Template.instance();
@@ -145,5 +146,6 @@ Template.yoodledeveloper.events({
         }
         
     }
+}, delayTimeAfterSound);
   }
 });

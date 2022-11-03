@@ -543,9 +543,11 @@ Template.basreturntransactionlist.events({
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblBasReturnTransactionList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');

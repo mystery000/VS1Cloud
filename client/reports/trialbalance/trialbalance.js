@@ -787,6 +787,7 @@ Template.trialbalance.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -825,6 +826,7 @@ Template.trialbalance.events({
       title: document.title + " | Trial Balance | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor",
     });
+  }, delayTimeAfterSound);
   },
   "click .btnExportReport": function () {
     LoadingOverlay.show();

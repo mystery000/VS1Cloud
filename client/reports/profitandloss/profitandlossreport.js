@@ -387,11 +387,13 @@ Template.profitlossreport.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     document.title = "Profit and Loss Report";
     $(".printReport").print({
       title: document.title + " | Profit and Loss | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor",
     });
+  }, delayTimeAfterSound);
   },
   "click .btnExportReportProfit": function () {
     $(".fullScreenSpin").css("display", "inline-block");

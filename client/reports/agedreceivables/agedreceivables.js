@@ -755,6 +755,7 @@ Template.agedreceivables.events({
     },
     'click .btnPrintReport': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -789,7 +790,8 @@ Template.agedreceivables.events({
         $(".printReport").print({
             title: document.title + " | Aged Receivables | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
-        })
+        });
+    }, delayTimeAfterSound);
     },
     'click .btnExportReport': function () {
         $('.fullScreenSpin').css('display', 'inline-block');

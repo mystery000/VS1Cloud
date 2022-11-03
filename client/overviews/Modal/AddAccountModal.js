@@ -1410,7 +1410,9 @@ Template.addAccountModal.events({
   },
   "click .btnDeleteAccount": (e, template) => {
     playDeleteAudio();
+    setTimeout(function(){
     template.deleteAccount();
+  }, delayTimeAfterSound);
   },
 
   "click #openEftOptionsModal" : (e) => {

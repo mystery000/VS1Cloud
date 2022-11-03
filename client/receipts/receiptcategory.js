@@ -337,6 +337,7 @@ Template.receiptcategory.events({
     },
     'click .btnDelete': function () {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
         let receiptCategoryId = $('#selectDeleteLineID').val();
@@ -373,10 +374,11 @@ Template.receiptcategory.events({
             });
             $('.fullScreenSpin').css('display','none');
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnSave': function () {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
         let receiptCategoryID = $('#edtReceiptCategoryID').val();
@@ -457,6 +459,7 @@ Template.receiptcategory.events({
                 $('.fullScreenSpin').css('display','none');
             });
         }
+    }, delayTimeAfterSound);
     },
     'click .btnAdd': function () {
         $('#add-receiptcategory-title').text('Add New Receipt Category');

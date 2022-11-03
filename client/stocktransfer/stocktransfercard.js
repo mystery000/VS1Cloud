@@ -3111,6 +3111,7 @@ Template.stocktransfercard.events({
     },
     'click .btnprintDockets': function(e) {
         playPrintAudio();
+        setTimeout(function(){
         let invoiceID = parseInt($("#SalesId").val());
         let templateObject = Template.instance();
         let isInvoice = templateObject.includeInvoiceAttachment.get();
@@ -3134,19 +3135,23 @@ Template.stocktransfercard.events({
                 templateObject.SendShippingDetails(printType);
             }
         }
-
+    }, delayTimeAfterSound);
     },
     'click .btnprintInvoice': function(e) {
         playPrintAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let printType = "InvoiceOnly";
         templateObject.SendShippingDetails(printType);
+    }, delayTimeAfterSound);
     },
     'click .btnprintDelDocket': function(e) {
         playPrintAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let printType = "DeliveryDocketsOnly";
         templateObject.SendShippingDetails(printType);
+    }, delayTimeAfterSound);
     },
     'click #printDockets': function(e) {
         const templateObject = Template.instance();
@@ -3172,6 +3177,7 @@ Template.stocktransfercard.events({
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
+        setTimeout(function(){
       $('.fullScreenSpin').css('display', 'inline-block');
         $('#html-2-pdfwrapper').css('display', 'block');
         $('.pdfCustomerName').html($('#sltDepartment').val());
@@ -3211,6 +3217,7 @@ Template.stocktransfercard.events({
         $('#html-2-pdfwrapper').css('display', 'none');
         $('.fullScreenSpin').css('display', 'none');
       }
+    }, delayTimeAfterSound);
     },
     'click .btnProcess': function(event) {
          if ($('.chkEmailCopy').is(':checked')) {
@@ -4269,39 +4276,52 @@ Template.stocktransfercard.events({
     },
     'click .btnDeleteFollowingStocks': async function(event) {
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = '';
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var stockData = await stockTransferService.getOneStockTransferData(currentInvoice);
-            var transferDate = stockData.fields.DateTransferred;
-            var fromDate = transferDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingStocks = await sideBarService.getAllStockTransferEntry("All", stockData.fields.Recno);//initialDataLoad
-            var stockList = followingStocks.tstocktransferentry;
-            for (var i=0; i < stockList.length; i++) {
-                var objDetails = {
-                    type: "TStockTransferEntry",
-                    fields: {
-                        ID: stockList[i].fields.ID,
-                        Deleted: true
+        swal({
+            title: 'Delete Stock Transfer',
+            text: "Do you wish to delete this transaction and all others associated with it moving forward?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then(async (result) => {
+            if (result.value) {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                var url = FlowRouter.current().path;
+                var getso_id = url.split('?id=');
+                var currentInvoice = getso_id[getso_id.length - 1];
+                var objDetails = '';
+                if (getso_id[1]) {
+                    currentInvoice = parseInt(currentInvoice);
+                    var stockData = await stockTransferService.getOneStockTransferData(currentInvoice);
+                    var transferDate = stockData.fields.DateTransferred;
+                    var fromDate = transferDate.substring(0, 10);
+                    var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+                    var followingStocks = await sideBarService.getAllStockTransferEntry("All", stockData.fields.Recno);//initialDataLoad
+                    var stockList = followingStocks.tstocktransferentry;
+                    for (var i=0; i < stockList.length; i++) {
+                        var objDetails = {
+                            type: "TStockTransferEntry",
+                            fields: {
+                                ID: stockList[i].fields.ID,
+                                Deleted: true
+                            }
+                        };
+                        var result = await stockTransferService.saveStockTransfer(objDetails);
                     }
-                };
-                var result = await stockTransferService.saveStockTransfer(objDetails);
+                }
+                FlowRouter.go('/stocktransferlist?success=true');
+                $('.modal-backdrop').css('display', 'none');
+                $('#deleteLineModal').modal('toggle');
             }
-        }
-        FlowRouter.go('/stocktransferlist?success=true');
-        $('.modal-backdrop').css('display', 'none');
-        $('#deleteLineModal').modal('toggle');
+        });
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteStock': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
@@ -4341,9 +4361,11 @@ Template.stocktransfercard.events({
             $('.modal-backdrop').css('display', 'none');
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteStockTransfer': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
         swal({
@@ -4394,10 +4416,11 @@ Template.stocktransfercard.events({
                 //$('#deleteLineModal').modal('toggle');
             } else {}
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let selectLineID = $('#selectDeleteLineID').val();
@@ -4435,6 +4458,7 @@ Template.stocktransfercard.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .removebutton': function(event) {
         let templateObject = Template.instance();

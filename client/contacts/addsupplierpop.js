@@ -1123,9 +1123,11 @@ Template.addsupplierpop.events({
   },
   "click .addsupplierpop .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     LoadingOverlay.show();
     jQuery("#tblTransactionlist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
+  }, delayTimeAfterSound);
   },
   "click .addsupplierpop .btnRefresh": function () {
     Meteor._reload.reload();
@@ -1424,6 +1426,7 @@ Template.addsupplierpop.events({
   },
   "click .addsupplierpop .btnDeleteSupplier": function (event) {
     playDeleteAudio();
+    setTimeout(function(){
     LoadingOverlay.show();
 
     let templateObject = Template.instance();
@@ -1465,6 +1468,7 @@ Template.addsupplierpop.events({
       FlowRouter.go("/supplierlist?success=true");
     }
     $("#deleteSupplierModal").modal("toggle");
+  }, delayTimeAfterSound);
   },
 });
 

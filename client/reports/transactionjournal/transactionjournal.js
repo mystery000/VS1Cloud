@@ -235,6 +235,7 @@ Template.transactionjournallist.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -274,6 +275,7 @@ Template.transactionjournallist.events({
       title: "Bin Location List | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor",
     });
+  }, delayTimeAfterSound);
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();

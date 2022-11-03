@@ -740,7 +740,7 @@
               }
             </style>
 
-            {{> deletepop itemName1="Cheque" itemName2="cheque" button1="btnDeleteCheque" button2="btnDeleteFollowingCheques"}}
+            {{> deletepop itemName1="Cheque" itemName2="cheque" itemName3="Cheque" button1="btnDeleteCheque" button2="btnDeleteFollowingCheques"}}
             <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -1476,6 +1476,10 @@
       {{> newtaxratepop}}
     </div>
     <!-- End Modal Tax Rate -->
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+      {{> copyfrequencypop}}
+    </div>
 
     <!-- ModalSupplier -->
     <div class="modal fade supplierListModal" role="dialog" tabindex="-1" id="supplierListModal">

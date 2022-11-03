@@ -431,6 +431,7 @@ Template.clienttypepopup.events({
     },
     'click .btnDeleteDClientType': function () {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
         let deptId = $('#selectDeleteLineID').val();
@@ -466,7 +467,7 @@ Template.clienttypepopup.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
-
+    }, delayTimeAfterSound);
     },
     'click #btnNewInvoice': function(event) {
         // FlowRouter.go('/invoicecard');

@@ -3306,21 +3306,27 @@ Template.customerscard.events({
     },
     'click .printConfirmTransaction': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .printConfirmCrm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblCrmList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .printConfirmJob': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .btnRefresh': function () {
         Meteor._reload.reload();
@@ -3823,6 +3829,7 @@ Template.customerscard.events({
     },
     'click .btnDeleteCustomer': function (event) {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
         let currentId = FlowRouter.current().queryParams;
@@ -3857,6 +3864,7 @@ Template.customerscard.events({
             FlowRouter.go('/customerlist?success=true');
         }
         $('#deleteCustomerModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnCustomerTask': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -3870,6 +3878,7 @@ Template.customerscard.events({
     },
     'click .btnCustomerEmail': function (event) {
         playEmailAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
@@ -3879,6 +3888,7 @@ Template.customerscard.events({
         } else {
           $('.fullScreenSpin').css('display', 'none');
         }
+    }, delayTimeAfterSound);
     },
     'click .btnCustomerAppointment': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -3942,6 +3952,7 @@ Template.customerscard.events({
     },
     'click .btnJobEmail': function (event) {
         playEmailAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.jobid)) {
@@ -3950,6 +3961,7 @@ Template.customerscard.events({
         } else {
           $('.fullScreenSpin').css('display', 'none');
         }
+    }, delayTimeAfterSound);
     },
     'click .btnJobAppointment': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');

@@ -496,7 +496,9 @@ Template._frequencyModal.events({
   },
   "click .btnSaveFrequency": (e, ui) => {
     playSaveAudio();
+    setTimeout(function(){
     ui.saveShedule();
+  }, delayTimeAfterSound);
   },
   'click input[name="frequencyRadio"]': event => {
     if (event.target.id == "frequencyMonthly") {

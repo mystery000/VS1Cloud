@@ -703,6 +703,7 @@ Template.newpaymentmethodpop.onRendered(function() {
 
         $("#saveStripeID").click(function() {
             playSaveAudio();
+            setTimeout(function(){
             $('.fullScreenSpin').css('display', 'inline-block');
             let companyID = 1;
             let feeMethod = "apply";
@@ -724,6 +725,7 @@ Template.newpaymentmethodpop.onRendered(function() {
             }).catch(function(err) {
                 window.open('/paymentmethodSettings', '_self');
             });
+        }, delayTimeAfterSound);
         });
 
     })
@@ -791,6 +793,7 @@ Template.newpaymentmethodpop.onRendered(function() {
 Template.newpaymentmethodpop.events({
     'click .btnSavePaymentMethodPOP': function() {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
         var currentLoc = FlowRouter.current().path;
@@ -965,6 +968,7 @@ Template.newpaymentmethodpop.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
+    }, delayTimeAfterSound);
     }
 });
 

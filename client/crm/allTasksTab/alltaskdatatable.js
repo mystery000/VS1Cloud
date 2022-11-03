@@ -3498,6 +3498,7 @@ Template.alltaskdatatable.events({
 
   "click .btnDeleteLabel": function (e) {
     playDeleteAudio();
+    setTimeout(function(){
     let id = e.target.dataset.id;
 
     if (id) {
@@ -3516,6 +3517,7 @@ Template.alltaskdatatable.events({
         $(".fullScreenSpin").css("display", "none");
       });
     }
+  }, delayTimeAfterSound);
   },
   // labels tab ---------------
 

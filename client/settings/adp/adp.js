@@ -56,6 +56,7 @@ Template.adp.events({
     },
     'click #saveAdpSetting': async function(){
         playSaveAudio();
+        setTimeout(async function(){
         $('.fullScreenSpin').css('display','block');
         let settingObject = [];
         const templateObject = Template.instance();
@@ -143,6 +144,7 @@ Template.adp.events({
             }
             
         }
+    }, delayTimeAfterSound);
     }
 
 });

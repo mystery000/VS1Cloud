@@ -161,6 +161,7 @@ Template.tripgroup.events({
     },
     'click .btnDelete': function () {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
         let tripGroupId = $('#selectDeleteLineID').val();
@@ -197,10 +198,11 @@ Template.tripgroup.events({
             });
             $('.fullScreenSpin').css('display','none');
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnSave': function () {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
         let tripGroupID = $('#edtTripGroupID').val();
@@ -253,6 +255,7 @@ Template.tripgroup.events({
             };
             doSaveTripGroup(objDetails);
         }
+    }, delayTimeAfterSound);
         function doSaveTripGroup(objDetails) {
             receiptService.saveTripGroup(objDetails).then(function (objDetails) {
                 sideBarService.getTripGroup().then(function(dataReload) {

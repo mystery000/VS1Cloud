@@ -665,7 +665,7 @@
                                 vertical-align:top;
                             }
                         </style>
-                        {{> deletepop itemName1="Quote" itemName2="quote" button1="btnDeleteQuote" button2="btnDeleteFollowingQuotes"}}
+                        {{> deletepop itemName1="Quote" itemName2="quote" button1="btnDeleteQuote" itemName3="Quote" button2="btnDeleteFollowingQuotes"}}
                         <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -2074,6 +2074,10 @@
 
         <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
             {{> newproductpop}}
+        </div>
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+            {{> copyfrequencypop}}
         </div>
     </div>
     <!-- Start Help Video Modal -->

@@ -949,6 +949,7 @@ Template.termsettings.events({
   },
   'click .btnDeleteTerms': function () {
     playDeleteAudio();
+    setTimeout(function(){
     let taxRateService = new TaxRateService();
     let termsId = $('#selectDeleteLineID').val();
 
@@ -987,10 +988,11 @@ Template.termsettings.events({
       });
         $('.fullScreenSpin').css('display','none');
     });
-
+  }, delayTimeAfterSound);
   },
   'click .btnSaveTerms': function () {
     playSaveAudio();
+    setTimeout(function(){
     $('.fullScreenSpin').css('display','inline-block');
     let taxRateService = new TaxRateService();
     let termsID = $('#edtTermsID').val();
@@ -1176,10 +1178,7 @@ Template.termsettings.events({
         $('.fullScreenSpin').css('display','none');
     });
    }
-
-
-
-
+  }, delayTimeAfterSound);
   },
   'click .btnAddTerms': function () {
     let templateObject = Template.instance();

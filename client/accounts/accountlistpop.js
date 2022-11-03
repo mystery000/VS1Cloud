@@ -831,6 +831,7 @@ Template.accountlistpop.events({
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#html-2-pdfwrapper').css('display', 'block');
         $('.pdfCustomerName').html($('#edtSupplierName').val());
@@ -839,7 +840,7 @@ Template.accountlistpop.events({
         var ponumber = $('#ponumber').val() || '.';
         $('.po').text(ponumber);
         exportSalesToPdf();
-
+    }, delayTimeAfterSound);
     },
     'keydown .lineQty, keydown .lineUnitPrice, keydown .lineAmount': function(event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -973,6 +974,7 @@ Template.accountlistpop.events({
     },
     'click .btnDeleteCredit': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -1013,9 +1015,11 @@ Template.accountlistpop.events({
             FlowRouter.go('/creditlist?success=true');
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -1140,6 +1144,7 @@ Template.accountlistpop.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();

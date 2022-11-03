@@ -833,6 +833,7 @@ Template.generalledger.events({
   // },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -872,6 +873,7 @@ Template.generalledger.events({
       title: "General Ledger | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor",
     });
+  }, delayTimeAfterSound);
   },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");

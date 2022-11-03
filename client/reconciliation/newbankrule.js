@@ -888,6 +888,7 @@ Template.newbankrule.events({
     },
     'click .btnSave': function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let selectedCard = $('#selectedCard').val();
         if (selectedCard == "spent") {
             let tblSpentConditionRows = $('#tblSpentCondition tbody tr');
@@ -912,6 +913,7 @@ Template.newbankrule.events({
         }
         swal('API is not ready.', '', 'error');
         return false;
+    }, delayTimeAfterSound);
     },
     'click #btnSpentRule': function(event) {
         $('#btnSpentRule').addClass('ruleTypeActive');

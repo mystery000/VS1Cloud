@@ -1815,6 +1815,7 @@ Template.accountant_companyastrustee.events({
 
     "click .btnSaveAccount": function() {
         playSaveAudio();
+        setTimeout(function(){
         $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
         let accountService = new AccountService();
@@ -2234,6 +2235,7 @@ Template.accountant_companyastrustee.events({
                     $(".fullScreenSpin").css("display", "none");
                 });
         }
+    }, delayTimeAfterSound);
     },
 
     "change #sltAccountType": function(e) {
@@ -2287,6 +2289,7 @@ Template.accountant_companyastrustee.events({
 
     "click .btnPrintReport": function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $(".printReport").show();
         $("a").attr("href", "/");
         document.title = "Company As Trustee";
@@ -2300,6 +2303,7 @@ Template.accountant_companyastrustee.events({
             $("a").attr("href", "#");
             $(".printReport").hide();
         }, 100);
+    }, delayTimeAfterSound);
     },
 
     "click .btnExportReport": function() {
@@ -2385,6 +2389,7 @@ Template.accountant_companyastrustee.events({
 
     "click #btnSaveEditor": function(event) {
         playSaveAudio();
+        setTimeout(function(){
         // $('#editor').wysiwyg();
         let iframe = document.getElementById("editor_ifr");
         var elmnt = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
@@ -2409,6 +2414,7 @@ Template.accountant_companyastrustee.events({
             $("#page-9-content-prt").html($("#page-9-content").html() + elmnt);
         }
         $('#editReportModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
 });
 

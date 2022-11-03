@@ -483,9 +483,11 @@ Template.adpapi.events({
     },
 'click .printConfirm' : function(event){
   playPrintAudio();
+  setTimeout(function(){
 $('.fullScreenSpin').css('display','inline-block');
 jQuery('#tbladp_wrapper .dt-buttons .btntabletopdf').click();
 $('.fullScreenSpin').css('display','none');
+}, delayTimeAfterSound);
 },
 'click .cashamount' : function(event){
   $(event.target).select();

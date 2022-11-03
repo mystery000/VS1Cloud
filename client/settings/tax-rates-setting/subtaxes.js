@@ -715,6 +715,7 @@ Template.subTaxesSettings.events({
   },
   'click .btnSaveSubTax': function () {
     playSaveAudio();
+    setTimeout(function(){
     $('.fullScreenSpin').css('display', 'inline-block');
     let taxtID = $('#edtTaxID').val();
     let taxCode = $('#edtTaxCode').val();
@@ -867,6 +868,7 @@ Template.subTaxesSettings.events({
         });
       $('.fullScreenSpin').css('display', 'none');
     }
+  }, delayTimeAfterSound);
   },
   'click .btnAddSubTax': function () {
     $('#add-tax-title').text('Add New Sub Tax');
@@ -877,6 +879,7 @@ Template.subTaxesSettings.events({
   },
   'click .btnDeleteSubTax': function () {
     playDeleteAudio();
+    setTimeout(function(){
     // add actions
     let taxCodeId = $('#selectDeleteLineID').val();
 
@@ -921,7 +924,8 @@ Template.subTaxesSettings.events({
         });
         $(".fullScreenSpin").css("display", "none");
       });
-  },
+    }, delayTimeAfterSound);
+    },
   "click #subTaxList td.clickable": (e) => SubTaxesEditListener(e),
   "click .table-remove": (e) => {
     e.stopPropagation();

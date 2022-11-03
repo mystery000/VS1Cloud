@@ -580,6 +580,7 @@ Template.leadstatussettings.events({
     },
     'click .btnDeleteLeadStatus': function () {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
         let statusId = $('#selectDeleteLineID').val();
@@ -612,9 +613,11 @@ Template.leadstatussettings.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
+    }, delayTimeAfterSound);
     },
     'click .btnSaveLeadStatus': function () {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let objDetails = {};
         let statusName = $('#edtLeadStatusName').val() || '';
@@ -676,6 +679,7 @@ Template.leadstatussettings.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
+    }, delayTimeAfterSound);
     },
     'click .btnBack': function (event) {
         playCancelAudio();

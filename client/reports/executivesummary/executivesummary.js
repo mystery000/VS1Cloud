@@ -449,6 +449,7 @@ Template.executivesummaryreport.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     $("a").attr("href", "/");
     document.title = "Executive Summary Report";
     $(".printReport").print({
@@ -460,6 +461,7 @@ Template.executivesummaryreport.events({
     setTimeout(function () {
       $("a").attr("href", "#");
     }, 100);
+  }, delayTimeAfterSound);
   },
   "click .btnExportReport": function () {
     LoadingOverlay.show();

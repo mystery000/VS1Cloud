@@ -646,6 +646,7 @@ Template.newtaxratepop.onRendered(function() {
 Template.newtaxratepop.events({
     'click .btnSaveTaxRate': function() {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         var url = FlowRouter.current().path;
         let taxRateService = new TaxRateService();
@@ -908,6 +909,7 @@ Template.newtaxratepop.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
+    }, delayTimeAfterSound);
     }
 });
 

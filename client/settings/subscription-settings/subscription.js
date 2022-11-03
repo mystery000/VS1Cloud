@@ -293,6 +293,7 @@ Template.subscriptionSettings.events({
     // },
     'click .btnSaveCreditCard': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let cardnumber = $('#txtCardNo').val();
         let month = $('#txtExpireDate').val().split('/')[0];
@@ -392,6 +393,6 @@ Template.subscriptionSettings.events({
                 }
             }
         });
-
+    }, delayTimeAfterSound);
     }
 });
