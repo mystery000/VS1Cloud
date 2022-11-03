@@ -2891,7 +2891,7 @@ Template.dsAppointmentsWidget.onRendered(function () {
 
                 }, 1000);
                 //}
-                templateObject.getProductClassQtyData = function () {
+                /*templateObject.getProductClassQtyData = function () {
                     productService.getOneProductClassQtyData(currentProductID).then(function (data) {
                         $('.fullScreenSpin').css('display', 'none');
                         let qtylineItems = [];
@@ -2916,7 +2916,7 @@ Template.dsAppointmentsWidget.onRendered(function () {
                         $('.fullScreenSpin').css('display', 'none');
                     });
 
-                }
+                }*/
                 //templateObject.getProductClassQtyData();
                 //templateObject.getProductData();
             } else {

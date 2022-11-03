@@ -2894,6 +2894,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
 
                 }, 1000);
                 //}
+                /*
                 templateObject.getProductClassQtyData = function () {
                     productService.getOneProductClassQtyData(currentProductID).then(function (data) {
                         $('.fullScreenSpin').css('display', 'none');
@@ -2920,6 +2921,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                     });
 
                 }
+                */
                 //templateObject.getProductClassQtyData();
                 //templateObject.getProductData();
             } else {

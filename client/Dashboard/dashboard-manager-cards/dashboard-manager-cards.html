@@ -1,113 +1,157 @@
 <template name="dashboardManagerCards">
-    <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="0" position="0" card-active="true" card-key="dashboard-sales-manager-new-leads-month">
-        <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip="" title="This new Lead/Customer source count.">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body text-center new-leads-month" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>New Leads</span></div>
-                        <div class="h5 font-weight-bold mb-1 currency-value"><span id="new-leads-month">0</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="1" position="1" card-active="true" card-key="dashboard-sales-manager-new-deals-month">
-        <div class="card shadow custom-sales-card border-left-primary py-2"
-            data-toggle="tooltip"
-            data-bs-tooltip=""
-            title="This new Quotes count.">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body text-center new-deals-month" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>New Deals</span></div>
-                        <div class="font-weight-bold h5 mb-1 currency-value"><span id="new-deals-month"></span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="2" position="2" card-active="true" card-key="dashboard-sales-manager-closed-deals-month">
-        <div class="card shadow custom-sales-card border-left-primary py-2"
-            data-toggle="tooltip" 
-            data-bs-tooltip=""
-            title="This new Invoice Value.">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body text-center closed-deals-month" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>Closed Deals</span></div>
-                        <div class="h5 font-weight-bold mb-1 currency-value"><span id="closed-deals-month"></span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="3" position="3" card-active="true" card-key="dashboard-sales-manager-closed-deals-year">
-        <div class="card shadow custom-sales-card border-left-primary py-2"
-            data-toggle="tooltip" 
-            data-bs-tooltip=""
-            title="This new Invoices value for last 12 months.">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body text-center closed-deals-year" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>Closed Deals Total</span></div>
-                        <div class="h5 font-weight-bold mb-1 currency-value"><span id="closed-deals-year"></span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="4" position="4" card-active="true" card-key="dashboard-sales-manager-sales-winrate">
-        <div class="card shadow custom-sales-card border-left-primary py-2"
-            data-toggle="tooltip" 
-            data-bs-tooltip=""
-            title="This converted quotes to invoice count to non-Converted quotes.">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body text-center sales-winrate" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>Win Rate</span></div>
-                        <div class="h5 font-weight-bold mb-1 currency-value"><span id="sales-winrate"></span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="5" position="5" card-active="true" card-key="dashboard-sales-manager-avg-sales-cycle">
-        <div class="card shadow custom-sales-card border-left-primary py-2"
-            data-toggle="tooltip" 
-            data-bs-tooltip=""
-            title="This average between quote date and converted to invoice date.">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body text-center avg-sales-cycle" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>Avg. Sales Cycle</span></div>
-                        <div class="h5 font-weight-bold mb-1 currency-value"><span id="avg-sales-cycle"></span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=0
+        position=0
+        cardActive=true
+        cardKey="dashboard-sales-manager-new-leads-month"
+        highlightColor="primary"
+        tooltipTitle="This new Lead/Customer source count."
+    }}
+        {{> kpiCardTitle
+            title="New Leads"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="new-leads-month"
+                name="new-leads-month"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=1
+        position=1
+        cardActive=true
+        cardKey="dashboard-sales-manager-new-deals-month"
+        highlightColor="primary"
+        tooltipTitle="This new Quotes count."
+    }}
+        {{> kpiCardTitle
+            title="New Deals"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="new-deals-month"
+                name="new-deals-month"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=2
+        position=2
+        cardActive=true
+        cardKey="dashboard-sales-manager-closed-deals-month"
+        highlightColor="primary"
+        tooltipTitle="This new Invoice Value."
+    }}
+        {{> kpiCardTitle
+            title="Closed Deals"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="closed-deals-month"
+                name="closed-deals-month"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=3
+        position=3
+        cardActive=true
+        cardKey="dashboard-sales-manager-closed-deals-year"
+        highlightColor="primary"
+        tooltipTitle="This new Invoices value for last 12 months."
+    }}
+        {{> kpiCardTitle
+            title="Closed Deals Total"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="closed-deals-year"
+                name="closed-deals-year"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=4
+        position=4
+        cardActive=true
+        cardKey="dashboard-sales-manager-sales-winrate"
+        highlightColor="primary"
+        tooltipTitle="This converted quotes to invoice count to non-Converted quotes."
+    }}
+        {{> kpiCardTitle
+            title="Win Rate"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="sales-winrate"
+                name="sales-winrate"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSalesManager"
+        defaultPosition=5
+        position=5
+        cardActive=true
+        cardKey="dashboard-sales-manager-avg-sales-cycle"
+        highlightColor="primary"
+        tooltipTitle="This average between quote date and converted to invoice date."
+    }}
+        {{> kpiCardTitle
+            title="Avg. Sales Cycle"
+            size="small"
+            color="info"
+            textTransform="uppercase"
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardSingleValue
+                id="avg-sales-cycle"
+                name="avg-sales-cycle"
+                color="secondary"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
 </template>
