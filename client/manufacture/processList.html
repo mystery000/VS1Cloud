@@ -195,18 +195,18 @@
                             <tbody>
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
-                                <tr class="dnd-moved" id="{{item.fields.id}}" style="cursor:pointer">
-                                    <td contenteditable="false" class="colName">{{item.fields.name}}</td>
-                                    <td contenteditable="false" class="colDescription">{{item.fields.description}}</td>
-                                    <td contenteditable="false" class="colDailyHours">{{item.fields.dailyHours}}</td>
-                                    <td contenteditable="false" class="colHourlyLabourCost">{{item.fields.hourlyLabourCost}}</td>
-                                    <td contenteditable="false" class="colCOGS">{{item.fields.cogs}}</td>
-                                    <td contenteditable="false" class="colExpense">{{item.fields.expenseAccount}}</td>
-                                    <td contenteditable="false" class="colHourlyOverheadCost">{{item.fields.oHourlyCost}}</td>
-                                    <td contenteditable="fasle" class="colOverCOGS">{{item.fields.oCogs}}</td>
-                                    <td contenteditable="false" class="colOverExpense">{{item.fields.oExpense}}</td>
-                                    <td contenteditable="false" class="colTotalHourlyCosts">{{item.fields.totalHourlyCost}}</td>
-                                    <td contenteditable="false" class="colWastage">{{item.fields.wastage}}</td>
+                                <tr class="dnd-moved" id="{{item.fields.ID}}" style="cursor:pointer">
+                                    <td contenteditable="false" class="colName">{{item.fields.KeyValue}}</td>
+                                    <td contenteditable="false" class="colDescription">{{item.fields.Description}}</td>
+                                    <td contenteditable="false" class="colDailyHours">{{item.fields.DailyHours}}</td>
+                                    <td contenteditable="false" class="colHourlyLabourCost">{{item.fields.HourlyLabourCost}}</td>
+                                    <td contenteditable="false" class="colCOGS">{{item.fields.COGS}}</td>
+                                    <td contenteditable="false" class="colExpense">{{item.fields.ExpenseAccount}}</td>
+                                    <td contenteditable="false" class="colHourlyOverheadCost">{{item.fields.OHourlyCost}}</td>
+                                    <td contenteditable="fasle" class="colOverCOGS">{{item.fields.OCOGS}}</td>
+                                    <td contenteditable="false" class="colOverExpense">{{item.fields.OExpense}}</td>
+                                    <td contenteditable="false" class="colTotalHourlyCosts">{{item.fields.TotalHourlyCost}}</td>
+                                    <td contenteditable="false" class="colWastage">{{item.fields.Wastage}}</td>
                                 </tr>
                                 {{/each}}
                                 {{/if}}

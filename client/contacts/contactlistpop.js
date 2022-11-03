@@ -1341,7 +1341,6 @@ Template.contactlistpop.events({
                             iscustomer = data.terpcombinedcontactsvs1[i].iscustomer;
                             isEmployee = data.terpcombinedcontactsvs1[i].isEmployee;
                             issupplier = data.terpcombinedcontactsvs1[i].issupplier;
-                            console.log(i, isprospect, iscustomer, isEmployee, issupplier)
                             if((isprospect == true) && (iscustomer == true) && (isEmployee == true) && (issupplier == true)){
                                 clienttype = "Customer / Employee / Prospect / Supplier";
                             }else if((isprospect == true) && (iscustomer ==true) && (issupplier ==true)){
@@ -1420,7 +1419,6 @@ Template.contactlistpop.events({
 
                     $('.fullScreenSpin').css('display', 'none');
                 } else {
-                    console.log('contact does not exist')
                     $('.fullScreenSpin').css('display', 'none');
                     $('#contactListModal').modal('toggle');
                     swal({

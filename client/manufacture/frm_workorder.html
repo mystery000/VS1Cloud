@@ -117,15 +117,19 @@
                             <div class="col-6 mb-3">
                                 <button type="button" class="w-100 btn btn-secondary btnBuildQty" id="btnBuildQty">Quantity Built</button>
                             </div>
+                            {{#if equals quantityBuild true}}
                             <div class="col-6 form-group">
                                 <input type="text" class="w-100 form-control text-center edtTotalQuantity" id="edtTotalQuantity"/>
                             </div>
+                            {{/if}}
                             <div class="col-6 mb-3">
                                 <button type="button" class="w-100 btn btn-primary btn-save-close" id="btn-save-close">Save & Close</button>
                             </div>
+                            {{#if equals workorderrecord.isStarted true}}
                             <div class="col-6 mb-3">
                                 <button type="button" class="w-100 btn btn-success btnCompleteProcess" id="btnCompleteProcess">Complete Process</button>
                             </div>
+                            {{/if}}
                         </div>
                     </div>
                 </div>

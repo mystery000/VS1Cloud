@@ -15,9 +15,11 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
+import {ManufacturingService} from "../manufacture/manufacturing-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let manufacturingService = new ManufacturingService()
 
 
 Template.new_process.onCreated(() => {
@@ -36,33 +38,58 @@ Template.new_process.onRendered(() => {
     // $('#edtWastage').editableSelect();
     var currentID = FlowRouter.current().queryParams.id;
     templateObject.getProcessDetail  = function() {
-        let tempArray = localStorage.getItem('TProcesses');
-        let processList = tempArray?JSON.parse(tempArray):[];
-        let processDetail = {};
-        if(currentID) {
-            let index = processList.findIndex(process=>{
-                return process.fields.id == parseInt(currentID);
-            })
-            if(index > -1) {
-                processDetail = processList[index].fields
-            }
-        } 
-        let objDetail = {
-            id: currentID?currentID : processList.length + 1,
-            name: processDetail.name?processDetail.name: '',
-            dailyHours: processDetail.dailyHours?processDetail.dailyHours: '',
-            description: processDetail.description?processDetail.description: '',
-            hourlyCost: processDetail.hourlyLabourCost?processDetail.hourlyLabourCost: '',
-            cogs: processDetail.cogs?processDetail.cogs:'',
-            expenseAccount: processDetail.expenseAccount?processDetail.expenseAccount : '',
-            oHourlyCost: processDetail.oHourlyCost?processDetail.oHourlyCost: '',
-            oCOGS: processDetail.oCogs?processDetail.oCogs: '',
-            oExpenseAccount: processDetail.oExpense? processDetail.oExpense : '',
-            totalHCost: processDetail.totalHourlyCost?processDetail.totalHourlyCost: '',
-            wastage: processDetail.wastage?processDetail.wastage: ''
-        }
+        $('.fullScreenSpin').css('display', 'inline-block')
+        // getVS1Data('TProcessStep').then()
+        let objDetail = {}
 
-        templateObject.processrecord.set(objDetail);        
+        if(FlowRouter.current().queryParams.id) {
+            let id=FlowRouter.current().queryParams.id
+            getVS1Data('TProcessStep').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    manufacturingService.getOneProcessDataByID(id).then(function(data){
+                        objDetail = data.fields
+                        templateObject.processrecord.set(objDetail); 
+                        $('.fullScreenSpin').css('display', 'none');
+                    })
+                }else {
+                    let data = JSON.parse(dataObject[0].data)
+                    let useData = data.tprocessstep;
+                    for(let i = 0; i< useData.length; i++) {
+                        if(useData[i].fields.ID == id) {
+                           objDetail = useData[i].fields;
+                           $('.fullScreenSpin').css('display', 'none');
+                        }
+                    }
+                    templateObject.processrecord.set(objDetail); 
+                }
+            }).catch(function(error) {
+                manufacturingService.getOneProcessDataByID(id).then(function(data){
+                    objDetail = data.fields;
+                    templateObject.processrecord.set(objDetail); 
+                    $('.fullScreenSpin').css('display', 'none');
+                }).catch(function(err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal("Something went wrong!", "", "error");
+                })
+            })
+        } else {
+             objDetail = {
+                        KeyValue: '',
+                        DailyHours: '',
+                        Description: '',
+                        HourlyLabourCost: '',
+                        COGS: '',
+                        ExpenseAccount: '',
+                        OHourlyCost: '',
+                        OCOGS: '',
+                        OExpense: '',
+                        TotalHourlyCost: '',
+                        Wastage: ''
+                    }
+
+                    templateObject.processrecord.set(objDetail); 
+                    $('.fullScreenSpin').css('display', 'none')
+        }
     }
 
     templateObject.getProcessDetail();
@@ -76,10 +103,6 @@ Template.new_process.onRendered(() => {
         $('#edtWastage').editableSelect();
     }, 500)
             // templateObject.selectedInventoryAssetAccount.set('Inventory Asset Wastage')
-            
-
-
-
   
 });
 
@@ -93,12 +116,10 @@ Template.new_process.helpers({
 
 Template.new_process.events({
     'click #btnSaveProcess': function(event) {
-        playSaveAudio();
-        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentID = FlowRouter.current().queryParams.id;
-        let tempArray = localStorage.getItem('TProcesses');
-        let processes = tempArray?JSON.parse(tempArray):[];
+        // let tempArray = localStorage.getItem('TProcesses');
+        // let processes = tempArray?JSON.parse(tempArray):[];
         let processName = $('#edtProcessName').val() || '';
         let processDescription = $('#edtDescription').val()|| '';
         let dailyHours = $('#edtDailyHours').val()|| '';
@@ -160,59 +181,59 @@ Template.new_process.events({
             e.preventDefault();
             return false;
         }
-        let existIndex = -1;
-        if(currentID) {
-            existIndex = processes.findIndex(process=>{
-                return process.fields.id == parseInt(currentID)
-            })
-        }
-        if(existIndex > -1) {
-            processes.splice(existIndex, 1);
-        }
-
+      
         let objDetail = {
-            type: 'TProcess',
+            type: 'TProcessStep',
             fields: {
-                id: -1,
-                name: processName,
-                description: processDescription,
-                dailyHours:  dailyHours,
-                hourlyLabourCost: hourlyCost,
-                cogs: cogs,
-                expenseAccount: expenseAccount,
-                oHourlyCost: overheadHourlyCost,
-                oCogs: overheadCOGS,
-                oExpense: overheadExpenseAcc,
-                totalHourlyCost: totalHourCost,
-                wastage: wastage
+                KeyValue: processName,
+                Description: processDescription,
+                DailyHours:  dailyHours,
+                HourlyLabourCost: parseInt(hourlyCost.replace(Currency, '')),
+                COGS: cogs,
+                ExpenseAccount: expenseAccount,
+                OHourlyCost: parseInt(overheadHourlyCost.replace(Currency, '')),
+                OCogs: overheadCOGS,
+                OExpense: overheadExpenseAcc,
+                TotalHourlyCost: parseInt(totalHourCost.replace(Currency, '')),
+                Wastage: wastage
             }
         }
         if(currentID) {
-            objDetail.fields.id = currentID
-        }else {
-            objDetail.fields.id = processes.length + 1
+            objDetail.fields.ID = currentID
         }
 
-        processes.push(objDetail);
-        localStorage.setItem('TProcesses', JSON.stringify(processes))
-        $('.fullScreenSpin').css('display', 'none');
-        swal({
-            title: 'Success',
-            text: 'Process has been saved successfully',
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'Continue',
-        }).then ((result)=>{
-            FlowRouter.go('/processlist')
-        });
-    }, delayTimeAfterSound);
+
+        manufacturingService.saveProcessData(objDetail).then(function(){
+            manufacturingService.getAllProcessData().then(function(datareturn) {
+                addVS1Data('TProcessStep', JSON.stringify(datareturn)).then(function(){
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Success',
+                        text: 'Process has been saved successfully',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Continue',
+                    }).then ((result)=>{
+                        FlowRouter.go('/processlist')
+                    })
+                }).catch(function(err){
+                    swal('Ooops, Something went wrong', '', 'warning');
+                    $('.fullScreenSpin').css('display', 'none');
+                })
+            })
+        }).catch(function(err) {
+            swal("Something went wrong!", "", "error");
+            $('.fullScreenSpin').css('display', 'none');
+        })
+
+        // processes.push(objDetail);
+        // localStorage.setItem('TProcesses', JSON.stringify(processes))
+        // $('.fullScreenSpin').css('display', 'none');
+        
     },
 
     'click #btnCancel': function(event) {
-        playCancelAudio();
-        setTimeout(function(){
-            FlowRouter.go('/processlist')
-        }, delayTimeAfterSound);
+        FlowRouter.go('/processlist')
     },
 
     'click #edtCOGS': function (event) {
