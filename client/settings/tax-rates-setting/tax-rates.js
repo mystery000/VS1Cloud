@@ -616,9 +616,11 @@ Template.taxRatesSettings.onRendered(function () {
       if (mainData.IsUSRegionTax || mainData.Country == "United States") {
         templateObject.isChkUSRegionTax.set(true);
         $(".btnSubTaxes").show();
+        $(".btnTaxSummary").show();
         $("#edtTaxRate").prop("disabled", true);
       } else {
         $(".btnSubTaxes").hide();
+        $(".btnTaxSummary").hide();
         $("#edtTaxRate").prop("disabled", false);
       }
       templateObject.getTaxRates();

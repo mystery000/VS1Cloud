@@ -501,63 +501,80 @@ Template.taxsummaryreport.onRendered(() => {
 
         let i = 0, posToAdd = -1, currentSubCode, subReportRecordsSize = subReportRecords.length;
 
+        let subrecords = [];
+        mainReportRecords.forEach((mainRecord) => {
+          mainRecord.subtaxcode = "";
+          subrecords.push(mainRecord);
+          let exist_subRecord = false;
+          subReportRecords.forEach((subRecord) => {
+            if(mainRecord.taxcode == subRecord.taxcode){
+              subRecord.taxcode = "";
+              subrecords.push(subRecord);
+              exist_subRecord = true;
+            }
+          });
+          if(exist_subRecord == false){
+            subrecords.pop();
+          }
+        });
+        
         // i should be iterated being lower than subReportRecordsSize, but iterated once more to summing last group
-        while (i <= subReportRecordsSize) {
-          if (i === subReportRecordsSize || currentSubCode !== subReportRecords[i].subtaxcode) {
-            if (posToAdd >= 0) {
-              const taxDetail = taxCodesDetail.find((v) => v.CodeName === subReportRecords[i - 1].taxcode);
+        // while (i <= subReportRecordsSize) {
+        //   if (i === subReportRecordsSize || currentSubCode !== subReportRecords[i].subtaxcode) {
+        //     if (posToAdd >= 0) {
+        //       const taxDetail = taxCodesDetail.find((v) => v.CodeName === subReportRecords[i - 1].taxcode);
 
-              const subReportData = {
-                id: taxDetail.ID,
-                taxcode: '',
-                subtaxcode: subReportRecords[i - 1].subtaxcode || '',
-                clientid: '',
-                inputsexpurchases: inputsexpurchasestotal,
-                inputsincpurchases: inputsincpurchasestotal,
-                outputexsales: outputexsalestotal,
-                outputincsales: outputincsalestotal,
-                totalnet: nettotal || 0.00,
-                totaltax: taxtotal || 0.00,
-                totaltax1: taxtotal1 || 0.00,
-                taxrate: (taxratetotal).toFixed(2) + '%' || 0,
-                taxrate2: (taxratetotal).toFixed(2) || 0
-              };
-              subReportRecords.splice(posToAdd, 0, subReportData);
+        //       const subReportData = {
+        //         id: taxDetail.ID,
+        //         taxcode: '',
+        //         subtaxcode: subReportRecords[i - 1].subtaxcode || '',
+        //         clientid: '',
+        //         inputsexpurchases: inputsexpurchasestotal,
+        //         inputsincpurchases: inputsincpurchasestotal,
+        //         outputexsales: outputexsalestotal,
+        //         outputincsales: outputincsalestotal,
+        //         totalnet: nettotal || 0.00,
+        //         totaltax: taxtotal || 0.00,
+        //         totaltax1: taxtotal1 || 0.00,
+        //         taxrate: (taxratetotal).toFixed(2) + '%' || 0,
+        //         taxrate2: (taxratetotal).toFixed(2) || 0
+        //       };
+        //       subReportRecords.splice(posToAdd, 0, subReportData);
 
-              // if this is last group summing, don't need to continue iterating
-              if (i === subReportRecordsSize) break;
+        //       // if this is last group summing, don't need to continue iterating
+        //       if (i === subReportRecordsSize) break;
 
-              i++;
-              subReportRecordsSize++;
-            }
+        //       i++;
+        //       subReportRecordsSize++;
+        //     }
 
-            posToAdd = i;
-            if (subReportRecords.length > 0) {
-              currentSubCode = subReportRecords[i].subtaxcode;
-            }
+        //     posToAdd = i;
+        //     if (subReportRecords.length > 0) {
+        //       currentSubCode = subReportRecords[i].subtaxcode;
+        //     }
 
-            inputsexpurchasestotal = 0;
-            inputsincpurchasestotal = 0;
-            outputexsalestotal = 0;
-            outputincsalestotal = 0;
-            nettotal = 0;
-            taxtotal = 0;
-            taxratetotal = 0;
-            taxtotal1 = 0;
-          }
-          if (subReportRecords.length > 0) {
-            inputsexpurchasestotal = inputsexpurchasestotal + parseFloat(subReportRecords[i].inputsexpurchases);
-            inputsincpurchasestotal = inputsincpurchasestotal + parseFloat(subReportRecords[i].inputsincpurchases);
-            outputexsalestotal = outputexsalestotal + parseFloat(subReportRecords[i].outputexsales);
-            outputincsalestotal = outputincsalestotal + parseFloat(subReportRecords[i].outputincsales);
-            nettotal = nettotal + parseFloat(subReportRecords[i].totalnet);
-            taxtotal = taxtotal + parseFloat(subReportRecords[i].totaltax);
-            taxratetotal = taxratetotal + Number(subReportRecords[i].taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
-            taxtotal1 = taxtotal1 + parseFloat(subReportRecords[i].totaltax1);
-          }
-          i++;
-        }
-        templateObject.subReportRecords.set(subReportRecords);
+        //     inputsexpurchasestotal = 0;
+        //     inputsincpurchasestotal = 0;
+        //     outputexsalestotal = 0;
+        //     outputincsalestotal = 0;
+        //     nettotal = 0;
+        //     taxtotal = 0;
+        //     taxratetotal = 0;
+        //     taxtotal1 = 0;
+        //   }
+        //   if (subReportRecords.length > 0) {
+        //     inputsexpurchasestotal = inputsexpurchasestotal + parseFloat(subReportRecords[i].inputsexpurchases);
+        //     inputsincpurchasestotal = inputsincpurchasestotal + parseFloat(subReportRecords[i].inputsincpurchases);
+        //     outputexsalestotal = outputexsalestotal + parseFloat(subReportRecords[i].outputexsales);
+        //     outputincsalestotal = outputincsalestotal + parseFloat(subReportRecords[i].outputincsales);
+        //     nettotal = nettotal + parseFloat(subReportRecords[i].totalnet);
+        //     taxtotal = taxtotal + parseFloat(subReportRecords[i].totaltax);
+        //     taxratetotal = taxratetotal + Number(subReportRecords[i].taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
+        //     taxtotal1 = taxtotal1 + parseFloat(subReportRecords[i].totaltax1);
+        //   }
+        //   i++;
+        // }
+        templateObject.subReportRecords.set(subrecords);
 
         if (templateObject.mainReportRecords.get()) {
           templateObject.stylizeForm();

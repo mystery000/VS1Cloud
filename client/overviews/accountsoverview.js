@@ -44,6 +44,23 @@ Template.accountsoverview.onRendered(function() {
     let needAddOfficeSupplies = true;
     let needAddTravel = true;
     let needAddVehicle = true;
+    
+
+    if(Session.get("ERPLoggedCountry") == "United States of America"){
+        $(".btnTaxSummary").show();
+        $(".btnBasReturnGroup").hide();
+        $(".btnVatReturnGroup").hide();
+    }
+    else if(Session.get("ERPLoggedCountry") == "Australia"){
+        $(".btnTaxSummary").hide();
+        $(".btnBasReturnGroup").show();        
+        $(".btnVatReturnGroup").hide();
+    }
+    else if(Session.get("ERPLoggedCountry") == "South Africa"){
+        $(".btnTaxSummary").hide();
+        $(".btnBasReturnGroup").hide();
+        $(".btnVatReturnGroup").show();
+    }
 
 
   // set initial table rest_data
