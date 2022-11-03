@@ -10,7 +10,7 @@
  -->
 <template name="kpiCardSingleValue">
     <div class="flex-grow-1 d-flex">
-        <a href="{{href}}" class="col mr-2">
+        <a href="{{href}}" class="mr-2 ml-3">
             <div class="text-{{color}} d-flex justify-content-center font-weight-bold h5 mb-0">
                 <span 
                 class="text-nowrap banklink" 
@@ -26,7 +26,7 @@
                 </span>
             </div>
             {{#if subText}}
-                <div class="text-{{color}} font-weight-bold h5 mb-0">
+                <div class="text-nowrap text-{{color}} font-weight-bold h5 mb-0">
                     <span style="font-size: 16px;"><span class="">
                         <span class="{{subValueId}}" id="{{subValueId}}" name="{{subValueName}}">0</span> {{subText}}</span>
                     </span>
