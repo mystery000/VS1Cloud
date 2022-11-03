@@ -36,7 +36,7 @@ Template.clienttypesettings.onRendered(function () {
     // });
 
     $('#tblClienttypeList tbody').on("click", "tr", function () {
-        $('#add-clienttype-title').text('Edit Client Type');
+        $('#add-clienttype-title').text('Edit Customer Type');
         let targetID = $(event.target).closest('tr').attr('id');
         let typeDescription = $(event.target).closest('tr').find('.colDescription').text();
         let typeName = $(event.target).closest('tr').find('.colTypeName').text();
@@ -77,10 +77,10 @@ Template.clienttypesettings.events({
         // Meteor._reload.reload();
     },
     'click .btnAddClientType': async function () {
-        await $('#add-clienttype-title').text('Add New Client Type');
+        await $('#add-clienttype-title').text('Add New Customer Type');
         $('#edtClientTypeName').val("");
         $('#txaDescription').val("");
-        $('.btnDeleteClientType').hide();
+        //$('.btnDeleteClientType').hide();
 
     },
      'click .btnAddNewClientType': function () {
