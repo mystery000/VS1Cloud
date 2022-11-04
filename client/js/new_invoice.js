@@ -16195,6 +16195,7 @@ Template.new_invoice.events({
   },
   "click .printConfirm": async function (event) {
   playPrintAudio();
+  const  templateObject = Template.instance();
   setTimeout(async function(){
     var printTemplate = [];
     $(".fullScreenSpin").css("display", "inline-block");
@@ -16774,7 +16775,7 @@ Template.new_invoice.events({
         } else {
           $(".linkText").attr("href", "#");
         }
-        let templateObject = Template.instance();
+        
         let completeTabRecord;
         let doc = new jsPDF("p", "pt", "a4");
         var source = document.getElementById("html-2-pdfwrapper");
@@ -16801,7 +16802,7 @@ Template.new_invoice.events({
       });
     }
     let attachment = [];
-    let templateObject = Template.instance();
+    // let templateObject = Template.instance();
 
     let invoiceId = FlowRouter.current().queryParams.id
       ? parseInt(FlowRouter.current().queryParams.id)
