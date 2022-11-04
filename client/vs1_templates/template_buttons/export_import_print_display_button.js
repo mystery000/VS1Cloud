@@ -22,6 +22,10 @@ Template.export_import_print_display_button.events({
           currenttablename = "tblLeadStatusList";
         }else if (url.includes("/departmentSettings")) {
           currenttablename = "tblDepartmentList";
+        }else if (url.includes("/paymentmethodSettings")) {
+          currenttablename = "tblPaymentMethodList";
+        }else if (url.includes("/termsettings")) {
+          currenttablename = "tblTermsList";
         };
 
         let getTableName = currenttablename||'';

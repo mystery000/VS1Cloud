@@ -4422,8 +4422,9 @@ Template.productview.events({
     },
     'click #btnSave': async function() {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
+        let getIsManufactured = await templateObject.isManufactured.get()||false;
+        setTimeout(async function(){
         let productCode = $("#edtproductcode").val();
         let productName = $("#edtproductname").val();
         var objDetails = '';
@@ -4432,8 +4433,6 @@ Template.productview.events({
 
         let lastPriceSetting = $('.lblPriceCheckStatus').val() || 'true';
         let lastCostSetting = $('.lblCostCheckStatus').val() || 'true';
-
-
         $('.fullScreenSpin').css('display', 'inline-block');
 
         let itrackThisItem = false;
@@ -4547,7 +4546,7 @@ Template.productview.events({
                         LockExtraSell: itrackThisItem,
                         ExtraSellPrice: lineExtaSellItems || null,
                         PublishOnVS1: true,
-                        isManufactured: templateObject.isManufactured.get()
+                        isManufactured: getIsManufactured
                     }
                 };
 
@@ -4585,7 +4584,7 @@ Template.productview.events({
                         LockExtraSell: itrackThisItem,
                         ExtraSellPrice: lineExtaSellItems || null,
                         PublishOnVS1: true,
-                        isManufactured: templateObject.isManufactured.get()
+                        isManufactured: getIsManufactured
                     }
                 };
             }
@@ -4668,7 +4667,7 @@ Template.productview.events({
                                 LockExtraSell: itrackThisItem,
                                 ExtraSellPrice: lineExtaSellItems || null,
                                 PublishOnVS1: true,
-                                isManufactured: templateObject.isManufactured.get()
+                                isManufactured: getIsManufactured
                             }
                         };
 
@@ -4706,7 +4705,7 @@ Template.productview.events({
                                 LockExtraSell: itrackThisItem,
                                 ExtraSellPrice: lineExtaSellItems || null,
                                 PublishOnVS1: true,
-                                isManufactured: templateObject.isManufactured.get()
+                                isManufactured: getIsManufactured
                             }
                         };
                     }
@@ -5636,7 +5635,7 @@ Template.productview.events({
                                 "<input type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' value = '"+ subs[i].process +"' /></div>"+
                                 "<div class='colNote form-group'>" +
                                 "<input class='w-100 form-control edtProcessNote'  type='text' value='"+subs[i].processNote+"'></div>" +
-                                "<div class='colAttachment form-group'><a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+subs[i].productName.replace(/[|&;$%@"<>()+," "]/g, '')+"' id='btn_Attachment' name='btn_Attachment'><i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div></div>" 
+                                "<div class='colAttachment form-group'><a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+subs[i].productName.replace(/[|&;$%@"<>()+," "]/g, '')+"' id='btn_Attachment' name='btn_Attachment'><i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div></div>"
                         // } else {
                         //     html += "<div class='colProcess form-group'></div>"+
                         //     "<div class='colNote form-group'></div>" +
@@ -5698,7 +5697,7 @@ Template.productview.events({
             let lastRow = $(grandParent).find('.product-content')[count-2];
             if(lastRow && lastRow != null) {
                 if ($(lastRow).find('.edtProductName').val() == '' || $(lastRow).find('.edtQuantity').val() == '') {
-                    return 
+                    return
                 }
             }
         }
@@ -5821,7 +5820,7 @@ Template.productview.events({
             if(parentBOM) {
                 subIndex = parentBOM.fields.subs.findIndex(sub=>{
                     return sub.productName == productName;
-                }) 
+                })
             }
 
             if(subIndex > -1) {
@@ -5847,7 +5846,7 @@ Template.productview.events({
 
                             let elements = $(row).find('.edtProductName')
                             $(elements[elements.length - 1]).editableSelect();
- 
+
                             let inputElements = $(row).find('input.edtProductName');
                                 $(inputElements[inputElements.length - 1]).val(subs[i].productName)
                             let processes = $(row).find('.edtProcessName');

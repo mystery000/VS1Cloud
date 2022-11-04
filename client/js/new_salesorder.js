@@ -7524,38 +7524,47 @@ Template.new_salesorder.onRendered(function() {
     tempObj.checkAbleToMakeWorkOrder = function() {
         let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')): [];
         let workorderList = [];
+        
         //await function to get all work order list data
         let temp = localStorage.getItem('TWorkorders');
         workorderList = temp?JSON.parse(temp): [];
-
+        if(workorderList.length == 0) {
+            tempObj.abletomakeworkorder.set(true);
+            return
+        }
         let returnvalue = false;
         let lineTable  = $('#tblSalesOrderLine');
-        let orderlines = $(lineTable).find('tbody tr')
-        for(let i = 0 ; i < orderlines.length; i++) {
-            let line =  orderlines[i];
-            let productName = $(line).find('.lineProductName').val();
-            let existBOM = false;
+        setTimeout(function() {
 
-            let index = bomProducts.findIndex(product => {
-                return product.fields.productName == productName
-            })
-            if(index > -1) {
-                existBOM = true;
-            }
-
-            if(existBOM == true) {
-                //check if the workorder is already exists
-                let workOrderIndex = workorderList.findIndex(order=>{
-                    return order.SalesOrderID == tempObj.salesOrderId.get() && order.line.fields.ProductName == productName;
+            let orderlines = $(lineTable).find('tbody tr')
+            for(let i = 0 ; i < orderlines.length; i++) {
+                let line =  orderlines[i];
+                let productName = $(line).find('.lineProductName').val();
+                let existBOM = false;
+    
+                let index = bomProducts.findIndex(product => {
+                    return product.fields.productName == productName
                 })
-                if(workOrderIndex == -1) {
-                    returnvalue = true
+    
+                if(index > -1) {
+                    existBOM = true;
+                }
+    
+                if(existBOM == true) {
+                    //check if the workorder is already exists
+                    let workOrderIndex = workorderList.findIndex(order=>{
+                        return order.SalesOrderID == tempObj.salesOrderId.get() && order.line.fields.ProductName == productName;
+                    })
+                    if(workOrderIndex == -1) {
+                        returnvalue = true
+                    }
                 }
             }
-        }
+        }, 1000)
+
         setTimeout(()=>{
             tempObj.abletomakeworkorder.set(returnvalue);
-        },500)
+        },1000)
     }
 
 
@@ -9540,7 +9549,9 @@ Template.new_salesorder.events({
             } else {
                 $('#deleteLineModal').modal('toggle');
             }
-            templateObject.checkAbleToMakeWorkOrder()
+            setTimeout(()=>{
+                templateObject.checkAbleToMakeWorkOrder()
+            }, 1000)
         }
     },
     'click .btnDeleteFollowingSOs': async function(event) {

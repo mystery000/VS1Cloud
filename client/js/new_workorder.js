@@ -1257,13 +1257,14 @@ Template.new_workorder.events({
                             productService.saveProductVS1({
                                 type: 'TProductVS1',
                                 fields: {
-                                    ...useData[i].fields,
-                                    // ID: useData[i].fields.ID,
+                                    // ...useData[i].fields,
+                                    ID: useData[i].fields.ID,
                                     TotalQtyInStock: currentworkorder.Line.fields.Qty + useData[i].fields.TotalQtyInStock
                                 }
                             }).then(function(){
                                 sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                                    addVS1Data('TProductVS1',JSON.stringify(data));
+                                    addVS1Data('TProductVS1',JSON.stringify(data)).then(()=>{
+                                    });
                                 })
                             })
                         }
