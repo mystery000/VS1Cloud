@@ -1606,6 +1606,7 @@ Template.emailsettings.onRendered(function () {
 
                         }
 
+
                         function getAttachments() {
                             return new Promise(async (resolve, reject) => {
                                 if (targetElement && targetElement != null && targetElement != "" && targetElement.length != 0) {
@@ -1713,6 +1714,7 @@ Template.emailsettings.onRendered(function () {
                             })
 
 
+
                             let objDetail = {
                                 type: "TReportSchedules",
                                 fields: {
@@ -1720,6 +1722,7 @@ Template.emailsettings.onRendered(function () {
                                     BeginFromOption: "",
                                     ContinueIndefinitely: true,
                                     EmployeeId: parseInt(recipientId),
+                                    EmployeeEmailID: recipients[index],
                                     Every: 1,
                                     EndDate: fDate,
                                     FormID: parseInt(formID),
@@ -1731,6 +1734,7 @@ Template.emailsettings.onRendered(function () {
                                     // attachments: attachments,
                                 }
                             };
+                            
 
                             let transIDs = ['54', '177', '12', '18', '21', '61', '69', '71', '74', '77', '17544', '94'];
                             if(transIDs.includes(formID.toString()) == true) {
@@ -1763,6 +1767,7 @@ Template.emailsettings.onRendered(function () {
                                             attachments: attaches,
                                             FormName: formName,
                                             EmployeeEmail: recipients[index],
+                                            EmployeeEmailID: recipients[index],
                                             HostURL: $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname'),
                                             Offset: new Date().getTimezoneOffset()
                                         }
@@ -1820,6 +1825,7 @@ Template.emailsettings.onRendered(function () {
                             }
 
 
+
                             if (frequencyName === "Monthly") {
                                 const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
                                 const ofMonths = frequencyEl.attr('data-ofMonths');
@@ -1857,6 +1863,7 @@ Template.emailsettings.onRendered(function () {
                                 // objDetail.fields.Active = false;
                             }
 
+
                             if (formID == '1') {
                                 // if report type is Grouped Reports....
 
@@ -1888,13 +1895,13 @@ Template.emailsettings.onRendered(function () {
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
                                 objDetail.fields.attachments = [];
 
+
                                 //TODO: Set basedon type here
                                 localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     ...objDetail.fields,
                                     BasedOnType: basedOnType,
                                     connectionInfo: connectionDetails
                                 }));
-
 
                                 objDetail.fields.Offset = new Date().getTimezoneOffset();
                                 const nextDueDate = await new Promise((resolve, reject) => {
@@ -1907,6 +1914,7 @@ Template.emailsettings.onRendered(function () {
 
                                 let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
                                 cloneObjDetailFields.attachments = documents;
+                               
                                 if(basedOnType.includes('EN') == true || basedOnType.includes('EU' == true)) {
                                     getVS1Data('TBasedOnType').then(function(dataObject) {
                                         let temp = dataObject.length > 0 ? JSON.parse(dataObject) : [];
@@ -1950,6 +1958,7 @@ Template.emailsettings.onRendered(function () {
                                     });
                                 } catch (e) {
                                 }
+
                                 if(transIDs.includes(formID) == false) {
                                     objDetail.fields.attachments = documents;
                                 }
@@ -2075,9 +2084,17 @@ Template.emailsettings.onRendered(function () {
             const frequencyEl = $('#automated1').find('#edtFrequency');
             const sendEl = $('#automated1').find('#edtBasedOn');
             let recipientIds = $('#automated1').find('input.edtRecipients').attr('data-ids');
+            let recipients = $("#automated1").find('input.edtRecipients').val();
             if (!!recipientIds) {
-                recipientIds = recipientIds.split('; ');
-                let savePromise = recipientIds.map(async (recipientId) => {
+                if (typeof recipientIds == 'string') {
+                    recipientIds = recipientIds.split('; ');
+                }
+                if (typeof recipients == 'string') {
+                    recipients = recipients.split('; ');
+                }
+                // recipientIds = recipientIds.split('; ');
+                recipients = recipients.split
+                let savePromise = recipientIds.map(async (recipientId, index) => {
                     const starttime = frequencyEl.attr('data-starttime');
                     const startdate = frequencyEl.attr('data-startdate');
                     const finishdate = frequencyEl.attr('data-finishdate');
@@ -2094,6 +2111,7 @@ Template.emailsettings.onRendered(function () {
                             BeginFromOption: "",
                             ContinueIndefinitely: true,
                             EmployeeId: parseInt(recipientId),
+                            EmployeeEmailID: recipients[index], 
                             Every: 1,
                             EndDate: fDate,
                             FormID: parseInt(formID),
