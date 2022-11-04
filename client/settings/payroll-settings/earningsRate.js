@@ -685,7 +685,6 @@ templateObject.getEarningTypes = async (refresh = false) => {
                         return item;
                     }
                 });   
-                console.log("taccoutn", tAccounts);
 
                 var accountid = tAccounts[0].fields.ID || '';
                 var accounttype = tAccounts[0].fields.AccountTypeName;
