@@ -31,7 +31,7 @@ Template.processlistpopup.onRendered(function(e){
         getVS1Data('TProcessStep').then(function(dataObject){
             if(dataObject.length == 0) {
                 manufacturingService.getAllProcessData().then(function(data){
-                    addVS1Data('TProcessStep', JSON.stringify(data).then(function(datareturn){}).catch(function(err){}))
+                    addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){}).catch(function(err){})
                     templateObject.datatablerecords.set(data.tprocessstep);
                     if(templateObject.datatablerecords.get()) {
                         let temp = templateObject.datatablerecords.get();
