@@ -100,7 +100,6 @@ Template.payrolloverview.onRendered(function () {
   templateObject.loadDraftPayrun = async () => {
 
     let payRunsHistory = PayRun.fromList(await templateObject.payRuns.get());
-    console.log('payruns', payRunsHistory);
 
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
 
