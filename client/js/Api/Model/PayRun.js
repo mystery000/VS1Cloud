@@ -4,7 +4,7 @@ import ObjectManager from "../../ObjectManager/ObjectManager";
 export default class PayRun {
   constructor({
     id = null,
-    stpFilling = null, // draft, aproved, overdue
+    stpFilling = PayRun.STPFilling.draft, // draft, aproved, overdue
     calendar = {},
     calendarId = null,
     netPay = 0.0,
@@ -24,6 +24,7 @@ export default class PayRun {
     this.earnings = earnings;
     this.employees = employees;
     this.wages = wages;
+    this.stpFilling = stpFilling || PayRun.STPFilling.draft;
   }
 
   static STPFilling = {

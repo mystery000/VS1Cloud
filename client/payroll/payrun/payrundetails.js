@@ -21,7 +21,6 @@ let sideBarService = new SideBarService();
 
 let payRunHandler = new PayRunHandler();
 
-
 const redirectToPayRollOverview = () => {
   window.location.href = `/payrolloverview`;
 };
@@ -44,6 +43,7 @@ Template.payrundetails.onCreated(function () {
   templateObject.payRunDetails = new ReactiveVar();
 
   templateObject.countEmployees = new ReactiveVar(0);
+  templateObject.timeSheetList = new ReactiveVar([]);
 });
 
 Template.payrundetails.onRendered(function () {
@@ -240,6 +240,88 @@ Template.payrundetails.onRendered(function () {
   /**
      * earnings
      */
+  templateObject.loadEmployeeEarnings = async (employeeID, refresh = false) => {
+    let timesheets = await this.timeSheetList.get();
+    if(timesheets.length == 0) {
+          // From the timesheets
+        let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
+          return await contactService.getAllTimeSheetList();
+        }, {
+          useIndexDb: true,
+          useLocalStorage: false,
+          fallBackToLocal: true,
+          forceOverride: refresh,
+          validate: cachedResponse => {
+            return true;
+          }
+        });
+        data = data.response;
+
+        timesheets = data.ttimesheet.map(t => t.fields);
+        timesheets.forEach((t, index) => {
+          if (t.Status == "") {
+            t.Status = "Draft";
+          }
+        });
+
+        // We want only aproved ones
+        timesheets = timesheets.filter(time => time.Status == "Approved");
+        // We load all timsheets
+        await this.timeSheetList.set(timesheets);
+    } 
+   
+    
+    // We need to fint the right timesheet of the employee
+    // Depending on the PayPeriod ? Payment Date ?
+    let timesheet = timesheets.find(o => o.ID == id);
+
+    if (timesheet) {
+      // this.timesheet.set(timesheet);
+      // this.weeklyTotal.set(timesheet.Hours);
+    } else {
+      LoadingOverlay.hide(0);
+      // const result = await swal({
+      //   title: `Timesheet ${id} is not found`,
+      //   //text: "Please log out to activate your changes.",
+      //   type: "error",
+      //   showCancelButton: false,
+      //   confirmButtonText: "OK"
+      // });
+
+      // if (result.value) {
+      //   // redirectToPayRollOverview();
+      // } else if (result.dismiss === "cancel") {}
+    }
+    // of the corresponding pay date
+  };
+
+  templateObject.loadEmployeePayTemplateEarnings = async (employeeID, refresh = false) => {
+    let data = await CachedHttp.get(erpObject.TPayTemplateEarningLine, async () => {
+      const employeePayrolApis = new EmployeePayrollApi();
+      const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TPayTemplateEarningLine);
+      employeePayrolEndpoint.url.searchParams.append("ListType", "'Detail'");
+
+      const response = await employeePayrolEndpoint.fetch();
+      if (response.ok == true) {
+        return await response.json();
+      }
+      return null;
+    }, {
+      forceOverride: refresh,
+      validate: cachedResponse => {
+        return true;
+      }
+    });
+
+    let response = data.response;
+
+    let earningLines = response.tpaytemplateearningline.map(earning => earning.fields);
+    if (employeeID) {
+      earningLines = earningLines.filter(item => parseInt(item.EmployeeID) == parseInt(employeeID));
+    }
+
+    return earningLines;
+  };
 
   /**
      * Taxes
@@ -271,7 +353,6 @@ Template.payrundetails.onRendered(function () {
       payRunDetails = payRunsHistory.find(p => p.calendarId == calendarId); // we search by calendar ID
 
       if (!payRunDetails) {
-
         const calendar = await templateObject.loadCalendar(calendarId); // single calendar
         const employees = await templateObject.loadEmployees();
 
@@ -431,13 +512,13 @@ Template.payrundetails.onRendered(function () {
     // /**
     //      * UPdate the payrun
     //      */
-    // // Get from the list
-    // let payRunsHistory = getPayRuns(); // we get the list and find
-    // // let payRunDetails = payRunsHistory.find(p => p.calendar.ID == urlParams.get("cid"));
+    //  Get from the list
+    // let payRunsHistory = getPayRuns();  we get the list and find
+    //  let payRunDetails = payRunsHistory.find(p => p.calendar.ID == urlParams.get("cid"));
 
     // const index = payRunsHistory.findIndex(p => p.calendar.ID == urlParams.get("cid"));
     // payRunsHistory[index] = newPayRunDetails;
-    // //templateObject.payRunDetails.set(newPayRunDetails);  no need to update this object
+    // templateObject.payRunDetails.set(newPayRunDetails);  no need to update this object
     // localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
 
     await payRunHandler.update(newPayRunDetails);
@@ -456,7 +537,6 @@ Template.payrundetails.onRendered(function () {
 
     // setPayRuns(payRuns);
 
-    
     await payRunHandler.remove(await this.payRunDetails.get());
     await payRunHandler.saveToLocal();
     await payRunHandler.sync();
@@ -504,7 +584,7 @@ Template.payrundetails.events({
   "click .close-payrun": (e, ui) => {
     window.location.href = "/payrolloverview";
   },
-  "click .reset-payrun": (e, ui) =>{
+  "click .reset-payrun": (e, ui) => {
     window.location.reload();
   }
 });
