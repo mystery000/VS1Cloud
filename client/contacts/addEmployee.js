@@ -4811,7 +4811,7 @@ Template.employeescard.onRendered(function() {
         LoadingOverlay.hide();
     }
    
-    this.initPage();
+    // this.initPage();
 
 });
 
