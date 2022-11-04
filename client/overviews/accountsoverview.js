@@ -44,7 +44,7 @@ Template.accountsoverview.onRendered(function() {
     let needAddOfficeSupplies = true;
     let needAddTravel = true;
     let needAddVehicle = true;
-    
+
 
     if(Session.get("ERPLoggedCountry") == "United States of America"){
         $(".btnTaxSummary").show();
@@ -1446,6 +1446,15 @@ Template.accountsoverview.events({
     "click #btnNewBasReturn": function(event) {
     FlowRouter.go("/basreturn");
     },
+    "click #btnVatReturn": function(event) {
+        FlowRouter.go("/vatreturnlist");
+        },
+    "click #btnNewVatReturn": function(event) {
+        FlowRouter.go("/vatreturn");
+    },
+    "click .btnTaxSummary": function(event) {
+        FlowRouter.go("/taxsummaryreport");
+    },
     "click .exportbtn": function() {
         $(".fullScreenSpin").css("display", "inline-block");
         jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletocsv").click();
@@ -1746,11 +1755,9 @@ Template.accountsoverview.events({
     },
     "click .printConfirm": function(event) {
         playPrintAudio();
-        setTimeout(function(){
         $(".fullScreenSpin").css("display", "inline-block");
         jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletopdf").click();
         $(".fullScreenSpin").css("display", "none");
-    }, delayTimeAfterSound);
     },
     "click .templateDownload": function() {
         let utilityService = new UtilityService();
@@ -2137,7 +2144,6 @@ Template.accountsoverview.events({
     },
     "click .btnDeleteAccount": function() {
         playDeleteAudio();
-        setTimeout(function(){
         swal({
             title: "Delete Account",
             text: "Are you sure you want to Delete Account?",
@@ -2197,7 +2203,6 @@ Template.accountsoverview.events({
                 }
             } else {}
         });
-    }, delayTimeAfterSound);
     },
     'click #tblCategory tbody tr': function(e) {
         let category = $(e.target).closest('tr').find(".colReceiptCategory").text() || '';
