@@ -1,3 +1,4 @@
+import LoadingOverlay from "../../../LoadingOverlay";
 import ApiService from "./ApiService";
 
 /**
@@ -31,6 +32,16 @@ export default class ApiEndPoint {
       const response = await fetch(url, options);
       return response;
     } catch (exception) {
+      LoadingOverlay.hide(0);
+      const result = await swal({
+        title: "Oooops...",
+        text: exception,
+        type: "error",
+        showCancelButton: true,
+        confirmButtonText: "Try Again",
+      });
+      if (result.value) {
+      }
     }
   }
 }

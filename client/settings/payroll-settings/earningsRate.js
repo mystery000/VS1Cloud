@@ -30,6 +30,7 @@ Template.earningRateSettings.onCreated(function() {
   // templateObject.Accounts = new ReactiveVar([]);
 
   templateObject.earningRates = new ReactiveVar([]);
+  templateObject.earningTypes = new ReactiveVar([]);
 });
 
 Template.earningRateSettings.onRendered(function() {
@@ -41,16 +42,16 @@ Template.earningRateSettings.onRendered(function() {
   const dataTableList = [];
   var splashArrayEarningList = new Array();
 
-  function MakeNegative() {
-    $('td').each(function() {
-        if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-    });
-    $(function() {
-        $('.modal-dialog').draggable({
-            "handle":".modal-header, .modal-footer"
+    function MakeNegative() {
+        $('td').each(function() {
+            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
         });
-    });
-};
+        $(function() {
+            $('.modal-dialog').draggable({
+                "handle":".modal-header, .modal-footer"
+            });
+        });
+    };
 
 templateObject.saveDataLocalDB = async () => {
 
@@ -103,196 +104,333 @@ templateObject.getEarningTypes = async (refresh = false) => {
 }
 
 
-templateObject.getEarnings = async function(){
-    try {
-        let data = {};
-        let splashArrayEarningList = new Array();
-        let dataObject = await getVS1Data('TEarnings')   
-        if ( dataObject.length == 0) {
-            data = await templateObject.saveDataLocalDB();
-        }else{
-            data = JSON.parse(dataObject[0].data);
-        }
-        if( data.tearnings.length > 0 ){
-            for (let i = 0; i < data.tearnings.length; i++) {            
-                let dataList = [
-                    data.tearnings[i].fields.ID || '',
-                    data.tearnings[i].fields.EarningsName || '',
-                    data.tearnings[i].fields.EarningType || '',
-                    data.tearnings[i].fields.EarningsDisplayName || '',
-                    data.tearnings[i].fields.EarningsRateType||'',
-                    data.tearnings[i].fields.ExpenseAccount || '',
-                    data.tearnings[i].fields.EarningsExemptPaygWithholding || '',
-                    data.tearnings[i].fields.EarningsExemptSuperannuationGuaranteeCont || '',
-                    data.tearnings[i].fields.EarningsReportableW1onActivityStatement || ''
-                ];    
-                splashArrayEarningList.push(dataList);
+    templateObject.getEarnings = async function(){
+        try {
+            let data = {};
+            let splashArrayEarningList = new Array();
+            let dataObject = await getVS1Data('TEarnings')   
+            if ( dataObject.length == 0) {
+                data = await templateObject.saveDataLocalDB();
+            }else{
+                data = JSON.parse(dataObject[0].data);
             }
-        }
-        templateObject.datatablerecords.set(splashArrayEarningList);
-        $('.fullScreenSpin').css('display', 'none');
-        setTimeout(function () {
-            $('#tblEarnings').DataTable({  
-                data: splashArrayEarningList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: [                              
-                    
-                    {
-                        className: "colEarningsID hiddenColumn",
-                        "targets": [0]
+            if( data.tearnings.length > 0 ){
+                for (let i = 0; i < data.tearnings.length; i++) {            
+                    let dataList = [
+                        data.tearnings[i].fields.ID || '',
+                        data.tearnings[i].fields.EarningsName || '',
+                        data.tearnings[i].fields.EarningType || '',
+                        data.tearnings[i].fields.EarningsDisplayName || '',
+                        data.tearnings[i].fields.EarningsRateType||'',
+                        data.tearnings[i].fields.ExpenseAccount || '',
+                        data.tearnings[i].fields.EarningsExemptPaygWithholding || '',
+                        data.tearnings[i].fields.EarningsExemptSuperannuationGuaranteeCont || '',
+                        data.tearnings[i].fields.EarningsReportableW1onActivityStatement || ''
+                    ];    
+                    splashArrayEarningList.push(dataList);
+                }
+            }
+            templateObject.datatablerecords.set(splashArrayEarningList);
+            $('.fullScreenSpin').css('display', 'none');
+            setTimeout(function () {
+                $('#tblEarnings').DataTable({  
+                    data: splashArrayEarningList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [                              
+                        
+                        {
+                            className: "colEarningsID hiddenColumn",
+                            "targets": [0]
+                        },
+                        {
+                            className: "colEarningsNames",
+                            "targets": [1]
+                        },  
+                        {
+                            className: "colEarningsType",
+                            "targets": [2]
+                        },      
+                        {
+                        className: "colEarningsDisplayName",
+                        "targets": [3]
+                        }, 
+                        {
+                        className: "colEarningsAccounts",
+                        "targets": [4]
+                        },   
+                        {
+                        className: "colEarningsRateType",
+                        "targets": [5]
+                        },
+                        {
+                        className: "colEarningsPAYG hiddenColumn"  ,
+                        "targets": [6]
+                        },  
+                        {
+                        className: "colEarningsSuperannuation hiddenColumn",
+                        "targets": [7]
+                        },  
+                        {
+                        className: "colEarningsReportableasW1 hiddenColumn",
+                        "targets": [8]
+                        }
+                    ],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[0, "asc"]],
+                    action: function () {
+                        $('#tblEarnings').DataTable().ajax.reload();
                     },
-                    {
-                        className: "colEarningsNames",
-                        "targets": [1]
-                    },  
-                    {
-                        className: "colEarningsType",
-                        "targets": [2]
-                    },      
-                    {
-                    className: "colEarningsDisplayName",
-                    "targets": [3]
-                    }, 
-                    {
-                    className: "colEarningsAccounts",
-                    "targets": [4]
-                    },   
-                    {
-                    className: "colEarningsRateType",
-                    "targets": [5]
-                    },
-                    {
-                    className: "colEarningsPAYG hiddenColumn"  ,
-                    "targets": [6]
-                    },  
-                    {
-                    className: "colEarningsSuperannuation hiddenColumn",
-                    "targets": [7]
-                    },  
-                    {
-                    className: "colEarningsReportableasW1 hiddenColumn",
-                    "targets": [8]
-                    }
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                info: true,
-                responsive: true,
-                "order": [[0, "asc"]],
-                action: function () {
-                    $('#tblEarnings').DataTable().ajax.reload();
-                },
-                "fnDrawCallback": function (oSettings) {
-                    $('.paginate_button.page-item').removeClass('disabled');
-                    $('#tblEarnings_ellipsis').addClass('disabled');
-                    if (oSettings._iDisplayLength == -1) {
-                        if (oSettings.fnRecordsDisplay() > 150) {
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblEarnings_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+
+                            }
+                        } else {
 
                         }
-                    } else {
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
 
-                    }
-                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                        $('.paginate_button.page-item.next').addClass('disabled');
-                    }
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                            .on('click', function () {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                var splashArrayEarningListDupp = new Array();
+                                let dataLenght = oSettings._iDisplayLength;
+                                let customerSearch = $('#tblEarnings_filter input').val();
 
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                        .on('click', function () {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            var splashArrayEarningListDupp = new Array();
-                            let dataLenght = oSettings._iDisplayLength;
-                            let customerSearch = $('#tblEarnings_filter input').val();
+                                sideBarService.getEarnings(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
-                            sideBarService.getEarnings(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                                    for (let i = 0; i < data.tearnings.length; i++) {              
+                                        var dataList = [
+                                        data.tearnings[i].fields.ID || '',
+                                        data.tearnings[i].fields.EarningsName || '',
+                                        data.tearnings[i].fields.EarningType || '',
+                                        data.tearnings[i].fields.EarningsDisplayName || '',
+                                        data.tearnings[i].fields.EarningsRateType||'',
+                                        data.tearnings[i].fields.ExpenseAccount || '',
+                                        data.tearnings[i].fields.EarningsExemptPaygWithholding || '',
+                                        data.tearnings[i].fields.EarningsExemptSuperannuationGuaranteeCont || '',
+                                        data.tearnings[i].fields.EarningsReportableW1onActivityStatement || ''
+                                        ];
+                                        splashArrayEarningList.push(dataList);
+                                    }
+                                    let uniqueChars = [...new Set(splashArrayEarningList)];
+                                    var datatable = $('#tblEarnings').DataTable();
+                                    datatable.clear();
+                                    datatable.rows.add(uniqueChars);
+                                    datatable.draw(false);
+                                    setTimeout(function () {
+                                        $("#tblEarnings").dataTable().fnPageChange('last');
+                                    }, 400);
 
-                                for (let i = 0; i < data.tearnings.length; i++) {              
-                                    var dataList = [
-                                    data.tearnings[i].fields.ID || '',
-                                    data.tearnings[i].fields.EarningsName || '',
-                                    data.tearnings[i].fields.EarningType || '',
-                                    data.tearnings[i].fields.EarningsDisplayName || '',
-                                    data.tearnings[i].fields.EarningsRateType||'',
-                                    data.tearnings[i].fields.ExpenseAccount || '',
-                                    data.tearnings[i].fields.EarningsExemptPaygWithholding || '',
-                                    data.tearnings[i].fields.EarningsExemptSuperannuationGuaranteeCont || '',
-                                    data.tearnings[i].fields.EarningsReportableW1onActivityStatement || ''
-                                    ];
-                                    splashArrayEarningList.push(dataList);
-                                }
-                                let uniqueChars = [...new Set(splashArrayEarningList)];
-                                var datatable = $('#tblEarnings').DataTable();
-                                datatable.clear();
-                                datatable.rows.add(uniqueChars);
-                                datatable.draw(false);
-                                setTimeout(function () {
-                                    $("#tblEarnings").dataTable().fnPageChange('last');
-                                }, 400);
-
-                                $('.fullScreenSpin').css('display', 'none');
+                                    $('.fullScreenSpin').css('display', 'none');
 
 
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
+
                             });
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
+                        $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
+                    }
 
-                        });
+                }).on('page', function () {
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
-                },
-                "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
-                    $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
-                }
 
-            }).on('page', function () {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
+                }).on('column-reorder', function () {
 
-            }).on('column-reorder', function () {
+                }).on('length.dt', function (e, settings, len) {
+                    //$('.fullScreenSpin').css('display', 'inline-block');
+                    let dataLenght = settings._iDisplayLength;
+                    splashArrayEarningList = [];
+                    if (dataLenght == -1) {
+                    $('.fullScreenSpin').css('display', 'none');
 
-            }).on('length.dt', function (e, settings, len) {
-                //$('.fullScreenSpin').css('display', 'inline-block');
-                let dataLenght = settings._iDisplayLength;
-                splashArrayEarningList = [];
-                if (dataLenght == -1) {
-                $('.fullScreenSpin').css('display', 'none');
-
-                } else {
-                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        $('.fullScreenSpin').css('display', 'none');
                     } else {
-                        sideBarService.getEarnings(dataLenght, 0).then(function (dataNonBo) {
+                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        } else {
+                            sideBarService.getEarnings(dataLenght, 0).then(function (dataNonBo) {
 
-                            addVS1Data('TEarnings', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                templateObject.resetData(dataNonBo);
-                                $('.fullScreenSpin').css('display', 'none');
+                                addVS1Data('TEarnings', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                    templateObject.resetData(dataNonBo);
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
                             }).catch(function (err) {
                                 $('.fullScreenSpin').css('display', 'none');
                             });
-                        }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                        }
+                    }
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
+            }, 1000);
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+        }
+    };
+    templateObject.getEarnings();
+
+    templateObject.getAllTaxCodes = function() {
+        getVS1Data("TTaxcodeVS1").then(function(dataObject) {
+            if (dataObject.length === 0) {
+                productService.getTaxCodesVS1().then(function(data) {
+                    let records = [];
+                    let inventoryData = [];
+                    for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                        let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                        var dataList = [
+                            data.ttaxcodevs1[i].Id || "",
+                            data.ttaxcodevs1[i].CodeName || "",
+                            data.ttaxcodevs1[i].Description || "-",
+                            taxRate || 0,
+                        ];
+
+                        let taxcoderecordObj = {
+                            codename: data.ttaxcodevs1[i].CodeName || " ",
+                            coderate: taxRate || " ",
+                        };
+
+                        taxCodesList.push(taxcoderecordObj);
+
+                        splashArrayTaxRateList.push(dataList);
+                    }
+                    templateObject.taxraterecords.set(taxCodesList);
+
+                    if (splashArrayTaxRateList) {
+                        $("#tblTaxRate").DataTable({
+                            data: splashArrayTaxRateList,
+                            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                            columnDefs: [{
+                                    orderable: false,
+                                    targets: 0,
+                                },
+                                {
+                                    className: "taxName",
+                                    targets: [1],
+                                },
+                                {
+                                    className: "taxDesc",
+                                    targets: [2],
+                                },
+                                {
+                                    className: "taxRate text-right",
+                                    targets: [3],
+                                },
+                            ],
+                            colReorder: true,
+
+                            pageLength: initialDatatableLoad,
+                            lengthMenu: [
+                                [initialDatatableLoad, -1],
+                                [initialDatatableLoad, "All"],
+                            ],
+                            info: true,
+                            responsive: true,
+                            fnDrawCallback: function(oSettings) {
+                                // $('.dataTables_paginate').css('display', 'none');
+                            },
+                            fnInitComplete: function() {
+                                $(
+                                    "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+                                ).insertAfter("#tblTaxRate_filter");
+                                $(
+                                    "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                                ).insertAfter("#tblTaxRate_filter");
+                            },
                         });
                     }
-                }
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-            });
-        }, 1000);
-    } catch (error) {
-        $('.fullScreenSpin').css('display', 'none');
-    }
-};
-templateObject.getEarnings();
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.ttaxcodevs1;
+                let records = [];
+                let inventoryData = [];
+                for (let i = 0; i < useData.length; i++) {
+                    let taxRate = (useData[i].Rate * 100).toFixed(2);
+                    var dataList = [
+                        useData[i].Id || "",
+                        useData[i].CodeName || "",
+                        useData[i].Description || "-",
+                        taxRate || 0,
+                    ];
 
-templateObject.getAllTaxCodes = function() {
-    getVS1Data("TTaxcodeVS1").then(function(dataObject) {
-        if (dataObject.length === 0) {
+                    let taxcoderecordObj = {
+                        codename: useData[i].CodeName || " ",
+                        coderate: taxRate || " ",
+                    };
+
+                    taxCodesList.push(taxcoderecordObj);
+
+                    splashArrayTaxRateList.push(dataList);
+                }
+                templateObject.taxraterecords.set(taxCodesList);
+                if (splashArrayTaxRateList) {
+                    $("#tblTaxRate").DataTable({
+                        data: splashArrayTaxRateList,
+                        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+
+                        columnDefs: [{
+                                orderable: false,
+                                targets: 0,
+                            },
+                            {
+                                className: "taxName",
+                                targets: [1],
+                            },
+                            {
+                                className: "taxDesc",
+                                targets: [2],
+                            },
+                            {
+                                className: "taxRate text-right",
+                                targets: [3],
+                            },
+                        ],
+                        colReorder: true,
+
+                        pageLength: initialDatatableLoad,
+                        lengthMenu: [
+                            [initialDatatableLoad, -1],
+                            [initialDatatableLoad, "All"],
+                        ],
+                        info: true,
+                        responsive: true,
+                        fnDrawCallback: function(oSettings) {
+                            // $('.dataTables_paginate').css('display', 'none');
+                        },
+                        fnInitComplete: function() {
+                            $(
+                                "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+                            ).insertAfter("#tblTaxRate_filter");
+                            $(
+                                "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                            ).insertAfter("#tblTaxRate_filter");
+                        },
+                    });
+                }
+            }
+        }).catch(function(err) {
             productService.getTaxCodesVS1().then(function(data) {
                 let records = [];
                 let inventoryData = [];
@@ -320,6 +458,7 @@ templateObject.getAllTaxCodes = function() {
                     $("#tblTaxRate").DataTable({
                         data: splashArrayTaxRateList,
                         sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+
                         columnDefs: [{
                                 orderable: false,
                                 targets: 0,
@@ -360,151 +499,13 @@ templateObject.getAllTaxCodes = function() {
                     });
                 }
             });
-        } else {
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data.ttaxcodevs1;
-            let records = [];
-            let inventoryData = [];
-            for (let i = 0; i < useData.length; i++) {
-                let taxRate = (useData[i].Rate * 100).toFixed(2);
-                var dataList = [
-                    useData[i].Id || "",
-                    useData[i].CodeName || "",
-                    useData[i].Description || "-",
-                    taxRate || 0,
-                ];
-
-                let taxcoderecordObj = {
-                    codename: useData[i].CodeName || " ",
-                    coderate: taxRate || " ",
-                };
-
-                taxCodesList.push(taxcoderecordObj);
-
-                splashArrayTaxRateList.push(dataList);
-            }
-            templateObject.taxraterecords.set(taxCodesList);
-            if (splashArrayTaxRateList) {
-                $("#tblTaxRate").DataTable({
-                    data: splashArrayTaxRateList,
-                    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                    columnDefs: [{
-                            orderable: false,
-                            targets: 0,
-                        },
-                        {
-                            className: "taxName",
-                            targets: [1],
-                        },
-                        {
-                            className: "taxDesc",
-                            targets: [2],
-                        },
-                        {
-                            className: "taxRate text-right",
-                            targets: [3],
-                        },
-                    ],
-                    colReorder: true,
-
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [
-                        [initialDatatableLoad, -1],
-                        [initialDatatableLoad, "All"],
-                    ],
-                    info: true,
-                    responsive: true,
-                    fnDrawCallback: function(oSettings) {
-                        // $('.dataTables_paginate').css('display', 'none');
-                    },
-                    fnInitComplete: function() {
-                        $(
-                            "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
-                        ).insertAfter("#tblTaxRate_filter");
-                        $(
-                            "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                        ).insertAfter("#tblTaxRate_filter");
-                    },
-                });
-            }
-        }
-    }).catch(function(err) {
-        productService.getTaxCodesVS1().then(function(data) {
-            let records = [];
-            let inventoryData = [];
-            for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                var dataList = [
-                    data.ttaxcodevs1[i].Id || "",
-                    data.ttaxcodevs1[i].CodeName || "",
-                    data.ttaxcodevs1[i].Description || "-",
-                    taxRate || 0,
-                ];
-
-                let taxcoderecordObj = {
-                    codename: data.ttaxcodevs1[i].CodeName || " ",
-                    coderate: taxRate || " ",
-                };
-
-                taxCodesList.push(taxcoderecordObj);
-
-                splashArrayTaxRateList.push(dataList);
-            }
-            templateObject.taxraterecords.set(taxCodesList);
-
-            if (splashArrayTaxRateList) {
-                $("#tblTaxRate").DataTable({
-                    data: splashArrayTaxRateList,
-                    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                    columnDefs: [{
-                            orderable: false,
-                            targets: 0,
-                        },
-                        {
-                            className: "taxName",
-                            targets: [1],
-                        },
-                        {
-                            className: "taxDesc",
-                            targets: [2],
-                        },
-                        {
-                            className: "taxRate text-right",
-                            targets: [3],
-                        },
-                    ],
-                    colReorder: true,
-
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [
-                        [initialDatatableLoad, -1],
-                        [initialDatatableLoad, "All"],
-                    ],
-                    info: true,
-                    responsive: true,
-                    fnDrawCallback: function(oSettings) {
-                        // $('.dataTables_paginate').css('display', 'none');
-                    },
-                    fnInitComplete: function() {
-                        $(
-                            "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
-                        ).insertAfter("#tblTaxRate_filter");
-                        $(
-                            "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                        ).insertAfter("#tblTaxRate_filter");
-                    },
-                });
-            }
         });
-    });
-};
+    };
 
-// setTimeout(function() {
-//     templateObject.getAllTaxCodes();
-//     templateObject.getEarningTypes();
-// }, 500);
+    // setTimeout(function() {
+    //     templateObject.getAllTaxCodes();
+    //     templateObject.getEarningTypes();
+    // }, 500);
 
     templateObject.initData = async (refresh = false) => {
         await templateObject.getAllTaxCodes(refresh);
@@ -684,6 +685,7 @@ templateObject.getAllTaxCodes = function() {
                         return item;
                     }
                 });   
+                console.log("taccoutn", tAccounts);
 
                 var accountid = tAccounts[0].fields.ID || '';
                 var accounttype = tAccounts[0].fields.AccountTypeName;
