@@ -6115,7 +6115,7 @@ Template.productview.events({
                         let _productName = $(productRows[j]).find('.edtProductName').val();
                         let _productQty = $(productRows[j]).find('.edtQuantity').val();
                         let _rawProcess = $(productRows[j]).find('.edtProcessName').val();
-                        if(_productName != '' && _productQty != '' && _rawProcess != '') {
+                        if(_productName != '' && _productQty != '' ) {
                             objectDetail.subs.push ({
                                 productName: _productName,
                                 qty: _productQty,

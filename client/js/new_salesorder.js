@@ -7528,10 +7528,7 @@ Template.new_salesorder.onRendered(function() {
         //await function to get all work order list data
         let temp = localStorage.getItem('TWorkorders');
         workorderList = temp?JSON.parse(temp): [];
-        if(workorderList.length == 0) {
-            tempObj.abletomakeworkorder.set(true);
-            return
-        }
+       
         let returnvalue = false;
         let lineTable  = $('#tblSalesOrderLine');
         setTimeout(function() {

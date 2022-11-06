@@ -125,7 +125,12 @@ Template.new_workorder.onRendered(function(){
                             }
                             record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                             templateObject.workorderrecord.set(record);
-                            templateObject.bomStructure.set(null)
+                            let name = record.line.fields.ProductName;
+                                let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
+                                let index = bomProductsTemp.findIndex(product=>{
+                                    return product.fields.productName == name;
+                                })
+                            templateObject.bomStructure.set(bomProductsTemp[index].fields)
                             $('#edtCustomerName').val(record.customer)
                             $('.fullScreenSpin').css('display', 'none');
 
@@ -149,7 +154,12 @@ Template.new_workorder.onRendered(function(){
                                 record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
 
                                 templateObject.workorderrecord.set(record);
-                                templateObject.bomStructure.set(null)
+                                let name = record.line.fields.ProductName;
+                                let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
+                                let index = bomProductsTemp.findIndex(product=>{
+                                    return product.fields.productName == name;
+                                })
+                                templateObject.bomStructure.set(bomProductsTemp[index].fields)
                                 $('#edtCustomerName').val(record.customer)
                                 setTimeout(()=>{
                                     $('.fullScreenSpin').css('display', 'none');
@@ -173,7 +183,12 @@ Template.new_workorder.onRendered(function(){
                         }
                         record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                         templateObject.workorderrecord.set(record);
-                        templateObject.bomStructure.set(null)
+                        let name = record.line.fields.ProductName;
+                        let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
+                        let index = bomProductsTemp.findIndex(product=>{
+                            return product.fields.productName == name;
+                        })
+                        templateObject.bomStructure.set(bomProductsTemp[index].fields)
                         $('#edtCustomerName').val(record.customer)
                         $('.fullScreenSpin').css('display', 'none');
                     })
@@ -375,7 +390,7 @@ Template.new_workorder.events({
         let objDetail = {
             ID: record.id,
             Customer: $('#edtCustomerName').val() || '',
-            OrderTo: $('#txabillingAddress').text() || '',
+            OrderTo: $('#txabillingAddress').val() || '',
             PONumber: $('#ponumber').val()||'',
             SaleDate: $('#dtSODate').val() || '',
             DueDate: record.duedate,
@@ -411,7 +426,7 @@ Template.new_workorder.events({
                     let subDetail = {
                         ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
                         Customer: $('#edtCustomerName').val() || '',
-                        OrderTo: $('#txabillingAddress').text() || '',
+                        OrderTo: $('#txabillingAddress').val() || '',
                         PONumber: $('#ponumber').val()||'',
                         SaleDate: $('#dtSODate').val() || '',
                         DueDate: record.duedate,
@@ -1046,7 +1061,7 @@ Template.new_workorder.events({
                             let _productName = $(productRows[j]).find('.edtProductName').val();
                             let _productQty = $(productRows[j]).find('.edtQuantity').val();
                             let _rawProcess = $(productRows[j]).find('.edtProcessName').val();
-                            if(_productName != '' && _productQty != '' && _rawProcess != '') {
+                            if(_productName != '' && _productQty != '') {
                                 objectDetail.subs.push ({
                                     productName: _productName,
                                     qty: _productQty,
