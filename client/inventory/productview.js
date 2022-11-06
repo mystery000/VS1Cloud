@@ -70,6 +70,7 @@ Template.productview.onCreated(() => {
     templateObject.isMobileDevices = new ReactiveVar(false);
     templateObject.isManufactured = new ReactiveVar(false);
     templateObject.bomStructure = new ReactiveVar();
+    templateObject.showSubButton = new ReactiveVar(true);
 
 });
 
@@ -5578,10 +5579,7 @@ Template.productview.events({
                 let html = '';
                 html = html + "<div class='product-content'>"+
                     "<div class='d-flex productRow'>"+
-                        "<div class='colProduct form-group d-flex'><div style='width: 29%'></div>" +
-
-                            "<select type='search' class='edtProductName edtRaw form-control es-input' style='width: 30%'></select>" ;
-
+                        "<div class='colProduct form-group d-flex'><div style='width: 29%'></div>" ;
                             // let bomIndex = objectArray.findIndex(object => {
                             //     return object.fields.productName == subs[i].product
                             // })
@@ -5595,7 +5593,9 @@ Template.productview.events({
                             }
 
                             if(isBOM == true) {
-                                html +="<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>";
+                                html +="<select type='search' class='edtProductName edtRaw form-control es-input' style='width: 40%'></select><button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>";
+                            } else {
+                                html +="<select type='search' class='edtProductName edtRaw form-control es-input' style='width: 70%'></select>"
                             }
                             // getVS1Data('TProductVS1').then(function(dataObject){
                             //     if(dataObject.length == 0) {
@@ -5626,7 +5626,7 @@ Template.productview.events({
 
                         html += "</div>"+
                         "<div class='colQty form-group'>"+
-                            "<input type='text' class='form-control edtQuantity w-100' value='"+ subs[i].qty +"'>" +
+                            "<input type='text' class='form-control edtQuantity w-100' type='number' step='.00001' value='"+ subs[i].qty +"'>" +
                         "</div>";
 
                         //  if (bomIndex > -1) {
@@ -5653,7 +5653,7 @@ Template.productview.events({
                 $(productContent).find('.edtProductName').editableSelect();
                 $(productContent).find('.edtProcessName').editableSelect()
                 $(productContent).find('.edtProductName').val(subs[i].productName || '')
-                $(productContent).find('.edtQuantity').val(subs[i].qty || "1")
+                $(productContent).find('.edtQuantity').val(subs[i].qty || 1)
                 $(productContent).find('.edtProcessName').val(subs[i].process || "")
                 // $(productContent).find('.edtProcessName').val(subs[i].process || "")
                 $(productContent).find('.edtProcessNote').val(subs[i].processNote || "")
@@ -5709,10 +5709,10 @@ Template.productview.events({
         let colNote = row.find('.colNote');
         let colAttachment = row.find('.colAttachment');
         let colDelete = row.find('.colDelete');
-        $(colProduct).prepend("<div style='width: 29%'></div><select class='edtProductName edtRaw form-control' id='edtRaw' type='search' style='width: 30%'></select>")
+        $(colProduct).prepend("<div style='width: 29%'></div><select class='edtProductName edtRaw form-control' id='edtRaw' type='search' style='width: 70%'></select>")
         $(event.target).remove()
         $(colProduct).find('.edtProductName').editableSelect()
-        $(colQty).append("<input type='text' class='form-control edtQuantity w-100'/>");
+        $(colQty).append("<input type='text' class='form-control edtQuantity w-100' type='number' step='.00001'/>");
         // $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
         $(colProcess).append("<select class='edtProcessName form-control w-100' type='search' ></select>")
         $(colProcess).find('.edtProcessName').editableSelect();
@@ -5806,6 +5806,7 @@ Template.productview.events({
         let productName = $(event.target).closest('.productRow').find('.edtProductName').val();
         let processName = $(event.target).closest('.productRow').find('.edtProcessName').val();
         let quantity = $(event.target).closest('.productRow').find('.edtQuantity').val();
+        $(event.target).closest('.productRow').find('.edtProductName').css('width', '70%')
         let bomIndex = bomProducts.findIndex(product=>{
             return product.fields.productName == productName
         })
@@ -5834,7 +5835,7 @@ Template.productview.events({
                                 "<select class='edtProductName edtRaw form-control' type='search' style='width: 40%'></select>" +
                                 "</div>" +
                                 "<div class='colQty form-group'>" +
-                                "<input type='text' class='edtQuantity w-100 form-control' value='" + subs[i].qty + "'/>" +
+                                "<input type='text' class='edtQuantity w-100 form-control' type='number' step='.00001' value='" + subs[i].qty + "'/>" +
                                 "</div>" +
                                 "<div class='colProcess form-group'>"+
                                 "<select type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' ></select>"+
@@ -5868,7 +5869,7 @@ Template.productview.events({
                                 "<select class='edtProductName edtRaw form-control' type='search' style='width: 40%'></select>" +
                                 "</div>" +
                                 "<div class='colQty form-group'>" +
-                                "<input type='text' class='edtQuantity w-100 form-control' value='" + subs[i].qty + "'/>" +
+                                "<input type='text' class='edtQuantity w-100 form-control' type='number' step='.00001' value='" + subs[i].qty + "'/>" +
                                 "</div>" +
                                 "<div class='colProcess form-group'>"+
                                 "<select type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' ></select>"+
@@ -5899,7 +5900,7 @@ Template.productview.events({
                         "<select class='edtProductName edtRaw form-control' type='search' style='width: 40%'></select>" +
                         "</div>"+
                         "<div class='colQty'>" +
-                        "<input type='text' class='edtQuantity w-100 form-control' />" +
+                        "<input type='text' class='edtQuantity  w-100 form-control' type='number' step='.00001'/>" +
                         "</div>"+
                         "<div class='colProcess form-group'>"+
                         "<select type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' ></select>"+
@@ -5943,7 +5944,7 @@ Template.productview.events({
                 "<select class='edtProductName edtRaw form-control' type='search' style='width: 40%'></select>" +
                 "</div>"+
                 "<div class='colQty'>" +
-                "<input type='text' class='edtQuantity w-100 form-control' />" +
+                "<input type='text' class='edtQuantity w-100 form-control' type='number' step='.00001'/>" +
                 "</div>"+
                 "<div class='colProcess form-group'>"+
                 "<select type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' ></select>"+
@@ -5964,7 +5965,9 @@ Template.productview.events({
         let templateObject = Template.instance();
         let colProduct = $(event.target).closest('div.colProduct');
         let buttonSub = $(event.target).closest('div.colProduct').find('.btnShowSub');
-        if(buttonSub){$(buttonSub).remove()}
+        if(buttonSub.length > 0){$(buttonSub).remove(); $(event.target).css('width', '70%')}
+        let buttonAddSub = $(event.target).closest('div.colProduct').find('.btnAddSubProduct');
+        if(buttonAddSub.length >0) {templateObject.showSubButton.set(false)}
         let colRow = $(event.target).closest('div.productRow')
 
         // $(event.target).editableSelect()
@@ -5995,7 +5998,13 @@ Template.productview.events({
         }
         if(isBOM == true) {
             let colProduct = $(selEle).closest('.colProduct')
-            $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
+            $(colProduct).find('.edtProductName').css('width', '40%')
+            console.log("templateObject.showSubButton.get()", templateObject.showSubButton.get())
+            if(templateObject.showSubButton.get() == true) {
+                $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
+            }
+
+            templateObject.showSubButton.set(true);
             // let colProcess = $(selEle).closest('.productRow').find('.edtProcessName');
             // $(colProcess).val(bomProducts[existIndex].fields.process)
         }
@@ -6205,6 +6214,13 @@ Template.productview.events({
             $('#chkBOM').attr('checked', false)
             templateObject.isManufactured.set(false);
         }
+    },
+
+    'change .edtQuantity' : function(event) {
+        let value = $(event.target).val();
+        value = parseFloat(value).toFixed(5);
+        console.log('value', value);
+        $(event.target).val(value);
     },
 
     'click #closeBOMSetupModal': function(event) {
