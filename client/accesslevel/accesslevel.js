@@ -334,9 +334,9 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
      },
      'click .btnGlobalSaveNOT': function () {
       playSaveAudio();
+      let templateObject = Template.instance();
+      let accesslevelService = new AccessLevelService();
       setTimeout(function(){
-       let templateObject = Template.instance();
-       let accesslevelService = new AccessLevelService();
         var erpGet = erpDb();
 
        let empInputValue = templateObject.$("#sltEmployeeName").val();
@@ -873,10 +873,9 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
  },
      'click .btnSaveAccess': function () {
       playSaveAudio();
+      let templateObject = Template.instance();
+      let accesslevelService = new AccessLevelService();
       setTimeout(function(){
-       let templateObject = Template.instance();
-       let accesslevelService = new AccessLevelService();
-
        let empInputValue = templateObject.$("#sltEmployeeName").val();
 
 

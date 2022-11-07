@@ -3111,9 +3111,10 @@ Template.stocktransfercard.events({
     },
     'click .btnprintDockets': function(e) {
         playPrintAudio();
+        let templateObject = Template.instance();
         setTimeout(function(){
         let invoiceID = parseInt($("#SalesId").val());
-        let templateObject = Template.instance();
+        
         let isInvoice = templateObject.includeInvoiceAttachment.get();
         let isShippingDocket = templateObject.includeDocketAttachment.get();
 
@@ -3139,16 +3140,18 @@ Template.stocktransfercard.events({
     },
     'click .btnprintInvoice': function(e) {
         playPrintAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
         let printType = "InvoiceOnly";
         templateObject.SendShippingDetails(printType);
     }, delayTimeAfterSound);
     },
     'click .btnprintDelDocket': function(e) {
         playPrintAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
         let printType = "DeliveryDocketsOnly";
         templateObject.SendShippingDetails(printType);
     }, delayTimeAfterSound);
@@ -3926,11 +3929,12 @@ Template.stocktransfercard.events({
     },
     'click .btnSave': function(event) {
         playSaveAudio();
+        let templateObject = Template.instance();
         setTimeout(function(){
         if ($('.chkEmailCopy').is(':checked')) {
         $('#html-2-pdfwrapper').css('display', 'block');
         }
-        let templateObject = Template.instance();
+        
         //let customername = $('#edtCustomerName').val() || '';
         //let shippingaddress = $('#txaShipingInfo').val() || '';
         let transferFrom = $('#sltDepartment').val() || '';
@@ -4276,10 +4280,10 @@ Template.stocktransfercard.events({
     },
     'click .btnDeleteFollowingStocks': async function(event) {
         playDeleteAudio();
-        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
+        setTimeout(async function(){
         swal({
             title: 'Delete Stock Transfer',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -4321,10 +4325,10 @@ Template.stocktransfercard.events({
     },
     'click .btnDeleteStock': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -4365,9 +4369,9 @@ Template.stocktransfercard.events({
     },
     'click .btnDeleteStockTransfer': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
+        setTimeout(function(){
         swal({
             title: 'Delete Stock Transfer',
             text: "Are you sure you want to Delete Stock Transfer?",
@@ -4420,9 +4424,9 @@ Template.stocktransfercard.events({
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
+        setTimeout(function(){
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblStocktransfer tbody>tr').length > 1) {
             this.click;

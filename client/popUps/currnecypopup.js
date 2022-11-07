@@ -1001,10 +1001,10 @@ Template.currencypop.events({
   },
   "click .btnDeleteCurrency": function () {
     playDeleteAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
+    
     let currencyId = $("#selectDeleteLineID").val();
-
     let objDetails = {
       type: "TCurrency",
       fields: {
@@ -1090,8 +1090,8 @@ Template.currencypop.events({
   },
   "click .btnSaveCurrency": function () {
     playSaveAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
     var currencyid = $("#edtCurrencyID").val();
     var country = $("#sedtCountry").val();

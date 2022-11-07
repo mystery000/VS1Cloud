@@ -90,8 +90,9 @@ Template.eftBankCodesModal.events({
 
   "click .btnSaveEftBankCodes": (e) => {
     playSaveAudio();
+    let templateObject = Template.instance();
     setTimeout(function(){
-    const templateObject = Template.instance();
+    
     let eftBankCodes = templateObject.eftBankCodeList.get();
 
     $('.chkEftBankCodesList').each(function (index) {

@@ -3213,10 +3213,11 @@ Template.depositcard.events({
     },
     'click .btnDeleteFollowingDepositEntries': async function(event){
         playDeleteAudio();
-        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        setTimeout(async function(){
+        
         swal({
             title: 'Delete Deposit',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -3263,9 +3264,10 @@ Template.depositcard.events({
     },
     'click .btnDelete': function(event){
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        setTimeout(function(){
+        
         swal({
             title: 'Delete Deposit',
             text: "Are you sure you want to delete Deposit?",
@@ -3322,10 +3324,11 @@ Template.depositcard.events({
     },
     'click .btnDeleteNothing': function(event){
         playDeleteAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display','inline-block');
+        
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length-1];
@@ -3365,10 +3368,11 @@ Template.depositcard.events({
     },
     'click .btnDeleteLine': function(event){
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
-        let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
+        setTimeout(function(){
+        
+        let taxcodeList = templateObject.taxraterecords.get();
         let selectLineID = $('#selectDeleteLineID').val();
         if($('#tblDepositEntryLine tbody>tr').length > 1){
             this.click;
@@ -3419,15 +3423,15 @@ Template.depositcard.events({
     },
     'click .btnSave': function(event){
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
+        let purchaseService = new PurchaseBoardService();
+        setTimeout(function(){
+        
         let account = $('#sltAccountName').val();
         let depositTotal = $('#depositTotal').val();
         let depositTotalLine = $('#depositTotalLine').text();
-
-
         let txaNotes = $('#txaNotes').val();
-        let purchaseService = new PurchaseBoardService();
+        
         if (account === ''){
             swal('Account has not been selected!', '', 'warning');
             e.preventDefault();
@@ -3848,10 +3852,7 @@ Template.depositcard.events({
 
             lineItems.push(lineItemObj);
 
-
-
         });
-
 
         var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
         if(getcurrentCloudDetails){

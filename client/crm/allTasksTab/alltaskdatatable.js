@@ -2285,6 +2285,7 @@ Template.alltaskdatatable.events({
   // update task rename task
   "click .btnSaveEditTask": function (e) {
     playSaveAudio();
+    let templateObject = Template.instance();
     setTimeout(function () {
       let taskID = $("#txtCrmTaskID").val();
       if (taskID) {
@@ -2314,14 +2315,13 @@ Template.alltaskdatatable.events({
         let leadID = 0;
         let supplierID = 0;
         if (contactType == 'Customer') {
-          customerID = contactID
+          customerID = contactID;
         } else if (contactType == 'Lead') {
-          leadID = contactID
+          leadID = contactID;
         } else if (contactType == 'Supplier') {
-          supplierID = contactID
+          supplierID = contactID;
         }
 
-        let templateObject = Template.instance();
         var objDetails = {
           type: "Tprojecttasks",
           fields: {
@@ -2868,6 +2868,7 @@ Template.alltaskdatatable.events({
   // submit save new project
   "click .btnSaveNewCrmProject": function (e) {
     playSaveAudio();
+    let templateObject = Template.instance();
     setTimeout(function () {
       let projectName = $("#crmProjectName").val();
       let projectColor = $("#crmProjectColor").val();
@@ -2894,8 +2895,7 @@ Template.alltaskdatatable.events({
           // AddToFavourite: swtNewCrmProjectFavorite,
         },
       };
-      let templateObject = Template.instance();
-
+      
       crmService.updateProject(objDetails).then(function (data) {
         templateObject.getTProjectList();
 
@@ -3465,6 +3465,7 @@ Template.alltaskdatatable.events({
 
   "click .btnSaveEditLabel": function (e) {
     playSaveAudio();
+    let templateObject = Template.instance();
     setTimeout(function () {
       let id = $("#editLabelID").val();
       let labelName = $("#editLabelName").val();
@@ -3486,7 +3487,6 @@ Template.alltaskdatatable.events({
         };
 
         $(".fullScreenSpin").css("display", "inline-block");
-        let templateObject = Template.instance();
         crmService.updateLabel(objDetails).then(function (objDetails) {
           templateObject.getAllLabels();
           $("#editLabelModal").modal("hide");
@@ -3498,6 +3498,7 @@ Template.alltaskdatatable.events({
 
   "click .btnDeleteLabel": function (e) {
     playDeleteAudio();
+    let templateObject = Template.instance();
     setTimeout(function(){
     let id = e.target.dataset.id;
 
@@ -3511,7 +3512,7 @@ Template.alltaskdatatable.events({
       };
 
       $(".fullScreenSpin").css("display", "inline-block");
-      let templateObject = Template.instance();
+      
       crmService.updateLabel(objDetails).then(function (objDetails) {
         templateObject.getAllLabels();
         $(".fullScreenSpin").css("display", "none");

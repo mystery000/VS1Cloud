@@ -1291,11 +1291,12 @@ Template.accountslistchart.onRendered(()=>{
    },
    "click .accountslistchart .btnSaveAccount": function() {
         playSaveAudio();
-        setTimeout(function(){
-       $(".fullScreenSpin").css("display", "inline-block");
-       let templateObject = Template.instance();
+        let templateObject = Template.instance();
        let accountService = new AccountService();
        let organisationService = new OrganisationService();
+        setTimeout(function(){
+       $(".fullScreenSpin").css("display", "inline-block");
+       
        let forTransaction = false;
        let isHeader = false;
        let useReceiptClaim = false;
@@ -1917,6 +1918,8 @@ Template.accountslistchart.onRendered(()=>{
    },
    "click .accountslistchart .btnDeleteAccount": function() {
        playDeleteAudio();
+       let templateObject = Template.instance();
+       let accountService = new AccountService();
        setTimeout(function(){
        swal({
            title: "Delete Account",
@@ -1927,10 +1930,8 @@ Template.accountslistchart.onRendered(()=>{
        }).then((result) => {
            if (result.value) {
                $(".fullScreenSpin").css("display", "inline-block");
-               let templateObject = Template.instance();
-               let accountService = new AccountService();
-               let accountID = $("#edtAccountID").val();
 
+               let accountID = $("#edtAccountID").val();
                if (accountID === "") {
                    window.open("/accountsoverview", "_self");
                } else {
@@ -2141,9 +2142,10 @@ Template.accountslistchart.onRendered(()=>{
    },
    'click .accountslistchart #addReceiptCategoryModal .btnSave': function(event) {
         playSaveAudio();
+        let receiptService = new ReceiptService();
         setTimeout(function(){
        $('.fullScreenSpin').css('display', 'inline-block');
-       let receiptService = new ReceiptService();
+       
        let receiptCategoryID = $('#edtReceiptCategoryID').val();
        let receiptCategoryName = $('#edtReceiptCategoryName').val();
        if (receiptCategoryName == '') {

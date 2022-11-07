@@ -1608,8 +1608,9 @@ Template.productlist.helpers({
       },
       'click #btnSave': async function () {
         playSaveAudio();
-        setTimeout(function(){
         let productService = new ProductService();
+        setTimeout(function(){
+        
         let productCode = $("#edtproductvs1code").val();
         let productName = $("#edtproductvs1name").val();
           if(productName == ''){

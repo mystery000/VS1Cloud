@@ -1035,12 +1035,11 @@ Template.departmentpop.events({
     },
     'click .btnDeleteDepartment': function () {
         playDeleteAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
+        
         let deptId = $('#selectDeleteLineID').val();
-
-
         let objDetails = {
             type: "TDeptClass",
             fields: {
@@ -1079,9 +1078,10 @@ Template.departmentpop.events({
     },
     'click .btnSaveDept': function () {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
+        
         let deptID = $('#edtDepartmentID').val();
         //let headerDept = $('#sltDepartment').val();
         let deptName = $('#edtDeptName').val();
@@ -1299,17 +1299,15 @@ Template.departmentpop.events({
     },
     'click .btnSaveRoom': function () {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
-
+        
         var parentdept = $('#sltDepartmentList').val();
         var newroomname = $('#newRoomName').val();
         var newroomnum = $('#newRoomNum').val();
 
-
         let data = '';
-
         data = {
             type: "TProductBin",
             fields: {

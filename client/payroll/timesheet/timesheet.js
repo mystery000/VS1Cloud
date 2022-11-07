@@ -5941,10 +5941,10 @@ Template.timesheet.events({
     },
     'click .btnSaveTimeSheetForm': function() {
         playSaveAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let contactService = new ContactService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
         let timesheetID = $('#edtTimesheetID').val();
         var employeeName = $('#sltEmployee').val();
         var jobName = $('#sltJob').val();
@@ -7042,11 +7042,11 @@ Template.timesheet.events({
     },
     'click .btnDeleteTimeSheetOne': function() {
         playDeleteAudio();
-        setTimeout(function(){
-        // $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let contactService = new ContactService();
-
+        setTimeout(function(){
+        // $('.fullScreenSpin').css('display', 'inline-block');
+        
         swal({
             title: 'Delete TimeSheet',
             text: "Are you sure you want to Delete this TimeSheet?",

@@ -1534,11 +1534,11 @@ Template.accountsoverview.events({
     },
     "click .btnSaveAccount": function() {
         playSaveAudio();
-        setTimeout(function(){
-        $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
         let accountService = new AccountService();
         let organisationService = new OrganisationService();
+        setTimeout(function(){
+        $(".fullScreenSpin").css("display", "inline-block");
         let forTransaction = false;
         let isHeader = false;
         let useReceiptClaim = false;
@@ -2160,6 +2160,8 @@ Template.accountsoverview.events({
     },
     "click .btnDeleteAccount": function() {
         playDeleteAudio();
+        let templateObject = Template.instance();
+        let accountService = new AccountService();
         swal({
             title: "Delete Account",
             text: "Are you sure you want to Delete Account?",
@@ -2169,10 +2171,7 @@ Template.accountsoverview.events({
         }).then((result) => {
             if (result.value) {
                 $(".fullScreenSpin").css("display", "inline-block");
-                let templateObject = Template.instance();
-                let accountService = new AccountService();
                 let accountID = $("#edtAccountID").val();
-
                 if (accountID === "") {
                     window.open("/accountsoverview", "_self");
                 } else {
@@ -2382,9 +2381,9 @@ Template.accountsoverview.events({
     },
     'click #addReceiptCategoryModal .btnSave': function(event) {
         playSaveAudio();
+        let receiptService = new ReceiptService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let receiptService = new ReceiptService();
         let receiptCategoryID = $('#edtReceiptCategoryID').val();
         let receiptCategoryName = $('#edtReceiptCategoryName').val();
         if (receiptCategoryName == '') {
@@ -2436,35 +2435,35 @@ Template.accountsoverview.events({
             doSaveReceiptCategory(objDetails);
         }
 
-        function doSaveReceiptCategory(objDetails) {
-            receiptService.saveReceiptCategory(objDetails).then(function(objDetails) {
-                sideBarService.getReceiptCategory().then(function(dataReload) {
-                    addVS1Data('TReceiptCategory', JSON.stringify(dataReload)).then(function(datareturn) {
-                        location.reload(true);
-                    }).catch(function(err) {
-                        location.reload(true);
-                    });
+      }, delayTimeAfterSound);
+      function doSaveReceiptCategory(objDetails) {
+        receiptService.saveReceiptCategory(objDetails).then(function(objDetails) {
+            sideBarService.getReceiptCategory().then(function(dataReload) {
+                addVS1Data('TReceiptCategory', JSON.stringify(dataReload)).then(function(datareturn) {
+                    location.reload(true);
                 }).catch(function(err) {
                     location.reload(true);
                 });
             }).catch(function(err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                        // Meteor._reload.reload();
-                    } else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-                $('.fullScreenSpin').css('display', 'none');
+                location.reload(true);
             });
-        }
-      }, delayTimeAfterSound);
+        }).catch(function(err) {
+            swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {
+                    // Meteor._reload.reload();
+                } else if (result.dismiss === 'cancel') {
+
+                }
+            });
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    }
     },
 });
 

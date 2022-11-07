@@ -52,8 +52,9 @@ Template.linktrueerp.onRendered(function(){
 Template.linktrueerp.events({
 'click .btnSave': function () {
   playSaveAudio();
-  setTimeout(function(){
   var erpGet = erpDb();
+  setTimeout(function(){
+  
   $('.fullScreenSpin').css('display','inline-block');
   let firstName = $('.edtFirstName').val();
   let lastName = $('.edtLastName').val();
