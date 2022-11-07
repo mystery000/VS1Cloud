@@ -3188,6 +3188,7 @@ Template.employeescard.onRendered(function () {
             earningLines = earningLines.filter((item) => parseInt( item.EmployeeID ) == parseInt( employeeID ));
         }
 
+
         await templateObject.earningLines.set(earningLines);
       
         return earningLines;
@@ -4136,13 +4137,13 @@ Template.employeescard.onRendered(function () {
 
     // Display pay template tab inputs
     templateObject.displayPayTempEarningLines = function() {
-        let payLines = templateObject.payTemplateEarningLineInfo.get();
-        if( payLines ){
-            Array.prototype.forEach.call(payLines, (item, index) => {
-                $('#ptEarningRate' + index).val(item.fields.EarningRate);
-                $('#ptEarningAmount' + index).val(item.fields.Amount);
-            })
-        }
+        // let payLines = templateObject.payTemplateEarningLineInfo.get();
+        // if( payLines ){
+        //     Array.prototype.forEach.call(payLines, (item, index) => {
+        //         $('#ptEarningRate' + index).val(item.fields.EarningRate);
+        //         $('#ptEarningAmount' + index).val(item.fields.Amount);
+        //     })
+        // }
     }
 
     templateObject.displayPayTempDeductionLines = function() {
@@ -4178,52 +4179,52 @@ Template.employeescard.onRendered(function () {
     }
 
     templateObject.setEarningLineDropDown = function(){
-        setTimeout( function () {
-            $('.earningLineDropDown').editableSelect();
-            $('.earningLineDropDown').editableSelect().on('click.editable-select', async function (e, li) {
-                let $search = $(this);
-                let offset = $search.offset();
-                let dropDownID = $search.attr('id')
-                $('#edtEarningDropDownID').val(dropDownID);
-                templateObject.currentDrpDownID.set(dropDownID);
-                let searchName = e.target.value || '';
-                if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                    $('#earningRateSettingsModal').modal('show');
-                } else {
-                    if (searchName.replace(/\s/g, '') == '') {
-                        $('#earningRateSettingsModal').modal('show');
-                        return false
-                    }
-                    let data = {};
-                    let dataObject = await getVS1Data('TEarnings');
-                    if ( dataObject.length > 0) {
-                        data = JSON.parse(dataObject[0].data);
-                        let tEarnings = data.tearnings.filter((item) => {
-                            if( item.fields.EarningsName == searchName ){
-                                return item;
-                            }
-                        });
-                        $('#headerEarningLabel').text('Edit Earning');
-                        $('#earningRateForm')[0].reset();
-                        $('#addEarningsLineModal').modal('hide');
-                        if( tEarnings.length > 0 ){
-                            let earningRate = tEarnings[0];
-                            $('#earningID').val(earningRate.fields.ID)
-                            $('#edtEarningsName').val(earningRate.fields.EarningsName)
-                            $('#edtEarningsType').val(earningRate.fields.EarningType)
-                            $('#edtDisplayName').val(earningRate.fields.EarningsDisplayName)
-                            $('#edtRateType').val(earningRate.fields.EarningsRateType)
-                            $('#edtExpenseAccount').val(earningRate.fields.ExpenseAccount)
-                            $('#formCheck-ExemptPAYG').prop('checked', earningRate.fields.EarningsExemptPaygWithholding)
-                            $('#formCheck-ExemptSuperannuation').prop('checked', earningRate.fields.EarningsExemptSuperannuationGuaranteeCont)
-                            $('#formCheck-ExemptReportable').prop('checked', earningRate.fields.EarningsReportableW1onActivityStatement)
-                        }
-                        $('#earningRateSettingsModal').modal('hide');
-                        $('#ordinaryTimeEarningsModal').modal('show');
-                    }
-                }
-            });
-        }, 500)
+        // setTimeout( function () {
+        //     $('.earningLineDropDown').editableSelect();
+        //     $('.earningLineDropDown').editableSelect().on('click.editable-select', async function (e, li) {
+        //         let $search = $(this);
+        //         let offset = $search.offset();
+        //         let dropDownID = $search.attr('id')
+        //         $('#edtEarningDropDownID').val(dropDownID);
+        //         templateObject.currentDrpDownID.set(dropDownID);
+        //         let searchName = e.target.value || '';
+        //         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+        //             $('#earningRateSettingsModal').modal('show');
+        //         } else {
+        //             if (searchName.replace(/\s/g, '') == '') {
+        //                 $('#earningRateSettingsModal').modal('show');
+        //                 return false
+        //             }
+        //             let data = {};
+        //             let dataObject = await getVS1Data('TEarnings');
+        //             if ( dataObject.length > 0) {
+        //                 data = JSON.parse(dataObject[0].data);
+        //                 let tEarnings = data.tearnings.filter((item) => {
+        //                     if( item.fields.EarningsName == searchName ){
+        //                         return item;
+        //                     }
+        //                 });
+        //                 $('#headerEarningLabel').text('Edit Earning');
+        //                 $('#earningRateForm')[0].reset();
+        //                 $('#addEarningsLineModal').modal('hide');
+        //                 if( tEarnings.length > 0 ){
+        //                     let earningRate = tEarnings[0];
+        //                     $('#earningID').val(earningRate.fields.ID)
+        //                     $('#edtEarningsName').val(earningRate.fields.EarningsName)
+        //                     $('#edtEarningsType').val(earningRate.fields.EarningType)
+        //                     $('#edtDisplayName').val(earningRate.fields.EarningsDisplayName)
+        //                     $('#edtRateType').val(earningRate.fields.EarningsRateType)
+        //                     $('#edtExpenseAccount').val(earningRate.fields.ExpenseAccount)
+        //                     $('#formCheck-ExemptPAYG').prop('checked', earningRate.fields.EarningsExemptPaygWithholding)
+        //                     $('#formCheck-ExemptSuperannuation').prop('checked', earningRate.fields.EarningsExemptSuperannuationGuaranteeCont)
+        //                     $('#formCheck-ExemptReportable').prop('checked', earningRate.fields.EarningsReportableW1onActivityStatement)
+        //                 }
+        //                 $('#earningRateSettingsModal').modal('hide');
+        //                 $('#ordinaryTimeEarningsModal').modal('show');
+        //             }
+        //         }
+        //     });
+        // }, 500)
     }
 
     templateObject.setDeductionLineDropDown = function() {
@@ -4452,19 +4453,19 @@ Template.employeescard.onRendered(function () {
     }
 
     //On Click Earnings List
-    $(document).on("click", "#tblEarnings tbody tr", function (e) {
-        const table = $(this);
-        let earningsName = table.find(".colEarningsNames").text()||'';
-        let earningsID = table.find(".colEarningsID").text()||'';
-        let account = table.find(".colEarningsAccounts").text()||'';
-        let searchFilterID = templateObject.currentDrpDownID.get()
-        $('#' + searchFilterID).val(earningsName);
-        $('#' + searchFilterID + 'ID').val(earningsID);
-        if( searchFilterID == 'earningRateSelect'){
-            $('#expenseAccount').val(account)
-        }
-        $('#earningRateSettingsModal').modal('toggle');
-    });
+    // $(document).on("click", "#tblEarnings tbody tr", function (e) {
+    //     const table = $(this);
+    //     let earningsName = table.find(".colEarningsNames").text()||'';
+    //     let earningsID = table.find(".colEarningsID").text()||'';
+    //     let account = table.find(".colEarningsAccounts").text()||'';
+    //     let searchFilterID = templateObject.currentDrpDownID.get()
+    //     $('#' + searchFilterID).val(earningsName);
+    //     $('#' + searchFilterID + 'ID').val(earningsID);
+    //     if( searchFilterID == 'earningRateSelect'){
+    //         $('#expenseAccount').val(account)
+    //     }
+    //     $('#earningRateSettingsModal').modal('toggle');
+    // });
     //On Click Deduction List
     $(document).on("click", "#tblDeductions tbody tr", function (e) {
         const table = $(this);
@@ -10953,7 +10954,41 @@ Template.employeescard.events({
 
     "click input#edtPayPeriod": (e, ui) => {
         $('#SelectPayRunModal').modal("show");
-    }
+    },
+    "click .earningLineDropDown": (e, ui) => {
+        $(e.currentTarget).addClass('paste-earnings');
+        $('#earningRateSettingsModal').modal('show');
+    },
+
+    "click #expenseAccount": (e, ui) => {
+        $(e.currentTarget).addClass('paste-expenses');
+    },
+    "click #tblAccount tbody tr": (e, ui) => {
+        const id = $(e.currentTarget).find('.colAccountID').text();
+        const accountName = $(e.currentTarget).find('.productName').text();
+        $(".paste-expenses").val(accountName);
+        $(".paste-expenses").attr('account-id', id);
+        $(".paste-expenses").removeClass('paste-expenses')
+    },
+
+    "click #tblEarnings tbody tr": (e, ui) => {
+        const tr = $(e.currentTarget);
+        const id = parseInt(tr.find('.colEarningsID').text());
+        const earningName = tr.find('.colEarningsNames').text();
+
+        let earningsName = tr.find(".colEarningsNames").text()||'';
+        let earningsID = tr.find(".colEarningsID").text()||'';
+        let account = tr.find(".colEarningsAccounts").text()||'';
+        let searchFilterID = ui.currentDrpDownID.get();
+        $('#' + searchFilterID).val(earningsName);
+        $('#' + searchFilterID + 'ID').val(earningsID);
+        if( searchFilterID == 'earningRateSelect'){
+            $('#expenseAccount').val(account)
+        }
+        $('#earningRateSettingsModal').modal('toggle');
+    },
+
+   
 });
 
 Template.employeescard.helpers({

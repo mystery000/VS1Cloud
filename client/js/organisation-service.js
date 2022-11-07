@@ -57,4 +57,11 @@ export class OrganisationService extends BaseService {
   getChkUSRegionTaxSetting() {
     return this.GET(this.erpGet.ERPUSRegionTaxSetting);
   }
+
+  getSetupInfo() {
+    let options = {
+      PropertyList:"ID,IsSetUpWizard",
+    };
+    return this.getList(this.ERPObjects.TCompanyInfo, options);
+  }
 }

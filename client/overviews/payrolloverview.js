@@ -103,7 +103,7 @@ Template.payrolloverview.onRendered(function () {
 
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
 
-    templateObject.draftPayRunRecords.set(payRunsHistory);
+    await templateObject.draftPayRunRecords.set(payRunsHistory);
 
     setTimeout(() => {
       $("#tblPayRunHistory").DataTable({

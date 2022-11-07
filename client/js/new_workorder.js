@@ -125,7 +125,12 @@ Template.new_workorder.onRendered(function(){
                             }
                             record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                             templateObject.workorderrecord.set(record);
-                            templateObject.bomStructure.set(null)
+                            let name = record.line.fields.ProductName;
+                                let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
+                                let index = bomProductsTemp.findIndex(product=>{
+                                    return product.fields.productName == name;
+                                })
+                            templateObject.bomStructure.set(bomProductsTemp[index].fields)
                             $('#edtCustomerName').val(record.customer)
                             $('.fullScreenSpin').css('display', 'none');
 
@@ -149,7 +154,12 @@ Template.new_workorder.onRendered(function(){
                                 record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
 
                                 templateObject.workorderrecord.set(record);
-                                templateObject.bomStructure.set(null)
+                                let name = record.line.fields.ProductName;
+                                let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
+                                let index = bomProductsTemp.findIndex(product=>{
+                                    return product.fields.productName == name;
+                                })
+                                templateObject.bomStructure.set(bomProductsTemp[index].fields)
                                 $('#edtCustomerName').val(record.customer)
                                 setTimeout(()=>{
                                     $('.fullScreenSpin').css('display', 'none');
@@ -173,7 +183,12 @@ Template.new_workorder.onRendered(function(){
                         }
                         record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                         templateObject.workorderrecord.set(record);
-                        templateObject.bomStructure.set(null)
+                        let name = record.line.fields.ProductName;
+                        let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
+                        let index = bomProductsTemp.findIndex(product=>{
+                            return product.fields.productName == name;
+                        })
+                        templateObject.bomStructure.set(bomProductsTemp[index].fields)
                         $('#edtCustomerName').val(record.customer)
                         $('.fullScreenSpin').css('display', 'none');
                     })
@@ -375,7 +390,7 @@ Template.new_workorder.events({
         let objDetail = {
             ID: record.id,
             Customer: $('#edtCustomerName').val() || '',
-            OrderTo: $('#txabillingAddress').text() || '',
+            OrderTo: $('#txabillingAddress').val() || '',
             PONumber: $('#ponumber').val()||'',
             SaleDate: $('#dtSODate').val() || '',
             DueDate: record.duedate,
@@ -410,7 +425,7 @@ Template.new_workorder.events({
                     let subDetail = {
                         ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
                         Customer: $('#edtCustomerName').val() || '',
-                        OrderTo: $('#txabillingAddress').text() || '',
+                        OrderTo: $('#txabillingAddress').val() || '',
                         PONumber: $('#ponumber').val()||'',
                         SaleDate: $('#dtSODate').val() || '',
                         DueDate: record.duedate,
@@ -547,7 +562,7 @@ Template.new_workorder.events({
                 }
                 if(isBuilt == false) {
                     addedRow += "<div style='width: 29%'><button class='btn btn-danger btn-from-stock w-100 px-0'>FROM STOCK</button></div>" +
-                        "<select type='search' class='edtProductName form-control' style='width: 30%'></select>"+
+                        "<select type='search' class='edtProductName form-control' style='width: 70%'></select>"+
                         "</div>"+
                         "<div class='colQty form-group'><input type='text' class='form-control edtQuantity w-100'/></div>"+
                         "<div class='colProcess form-group'><select type='search' class='edtProcessName form-control w-100' disabled style='background-color: #ddd'></select></div>"+
@@ -558,7 +573,7 @@ Template.new_workorder.events({
                         "</div>";
                 }else {
                     addedRow += "<div style='width: 29%'><button class='btn btn-success btn-product-build w-100 px-0'>Build</button></div>" +
-                        "<select type='search' class='edtProductName form-control' style='width: 30%'></select>"+
+                        "<select type='search' class='edtProductName form-control' style='width: 70%'></select>"+
                         "</div>"+
                         "<div class='colQty form-group'><input type='text' class='form-control edtQuantity w-100'/></div>"+
                         "<div class='colProcess form-group'><select type='search' class='edtProcessName form-control w-100' disabled style='background-color: #ddd'></select></div>"+
@@ -572,7 +587,7 @@ Template.new_workorder.events({
                         let addRowHtml = "<div class='d-flex productRow'>" +
                         "<div class= 'd-flex colProduct form-group'>" +
                         "<div style='width: 60%'></div>" +
-                        "<input class='edtProductName edtRaw form-control es-input' autocomplete='false' type='search' style='width: 40%' value ='"+subs[i].subs[j].productName+"'/>" +
+                        "<input class='edtProductName edtRaw form-control es-input' autocomplete='false' type='search' style='width: 70%' value ='"+subs[i].subs[j].productName+"'/>" +
                         "</div>" +
                         "<div class='colQty form-group'>" +
                         "<input type='text' class='edtQuantity w-100 form-control' value='" + subs[i].subs[j].qty + "'/>" +
@@ -602,7 +617,7 @@ Template.new_workorder.events({
             //end check
             }else {
                 addedRow += "<div style='width: 29%'></div>" +
-                "<select type='search' class='edtProductName form-control' style='width: 30%'></select>"+
+                "<select type='search' class='edtProductName form-control' style='width: 70%'></select>"+
                 "</div>"+
                 "<div class='colQty form-group'><input type='text' class='form-control edtQuantity w-100'/></div>"+
                 "<div class='colProcess form-group'></div><div class='colNote form-group'></div><div class='colAttachment form-group'></div><div class='colDelete d-flex align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>"+
@@ -628,7 +643,12 @@ Template.new_workorder.events({
             // $(productContents[productContents.length-2]).find('input.edtProcessNote').val(subs[i].processNote)
 
         }
-    }
+    },
+    'change .edtQuantity' : function(event) {
+        let value = $(event.target).val();
+        value = parseFloat(value).toFixed(5);
+        $(event.target).val(value);
+    },
 
 })
 
@@ -671,7 +691,7 @@ Template.new_workorder.events({
         $('#processListModal').modal('toggle');
     },
 
-    'click #productListModal table tr': function(event) {
+    'click #productListModal table tbody tr': function(event) {
         let name = $(event.target).closest('tr').find('.productName').text();
         let templateObject = Template.instance();
         let targetElement = templateObject.selectedProductField.get();
@@ -687,7 +707,9 @@ Template.new_workorder.events({
             $(targetElement).before("<div style='width: 29%'><button class='btn btn-danger btn-from-stock w-100 px-0'>FROM STOCK</button></div>")
 
             let row = $(targetElement).closest('div.productRow');
+            $(row).find('.colProcess').empty();
             $(row).find('.colProcess').append("<select type='search' class='form-control edtProcessName'></select>")
+            $(row).find('.colNote').empty()
             $(row).find('.colNote').append("<input type='text' class='form-control edtProcessNote'/>")
             $(row).find('.edtProcessName').editableSelect();
             $(row).find('.edtProcessName').val(bomProducts[index].fields.process)
@@ -821,7 +843,7 @@ Template.new_workorder.events({
         let colNote = row.find('.colNote');
         let colAttachment = row.find('.colAttachment');
         let colDelete = row.find('.colDelete');
-        $(colProduct).prepend("<div style='width: 29%'></div><select class='edtProductName edtRaw form-control' id='edtRaw' type='search' style='width: 30%'></select>")
+        $(colProduct).prepend("<div style='width: 29%'></div><select class='edtProductName edtRaw form-control' id='edtRaw' type='search' style='width: 70%'></select>")
         $(event.target).remove()
         $(colProduct).find('.edtProductName').editableSelect()
         $(colQty).append("<input type='text' class='form-control edtQuantity w-100'/>");

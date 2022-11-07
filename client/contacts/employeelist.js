@@ -8,9 +8,11 @@ import '../lib/global/indexdbstorage.js';
 import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
 import LoadingOverlay from "../LoadingOverlay";
+import { OrganisationService } from "../js/organisation-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let organisationService = new OrganisationService();
 Template.employeelist.inheritsHooksFrom('non_transactional_list');
 Template.employeelist.onCreated(function(){
     const templateObject = Template.instance();
@@ -19,6 +21,7 @@ Template.employeelist.onCreated(function(){
     templateObject.selectedFile = new ReactiveVar();
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+    templateObject.setupFinished = new ReactiveVar();
 
 
     templateObject.employees = new ReactiveVar([]);
@@ -306,6 +309,20 @@ Template.employeelist.onRendered(function() {
             FlowRouter.go('/employeescard?id=' + listData);
         }
     });
+    templateObject.checkSetupWizardFinished = async function () {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+        if( setupFinished === null || setupFinished ===  "" ){
+            let setupInfo = await organisationService.getSetupInfo();
+            if( setupInfo.tcompanyinfo.length > 0 ){
+                let data = setupInfo.tcompanyinfo[0];
+                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+                templateObject.setupFinished.set(data.IsSetUpWizard)
+            }
+        }else{
+            templateObject.setupFinished.set(setupFinished)
+        }
+    }
+    templateObject.checkSetupWizardFinished();
 });
 
 Template.employeelist.events({
@@ -688,13 +705,8 @@ Template.employeelist.helpers({
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
     },
-    showSetupFinishedAlert: () => {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
-        if (setupFinished == true || setupFinished == "true") {
-            return false;
-        } else {
-            return true;
-        }
+    isSetupFinished: () => {
+        return Template.instance().setupFinished.get();
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();

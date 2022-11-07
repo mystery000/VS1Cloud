@@ -57,35 +57,35 @@ Template.generalledger.onRendered(() => {
   // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
   var fromDate =
     fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
-  templateObject.dateAsAt.set(begunDate);
+  // templateObject.dateAsAt.set(begunDate);
   const dataTableList = [];
   const deptrecords = [];
-  $("#date-input,#dateTo,#dateFrom").datepicker({
-    showOn: "button",
-    buttonText: "Show Date",
-    buttonImageOnly: true,
-    buttonImage: "/img/imgCal2.png",
-    dateFormat: "dd/mm/yy",
-    showOtherMonths: true,
-    selectOtherMonths: true,
-    changeMonth: true,
-    changeYear: true,
-    yearRange: "-90:+10",
-    onChangeMonthYear: function (year, month, inst) {
-      // Set date to picker
-      $(this).datepicker(
-        "setDate",
-        new Date(year, inst.selectedMonth, inst.selectedDay)
-      );
-      // Hide (close) the picker
-      // $(this).datepicker('hide');
-      // // Change ttrigger the on change function
-      // $(this).trigger('change');
-    },
-  });
+  // $("#date-input,#dateTo,#dateFrom").datepicker({
+  //   showOn: "button",
+  //   buttonText: "Show Date",
+  //   buttonImageOnly: true,
+  //   buttonImage: "/img/imgCal2.png",
+  //   dateFormat: "dd/mm/yy",
+  //   showOtherMonths: true,
+  //   selectOtherMonths: true,
+  //   changeMonth: true,
+  //   changeYear: true,
+  //   yearRange: "-90:+10",
+  //   onChangeMonthYear: function (year, month, inst) {
+  //     // Set date to picker
+  //     $(this).datepicker(
+  //       "setDate",
+  //       new Date(year, inst.selectedMonth, inst.selectedDay)
+  //     );
+  //     // Hide (close) the picker
+  //     // $(this).datepicker('hide');
+  //     // // Change ttrigger the on change function
+  //     // $(this).trigger('change');
+  //   },
+  // });
 
-  $("#dateFrom").val(fromDate);
-  $("#dateTo").val(begunDate);
+  // $("#dateFrom").val(fromDate);
+  // $("#dateTo").val(begunDate);
 
   templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
@@ -601,13 +601,13 @@ Template.generalledger.onRendered(() => {
       $(".fullScreenSpin").css("display", "none");
     }
   };
-  templateObject.setReportOptions();
+  // templateObject.setReportOptions();
   var currentDate2 = new Date();
   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
 
   let getDateFrom =currentDate2.getFullYear() +"-" +currentDate2.getMonth() +"-" +currentDate2.getDate();
 
-  templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+  // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
 
   templateObject.getDepartments = function () {
     reportService.getDepartment().then(function (data) {
@@ -712,102 +712,102 @@ Template.generalledger.events({
   //     "_self"
   //   );
   // },
-  "change #dateTo": function () {
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    templateObject.records.set("");
-    templateObject.grandrecords.set("");
-    setTimeout(function () {
-      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+  // "change #dateTo": function () {
+  //   let templateObject = Template.instance();
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   $("#dateFrom").attr("readonly", false);
+  //   $("#dateTo").attr("readonly", false);
+  //   templateObject.records.set("");
+  //   templateObject.grandrecords.set("");
+  //   setTimeout(function () {
+  //     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+  //     var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-      let formatDateFrom =
-        dateFrom.getFullYear() +
-        "-" +
-        (dateFrom.getMonth() + 1) +
-        "-" +
-        dateFrom.getDate();
-      let formatDateTo =
-        dateTo.getFullYear() +
-        "-" +
-        (dateTo.getMonth() + 1) +
-        "-" +
-        dateTo.getDate();
+  //     let formatDateFrom =
+  //       dateFrom.getFullYear() +
+  //       "-" +
+  //       (dateFrom.getMonth() + 1) +
+  //       "-" +
+  //       dateFrom.getDate();
+  //     let formatDateTo =
+  //       dateTo.getFullYear() +
+  //       "-" +
+  //       (dateTo.getMonth() + 1) +
+  //       "-" +
+  //       dateTo.getDate();
 
-      //templateObject.getGeneralLedgerReports(formatDateFrom,formatDateTo,false);
-      var formatDate =
-        dateTo.getDate() +
-        "/" +
-        (dateTo.getMonth() + 1) +
-        "/" +
-        dateTo.getFullYear();
-      //templateObject.dateAsAt.set(formatDate);
-      if (
-        $("#dateFrom").val().replace(/\s/g, "") == "" &&
-        $("#dateFrom").val().replace(/\s/g, "") == ""
-      ) {
-        templateObject.getGeneralLedgerReports("", "", true);
-        templateObject.dateAsAt.set("Current Date");
-      } else {
-        templateObject.getGeneralLedgerReports(
-          formatDateFrom,
-          formatDateTo,
-          false
-        );
-        templateObject.dateAsAt.set(formatDate);
-      }
-    }, 500);
-  },
-  "change #dateFrom": function () {
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    templateObject.records.set("");
-    templateObject.grandrecords.set("");
-    setTimeout(function () {
-      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+  //     //templateObject.getGeneralLedgerReports(formatDateFrom,formatDateTo,false);
+  //     var formatDate =
+  //       dateTo.getDate() +
+  //       "/" +
+  //       (dateTo.getMonth() + 1) +
+  //       "/" +
+  //       dateTo.getFullYear();
+  //     //templateObject.dateAsAt.set(formatDate);
+  //     if (
+  //       $("#dateFrom").val().replace(/\s/g, "") == "" &&
+  //       $("#dateFrom").val().replace(/\s/g, "") == ""
+  //     ) {
+  //       templateObject.getGeneralLedgerReports("", "", true);
+  //       templateObject.dateAsAt.set("Current Date");
+  //     } else {
+  //       templateObject.getGeneralLedgerReports(
+  //         formatDateFrom,
+  //         formatDateTo,
+  //         false
+  //       );
+  //       templateObject.dateAsAt.set(formatDate);
+  //     }
+  //   }, 500);
+  // },
+  // "change #dateFrom": function () {
+  //   let templateObject = Template.instance();
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   $("#dateFrom").attr("readonly", false);
+  //   $("#dateTo").attr("readonly", false);
+  //   templateObject.records.set("");
+  //   templateObject.grandrecords.set("");
+  //   setTimeout(function () {
+  //     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+  //     var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-      let formatDateFrom =
-        dateFrom.getFullYear() +
-        "-" +
-        (dateFrom.getMonth() + 1) +
-        "-" +
-        dateFrom.getDate();
-      let formatDateTo =
-        dateTo.getFullYear() +
-        "-" +
-        (dateTo.getMonth() + 1) +
-        "-" +
-        dateTo.getDate();
+  //     let formatDateFrom =
+  //       dateFrom.getFullYear() +
+  //       "-" +
+  //       (dateFrom.getMonth() + 1) +
+  //       "-" +
+  //       dateFrom.getDate();
+  //     let formatDateTo =
+  //       dateTo.getFullYear() +
+  //       "-" +
+  //       (dateTo.getMonth() + 1) +
+  //       "-" +
+  //       dateTo.getDate();
 
-      //templateObject.getGeneralLedgerReports(formatDateFrom,formatDateTo,false);
-      var formatDate =
-        dateTo.getDate() +
-        "/" +
-        (dateTo.getMonth() + 1) +
-        "/" +
-        dateTo.getFullYear();
-      //templateObject.dateAsAt.set(formatDate);
-      if (
-        $("#dateFrom").val().replace(/\s/g, "") == "" &&
-        $("#dateFrom").val().replace(/\s/g, "") == ""
-      ) {
-        templateObject.getGeneralLedgerReports("", "", true);
-        templateObject.dateAsAt.set("Current Date");
-      } else {
-        templateObject.getGeneralLedgerReports(
-          formatDateFrom,
-          formatDateTo,
-          false
-        );
-        templateObject.dateAsAt.set(formatDate);
-      }
-    }, 500);
-  },
+  //     //templateObject.getGeneralLedgerReports(formatDateFrom,formatDateTo,false);
+  //     var formatDate =
+  //       dateTo.getDate() +
+  //       "/" +
+  //       (dateTo.getMonth() + 1) +
+  //       "/" +
+  //       dateTo.getFullYear();
+  //     //templateObject.dateAsAt.set(formatDate);
+  //     if (
+  //       $("#dateFrom").val().replace(/\s/g, "") == "" &&
+  //       $("#dateFrom").val().replace(/\s/g, "") == ""
+  //     ) {
+  //       templateObject.getGeneralLedgerReports("", "", true);
+  //       templateObject.dateAsAt.set("Current Date");
+  //     } else {
+  //       templateObject.getGeneralLedgerReports(
+  //         formatDateFrom,
+  //         formatDateTo,
+  //         false
+  //       );
+  //       templateObject.dateAsAt.set(formatDate);
+  //     }
+  //   }, 500);
+  // },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1GeneralLedger_Report", "");
@@ -921,14 +921,14 @@ Template.generalledger.events({
     //
     // });
   },
-  "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1GeneralLedger_Report', '');
-    let templateObject = Template.instance();
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    await templateObject.setReportOptions(false, dateFrom, dateTo);
-},
+//   "change .edtReportDates": async function () {
+//     $(".fullScreenSpin").css("display", "inline-block");
+//     localStorage.setItem('VS1GeneralLedger_Report', '');
+//     let templateObject = Template.instance();
+//     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+//     var dateTo = new Date($("#dateTo").datepicker("getDate"));
+//     await templateObject.setReportOptions(false, dateFrom, dateTo);
+// },
 "click #lastMonth": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem('VS1GeneralLedger_Report', '');
@@ -964,7 +964,7 @@ Template.generalledger.events({
     }
 
     var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
-    templateObject.dateAsAt.set(begunDate);
+    // templateObject.dateAsAt.set(begunDate);
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
@@ -973,15 +973,15 @@ Template.generalledger.events({
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
 },
-"click #ignoreDate": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", true);
-    $("#dateTo").attr("readonly", true);
-    localStorage.setItem('VS1GeneralLedger_Report', '');
-    let templateObject = Template.instance();
-    templateObject.dateAsAt.set("Current Date");
-    await templateObject.setReportOptions(true);
-},
+// "click #ignoreDate": async function () {
+//     $(".fullScreenSpin").css("display", "inline-block");
+//     $("#dateFrom").attr("readonly", true);
+//     $("#dateTo").attr("readonly", true);
+//     localStorage.setItem('VS1GeneralLedger_Report', '');
+//     let templateObject = Template.instance();
+//     templateObject.dateAsAt.set("Current Date");
+//     await templateObject.setReportOptions(true);
+// },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
     let searchItem = $(event.target).val();
@@ -1226,9 +1226,9 @@ Template.generalledger.helpers({
   grandrecords: () => {
     return Template.instance().grandrecords.get();
   },
-  dateAsAt: () => {
-    return Template.instance().dateAsAt.get() || "-";
-  },
+  // dateAsAt: () => {
+  //   return Template.instance().dateAsAt.get() || "-";
+  // },
   companyname: () => {
     return loggedCompany;
   },

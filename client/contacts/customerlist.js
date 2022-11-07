@@ -5,10 +5,12 @@ import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { OrganisationService } from "../js/organisation-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
+let organisationService = new OrganisationService();
 Template.customerlist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -44,15 +46,20 @@ Template.customerlist.onRendered(function() {
         }
 
     });
-    templateObject.fetchSetupWizard = async function () {
-        let setupFinished = await checkSetupFinished();
-        if (setupFinished == true || setupFinished == "true") {
-            templateObject.setupFinished.set(false)
-        } else {
-            templateObject.setupFinished.set(true)
+    templateObject.checkSetupWizardFinished = async function () {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+        if( setupFinished === null || setupFinished ===  "" ){
+            let setupInfo = await organisationService.getSetupInfo();
+            if( setupInfo.tcompanyinfo.length > 0 ){
+                let data = setupInfo.tcompanyinfo[0];
+                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+                templateObject.setupFinished.set(data.IsSetUpWizard)
+            }
+        }else{
+            templateObject.setupFinished.set(setupFinished)
         }
     }
-    templateObject.fetchSetupWizard();
+    templateObject.checkSetupWizardFinished();
 
 });
 
@@ -618,7 +625,7 @@ Template.customerlist.helpers({
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
     },
-    showSetupFinishedAlert: () => {
+    isSetupFinished: () => {
         return Template.instance().setupFinished.get();
     },    
     getSkippedSteps() {
