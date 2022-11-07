@@ -4998,6 +4998,7 @@ Template.paymentcard.events({
     // },
     'click .btnSave': (e, templateObject) => {
         playSaveAudio();
+        let paymentService = new PaymentsService();
         setTimeout(function(){
         LoadingOverlay.show();
 
@@ -5005,8 +5006,6 @@ Template.paymentcard.events({
          * We need to save it
          */
         saveCurrencyHistory();
-
-        let paymentService = new PaymentsService();
         let customer = $("#edtCustomerName").val();
         let paymentAmt = $("#edtPaymentAmount").val();
 
@@ -9692,10 +9691,11 @@ Template.paymentcard.events({
     },
     'click .btnDeleteFollowingPayments': async function (event) {
         playDeleteAudio();
-        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let paymentService = new PaymentsService();
+        setTimeout(async function(){
+        
         swal({
             title: 'Delete Payment',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -9742,9 +9742,9 @@ Template.paymentcard.events({
     },
     'click .btnDeletePayment': async function (event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let paymentService = new PaymentsService();
+        setTimeout(function(){
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -9857,9 +9857,9 @@ Template.paymentcard.events({
     },
     'click .btnDeleteLine': function (event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
+        setTimeout(function(){
         let selectLineID = $('#selectDeleteLineID').val() || 0;
         if ($('#tblPaymentcard tbody>tr').length > 1) {
             this.click;

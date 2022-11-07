@@ -1972,10 +1972,10 @@ Template.addemployeepop.events({
     },
     'click .addemployeepop .btnSaveEmpPop': async function (event) {
         playSaveAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();
+        setTimeout(async function(){
         LoadingOverlay.show();
         let title = $('.addemployeepop #edtTitle').val();
         let firstname = $('.addemployeepop #edtFirstName').val();
@@ -3467,9 +3467,9 @@ Template.addemployeepop.events({
     },
     'click .addemployeepop .btnSaveSettings': function (event) {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
-
+        setTimeout(function(){
+        
         $('.addemployeepop .lblCustomField1').html('');
         $('.addemployeepop .lblCustomField2').html('');
         $('.addemployeepop .lblCustomField3').html('');
@@ -3709,12 +3709,11 @@ Template.addemployeepop.events({
     },
     'click .addemployeepop .btnDeleteEmployee': function (event) {
         playDeleteAudio();
-        setTimeout(function(){
-        LoadingOverlay.show();
-
+        
         let templateObject = Template.instance();
         let contactService2 = new ContactService();
-
+        setTimeout(function(){
+        LoadingOverlay.show();
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
 

@@ -2935,7 +2935,7 @@ Template.vatreturn.events({
     'click .btnDelete': function(event) {
         playDeleteAudio();
         let templateObject = Template.instance();
-
+        setTimeout(function(){
         if (templateObject.getId.get()) {
             swal({
                 title: 'Delete VAT Return',
@@ -2977,6 +2977,7 @@ Template.vatreturn.events({
                 } else {}
             });
         }
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();

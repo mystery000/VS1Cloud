@@ -4682,11 +4682,12 @@ Template.dsmAppointmentsWidget.events({
     },
     'click #btnSaveRepeat': function () {
         playSaveAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let repeatDays = templateObject.repeatDays.get();
         let appointmentService = new AppointmentService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
         let days = [];
         let week_day = "";
         let frequency = parseInt($('#frequency').val()) || 1;
@@ -6704,8 +6705,9 @@ Template.dsmAppointmentsWidget.events({
     },
     'click #btnSaveAppointment': async function() {
         playSaveAudio();
+        let templateObject = Template.instance();
         setTimeout(function(){
-        const templateObject = Template.instance();
+        
         templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
@@ -6730,7 +6732,6 @@ Template.dsmAppointmentsWidget.events({
               $('#btnSaveAppointmentSubmit').trigger('click');
             }
         } else {
-            const templateObject = Template.instance();
             const smsSettings = templateObject.defaultSMSSettings.get();
             if (smsCustomer || smsUser) {
                 if (!smsSettings || !smsSettings.twilioAccountId) {
@@ -6755,7 +6756,6 @@ Template.dsmAppointmentsWidget.events({
                         }
                     });
                 } else {
-                    const templateObject = Template.instance();
                     $('#saveAppointmentModal').modal('show');
                     const accountName = $('#customer').val();
                     const employeeName = $('#employee_name').val();
@@ -6794,8 +6794,9 @@ Template.dsmAppointmentsWidget.events({
     'click #btnSaveAppointmentSubmit': async function(e) {
         playSaveAudio();
         e.preventDefault();
+        let templateObject = Template.instance();
         setTimeout(async function(){
-        const templateObject = Template.instance();
+        
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
         const customerPhone = $('#mobile').val();

@@ -1113,10 +1113,11 @@ Template.newprofitandloss.events({
   //custom selection period number
   "click .btnSaveComparisonPeriods": async function (event) {
     playSaveAudio();
+    let templateObject = Template.instance();
     setTimeout(async function(){
     let periods = $("#comparisonPeriodNum").val();
     $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
+    
     let defaultOptions = await templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.compPeriod = periods;

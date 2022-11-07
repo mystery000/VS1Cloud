@@ -8492,10 +8492,10 @@ Template.supplierpaymentcard.events({
   },
   "click .btnSave": (e, ui) => {
   playSaveAudio();
+  let templateObject = Template.instance();
+  let paymentService = new PaymentsService();
   setTimeout(function(){
-    LoadingOverlay.show();
-    let templateObject = Template.instance();
-    let paymentService = new PaymentsService();
+    LoadingOverlay.show();  
     let customer = $("#edtSupplierName").val();
     let paymentAmt = $("#edtPaymentAmount").val();
     var paymentDateTime = new Date($("#dtPaymentDate").datepicker("getDate"));
@@ -12639,10 +12639,11 @@ Template.supplierpaymentcard.events({
   },
   "click .btnDeleteFollowingPayments": async function (event) {
     playDeleteAudio();
-    setTimeout(async function(){
     var currentDate = new Date();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
+    setTimeout(async function(){
+    
     swal({
         title: 'Delete Payment',
         text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -12689,9 +12690,9 @@ Template.supplierpaymentcard.events({
   },
   "click .btnDeletePayment": async function (event) {
     playDeleteAudio();
-    setTimeout(async function(){
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
+    setTimeout(async function(){
     var url = FlowRouter.current().path;
     var getso_id = url.split('?id=');
     var currentInvoice = getso_id[getso_id.length - 1];
@@ -12747,9 +12748,10 @@ Template.supplierpaymentcard.events({
   },
   "click .btnDeleteLine": function (event) {
     playDeleteAudio();
-    setTimeout(function(){
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
+    setTimeout(function(){
+    
     let selectLineID = $("#selectDeleteLineID").val() || 0;
     if ($("#tblSupplierPaymentcard tbody>tr").length > 1) {
       this.click;

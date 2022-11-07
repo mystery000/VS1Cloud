@@ -173,11 +173,10 @@ Template.termsettings.events({
   },
   'click .btnDeleteTerms': function () {
     playDeleteAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
+    
     let termsId = $('#selectDeleteLineID').val();
-
-
     let objDetails = {
         type: "TTermsVS1",
         fields: {
@@ -216,9 +215,10 @@ Template.termsettings.events({
   },
   'click .btnSaveTerms': function () {
     playSaveAudio();
+    let taxRateService = new TaxRateService();
     setTimeout(function(){
     $('.fullScreenSpin').css('display','inline-block');
-    let taxRateService = new TaxRateService();
+    
     let termsID = $('#edtTermsID').val();
     let termsName = $('#edtName').val();
     let description = $('#edtDesc').val();

@@ -161,9 +161,10 @@ Template.tripgroup.events({
     },
     'click .btnDelete': function () {
         playDeleteAudio();
+        let receiptService = new ReceiptService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let receiptService = new ReceiptService();
+        
         let tripGroupId = $('#selectDeleteLineID').val();
         let objDetails = {
             type: "TTripGroup",
@@ -202,9 +203,10 @@ Template.tripgroup.events({
     },
     'click .btnSave': function () {
         playSaveAudio();
+        let receiptService = new ReceiptService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let receiptService = new ReceiptService();
+        
         let tripGroupID = $('#edtTripGroupID').val();
         let tripGroupName = $('#edtTripGroupName').val();
         if (tripGroupName == '') {

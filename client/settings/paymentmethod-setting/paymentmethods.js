@@ -277,11 +277,10 @@ Template.paymentmethodSettings.events({
   },
   'click .btnDeletePaymentMethod': function () {
     playDeleteAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
+    
     let paymentMethodId = $('#selectDeleteLineID').val();
-
-
     let objDetails = {
         type: "TPaymentMethod",
         fields: {
@@ -320,9 +319,10 @@ Template.paymentmethodSettings.events({
   },
   'click .btnSavePaymentMethod': function () {
     playSaveAudio();
+    let taxRateService = new TaxRateService();
     setTimeout(function(){
     $('.fullScreenSpin').css('display','inline-block');
-    let taxRateService = new TaxRateService();
+    
     let paymentMethodID = $('#edtPaymentMethodID').val();
     //let headerDept = $('#sltDepartment').val();
     let paymentName = $('#edtPaymentMethodName').val();

@@ -503,9 +503,9 @@ Template.companyappsettingsdup.events({
     },
     'click .btnTopGlobalSave': function () {
         playSaveAudio();
+        let templateObject = Template.instance();
         setTimeout(function(){
         // $('.fullScreenSpin').css('display', 'inline-block');
-        const templateObject = Template.instance();
         let checkLinkTrueERP = false;
         let cloudPackageCheck = localStorage.getItem('vs1cloudlicenselevel');
         cloudPackageCheck = 'Simple Start';

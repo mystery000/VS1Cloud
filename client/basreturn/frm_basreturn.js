@@ -2898,8 +2898,9 @@ Template.basreturn.events({
     },
     'click .btnDelete': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
 
         if (templateObject.getId.get()) {
             swal({

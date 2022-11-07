@@ -1247,9 +1247,9 @@ Template.customfieldpop.onRendered(() => {
 Template.customfieldpop.events({
   "click .btnSaveCustomFieldDropdown": function (e) {
     playSaveAudio();
-    setTimeout(function(){
     const templateObject = Template.instance();
     let organisationService = new OrganisationService();
+    setTimeout(function(){
     let customFieldDropdownId = $("#customFieldDropdownId").val() ? parseInt($("#customFieldDropdownId").val()) : 0;
     let newCustomFieldDropdownName = $("#newCustomFieldDropdownName").val();
 
@@ -1324,12 +1324,10 @@ Template.customfieldpop.events({
 
   "click .btnSaveCustomField": function () {
     playSaveAudio();
-    setTimeout(function(){
     const templateObject = Template.instance();
-
-    let data_id = $("#currentCustomField").val();
-
     let organisationService = new OrganisationService();
+    setTimeout(function(){
+    let data_id = $("#currentCustomField").val();
     var url = FlowRouter.current().path;
     let fieldID = parseInt($("#statusId" + data_id).val()) || "";
     let termsName = $("#customFieldText" + data_id).val() || "";

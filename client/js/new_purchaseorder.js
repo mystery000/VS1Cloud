@@ -7588,10 +7588,11 @@ Template.purchaseordercard.events({
     },
     'click .btnDeleteFollowingPOs': async function(event) {
         playDeleteAudio();
-        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        setTimeout(async function(){
+        
         swal({
             title: 'Delete Purchase Order',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -7704,10 +7705,12 @@ Template.purchaseordercard.events({
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
-        let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
+        setTimeout(function(){
+        
+        let taxcodeList = templateObject.taxraterecords.get();
+        
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblPurchaseOrderLine tbody>tr').length > 1) {
             this.click;
@@ -7868,12 +7871,13 @@ Template.purchaseordercard.events({
     },
     'click .btnSave': async (event, templateObject) => {
         playSaveAudio();
+        let tempObject = Template.instance();
+        let purchaseService = new PurchaseBoardService();
         setTimeout(async function(){
         saveCurrencyHistory();
-        let tempObject = Template.instance();
         let isBORedirect = await tempObject.isbackorderredirect.get() || false;
         let suppliername = $('#edtSupplierName');
-        let purchaseService = new PurchaseBoardService();
+        
         let termname = $('#sltTerms').val() || '';
         if (termname === '') {
             swal('Terms has not been selected!', '', 'warning');
@@ -8984,6 +8988,7 @@ Template.purchaseordercard.events({
     },
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
+        let templateObject = Template.instance();
         setTimeout(async function(){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
@@ -9012,7 +9017,7 @@ Template.purchaseordercard.events({
         lineItems.push(lineItemObj);
       });
 
-      let templateObject = Template.instance();
+      
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);

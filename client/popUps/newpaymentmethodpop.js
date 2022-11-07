@@ -793,9 +793,10 @@ Template.newpaymentmethodpop.onRendered(function() {
 Template.newpaymentmethodpop.events({
     'click .btnSavePaymentMethodPOP': function() {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let taxRateService = new TaxRateService();
+        
         var currentLoc = FlowRouter.current().path;
         let paymentMethodID = $('#edtPaymentMethodID').val()||'';
         let paymentName = $('#edtPaymentMethodName').val();

@@ -1264,8 +1264,8 @@ Template.dashboardexe.events({
 
   "click #btnDone2": async () => {
     playSaveAudio();
+    let templateObject = Template.instance();
     setTimeout(async function(){
-    const templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "block");
     await saveCharts();
     await chartsEditor.disable();

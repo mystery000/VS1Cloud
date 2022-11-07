@@ -1229,8 +1229,8 @@ Template.currenciessettings.events({
   },
   "click .btnDeleteCurrency": function () {
     playDeleteAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let currencyId = $("#selectDeleteLineID").val();
 
     let objDetails = {
@@ -1331,8 +1331,9 @@ Template.currenciessettings.events({
   // },
   "click .btnSaveCurrency": e => {
     playSaveAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
+    
     LoadingOverlay.show();
     var currencyid = $("#edtCurrencyID").val();
     var country = $("#sedtCountry").val();

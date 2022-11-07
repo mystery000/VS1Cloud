@@ -5107,9 +5107,10 @@ Template.setup.events({
   },
   "click .btnSaveTaxRate": function () {
     playSaveAudio();
+    let taxRateService = new TaxRateService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    let taxRateService = new TaxRateService();
+    
     let taxtID = $("#edtTaxID").val();
     let taxName = $("#edtTaxName").val();
     let taxDesc = $("#edtTaxDesc").val();
@@ -5279,8 +5280,8 @@ Template.setup.events({
   },
   "click .btnDeleteTaxRate": function () {
     playDeleteAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let taxCodeId = $("#selectDeleteLineID").val();
 
     let objDetails = {
@@ -5572,8 +5573,8 @@ Template.setup.events({
   },
   "click .btnDeletePaymentMethod": function () {
     playDeleteAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let paymentMethodId = $("#selectDeleteLineID").val();
 
     let objDetails = {
@@ -5621,9 +5622,10 @@ Template.setup.events({
     },
   "click .btnSavePaymentMethod": function () {
     playSaveAudio();
+    let taxRateService = new TaxRateService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    let taxRateService = new TaxRateService();
+    
     let paymentMethodID = $("#edtPaymentMethodID").val();
     //let headerDept = $('#sltDepartment').val();
     let paymentName = $("#edtPaymentMethodName").val();
@@ -6066,10 +6068,9 @@ Template.setup.events({
   },
   "click .btnDeleteTerms": function () {
     playDeleteAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let termsId = $("#selectDeleteLineID").val();
-
     let objDetails = {
       type: "TTerms",
       fields: {
@@ -6115,9 +6116,10 @@ Template.setup.events({
     },
   "click .btnSaveTerms": function () {
     playSaveAudio();
+    let taxRateService = new TaxRateService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    let taxRateService = new TaxRateService();
+    
     let termsID = $("#edtTermsID").val();
     let termsName = $("#edtName").val();
     let description = $("#edtDesc").val();
@@ -7491,9 +7493,10 @@ Template.setup.events({
   },
   "click .btnSaveStatus": function () {
     playSaveAudio();
+    let clientService = new SalesBoardService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    let clientService = new SalesBoardService();
+    
     let status = $("#status").val();
     let leadData = {
       type: "TLeadStatusType",
