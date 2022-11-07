@@ -665,10 +665,16 @@ Template.setup.onRendered(function () {
     let tableHeaderList = [];
     let _taxRatesHeaders = [];
     let dataObject = await getVS1Data("TTaxcodeVS1");
+    let regionName = "Australia";
+    const dataListRet = await organisationService.getOrganisationDetail();
+    if( dataListRet.tcompanyinfo.length > 0 ){
+      let mainData = dataListRet.tcompanyinfo[0];
+      regionName = mainData.Country
+    }
     let _taxRateList = [];
     let data =
       dataObject.length == 0
-        ? await taxRateService.getTaxRateVS1()
+        ? await taxRateService.getTaxRateVS1( regionName )
         : JSON.parse(dataObject[0].data);
 
     if (data.ttaxcodevs1) {
