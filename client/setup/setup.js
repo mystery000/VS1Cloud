@@ -680,15 +680,17 @@ Template.setup.onRendered(function () {
     if (data.ttaxcodevs1) {
       data.ttaxcodevs1.forEach((rate) => {
         let taxRate = (rate.Rate * 100).toFixed(2) + "%";
-        var dataList = {
-          id: rate.Id || "",
-          codename: rate.CodeName || "-",
-          description: rate.Description || "-",
-          region: rate.RegionName || "-",
-          rate: taxRate || "-",
-        };
+        if( rate.RegionName == regionName ){
+          var dataList = {
+            id: rate.Id || "",
+            codename: rate.CodeName || "-",
+            description: rate.Description || "-",
+            region: rate.RegionName || "-",
+            rate: taxRate || "-",
+          };
 
-        _taxRateList.push(dataList);
+          _taxRateList.push(dataList);
+        }
       });
 
       await templateObject.taxRates.set(_taxRateList);
