@@ -703,10 +703,10 @@ Template.employeetimeclock.events({
   },
   'click .btnSaveTimeSheet': function () {
     playSaveAudio();
-    setTimeout(function(){
-    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
+    setTimeout(function(){
+    $('.fullScreenSpin').css('display', 'inline-block');
     //let timesheetID = $('#edtTimesheetID').val();
     var employeeName = $('.employee_name').val();
     var jobName = $('#sltJob').val();
@@ -812,10 +812,11 @@ Template.employeetimeclock.events({
   },
   'click .btnDeleteTimeSheet': function () {
     playDeleteAudio();
-    setTimeout(function(){
-    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
+    setTimeout(function(){
+    $('.fullScreenSpin').css('display', 'inline-block');
+    
     let timesheetID = $('#edtTimesheetID').val();
 
     if (timesheetID == "") {

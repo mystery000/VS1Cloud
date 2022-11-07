@@ -11,9 +11,10 @@ Template.newstatuspop.helpers({});
 Template.newstatuspop.events({
     'click .btnSaveStatus': function() {
         playSaveAudio();
+        let clientService = new SalesBoardService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let clientService = new SalesBoardService()
+        
         let statusName = $('#newStatus').val();
         let statusId = $('#statusId').val();
         let statusDesc = $('#description').val();

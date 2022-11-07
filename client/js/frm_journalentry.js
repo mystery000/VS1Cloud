@@ -3255,10 +3255,11 @@ Template.journalentrycard.events({
     },
     'click .btnDeleteFollowingJournals': async function(event) {
         playDeleteAudio();
-        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        setTimeout(async function(){
+        
         swal({
             title: 'Delete Journal Entry',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -3306,10 +3307,11 @@ Template.journalentrycard.events({
     },
     'click .btnDeleteJournal': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -3367,9 +3369,10 @@ Template.journalentrycard.events({
     },
     'click .btnDelete': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        setTimeout(function(){
+        
         swal({
             title: 'Delete Journal Entry',
             text: "Are you sure you want to Delete this Journal Entry?",
@@ -3438,10 +3441,11 @@ Template.journalentrycard.events({
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
-        let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
+        setTimeout(function(){
+        
+        let taxcodeList = templateObject.taxraterecords.get();
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblJournalEntryLine tbody>tr').length > 1) {
             this.click;
@@ -3502,11 +3506,14 @@ Template.journalentrycard.events({
     },
     'click .btnSave': function(event) {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
+        let purchaseService = new PurchaseBoardService();
+        let uploadedItems = templateObject.uploadedFiles.get();
+        setTimeout(function(){
+        
         let department = $('#sltDepartment').val();
         let headMemo = $('#txaMemo').val();
-        let purchaseService = new PurchaseBoardService();
+        
         if (department === '') {
           swal({
               title: "Department has not been selected!",
@@ -3537,7 +3544,7 @@ Template.journalentrycard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentBill = getso_id[getso_id.length - 1];
-            let uploadedItems = templateObject.uploadedFiles.get();
+            
             var objDetails = '';
             if (getso_id[1]) {
                 $('#tblJournalEntryLine > tbody > tr').each(function() {

@@ -2087,8 +2087,8 @@ Template.bankrecon2.events({
     },
     'click .btnDeleteRecon': function(e) {
         playDeleteAudio();
-        setTimeout(function(){
         let recService = new ReconService();
+        setTimeout(function(){
         swal({
             title: 'Delete Bank Reconciliation',
             text: "Are you sure you want to Delete Bank Reconciliation?",

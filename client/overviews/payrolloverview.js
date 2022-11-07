@@ -5002,17 +5002,18 @@ Template.payrolloverview.events({
   },
   "click .btnSaveTimeSheet": async function () {
     playSaveAudio();
+    let templateObject = Template.instance();
+    let contactService = new ContactService();
     setTimeout(async function(){
     LoadingOverlay.show();
-    let templateObject = Template.instance();
+    
     let showTimesheetStatus = Session.get("CloudShowTimesheet") || true;
     let checkStatus = "";
     let checkStartTime = "";
     let checkEndTime = "";
     let TimeSheetHours = 0;
     let updateID = $("#updateID").val() || "";
-    let contactService = new ContactService();
-
+    
     let clockList = templateObject.timesheetrecords.get();
 
     let getEmpIDFromLine = $(".employee_name").val() || "";
@@ -6404,10 +6405,9 @@ Template.payrolloverview.events({
   },
   "click .btnDeleteTimeSheet": function () {
     playDeleteAudio();
-    setTimeout(function(){
     let templateObject = Template.instance();
     let contactService = new ContactService();
-
+    setTimeout(function(){
     swal({
       title: "Delete TimeSheet",
       text: "Are you sure you want to Delete this TimeSheet?",

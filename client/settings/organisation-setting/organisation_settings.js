@@ -988,9 +988,10 @@ Template.organisationsettings.events({
     },
     "click #saveCompanyInfo": function(event) {
         playSaveAudio();
+        let templateObject = Template.instance();
         setTimeout(function(){
         $(".fullScreenSpin").css("display", "inline-block");
-        const templateObject = Template.instance();
+        
         let companyID = 1;
         let companyName = $("#displayname").val();
         let tradingName = $("#tradingname").val();

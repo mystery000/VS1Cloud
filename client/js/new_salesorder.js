@@ -9553,10 +9553,11 @@ Template.new_salesorder.events({
     },
     'click .btnDeleteFollowingSOs': async function(event) {
         playDeleteAudio();
-        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
+        setTimeout(async function(){
+        
         swal({
             title: 'Delete Sales Order',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -9604,10 +9605,11 @@ Template.new_salesorder.events({
     },
     'click .btnDeleteSO': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
-        LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
+        setTimeout(function(){
+        LoadingOverlay.show();
+        
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -9647,10 +9649,10 @@ Template.new_salesorder.events({
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
-        let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
+        setTimeout(function(){
+        let taxcodeList = templateObject.taxraterecords.get();
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblSalesOrderLine tbody>tr').length > 1) {
             this.click;
@@ -9809,15 +9811,18 @@ Template.new_salesorder.events({
     },
     'click .btnSave': (event, templateObject) => {
         playSaveAudio();
+        // let templateObject = Template.instance();
+        let salesService = new SalesBoardService();
+        let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(function(){
         saveCurrencyHistory();
-       // let templateObject = Template.instance();
+       
         let stripe_id = templateObject.accountID.get();
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         let customername = $('#edtCustomerName');
         let name = $('#edtCustomerEmail').attr('customerfirstname');
         let surname = $('#edtCustomerEmail').attr('customerlastname');
-        let salesService = new SalesBoardService();
+        
         let termname = $('#sltTerms').val() || '';
         if (termname === '') {
             swal('Terms has not been selected!', '', 'warning');
@@ -9959,7 +9964,7 @@ Template.new_salesorder.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentSalesOrder = getso_id[getso_id.length - 1];
-            let uploadedItems = templateObject.uploadedFiles.get();
+            
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
             let foreignCurrencyFields = {}
@@ -10975,6 +10980,7 @@ Template.new_salesorder.events({
     // custom field displaysettings
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
+        let templateObject = Template.instance();
         setTimeout(async function(){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
@@ -11003,7 +11009,7 @@ Template.new_salesorder.events({
         lineItems.push(lineItemObj);
       });
 
-      let templateObject = Template.instance();
+      
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
@@ -12356,6 +12362,7 @@ Template.new_salesorder.events({
           $("#copyFrequencyModal").modal("toggle");
         }, delayTimeAfterSound);
         //Commented Original Code
+    //         let uploadedItems = templateObject.uploadedFiles.get();
     //     setTimeout(function(){
     //     //FlowRouter.go('/salesorderslist');
     //     //window.open('/invoicelist','_self');
@@ -12446,7 +12453,7 @@ Template.new_salesorder.events({
     //         var url = FlowRouter.current().path;
     //         var getso_id = url.split('?id=');
     //         var currentSalesOrder = getso_id[getso_id.length - 1];
-    //         let uploadedItems = templateObject.uploadedFiles.get();
+    
     //         var currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //         let ForeignExchangeRate = $('#exchange_rate').val();
     //         let foreignCurrencyFields = {}

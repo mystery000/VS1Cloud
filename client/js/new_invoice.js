@@ -17074,10 +17074,11 @@ Template.new_invoice.events({
   },
   "click .btnDeleteFollowingInvoices": async function (event) {
     playDeleteAudio();
-    setTimeout(async function(){
     var currentDate = new Date();
     let templateObject = Template.instance();
     let salesService = new SalesBoardService();
+    setTimeout(async function(){
+    
     swal({
       title: 'Delete Invoice',
       text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -17140,10 +17141,11 @@ Template.new_invoice.events({
   },
   "click .btnDeleteInvoice": function (event) {
     playDeleteAudio();
-    setTimeout(function(){
-    $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     let salesService = new SalesBoardService();
+    setTimeout(function(){
+    $(".fullScreenSpin").css("display", "inline-block");
+    
     var url = FlowRouter.current().path;
     var getso_id = url.split("?id=");
     var currentInvoice = getso_id[getso_id.length - 1];
@@ -17204,10 +17206,11 @@ Template.new_invoice.events({
   },
   "click .btnDeleteLine": function (event) {
     playDeleteAudio();
-    setTimeout(function(){
     let templateObject = Template.instance();
-    let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
+    setTimeout(function(){
+    
+    let taxcodeList = templateObject.taxraterecords.get();
     let selectLineID = $("#selectDeleteLineID").val();
     if ($("#tblInvoiceLine tbody>tr").length > 1) {
       this.click;
@@ -17415,9 +17418,12 @@ Template.new_invoice.events({
   // },
   "click .btnSave":  (event, templateObject) => {
     playSaveAudio();
+    // let templateObject = Template.instance();
+    let salesService = new SalesBoardService();
+    let uploadedItems = templateObject.uploadedFiles.get();
     setTimeout(function(){
     saveCurrencyHistory();
-    // let templateObject = Template.instance();
+    
     let stripe_id = templateObject.accountID.get();
     let stripe_fee_method = templateObject.stripe_fee_method.get();
     let lineItems = [];
@@ -17425,7 +17431,7 @@ Template.new_invoice.events({
     let customername = $("#edtCustomerName");
     let name = $("#edtCustomerEmail").attr("customerfirstname");
     let surname = $("#edtCustomerEmail").attr("customerlastname");
-    let salesService = new SalesBoardService();
+    
     let termname = $("#sltTerms").val() || "";
     if (termname === "") {
       swal({
@@ -17644,7 +17650,7 @@ Template.new_invoice.events({
       var url = FlowRouter.current().path;
       var getso_id = url.split("?id=");
       var currentInvoice = getso_id[getso_id.length - 1];
-      let uploadedItems = templateObject.uploadedFiles.get();
+      
       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
       let ForeignExchangeRate = $('#exchange_rate').val();
       var objDetails = "";
@@ -18819,6 +18825,7 @@ Template.new_invoice.events({
   // custom field displaysettings
   "click .btnSaveGridSettings": async function (event) {
     playSaveAudio();
+    let templateObject = Template.instance();
     setTimeout(async function(){
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
@@ -18847,7 +18854,7 @@ Template.new_invoice.events({
       lineItems.push(lineItemObj);
     });
 
-    let templateObject = Template.instance();
+    
     let reset_data = templateObject.reset_data.get();
     reset_data = reset_data.filter(redata => redata.display == false);
     lineItems.push(...reset_data);
@@ -20021,6 +20028,7 @@ Template.new_invoice.events({
       }
       $("#copyFrequencyModal").modal("toggle");
     }, delayTimeAfterSound);
+  //       let uploadedItems = templateObject.uploadedFiles.get();
   //   setTimeout(function(){
   //   $(".fullScreenSpin").css("display", "inline-block");
   //   var url = FlowRouter.current().path;
@@ -20177,7 +20185,7 @@ Template.new_invoice.events({
   //       var url = FlowRouter.current().path;
   //       var getso_id = url.split("?id=");
   //       var currentInvoice = getso_id[getso_id.length - 1];
-  //       let uploadedItems = templateObject.uploadedFiles.get();
+  
   //       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
   //       let ForeignExchangeRate = $('#exchange_rate').val();
   //       var objDetails = "";

@@ -69,6 +69,8 @@ Template.non_transactional_list.onRendered(function() {
       currenttablename = "tblPaymentMethodList"; //Done Something Here;
     }else if (url.includes("/termsettings")) {
       currenttablename = "tblTermsList"; //Done Something Here;
+    }else if (url.includes("/uomSettings")) {
+      currenttablename = "tblUOMList"; //Done Something Here;
     }
     templateObject.tablename.set(currenttablename);
 
@@ -184,6 +186,23 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 6, label: 'Custom Default', class: 'colCustomerDef', active: true, display: true, width: "125" },
                 { index: 7, label: 'Supplier Default', class: 'colSupplierDef', active: true, display: true, width: "125" },
                 { index: 8, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+              ];
+          }else if(currenttablename == "tblUOMList") { //Do Something Here
+              reset_data = [
+                { index: 0, label: '#ID', class: 'colUOMID', active: false, display: true, width: "10" },
+                { index: 1, label: 'Unit', class: 'colUOMName', active: true, display: true, width: "" },
+                { index: 2, label: 'Description', class: 'colUOMDesc', active: true, display: true, width: "" },
+                { index: 3, label: 'Link to', class: 'colUOMProduct', active: true, display: true, width: "" },
+                { index: 4, label: 'Unit Multiplier', class: 'colUOMMultiplier', active: true, display: true, width: "140" },
+                { index: 5, label: 'Sales Default', class: 'colUOMSalesDefault', active: true, display: true, width: "140" },
+                { index: 6, label: 'Purchases Default', class: 'colUOMPurchaseDefault', active: true, display: true, width: "170" },
+                { index: 7, label: 'Weight', class: 'colUOMWeight', active: true, display: true, width: "100" },
+                { index: 8, label: 'No of Boxes', class: 'colUOMNoOfBoxes', active: true, display: true, width: "120" },
+                { index: 9, label: 'Height', class: 'colUOMHeight', active: true, display: true, width: "100" },
+                { index: 10, label: 'Width', class: 'colUOMWidth', active: true, display: true, width: "100" },
+                { index: 11, label: 'Length', class: 'colUOMLength', active: true, display: true, width: "100" },
+                { index: 12, label: 'Volume', class: 'colUOMVolume', active: true, display: true, width: "100" },
+                { index: 13, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
               ];
           }
         templateObject.reset_data.set(reset_data);
@@ -1929,7 +1948,6 @@ Template.non_transactional_list.onRendered(function() {
         });
       }
       templateObject.displayDepartmentListData = async function (data) {
-      console.log(data);
     var splashArrayDepartmentList = new Array();
     let lineItems = [];
     let lineItemObj = {};
@@ -2193,7 +2211,6 @@ Template.non_transactional_list.onRendered(function() {
         });
       }
       templateObject.displayPaymentMethodListData = async function (data) {
-          console.log(data);
             var splashArrayPaymentMethodList = new Array();
             let lineItems = [];
             let lineItemObj = {};
@@ -2241,7 +2258,6 @@ Template.non_transactional_list.onRendered(function() {
             }
             //$('.fullScreenSpin').css('display','none');
             setTimeout(function () {
-                console.log(splashArrayPaymentMethodList);
                 //$('#'+currenttablename).removeClass('hiddenColumn');
                 $('#'+currenttablename).DataTable({
                     data: splashArrayPaymentMethodList,
@@ -2406,7 +2422,7 @@ Template.non_transactional_list.onRendered(function() {
           });
         }
         templateObject.displayTermsListData = async function (data) {
-            console.log(data);
+
               var splashArrayTermsList = new Array();
               let lineItems = [];
               let lineItemObj = {};
@@ -2482,7 +2498,6 @@ Template.non_transactional_list.onRendered(function() {
               }
               //$('.fullScreenSpin').css('display','none');
               setTimeout(function () {
-                  console.log(splashArrayTermsList);
                   //$('#'+currenttablename).removeClass('hiddenColumn');
                   $('#'+currenttablename).DataTable({
                       data: splashArrayTermsList,
@@ -2649,6 +2664,309 @@ Template.non_transactional_list.onRendered(function() {
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
           }
 
+      //UOM List Data
+      templateObject.getUOMListData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
+        var customerpage = 0;
+        getVS1Data('TUnitOfMeasure').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getUOMDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+                    //await addVS1Data('TUnitOfMeasure', JSON.stringify(data));
+                    templateObject.displayUOMListData(data); //Call this function to display data on the table
+                }).catch(function (err) {
+
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayUOMListData(data); //Call this function to display data on the table
+            }
+        }).catch(function (err) {
+          sideBarService.getUOMDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+              //await addVS1Data('TUnitOfMeasure', JSON.stringify(data));
+              templateObject.displayUOMListData(data); //Call this function to display data on the table
+          }).catch(function (err) {
+
+          });
+        });
+      }
+      templateObject.displayUOMListData = async function (data) {
+            var splashArrayUOMList = new Array();
+            let lineItems = [];
+            let lineItemObj = {};
+            let deleteFilter = false;
+            // if(data.Params.Search.replace(/\s/g, "") == ""){
+            //   deleteFilter = true;
+            // }else{
+            //   deleteFilter = false;
+            // };
+
+            for (let i = 0; i < data.tunitofmeasure.length; i++) {
+              let mobile = "";
+              //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
+              let linestatus = '';
+              if (data.tunitofmeasure[i].fields.Active == true) {
+                  linestatus = "";
+              } else if (data.tunitofmeasure[i].fields.Active == false) {
+                  linestatus = "In-Active";
+              };
+
+              //Check if Sales defaultis checked
+              if(data.tunitofmeasure[i].fields.SalesDefault == true){
+                  tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-'+data.tunitofmeasure[i].fields.ID+'" checked><label class="custom-control-label chkBox" for="swtSalesDefault-'+data.tunitofmeasure[i].fields.ID+'"></label></div>';
+              }else{
+                  tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-'+data.tunitofmeasure[i].fields.ID+'"><label class="custom-control-label chkBox" for="swtSalesDefault-'+data.tunitofmeasure[i].fields.ID+'"></label></div>';
+              };
+              //Check if Purchase default is checked
+              if(data.tunitofmeasure[i].fields.PurchasesDefault == true){
+                  tdPurchaseDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'"></label></div>';
+              }else{
+                  tdPurchaseDef= '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'"><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'"></label></div>';
+              };
+
+              var dataList = [
+                  data.tunitofmeasure[i].fields.ID || '',
+                  data.tunitofmeasure[i].fields.UOMName || '',
+                  data.tunitofmeasure[i].fields.UnitDescription || '',
+                  data.tunitofmeasure[i].fields.ProductName || '',
+                  data.tunitofmeasure[i].fields.Multiplier || 0,
+                  tdSupplierDef,
+                  tdPurchaseDef,
+                  data.tunitofmeasure[i].fields.Weight || 0,
+                  data.tunitofmeasure[i].fields.NoOfBoxes || 0,
+                  data.tunitofmeasure[i].fields.Height || 0,
+                  data.tunitofmeasure[i].fields.Width || 0,
+                  data.tunitofmeasure[i].fields.Length || 0,
+                  data.tunitofmeasure[i].fields.Volume || 0,
+                  linestatus,
+              ];
+
+              //if (data.temployeelist[i].EmployeeName.replace(/\s/g, "") !== "") {
+                splashArrayUOMList.push(dataList);
+                templateObject.transactiondatatablerecords.set(splashArrayUOMList);
+              //}
+
+              //}
+            }
+
+            if (templateObject.transactiondatatablerecords.get()) {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            }
+            //$('.fullScreenSpin').css('display','none');
+            setTimeout(function () {
+                //$('#'+currenttablename).removeClass('hiddenColumn');
+                $('#'+currenttablename).DataTable({
+                    data: splashArrayUOMList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
+                        {
+                        targets: 0,
+                        className: "colUOMID colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function (td, cellData, rowData, row, col) {
+                          $(td).closest("tr").attr("id", rowData[0]);
+                        }},
+                        {
+                            targets: 1,
+                            className: "colUOMName",
+                        }, {
+                            targets: 2,
+                            className: "colUOMDesc",
+                        }, {
+                            targets: 3,
+                            className: "colUOMProduct",
+                        }, {
+                            targets: 4,
+                            className: "colUOMMultiplier",
+                            width: "140",
+                        }, {
+                            targets: 5,
+                            className: "colUOMSalesDefault",
+                            width: "140",
+                        }, {
+                            targets: 6,
+                            className: "colUOMPurchaseDefault",
+                            width: "170",
+                        }, {
+                            targets: 7,
+                            className: "colUOMWeight",
+                            width: "120",
+                        }, {
+                            targets: 8,
+                            className: "colUOMNoOfBoxes",
+                            width: "100",
+                        },{
+                            targets: 9,
+                            className: "colUOMHeight",
+                            width: "100",
+                        }, {
+                            targets: 10,
+                            className: "colUOMWidth",
+                            width: "100",
+                        }, {
+                            targets: 11,
+                            className: "colUOMLength",
+                            width: "100",
+                        },{
+                            targets: 12,
+                            className: "colUOMVolume",
+                            width: "100",
+                        },{
+                            targets: 13,
+                            className: "colStatus",
+                        }],
+                    buttons: [
+                        {
+                            extend: 'csvHtml5',
+                            text: '',
+                            download: 'open',
+                            className: "btntabletocsv hiddenColumn",
+                            filename: "Units of Measure Settings",
+                            orientation:'portrait',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },{
+                            extend: 'print',
+                            download: 'open',
+                            className: "btntabletopdf hiddenColumn",
+                            text: '',
+                            title: 'Units of Measure Settings',
+                            filename: "Units of Measure Settings",
+                            exportOptions: {
+                                columns: ':visible',
+                                stripHtml: false
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: '',
+                            download: 'open',
+                            className: "btntabletoexcel hiddenColumn",
+                            filename: "Units of Measure Settings",
+                            orientation:'portrait',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+
+                        }],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[1, "asc"]],
+                    action: function () {
+                        $('#'+currenttablename).DataTable().ajax.reload();
+                    },
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#'+currenttablename+'_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+
+                            }
+                        } else {
+
+                        }
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                      $('.fullScreenSpin').css('display', 'inline-block');
+                      //var splashArrayCustomerListDupp = new Array();
+                      let dataLenght = oSettings._iDisplayLength;
+                      let customerSearch = $('#'+currenttablename+'_filter input').val();
+
+                        sideBarService.getAllTUOMList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+
+                        for (let j = 0; j < dataObjectnew.clienttypelist.length; j++) {
+                          let mobile = sideBarService.changeDialFormat(dataObjectnew.clienttypelist[j].Mobile, dataObjectnew.clienttypelist[j].Country);
+                          let linestatus = '';
+                          if (dataObjectnew.clienttypelist[j].Active == true) {
+                              linestatus = "";
+                          } else if (dataObjectnew.clienttypelist[j].Active == false) {
+                              linestatus = "In-Active";
+                          };
+
+
+                            var dataListDupp = [
+                              dataObjectnew.clienttypelist[j].ID || "",
+                              dataObjectnew.clienttypelist[j].TypeName || "",
+                              dataObjectnew.clienttypelist[j].TypeDescription || "",
+                              linestatus,
+                            ];
+
+                            splashArrayUOMList.push(dataListDupp);
+                            //}
+                        }
+                        let uniqueChars = [...new Set(splashArrayUOMList)];
+                        templateObject.transactiondatatablerecords.set(uniqueChars);
+                        var datatable = $('#'+currenttablename).DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                        setTimeout(function () {
+                          $('#'+currenttablename).dataTable().fnPageChange('last');
+                        }, 400);
+
+                        $('.fullScreenSpin').css('display', 'none');
+
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+
+                      });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                    },
+                    language: { search: "",searchPlaceholder: "Search List..." },
+                    "fnInitComplete": function (oSettings) {
+                          if(deleteFilter){
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                          }else{
+                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                          }
+                          $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+                    },
+                    "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                        //let countTableData = data.Params.Count || 0; //get count from API data
+
+                        //return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                    }
+
+                }).on('page', function () {
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                }).on('column-reorder', function () {
+
+                }).on('length.dt', function (e, settings, len) {
+
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  let dataLenght = settings._iDisplayLength;
+                  if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                      $(".fullScreenSpin").css("display", "none");
+                    } else {
+                      $(".fullScreenSpin").css("display", "none");
+                    }
+                  } else {
+                    $(".fullScreenSpin").css("display", "none");
+                  }
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
+                $(".fullScreenSpin").css("display", "none");
+            }, 0);
+
+            $('div.dataTables_filter input').addClass('form-control form-control-sm');
+          }
         //Check URL to make right call.
         if(currenttablename == "tblcontactoverview"){
             templateObject.getContactOverviewData();
@@ -2666,6 +2984,8 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getPaymentMethodData();
         }else if(currenttablename == "tblTermsList"){
             templateObject.getTermsData();
+        }else if(currenttablename == "tblUOMList"){
+            templateObject.getUOMListData();
         }
       tableResize();
     });
@@ -2702,6 +3022,9 @@ Template.non_transactional_list.events({
     }else if(currenttablename == "tblTermsList"){
         await clearData('TTermsVS1List');
         templateObject.getTermsData(true);
+    }else if(currenttablename == "tblUOMList"){
+      await clearData('TUOMList');
+      templateObject.getUOMListData(true);
     }
 
     },
@@ -2741,6 +3064,9 @@ Template.non_transactional_list.events({
     }else if(currenttablename == "tblTermsList"){
       await clearData('TTermsVS1List');
       templateObject.getTermsListData(false);
+    }else if(currenttablename == "tblUOMList"){
+      await clearData('TUOMList');
+      templateObject.getUOMListData(false);
     }
 
     },

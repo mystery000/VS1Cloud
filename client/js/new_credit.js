@@ -6605,10 +6605,11 @@ Template.creditcard.events({
     },
     'click .btnDeleteFollowingCredits': async function(event) {
         playDeleteAudio();
-        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        setTimeout(async function(){
+        
         swal({
             title: 'Delete Credit',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -6661,10 +6662,11 @@ Template.creditcard.events({
     },
     'click .btnDeleteCredit': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -6714,10 +6716,11 @@ Template.creditcard.events({
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
-        let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
+        setTimeout(function(){
+        
+        let taxcodeList = templateObject.taxraterecords.get();
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblCreditLine tbody>tr').length > 1) {
             this.click;
@@ -6849,11 +6852,13 @@ Template.creditcard.events({
     },
     'click .btnSave': (event, templateObject) => {
         playSaveAudio();
+        //let templateObject = Template.instance();
+        let purchaseService = new PurchaseBoardService();
+        let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(function(){
         saveCurrencyHistory();
-        //let templateObject = Template.instance();
+        
         let suppliername = $('#edtSupplierName');
-        let purchaseService = new PurchaseBoardService();
         let termname = $('#sltTerms').val() || '';
         if (termname === '') {
             swal('Terms has not been selected!', '', 'warning');
@@ -6931,7 +6936,7 @@ Template.creditcard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentCredit = getso_id[getso_id.length - 1];
-            let uploadedItems = templateObject.uploadedFiles.get();
+            
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
             let foreignCurrencyFields = {}
@@ -7703,6 +7708,7 @@ Template.creditcard.events({
     },
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
+        let templateObject = Template.instance();
         setTimeout(async function(){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
@@ -7731,7 +7737,7 @@ Template.creditcard.events({
         lineItems.push(lineItemObj);
       });
 
-      let templateObject = Template.instance();
+      
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);

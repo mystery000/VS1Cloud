@@ -1280,10 +1280,10 @@ Template.timesheettimelog.onRendered(function () {
         },
         'click .btnSaveTimeSheet': function () {
             playSaveAudio();
-            setTimeout(function(){
-            $('.fullScreenSpin').css('display', 'inline-block');
             let templateObject = Template.instance();
             let contactService = new ContactService();
+            setTimeout(function(){
+            $('.fullScreenSpin').css('display', 'inline-block');
             let timesheetID = $('#edtTimesheetID').val();
             var employeeName = $('#sltEmployee').val();
             var jobName = $('#sltJob').val();
@@ -1440,10 +1440,10 @@ Template.timesheettimelog.onRendered(function () {
         },
         'click .btnDeleteTimeSheet': function () {
             playDeleteAudio();
-            setTimeout(function(){
-            $('.fullScreenSpin').css('display', 'inline-block');
             let templateObject = Template.instance();
             let contactService = new ContactService();
+            setTimeout(function(){
+            $('.fullScreenSpin').css('display', 'inline-block');
             let timesheetID = $('#edtTimesheetID').val();
 
             if (timesheetID == "") {

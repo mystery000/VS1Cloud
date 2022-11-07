@@ -8,8 +8,10 @@ import Chart from "chart.js";
 import XLSX from "xlsx";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
+import { OrganisationService } from "../js/organisation-service";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let organisationService = new OrganisationService;
 
 
 Template.inventorylist.onCreated(function() {
@@ -54,6 +56,7 @@ Template.inventorylist.onCreated(function() {
 
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+    templateObject.setupFinished = new ReactiveVar();
 });
 
 Template.inventorylist.onRendered(function() {
@@ -1361,6 +1364,20 @@ Template.inventorylist.onRendered(function() {
             templateObject.taxraterecords.set(taxCodesList);
         });
     };
+    templateObject.checkSetupWizardFinished = async function () {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+        if( setupFinished === null || setupFinished ===  "" ){
+            let setupInfo = await organisationService.getSetupInfo();
+            if( setupInfo.tcompanyinfo.length > 0 ){
+                let data = setupInfo.tcompanyinfo[0];
+                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+                templateObject.setupFinished.set(data.IsSetUpWizard)
+            }
+        }else{
+            templateObject.setupFinished.set(setupFinished)
+        }
+    }
+    templateObject.checkSetupWizardFinished();
     // templateObject.getAccountNames();
     // templateObject.getAllTaxCodes();
     tableResize();
@@ -1454,13 +1471,8 @@ Template.inventorylist.helpers({
     displayfields: () => {
       return Template.instance().displayfields.get();
     },
-    showSetupFinishedAlert: () => {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
-        if (setupFinished == true || setupFinished == "true") {
-            return false;
-        } else {
-            return true;
-        }
+    isSetupFinished: () => {
+        return Template.instance().setupFinished.get();
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
@@ -2196,8 +2208,9 @@ Template.inventorylist.events({
     },
     "click #btnSave": async function() {
         playSaveAudio();
-        setTimeout(function(){
         let productService = new ProductService();
+        setTimeout(function(){
+        
         let productCode = $("#edtproductvs1code").val();
         let productName = $("#edtproductvs1name").val();
         if (productName == "") {

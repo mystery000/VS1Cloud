@@ -8,9 +8,11 @@ import '../lib/global/indexdbstorage.js';
 import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
 import LoadingOverlay from "../LoadingOverlay";
+import { OrganisationService } from "../js/organisation-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let organisationService = new OrganisationService();
 Template.employeelist.inheritsHooksFrom('non_transactional_list');
 Template.employeelist.onCreated(function(){
     const templateObject = Template.instance();
@@ -19,6 +21,7 @@ Template.employeelist.onCreated(function(){
     templateObject.selectedFile = new ReactiveVar();
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+    templateObject.setupFinished = new ReactiveVar();
 
 
     templateObject.employees = new ReactiveVar([]);
@@ -306,6 +309,20 @@ Template.employeelist.onRendered(function() {
             FlowRouter.go('/employeescard?id=' + listData);
         }
     });
+    templateObject.checkSetupWizardFinished = async function () {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+        if( setupFinished === null || setupFinished ===  "" ){
+            let setupInfo = await organisationService.getSetupInfo();
+            if( setupInfo.tcompanyinfo.length > 0 ){
+                let data = setupInfo.tcompanyinfo[0];
+                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+                templateObject.setupFinished.set(data.IsSetUpWizard)
+            }
+        }else{
+            templateObject.setupFinished.set(setupFinished)
+        }
+    }
+    templateObject.checkSetupWizardFinished();
 });
 
 Template.employeelist.events({
@@ -454,46 +471,34 @@ Template.employeelist.events({
         jQuery('#tblEmployeelist_wrapper .dt-buttons .btntabletoexcel').click();
         $('.fullScreenSpin').css('display','none');
     },
-    // 'click .btnRefresh':  (e, ui) => {
-    //     ui.initPage(true);
+    'click .btnRefresh':  (e, ui) => {
+        // ui.initPage(true);
+        $('.fullScreenSpin').css('display','inline-block');
+        let templateObject = Template.instance();
 
-    //     // $('.fullScreenSpin').css('display','inline-block');
-    //     // let templateObject = Template.instance();
-    //     // sideBarService.getAllAppointmentPredList().then(function (dataPred) {
-    //     //     addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
-    //     //       sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-    //     //           addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-    //     //               window.open('/employeelist','_self');
-    //     //           }).catch(function (err) {
-    //     //               window.open('/employeelist','_self');
-    //     //           });
-    //     //       }).catch(function(err) {
-    //     //           window.open('/employeelist','_self');
-    //     //       });
-    //     //     }).catch(function (err) {
-    //     //       sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-    //     //           addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-    //     //               window.open('/employeelist','_self');
-    //     //           }).catch(function (err) {
-    //     //               window.open('/employeelist','_self');
-    //     //           });
-    //     //       }).catch(function(err) {
-    //     //           window.open('/employeelist','_self');
-    //     //       });
-    //     //     });
-    //     // }).catch(function (err) {
-    //     //   sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-    //     //       addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-    //     //           window.open('/employeelist','_self');
-    //     //       }).catch(function (err) {
-    //     //           window.open('/employeelist','_self');
-    //     //       });
-    //     //   }).catch(function(err) {
-    //     //       window.open('/employeelist','_self');
-    //     //   });
-    //     // });
+        sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(dataEmployee) {
+            addVS1Data('TEmployee',JSON.stringify(dataEmployee));
+        });
 
-    // },
+        sideBarService.getAllAppointmentPredList().then(function (dataPred) {
+            addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
+              sideBarService.getAllTEmployeeList(initialBaseDataLoad,0,false).then(function(data) {
+                  addVS1Data('TEmployeeList',JSON.stringify(data)).then(function (datareturn) {
+                      window.open('/employeelist','_self');
+                  }).catch(function (err) {
+                      window.open('/employeelist','_self');
+                  });
+              }).catch(function(err) {
+                  window.open('/employeelist','_self');
+              });
+            }).catch(function (err) {
+              window.open('/employeelist','_self');
+            });
+        }).catch(function (err) {
+          window.open('/employeelist','_self');
+        });
+
+    },
     'click .printConfirm' : function(event){
         playPrintAudio();
         setTimeout(function(){
@@ -688,13 +693,8 @@ Template.employeelist.helpers({
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
     },
-    showSetupFinishedAlert: () => {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
-        if (setupFinished == true || setupFinished == "true") {
-            return false;
-        } else {
-            return true;
-        }
+    isSetupFinished: () => {
+        return Template.instance().setupFinished.get();
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();

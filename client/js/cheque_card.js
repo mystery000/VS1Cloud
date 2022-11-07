@@ -5841,10 +5841,11 @@ Template.chequecard.events({
   },
   "click .btnDeleteCheque": function (event) {
     playDeleteAudio();
-    setTimeout(function(){
-    $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     let purchaseService = new PurchaseBoardService();
+    setTimeout(function(){
+    $(".fullScreenSpin").css("display", "inline-block");
+    
     var url = FlowRouter.current().path;
     var getso_id = url.split("?id=");
     var currentInvoice = getso_id[getso_id.length - 1];
@@ -5894,10 +5895,11 @@ Template.chequecard.events({
   },
   "click .btnDeleteLine": function (event) {
     playDeleteAudio();
-    setTimeout(function(){
     let templateObject = Template.instance();
-    let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
+    setTimeout(function(){
+    
+    let taxcodeList = templateObject.taxraterecords.get();
     let selectLineID = $("#selectDeleteLineID").val();
     if ($("#tblChequeLine tbody>tr").length > 1) {
       this.click;
@@ -6051,10 +6053,12 @@ Template.chequecard.events({
   },
   "click .btnSave": function (event) {
     playSaveAudio();
-    setTimeout(function(){
     let templateObject = Template.instance();
-    let suppliername = $("#edtSupplierName");
     let purchaseService = new PurchaseBoardService();
+    let uploadedItems = templateObject.uploadedFiles.get();
+    setTimeout(function(){
+    
+    let suppliername = $("#edtSupplierName");
     // let termname = $('#sltTerms').val() || '';
     // if (termname === '') {
     //     swal('Terms has not been selected!', '', 'warning');
@@ -6131,7 +6135,7 @@ Template.chequecard.events({
       var url = FlowRouter.current().path;
       var getso_id = url.split("?id=");
       var currentCheque = getso_id[getso_id.length - 1];
-      let uploadedItems = templateObject.uploadedFiles.get();
+      
       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
       var objDetails = "";
       if (getso_id[1]) {

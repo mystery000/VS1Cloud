@@ -665,24 +665,32 @@ Template.setup.onRendered(function () {
     let tableHeaderList = [];
     let _taxRatesHeaders = [];
     let dataObject = await getVS1Data("TTaxcodeVS1");
+    let regionName = "Australia";
+    const dataListRet = await organisationService.getOrganisationDetail();
+    if( dataListRet.tcompanyinfo.length > 0 ){
+      let mainData = dataListRet.tcompanyinfo[0];
+      regionName = mainData.Country
+    }
     let _taxRateList = [];
     let data =
       dataObject.length == 0
-        ? await taxRateService.getTaxRateVS1()
+        ? await taxRateService.getTaxRateVS1( regionName )
         : JSON.parse(dataObject[0].data);
 
     if (data.ttaxcodevs1) {
       data.ttaxcodevs1.forEach((rate) => {
         let taxRate = (rate.Rate * 100).toFixed(2) + "%";
-        var dataList = {
-          id: rate.Id || "",
-          codename: rate.CodeName || "-",
-          description: rate.Description || "-",
-          region: rate.RegionName || "-",
-          rate: taxRate || "-",
-        };
+        if( rate.RegionName == regionName ){
+          var dataList = {
+            id: rate.Id || "",
+            codename: rate.CodeName || "-",
+            description: rate.Description || "-",
+            region: rate.RegionName || "-",
+            rate: taxRate || "-",
+          };
 
-        _taxRateList.push(dataList);
+          _taxRateList.push(dataList);
+        }
       });
 
       await templateObject.taxRates.set(_taxRateList);
@@ -4479,6 +4487,9 @@ Template.setup.events({
       document.getElementById("show_address_data").style.display = "block";
     }
   },
+  "click #edtCountry": async function (event) {
+    await clearData('TTaxcodeVS1');
+  },  
   "click #saveStep1": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     let companyID = 1;
@@ -5101,9 +5112,10 @@ Template.setup.events({
   },
   "click .btnSaveTaxRate": function () {
     playSaveAudio();
+    let taxRateService = new TaxRateService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    let taxRateService = new TaxRateService();
+    
     let taxtID = $("#edtTaxID").val();
     let taxName = $("#edtTaxName").val();
     let taxDesc = $("#edtTaxDesc").val();
@@ -5273,8 +5285,8 @@ Template.setup.events({
   },
   "click .btnDeleteTaxRate": function () {
     playDeleteAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let taxCodeId = $("#selectDeleteLineID").val();
 
     let objDetails = {
@@ -5566,8 +5578,8 @@ Template.setup.events({
   },
   "click .btnDeletePaymentMethod": function () {
     playDeleteAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let paymentMethodId = $("#selectDeleteLineID").val();
 
     let objDetails = {
@@ -5615,9 +5627,10 @@ Template.setup.events({
     },
   "click .btnSavePaymentMethod": function () {
     playSaveAudio();
+    let taxRateService = new TaxRateService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    let taxRateService = new TaxRateService();
+    
     let paymentMethodID = $("#edtPaymentMethodID").val();
     //let headerDept = $('#sltDepartment').val();
     let paymentName = $("#edtPaymentMethodName").val();
@@ -6060,10 +6073,9 @@ Template.setup.events({
   },
   "click .btnDeleteTerms": function () {
     playDeleteAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let termsId = $("#selectDeleteLineID").val();
-
     let objDetails = {
       type: "TTerms",
       fields: {
@@ -6109,9 +6121,10 @@ Template.setup.events({
     },
   "click .btnSaveTerms": function () {
     playSaveAudio();
+    let taxRateService = new TaxRateService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    let taxRateService = new TaxRateService();
+    
     let termsID = $("#edtTermsID").val();
     let termsName = $("#edtName").val();
     let description = $("#edtDesc").val();
@@ -7485,9 +7498,10 @@ Template.setup.events({
   },
   "click .btnSaveStatus": function () {
     playSaveAudio();
+    let clientService = new SalesBoardService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    let clientService = new SalesBoardService();
+    
     let status = $("#status").val();
     let leadData = {
       type: "TLeadStatusType",
@@ -7797,6 +7811,7 @@ Template.setup.events({
   },
   // "click .btnSaveAccount": function (event) {
   //   let templateObject = Template.instance();
+  //     let uploadedItems = templateObject.uploadedFiles.get();
   //   let suppliername = $("#edtSupplierName");
   //   let purchaseService = new PurchaseBoardService();
   //   if (suppliername.val() === "") {
@@ -7880,7 +7895,7 @@ Template.setup.events({
   //     var url = FlowRouter.current().path;
   //     var getso_id = url.split("?id=");
   //     var currentCredit = getso_id[getso_id.length - 1];
-  //     let uploadedItems = templateObject.uploadedFiles.get();
+  
   //     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
   //     var objDetails = "";
   //     if (getso_id[1]) {

@@ -433,8 +433,8 @@ Template.deductionSettings.events({
     },
     'click .btnSaveDeduction': async function (event) {
         playSaveAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
+        setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         
         const employeePayrolApis = new EmployeePayrollApi();

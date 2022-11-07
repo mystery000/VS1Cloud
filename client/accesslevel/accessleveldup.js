@@ -3624,10 +3624,10 @@ Template.accessleveldup.events({
     },
     'click .btnGlobalSave': function () {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let accesslevelService = new AccessLevelService();
-
+        setTimeout(function(){
+        
         let empInputValue = templateObject.$("#sltEmployeeName").val()||'';
         var erpGet = erpDb();
         if(empInputValue != ''){
@@ -3995,16 +3995,11 @@ Template.accessleveldup.events({
     },
     'click .btnSaveAccess': function () {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let accesslevelService = new AccessLevelService();
-
+        setTimeout(function(){
         let empInputValue = templateObject.$("#sltEmployeeName").val();
-
-
         let employeeID = $("#mytag").val()||'';
-
-
         var loggedEmpName = localStorage.getItem('mySession');
         let empLoggedID = Session.get('mySessionEmployeeLoggedID');
         let isSidePanelID = '';

@@ -26,6 +26,8 @@ Template.export_import_print_display_button.events({
           currenttablename = "tblPaymentMethodList";
         }else if (url.includes("/termsettings")) {
           currenttablename = "tblTermsList";
+        }else if (url.includes("/uomSettings")) {
+          currenttablename = "tblUOMList";
         };
 
         let getTableName = currenttablename||'';

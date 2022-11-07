@@ -646,10 +646,11 @@ Template.newtaxratepop.onRendered(function() {
 Template.newtaxratepop.events({
     'click .btnSaveTaxRate': function() {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         var url = FlowRouter.current().path;
-        let taxRateService = new TaxRateService();
+        
         let taxSelected = $('#taxSelected').val();
         let taxtID = $('#edtTaxID').val();
         let taxName = $('#edtTaxNamePop').val();

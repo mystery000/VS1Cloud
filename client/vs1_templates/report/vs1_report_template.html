@@ -151,7 +151,21 @@
                                     }
                                 </style>
                                 <div class="table-responsive">
-                                  {Call Template here > General Ledger}
+                                    <table id="{{tablename}}" class="table tableExportDetailDiv table-sm {{tablename}}">
+                                        <thead>
+                                            <tr class="dnd-moved">
+                                                {{#each displayfield in report_displayfields}}
+                                                    {{#if displayfield.display}}
+                                                        <th data-class="{{displayfield.class}}" thclass="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                                            {{displayfield.custfieldlabel}}
+                                                        </th>
+                                                    {{/if}}
+                                                {{/each}}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
                                 </div>
 
                             </div>

@@ -89,8 +89,9 @@ Template.addNewEftModal.events({
 
   "click .btnSaveEftOptions": (e) => {
     playSaveAudio();
+    let templateObject = Template.instance();
     setTimeout(function(){
-    const templateObject = Template.instance();
+    
     let eftOptions = templateObject.eftOptionsList.get();
 
     $('.chkEftOptionsList').each(function (index) {
