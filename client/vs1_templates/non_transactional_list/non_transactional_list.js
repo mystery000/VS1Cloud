@@ -1948,7 +1948,6 @@ Template.non_transactional_list.onRendered(function() {
         });
       }
       templateObject.displayDepartmentListData = async function (data) {
-      console.log(data);
     var splashArrayDepartmentList = new Array();
     let lineItems = [];
     let lineItemObj = {};
@@ -2212,7 +2211,6 @@ Template.non_transactional_list.onRendered(function() {
         });
       }
       templateObject.displayPaymentMethodListData = async function (data) {
-          console.log(data);
             var splashArrayPaymentMethodList = new Array();
             let lineItems = [];
             let lineItemObj = {};
@@ -2260,7 +2258,6 @@ Template.non_transactional_list.onRendered(function() {
             }
             //$('.fullScreenSpin').css('display','none');
             setTimeout(function () {
-                console.log(splashArrayPaymentMethodList);
                 //$('#'+currenttablename).removeClass('hiddenColumn');
                 $('#'+currenttablename).DataTable({
                     data: splashArrayPaymentMethodList,
@@ -2501,7 +2498,6 @@ Template.non_transactional_list.onRendered(function() {
               }
               //$('.fullScreenSpin').css('display','none');
               setTimeout(function () {
-                  console.log(splashArrayTermsList);
                   //$('#'+currenttablename).removeClass('hiddenColumn');
                   $('#'+currenttablename).DataTable({
                       data: splashArrayTermsList,
@@ -2693,7 +2689,6 @@ Template.non_transactional_list.onRendered(function() {
         });
       }
       templateObject.displayUOMListData = async function (data) {
-          console.log(data);
             var splashArrayUOMList = new Array();
             let lineItems = [];
             let lineItemObj = {};

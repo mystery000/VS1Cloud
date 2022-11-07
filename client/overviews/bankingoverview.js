@@ -1942,7 +1942,7 @@ Template.bankingoverview.events({
     //     });
     //     templateObject.tableheaderrecords.set(tableHeaderList);
     // },
-    'click #exportbtn': function() {
+    'click .exportbtn': function() {
 
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblBankingOverview_wrapper .dt-buttons .btntabletoexcel').click();

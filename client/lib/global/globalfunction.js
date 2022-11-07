@@ -676,7 +676,6 @@ playSaveAudio = function () {
 }
 checkSetupFinished = function () {
   let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
-  console.log('setupFinished', setupFinished)
   if( setupFinished === null || setupFinished ===  "" ){
     let ERPIPAddress = localStorage.getItem('EIPAddress');
     let ERPUsername = localStorage.getItem('EUserName');
@@ -695,17 +694,14 @@ checkSetupFinished = function () {
         } else {
           if(result.data != undefined) {
             if( result.data.tcompanyinfo.length > 0 ){
-              console.log('reposse')
               let data = result.data.tcompanyinfo[0];
               localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
               return data.IsSetUpWizard;
             }
           }     
-          console.log('333')   
         }
     });
   }else{
-    console.log('else')
     return setupFinished;
   }
 }

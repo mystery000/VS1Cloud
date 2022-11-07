@@ -3,7 +3,7 @@ import { CoreService } from '../../js/core-service';
 import {UtilityService} from "../../utility-service";
 import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
-import { ReportService } from "../../reports/report-service"; 
+import { ReportService } from "../../reports/report-service";
 import TableHandler from '../../js/Table/TableHandler';
 import moment from 'moment';
 let sideBarService = new SideBarService();
@@ -89,7 +89,7 @@ Template.vs1_report_template.onRendered(function() {
     templateObject.reset_data.set(reset_data);
   }
   templateObject.init_reset_data();
-  
+
   // custom field displaysettings
 
   templateObject.initCustomFieldDisplaySettings = function(data, listType){
@@ -97,9 +97,9 @@ Template.vs1_report_template.onRendered(function() {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       templateObject.showCustomFieldDisplaySettings(reset_data);
-  
+
       try {
-  
+
         getVS1Data("VS1_Customize").then(function (dataObject) {
           if (dataObject.length == 0) {
             sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
@@ -119,7 +119,7 @@ Template.vs1_report_template.onRendered(function() {
            };
           }
         });
-  
+
       } catch (error) {
       }
       return;
@@ -129,7 +129,7 @@ Template.vs1_report_template.onRendered(function() {
       let custFields = [];
       let customData = {};
       let customFieldCount = reset_data.length;
-  
+
       for (let r = 0; r < customFieldCount; r++) {
         customData = {
           active: reset_data[r].active,
@@ -139,7 +139,7 @@ Template.vs1_report_template.onRendered(function() {
           display: reset_data[r].display,
           width: reset_data[r].width ? reset_data[r].width : ''
         };
-  
+
         if(reset_data[r].active == true){
           $('#'+currenttablename+' .'+reset_data[r].class).removeClass('hiddenColumn');
         }else if(reset_data[r].active == false){
@@ -151,29 +151,29 @@ Template.vs1_report_template.onRendered(function() {
       $('.dataTable').resizable();
     }
     templateObject.initCustomFieldDisplaySettings("", currenttablename);
-  
+
     templateObject.resetData = function (dataVal) {
         location.reload();
     };
-    
+
     templateObject.getGeneralLedgerReports = async function (dateFrom= new Date(), dateTo= new Date(), ignoreDate = true) {
       let data = {};
-      if (!localStorage.getItem("VS1GeneralLedger_Report")) {
+      if (!localStorage.getItem("VS1GeneralLedger_Report1")) {
         data = await reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, ignoreDate);
-        localStorage.setItem("VS1GeneralLedger_Report",JSON.stringify(data) || "");
+        //localStorage.setItem("VS1GeneralLedger_Report",JSON.stringify(data) || "");
       } else {
         data = JSON.parse(localStorage.getItem("VS1GeneralLedger_Report"));
       }
       let allRecords = [];
       if (data.tgeneralledgerreport.length) {
-        let records = [];        
+        let records = [];
         let accountData = data.tgeneralledgerreport;
         for (let i = 0; i < accountData.length; i++) {
           if( records[data.tgeneralledgerreport[i].ACCOUNTID] === undefined ){
             records[data.tgeneralledgerreport[i].ACCOUNTID] = {
               Name: data.tgeneralledgerreport[i].ACCOUNTNAME,
               List: []
-            };     
+            };
             allRecords.push([
               data.tgeneralledgerreport[i].ACCOUNTNAME,
               "",
@@ -183,7 +183,7 @@ Template.vs1_report_template.onRendered(function() {
               "",
               "",
               ""
-            ])       
+            ])
           }else{
             allRecords.push([
               "",
@@ -202,10 +202,10 @@ Template.vs1_report_template.onRendered(function() {
               utilityService.modifynegativeCurrencyFormat(
                 data.tgeneralledgerreport[i].AMOUNTINC
               ) || "-",
-            ])  
-          }        
+            ])
+          }
         }
-      }  
+      }
       setTimeout(function () {
         //$('#'+currenttablename).removeClass('hiddenColumn');
         $('#'+currenttablename).DataTable({

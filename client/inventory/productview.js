@@ -5455,7 +5455,7 @@ Template.productview.events({
         let contactService = new ProductService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         //let headerDept = $('#sltDepartment').val();
         let custType = $('#edtDeptName').val();
         let typeDesc = $('#txaDescription').val() || '';
@@ -5999,7 +5999,6 @@ Template.productview.events({
         if(isBOM == true) {
             let colProduct = $(selEle).closest('.colProduct')
             $(colProduct).find('.edtProductName').css('width', '40%')
-            console.log("templateObject.showSubButton.get()", templateObject.showSubButton.get())
             if(templateObject.showSubButton.get() == true) {
                 $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
             }
@@ -6219,7 +6218,6 @@ Template.productview.events({
     'change .edtQuantity' : function(event) {
         let value = $(event.target).val();
         value = parseFloat(value).toFixed(5);
-        console.log('value', value);
         $(event.target).val(value);
     },
 

@@ -1,9 +1,12 @@
 import moment from "moment";
-Template.daterangefromto.inheritsHooksFrom('daterangedropdownoption');
-Template.daterangefromto.onCreated(function(){
+Template.daterangefromto_trans.inheritsHooksFrom('daterangedropdownoption');
+Template.daterangefromto_trans.inheritsHelpersFrom('daterangedropdownoption');
+Template.daterangefromto_trans.inheritsEventsFrom('daterangedropdownoption');
+Template.daterangefromto_trans.inheritsHooksFrom('daterangedropdownoption');
+Template.daterangefromto_trans.onCreated(function(){
 });
 
-Template.daterangefromto.onRendered(function() {
+Template.daterangefromto_trans.onRendered(function() {
   var today = moment().format("DD/MM/YYYY");
   var currentDate = new Date();
   var begunDate = moment(currentDate).format("DD/MM/YYYY");
@@ -41,9 +44,9 @@ Template.daterangefromto.onRendered(function() {
   $(".dateTo").val(begunDate);
 });
 
-Template.daterangefromto.events({
+Template.daterangefromto_trans.events({
 
 });
 
-Template.daterangefromto.helpers({
+Template.daterangefromto_trans.helpers({
 });
