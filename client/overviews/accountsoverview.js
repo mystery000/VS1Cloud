@@ -12,6 +12,7 @@ import { ReceiptService } from "../receipts/receipt-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let receiptService = new ReceiptService();
+let organisationService = new OrganisationService();
 Template.accountsoverview.inheritsHooksFrom('non_transactional_list');
 Template.accountsoverview.onCreated(function() {
     const templateObject = Template.instance();
@@ -24,6 +25,7 @@ Template.accountsoverview.onCreated(function() {
     templateObject.isBankAccount.set(false);
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+    templateObject.setupFinished = new ReactiveVar();
 });
 
 Template.accountsoverview.onRendered(function() {
@@ -1424,6 +1426,20 @@ Template.accountsoverview.onRendered(function() {
     //     $("#taxRateListModal").modal("toggle");
     //   });
     // });
+    templateObject.checkSetupWizardFinished = async function () {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+        if( setupFinished === null || setupFinished ===  "" ){
+            let setupInfo = await organisationService.getSetupInfo();
+            if( setupInfo.tcompanyinfo.length > 0 ){
+                let data = setupInfo.tcompanyinfo[0];
+                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+                templateObject.setupFinished.set(data.IsSetUpWizard)
+            }
+        }else{
+            templateObject.setupFinished.set(setupFinished)
+        }
+    }
+    templateObject.checkSetupWizardFinished();
     tableResize();
 });
 
@@ -2519,13 +2535,8 @@ Template.accountsoverview.helpers({
         }
         return transactionTableLastUpdated;
     },
-    showSetupFinishedAlert: () => {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
-        if (setupFinished == true || setupFinished == "true") {
-            return false;
-        } else {
-            return true;
-        }
+    isSetupFinished: () => {
+        return Template.instance().setupFinished.get();
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();

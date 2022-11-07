@@ -145,7 +145,7 @@
                     </div>
                 {{/if}}
             </div>
-            {{#if showSetupFinishedAlert }}
+            {{#if equals isSetupFinished false}}
                 <div class="col-2 setupIncompleatedMsg text-danger">
                     <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
                 </div>

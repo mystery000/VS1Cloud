@@ -62,7 +62,7 @@
                     <button class="btn btn-primary btnRefresh vs1ButtonMargin " type="button" ><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                     <button id="btnNewCustomer" name="btnNewCustomer" class="btn btn-primary vs1ButtonMargin" type="button" ><i class="icon ion-plus" style="padding-right: 5px;"></i>New Customer</button>
                 </div>
-                {{#if equals showSetupFinishedAlert true}}
+                {{#if equals isSetupFinished false}}
                     <div class="col-2 setupIncompleatedMsg text-danger">
                         <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
                     </div>
