@@ -2731,7 +2731,7 @@ Template.non_transactional_list.onRendered(function() {
                   data.tunitofmeasure[i].fields.ID || '',
                   data.tunitofmeasure[i].fields.UOMName || '',
                   data.tunitofmeasure[i].fields.UnitDescription || '',
-                  data.tunitofmeasure[i].fields.UnitProductKeyName || '',
+                  data.tunitofmeasure[i].fields.ProductName || '',
                   data.tunitofmeasure[i].fields.Multiplier || 0,
                   tdSupplierDef,
                   tdPurchaseDef,
