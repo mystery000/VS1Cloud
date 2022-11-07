@@ -471,46 +471,34 @@ Template.employeelist.events({
         jQuery('#tblEmployeelist_wrapper .dt-buttons .btntabletoexcel').click();
         $('.fullScreenSpin').css('display','none');
     },
-    // 'click .btnRefresh':  (e, ui) => {
-    //     ui.initPage(true);
+    'click .btnRefresh':  (e, ui) => {
+        // ui.initPage(true);
+        $('.fullScreenSpin').css('display','inline-block');
+        let templateObject = Template.instance();
 
-    //     // $('.fullScreenSpin').css('display','inline-block');
-    //     // let templateObject = Template.instance();
-    //     // sideBarService.getAllAppointmentPredList().then(function (dataPred) {
-    //     //     addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
-    //     //       sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-    //     //           addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-    //     //               window.open('/employeelist','_self');
-    //     //           }).catch(function (err) {
-    //     //               window.open('/employeelist','_self');
-    //     //           });
-    //     //       }).catch(function(err) {
-    //     //           window.open('/employeelist','_self');
-    //     //       });
-    //     //     }).catch(function (err) {
-    //     //       sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-    //     //           addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-    //     //               window.open('/employeelist','_self');
-    //     //           }).catch(function (err) {
-    //     //               window.open('/employeelist','_self');
-    //     //           });
-    //     //       }).catch(function(err) {
-    //     //           window.open('/employeelist','_self');
-    //     //       });
-    //     //     });
-    //     // }).catch(function (err) {
-    //     //   sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-    //     //       addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-    //     //           window.open('/employeelist','_self');
-    //     //       }).catch(function (err) {
-    //     //           window.open('/employeelist','_self');
-    //     //       });
-    //     //   }).catch(function(err) {
-    //     //       window.open('/employeelist','_self');
-    //     //   });
-    //     // });
+        sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(dataEmployee) {
+            addVS1Data('TEmployee',JSON.stringify(dataEmployee));
+        });
 
-    // },
+        sideBarService.getAllAppointmentPredList().then(function (dataPred) {
+            addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
+              sideBarService.getAllTEmployeeList(initialBaseDataLoad,0,false).then(function(data) {
+                  addVS1Data('TEmployeeList',JSON.stringify(data)).then(function (datareturn) {
+                      window.open('/employeelist','_self');
+                  }).catch(function (err) {
+                      window.open('/employeelist','_self');
+                  });
+              }).catch(function(err) {
+                  window.open('/employeelist','_self');
+              });
+            }).catch(function (err) {
+              window.open('/employeelist','_self');
+            });
+        }).catch(function (err) {
+          window.open('/employeelist','_self');
+        });
+
+    },
     'click .printConfirm' : function(event){
         playPrintAudio();
         setTimeout(function(){
