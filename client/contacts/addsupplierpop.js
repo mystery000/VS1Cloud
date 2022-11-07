@@ -530,6 +530,7 @@ Template.addsupplierpop.events({
     playSaveAudio();
     let templateObject = Template.instance();
     let contactService = new ContactService();
+    let uploadedItems = templateObject.uploadedFiles.get();
     setTimeout(async function(){
     if ($("#edtSupplierCompany").val() === "") {
       swal("Supplier Name should not be blank!", "", "warning");
@@ -605,7 +606,7 @@ Template.addsupplierpop.events({
     var currentEmployee = getemp_id[getemp_id.length - 1];
     var objDetails = "";
 
-    let uploadedItems = templateObject.uploadedFiles.get();
+    
 
     let suppdupID = 0;
     if (supplierPOPID != "") {

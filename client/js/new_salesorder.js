@@ -9813,6 +9813,7 @@ Template.new_salesorder.events({
         playSaveAudio();
         // let templateObject = Template.instance();
         let salesService = new SalesBoardService();
+        let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(function(){
         saveCurrencyHistory();
        
@@ -9963,7 +9964,7 @@ Template.new_salesorder.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentSalesOrder = getso_id[getso_id.length - 1];
-            let uploadedItems = templateObject.uploadedFiles.get();
+            
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
             let foreignCurrencyFields = {}
@@ -12361,6 +12362,7 @@ Template.new_salesorder.events({
           $("#copyFrequencyModal").modal("toggle");
         }, delayTimeAfterSound);
         //Commented Original Code
+    //         let uploadedItems = templateObject.uploadedFiles.get();
     //     setTimeout(function(){
     //     //FlowRouter.go('/salesorderslist');
     //     //window.open('/invoicelist','_self');
@@ -12451,7 +12453,7 @@ Template.new_salesorder.events({
     //         var url = FlowRouter.current().path;
     //         var getso_id = url.split('?id=');
     //         var currentSalesOrder = getso_id[getso_id.length - 1];
-    //         let uploadedItems = templateObject.uploadedFiles.get();
+    
     //         var currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //         let ForeignExchangeRate = $('#exchange_rate').val();
     //         let foreignCurrencyFields = {}

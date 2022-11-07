@@ -3508,6 +3508,7 @@ Template.journalentrycard.events({
         playSaveAudio();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(function(){
         
         let department = $('#sltDepartment').val();
@@ -3543,7 +3544,7 @@ Template.journalentrycard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentBill = getso_id[getso_id.length - 1];
-            let uploadedItems = templateObject.uploadedFiles.get();
+            
             var objDetails = '';
             if (getso_id[1]) {
                 $('#tblJournalEntryLine > tbody > tr').each(function() {

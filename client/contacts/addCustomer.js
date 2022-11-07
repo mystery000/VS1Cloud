@@ -2583,6 +2583,7 @@ Template.customerscard.events({
         playSaveAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
+        let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(async function(){
         
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -2653,7 +2654,7 @@ Template.customerscard.events({
         let custField3 = $('#edtCustomField3').val()||'';
         let custField4 = $('#edtCustomField4').val()||'';
         let customerType = $('#sltCustomerType').val()||'';
-        let uploadedItems = templateObject.uploadedFiles.get();
+        
         let sourceName = $('#leadSource').val()||'';
         let repName = $('#leadRep').val()||'';
         let status = $('#leadStatus').val()||'';

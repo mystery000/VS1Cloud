@@ -21,7 +21,6 @@ class CachedHttp {
     const prefix = "CachedHttp | ";
 
     if (this.debug) {
-      // console.info(prefix, message, ...optionalParams);
     }
   }
 
@@ -38,10 +37,10 @@ class CachedHttp {
   }
 
   /**
-   * 
-   * @param {String} endpoint 
+   *
+   * @param {String} endpoint
    * @param {CallableFunction} onRemoteCall it should return {response: ReponseObject}
-   * @returns 
+   * @returns
    */
   async get(endpoint, onRemoteCall = async () => {}, options = {
     date: new Date(),

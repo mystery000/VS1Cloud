@@ -1169,6 +1169,7 @@ Template.leadscard.events({
         playSaveAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
+        let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'inline-block');
 
@@ -1281,7 +1282,7 @@ Template.leadscard.events({
         let custField2 = $('#edtSaleCustField2').val()||'';
         let custField3 = $('#edtSaleCustField3').val()||'';
 
-        let uploadedItems = templateObject.uploadedFiles.get();
+        
 
         const url = FlowRouter.current().path;
         const getemp_id = url.split('?id=');

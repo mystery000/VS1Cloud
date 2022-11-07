@@ -103,7 +103,7 @@ export class TaxRateService extends BaseService {
                 select: "[Active]=true",
             };
         }
-        
+
         let that = this;
         let promise = new Promise(function(resolve, reject) {
             that.getList(that.ERPObjects.TTaxcodeVS1, options).then(function (data) {
@@ -208,7 +208,7 @@ export class TaxRateService extends BaseService {
         return this.getList(this.ERPObjects.Tsuperannuation, options);
     }
 
-    
+
     checkfundTypeByName(description)
     {
         let options = {
@@ -363,7 +363,7 @@ export class TaxRateService extends BaseService {
         };
         return this.getList(this.ERPObjects.TDeptClass, options);
     }
-    
+
     checkAccountantByName(docName) {
         let options = {
             select: "[DocName]='" + docName + "'"
@@ -495,6 +495,30 @@ export class TaxRateService extends BaseService {
 
     saveTerms(data) {
         return this.POST(this.ERPObjects.TTerms, data);
+    }
+
+    //Units of Measure
+    getUOM() {
+        let options = {
+            PropertyList: "ID,UOMName,Description,ProductName,Multipler,SalesDefault,PurchaseDefault,Weight,NoOfBoxes,Height,Width,Length,Volume,Active",
+            select: "[Active]=true",
+        };
+        return this.getList(this.ERPObjects.TUnitOfMeasure, options);
+    }
+    getUOMVS1() {
+        let options = {
+            PropertyList: "ID,UOMName,Description,ProductName,Multipler,SalesDefault,PurchaseDefault,Weight,NoOfBoxes,Height,Width,Length,Volume,Active",
+            select: "[Active]=true",
+        };
+        return this.getList(this.ERPObjects.TUOMVS1, options);
+    }
+
+    getOneUOM(id) {
+        return this.getOneById(this.ERPObjects.TUnitOfMeasure, id);
+    }
+
+    saveUOM(data) {
+        return this.POST(this.ERPObjects.TUnitOfMeasure, data);
     }
 
     saveAllowance(data) {

@@ -116,7 +116,6 @@ export default class TableHandler {
       swal("Something went wrong!", "", "error");
     }
   }
-
   static getDefaultTableConfiguration(selector = null, options = {
     pageLength: 25,
     initialReportDatatableLoad,
@@ -129,7 +128,7 @@ export default class TableHandler {
     colReorder: true,
   }) {
     return {
-      sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+      sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
       pageLength: options.pageLength || 25,
       paging: true,
       colReorder: {
@@ -149,14 +148,11 @@ export default class TableHandler {
       select: options.select || true,
       destroy: options.destroy || true,
       colReorder: options.colReorder || true,
-      language: {
-        search: "",
-        searchPlaceholder: "Search List..."
-      },
+      language: {search: "",searchPlaceholder: "Search List..."},
       fnInitComplete: function () {
-        if (options.showSearchButton) 
+        if (options.showSearchButton)
           $(`<button class='btn btn-primary refresh-${selector}' type='button' id='refresh-${selector}' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>`).insertAfter(`#${selector}_filter`);
-        if (options.showPlusButton) 
+        if (options.showPlusButton)
           $(`<button class='btn btn-primary add-${selector}' data-dismiss='modal' data-toggle='modal' data-target='#add-${selector}_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>`).insertAfter(`#${selector}_filter`);
         }
       };

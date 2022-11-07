@@ -17420,6 +17420,7 @@ Template.new_invoice.events({
     playSaveAudio();
     // let templateObject = Template.instance();
     let salesService = new SalesBoardService();
+    let uploadedItems = templateObject.uploadedFiles.get();
     setTimeout(function(){
     saveCurrencyHistory();
     
@@ -17649,7 +17650,7 @@ Template.new_invoice.events({
       var url = FlowRouter.current().path;
       var getso_id = url.split("?id=");
       var currentInvoice = getso_id[getso_id.length - 1];
-      let uploadedItems = templateObject.uploadedFiles.get();
+      
       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
       let ForeignExchangeRate = $('#exchange_rate').val();
       var objDetails = "";
@@ -20027,6 +20028,7 @@ Template.new_invoice.events({
       }
       $("#copyFrequencyModal").modal("toggle");
     }, delayTimeAfterSound);
+  //       let uploadedItems = templateObject.uploadedFiles.get();
   //   setTimeout(function(){
   //   $(".fullScreenSpin").css("display", "inline-block");
   //   var url = FlowRouter.current().path;
@@ -20183,7 +20185,7 @@ Template.new_invoice.events({
   //       var url = FlowRouter.current().path;
   //       var getso_id = url.split("?id=");
   //       var currentInvoice = getso_id[getso_id.length - 1];
-  //       let uploadedItems = templateObject.uploadedFiles.get();
+  
   //       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
   //       let ForeignExchangeRate = $('#exchange_rate').val();
   //       var objDetails = "";

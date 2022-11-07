@@ -680,15 +680,17 @@ Template.setup.onRendered(function () {
     if (data.ttaxcodevs1) {
       data.ttaxcodevs1.forEach((rate) => {
         let taxRate = (rate.Rate * 100).toFixed(2) + "%";
-        var dataList = {
-          id: rate.Id || "",
-          codename: rate.CodeName || "-",
-          description: rate.Description || "-",
-          region: rate.RegionName || "-",
-          rate: taxRate || "-",
-        };
+        if( rate.RegionName == regionName ){
+          var dataList = {
+            id: rate.Id || "",
+            codename: rate.CodeName || "-",
+            description: rate.Description || "-",
+            region: rate.RegionName || "-",
+            rate: taxRate || "-",
+          };
 
-        _taxRateList.push(dataList);
+          _taxRateList.push(dataList);
+        }
       });
 
       await templateObject.taxRates.set(_taxRateList);
@@ -4485,6 +4487,9 @@ Template.setup.events({
       document.getElementById("show_address_data").style.display = "block";
     }
   },
+  "click #edtCountry": async function (event) {
+    await clearData('TTaxcodeVS1');
+  },  
   "click #saveStep1": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     let companyID = 1;
@@ -7806,6 +7811,7 @@ Template.setup.events({
   },
   // "click .btnSaveAccount": function (event) {
   //   let templateObject = Template.instance();
+  //     let uploadedItems = templateObject.uploadedFiles.get();
   //   let suppliername = $("#edtSupplierName");
   //   let purchaseService = new PurchaseBoardService();
   //   if (suppliername.val() === "") {
@@ -7889,7 +7895,7 @@ Template.setup.events({
   //     var url = FlowRouter.current().path;
   //     var getso_id = url.split("?id=");
   //     var currentCredit = getso_id[getso_id.length - 1];
-  //     let uploadedItems = templateObject.uploadedFiles.get();
+  
   //     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
   //     var objDetails = "";
   //     if (getso_id[1]) {
