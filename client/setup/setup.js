@@ -4487,6 +4487,9 @@ Template.setup.events({
       document.getElementById("show_address_data").style.display = "block";
     }
   },
+  "click #edtCountry": async function (event) {
+    await clearData('TTaxcodeVS1');
+  },  
   "click #saveStep1": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     let companyID = 1;
