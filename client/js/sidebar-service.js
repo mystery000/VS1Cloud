@@ -2569,6 +2569,43 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TUnitOfMeasure, options);
   }
 
+  getUOMDataList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            //orderby: '"UOMName asc"',
+            select: "[Active]=true",
+        };
+      } else {
+        options = {
+          //orderby: '"UOMName asc"',
+          ListType: "Detail",
+          select: "[Active]=true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            //orderby: '"UOMName asc"',
+        };
+      } else {
+        options = {
+            //orderby: '"UOMName asc"',
+            ListType: "Detail",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TUnitOfMeasure, options);
+  }
+
   getTaxRateVS1() {
     let options = {
       // PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",

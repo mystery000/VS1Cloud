@@ -37,7 +37,7 @@ Template.uomlistpop.onRendered(function() {
                   }
 
                   if (splashArrayUOMList) {
-                      $('#tblUOM').DataTable({
+                      $('#tblUOMList').DataTable({
                           data: splashArrayUOMList,
                           "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                           select: true,
@@ -82,8 +82,8 @@ Template.uomlistpop.onRendered(function() {
                           },
                           language: { search: "",searchPlaceholder: "Search List..." },
                           "fnInitComplete": function () {
-                            // $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOM_filter");
-                            $("<button class='btn btn-primary btnRefreshUOM' type='button' id='btnRefreshUOM' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblUOM_filter");
+                            // $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOMList_filter");
+                            $("<button class='btn btn-primary btnRefreshUOM' type='button' id='btnRefreshUOM' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblUOMList_filter");
                           }
 
                       });
@@ -111,7 +111,7 @@ Template.uomlistpop.onRendered(function() {
                   splashArrayUOMList.push(dataListUOM);
               }
               if (splashArrayUOMList) {
-                  $('#tblUOM').DataTable({
+                  $('#tblUOMList').DataTable({
                       data: splashArrayUOMList,
                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                       select: true,
@@ -156,8 +156,8 @@ Template.uomlistpop.onRendered(function() {
                       },
                       language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
-                        // $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOM_filter");
-                        $("<button class='btn btn-primary btnRefreshUOM' type='button' id='btnRefreshUOM' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblUOM_filter");
+                        // $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOMList_filter");
+                        $("<button class='btn btn-primary btnRefreshUOM' type='button' id='btnRefreshUOM' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblUOMList_filter");
                       }
 
                   });
@@ -185,7 +185,7 @@ Template.uomlistpop.onRendered(function() {
               }
 
               if (splashArrayUOMList) {
-                  $('#tblUOM').DataTable({
+                  $('#tblUOMList').DataTable({
                       data: splashArrayUOMList,
                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                       select: true,
@@ -230,8 +230,8 @@ Template.uomlistpop.onRendered(function() {
                       },
                       language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
-                        // $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOM_filter");
-                        $("<button class='btn btn-primary btnRefreshUOM' type='button' id='btnRefreshUOM' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblUOM_filter");
+                        // $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOMList_filter");
+                        $("<button class='btn btn-primary btnRefreshUOM' type='button' id='btnRefreshUOM' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblUOMList_filter");
                       }
 
                   });
@@ -257,7 +257,7 @@ Template.uomlistpop.events({
       const tableHeaderList = [];
       let sideBarService = new SideBarService();
       let taxRateService = new TaxRateService();
-      let dataSearchName = $('#tblUOM_filter input').val();
+      let dataSearchName = $('#tblUOMList_filter input').val();
       var currentLoc = FlowRouter.current().route.path;
       if (dataSearchName.replace(/\s/g, '') != '') {
           sideBarService.getUOMVS1ByName(dataSearchName).then(function (data) {
@@ -280,7 +280,7 @@ Template.uomlistpop.events({
                     splashArrayUOMList.push(dataList);
                 }
 
-                  var datatable = $('#tblUOM').DataTable();
+                  var datatable = $('#tblUOMList').DataTable();
                   datatable.clear();
                   datatable.rows.add(splashArrayUOMList);
                   datatable.draw(false);
@@ -331,7 +331,7 @@ Template.uomlistpop.events({
 
                     splashArrayUOMList.push(dataList);
                 }
-      var datatable = $('#tblUOM').DataTable();
+      var datatable = $('#tblUOMList').DataTable();
             datatable.clear();
             datatable.rows.add(splashArrayUOMList);
             datatable.draw(false);
@@ -342,7 +342,7 @@ Template.uomlistpop.events({
           });
       }
   },
-  'keyup #tblUOM_filter input': function (event) {
+  'keyup #tblUOMList_filter input': function (event) {
     if (event.keyCode == 13) {
        $(".btnRefreshUOM").trigger("click");
     }
