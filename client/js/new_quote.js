@@ -7633,6 +7633,7 @@ Template.new_quote.events({
         playSaveAudio();
         let contactService = new ContactService();
         let salesService = new SalesBoardService();
+        let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(function(){
         saveCurrencyHistory();
         //let templateObject = Template.instance();
@@ -7793,7 +7794,7 @@ Template.new_quote.events({
             const url = FlowRouter.current().path;
             const getso_id = url.split('?id=');
             let currentQuote = getso_id[getso_id.length - 1];
-            let uploadedItems = templateObject.uploadedFiles.get();
+            
             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
             let foreignCurrencyFields = {}
@@ -10056,6 +10057,7 @@ Template.new_quote.events({
           }
           $("#copyFrequencyModal").modal("toggle");
         }, delayTimeAfterSound);
+    //             let uploadedItems = templateObject.uploadedFiles.get();
     //     setTimeout(function(){
     //     LoadingOverlay.show();
     //     let url = FlowRouter.current().path;
@@ -10149,7 +10151,7 @@ Template.new_quote.events({
     //             url = FlowRouter.current().path;
     //             const getso_id = url.split('?id=');
     //             let currentQuote = getso_id[getso_id.length - 1];
-    //             let uploadedItems = templateObject.uploadedFiles.get();
+    
     //             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //             let ForeignExchangeRate = $('#exchange_rate').val();
     //             let foreignCurrencyFields = {}
@@ -10439,6 +10441,7 @@ Template.new_quote.events({
           }
           $("#copyFrequencyModal").modal("toggle");
         }, delayTimeAfterSound);
+    //             let uploadedItems = templateObject.uploadedFiles.get();
     //     setTimeout(function(){
     //     LoadingOverlay.show();
     //     let url = FlowRouter.current().path;
@@ -10534,7 +10537,7 @@ Template.new_quote.events({
     //             url = FlowRouter.current().path;
     //             const getso_id = url.split('?id=');
     //             let currentQuote = getso_id[getso_id.length - 1];
-    //             let uploadedItems = templateObject.uploadedFiles.get();
+    
     //             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //             let ForeignExchangeRate = $('#exchange_rate').val();
     //             let foreignCurrencyFields = {}

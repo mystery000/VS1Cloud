@@ -7873,6 +7873,7 @@ Template.purchaseordercard.events({
         playSaveAudio();
         let tempObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(async function(){
         saveCurrencyHistory();
         let isBORedirect = await tempObject.isbackorderredirect.get() || false;
@@ -8055,7 +8056,7 @@ Template.purchaseordercard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentPurchaseOrder = getso_id[getso_id.length - 1];
-            let uploadedItems = templateObject.uploadedFiles.get();
+            
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
             let foreignCurrencyFields = {}
@@ -9624,6 +9625,7 @@ Template.purchaseordercard.events({
         }
         $("#copyFrequencyModal").modal("toggle");
         }, delayTimeAfterSound);
+    //             let uploadedItems = templateObject.uploadedFiles.get();
     //     setTimeout(function(){
     //     $('.fullScreenSpin').css('display', 'inline-block');
     //     var url = FlowRouter.current().path;
@@ -9732,7 +9734,7 @@ Template.purchaseordercard.events({
     //             var url = FlowRouter.current().path;
     //             var getso_id = url.split('?id=');
     //             var currentPurchaseOrder = getso_id[getso_id.length - 1];
-    //             let uploadedItems = templateObject.uploadedFiles.get();
+    
     //             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //             var objDetails = '';
     //             if (getso_id[1]) {
@@ -10008,6 +10010,7 @@ Template.purchaseordercard.events({
         }
         $("#copyFrequencyModal").modal("toggle");
         }, delayTimeAfterSound);
+    //         let uploadedItems = templateObject.uploadedFiles.get();
     //     setTimeout(function(){
     //     $('.fullScreenSpin').css('display', 'inline-block');
     //     var url = FlowRouter.current().path;
@@ -10132,7 +10135,7 @@ Template.purchaseordercard.events({
     //         var url = FlowRouter.current().path;
     //         var getso_id = url.split('?id=');
     //         var currentPurchaseOrder = getso_id[getso_id.length - 1];
-    //         let uploadedItems = templateObject.uploadedFiles.get();
+    
     //         var currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //         var objDetails = '';
     //         if (getso_id[1]) {

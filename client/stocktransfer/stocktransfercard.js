@@ -3930,6 +3930,7 @@ Template.stocktransfercard.events({
     'click .btnSave': function(event) {
         playSaveAudio();
         let templateObject = Template.instance();
+        // let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(function(){
         if ($('.chkEmailCopy').is(':checked')) {
         $('#html-2-pdfwrapper').css('display', 'block');
@@ -4026,7 +4027,7 @@ Template.stocktransfercard.events({
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentStock = getso_id[getso_id.length - 1];
-        // let uploadedItems = templateObject.uploadedFiles.get();
+        
         var objDetails = '';
         if (getso_id[1]) {
             currentStock = parseInt(currentStock);

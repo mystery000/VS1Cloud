@@ -7811,6 +7811,7 @@ Template.setup.events({
   },
   // "click .btnSaveAccount": function (event) {
   //   let templateObject = Template.instance();
+  //     let uploadedItems = templateObject.uploadedFiles.get();
   //   let suppliername = $("#edtSupplierName");
   //   let purchaseService = new PurchaseBoardService();
   //   if (suppliername.val() === "") {
@@ -7894,7 +7895,7 @@ Template.setup.events({
   //     var url = FlowRouter.current().path;
   //     var getso_id = url.split("?id=");
   //     var currentCredit = getso_id[getso_id.length - 1];
-  //     let uploadedItems = templateObject.uploadedFiles.get();
+  
   //     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
   //     var objDetails = "";
   //     if (getso_id[1]) {

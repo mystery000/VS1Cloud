@@ -5518,6 +5518,7 @@ Template.employeescard.events({
         await templateObject.saveSelectedProduct();
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();
+        let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(async function(){
         LoadingOverlay.show();
         let title = $('#edtTitle').val();
@@ -5564,7 +5565,7 @@ Template.employeescard.events({
         let custField2 = $('#edtSaleCustField2').val()||'';
         let custField3 = $('#edtSaleCustField3').val()||'';
         let priorityData = $('#edtPriority').val() || '';
-        let uploadedItems = templateObject.uploadedFiles.get();
+        
         let notes = $('#txaNotes').val();
         const url = FlowRouter.current().path;
         const getemp_id = url.split('?id=');

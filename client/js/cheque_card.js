@@ -6055,6 +6055,7 @@ Template.chequecard.events({
     playSaveAudio();
     let templateObject = Template.instance();
     let purchaseService = new PurchaseBoardService();
+    let uploadedItems = templateObject.uploadedFiles.get();
     setTimeout(function(){
     
     let suppliername = $("#edtSupplierName");
@@ -6134,7 +6135,7 @@ Template.chequecard.events({
       var url = FlowRouter.current().path;
       var getso_id = url.split("?id=");
       var currentCheque = getso_id[getso_id.length - 1];
-      let uploadedItems = templateObject.uploadedFiles.get();
+      
       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
       var objDetails = "";
       if (getso_id[1]) {
