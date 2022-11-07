@@ -924,9 +924,10 @@ Template.reportsAccountantSettings123.events({
     },
     'click .btnDeleteAccountant': function () {
         playDeleteAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
+        
         let accountantId = $('#selectDeleteLineID').val();
 
         let objDetails = {
@@ -967,9 +968,10 @@ Template.reportsAccountantSettings123.events({
     },
     'click .btnSaveAccountant': function () {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
+        
         let accountantID = $('#edtAccountantID').val();
         let firstName = $('#edtFirstName').val();
         let lastName = $('#edtLastName').val();
@@ -1270,9 +1272,9 @@ Template.reportsAccountantSettings123.events({
     },
     'click .btnSaveRoom': function () {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
 
         var parentdept = $('#sltDepartmentList').val();
         var newroomname = $('#newRoomName').val();

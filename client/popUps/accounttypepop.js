@@ -1933,11 +1933,11 @@ Template.accounttypepop.events({
     },
     'click .btnSaveAccount': function () {
         playSaveAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let accountService = new AccountService();
         let organisationService = new OrganisationService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
         let forTransaction = false;
 
         if ($('#showOnTransactions').is(':checked')) {
@@ -2513,6 +2513,8 @@ Template.accounttypepop.events({
     },
     'click .btnDeleteAccount': function () {
         playDeleteAudio();
+        let templateObject = Template.instance();
+        let accountService = new AccountService();
         setTimeout(function(){
         swal({
             title: 'Delete Account',
@@ -2523,8 +2525,6 @@ Template.accounttypepop.events({
         }).then((result) => {
             if (result.value) {
                 $('.fullScreenSpin').css('display', 'inline-block');
-                let templateObject = Template.instance();
-                let accountService = new AccountService();
                 let accountID = $('#edtAccountID').val();
 
                 if (accountID == "") {

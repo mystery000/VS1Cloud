@@ -431,9 +431,9 @@ Template.clienttypepopup.events({
     },
     'click .btnDeleteDClientType': function () {
         playDeleteAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let taxRateService = new TaxRateService();
         let deptId = $('#selectDeleteLineID').val();
 
         let objDetails = {

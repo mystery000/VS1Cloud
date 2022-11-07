@@ -393,7 +393,6 @@ Template.new_workorder.events({
         workorders = [...workorders, objDetail];
         localStorage.setItem('TWorkorders', JSON.stringify(workorders));
 
-
         let bomStructure = templateObject.bomStructure.get();
 
         let totalWorkOrders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): []
@@ -995,102 +994,6 @@ Template.new_workorder.events({
             mainOrderSaved = false;
         }
 
-
-
-        function saveMainBOMStructure() {
-            let mainProductName = $('#edtMainProductName').val();
-            let mainProcessName = $('#edtProcess').val();
-            let mainQuantity = $('#edtMainQty').val();
-            let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')) : []
-
-            if(mainProcessName == '') {
-                swal('Please provide the process !', '', 'warning');
-                $('.fullScreenSpin').css('display', 'none');
-                return false;
-            }
-
-            let products = $('.product-content');
-            if(products.length < 3) {
-                swal('Must have sub builds or raws !', '', 'warning');
-                $('.fullScreenSpin').css('display', 'none');
-                return false;
-            }
-            let objDetails  = {
-                productName: mainProductName,
-                qty: mainQuantity,
-                process: mainProcessName,
-                processNote: $(products[0]).find('.edtProcessNote').val() || '',
-                attachments: JSON.parse($(products[0]).find('.attachedFiles').text() != ''?$(products[0]).find('.attachedFiles').text(): '[]').uploadedFilesArray || [],
-                subs: []
-            }
-
-            for(let i = 1; i< products.length - 1; i ++) {
-                let productRows = products[i].querySelectorAll('.productRow')
-                let objectDetail;
-                    let _name = $(productRows[0]).find('.edtProductName').val();
-                    let _qty = $(productRows[0]).find('.edtQuantity').val();
-                    let _process = $(productRows[0]).find('.edtProcessName').val();
-                    let _note = $(productRows[0]).find('.edtProcessNote').val();
-                    let _attachments = JSON.parse($(productRows[0]).find('.attachedFiles').text()!= ''?$(productRows[0]).find('.attachedFiles').text(): '[]').uploadedFilesArray || [];
-                    objectDetail = {
-                        productName: _name,
-                        qty: _qty,
-                        process: _process,
-                        processNote: _note,
-                        attachments: _attachments,
-                        subs:[],
-                        isBuild: false
-                    }
-                    if(productRows.length > 1) {
-                        for(let j = 1; j<productRows.length; j++) {
-                            let _productName = $(productRows[j]).find('.edtProductName').val();
-                            let _productQty = $(productRows[j]).find('.edtQuantity').val();
-                            let _rawProcess = $(productRows[j]).find('.edtProcessName').val();
-                            if(_productName != '' && _productQty != '' && _rawProcess != '') {
-                                objectDetail.subs.push ({
-                                    productName: _productName,
-                                    qty: _productQty,
-                                    process: _rawProcess
-                                })
-                            }
-                        }
-                    } else {
-                        let bomProductIndex = bomProducts.findIndex(product => {
-                            return product.fields.productName == _name;
-                        })
-                        if(bomProductIndex > -1) {
-                            let subProduct = bomProducts[bomProductIndex];
-                            if(subProduct && subProduct.fields.subs && subProduct.fields.subs.length> 0) {
-                                for(let j=0; j< subProduct.fields.subs.length; j++) {
-                                    let sub = subProduct.fields.subs[j];
-                                    objectDetail.subs.push({
-                                        productName: sub.product,
-                                        qty: sub.quantity,
-                                        process: sub.process
-                                    })
-                                }
-                            }
-                        }
-                    }
-                    if($(productRows[0]).find('.btn-product-build').length > 0) {
-                        objectDetail.isBuild = true;
-                    }
-
-                // }
-                objDetails.subs.push(objectDetail);
-            }
-            finalStructure = objDetails;
-
-            //global save action
-            templateObject.bomStructure.set(finalStructure);
-            swal('BOM Settings Successfully Saved', '', 'success');
-            let productContents = $('#BOMSetupModal').find('.product-content');
-            for (let l = 1; l < productContents.length -1; l++) {
-                $(productContents[l]).remove()
-            }
-            $('#BOMSetupModal').modal('toggle');
-        }
-
         // if(builtCount == 0 && bomProduct[currentBOMIndex].fields.subs.length == $('#BOMSetupModal .product-content').length-2) {
         //     finalStructure = currentBOMStructure;
         //     //global save action
@@ -1180,7 +1083,6 @@ Template.new_workorder.events({
             // }
         // }
 
-
         // templateObject.bomStructure.set(finalStructure);
         // swal('BOM Settings Successfully Saved', '', 'success');
         // let productContents = $('#BOMSetupModal').find('.product-content');
@@ -1189,6 +1091,99 @@ Template.new_workorder.events({
         // }
         // $('#BOMSetupModal').modal('toggle');
     }, delayTimeAfterSound);
+    function saveMainBOMStructure() {
+        let mainProductName = $('#edtMainProductName').val();
+        let mainProcessName = $('#edtProcess').val();
+        let mainQuantity = $('#edtMainQty').val();
+        let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')) : []
+
+        if(mainProcessName == '') {
+            swal('Please provide the process !', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            return false;
+        }
+
+        let products = $('.product-content');
+        if(products.length < 3) {
+            swal('Must have sub builds or raws !', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            return false;
+        }
+        let objDetails  = {
+            productName: mainProductName,
+            qty: mainQuantity,
+            process: mainProcessName,
+            processNote: $(products[0]).find('.edtProcessNote').val() || '',
+            attachments: JSON.parse($(products[0]).find('.attachedFiles').text() != ''?$(products[0]).find('.attachedFiles').text(): '[]').uploadedFilesArray || [],
+            subs: []
+        }
+
+        for(let i = 1; i< products.length - 1; i ++) {
+            let productRows = products[i].querySelectorAll('.productRow')
+            let objectDetail;
+                let _name = $(productRows[0]).find('.edtProductName').val();
+                let _qty = $(productRows[0]).find('.edtQuantity').val();
+                let _process = $(productRows[0]).find('.edtProcessName').val();
+                let _note = $(productRows[0]).find('.edtProcessNote').val();
+                let _attachments = JSON.parse($(productRows[0]).find('.attachedFiles').text()!= ''?$(productRows[0]).find('.attachedFiles').text(): '[]').uploadedFilesArray || [];
+                objectDetail = {
+                    productName: _name,
+                    qty: _qty,
+                    process: _process,
+                    processNote: _note,
+                    attachments: _attachments,
+                    subs:[],
+                    isBuild: false
+                }
+                if(productRows.length > 1) {
+                    for(let j = 1; j<productRows.length; j++) {
+                        let _productName = $(productRows[j]).find('.edtProductName').val();
+                        let _productQty = $(productRows[j]).find('.edtQuantity').val();
+                        let _rawProcess = $(productRows[j]).find('.edtProcessName').val();
+                        if(_productName != '' && _productQty != '' && _rawProcess != '') {
+                            objectDetail.subs.push ({
+                                productName: _productName,
+                                qty: _productQty,
+                                process: _rawProcess
+                            })
+                        }
+                    }
+                } else {
+                    let bomProductIndex = bomProducts.findIndex(product => {
+                        return product.fields.productName == _name;
+                    })
+                    if(bomProductIndex > -1) {
+                        let subProduct = bomProducts[bomProductIndex];
+                        if(subProduct && subProduct.fields.subs && subProduct.fields.subs.length> 0) {
+                            for(let j=0; j< subProduct.fields.subs.length; j++) {
+                                let sub = subProduct.fields.subs[j];
+                                objectDetail.subs.push({
+                                    productName: sub.product,
+                                    qty: sub.quantity,
+                                    process: sub.process
+                                })
+                            }
+                        }
+                    }
+                }
+                if($(productRows[0]).find('.btn-product-build').length > 0) {
+                    objectDetail.isBuild = true;
+                }
+
+            // }
+            objDetails.subs.push(objectDetail);
+        }
+        finalStructure = objDetails;
+
+        //global save action
+        templateObject.bomStructure.set(finalStructure);
+        swal('BOM Settings Successfully Saved', '', 'success');
+        let productContents = $('#BOMSetupModal').find('.product-content');
+        for (let l = 1; l < productContents.length -1; l++) {
+            $(productContents[l]).remove()
+        }
+        $('#BOMSetupModal').modal('toggle');
+    }
     },
 
     'click #BOMSetupModal .btn-cancel-bom': function(event) {

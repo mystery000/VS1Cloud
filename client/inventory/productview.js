@@ -5451,10 +5451,10 @@ Template.productview.events({
     },
     'click .btnSaveDept': function() {
         playSaveAudio();
+        let contactService = new ProductService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService = new ProductService();
-
+        
         //let headerDept = $('#sltDepartment').val();
         let custType = $('#edtDeptName').val();
         let typeDesc = $('#txaDescription').val() || '';

@@ -2333,9 +2333,10 @@ Template.emailsettings.events({
     },
     'click .btnSaveFrequency': function () {
         playSaveAudio();
-        setTimeout(function(){
         // let taxRateService = new TaxRateService();
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
         // let startTime = "";
         // let startDate = "";
         // let date = "";

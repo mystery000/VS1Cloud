@@ -5514,13 +5514,11 @@ Template.employeescard.events({
     },
     'click .btnSave': async (e, templateObject) => {
         playSaveAudio();
-        setTimeout(async function(){
         await templateObject.saveSelectedProduct();
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();
+        setTimeout(async function(){
         LoadingOverlay.show();
-
-
         let title = $('#edtTitle').val();
         let firstname = $('#edtFirstName').val();
         if (firstname === '') {
@@ -6591,8 +6589,8 @@ Template.employeescard.events({
     // Save LeaveRequest Popup
     'click #btnSaveLeaveRequest': async function(event) {
         playSaveAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
+        setTimeout(async function(){
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let ID = $('#edtLeaveRequestID').val();
@@ -6713,8 +6711,8 @@ Template.employeescard.events({
     // Save AssignLeaveType Popup
     'click #btnSaveAssignLeaveType': async function(event) {
         playSaveAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
+        setTimeout(async function(){
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
 
@@ -10053,8 +10051,8 @@ Template.employeescard.events({
     },
     'click .printConfirm': function (event) {
         playPrintAudio();
-        setTimeout(function(){
         LoadingOverlay.show();
+        setTimeout(function(){
 
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
@@ -10144,9 +10142,9 @@ Template.employeescard.events({
     },
     'click .btnSaveSettings': function (event) {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
-
+        setTimeout(function(){
+        
         $('.lblCustomField1').html('');
         $('.lblCustomField2').html('');
         $('.lblCustomField3').html('');
@@ -10598,8 +10596,9 @@ Template.employeescard.events({
     },
     "click .btnDeleteAssignLeaveType": function (e){
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
         let deleteID = $(e.target).data('id') || '';
         swal({
             title: 'Delete Assign Leave Type',
@@ -10775,8 +10774,9 @@ Template.employeescard.events({
     },
     "click .btnDeletePayNote": function (e){
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
         let deleteID = $(e.target).data('id') || '';
         swal({
             title: 'Delete Note',

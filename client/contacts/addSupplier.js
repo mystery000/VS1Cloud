@@ -1737,9 +1737,9 @@ Template.supplierscard.events({
     },
     'click .btnSave': async function (event) {
         playSaveAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
+        setTimeout(async function(){
         if ($('#edtSupplierCompany').val() === ''){
             swal('Supplier Name should not be blank!', '', 'warning');
             e.preventDefault();
@@ -2543,10 +2543,11 @@ Template.supplierscard.events({
     },
     'click .btnDeleteSupplier': function (event) {
         playDeleteAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let contactService2 = new ContactService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
 

@@ -580,9 +580,10 @@ Template.leadstatussettings.events({
     },
     'click .btnDeleteLeadStatus': function () {
         playDeleteAudio();
+        let contactService = new ContactService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService = new ContactService();
+        
         let statusId = $('#selectDeleteLineID').val();
         let objDetails = {
             type: "TLeadStatusType",

@@ -737,12 +737,12 @@ Template.fixUpdates.events({
     },
     'click .btnSaveFrequency': function() {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
+        let templateObject = Template.instance();
         setTimeout(function(){
         //FxEditorSetting.save();
 
         $('.fullScreenSpin').css('display', 'inline-block');
-        let taxRateService = new TaxRateService();
-        let templateObject = Template.instance();
         let startTime = "";
         let startDate = "";
         let date = "";

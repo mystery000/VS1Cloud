@@ -337,9 +337,10 @@ Template.receiptcategory.events({
     },
     'click .btnDelete': function () {
         playDeleteAudio();
+        let receiptService = new ReceiptService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let receiptService = new ReceiptService();
+        
         let receiptCategoryId = $('#selectDeleteLineID').val();
         let objDetails = {
             type: "TReceiptCategory",
@@ -378,9 +379,10 @@ Template.receiptcategory.events({
     },
     'click .btnSave': function () {
         playSaveAudio();
+        let receiptService = new ReceiptService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let receiptService = new ReceiptService();
+        
         let receiptCategoryID = $('#edtReceiptCategoryID').val();
         let receiptCategoryName = $('#edtReceiptCategoryName').val();
         if (receiptCategoryName == '') {

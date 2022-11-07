@@ -853,9 +853,9 @@ Template.departmentSettings.events({
     },
     'click .btnDeleteDept': function () {
         playDeleteAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let taxRateService = new TaxRateService();
         let deptId = $('#edtDepartmentID').val();
 
         let objDetails = {
@@ -893,9 +893,10 @@ Template.departmentSettings.events({
     },
     'click .btnSaveDept': function () {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
+        
         let deptID = $('#edtDepartmentID').val()||0;
         //let headerDept = $('#sltDepartment').val();
         let deptName = $('#edtDeptName').val()||'';
@@ -1108,9 +1109,9 @@ Template.departmentSettings.events({
     },
     'click .btnSaveRoom': function () {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
 
         var parentdept = $('#sltDepartmentList').val();
         var newroomname = $('#newRoomName').val();

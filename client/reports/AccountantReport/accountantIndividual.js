@@ -1811,11 +1811,12 @@ Template.accountant_individual.events({
 
     "click .btnSaveAccount": function() {
         playSaveAudio();
-        setTimeout(function(){
-        $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
         let accountService = new AccountService();
         let organisationService = new OrganisationService();
+        setTimeout(function(){
+        $(".fullScreenSpin").css("display", "inline-block");
+        
         let forTransaction = false;
         let isHeader = false;
         let useReceiptClaim = false;

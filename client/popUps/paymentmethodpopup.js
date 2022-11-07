@@ -988,10 +988,9 @@ Template.paymentmethodpop.events({
     },
     'click .btnDeletePaymentMethod': function() {
         playDeleteAudio();
-        setTimeout(function(){
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
         let paymentMethodId = $('#selectDeleteLineID').val();
-
 
         let objDetails = {
             type: "TPaymentMethod",

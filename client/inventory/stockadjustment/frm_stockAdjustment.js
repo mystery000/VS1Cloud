@@ -2152,10 +2152,11 @@ Template.stockadjustmentcard.events({
     },
     'click .btnDeleteFollowingStocks': async function (event) {
         playDeleteAudio();
-        setTimeout(async function(){
-        var currentDate = new Date();
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
+        setTimeout(async function(){
+        var currentDate = new Date();
+        
         swal({
             title: 'Delete Stock Adjustment',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -2197,10 +2198,10 @@ Template.stockadjustmentcard.events({
     },
     'click .btnDeleteStock': function (event) {
         playDeleteAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -2241,9 +2242,9 @@ Template.stockadjustmentcard.events({
     },
     'click .btnDeleteStockAdjust': function (event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
+        setTimeout(function(){
         swal({
             title: 'Delete Stock Adjustment',
             text: "Are you sure you want to Delete Stock Adjustment?",
@@ -2296,9 +2297,10 @@ Template.stockadjustmentcard.events({
     },
     'click .btnDeleteLine': function (event) {
         playDeleteAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
+        setTimeout(function(){
+        
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblStockAdjustmentLine tbody>tr').length > 1) {
             this.click;

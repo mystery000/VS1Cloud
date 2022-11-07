@@ -1073,8 +1073,9 @@ Template.taxRatesSettings.events({
   },
   "click .btnSaveSubTax": function () {
     playSaveAudio();
-    setTimeout(function(){
     let templateObject = Template.instance();
+    setTimeout(function(){
+    
     let edtSubTaxLineId = $("#edtSubTaxLineId").val();
     let subTaxId = $('#subTaxCode').val();
     let subTaxCodes = templateObject.subtaxcodes.get();
@@ -1126,10 +1127,10 @@ Template.taxRatesSettings.events({
   },
   'click .btnSaveTaxRate': function () {
     playSaveAudio();
-    setTimeout(function(){
     let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display', 'inline-block');
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
+    $('.fullScreenSpin').css('display', 'inline-block');
     let taxtID = $('#edtTaxID').val();
     let taxName = $('#edtTaxName').val();
     let taxDesc = $('#edtTaxDesc').val();
@@ -1377,8 +1378,8 @@ Template.taxRatesSettings.events({
   },
   'click .btnDeleteTaxRate': function () {
     playDeleteAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let taxCodeId = $('#selectDeleteLineID').val();
 
     let objDetails = {

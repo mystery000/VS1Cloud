@@ -95,10 +95,9 @@ Template.edismssettings.events({
   },
   'click #saveTwilioSettings': async function() {
     playSaveAudio();
+    const templateObject = Template.instance();
     setTimeout(async function(){
     $('.fullScreenSpin').css('display','inline-block');
-
-    const templateObject = Template.instance();
 
     //TODO: Save SMS Settings with API
     const allKeys = ["VS1SMSID", "VS1SMSToken", "VS1SMSPhone", "VS1HEADERSMSMSG", "VS1SAVESMSMSG", "VS1STARTSMSMSG", "VS1STOPSMSMSG"];

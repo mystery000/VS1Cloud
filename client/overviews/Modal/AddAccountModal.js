@@ -975,13 +975,13 @@ Template.addAccountModal.events({
 
   "click .btnSaveAccount": function () {
     playSaveAudio();
-    setTimeout(function(){
-    LoadingOverlay.show();
     let templateObject = Template.instance();
     let accountService = new AccountService();
     let organisationService = new OrganisationService();
+    setTimeout(function(){
+    LoadingOverlay.show();
+    
     let forTransaction = false;
-
     if ($("#showOnTransactions").is(":checked")) {
       forTransaction = true;
     }

@@ -7371,10 +7371,11 @@ Template.new_quote.events({
     },
     'click .btnDeleteFollowingQuotes': async function(event) {
         playDeleteAudio();
-        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
+        setTimeout(async function(){
+        
         swal({
             title: 'Delete Quote',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -7426,10 +7427,11 @@ Template.new_quote.events({
     },
     'click .btnDeleteQuote': function(event) {
         playDeleteAudio();
-        setTimeout(function(){
-        LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
+        setTimeout(function(){
+        LoadingOverlay.show();
+        
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -7477,10 +7479,10 @@ Template.new_quote.events({
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
-        let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
+        setTimeout(async function(){
+        let taxcodeList = templateObject.taxraterecords.get();
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblQuoteLine tbody>tr').length > 1) {
             this.click;
@@ -7629,8 +7631,9 @@ Template.new_quote.events({
     // },
     'click .btnSave': (e, templateObject) => {
         playSaveAudio();
-        setTimeout(function(){
         let contactService = new ContactService();
+        let salesService = new SalesBoardService();
+        setTimeout(function(){
         saveCurrencyHistory();
         //let templateObject = Template.instance();
         let quoteData = templateObject.quoterecord.get();
@@ -7640,7 +7643,7 @@ Template.new_quote.events({
         let customername = $('#edtCustomerName');
         let name = $('#edtCustomerEmail').attr('customerfirstname');
         let surname = $('#edtCustomerEmail').attr('customerlastname');
-        let salesService = new SalesBoardService();
+        
         let termname = $('#sltTerms').val() || '';
         // if (termname === '') {
         //     swal('Terms has not been selected!', '', 'warning');
@@ -8753,6 +8756,7 @@ Template.new_quote.events({
     // custom field displaysettings
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
+        let templateObject = Template.instance();
         setTimeout(async function(){
         let lineItems = [];
         $(".fullScreenSpin").css("display", "inline-block");
@@ -8774,7 +8778,7 @@ Template.new_quote.events({
             };
             lineItems.push(lineItemObj);
         });
-        let templateObject = Template.instance();
+        
         let reset_data = templateObject.reset_data.get();
         reset_data = reset_data.filter(redata => redata.display == false);
         lineItems.push(...reset_data);

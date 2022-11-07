@@ -95,9 +95,9 @@ Template.clienttypesettings.events({
     },
     'click .btnDeleteClientType': function () {
         playDeleteAudio();
+        let contactService = new ContactService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService = new ContactService();
         let clientTypeId = $('#edtClientTypeID').val();
 
         let objDetails = {
@@ -135,9 +135,10 @@ Template.clienttypesettings.events({
     },
     'click .btnSaveDept': function () {
         playSaveAudio();
+        let contactService = new ContactService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService = new ContactService();
+        
         let objDetails ={};
         //let headerDept = $('#sltDepartment').val();
         let custType = $('#edtClientTypeName').val();
@@ -243,9 +244,9 @@ Template.clienttypesettings.events({
     },
     'click .btnSaveRoom': function () {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let taxRateService = new TaxRateService();
 
         var parentdept = $('#sltDepartmentList').val();
         var newroomname = $('#newRoomName').val();
