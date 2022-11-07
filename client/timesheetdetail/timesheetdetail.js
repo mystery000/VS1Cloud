@@ -154,7 +154,7 @@ Template.timesheetdetail.onRendered(function () {
      * @param {integer} employeeID
      * @returns
      */
-  this.getEarnings = async (employeeID = null) => {
+  this.getEmployeePayRollPayTemplates = async (employeeID = null) => {
     let data = await CachedHttp.get(erpObject.TPayTemplateEarningLine, async () => {
       const employeePayrolApis = new EmployeePayrollApi();
       const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TPayTemplateEarningLine);
@@ -180,6 +180,7 @@ Template.timesheetdetail.onRendered(function () {
 
     data = _.groupBy(data, "EarningRate");
 
+    console.log("pay tempaltes", data);
     this.earnings.set(data);
     return data;
   };
@@ -649,6 +650,7 @@ Template.timesheetdetail.onRendered(function () {
   this.loadTimeSheetDetails = async () => {
     let timeSheetDetails = await this._getTimeSheetDetails(id);
     await this.timeSheetDetails.set(timeSheetDetails);
+    return timeSheetDetails;
   };
 
   // This will contain the logs to save this timesheet
@@ -715,7 +717,7 @@ Template.timesheetdetail.onRendered(function () {
       }
       return timesheetsDetails;
     }
-    return [];
+    return undefined;
   };
 
   this._deleteTimSheetDetails = async timesheetId => {
@@ -775,7 +777,7 @@ Template.timesheetdetail.onRendered(function () {
     await this.loadOvertimes(refresh);
 
     const employee = await this.employee.get();
-    await this.getEarnings(employee.ID);
+    await this.getEmployeePayRollPayTemplates(employee.ID);
 
     await this.calculateThisWeek();
 
@@ -785,9 +787,11 @@ Template.timesheetdetail.onRendered(function () {
 
     //await this._getTimeSheetDetails();
     // Lets load the timesheet data
-    await this.loadTimeSheetDetails();
+    let timesheetDetails = await this.loadTimeSheetDetails();
 
-    if (!(await this.timeSheetDetails.get())) {
+    console.log("timsheetdetails", timesheetDetails);
+
+    if (timesheetDetails == undefined) {
       setTimeout(() => {
         this.duplicateFirstLine();
       }, 300);

@@ -248,10 +248,10 @@ Template.AddPayRunModal.events({
   },
   "click .btnPayRunNext": async event => {
     $(".modal-backdrop").css("display", "none");
-    const id = $("#selectAPayRun").attr("calendar-id");
+    const calendarId = $("#selectAPayRun").attr("calendar-id");
 
-    if (await payRunHandler.isPayRunCalendarAlreadyDrafted(id) == undefined) {
-      window.location.href = `/payrundetails?cid=${id}`;
+    if (await payRunHandler.isPayRunCalendarAlreadyDrafted(calendarId) == undefined) {
+      window.location.href = `/payrundetails?cid=${calendarId}`; // this will generate one 
     } else {
       const result = await swal({title: "Can't create duplicate draft PayRuns", text: "You can't select this Pay Pariod while one is in draft. Please Approve or Delete it to create a new one first", type: "error", showCancelButton: true, confirmButtonText: "Ok"});
     }
