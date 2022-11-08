@@ -234,6 +234,22 @@ Template.payrundetails.onRendered(function () {
     this.payRunDetails.set(payRunDetails);
   };
 
+  this._getTimeSheetDetails = async (timesheetId = null, list = false) => {
+    let response = await getVS1Data(erpObject.TTimeSheetDetails);
+
+    if (response.length > 0) {
+      let timesheetsDetails = JSON.parse(response[0].data);
+
+      if (timesheetId) {
+        return list == true
+          ? timesheetsDetails.filter(time => time.timeSheetId == timesheetId)
+          : timesheetsDetails.find(time => time.timeSheetId == timesheetId);
+      }
+      return timesheetsDetails;
+    }
+    return undefined;
+  };
+
   this.loadTimesheets = async refresh => {
     // From the timesheets
     let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
@@ -443,7 +459,7 @@ Template.payrundetails.onRendered(function () {
         selected: false
       });
 
-      console.log("geenrated payrun", payRunDetails);
+      
 
       await payRunHandler.add(payRunDetails);
     };

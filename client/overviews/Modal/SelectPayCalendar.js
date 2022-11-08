@@ -331,8 +331,6 @@ Template.SelectPayCalendar.events({
     const periods = ui.calendarPeriods.get();
     const selectPeriod = periods.find(p => p.ID);
 
-    console.log(FlowRouter.current().path);
-
     $(".paste-selected-pay-period-name-js").attr("calendar-id", selectPeriod.ID);
     $(".paste-selected-pay-period-name-js").val(`${selectPeriod.PayrollCalendarName} (${selectPeriod.PayrollCalendarPayPeriod})`);
     
