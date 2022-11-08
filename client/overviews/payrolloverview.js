@@ -291,6 +291,8 @@ Template.payrolloverview.onRendered(function () {
     });
     templateObject.timeSheetList.set(timesheets);
 
+    
+
     // TODO: Datable jquery to be added
 
     setTimeout(() => {
@@ -6774,13 +6776,14 @@ Template.payrolloverview.events({
   },
 
   "click .redirect-to-payrun-details": async (e, ui) => {
-    if($(e.currentTarget).attr('id')) {
-      const id = $(e.currentTarget).attr('id');
+    if($(e.currentTarget).attr('payrun-id')) {
+      const id = $(e.currentTarget).attr('payrun-id');
       window.location.href = `/payrundetails?id=${id}`;
-    } else {
-      const id = $(e.currentTarget).attr('calendar-id');
-      window.location.href = `/payrundetails?cid=${id}`;
-    }
+    } 
+    // else {
+    //   const id = $(e.currentTarget).attr('calendar-id');
+    //   window.location.href = `/payrundetails?cid=${id}`;
+    // }
 
     // const id = $(e.currentTarget).attr('calendar-id');
     // window.location.href = `/payrundetails?cid=${id}`;
