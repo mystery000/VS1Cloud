@@ -1455,7 +1455,7 @@
                                                                                 <div class="col-12 col-md-3">
                                                                                     <div class="form-group" style="margin: 4px;">
                                                                                         <label>Tax File Number (TFN)</label>
-                                                                                        <input type="text" class="form-control" id="edtTaxFileNumber" name="edtTaxFileNumber" value="{{employeePaySetting.TFN}}">
+                                                                                        <input type="text" class="form-control" id="edtTaxFileNumber" name="edtTaxFileNumber" value="{{employeePaySetting.Employee.fields.TFN}}">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-12 col-md-1">
@@ -1515,7 +1515,7 @@
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>First Pay Date</label>
                                                                             <div class="input-group date">
-                                                                                <input type="text" class="form-control" name="edtFirstPayDate" id="edtFirstPayDate" value="{{employeePaySetting.StartingDate}}" />
+                                                                                <input type="text" class="form-control" name="edtFirstPayDate" id="edtFirstPayDate" value="{{ formatDate employeePaySetting.FirstPayDate}}" />
                                                                             </div>
                                                                         </div>
                                                                     </div>

@@ -117,7 +117,26 @@
               overflow-x: auto!important;
               overflow-y: hidden!important;
               }
-
+              .table th.colARBalance,
+              .table th.colCreditBalance,
+              .table th.colBalance,
+              .table th.colCreditLimit,
+              .table th.colSalesOrderBalance {
+                text-align: right !important;
+              }
+              @media print {
+                table.dataTable {
+                    width: 100% !important;
+                }
+                table.dataTable tr td {
+                    font-size: 0.7rem !important;
+                    padding: 0.6rem !important;
+                }
+                table.dataTable tr th {
+                    font-size: 0.7rem !important;
+                    padding: 0.6rem !important;
+                }
+              }
         </style>
         <table id="{{tablename}}" class="dataTable table table-striped table-bordered {{tablename}}">
             <thead>

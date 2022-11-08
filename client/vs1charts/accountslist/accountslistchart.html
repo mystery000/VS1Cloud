@@ -319,6 +319,27 @@
                 .btn-primary, a.btnOpenSettings {
                     color: #fff!important;
                 }
+                .colBalance.text-right {
+                    text-align: right !important;
+                }
+                @media print {
+                    div {
+                        width: 100% !important;
+                        min-width: 100% !important;
+                    }
+                    table {
+                        width: 100% !important;
+                        min-width: 100% !important;
+                    }
+                    table thead tr th {
+                        font-size: 12px !important;
+                        padding: 10px !important;
+                    }
+                    table tbody tr td {
+                        font-size: 10px !important;
+                        padding: 10px !important;
+                    }
+                }
             </style>
             <table id="tblDashboardAccountChartList" style="width:100%" class="dataTable table table-striped table-bordered tblDashboardAccountChartList">
                 <thead>
@@ -328,7 +349,7 @@
                         <th class="th colDescription" style=" ">Description</th>
                         <th class="th colAccountNo" style="width:90px;">Account No</th>
                         <th class="th colType">Type</th>
-                        <th class="th colBalance" style="width:80px;">Balance</th>
+                        <th class="th colBalance text-right" style="width:80px;">Balance</th>
                         <th class="th colTaxCode" style="width:80px;">Tax Code</th>
                         <th class="th colBankName hiddenColumn" style="width:120px;">Bank Name</th>
                         <th class="th colBankAccountName" style="width:120px;">Bank Acc Name</th>
