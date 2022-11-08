@@ -511,7 +511,7 @@ Template.crmoverview.onRendered(function () {
   $(".crmSelectEmployeeList").editableSelect();
   $(".crmSelectEmployeeList").editableSelect().on("click.editable-select", function (e, li) {
     $("#employeeListModal").modal();
-  }); 
+  });
   $(document).on("click", "#tblContactlist tbody tr", function (e) {
     var table = $(this);
     let colClientName = table.find(".colClientName").text();
@@ -620,7 +620,7 @@ Template.crmoverview.events({
     $('#contactID').val('');
     $('#contactType').val('')
     $('#add_contact_name').val('')
-    
+
     $("#newTaskModal").modal("toggle");
   },
 
@@ -803,8 +803,9 @@ Template.crmoverview.events({
 
   "click .printConfirm": function (event) {
     playPrintAudio();
-    setTimeout(function(){
-    let currentTabID = Template.instance().currentTabID.get();
+    const instance = Template.instance();
+    setTimeout(() => {
+    let currentTabID = instance.currentTabID.get();
 
     $(".fullScreenSpin").css("display", "inline-block");
     switch (currentTabID) {
