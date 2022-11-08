@@ -110,7 +110,7 @@ Template.agedpayablessummary.onRendered(function() {
       defaultOptions = {
         fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
         toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: false
+        ignoreDate: true
       };
     }
     this.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));

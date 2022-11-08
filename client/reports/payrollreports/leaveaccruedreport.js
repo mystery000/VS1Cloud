@@ -137,7 +137,6 @@ Template.leaveaccruedreport.onRendered(() => {
 
     data = data.response;
 
-
     // if (!localStorage.getItem('VS1LeaveAccrued_Report')) {
     //   const options = await templateObject.reportOptions.get();
     //   let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
@@ -152,21 +151,20 @@ Template.leaveaccruedreport.onRendered(() => {
     // }
     const result = new Array();
     if(data){
-      data.tleaveaccruals.map((y) => {
-        let index = result.findIndex(x => x.EmployeeName == y.fields.EmployeeName)
+      data.tleaveaccruallist.map((y) => {
+        let index = result.findIndex(x => x.EmployeeID == y.EmployeeID)
         if(index == -1) {
-          result.push({ EmployeeName:y.fields.EmployeeName, records: [y]})
+          result.push({ EmployeeID:y.EmployeeID, records: [y]})
         } else {
           result[index].records.push(y)
         }
       });
     }
 
-
     templateObject.records.set(result);
-    setTimeout(function() {
-        MakeNegative();
-    }, 1000);
+    // setTimeout(function() {
+    //     MakeNegative();
+    // }, 1000);
 
     LoadingOverlay.hide();
   }
@@ -437,7 +435,7 @@ Template.leaveaccruedreport.helpers({
     return Template.instance().records.get();
   },
   redirectionType(item) {
-    if(item.fields.PayID === 'PO') {
+    if(item.PayID === 'PO') {
       return '/purchaseordercard?id=' + item.Id;
     } else {
       return '#noInfoFound';
@@ -446,7 +444,7 @@ Template.leaveaccruedreport.helpers({
   calculateHourPriceConvert: (item, currencyData) => {
 
     let utilityService = new UtilityService();
-    let amount = item.fields.AccruedHours * item.fields.CurrentHourlyRate
+    let amount = item.AccruedHours * item.CurrentHourlyRate
     if( isNaN( amount ) ){
         amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
@@ -549,7 +547,7 @@ Template.leaveaccruedreport.helpers({
   },
   calculateHourPrice: (item) => {
     let utilityService = new UtilityService();
-    let amount = item.fields.AccruedHours * item.fields.CurrentHourlyRate
+    let amount = item.AccruedHours * item.CurrentHourlyRate
     if( isNaN( amount ) ){
         amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;

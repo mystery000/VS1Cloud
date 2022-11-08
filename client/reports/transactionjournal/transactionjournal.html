@@ -268,9 +268,9 @@
                                         <tbody>
                                             {{#if records}}
                                                 {{#each arrayify records}}
-                                                    {{#if value.ACCOUNTNAME}}
+                                                    {{#if value.ACCOUNT}}
                                                         <tr>
-                                                            <td colspan="8" style="font-weight: 800;">{{ value.ACCOUNTNAME }}</td>
+                                                            <td colspan="8" style="font-weight: 800;">{{ value.ACCOUNT }}</td>
                                                         </tr>
                                                     {{/if}}
                                                     {{#each item in value.SubAccounts}}
@@ -324,7 +324,7 @@
                                                         <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.CREDITSINC }}</a></td>
                                                         {{/if}}
                                                            
-                                                            <td>{{ item.ReferenceNo }}</td>
+                                                            <td class="text-right">{{ item.GLOBALREF }}</td>
                                                         </tr>
                                                     {{/each}}
                                                 {{/each}}
