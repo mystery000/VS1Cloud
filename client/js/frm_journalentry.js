@@ -98,14 +98,14 @@ Template.journalentrycard.onCreated(() => {
 });
 Template.journalentrycard.onRendered(() => {
     let templateObject = Template.instance();
-    $('#onEventSettings').css('display', 'none');
     $('#edtFrequencyDetail').css('display', 'none');
-    $('#basedOnFrequency').prop('checked', false);
-    $('#basedOnPrint').prop('checked', false);
-    $('#basedOnSave').prop('checked', false);
-    $('#basedOnTransactionDate').prop('checked', false);
-    $('#basedOnDueDate').prop('checked', false);
-    $('#basedOnEvent').prop('checked', false);
+    // $('#onEventSettings').css('display', 'none');
+    // $('#basedOnFrequency').prop('checked', false);
+    // $('#basedOnPrint').prop('checked', false);
+    // $('#basedOnSave').prop('checked', false);
+    // $('#basedOnTransactionDate').prop('checked', false);
+    // $('#basedOnDueDate').prop('checked', false);
+    // $('#basedOnEvent').prop('checked', false);
     $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
       showOn: 'button',
       buttonText: 'Show Date',
@@ -1951,28 +1951,28 @@ Template.journalentrycard.helpers({
 });
 
 Template.journalentrycard.events({
-    'click input.basedOnSettings': function (event) {
-        if (event.target.id == "basedOnEvent") {
-            const value = $(event.target).prop('checked');
-            if (value) {
-                $('#onEventSettings').css('display', 'block');
-                $('#settingsOnEvents').prop('checked', true);
-            } else {
-                $('#onEventSettings').css('display', 'none');
-                $('#settingsOnEvents').prop('checked', false);
-                $('#settingsOnLogout').prop('checked', false);
-            }
-        } else if (event.target.id == 'basedOnFrequency') {
-            const value = $(event.target).prop('checked');
-            if(value) {
-                $('#edtFrequencyDetail').css('display', 'flex');
-                $('#basedOnSettingsTitle').css('border-top-width', '1px');
-            }else {
-                $('#edtFrequencyDetail').css('display', 'none');
-                $('#basedOnSettingsTitle').css('border-top-width', '0px');
-            }
-        }
-      },
+    // 'click input.basedOnSettings': function (event) {
+    //     if (event.target.id == "basedOnEvent") {
+    //         const value = $(event.target).prop('checked');
+    //         if (value) {
+    //             $('#onEventSettings').css('display', 'block');
+    //             $('#settingsOnEvents').prop('checked', true);
+    //         } else {
+    //             $('#onEventSettings').css('display', 'none');
+    //             $('#settingsOnEvents').prop('checked', false);
+    //             $('#settingsOnLogout').prop('checked', false);
+    //         }
+    //     } else if (event.target.id == 'basedOnFrequency') {
+    //         const value = $(event.target).prop('checked');
+    //         if(value) {
+    //             $('#edtFrequencyDetail').css('display', 'flex');
+    //             $('#basedOnSettingsTitle').css('border-top-width', '1px');
+    //         }else {
+    //             $('#edtFrequencyDetail').css('display', 'none');
+    //             $('#basedOnSettingsTitle').css('border-top-width', '0px');
+    //         }
+    //     }
+    //   },
       'click input[name="frequencyRadio"]': function (event) {
         if (event.target.id == "frequencyMonthly") {
             document.getElementById("monthlySettings").style.display = "block";
