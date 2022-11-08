@@ -8175,6 +8175,7 @@ Template.supplierpaymentcard.events({
   },
   "click .printConfirm": async function (event) {
     playPrintAudio();
+    setTimeout(async function(){
     var printTemplate = [];
     LoadingOverlay.show();
 
@@ -8397,10 +8398,12 @@ Template.supplierpaymentcard.events({
         }
       });
     }
+  }, delayTimeAfterSound);
   },
 
   "click  #open_print_confirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     if ($("#choosetemplate").is(":checked")) {
         $('#templateselection').modal('show');
     } else {
@@ -8435,6 +8438,7 @@ Template.supplierpaymentcard.events({
 
       $("#confirmprint").modal("hide");
     }
+  }, delayTimeAfterSound);
   },
 
   "click #choosetemplate": function (event) {
@@ -8488,10 +8492,10 @@ Template.supplierpaymentcard.events({
   },
   "click .btnSave": (e, ui) => {
   playSaveAudio();
+  let templateObject = Template.instance();
+  let paymentService = new PaymentsService();
   setTimeout(function(){
-    LoadingOverlay.show();
-    let templateObject = Template.instance();
-    let paymentService = new PaymentsService();
+    LoadingOverlay.show();  
     let customer = $("#edtSupplierName").val();
     let paymentAmt = $("#edtPaymentAmount").val();
     var paymentDateTime = new Date($("#dtPaymentDate").datepicker("getDate"));
@@ -12638,53 +12642,57 @@ Template.supplierpaymentcard.events({
     var currentDate = new Date();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
-    var url = FlowRouter.current().path;
-    var getso_id = url.split('?id=');
-    var currentInvoice = getso_id[getso_id.length - 1];
-    var objDetails = '';
+    setTimeout(async function(){
+    
     swal({
         title: 'Delete Payment',
-        text: "Are you sure you want to Delete this Payment and following payments?",
+        text: "Do you wish to delete this transaction and all others associated with it moving forward?",
         type: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes'
     }).then(async (result) => {
         if (result.value) {
-            $('.fullScreenSpin').css('display','inline-block');
-            if (getso_id[1]) {
-                currentInvoice = parseInt(currentInvoice);
-                var paymentData = await paymentService.getOneSupplierPayment(currentInvoice);
-                var paymentDate = paymentData.fields.PaymentDate;
-                var fromDate = paymentDate.substring(0, 10);
-                var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-                var followingPayments = await sideBarService.getAllTSupplierPaymentListData(
-                    fromDate,
-                    toDate,
-                    false,
-                    initialReportLoad,
-                    0
-                );
-                var paymentList = followingPayments.tsupplierpaymentlist;
-                for (var i=0; i < paymentList.length; i++) {
-                    var objDetails = {
-                        type: "TCustPayments",
-                        fields: {
-                            ID: paymentList[i].PaymentID,
-                            Deleted: true
-                        }
-                    };
-                    var result = await paymentService.deleteSuppDepositData(objDetails)
-                }
-            }
+          var url = FlowRouter.current().path;
+          var getso_id = url.split('?id=');
+          var currentInvoice = getso_id[getso_id.length - 1];
+          var objDetails = '';
+          $('.fullScreenSpin').css('display','inline-block');
+          if (getso_id[1]) {
+              currentInvoice = parseInt(currentInvoice);
+              var paymentData = await paymentService.getOneSupplierPayment(currentInvoice);
+              var paymentDate = paymentData.fields.PaymentDate;
+              var fromDate = paymentDate.substring(0, 10);
+              var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+              var followingPayments = await sideBarService.getAllTSupplierPaymentListData(
+                  fromDate,
+                  toDate,
+                  false,
+                  initialReportLoad,
+                  0
+              );
+              var paymentList = followingPayments.tsupplierpaymentlist;
+              for (var i=0; i < paymentList.length; i++) {
+                  var objDetails = {
+                      type: "TCustPayments",
+                      fields: {
+                          ID: paymentList[i].PaymentID,
+                          Deleted: true
+                      }
+                  };
+                  var result = await paymentService.deleteSuppDepositData(objDetails)
+              }
+          }
+          $('.modal-backdrop').css('display', 'none');
+          FlowRouter.go('/paymentoverview?success=true');
         }    
     });
-    $('.modal-backdrop').css('display', 'none');
-    FlowRouter.go('/paymentoverview?success=true');
+  }, delayTimeAfterSound);
   },
   "click .btnDeletePayment": async function (event) {
     playDeleteAudio();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
+    setTimeout(async function(){
     var url = FlowRouter.current().path;
     var getso_id = url.split('?id=');
     var currentInvoice = getso_id[getso_id.length - 1];
@@ -12732,6 +12740,7 @@ Template.supplierpaymentcard.events({
     } else {}
   });
     // $('#deleteLineModal').modal('toggle');
+  }, delayTimeAfterSound);
   },
   "click .btnConfirmPayment": function (event) {
     $(".btnDeleteLine").hide();
@@ -12741,6 +12750,8 @@ Template.supplierpaymentcard.events({
     playDeleteAudio();
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
+    setTimeout(function(){
+    
     let selectLineID = $("#selectDeleteLineID").val() || 0;
     if ($("#tblSupplierPaymentcard tbody>tr").length > 1) {
       this.click;
@@ -12767,6 +12778,7 @@ Template.supplierpaymentcard.events({
       this.click;
     }
     $("#deleteLineModal").modal("toggle");
+  }, delayTimeAfterSound);
   },
   // 'click .printConfirm': function(event) {
   //     $('#html-2-pdfwrapper').css('display', 'block');
@@ -12918,6 +12930,7 @@ Template.supplierpaymentcard.events({
   },
   "click .btnSaveGridSettings": function (event) {
     playSaveAudio();
+    setTimeout(function(){
     let lineItems = [];
     //let lineItemObj = {};
     $(".columnSettings").each(function (index) {
@@ -13010,6 +13023,7 @@ Template.supplierpaymentcard.events({
       }
     }
     $("#myModal2").modal("toggle");
+  }, delayTimeAfterSound);
   },
   "blur .divcolumn": function (event) {
     let columData = $(event.target).html();

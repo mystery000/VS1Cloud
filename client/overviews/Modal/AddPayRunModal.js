@@ -250,7 +250,7 @@ Template.AddPayRunModal.events({
     $(".modal-backdrop").css("display", "none");
     const id = $("#selectAPayRun").attr("calendar-id");
 
-    if (await payRunHandler.isPayRunCalendarAlreadyDrafted(id)) {
+    if (await payRunHandler.isPayRunCalendarAlreadyDrafted(id) == undefined) {
       window.location.href = `/payrundetails?cid=${id}`;
     } else {
       const result = await swal({title: "Can't create duplicate draft PayRuns", text: "You can't select this Pay Pariod while one is in draft. Please Approve or Delete it to create a new one first", type: "error", showCancelButton: true, confirmButtonText: "Ok"});
@@ -457,6 +457,7 @@ Template.AddPayRunModal.events({
   "click .btnDeleteCalender": (e, ui) => {
     playDeleteAudio();
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let calenderid = $("#selectColDeleteLineID").val() || 0;
     let calendername = $("#selectCalenderName").val() || 0;
     LoadingOverlay.show();
@@ -506,6 +507,7 @@ Template.AddPayRunModal.events({
         if (result.value) {} else if (result.dismiss === "cancel") {}
       });
     }
+  }, delayTimeAfterSound);
   }
 });
 

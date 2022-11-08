@@ -20,6 +20,14 @@ Template.export_import_print_display_button.events({
           currenttablename = "tblClienttypeList";
         }else if (url.includes("/leadstatussettings")) {
           currenttablename = "tblLeadStatusList";
+        }else if (url.includes("/departmentSettings")) {
+          currenttablename = "tblDepartmentList";
+        }else if (url.includes("/paymentmethodSettings")) {
+          currenttablename = "tblPaymentMethodList";
+        }else if (url.includes("/termsettings")) {
+          currenttablename = "tblTermsList";
+        }else if (url.includes("/uomSettings")) {
+          currenttablename = "tblUOMList";
         };
 
         let getTableName = currenttablename||'';

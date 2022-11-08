@@ -2605,25 +2605,25 @@
                                                                     <div class="col-12">
                                                                         <!-- Earning rate setting -->
                                                                         <div class="card shadow" style="padding: 8px 16px;">
-                                                                            {{#if payTemplateEarningLines}}
-                                                                                {{#each item in payTemplateEarningLines}}
-                                                                                    {{#if item.fields.Active }}
-                                                                                        <div class="earningLinesContainer earningRateNewDiv">
+                                                                            {{#if earningLines}}
+                                                                                {{#each item in earningLines}}
+                                                                                    {{#if item.Active }}
+                                                                                        <div class="earningLinesContainer earningRateNewDiv" data-id="{{ item.ID }}">
                                                                                             <div class="row align-items-end ">
                                                                                                 <div class="col-6 col-md-7">
                                                                                                     <div class="form-group">
                                                                                                         <label class="borderBottom1">Earnings Rate</label>
-                                                                                                        <input type="text" class="form-control earningLineDropDown" id="ptEarningRate{{ item.fields.ID }}" value="{{ item.fields.EarningRate }}" style="background-color:rgb(255, 255, 255); cursor: pointer;" />
+                                                                                                        <input type="text" class="form-control earningLineDropDown" id="ptEarningRate{{ item.ID }}" data-value="{{ item.EarningRate }}" value="{{ item.EarningRate }}" style="background-color:rgb(255, 255, 255); cursor: pointer;" />
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div class="col-5 col-md-2">
                                                                                                     <div class="form-group">
                                                                                                         <label>Amount</label>
-                                                                                                        <input type="text" class="form-control edtPriceFormatting" id="ptEarningAmount{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}">
+                                                                                                        <input type="text" class="form-control edtPriceFormatting" id="ptEarningAmount{{ item.ID }}" value="{{ formatPrice item.Amount }}">
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div class="col-1 col-md-1" style="padding-left: 0px;">
-                                                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempEarning" data-id="{{ item.fields.ID }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempEarning" data-id="{{ item.ID }}" earning-id="{{ item.ID }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>

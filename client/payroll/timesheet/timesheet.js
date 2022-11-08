@@ -5941,10 +5941,10 @@ Template.timesheet.events({
     },
     'click .btnSaveTimeSheetForm': function() {
         playSaveAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let contactService = new ContactService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
         let timesheetID = $('#edtTimesheetID').val();
         var employeeName = $('#sltEmployee').val();
         var jobName = $('#sltJob').val();
@@ -6831,9 +6831,11 @@ Template.timesheet.events({
     },
     'click .printConfirm': function(event) {
     playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblTimeSheet_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click #btnHoldOne': function(event) {
         $('#frmOnHoldModal').modal('show');
@@ -7040,10 +7042,11 @@ Template.timesheet.events({
     },
     'click .btnDeleteTimeSheetOne': function() {
         playDeleteAudio();
-        // $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let contactService = new ContactService();
-
+        setTimeout(function(){
+        // $('.fullScreenSpin').css('display', 'inline-block');
+        
         swal({
             title: 'Delete TimeSheet',
             text: "Are you sure you want to Delete this TimeSheet?",
@@ -7092,8 +7095,7 @@ Template.timesheet.events({
                 $('.fullScreenSpin').css('display', 'none');
             }
         });
-
-
+    }, delayTimeAfterSound);
     },
     'blur .cashamount': function(event) {
         let inputUnitPrice = parseFloat($(event.target).val()) || 0;

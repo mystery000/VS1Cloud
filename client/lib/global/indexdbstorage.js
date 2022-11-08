@@ -48,9 +48,12 @@ openDb = function(dbName) {
             db.createObjectStore("TTaxcodeVS1", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TSubTaxVS1", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TTermsVS1", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TTermsVS1List", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TDeptClass", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TDepartment", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TCurrency", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TLeadStatusType", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TLeadStatusTypeList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TShippingMethod", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TAccountType", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TERPCombinedContactsVS1", { keyPath: "EmployeeEmail" });
@@ -308,6 +311,7 @@ openDb = function(dbName) {
             db.createObjectStore('TCorrespondence', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TEftOptions', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TBasReturn', { keyPath: "EmployeeEmail" });
+            db.createObjectStore('TVatReturn', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Customize', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Dashboard', { keyPath: "EmployeeEmail" });
             db.createObjectStore("TPayrollSettingOvertimes", { keyPath: "EmployeeEmail" });
@@ -581,7 +585,7 @@ getStoreToDelete = async function(email) {
 openDbCheckVersion = async function() {
     var promiseversion = new Promise((resolve, reject) => {
         var versionExists = false;
-        let dbReqVersion = indexedDB.open('TDatabaseVersion', 95);
+        let dbReqVersion = indexedDB.open('TDatabaseVersion', 98);
         dbReqVersion.onsuccess = function() {
             resolve(versionExists);
         };

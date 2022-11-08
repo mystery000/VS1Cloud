@@ -272,6 +272,8 @@ const erpObject = {
     TJobProfitability: "TJobProfitability",
     TBasReturn: "TBasReturn",
     TBASReturnDetail: "TBASReturnDetail",
+    TVatReturn: "TVatReturn",
+    TVATReturnDetail: "TVATReturnDetail",
     VS1_Customize: "VS1_Customize",
     TProductList:"TProductList",
     TProductMovementList:"TProductMovementList",

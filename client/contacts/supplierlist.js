@@ -5,6 +5,8 @@ import { UtilityService } from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { OrganisationService } from "../js/organisation-service";
+let organisationService = new OrganisationService;
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.supplierlist.onCreated(function() {
@@ -15,6 +17,7 @@ Template.supplierlist.onCreated(function() {
     templateObject.selectedFile = new ReactiveVar();
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+    templateObject.setupFinished = new ReactiveVar();
 });
 
 Template.supplierlist.onRendered(function() {
@@ -752,6 +755,21 @@ Template.supplierlist.onRendered(function() {
 
     });
 
+    templateObject.checkSetupWizardFinished = async function () {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+        if( setupFinished === null || setupFinished ===  "" ){
+            let setupInfo = await organisationService.getSetupInfo();
+            if( setupInfo.tcompanyinfo.length > 0 ){
+                let data = setupInfo.tcompanyinfo[0];
+                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+                templateObject.setupFinished.set(data.IsSetUpWizard)
+            }
+        }else{
+            templateObject.setupFinished.set(setupFinished)
+        }
+    }
+    templateObject.checkSetupWizardFinished();
+
     tableResize();
 
 
@@ -1160,9 +1178,11 @@ Template.supplierlist.events({
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblSupplierlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .templateDownload': function() {
         let utilityService = new UtilityService();
@@ -1355,14 +1375,6 @@ Template.supplierlist.helpers({
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblSupplierlist' });
     },
-    showSetupFinishedAlert: () => {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
-        if (setupFinished == true || setupFinished == "true") {
-            return false;
-        } else {
-            return true;
-        }
-    },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
         return setupUrl[1];
@@ -1371,5 +1383,7 @@ Template.supplierlist.helpers({
     displayfields: () => {
         return Template.instance().displayfields.get();
     },
-
+    isSetupFinished: () => {
+        return Template.instance().setupFinished.get();
+    },
 });

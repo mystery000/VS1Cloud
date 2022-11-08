@@ -63,6 +63,7 @@ Template.fxhistorylist.events({
     },
     'click .btnPrintReport': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -96,7 +97,8 @@ Template.fxhistorylist.events({
         $(".printReport").print({
             title: "Foreign Exchange History List | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor"
-        })
+        });
+    }, delayTimeAfterSound);
     },
     'keyup #myInputSearch': function(event) {
         $('.table tbody tr').show();

@@ -26,8 +26,10 @@ Template.newshipvia.helpers({});
 Template.newshipvia.events({
     'click .btnSaveShipVia': function() {
         playSaveAudio();
+        let clientService = new SalesBoardService();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let clientService = new SalesBoardService()
+        
         let shipViaData = $('#edtShipVia').val() || '';
         let shipViaID = $('#edtShipViaID').val() || 0;
         let leadData = '';
@@ -88,5 +90,6 @@ Template.newshipvia.events({
                 else if (result.dismiss === 'cancel') {}
             });
         }
+    }, delayTimeAfterSound);
     }
 });

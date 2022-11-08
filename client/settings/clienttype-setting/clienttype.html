@@ -43,8 +43,6 @@
           <button id="btnRefresh" class="btn btn-primary btnRefresh btnNav " type="button" style="min-width: 117.016px;margin :14px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
 
 
-
-
           <a class="btn btn-primary btnAddClientType"  role="button" data-toggle="modal" href="#myModalClientType" style="margin-top: 14px;margin: 14px;"><i class="fa fa-plus" style="margin-right: 14px;"></i>Add New Customer Type<br></a>
           {{> clienttypemodal}}
       </div>
@@ -65,48 +63,6 @@
   margin: 16px 0px;
 }
 </style>
-<!-- Start {{> optionNavSalesOverview}} -->
-
-<!-- End -->
-<!--
-<div class="table-responsive">
-<style>
-  .hiddenColumn{
-      display:none;
-  }
-  .showColumn {
-      display:table-cell;
-      padding:.75rem;
-      vertical-align:top;
-  }
-</style>
-
-<table id="clienttypeList" style="width:100%" class="dataTable table table-hover table-striped table-bordered clienttypeList">
-  <thead>
-      <tr class="dnd-moved">
-          <th class="th colDeptName" style="width:150px">Type Name</th>
-          <th class="th colDescription" >Description</th>
-          <th class="th colDelete" style="width:20px;"></th>
-      </tr>
-  </thead>
-  <tbody>
-      {{#if datatablerecords}}
-      {{#each item in datatablerecords}}
-      <tr class="dnd-moved" id="{{item.id}}"  style="cursor: default;">
-
-          <td contenteditable="false" class="colDeptName">{{item.typeName}}</td>
-
-          <td contenteditable="false" class="colDescription">{{item.description}}</td>
-
-          <td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
-      </tr>
-      {{/each}}
-      {{/if}}
-  </tbody>
-
-</table>
-</div>
--->
 {{> non_transactional_list}}
 </div>
 <div class="row no-gutters">
@@ -128,7 +84,7 @@
 <div class="modal-content" >
 <div class="modal-header" >
 
-<h4 class="title-header" >Client Type</h4>
+<h4 class="title-header" >Customer Type</h4>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 </div>
 <div class="modal-body">
@@ -157,7 +113,7 @@
               </button>
           </div>
           <div class="modal-body">
-              <p>Please click "Delete" to deactivate Client Type</p>
+              <p>Please click "Delete" to deactivate Customer Type</p>
 
               <button class="btn btn-danger float-right btnDeleteDepartment" type="button">
                   <i class="fa fa-close" style="margin-right: 5px;"></i>Delete

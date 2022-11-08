@@ -55,9 +55,11 @@ Template.xecurrencies.events({
   },
   "click #saveXeCurrencySettings": async function (event) {
     playSaveAudio();
+    let templateObject = Template.instance();
+    setTimeout(async function(){
     $(".fullScreenSpin").css("display", "block");
     let settingObject = [];
-    const templateObject = Template.instance();
+    
     let settingDetails = templateObject.settingDetails.get();
     if (settingDetails.length > 0) {
       for (const item of settingDetails) {
@@ -123,6 +125,7 @@ Template.xecurrencies.events({
         swal({title: "Oooops...", text: error, type: "error", showCancelButton: false, confirmButtonText: "Try Again"});
       }
     }
+  }, delayTimeAfterSound);
   }
 });
 

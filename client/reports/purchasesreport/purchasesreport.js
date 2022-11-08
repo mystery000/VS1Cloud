@@ -729,6 +729,7 @@ Template.purchasesreport.events({
     },
     'click .btnPrintReport': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -763,7 +764,8 @@ Template.purchasesreport.events({
         $(".printReport").print({
             title: document.title + " | Purchase | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
-        })
+        });
+    }, delayTimeAfterSound);
     },
     'click .btnExportReport': function() {
         $('.fullScreenSpin').css('display', 'inline-block');

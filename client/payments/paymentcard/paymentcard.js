@@ -4998,6 +4998,7 @@ Template.paymentcard.events({
     // },
     'click .btnSave': (e, templateObject) => {
         playSaveAudio();
+        let paymentService = new PaymentsService();
         setTimeout(function(){
         LoadingOverlay.show();
 
@@ -5005,8 +5006,6 @@ Template.paymentcard.events({
          * We need to save it
          */
         saveCurrencyHistory();
-
-        let paymentService = new PaymentsService();
         let customer = $("#edtCustomerName").val();
         let paymentAmt = $("#edtPaymentAmount").val();
 
@@ -9389,6 +9388,7 @@ Template.paymentcard.events({
     },
     'click .printConfirm': async function (event) {
     playPrintAudio();
+    setTimeout(async function(){
         var printTemplate = [];
         LoadingOverlay.show();
         var customer_payment = $('input[name="Customer Payments"]:checked').val();
@@ -9597,10 +9597,12 @@ Template.paymentcard.events({
                 }
             });
         }
+    }, delayTimeAfterSound);
     },
 
     'click  #open_print_confirm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         if ($('#choosetemplate').is(':checked')) {
             $('#templateselection').modal('show');
         } else {
@@ -9635,7 +9637,7 @@ Template.paymentcard.events({
 
             $('#confirmprint').modal('hide');
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click #choosetemplate': function (event) {
@@ -9692,18 +9694,20 @@ Template.paymentcard.events({
         var currentDate = new Date();
         let templateObject = Template.instance();
         let paymentService = new PaymentsService();
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = '';
+        setTimeout(async function(){
+        
         swal({
             title: 'Delete Payment',
-            text: "Are you sure you want to Delete this Payment and following payments?",
+            text: "Do you wish to delete this transaction and all others associated with it moving forward?",
             type: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes'
         }).then(async (result) => {
             if (result.value) {
+                var url = FlowRouter.current().path;
+                var getso_id = url.split('?id=');
+                var currentInvoice = getso_id[getso_id.length - 1];
+                var objDetails = '';
                 $('.fullScreenSpin').css('display','inline-block');
                 if (getso_id[1]) {
                     currentInvoice = parseInt(currentInvoice);
@@ -9730,15 +9734,17 @@ Template.paymentcard.events({
                         var result = await paymentService.deleteDepositData(objDetails);
                     }
                 }
+                $('.modal-backdrop').css('display', 'none');
+                FlowRouter.go('/paymentoverview?success=true');
             }    
         });
-        $('.modal-backdrop').css('display', 'none');
-        FlowRouter.go('/paymentoverview?success=true');
+    }, delayTimeAfterSound);
     },
     'click .btnDeletePayment': async function (event) {
         playDeleteAudio();
         let templateObject = Template.instance();
         let paymentService = new PaymentsService();
+        setTimeout(function(){
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -9788,6 +9794,7 @@ Template.paymentcard.events({
             }
         });
         // $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnRecoverPayment': function (event) {
         LoadingOverlay.show();
@@ -9852,6 +9859,7 @@ Template.paymentcard.events({
         playDeleteAudio();
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
+        setTimeout(function(){
         let selectLineID = $('#selectDeleteLineID').val() || 0;
         if ($('#tblPaymentcard tbody>tr').length > 1) {
             this.click;
@@ -9878,6 +9886,7 @@ Template.paymentcard.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .chkcolTransDate': function (event) {
         if ($(event.target).is(':checked')) {

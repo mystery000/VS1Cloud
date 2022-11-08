@@ -75,7 +75,7 @@ Template.appointments.onCreated(function () {
   templateObject.repeatDays.set(dayObj);
   templateObject.toupdatelogid = new ReactiveVar();
   templateObject.isAccessLevels = new ReactiveVar();
-  templateObject.productFees = new ReactiveVar([]);
+  templateObject.productFees = new ReactiveVar();
   templateObject.leaveemployeerecords = new ReactiveVar([]);
 });
 
@@ -12130,10 +12130,11 @@ Template.appointments.events({
   },
   "click #btnSaveRepeat": function () {
     playSaveAudio();
-    $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
-    let repeatDays = templateObject.repeatDays.get();
     let appointmentService = new AppointmentService();
+    setTimeout(function(){
+    $(".fullScreenSpin").css("display", "inline-block");
+    let repeatDays = templateObject.repeatDays.get();
     let days = [];
     let week_day = "";
     let frequency = parseInt($("#frequency").val()) || 1;
@@ -12503,6 +12504,7 @@ Template.appointments.events({
         }
       };
     }
+  }, delayTimeAfterSound);
   },
   "click #createInvoice": function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -12520,6 +12522,7 @@ Template.appointments.events({
         AppointID: parseInt(id),
       };
       let JsonIn = {
+        Name: "VS1_InvoiceAppt",
         Params: {
           AppointIDs: [obj],
         },
@@ -15019,6 +15022,7 @@ Template.appointments.events({
   "click #btnSaveAppointment": async function () {
     playSaveAudio();
     const templateObject = Template.instance();
+    setTimeout(async function(){
     const isLeaveBooked = await templateObject.getLeaveRequests();
     if (isLeaveBooked === true) {
       swal("Appointments can't be booked against this Employee", "", "error");
@@ -15169,9 +15173,11 @@ Template.appointments.events({
         }
       }
     }
+  }, delayTimeAfterSound);
   },
   "click .btnSaveIgnoreSMS": async function () {
     playSaveAudio();
+    setTimeout(async function(){
     $("#chkSMSCustomer").prop("checked", false);
     $("#chkSMSUser").prop("checked", false);
     let emailCustomer = $("#customerEmail").is(":checked");
@@ -15182,6 +15188,7 @@ Template.appointments.events({
     } else {
       $("#frmAppointment").trigger("submit");
     }
+  }, delayTimeAfterSound);
   },
   "click #btnCloseStopAppointmentModal": function () {
     $("#stopAppointmentModal").modal("hide");
@@ -17174,47 +17181,47 @@ Template.appointments.events({
                                         );
                                         setTimeout(function () {
                                           if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                            window.open(localStorage.getItem("appt_historypage"), "_self");
+                                            FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                                           }
                                           else{
-                                            window.open("/appointments", "_self");
+                                            FlowRouter.go("/appointments", "_self");
                                           }
                                         }, 500);
                                       });
                                   })
                                   .catch(function (err) {
                                     if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                      window.open(localStorage.getItem("appt_historypage"), "_self");
+                                      FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                                     }
                                     else{
-                                      window.open("/appointments", "_self");
+                                      FlowRouter.go("/appointments", "_self");
                                     }
                                   });
                               })
                               .catch(function (err) {
                                 if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                  window.open(localStorage.getItem("appt_historypage"), "_self");
+                                  FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                                 }
                                 else{
-                                  window.open("/appointments", "_self");
+                                  FlowRouter.go("/appointments", "_self");
                                 }
                               });
                           })
                           .catch(function (err) {
                             if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                              window.open(localStorage.getItem("appt_historypage"), "_self");
+                              FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                             }
                             else{
-                              window.open("/appointments", "_self");
+                              FlowRouter.go("/appointments", "_self");
                             }
                           });
                       })
                       .catch(function (err) {
                         if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
+                          FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                         }
                         else{
-                          window.open("/appointments", "_self");
+                          FlowRouter.go("/appointments", "_self");
                         }
                       });
                   } else {
@@ -17273,20 +17280,20 @@ Template.appointments.events({
                                     );
                                     setTimeout(function () {
                                       if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                        window.open(localStorage.getItem("appt_historypage"), "_self");
+                                        FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                                       }
                                       else{
-                                        window.open("/appointments", "_self");
+                                        FlowRouter.go("/appointments", "_self");
                                       }
                                     }, 500);
                                   });
                               })
                               .catch(function (err) {
                                 if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                  window.open(localStorage.getItem("appt_historypage"), "_self");
+                                  FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                                 }
                                 else{
-                                  window.open("/appointments", "_self");
+                                  FlowRouter.go("/appointments", "_self");
                                 }
                               });
                           })
@@ -17295,16 +17302,16 @@ Template.appointments.events({
                               window.open(localStorage.getItem("appt_historypage"), "_self");
                             }
                             else{
-                              window.open("/appointments", "_self");
+                              FlowRouter.go("/appointments", "_self");
                             }
                           });
                       })
                       .catch(function (err) {
                         if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
+                          FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                         }
                         else{
-                          window.open("/appointments", "_self");
+                          FlowRouter.go("/appointments", "_self");
                         }
                       });
                   }
@@ -17344,10 +17351,10 @@ Template.appointments.events({
               })
               .catch(function (err) {
                 if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                  window.open(localStorage.getItem("appt_historypage"), "_self");
+                  FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                 }
                 else{
-                  window.open("/appointments", "_self");
+                  FlowRouter.go("/appointments", "_self");
                 }
               });
           } else {
@@ -17355,32 +17362,33 @@ Template.appointments.events({
             sideBarService
               .getAllAppointmentList(initialDataLoad, 0)
               .then(function (data) {
+                // addVS1Data('TAppointmentList', JSON.stringify(data));
                 addVS1Data("TAppointment", JSON.stringify(data))
                   .then(function (datareturn) {
                     setTimeout(function () {
                       if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                        window.open(localStorage.getItem("appt_historypage"), "_self");
+                        FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                       }
                       else{
-                        window.open("/appointments", "_self");
+                        FlowRouter.go("/appointments", "_self");
                       }
                     }, 500);
                   })
                   .catch(function (err) {
                     if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                      window.open(localStorage.getItem("appt_historypage"), "_self");
+                      FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                     }
                     else{
-                      window.open("/appointments", "_self");
+                      FlowRouter.go("/appointments", "_self");
                     }
                   });
               })
               .catch(function (err) {
                 if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                  window.open(localStorage.getItem("appt_historypage"), "_self");
+                  FlowRouter.go(localStorage.getItem("appt_historypage"), "_self");
                 }
                 else{
-                  window.open("/appointments", "_self");
+                  FlowRouter.go("/appointments", "_self");
                 }
               });
           }

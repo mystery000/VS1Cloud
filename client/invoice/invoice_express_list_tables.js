@@ -3205,9 +3205,11 @@ Template.invoicelist.events({
   },
   "click .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblInvoicelist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
+  }, delayTimeAfterSound);
   },
 });
 

@@ -84,6 +84,13 @@ export class AccountService extends BaseService {
         return this.getList(this.ERPObjects.TBASReturnDetail, options);
     }
 
+    getVATReturnDetail(){
+        let options = {
+            IgnoreDates:true,
+        };
+        return this.getList(this.ERPObjects.TVATReturnDetail, options);
+    }
+
     saveAsset(data){
         return this.POST(this.ERPObjects.TFixedAssets, data);
     }

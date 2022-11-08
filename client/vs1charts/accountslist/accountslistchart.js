@@ -1291,10 +1291,12 @@ Template.accountslistchart.onRendered(()=>{
    },
    "click .accountslistchart .btnSaveAccount": function() {
         playSaveAudio();
-       $(".fullScreenSpin").css("display", "inline-block");
-       let templateObject = Template.instance();
+        let templateObject = Template.instance();
        let accountService = new AccountService();
        let organisationService = new OrganisationService();
+        setTimeout(function(){
+       $(".fullScreenSpin").css("display", "inline-block");
+       
        let forTransaction = false;
        let isHeader = false;
        let useReceiptClaim = false;
@@ -1362,6 +1364,7 @@ Template.accountslistchart.onRendered(()=>{
        } else {
            doBeforeSave(accountID);
        }
+    }, delayTimeAfterSound);
        function doBeforeSave(accountID) {
            if (accountID == "") {
                accountService.getCheckAccountData(accountname).then(function (data) {
@@ -1486,8 +1489,7 @@ Template.accountslistchart.onRendered(()=>{
                window.open("/accountsoverview", "_self");
            }, 100);
        }
-
-   },
+    },
    "click .accountslistchart .btnAddNewAccounts": function() {
        $("#add-account-title").text("Add New Account");
        $("#edtAccountID").val("");
@@ -1527,9 +1529,11 @@ Template.accountslistchart.onRendered(()=>{
    },
    "click .accountslistchart .printConfirm": function(event) {
     playPrintAudio();
+    setTimeout(function(){
        $(".fullScreenSpin").css("display", "inline-block");
        jQuery("#tblDashboardAccountChartList_wrapper .dt-buttons .btntabletopdf").click();
        $(".fullScreenSpin").css("display", "none");
+    }, delayTimeAfterSound);
    },
    "click .accountslistchart .templateDownload": function() {
        let utilityService = new UtilityService();
@@ -1914,6 +1918,9 @@ Template.accountslistchart.onRendered(()=>{
    },
    "click .accountslistchart .btnDeleteAccount": function() {
        playDeleteAudio();
+       let templateObject = Template.instance();
+       let accountService = new AccountService();
+       setTimeout(function(){
        swal({
            title: "Delete Account",
            text: "Are you sure you want to Delete Account?",
@@ -1923,10 +1930,8 @@ Template.accountslistchart.onRendered(()=>{
        }).then((result) => {
            if (result.value) {
                $(".fullScreenSpin").css("display", "inline-block");
-               let templateObject = Template.instance();
-               let accountService = new AccountService();
-               let accountID = $("#edtAccountID").val();
 
+               let accountID = $("#edtAccountID").val();
                if (accountID === "") {
                    window.open("/accountsoverview", "_self");
                } else {
@@ -1973,6 +1978,7 @@ Template.accountslistchart.onRendered(()=>{
                }
            } else {}
        });
+    }, delayTimeAfterSound);
    },
    'click .accountslistchart #tblDashboardCategory tbody tr': function(e) {
        let category = $(e.target).closest('tr').find(".colReceiptCategory").text() || '';
@@ -2136,8 +2142,10 @@ Template.accountslistchart.onRendered(()=>{
    },
    'click .accountslistchart #addReceiptCategoryModal .btnSave': function(event) {
         playSaveAudio();
+        let receiptService = new ReceiptService();
+        setTimeout(function(){
        $('.fullScreenSpin').css('display', 'inline-block');
-       let receiptService = new ReceiptService();
+       
        let receiptCategoryID = $('#edtReceiptCategoryID').val();
        let receiptCategoryName = $('#edtReceiptCategoryName').val();
        if (receiptCategoryName == '') {
@@ -2188,7 +2196,7 @@ Template.accountslistchart.onRendered(()=>{
            };
            doSaveReceiptCategory(objDetails);
        }
-
+    }, delayTimeAfterSound);
        function doSaveReceiptCategory(objDetails) {
            receiptService.saveReceiptCategory(objDetails).then(function(objDetails) {
                sideBarService.getReceiptCategory().then(function(dataReload) {
@@ -2217,6 +2225,7 @@ Template.accountslistchart.onRendered(()=>{
                $('.fullScreenSpin').css('display', 'none');
            });
        }
+       
    },
  });
   Template.accountslistchart.helpers({

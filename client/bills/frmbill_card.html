@@ -384,6 +384,8 @@
                         {{else}}
                             <button class="btn btn-primary float-right" type="button" style="width: 150px;margin: 16px; margin-left: 0px; margin-right: 24px;" id="btnViewPayment" name="btnViewPayment">View Payment</button>
                         {{/if}}
+                        <label style="visibility:hidden;"></label>
+                        <button class="btn btn-primary float-right" type="button" style="width: 150px;margin: 16px; margin-left: 0px; margin-right: 24px;" id="btnCopyBill" name="btnCopyBill">Copy Bill</button>
                     </div>
                 </div>
                 <div class="row" style="background-color: #ededed; padding: 0px 32px;">
@@ -912,7 +914,7 @@
                                 }
                             </style>
 
-                            {{> deletepop itemName1="Bill" itemName2="bill" button1="btnDeleteBill" button2="btnDeleteFollowingBills"}}
+                            {{> deletepop itemName1="Bill" itemName2="bill" itemName3="Bill" button1="btnDeleteBill" button2="btnDeleteFollowingBills"}}
                             <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -2201,6 +2203,10 @@
 
         <div class="modal fade" role="dialog" tabindex="-1" id="newShipViaModal">
             {{> newshipvia}}
+        </div>
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+            {{> copyfrequencypop}}
         </div>
 
         <!-- ModalCustomer -->

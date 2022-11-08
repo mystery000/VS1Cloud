@@ -869,9 +869,9 @@ Template.custfieldlist.events({
     'click .btnDeleteTerms': function() {
         playDeleteAudio();
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
+        
         let termsId = $('#selectDeleteLineID').val();
-
-
         let objDetails = {
             type: "TTerms",
             fields: {
@@ -906,13 +906,13 @@ Template.custfieldlist.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnSaveTerms': function() {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let taxRateService = new TaxRateService();
         let termsID = $('#edtTermsID').val();
         let termsName = $('#edtName').val();
         let description = $('#edtDesc').val();

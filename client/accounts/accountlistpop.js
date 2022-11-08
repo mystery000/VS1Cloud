@@ -617,9 +617,10 @@ Template.accountlistpop.events({
     },
     'click .btnSaveStatus': function () {
         playSaveAudio();
+        let clientService = new SalesBoardService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let clientService = new SalesBoardService();
+        
         let status = $('#status').val();
         let leadData = {
             type: 'TLeadStatusType',
@@ -831,6 +832,7 @@ Template.accountlistpop.events({
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#html-2-pdfwrapper').css('display', 'block');
         $('.pdfCustomerName').html($('#edtSupplierName').val());
@@ -839,7 +841,7 @@ Template.accountlistpop.events({
         var ponumber = $('#ponumber').val() || '.';
         $('.po').text(ponumber);
         exportSalesToPdf();
-
+    }, delayTimeAfterSound);
     },
     'keydown .lineQty, keydown .lineUnitPrice, keydown .lineAmount': function(event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -973,9 +975,11 @@ Template.accountlistpop.events({
     },
     'click .btnDeleteCredit': function(event) {
         playDeleteAudio();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -1013,12 +1017,15 @@ Template.accountlistpop.events({
             FlowRouter.go('/creditlist?success=true');
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
         let templateObject = Template.instance();
-        let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
+        setTimeout(function(){
+        
+        let taxcodeList = templateObject.taxraterecords.get();
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblCreditLine tbody>tr').length > 1) {
             this.click;
@@ -1140,6 +1147,7 @@ Template.accountlistpop.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
@@ -1149,10 +1157,11 @@ Template.accountlistpop.events({
     },
     'click .btnSave': function(event) {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
-        let suppliername = $('#edtSupplierName');
         let purchaseService = new PurchaseBoardService();
+        let uploadedItems = templateObject.uploadedFiles.get();
+        setTimeout(function(){
+        let suppliername = $('#edtSupplierName');
         if (suppliername.val() === '') {
             swal('Supplier has not been selected!', '', 'warning');
             e.preventDefault();
@@ -1224,7 +1233,7 @@ Template.accountlistpop.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentCredit = getso_id[getso_id.length - 1];
-            let uploadedItems = templateObject.uploadedFiles.get();
+            
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             var objDetails = '';
             if (getso_id[1]) {
@@ -1746,10 +1755,7 @@ Template.accountlistpop.events({
 
             lineItems.push(lineItemObj);
 
-
-
         });
-
 
         var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {

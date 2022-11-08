@@ -737,11 +737,12 @@ Template.fixUpdates.events({
     },
     'click .btnSaveFrequency': function() {
         playSaveAudio();
+        let taxRateService = new TaxRateService();
+        let templateObject = Template.instance();
+        setTimeout(function(){
         //FxEditorSetting.save();
 
         $('.fullScreenSpin').css('display', 'inline-block');
-        let taxRateService = new TaxRateService();
-        let templateObject = Template.instance();
         let startTime = "";
         let startDate = "";
         let date = "";
@@ -838,7 +839,7 @@ Template.fixUpdates.events({
         }
 
         $('.fullScreenSpin').css('display', 'none');
-
+    }, delayTimeAfterSound);
     },
     'click .btnCancelFrequency': (e) => {
         FxEditorSetting.cancel();
@@ -1002,6 +1003,7 @@ Template.fixUpdates.events({
     },
     'click .btnSaveBasedOn': (e) => {
         playSaveAudio();
+        setTimeout(function(){
         let radioFrequency = $('input[type=radio][name=basedOnRadio]:checked').attr('id');
 
         // We get the ID of the row
@@ -1041,6 +1043,7 @@ Template.fixUpdates.events({
         } else {
             $("#basedOnModal").modal('toggle');
         }
+    }, delayTimeAfterSound);
     },
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');

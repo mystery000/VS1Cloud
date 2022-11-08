@@ -246,6 +246,7 @@ Template.payrollleavetaken.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -285,6 +286,7 @@ Template.payrollleavetaken.events({
       title: "Payroll Leave Taken Report | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor",
     });
+  }, delayTimeAfterSound);
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();

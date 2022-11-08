@@ -1056,6 +1056,7 @@ Template.shippingdocket.onRendered(function() {
     ShippingRow();
     $("#btnsaveallocline").click(function() {
         playSaveAudio();
+        setTimeout(function(){
         $('#tblShippingDocket tr:eq(' + rowIndex + ')').find("[id=pqa]").text("");
         //   var allocLinesTable = $('#serailscanlist tbody tr').map(function (idxRow, ele) {
         //   var typeName = "TPQASN";
@@ -1130,6 +1131,7 @@ Template.shippingdocket.onRendered(function() {
         $('#tblShippingDocket tr:eq(' + rowIndex + ')').find("[id=lineID]").text(JSON.stringify(AllocLineObjDetails));
         $('#tblShippingDocket tr:eq(' + rowIndex + ')').find("[id=UOMQtyShipped]").text(qtyShipped);
         $('#tblShippingDocket tr:eq(' + rowIndex + ')').find("[id=UOMQtyBackOrder]").text(qtyBackOrder);
+    }, delayTimeAfterSound);
     });
 
     //Send back to ERP
@@ -1994,42 +1996,50 @@ Template.shippingdocket.events({
     },
     'click .btnprintDockets': function(e) {
         playPrintAudio();
-        let shipID = parseInt($("#SalesId").val()) || '';
         let templateObject = Template.instance();
+        setTimeout(function(){
+        let shipID = parseInt($("#SalesId").val()) || '';
+        
         let isInvoice = templateObject.includeInvoiceAttachment.get();
         let isShippingDocket = templateObject.includeDocketAttachment.get();
 
         if (shipID != '') {
             if ((isInvoice) && (isShippingDocket)) {
-                let templateObject = Template.instance();
+                
                 let printType = "InvoiceANDDeliveryDocket";
                 templateObject.SendShippingDetails(printType);
 
             }
             if ((isInvoice) && !(isShippingDocket)) {
-                let templateObject = Template.instance();
+                
                 let printType = "InvoiceOnly";
                 templateObject.SendShippingDetails(printType);
             }
             if ((isShippingDocket) && !(isInvoice)) {
-                let templateObject = Template.instance();
+                
                 let printType = "DeliveryDocketsOnly";
                 templateObject.SendShippingDetails(printType);
             }
         }
-
+    }, delayTimeAfterSound);
     },
     'click .btnprintInvoice': function(e) {
         playPrintAudio();
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
         let printType = "InvoiceOnly";
         templateObject.SendShippingDetails(printType);
+    }, delayTimeAfterSound);
     },
     'click .btnprintDelDocket': function(e) {
         playPrintAudio();
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
         let printType = "DeliveryDocketsOnly";
         templateObject.SendShippingDetails(printType);
+    }, delayTimeAfterSound);
     },
     'click #printDockets': function(e) {
         const templateObject = Template.instance();
@@ -2067,6 +2077,7 @@ Template.shippingdocket.events({
         playDeleteAudio();
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
+        setTimeout(function(){
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblShippingDocket tbody>tr').length > 1) {
             this.click;
@@ -2095,6 +2106,7 @@ Template.shippingdocket.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteFollowingInvoices': async function(event) {
         playDeleteAudio();
@@ -2102,10 +2114,11 @@ Template.shippingdocket.events({
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
         let salesService = new SalesBoardService();
+        setTimeout(async function(){
         swal({
             title: 'Delete Shipping Docket',
-            text: "Are you sure you want to Delete Shipping Docket and following shipping dockets?",
-            type: 'info',
+            text: "Do you wish to delete this transaction and all others associated with it moving forward?",
+            type: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes'
         }).then(async (result) => {
@@ -2140,15 +2153,17 @@ Template.shippingdocket.events({
                         var result = await stockTransferService.saveShippingDocket(objDetails);   
                     }
                 }
+                FlowRouter.go('/vs1shipping?success=true');
+                $('.modal-backdrop').css('display', 'none');
             }
         });
-        FlowRouter.go('/vs1shipping?success=true');
-        $('.modal-backdrop').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteInvoice': function(event) {
         playDeleteAudio();
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
+        setTimeout(function(){
         swal({
             title: 'Delete Shipping Docket',
             text: "Are you sure you want to Delete Shipping Docket?",
@@ -2196,7 +2211,7 @@ Template.shippingdocket.events({
                 }
             } else {}
         });
-
+    }, delayTimeAfterSound);
     }
 });
 

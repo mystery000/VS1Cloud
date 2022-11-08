@@ -2280,6 +2280,7 @@ Template.salesoverview.events({
   },
   "click .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblSalesOverview_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
@@ -2292,6 +2293,7 @@ Template.salesoverview.events({
     //      pdf.save('salesoverview.pdf');
     //      $('#html-2-pdfwrapper').css('display','none');
     //  });
+  }, delayTimeAfterSound);
   },
   "click .close": function (event) {
     var vid = document.getElementById("myVideo");

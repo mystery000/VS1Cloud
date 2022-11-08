@@ -583,11 +583,13 @@ Template.salessummaryreport.events({
     },
     'click .btnPrintReport': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         document.title = 'Sales Summary Report';
         $(".printReport").print({
             title: document.title + " | Sales Summary | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
-        })
+        });
+    }, delayTimeAfterSound);
     },
     'click .btnExportReport': function() {
         LoadingOverlay.show();

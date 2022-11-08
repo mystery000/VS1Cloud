@@ -1805,10 +1805,12 @@ Template.accountant_soletradernontrading.events({
 
     "click .btnSaveAccount": function() {
         playSaveAudio();
-        $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
         let accountService = new AccountService();
         let organisationService = new OrganisationService();
+        setTimeout(function(){
+        $(".fullScreenSpin").css("display", "inline-block");
+        
         let forTransaction = false;
         let isHeader = false;
         let useReceiptClaim = false;
@@ -2224,6 +2226,7 @@ Template.accountant_soletradernontrading.events({
                     $(".fullScreenSpin").css("display", "none");
                 });
         }
+    }, delayTimeAfterSound);
     },
 
     "change #sltAccountType": function(e) {
@@ -2279,6 +2282,7 @@ Template.accountant_soletradernontrading.events({
 
     "click .btnPrintReport": function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $(".printReport").show();
         $("a").attr("href", "/");
         document.title = "Sole Trader Non Trading";
@@ -2292,6 +2296,7 @@ Template.accountant_soletradernontrading.events({
             $("a").attr("href", "#");
             $(".printReport").hide();
         }, 100);
+    }, delayTimeAfterSound);
     },
 
     "click .btnExportReport": function() {

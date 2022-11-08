@@ -1801,6 +1801,7 @@ Template.customerpayment.events({
     },
     'click .printConfirm' : function(event){
         playPrintAudio();
+        setTimeout(function(){
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -1833,6 +1834,7 @@ Template.customerpayment.events({
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblCustomerPayment_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
+    }, delayTimeAfterSound);
     }
 
 

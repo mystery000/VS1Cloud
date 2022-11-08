@@ -161,8 +161,10 @@ Template.tripgroup.events({
     },
     'click .btnDelete': function () {
         playDeleteAudio();
-        $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display','inline-block');
+        
         let tripGroupId = $('#selectDeleteLineID').val();
         let objDetails = {
             type: "TTripGroup",
@@ -197,12 +199,14 @@ Template.tripgroup.events({
             });
             $('.fullScreenSpin').css('display','none');
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnSave': function () {
         playSaveAudio();
-        $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display','inline-block');
+        
         let tripGroupID = $('#edtTripGroupID').val();
         let tripGroupName = $('#edtTripGroupName').val();
         if (tripGroupName == '') {
@@ -253,6 +257,7 @@ Template.tripgroup.events({
             };
             doSaveTripGroup(objDetails);
         }
+    }, delayTimeAfterSound);
         function doSaveTripGroup(objDetails) {
             receiptService.saveTripGroup(objDetails).then(function (objDetails) {
                 sideBarService.getTripGroup().then(function(dataReload) {

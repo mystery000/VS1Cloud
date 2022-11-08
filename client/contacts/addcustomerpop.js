@@ -554,10 +554,10 @@ Template.addcustomerpop.events({
     },
     'click .btnSaveDept': function (e) {
         playSaveAudio();
-        setTimeout(function(){
         LoadingOverlay.show();
         let contactService = new ContactService();
-
+        setTimeout(function(){
+        
         //let headerDept = $('.addcustomerpop #sltDepartment').val();
         let custType = $('.addcustomerpop #edtDeptName').val();
         let typeDesc = $('.addcustomerpop #txaDescription').val() || '';
@@ -729,9 +729,10 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .btnSaveCustPOP': async function (event) {
         playSaveAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
+        setTimeout(async function(){
+        
         LoadingOverlay.show();
         let customerPOPID = $('.addcustomerpop #edtCustomerPOPID').val();
         let company = $('.addcustomerpop #edtCustomerCompany').val();
@@ -1022,11 +1023,11 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .btnSaveJob': function (event) {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
+        
+        setTimeout(function(){
         LoadingOverlay.show();
-
         let companyJob = $('.addcustomerpop #edtJobCustomerCompany').val();
         let companyParent = $('.addcustomerpop #edtParentJobCustomerCompany').val();
 
@@ -1490,8 +1491,10 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .printConfirm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
+    }, delayTimeAfterSound);
     },
     'click .addcustomerpop #exportbtnJob': function () {
         LoadingOverlay.show();
@@ -1500,7 +1503,9 @@ Template.addcustomerpop.events({
     'click .addcustomerpop .printConfirmJob': function (event) {
         playPrintAudio();
         LoadingOverlay.show();
+        setTimeout(function(){
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletopdf').click();
+    }, delayTimeAfterSound);
     },
     'click .addcustomerpop .btnRefresh': function () {
         Meteor._reload.reload();
@@ -1667,8 +1672,9 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .btnSaveSettings': function (event) {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
         $('.addcustomerpop .lblCustomField1').html('');
         $('.addcustomerpop .lblCustomField2').html('');
         $('.addcustomerpop .lblCustomField3').html('');
@@ -2079,11 +2085,11 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .btnDeleteCustomer': function (event) {
         playDeleteAudio();
-        LoadingOverlay.show();
-
         let templateObject = Template.instance();
         let contactService2 = new ContactService();
-
+        LoadingOverlay.show();
+        setTimeout(function(){
+        
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
 
@@ -2116,6 +2122,7 @@ Template.addcustomerpop.events({
             FlowRouter.go('/customerlist?success=true');
         }
         $('.addcustomerpop #deleteCustomerModal').modal('toggle');
+    }, delayTimeAfterSound);
     }
 });
 

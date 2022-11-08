@@ -100,10 +100,10 @@ Template.payrolloverview.onRendered(function () {
   templateObject.loadDraftPayrun = async () => {
 
     let payRunsHistory = PayRun.fromList(await templateObject.payRuns.get());
-   
+
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
 
-    templateObject.draftPayRunRecords.set(payRunsHistory);
+    await templateObject.draftPayRunRecords.set(payRunsHistory);
 
     setTimeout(() => {
       $("#tblPayRunHistory").DataTable({
@@ -4352,7 +4352,6 @@ Template.payrolloverview.events({
     // return;
    // const templateObject = Template.instance();
     let checkIncludeAllProducts = templateObject.includeAllProducts.get();
-    console.log("===========", Session.get("mySessionEmployee"));
     $("#clock_employee_name").val(Session.get("mySessionEmployee"));
     $("#sltJob").val("");
     $("#product-list").val("");
@@ -5001,17 +5000,18 @@ Template.payrolloverview.events({
   },
   "click .btnSaveTimeSheet": async function () {
     playSaveAudio();
+    let templateObject = Template.instance();
+    let contactService = new ContactService();
     setTimeout(async function(){
     LoadingOverlay.show();
-    let templateObject = Template.instance();
+    
     let showTimesheetStatus = Session.get("CloudShowTimesheet") || true;
     let checkStatus = "";
     let checkStartTime = "";
     let checkEndTime = "";
     let TimeSheetHours = 0;
     let updateID = $("#updateID").val() || "";
-    let contactService = new ContactService();
-
+    
     let clockList = templateObject.timesheetrecords.get();
 
     let getEmpIDFromLine = $(".employee_name").val() || "";
@@ -6405,7 +6405,7 @@ Template.payrolloverview.events({
     playDeleteAudio();
     let templateObject = Template.instance();
     let contactService = new ContactService();
-
+    setTimeout(function(){
     swal({
       title: "Delete TimeSheet",
       text: "Are you sure you want to Delete this TimeSheet?",
@@ -6458,6 +6458,7 @@ Template.payrolloverview.events({
         $(".fullScreenSpin").css("display", "none");
       }
     });
+  }, delayTimeAfterSound);
   },
   "click .exportbtn": function () {
     LoadingOverlay.show();
@@ -6533,9 +6534,11 @@ Template.payrolloverview.events({
   },
   "click .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     LoadingOverlay.show();
     jQuery("#tblPayHistorylist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
+  }, delayTimeAfterSound);
   },
   "click .templateDownload": function () {
     let utilityService = new UtilityService();
@@ -6782,8 +6785,8 @@ Template.payrolloverview.events({
     // const id = $(e.currentTarget).attr('calendar-id');
     // window.location.href = `/payrundetails?cid=${id}`;
 
-   
-   
+
+
   },
 
   "change .employee-select": (e, ui) => {

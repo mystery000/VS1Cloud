@@ -29,9 +29,11 @@ Template.clienttypemodal.events({
     },
     'click .btnSaveClientType': function () {
         playSaveAudio();
+        let contactService = new ContactService();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         var url = FlowRouter.current().path;
-        let contactService = new ContactService();
+        
         let objDetails ={};
         //let headerDept = $('#sltDepartment').val();
         let custType = $('#edtClientTypeName').val() || '';
@@ -116,6 +118,7 @@ Template.clienttypemodal.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
+    }, delayTimeAfterSound);
     },
 
     'click .btnBack': function (event) {

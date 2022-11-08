@@ -439,9 +439,11 @@ Template.dsleadlistchart.events({
     },
     'click .printConfirm' : function(event){
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblDSLeadChartList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
+    }, delayTimeAfterSound);
     },
     'click .templateDownload': function () {
         let utilityService = new UtilityService();

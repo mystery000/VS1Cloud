@@ -68,184 +68,13 @@
 <!--
                                                     <a class="btn btn-primary btnAddDept"  role="button" data-toggle="modal" href="#myModalClientType" style="margin-top: 14px;margin: 14px;"><i class="fa fa-plus" style="margin-right: 14px;"></i>Add New Customer Type<br></a>
                                                     {{> clienttypemodal}} -->
-                                                    <a class="btn btn-primary btnAddDept btnAddDeptMobile" role="button" data-toggle="modal" href="#myModal" style="margin: 14px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Department<br></a>
-                                                    <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
-                                                        <div class="modal-dialog  modal-dialog-centered" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h4 style="" ><div id="add-dept-title" name="add-dept-title" style="float: left;">Add New Department</div>
-                                                                        <!-- <a role="button" data-toggle="modal" href="#helpModalAdd" class="helpModalAdd" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-                                                                        <a role="button" data-toggle="modal" href="#helpViewModalAdd"  style="font-size: 20px; padding-left:5px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
-
-                                                                        <!-- Start Help View Modal -->
-                                                                        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
-                                                                            <div class="modal-dialog modal-sm" role="document">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header" style="padding-bottom: 8px;">
-                                                                                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                                                    <div class="modal-body">
-                                                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a></p>
-                                                                                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=186" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                                                                        <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                                                                        <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
-                                                                                    </div>
-                                                                                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- End Help View Modal -->
-                                                                    </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                                <div class="modal-body" style="background-color: #ededed;">
-                                                                    <input type="hidden" class="form-control" id="edtDepartmentID" name="edtDepartmentID" style="display:none;">
-                                                                    <div class="row no-gutters">
-                                                                        <div class="col d-xl-flex align-items-xl-end">
-                                                                            <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Department Name</label>
-                                                                                <input type="text" class="form-control" id="edtDeptName" name="edtDeptName"></div>
-                                                                            <div class="form-group flex-grow-0" style="margin: 8px;">
-                                                                                <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="3-Digit Alpha Code">
-                                                                                    Site Code <a href="#" download><i class="fa fa-question-circle-o" data-toggle="tooltip" data-bs-tooltip="" title="3-Digit Alpha Code" style="margin: 12px;"></i></a>
-                                                                                </label>
-
-                                                                                <input type="text" class="form-control" style="width: 110px;" id="edtSiteCode" name="edtSiteCode" maxlength="3" data-toggle="tooltip" data-placement="bottom" data-bs-tooltip="3-digit Alpha Code" title="3-Digit Alpha Code"></div>
-                                                                            <!-- <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Header Department</label>
-        <select class="form-control" id="sltDepartment" name="sltDepartment">
-        {{#each item in deptrecords}}
-        <option value="{{item.department}}">{{item.department}}</option>
-        {{/each}}
-        </select>
-        </div> -->
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row no-gutters">
-                                                                        <div class="col d-xl-flex align-items-xl-end">
-                                                                            <!-- <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Department Name</label>
-        <input type="text" class="form-control" id="edtDeptName" name="edtDeptName"></div> -->
-                                                                            <div class="form-group flex-grow-1" style="margin: 8px;"><label>Department Description</label>
-                                                                                <input type="text" class="form-control" id="edtDeptDesc" name="edtDeptDesc"></div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <!-- SEED TO SALE START -->
-                                                                    {{#if isModuleGreenTrack}}
-                                                                    <div class="row no-gutters">
-                                                                        <div class="col d-xl-flex align-items-xl-end">
-                                                                            <h4>Seed to Sale</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row no-gutters">
-                                                                        <div class="col-6 d-xl-flex align-items-xl-end">
-                                                                            <div class="form-group flex-grow-1" style="margin: 8px;"><label>Main Contact</label>
-                                                                                <select class="form-control" name="sltMainContact" id="sltMainContact" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                                    {{#each item in listEmployees}}
-                                                                                    <option value="{{item.employeename}}" mytagemp="{{item.empID}}">{{item.employeename}}</option>
-                                                                                    {{/each}}
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-6 d-xl-flex align-items-xl-end">
-                                                                            <div class="form-group flex-grow-1" style="margin: 8px;"><label>Phone No.</label>
-                                                                                <input type="text" class="form-control" id="stsMainContactNo" name="stsMainContactNo">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row no-gutters">
-                                                                        <div class="col-6 d-xl-flex align-items-xl-end">
-                                                                            <div class="form-group flex-grow-1" style="margin: 8px;"><label>License No.</label>
-                                                                                <input type="text" class="form-control" id="stsLicenseNo" name="stsLicenseNo">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-6 d-xl-flex align-items-xl-end">
-                                                                            <div class="form-group flex-grow-1" style="margin: 8px;"><label>Default Room</label>
-                                                                                <select class="form-control" name="sltDefaultRoom" id="sltDefaultRoom" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                                    {{#each itemBin in listBins}}
-                                                                                    <option value="{{itemBin.roomname}}" mytagroom="{{itemBin.roomid}}">{{itemBin.roomname}}</option>
-                                                                                    {{/each}}
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    {{/if}}
-                                                                    <!-- SEED TO SALE END -->
-                                                                </div>
-                                                                <div class="modal-footer" style="background-color: #ededed;">
-                                                                    <button class="btn btn-success btnSaveDept" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-                                                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <a class="btn btn-primary btnAddDept btnAddDeptMobile" role="button" data-toggle="modal" href="#myModalDepartment" style="margin: 14px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Department<br></a>
 
                                                 </div>
 
 
                                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start" style="padding: 0px !important;">
-                                                    <button id="exportbtn" class="btn btn-primary float-right btnNav vs1ButtonMargin" type="button" ><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                                                    <button class="btn btn-primary float-right vs1ButtonMargin" type="button" data-toggle="modal" href="#importInveontoryOverviewModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-
-
-                                                    <div class="modal fade" role="dialog" tabindex="-1" id="importInveontoryOverviewModal">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                                <div class="modal-body">
-                                                                    <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
-                                                                        <p style="margin-bottom: 0px;font-weight: bold;">1. Download the &lt;&lt;form&gt;&gt; template</p>
-                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Start by downloading our template file. This file has the correct column headings to allow VS1 Cloud to import your form's details.</p>
-                                                                        <div class="col flex-grow-1">
-                                                                            <button class="btn btn-primary templateDownload" type="button" style="margin: 12px;margin-bottom: 0px;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download CSV Template</button>
-                                                                            <button class="btn btn-primary templateDownloadXLSX" type="button" style="margin: 12px;margin-bottom: 0px;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download Excel Template</button>
-                                                                        </div>
-                                                                        <div class="col d-xl-flex align-items-xl-center" style="width: 50px;max-width: 50px;">
-                                                                            <a href="#" download><i class="fa fa-question-circle-o" data-toggle="tooltip" data-bs-tooltip="" title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'." style="margin: 12px;"></i></a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr>
-                                                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                                                        <p style="margin-bottom: 0px;font-weight: bold;">2. Copy your items into the template</p>
-                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Using MS Excel, or another spreadsheet editor, you can fill in the VS1 Cloud template with your desired details.</p>
-                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 16px;">Important: Avoid changing the column headings in the template file.</p>
-                                                                    </div>
-                                                                    <hr>
-                                                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                                                        <p style="margin-bottom: 0px;font-weight: bold;">3. Import the updated template file</p>
-                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Save your updated template and you're ready to go.</p>
-
-                                                                        <div class="divTable" id="file-display">
-                                                                        </div>
-                                                                        <input type="file" id="attachment-upload" style="display:none" accept=".csv,.txt,.xlsx">
-                                                                        <style>
-                                                                            #row1{
-                                                                                display:flex;
-                                                                                flex-direction:row;
-                                                                                justify-content: space-around;
-                                                                            }
-
-                                                                            #column1{
-                                                                                display:flex;
-                                                                            }
-
-
-                                                                            #column2{
-                                                                                display:flex;
-                                                                                flex-direction:column;
-                                                                                margin: 16px;
-                                                                                padding: .375rem .75rem;
-                                                                            }
-                                                                        </style>
-                                                                        <div id="row1">
-                                                                            <div id="column1"></div><button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px;" ><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
-                                                                            <div class="file-name" id="column2"></div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer"><button class="btn btn-primary btnImport" type="button" disabled><i class="fas fa-file-import" style="margin-right: 5px;" ></i>Import</button>
-                                                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <button class="btn btn-primary printConfirm float-right btnNav vs1ButtonMargin" type="button" ><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                                                    <a class="btn btnOpenSettings float-right " role="button" data-toggle="modal" href="#myModal2" style="margin :14px" ><i class="icon ion-android-more-horizontal"></i></a>
-
+                                                    {{> export_import_print_display_button}}
                                                 </div>
 
                                             </div>
@@ -308,136 +137,12 @@
                                             margin: 16px 0px;
                                         }
                                     </style>
-                                    <div class="card newTaxRate" id="newTaxRate">
-                                        <div class="row no-gutters d-xl-flex flex-column justify-content-xl-center">
-                                            <div class="col d-xl-flex align-items-xl-end">
-                                                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start" style="margin: 8px;">
-                                                    <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Department ID</label><input type="text" class="form-control" style="width: 150px;" readonly="">
-                                                </div>
-                                                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start" style="margin: 8px;">
-                                                    <label class="text-nowrap" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Header Department</label>
-                                                    <select class="custom-select">
-                                                        <optgroup label="This is a group">
-                                                            <option value="12" selected="">This is item 1</option>
-                                                            <option value="13">This is item 2</option>
-                                                            <option value="14">This is item 3</option>
-                                                        </optgroup>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group d-xl-flex flex-column flex-grow-1 justify-content-xl-start align-items-xl-start" style="margin: 8px;">
-                                                    <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Department Name</label><input type="text" class="form-control">
-                                                </div>
-                                                <div class="form-group d-xl-flex flex-column flex-grow-1 justify-content-xl-start align-items-xl-start" style="margin: 8px;">
-                                                    <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Description</label>
-                                                    <input type="text" class="form-control">
-                                                </div>
-                                                <div class="form-group" style="margin: 8px;">
-                                                    <div class="custom-control custom-switch" style="margin: 8px;">
-                                                        <input class="custom-control-input" type="checkbox" id="formCheck-2"><label class="custom-control-label" for="formCheck-2">Active</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row no-gutters">
-                                            <div class="col">
-                                                <button class="btn btn-secondary float-right btnCloseAddNewDept" type="button" style="margin: 8px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                                <!-- <button class="btn btn-primary float-right" type="button" style="margin: 8px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button> -->
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                     <!-- Start {{> optionNavSalesOverview}} -->
                                     <div class="d-xl-flex justify-content-xl-end">
                                         <div>
                                             <!-- <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a> -->
-                                            <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
-                                                <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                        <div class="modal-body">
-                                                            <div>
-                                                                {{#if tableheaderrecords}}
-                                                                <form class="d-xl-flex align-items-xl-center">
-                                                                    <div class="flex-grow-1">
-                                                                        <style>
-                                                                            .groove {
-                                                                                border-style: solid;
-                                                                                border-width: 1px;
-                                                                                width: 200px;
-                                                                                padding: 2px;
-                                                                                border-radius: .35rem;
-                                                                            }
-                                                                            .custom-control-label{
-                                                                                position: absolute;
-                                                                            }
-                                                                            .rngRange {
-                                                                                position: relative;
-                                                                                display: flex;
-                                                                                flex-direction: column;
-                                                                                width: 100%;
-                                                                                pointer-events: auto;
-                                                                                background-color: rgb(255, 255, 255);
-                                                                                background-clip: padding-box;
-                                                                                border: 1px solid rgb(133, 135, 150);
-                                                                                border-radius: .3rem;
-                                                                                border-style: solid;
-                                                                                border-width: 1px;
-                                                                                padding: 2px;
-                                                                                border-radius: .35rem;
-                                                                                color: rgb(128, 128, 128);
-                                                                                height:inherit!important;
-                                                                            }
-                                                                            @media only screen and (max-width: 480px) {
-                                                                                .modal.show .modal-dialog{
-                                                                                    float: inherit!important;
-                                                                                    left: inherit!important;
-                                                                                    top: auto!important;
 
-                                                                                }
-                                                                            }
-                                                                        </style>
-                                                                        {{#each item in tableheaderrecords}}
-                                                                        {{#if equals item.sTitle ""}}
-                                                                        {{else}}
-
-                                                                        <div id="{{item.sIndex}}" class="columnSettings">
-                                                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                                <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
-                                                                                <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
-                                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
-                                                                            </div>
-                                                                            <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>--></label>
-                                                                                <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
-                                                                                <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
-                                                                            </div>
-                                                                        </div>
-
-                                                                        {{#if equals item.sVisible true}}
-                                                                        <script>
-                                                                            $("#"+ {{item.sIndex}} +".chkDatatable").attr("checked","checked");
-                                                                        </script>
-                                                                        {{else}}
-                                                                        <script>
-                                                                            $("#"+ {{item.sIndex}} +".chkDatatable").removeAttr("checked");
-                                                                        </script>
-                                                                        {{/if}}
-
-                                                                        {{/if}}
-                                                                        {{/each}}
-                                                                    </div>
-                                                                </form>
-                                                                {{/if}}
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button class="btn btn-success saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                            <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                                                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                     <!-- End -->
@@ -466,7 +171,7 @@
                                                     <div class="modal-body">
                                                         <p>Please click "Delete" to deactivate department</p>
 
-                                                        <button class="btn btn-danger float-right btnDeleteDepartment" type="button">
+                                                        <button class="btn btn-danger float-right btnDeleteDept" type="button">
                                                             <i class="fa fa-close" style="margin-right: 5px;"></i>Delete
                                                         </button>
                                                     </div>
@@ -474,35 +179,7 @@
                                             </div>
                                         </div>
 
-                                        <table id="departmentList" style="width:100%" class="dataTable table table-hover table-striped table-bordered departmentList">
-                                            <thead>
-                                                <tr class="dnd-moved">
-                                                    <!-- <th class="th colDeptID" style="width:50px">Dept #</th> -->
-                                                    <!-- <th class="th colHeadDept" style="width:100px;">Header Department</th> -->
-                                                    <th class="th colDeptName" style="width:150px">Department Name</th>
-                                                    <!-- <th class="th colStatus" style="width:50px">Active</th> -->
-                                                    <th class="th colDescription" >Description</th>
-                                                    <th class="th colSiteCode hiddenColumn" >Site Code</th>
-                                                    <th class="th colDelete" style="width:20px;"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{#if datatablerecords}}
-                                                {{#each item in datatablerecords}}
-                                                <tr class="dnd-moved" id="{{item.id}}"  style="cursor: default;">
-                                                    <!-- <td contenteditable="false" class="colDeptID">{{item.id}}</td> -->
-                                                    <!-- <td contenteditable="false" class="colHeadDept">{{item.headDept}}</td> -->
-                                                    <td contenteditable="false" class="colDeptName">{{item.departmentName}}</td>
-                                                    <!-- <td contenteditable="false" class="colStatus">{{item.status}}</td> -->
-                                                    <td contenteditable="false" class="colDescription">{{item.description}}</td>
-                                                    <td contenteditable="false" class="colSiteCode hiddenColumn">{{item.sitecode}}</td>
-                                                    <td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
-                                                </tr>
-                                                {{/each}}
-                                                {{/if}}
-                                            </tbody>
-
-                                        </table>
+                                        {{> non_transactional_list}}
                                     </div>
                                 </div>
                                 <div class="row no-gutters">
@@ -560,7 +237,72 @@
         </div>
     </div>
 
+    <!-- myModal Department -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 style=""><div id="add-dept-title" name="add-dept-title" style="float: left;">Add Department</div>
+                      <!-- <a role="button" data-toggle="modal" href="#helpModalAdd" class="helpModalAdd" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
+                      <a role="button" data-toggle="modal" href="#helpViewModalAdd"  style="font-size: 20px; padding-left:5px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+
+                      <!-- Start Help View Modal -->
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
+                          <div class="modal-dialog modal-sm" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header" style="padding-bottom: 8px;">
+                                      <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                      <div class="modal-body">
+                                          <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a></p>
+                                          <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=186" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                          <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                                          <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                      </div>
+                                  <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                              </div>
+                          </div>
+                    </div>
+                      <!-- End Help View Modal -->
+                    </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                <div class="modal-body" style="background-color: #ededed;">
+                    <input type="hidden" class="form-control" id="edtDepartmentID" name="edtDepartmentID" style="display:none;">
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Department Name</label>
+                                <input type="text" class="form-control" id="edtDeptName" name="edtDeptName">
+                                <input type="hidden" class="form-control" id="deptID" name="deptID">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;"><label>Description</label>
+                                <textarea class="form-control" rows="5" id="txaDescription" name="txaDescription"></textarea>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Site Code</label>
+                                <input type="text" class="form-control" id="edtSiteCode" name="edtSiteCode">
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="background-color: #ededed;">
+                    <button class="btn btn-primary btnSaveDept vs1ButtonMargin" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+                    <button class="btn btn-danger btnDeleteDept vs1ButtonMargin" type="button"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
+                    <button class="btn btn-secondary vs1ButtonMargin" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- End Help Video Modal -->
+    <!-- Import Modal -->
+    {{> import_template}}
     <script>
         modalDraggable();
     </script>

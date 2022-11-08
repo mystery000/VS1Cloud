@@ -1,47 +1,29 @@
 <template name="dashboardSalesCharts">
-    <div class="sortable-chart-widget-js hideelement col-auto col-md-6" data-default-position="30" data-default-class="col-md-6" key="dscharts__performance_quota">
-        <div class="">
-            <div class="card shadow mb-4 portlet">
-                <div class="card-header d-flex justify-content-between align-items-center" data-toggle="tooltip" title="This is the chart of Quota amount for last 6 months. This is the chart of Quotes per month for last 6 months. This is the chart of Invoices per month for last 6 months">
-                    <h6 class="text-info font-weight-bold m-0">Sales Performance vs Quota</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
-                        <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                        <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                            <a  class="dropdown-item" role="presentation" href="#">&nbsp;More Details</a>
-                            <div class="dropdown-divider"></div>
-                            <a id="" class="dropdown-item pointer editchartsbtn " role="presentation" data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
-                            <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div id="sd-comparison-chart" class="ds-highcharts"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{# draggablePanel 
+        md=6
+        defaultPosition=30
+        key="dscharts__performance_quota"
+        id=""
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Sales Performance vs Quota"
+        hrefDetails=""
+        editModalID=""
+    }}
+    <div id="sd-comparison-chart" class="ds-highcharts"></div>
+    {{/draggablePanel}}
 
-    <div class="sortable-chart-widget-js hideelement col-auto col-md-6" data-default-position="31" data-default-class="col-md-6" key="dscharts__opportunities_source">
-        <div class="">
-            <div class="card shadow mb-4 portlet">
-                <div class="card-header d-flex justify-content-between align-items-center" data-toggle="tooltip" title="This is the chart of Lead/Customer count for last 6 months where a quote has been made. This is the chart of top 3 source counts for last 6 months where a quote has been made.">
-                    <h6 class="text-info font-weight-bold m-0">Open Opportunities vs Source</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
-                        <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                        <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                            <a  class="dropdown-item" role="presentation" href="#">&nbsp;More Details</a>
-                            <div class="dropdown-divider"></div>
-                            <a id="" class="dropdown-item pointer editchartsbtn " role="presentation" data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
-                            <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">                
-                    <div id="opens-opportunities-chart" class="ds-highcharts"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{# draggablePanel 
+        md=6
+        defaultPosition=31
+        key="dscharts__opportunities_source"
+        id=""
+        headerClass=""
+        headerColor="primary"
+        headerTitle="Open Opportunities vs Source"
+        hrefDetails=""
+        editModalID=""
+    }}
+    <div id="opens-opportunities-chart" class="ds-highcharts"></div>
+    {{/draggablePanel}}
 </template>

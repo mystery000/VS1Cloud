@@ -337,8 +337,10 @@ Template.receiptcategory.events({
     },
     'click .btnDelete': function () {
         playDeleteAudio();
-        $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display','inline-block');
+        
         let receiptCategoryId = $('#selectDeleteLineID').val();
         let objDetails = {
             type: "TReceiptCategory",
@@ -373,12 +375,14 @@ Template.receiptcategory.events({
             });
             $('.fullScreenSpin').css('display','none');
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnSave': function () {
         playSaveAudio();
-        $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display','inline-block');
+        
         let receiptCategoryID = $('#edtReceiptCategoryID').val();
         let receiptCategoryName = $('#edtReceiptCategoryName').val();
         if (receiptCategoryName == '') {
@@ -457,6 +461,7 @@ Template.receiptcategory.events({
                 $('.fullScreenSpin').css('display','none');
             });
         }
+    }, delayTimeAfterSound);
     },
     'click .btnAdd': function () {
         $('#add-receiptcategory-title').text('Add New Receipt Category');

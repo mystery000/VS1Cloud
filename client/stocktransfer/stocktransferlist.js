@@ -951,17 +951,20 @@ Template.stocktransferlist.events({
     },
     'click .printConfirm' : function(event){
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblStockTransferList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
-
+    }, delayTimeAfterSound);
     },
 
     'click .printConfirm' : function(event){
         playPrintAudio();
+        setTimeout(function(){
     $('.fullScreenSpin').css('display','inline-block');
     jQuery('#tblInventory_wrapper .dt-buttons .btntabletopdf').click();
     $('.fullScreenSpin').css('display','none');
+    }, delayTimeAfterSound);
     },
     'click .btnStockAdjustment' : function(event){
       FlowRouter.go('/stockadjustmentoverview');
@@ -979,7 +982,6 @@ Template.stocktransferlist.events({
     $('.file-name').text('');
     //$(".btnImport").removeAttr("disabled");
     $('#attachment-upload').trigger('click');
-
     },
     'click .templateDownloadXLSX': function (e) {
 

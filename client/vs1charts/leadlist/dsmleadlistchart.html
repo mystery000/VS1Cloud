@@ -16,201 +16,192 @@
     </style>
     <div style="margin-top: -24px;">
         <div class="dsmleadlistchart" id="dsmleadlistchart">
-            <div class="overflow-hidden card shadow mb-4 portlet">
-                <div class="card-header leadlistheader d-flex justify-content-between align-items-center">
-                    <h6 class="text-info font-weight-bold m-0">Lead List</h6>
-                    <div class="dropdown no-arrow" style="display: inline-flex;">
-                        <a id="leadlisthide" class="on-editor-change-mode hideelement leadlistedit btn btn-link" role="presentation" href="">Hide</a>
-                        <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" id="" data-toggle="dropdown"
-                                aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                        <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                            <a id="leadlist" class="dropdown-item" role="presentation" href="/leadlist">&nbsp;More Details</a>
-                            <div class="dropdown-divider"></div>
-                            <a id="editchartleadlist" class="dropdown-item editchartsbtn pointer" role="presentation"
-                               data-toggle="modal" data-target="#editDashboardModal">&nbsp;Edit Chart</a>
-                            <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="canvasParentDiv canvasHeight100">
-                        <style>
-                            @media screen and (max-width: 450px) {
-                                .btnNav {
-                                    width: 90%;
-                                    margin: 12px 0px !important;
-                                }
-
-                                .btnOpenSettingsDesktop {
-                                    display: none !important;
-                                }
-
-                                .btnOpenSettingsMobile {
-                                    display: block !important;
-                                    margin: 12px 0px !important;
-                                }
+            {{# draggablePanel 
+                xs=xs sm=sm md=md lg=lg xl=xl 
+                defaultPosition=defaultPosition
+                key=key
+                id="bankaccountschart"
+                headerClass="leadlistheader"
+                headerColor="primary"
+                headerTitle="Lead List"
+                hrefDetails="/leadlist"
+                editModalID="editDashboardModal"
+            }}
+                <div>
+                    <style>
+                        @media screen and (max-width: 450px) {
+                            .btnNav {
+                                width: 90%;
+                                margin: 12px 0px !important;
                             }
-                        </style>
-                        <div class="row d-xl-flex flex-row justify-content-xl-center">
-                            <div class="col float-left flex-grow-1">
-                                <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                <button id="btnNewLead" name="btnNewLead" class="btn btn-primary" type="button" style="margin: 12px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Lead</button>
-            <!--                    <button class="btn btn-success btnAddVS1User" type="button" style="margin: 12px;"><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button>-->
-                            </div>
-                            <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                                <div class="btn-group" style="margin: 12px;">
-                                    <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
-                                    <div role="menu" class="dropdown-menu">
-                                        <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export Excel</a>
-                                        <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button style="margin: 12px;" class="btn btn-primary" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                                    <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                <div class="modal-body">
-                                                    <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
-                                                        <p style="margin-bottom: 0;font-weight: bold;">1. Download the &lt;&lt;form&gt;&gt; template</p>
-                                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Start by downloading our template file. This file has the correct column headings to allow VS1 Cloud to import your form's details.</p>
-                                                        <div class="col flex-grow-1">
-                                                            <button class="btn btn-primary templateDownload" type="button" style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download CSV Template</button>
-                                                            <button class="btn btn-primary templateDownloadXLSX" type="button" style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download Excel Template</button>
-                                                        </div>
-                                                        <div class="col d-xl-flex align-items-xl-center" style="width: 50px;max-width: 50px;">
-                                                            <a href="#" download>
-                                                                <i class="fa fa-question-circle-o" data-toggle="tooltip" data-bs-tooltip="" title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'." style="margin: 12px;"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <hr>
-                                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                                        <p style="margin-bottom: 0;font-weight: bold;">2. Copy your items into the template</p>
-                                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Using MS Excel, or another spreadsheet editor, you can fill in the VS1 Cloud template with your desired details.</p>
-                                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 16px;">Important: Avoid changing the column headings in the template file.</p>
-                                                    </div>
-                                                    <hr>
-                                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                                        <p style="margin-bottom: 0;font-weight: bold;">3. Import the updated template file</p>
-                                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Save your updated template and you're ready to go.</p>
 
-                                                        <div class="divTable" id="file-display">
-                                                        </div>
-                                                        <input type="file" id="attachment-upload" style="display:none" accept=".csv,.txt,.xlsx">
-                                                        <style>
-                                                            #row1{
-                                                                display:flex;
-                                                                flex-direction:row;
-                                                                justify-content: space-around;
-                                                            }
-                                                            #column1{
-                                                                display:flex;
-                                                            }
-                                                            #column2{
-                                                                display:flex;
-                                                                flex-direction:column;
-                                                                margin: 16px;
-                                                                padding: .375rem .75rem;
-                                                            }
-                                                        </style>
-                                                        <div id="row1">
-                                                            <div id="column1"></div><button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px;" ><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
-                                                            <div class="file-name" id="column2"></div>
-                                                        </div>
+                            .btnOpenSettingsDesktop {
+                                display: none !important;
+                            }
+
+                            .btnOpenSettingsMobile {
+                                display: block !important;
+                                margin: 12px 0px !important;
+                            }
+                        }
+                    </style>
+                    <div class="row d-xl-flex flex-row justify-content-xl-center">
+                        <div class="col float-left flex-grow-1">
+                            <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                            <button id="btnNewLead" name="btnNewLead" class="btn btn-primary" type="button" style="margin: 12px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Lead</button>
+        <!--                    <button class="btn btn-success btnAddVS1User" type="button" style="margin: 12px;"><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button>-->
+                        </div>
+                        <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                            <div class="btn-group" style="margin: 12px;">
+                                <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                                <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                                <div role="menu" class="dropdown-menu">
+                                    <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export Excel</a>
+                                    <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
+                                </div>
+                            </div>
+                            <div>
+                                <button style="margin: 12px;" class="btn btn-primary" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                            <div class="modal-body">
+                                                <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                                                    <p style="margin-bottom: 0;font-weight: bold;">1. Download the &lt;&lt;form&gt;&gt; template</p>
+                                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Start by downloading our template file. This file has the correct column headings to allow VS1 Cloud to import your form's details.</p>
+                                                    <div class="col flex-grow-1">
+                                                        <button class="btn btn-primary templateDownload" type="button" style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download CSV Template</button>
+                                                        <button class="btn btn-primary templateDownloadXLSX" type="button" style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download Excel Template</button>
+                                                    </div>
+                                                    <div class="col d-xl-flex align-items-xl-center" style="width: 50px;max-width: 50px;">
+                                                        <a href="#" download>
+                                                            <i class="fa fa-question-circle-o" data-toggle="tooltip" data-bs-tooltip="" title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'." style="margin: 12px;"></i>
+                                                        </a>
                                                     </div>
                                                 </div>
-                                                <div class="modal-footer"><button class="btn btn-primary btnImport" type="button" disabled><i class="fas fa-file-import" style="margin-right: 5px;" ></i>Import</button>
-                                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
+                                                <hr>
+                                                <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                    <p style="margin-bottom: 0;font-weight: bold;">2. Copy your items into the template</p>
+                                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Using MS Excel, or another spreadsheet editor, you can fill in the VS1 Cloud template with your desired details.</p>
+                                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 16px;">Important: Avoid changing the column headings in the template file.</p>
+                                                </div>
+                                                <hr>
+                                                <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                    <p style="margin-bottom: 0;font-weight: bold;">3. Import the updated template file</p>
+                                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Save your updated template and you're ready to go.</p>
+
+                                                    <div class="divTable" id="file-display">
+                                                    </div>
+                                                    <input type="file" id="attachment-upload" style="display:none" accept=".csv,.txt,.xlsx">
+                                                    <style>
+                                                        #row1{
+                                                            display:flex;
+                                                            flex-direction:row;
+                                                            justify-content: space-around;
+                                                        }
+                                                        #column1{
+                                                            display:flex;
+                                                        }
+                                                        #column2{
+                                                            display:flex;
+                                                            flex-direction:column;
+                                                            margin: 16px;
+                                                            padding: .375rem .75rem;
+                                                        }
+                                                    </style>
+                                                    <div id="row1">
+                                                        <div id="column1"></div><button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px;" ><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
+                                                        <div class="file-name" id="column2"></div>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <div class="modal-footer"><button class="btn btn-primary btnImport" type="button" disabled><i class="fas fa-file-import" style="margin-right: 5px;" ></i>Import</button>
+                                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <button class="btn btn-primary float-right" type="button" style="margin: 12px;" id="" name=""><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button> -->
-                                <button class="btn btn-primary printConfirm" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                                <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myLeadChartModal" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
                             </div>
+                            <!-- <button class="btn btn-primary float-right" type="button" style="margin: 12px;" id="" name=""><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button> -->
+                            <button class="btn btn-primary printConfirm" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+                            <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myLeadChartModal" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
                         </div>
-                        <div>
-    <!--                            <div class="card-body p-3 rounded" style="margin: 0 16px;">-->
-                                <div class="table-responsive">
-                                    <style>
-                                        th {
-                                            background-color: #ededed;
-                                        }
-                                        .table-striped tbody tr:nth-of-type(odd) {
-                                            background-color: white !important;
-                                        }
+                    </div>
+                    <div>
+                        <div class="table-responsive">
+                            <style>
+                                th {
+                                    background-color: #ededed;
+                                }
+                                .table-striped tbody tr:nth-of-type(odd) {
+                                    background-color: white !important;
+                                }
 
-                                        .table-striped tbody tr:nth-of-type(even) {
-                                            background-color: #0000000d !important;
-                                        }
+                                .table-striped tbody tr:nth-of-type(even) {
+                                    background-color: #0000000d !important;
+                                }
 
-                                        .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
-                                            padding: .75rem!important;
-                                        }
-                                        .hiddenColumn{
-                                            display:none;
-                                        }
-                                        .showColumn {
-                                            display:table-cell;
-                                            padding:.75rem;
-                                            vertical-align:top;
-                                        }
+                                .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
+                                    padding: .75rem!important;
+                                }
+                                .hiddenColumn{
+                                    display:none;
+                                }
+                                .showColumn {
+                                    display:table-cell;
+                                    padding:.75rem;
+                                    vertical-align:top;
+                                }
 
-                                        input[type=number]::-webkit-inner-spin-button,
-                                        input[type=number]::-webkit-outer-spin-button {
-                                            opacity: 1;
-                                        }
-                                    </style>
+                                input[type=number]::-webkit-inner-spin-button,
+                                input[type=number]::-webkit-outer-spin-button {
+                                    opacity: 1;
+                                }
+                            </style>
 
-                                    <table id="tblDSMLeadChartList" class="dataTable table table-hover table-striped table-bordered tblDSMLeadChartList">
-                                        <thead>
-                                            <tr class="dnd-moved">
-                                                <th class="th colLeadId hiddenColumn"></th>
-                                                <th class="th colLeadName" style="width:150px;">Lead Name</th>
-                                                <th class="th colFirstName" style="width:85px;">First Name</th>
-                                                <th class="th colLastName" style="width:85px;">Last Name</th>
-                                                <th class="th colPhone" style="width:95px;">Phone</th>
-                                                <th class="th colMobile" style="width:95px;">Mobile</th>
-                                                <th class="th colEmail" style="width:100px;">Email</th>
-                                                <th class="th colDepartment" style="width:100px;">Department</th>
-                                                <th class="th colAddress" style="width:150px;">Address</th>
-                                                <th class="th colSuburb" style="width:100px;">Suburb</th>
-                                                <th class="th colCity" style="width:100px;">City</th>
-                                                <!-- <th class="th colDeletelead" style="width: 3% !important;"></th> -->
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {{#if datatablerecords}}
-                                            {{#each item in datatablerecords}}
-                                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                <td contenteditable="false" class="colLeadId hiddenColumn" >{{item.id}}</td>
-                                                <td contenteditable="false" class="colLeadName">{{item.employeeName}}</td>
-                                                <td contenteditable="false" class="colFirstName">{{item.firstName}}</td>
-                                                <td contenteditable="false" class="colLastName">{{item.lastName}}</td>
-                                                <td contenteditable="false" class="colPhone">{{item.phone}}</td>
-                                                <td contenteditable="false" class="colMobile">{{item.mobile}}</td>
-                                                <td contenteditable="false" class="colEmail">{{item.email}}</td>
-                                                <td contenteditable="false" class="colDepartment">{{item.department}}</td>
-                                                <td contenteditable="false" class="colAddress">{{item.address}}</td>
-                                                <td contenteditable="false" class="colSuburb">{{item.surburb}}</td>
-                                                <td contenteditable="false" class="colCity">{{item.city}}</td>
-                                                <!-- <td contenteditable="false" style="width: 3% !important;" class="colDeletelead"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td> -->
-                                            </tr>
-                                            {{/each}}
-                                            {{/if}}
-                                        </tbody>
-                                    </table>
-                                </div>
-    <!--                            </div>-->
+                            <table id="tblDSMLeadChartList" class="dataTable table table-hover table-striped table-bordered tblDSMLeadChartList">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="th colLeadId hiddenColumn"></th>
+                                        <th class="th colLeadName" style="width:150px;">Lead Name</th>
+                                        <th class="th colFirstName" style="width:85px;">First Name</th>
+                                        <th class="th colLastName" style="width:85px;">Last Name</th>
+                                        <th class="th colPhone" style="width:95px;">Phone</th>
+                                        <th class="th colMobile" style="width:95px;">Mobile</th>
+                                        <th class="th colEmail" style="width:100px;">Email</th>
+                                        <th class="th colDepartment" style="width:100px;">Department</th>
+                                        <th class="th colAddress" style="width:150px;">Address</th>
+                                        <th class="th colSuburb" style="width:100px;">Suburb</th>
+                                        <th class="th colCity" style="width:100px;">City</th>
+                                        <!-- <th class="th colDeletelead" style="width: 3% !important;"></th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#if datatablerecords}}
+                                    {{#each item in datatablerecords}}
+                                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                        <td contenteditable="false" class="colLeadId hiddenColumn" >{{item.id}}</td>
+                                        <td contenteditable="false" class="colLeadName">{{item.employeeName}}</td>
+                                        <td contenteditable="false" class="colFirstName">{{item.firstName}}</td>
+                                        <td contenteditable="false" class="colLastName">{{item.lastName}}</td>
+                                        <td contenteditable="false" class="colPhone">{{item.phone}}</td>
+                                        <td contenteditable="false" class="colMobile">{{item.mobile}}</td>
+                                        <td contenteditable="false" class="colEmail">{{item.email}}</td>
+                                        <td contenteditable="false" class="colDepartment">{{item.department}}</td>
+                                        <td contenteditable="false" class="colAddress">{{item.address}}</td>
+                                        <td contenteditable="false" class="colSuburb">{{item.surburb}}</td>
+                                        <td contenteditable="false" class="colCity">{{item.city}}</td>
+                                        <!-- <td contenteditable="false" style="width: 3% !important;" class="colDeletelead"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td> -->
+                                    </tr>
+                                    {{/each}}
+                                    {{/if}}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            </div>
+            {{/draggablePanel}}
         </div>
     </div>
     <!-- Start Help Video Modal -->

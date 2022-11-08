@@ -528,9 +528,10 @@ Template.addsupplierpop.events({
   },
   "click .addsupplierpop .btnSaveSuppPOP": async function (event) {
     playSaveAudio();
-    setTimeout(async function(){
     let templateObject = Template.instance();
     let contactService = new ContactService();
+    let uploadedItems = templateObject.uploadedFiles.get();
+    setTimeout(async function(){
     if ($("#edtSupplierCompany").val() === "") {
       swal("Supplier Name should not be blank!", "", "warning");
       e.preventDefault();
@@ -605,7 +606,7 @@ Template.addsupplierpop.events({
     var currentEmployee = getemp_id[getemp_id.length - 1];
     var objDetails = "";
 
-    let uploadedItems = templateObject.uploadedFiles.get();
+    
 
     let suppdupID = 0;
     if (supplierPOPID != "") {
@@ -1123,9 +1124,11 @@ Template.addsupplierpop.events({
   },
   "click .addsupplierpop .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     LoadingOverlay.show();
     jQuery("#tblTransactionlist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
+  }, delayTimeAfterSound);
   },
   "click .addsupplierpop .btnRefresh": function () {
     Meteor._reload.reload();
@@ -1184,8 +1187,8 @@ Template.addsupplierpop.events({
   },
   "click .addsupplierpop .btnSaveSettings": function (event) {
     playSaveAudio();
-    setTimeout(function(){
     let templateObject = Template.instance();
+    setTimeout(function(){
 
     $(".lblCustomField1").html("");
     $(".lblCustomField2").html("");
@@ -1424,10 +1427,10 @@ Template.addsupplierpop.events({
   },
   "click .addsupplierpop .btnDeleteSupplier": function (event) {
     playDeleteAudio();
-    LoadingOverlay.show();
-
     let templateObject = Template.instance();
     let contactService2 = new ContactService();
+    setTimeout(function(){
+    LoadingOverlay.show();
 
     let currentId = FlowRouter.current().queryParams;
     var objDetails = "";
@@ -1465,6 +1468,7 @@ Template.addsupplierpop.events({
       FlowRouter.go("/supplierlist?success=true");
     }
     $("#deleteSupplierModal").modal("toggle");
+  }, delayTimeAfterSound);
   },
 });
 

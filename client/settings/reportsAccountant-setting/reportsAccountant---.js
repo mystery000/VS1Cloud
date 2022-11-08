@@ -924,8 +924,10 @@ Template.reportsAccountantSettings123.events({
     },
     'click .btnDeleteAccountant': function () {
         playDeleteAudio();
-        $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display','inline-block');
+        
         let accountantId = $('#selectDeleteLineID').val();
 
         let objDetails = {
@@ -962,11 +964,14 @@ Template.reportsAccountantSettings123.events({
             });
             $('.fullScreenSpin').css('display','none');
         });
+    }, delayTimeAfterSound);
     },
     'click .btnSaveAccountant': function () {
         playSaveAudio();
-        $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display','inline-block');
+        
         let accountantID = $('#edtAccountantID').val();
         let firstName = $('#edtFirstName').val();
         let lastName = $('#edtLastName').val();
@@ -1241,6 +1246,7 @@ Template.reportsAccountantSettings123.events({
             //     $('.fullScreenSpin').css('display','none');
             // });
         }
+    }, delayTimeAfterSound);
     },
     'click .btnAddAccountant': function () {
         $('#add-accountant-title').text('Add New Accountant');
@@ -1266,8 +1272,9 @@ Template.reportsAccountantSettings123.events({
     },
     'click .btnSaveRoom': function () {
         playSaveAudio();
-        $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display','inline-block');
 
         var parentdept = $('#sltDepartmentList').val();
         var newroomname = $('#newRoomName').val();
@@ -1291,6 +1298,7 @@ Template.reportsAccountantSettings123.events({
 
             $('.fullScreenSpin').css('display','none');
         });
+    }, delayTimeAfterSound);
     },
 });
 

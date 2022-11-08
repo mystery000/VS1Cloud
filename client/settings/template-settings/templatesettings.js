@@ -3877,6 +3877,7 @@ Template.templatesettings.events({
 
 'click .btnTopGlobalSave':function(){
   playSaveAudio();
+  setTimeout(function(){
     $('.fullScreenSpin').css('display', 'inline-block');
     var bill = $('input[name="Bills"]:checked').val();
     var credits = $('input[name="Credits"]:checked').val();
@@ -7620,7 +7621,8 @@ Template.templatesettings.events({
 
        
 
-},
+      }, delayTimeAfterSound);
+      },
 
 'click .btnRefresh':function(){
   $('.fullScreenSpin').css('display', 'inline-block');

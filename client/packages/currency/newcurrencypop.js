@@ -966,6 +966,7 @@ Template.newcurrencypop.events({
   "click .btnDeleteCurrency": function () {
     playDeleteAudio();
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let currencyId = $("#selectDeleteLineID").val();
 
     let objDetails = {
@@ -1009,6 +1010,7 @@ Template.newcurrencypop.events({
         });
         $(".fullScreenSpin").css("display", "none");
       });
+    }, delayTimeAfterSound);
   },
   "click .btnAddCurrency": function () {
     $("#add-currency-title").text("Add New Currency");
@@ -1026,8 +1028,9 @@ Template.newcurrencypop.events({
 
   "click .newcurrencypop .btnSaveCurrency": function () {
     playSaveAudio();
-    setTimeout(function(){
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
+    
     LoadingOverlay.show();
     var currencyid = $("#edtCurrencyID").val();
     var country = $("#sedtCountry").val();

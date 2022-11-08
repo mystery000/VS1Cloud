@@ -1608,8 +1608,9 @@ Template.productlist.helpers({
       },
       'click #btnSave': async function () {
         playSaveAudio();
-        setTimeout(function(){
         let productService = new ProductService();
+        setTimeout(function(){
+        
         let productCode = $("#edtproductvs1code").val();
         let productName = $("#edtproductvs1name").val();
           if(productName == ''){
@@ -1843,9 +1844,11 @@ Template.productlist.helpers({
       },
 'click .printConfirm' : function(event){
   playPrintAudio();
+  setTimeout(function(){
 $('.fullScreenSpin').css('display','inline-block');
 jQuery('#tblInventory_wrapper .dt-buttons .btntabletopdf').click();
 $('.fullScreenSpin').css('display','none');
+}, delayTimeAfterSound);
 },
 'click .btnStockAdjustment' : function(event){
   FlowRouter.go('/stockadjustmentoverview');

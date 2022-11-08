@@ -1737,9 +1737,9 @@ Template.supplierscard.events({
     },
     'click .btnSave': async function (event) {
         playSaveAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
+        setTimeout(async function(){
         if ($('#edtSupplierCompany').val() === ''){
             swal('Supplier Name should not be blank!', '', 'warning');
             e.preventDefault();
@@ -2277,9 +2277,11 @@ Template.supplierscard.events({
     },
     'click .printConfirm' : function(event){
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
+    }, delayTimeAfterSound);
     },
     'click .btnRefresh': function () {
         Meteor._reload.reload();
@@ -2541,9 +2543,11 @@ Template.supplierscard.events({
     },
     'click .btnDeleteSupplier': function (event) {
         playDeleteAudio();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let contactService2 = new ContactService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
 
@@ -2577,6 +2581,7 @@ Template.supplierscard.events({
             FlowRouter.go('/supplierlist?success=true');
         }
         $('#deleteSupplierModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnTask': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -2590,6 +2595,7 @@ Template.supplierscard.events({
     },
     'click .btnEmail': function (event) {
         playEmailAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
@@ -2600,6 +2606,7 @@ Template.supplierscard.events({
         } else {
 
         }
+    }, delayTimeAfterSound);
     },
     'click .btnAppointment': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');

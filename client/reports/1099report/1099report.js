@@ -628,11 +628,13 @@ Template.report1099.onRendered(()=>{
     },
     'click .btnPrintReport':function (event) {
       playPrintAudio();
+      setTimeout(function(){
       document.title = '1099 Transactional Report';
       $(".printReport").print({
           title   :  document.title +" | 1099 Transactional | "+loggedCompany,
           noPrintSelector : ".addSummaryEditor",
-      })
+      });
+    }, delayTimeAfterSound);
     },
     'click .btnExportReport':function() {
       $('.fullScreenSpin').css('display','inline-block');

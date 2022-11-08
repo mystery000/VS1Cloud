@@ -117,15 +117,19 @@
                             <div class="col-6 mb-3">
                                 <button type="button" class="w-100 btn btn-secondary btnBuildQty" id="btnBuildQty">Quantity Built</button>
                             </div>
+                            {{#if equals quantityBuild true}}
                             <div class="col-6 form-group">
                                 <input type="text" class="w-100 form-control text-center edtTotalQuantity" id="edtTotalQuantity"/>
                             </div>
+                            {{/if}}
                             <div class="col-6 mb-3">
                                 <button type="button" class="w-100 btn btn-primary btn-save-close" id="btn-save-close">Save & Close</button>
                             </div>
+                            {{#if equals workorderrecord.isStarted true}}
                             <div class="col-6 mb-3">
                                 <button type="button" class="w-100 btn btn-success btnCompleteProcess" id="btnCompleteProcess">Complete Process</button>
                             </div>
+                            {{/if}}
                         </div>
                     </div>
                 </div>
@@ -582,7 +586,7 @@
                                     vertical-align: top;
                                 }
                             </style>
-                            {{> deletepop itemName1="Sales Order" itemName2="sales order" button1="btnDeleteSO" button2="btnDeleteFollowingSOs"}}
+                            {{> deletepop itemName1="Sales Order" itemName2="sales order" itemName3="Sales Order" button1="btnDeleteSO" button2="btnDeleteFollowingSOs"}}
                             <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -815,7 +819,7 @@
                                 gap: 0.5%;
                             }
                            #BOMSetupModal .productRow .colProduct{
-                                width: 40%;
+                                width: 34.5%;
                                 gap: 5px;
                                 text-align: left;
                             }
@@ -825,7 +829,7 @@
                                 text-align: left;
                             }
                            #BOMSetupModal .productRow .colQty {
-                                width: 4.5%;
+                                width: 10%;
                                 text-align: left;
                             }
                             #BOMSetupModal .productRow .colDelete {

@@ -84,8 +84,110 @@ Template.billcard.onCreated(() => {
     templateObject.reset_data = new ReactiveVar([]);
 });
 Template.billcard.onRendered(() => {
-
-    const templateObject = Template.instance();
+    let templateObject = Template.instance();
+    $('#onEventSettings').css('display', 'none');
+    $('#edtFrequencyDetail').css('display', 'none');
+    $('#basedOnFrequency').prop('checked', false);
+    $('#basedOnPrint').prop('checked', false);
+    $('#basedOnSave').prop('checked', false);
+    $('#basedOnTransactionDate').prop('checked', false);
+    $('#basedOnDueDate').prop('checked', false);
+    $('#basedOnEvent').prop('checked', false);
+    $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
+      showOn: 'button',
+      buttonText: 'Show Date',
+      buttonImageOnly: true,
+      buttonImage: '/img/imgCal2.png',
+      constrainInput: false,
+      dateFormat: 'd/mm/yy',
+      showOtherMonths: true,
+      selectOtherMonths: true,
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-90:+10",
+    });
+  
+    templateObject.getDayNumber = function (day) {
+      day = day.toLowerCase();
+      if (day == "") {
+          return;
+      }
+      if (day == "monday") {
+          return 1;
+      }
+      if (day == "tuesday") {
+          return 2;
+      }
+      if (day == "wednesday") {
+          return 3;
+      }
+      if (day == "thursday") {
+          return 4;
+      }
+      if (day == "friday") {
+          return 5;
+      }
+      if (day == "saturday") {
+          return 6;
+      }
+      if (day == "sunday") {
+          return 0;
+      }
+    }
+    templateObject.getMonths = function (startDate, endDate) {
+      let dateone = "";
+      let datetwo = "";
+      if (startDate != "") {
+          dateone = moment(startDate).format('M');
+      }
+      if (endDate != "") {
+          datetwo = parseInt(moment(endDate).format('M')) + 1;
+      }
+      if (dateone != "" && datetwo != "") {
+          for (let x = dateone; x < datetwo; x++) {
+              if (x == 1) {
+                  $("#formCheck-january").prop('checked', true);
+              }
+              if (x == 2) {
+                  $("#formCheck-february").prop('checked', true);
+              }
+              if (x == 3) {
+                  $("#formCheck-march").prop('checked', true);
+              }
+              if (x == 4) {
+                  $("#formCheck-april").prop('checked', true);
+              }
+              if (x == 5) {
+                  $("#formCheck-may").prop('checked', true);
+              }
+              if (x == 6) {
+                  $("#formCheck-june").prop('checked', true);
+              }
+              if (x == 7) {
+                  $("#formCheck-july").prop('checked', true);
+              }
+              if (x == 8) {
+                  $("#formCheck-august").prop('checked', true);
+              }
+              if (x == 9) {
+                  $("#formCheck-september").prop('checked', true);
+              }
+              if (x == 10) {
+                  $("#formCheck-october").prop('checked', true);
+              }
+              if (x == 11) {
+                  $("#formCheck-november").prop('checked', true);
+              }
+              if (x == 12) {
+                  $("#formCheck-december").prop('checked', true);
+              }
+          }
+      }
+      if (dateone == "") {
+          $("#formCheck-january").prop('checked', true);
+      }
+    }
+    
     $('#choosetemplate').attr('checked', true);
 
     // set initial table rest_data
@@ -5349,6 +5451,307 @@ Template.billcard.helpers({
 });
 
 Template.billcard.events({
+    'click input.basedOnSettings': function (event) {
+        if (event.target.id == "basedOnEvent") {
+            const value = $(event.target).prop('checked');
+            if (value) {
+                $('#onEventSettings').css('display', 'block');
+                $('#settingsOnEvents').prop('checked', true);
+            } else {
+                $('#onEventSettings').css('display', 'none');
+                $('#settingsOnEvents').prop('checked', false);
+                $('#settingsOnLogout').prop('checked', false);
+            }
+        } else if (event.target.id == 'basedOnFrequency') {
+            const value = $(event.target).prop('checked');
+            if(value) {
+                $('#edtFrequencyDetail').css('display', 'flex');
+                $('#basedOnSettingsTitle').css('border-top-width', '1px');
+            }else {
+                $('#edtFrequencyDetail').css('display', 'none');
+                $('#basedOnSettingsTitle').css('border-top-width', '0px');
+            }
+        }
+      },
+      'click input[name="frequencyRadio"]': function (event) {
+        if (event.target.id == "frequencyMonthly") {
+            document.getElementById("monthlySettings").style.display = "block";
+            document.getElementById("weeklySettings").style.display = "none";
+            document.getElementById("dailySettings").style.display = "none";
+            document.getElementById("oneTimeOnlySettings").style.display = "none";
+        } else if (event.target.id == "frequencyWeekly") {
+            document.getElementById("weeklySettings").style.display = "block";
+            document.getElementById("monthlySettings").style.display = "none";
+            document.getElementById("dailySettings").style.display = "none";
+            document.getElementById("oneTimeOnlySettings").style.display = "none";
+        } else if (event.target.id == "frequencyDaily") {
+            document.getElementById("dailySettings").style.display = "block";
+            document.getElementById("monthlySettings").style.display = "none";
+            document.getElementById("weeklySettings").style.display = "none";
+            document.getElementById("oneTimeOnlySettings").style.display = "none";
+        } else if (event.target.id == "frequencyOnetimeonly") {
+            document.getElementById("oneTimeOnlySettings").style.display = "block";
+            document.getElementById("monthlySettings").style.display = "none";
+            document.getElementById("weeklySettings").style.display = "none";
+            document.getElementById("dailySettings").style.display = "none";
+        } else {
+            $("#copyFrequencyModal").modal('toggle');
+        }
+      },
+      'click input[name="settingsMonthlyRadio"]': function (event) {
+        if (event.target.id == "settingsMonthlyEvery") {
+            $('.settingsMonthlyEveryOccurence').attr('disabled', false);
+            $('.settingsMonthlyDayOfWeek').attr('disabled', false);
+            $('.settingsMonthlySpecDay').attr('disabled', true);
+        } else if (event.target.id == "settingsMonthlyDay") {
+            $('.settingsMonthlySpecDay').attr('disabled', false);
+            $('.settingsMonthlyEveryOccurence').attr('disabled', true);
+            $('.settingsMonthlyDayOfWeek').attr('disabled', true);
+        } else {
+            $("#frequencyModal").modal('toggle');
+        }
+      },
+      'click input[name="dailyRadio"]': function (event) {
+          if (event.target.id == "dailyEveryDay") {
+              $('.dailyEveryXDays').attr('disabled', true);
+          } else if (event.target.id == "dailyWeekdays") {
+              $('.dailyEveryXDays').attr('disabled', true);
+          } else if (event.target.id == "dailyEvery") {
+              $('.dailyEveryXDays').attr('disabled', false);
+          } else {
+              $("#frequencyModal").modal('toggle');
+          }
+      },
+    'click #btnCopyBill': function() {
+        playCopyAudio();
+        let templateObject = Template.instance();      
+        let purchaseService = new PurchaseBoardService();
+    let i = 0;
+    setTimeout(async function(){
+      $(".ofMonthList input[type=checkbox]").each(function() {
+        $(this).prop('checked', false);
+      });
+      $(".selectDays input[type=checkbox]").each(function (){
+        $(this).prop('checked', false);
+      });
+      var url = FlowRouter.current().path;
+      var getso_id = url.split("?id=");
+      var currentInvoice = getso_id[getso_id.length - 1];
+      if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        var billData = await purchaseService.getOneBilldataEx(currentInvoice);
+        var selectedType = billData.fields.CustField7;
+        var frequencyVal = billData.fields.CustField8;
+        var startDate = billData.fields.CustField9;
+        var finishDate = billData.fields.CustField10;
+        var subStartDate = startDate.substring(0, 10);
+        var subFinishDate = finishDate.substring(0, 10);
+        var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
+        var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
+        if (selectedType == "basedOnEvent") {
+          $("#basedOnEvent").prop('checked', true);
+          $('#onEventSettings').css('display', 'block');
+          $('#settingsOnEvents').prop('checked', true);
+        } else {
+          $("#basedOnEvent").prop('checked', false);
+          $('#onEventSettings').css('display', 'none');
+          $('#settingsOnEvents').prop('checked', false);
+          $('#settingsOnLogout').prop('checked', false);
+        }
+        if (selectedType == 'basedOnFrequency') {
+          $("#basedOnFrequency").prop('checked', true);
+          $('#edtFrequencyDetail').css('display', 'flex');
+          $('#basedOnSettingsTitle').css('border-top-width', '1px');
+        } else {
+          $("#basedOnFrequency").prop('checked', false);
+          $('#edtFrequencyDetail').css('display', 'none');
+          $('#basedOnSettingsTitle').css('border-top-width', '0px');
+        }
+        var arrFrequencyVal = frequencyVal.split("@");
+        var radioFrequency = arrFrequencyVal[0];
+        $("#" + radioFrequency).prop('checked', true);
+        if (radioFrequency == "frequencyMonthly") {
+          document.getElementById("monthlySettings").style.display = "block";
+          document.getElementById("weeklySettings").style.display = "none";
+          document.getElementById("dailySettings").style.display = "none";
+          document.getElementById("oneTimeOnlySettings").style.display = "none";
+          var monthDate = arrFrequencyVal[1];
+          $("#sltDay").val('day' + monthDate);
+          var ofMonths = arrFrequencyVal[2];
+          var arrOfMonths = ofMonths.split(",");
+          for (i=0; i<arrOfMonths.length; i++) {
+            $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
+          }
+          $('#edtMonthlyStartDate').val(convertedStartDate);
+          $('#edtMonthlyFinishDate').val(convertedFinishDate);
+        } else if (radioFrequency == "frequencyWeekly") {
+          document.getElementById("weeklySettings").style.display = "block";
+          document.getElementById("monthlySettings").style.display = "none";
+          document.getElementById("dailySettings").style.display = "none";
+          document.getElementById("oneTimeOnlySettings").style.display = "none";
+          var everyWeeks = arrFrequencyVal[1];
+          $("#weeklyEveryXWeeks").val(everyWeeks);
+          var selectDays = arrFrequencyVal[2];
+          var arrSelectDays = selectDays.split(",");
+          for (i=0; i<arrSelectDays.length; i++) {
+            if (parseInt(arrSelectDays[i]) == 0)
+              $("#formCheck-sunday").prop('checked', true);
+            if (parseInt(arrSelectDays[i]) == 1)
+              $("#formCheck-monday").prop('checked', true);
+            if (parseInt(arrSelectDays[i]) == 2)
+              $("#formCheck-tuesday").prop('checked', true);
+            if (parseInt(arrSelectDays[i]) == 3)
+              $("#formCheck-wednesday").prop('checked', true);
+            if (parseInt(arrSelectDays[i]) == 4)
+              $("#formCheck-thursday").prop('checked', true);
+            if (parseInt(arrSelectDays[i]) == 5)
+              $("#formCheck-friday").prop('checked', true);
+            if (parseInt(arrSelectDays[i]) == 6)
+              $("#formCheck-saturday").prop('checked', true);
+          }
+          $('#edtWeeklyStartDate').val(convertedStartDate);
+          $('#edtWeeklyFinishDate').val(convertedFinishDate);
+        } else if (radioFrequency == "frequencyDaily") {
+          document.getElementById("dailySettings").style.display = "block";
+          document.getElementById("monthlySettings").style.display = "none";
+          document.getElementById("weeklySettings").style.display = "none";
+          document.getElementById("oneTimeOnlySettings").style.display = "none";
+          var dailyRadioOption = arrFrequencyVal[1];
+          $("#" + dailyRadioOption).prop('checked', true);
+          var everyDays = arrFrequencyVal[2];
+          $("#dailyEveryXDays").val(everyDays);
+          $('#edtDailyStartDate').val(convertedStartDate);
+          $('#edtDailyFinishDate').val(convertedFinishDate);
+        } else if (radioFrequency == "frequencyOnetimeonly") {
+          document.getElementById("oneTimeOnlySettings").style.display = "block";
+          document.getElementById("monthlySettings").style.display = "none";
+          document.getElementById("weeklySettings").style.display = "none";
+          document.getElementById("dailySettings").style.display = "none";
+          $('#edtOneTimeOnlyDate').val(convertedStartDate);
+          $('#edtOneTimeOnlyTimeError').css('display', 'none');
+          $('#edtOneTimeOnlyDateError').css('display', 'none');
+        }
+      }
+      $("#copyFrequencyModal").modal("toggle");
+    }, delayTimeAfterSound);
+    },
+    'click .btnSaveFrequency': async function () {
+        playSaveAudio();
+        let templateObject = Template.instance();      
+        let purchaseService = new PurchaseBoardService();
+        let selectedType = '';
+        let frequencyVal = '';
+        let startDate = '';
+        let finishDate = '';
+        let convertedStartDate = '';
+        let convertedFinishDate = '';
+        let sDate = '';
+        let fDate = '';
+        let monthDate = '';
+        let ofMonths = '';
+        let isFirst = true;
+        let everyWeeks = '';
+        let selectDays = '';
+        let dailyRadioOption = '';
+        let everyDays = '';
+        
+        const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
+        let basedOnTypeTexts = '';
+        let basedOnTypeAttr = '';
+        setTimeout(async function(){
+          basedOnTypes.each(function () {
+            if ($(this).prop('checked')) {
+              selectedType = $(this).attr('id');
+              if (selectedType === "basedOnFrequency") { basedOnTypeAttr += 'F,'}
+              if (selectedType === "basedOnPrint") { basedOnTypeTexts += 'On Print, '; basedOnTypeAttr += 'P,'; }
+              if (selectedType === "basedOnSave") { basedOnTypeTexts += 'On Save, '; basedOnTypeAttr += 'S,'; }
+              if (selectedType === "basedOnTransactionDate") { basedOnTypeTexts += 'On Transaction Date, '; basedOnTypeAttr += 'T,'; }
+              if (selectedType === "basedOnDueDate") { basedOnTypeTexts += 'On Due Date, '; basedOnTypeAttr += 'D,'; }
+              if (selectedType === "basedOnOutstanding") { basedOnTypeTexts += 'If Outstanding, '; basedOnTypeAttr += 'O,'; }
+              if (selectedType === "basedOnEvent") {
+                if ($('#settingsOnEvents').prop('checked')) { basedOnTypeTexts += 'On Event(On Logon), '; basedOnTypeAttr += 'EN,'; }
+                if ($('#settingsOnLogout').prop('checked')) { basedOnTypeTexts += 'On Event(On Logout), '; basedOnTypeAttr += 'EU,'; }
+              }
+            }
+          });
+          if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
+          if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
+    
+          let formId = parseInt($("#formid").val());
+          let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
+          frequencyVal = radioFrequency + '@';
+          const values = basedOnTypeAttr.split(',');
+          if(values.includes('F')) {
+            if (radioFrequency == "frequencyMonthly") {
+              isFirst = true;
+              monthDate = $("#sltDay").val().replace('day', '');
+              $(".ofMonthList input[type=checkbox]:checked").each(function () {
+                ofMonths += isFirst ? $(this).val() : ',' + $(this).val();
+                isFirst = false;
+              });
+              startDate = $('#edtMonthlyStartDate').val();
+              finishDate = $('#edtMonthlyFinishDate').val();
+              frequencyVal += monthDate + '@' + ofMonths;
+            } else if (radioFrequency == "frequencyWeekly") {
+              isFirst = true;
+              everyWeeks = $("#weeklyEveryXWeeks").val();
+              let sDay = -1;
+              $(".selectDays input[type=checkbox]:checked").each(function (){
+                sDay = templateObject.getDayNumber($(this).val());
+                selectDays += isFirst ? sDay : ',' + sDay;
+                isFirst = false;
+              });
+              startDate = $('#edtWeeklyStartDate').val();
+              finishDate = $('#edtWeeklyFinishDate').val();
+              frequencyVal += everyWeeks + '@' + selectDays;
+            } else if (radioFrequency == "frequencyDaily") {
+              dailyRadioOption = $('#dailySettings input[type=radio]:checked').attr('id');
+              everyDays = $("#dailyEveryXDays").val();
+              startDate = $('#edtDailyStartDate').val();
+              finishDate = $('#edtDailyFinishDate').val();
+              frequencyVal += dailyRadioOption + '@' + everyDays;
+            } else if (radioFrequency == "frequencyOnetimeonly") {
+              startDate = $('#edtOneTimeOnlyDate').val();
+              finishDate = $('#edtOneTimeOnlyDate').val();
+              $('#edtOneTimeOnlyTimeError').css('display', 'none');
+              $('#edtOneTimeOnlyDateError').css('display', 'none');
+              frequencyVal = radioFrequency;
+            }
+          }
+          $('#copyFrequencyModal').modal('toggle');
+          convertedStartDate = startDate ? startDate.split('/')[2] + '-' + startDate.split('/')[1] + '-' + startDate.split('/')[0] : '';
+          convertedFinishDate = finishDate ? finishDate.split('/')[2] + '-' + finishDate.split('/')[1] + '-' + finishDate.split('/')[0] : '';
+          sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
+          fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
+    
+          $(".fullScreenSpin").css("display", "inline-block");
+          var url = FlowRouter.current().path;
+          if (
+            url.indexOf("?id=")
+          ) {
+            var getso_id = url.split("?id=");
+            var currentInvoice = getso_id[getso_id.length - 1];
+            if (getso_id[1]) {
+              currentInvoice = parseInt(currentInvoice);
+              objDetails = {
+                type: "TBillEx",
+                fields: {
+                  ID: currentInvoice,
+                  CustField7: selectedType,
+                  CustField8: frequencyVal,
+                  CustField9: sDate,
+                  CustField10: fDate,
+                }
+              };
+              var result = await purchaseService.saveBillEx(objDetails);
+            }
+          } else {
+            // window.open("/invoicecard", "_self");
+          }
+          FlowRouter.go('/billlist?success=true');
+          $('.modal-backdrop').css('display','none');
+        }, delayTimeAfterSound);
+      },
     // 'click #sltTerms': function(event) {
     //     $('#termsListModal').modal('toggle');
     // },
@@ -5361,84 +5764,6 @@ Template.billcard.events({
     // 'click #sltStatus': function(event) {
     //     $('#statusPopModal').modal('toggle');
     // },
-    'click .payNow': async function () {
-        let templateObject = Template.instance();
-        let stripe_id = templateObject.accountID.get() || '';
-        let stripe_fee_method = templateObject.stripe_fee_method.get();
-        if (stripe_id != "") {
-            var url = FlowRouter.current().path;
-            var id_available = url.includes("?supplierid=");
-            if (id_available == true) {
-                if ($('.edtSupplierEmail').val() != "") {
-                    let supplierDataName = $('#edtSupplierName').val();
-                    let data = await sideBarService.getOneSupplierDataExByName(supplierDataName);
-                    let SupplierID = data.tsupplier[0].fields.ID || '';
-                    let name = data.tsupplier[0].fields.FirstName || '';
-                    let surname = data.tsupplier[0].fields.LastName || '';
-                    let lineItems = [];
-                    let total = $('#balanceDue').html() || 0;
-                    let tax = $('#subtotal_tax').html() || 0;
-                    let customer = $('#edtSupplierFirstName').val() + ' ' + $('#edtSupplierLastName').val();
-                    let company = Session.get('vs1companyName');
-                    $('#tblBillLine > tbody > tr').each(function () {
-                        var lineID = this.id;
-                        let tdproduct = $('#' + lineID + " .lineProductName").val();
-                        let tddescription = $('#' + lineID + " .lineMemo").text();
-                        let tdQty = 1;
-                        let tdunitprice = $('#' + lineID + " .colAmountExChange").val();
-                        let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-                        let tdlineamt = $('#' + lineID + " .lineAmt").text();
-                        let tdlineUnit = $('#' + lineID + " .lineUOM").text()||defaultUOM;
-                        lineItemObj = {
-                            description: tddescription || '',
-                            quantity: tdQty || 0,
-                            unitPrice: tdunitprice.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            }) || 0
-                        }
-
-                        lineItems.push(lineItemObj);
-                    });
-                    var erpGet = erpDb();
-                    let vs1User = localStorage.getItem('mySession');
-                    let customerEmail = $('#edtSupplierEmail').val();
-                    let currencyname = (CountryAbbr).toLowerCase();
-                    let stringQuery = "?";
-                    let dept = $('#sltDept').val();
-                    var customerID = $('#edtSupplierEmail').attr('customerid');
-                    for (let l = 0; l < lineItems.length; l++) {
-                        stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
-                    }
-                    stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + customerID + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
-                    window.open(stripeGlobalURL + stringQuery, '_self');
-                } else {
-                    swal({
-                        title: 'Supplier Email Required',
-                        text: 'Please enter supplier email',
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.value) {}
-                        else if (result.dismiss === 'cancel') {}
-                    });
-                }
-            }
-        } else {
-            swal({
-                title: 'WARNING',
-                text: "Please Set Up Payment Method To Use This Option, Click Ok to be Redirected to Payment Method page.",
-                type: 'warning',
-                showCancelButton: false,
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.value) {
-                    window.open('paymentmethodSettings', '_self');
-                } else if (result.dismiss === 'cancel') {}
-            });
-        }
-    },
     'click #edtSupplierName': function(event) {
         $('#edtSupplierName').select();
         $('#edtSupplierName').editableSelect();
@@ -6775,6 +7100,7 @@ Template.billcard.events({
 
     'click .printConfirm':async function (event) {
         playPrintAudio();
+        setTimeout(async function(){
                 var printTemplate = [];
                 $('.fullScreenSpin').css('display', 'inline-block');
                 $('#html-2-pdfwrapper').css('display', 'block');
@@ -7061,13 +7387,13 @@ Template.billcard.events({
                 }
             }
         });
-
-
+    }, delayTimeAfterSound);
     },
 
     'click  #open_print_confirm':function(event)
     {
         playPrintAudio();
+        setTimeout(function(){
         if($('#choosetemplate').is(':checked'))
         {
 
@@ -7106,7 +7432,7 @@ Template.billcard.events({
 
             $('#confirmprint').modal('hide');
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click #choosetemplate':function(event)
@@ -7271,54 +7597,69 @@ Template.billcard.events({
         var currentDate = new Date();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        let billTotal = $('#grandTotal').text();
-        var objDetails = "";
-        if (getso_id[1]) {
-            $(".fullScreenSpin").css("display", "inline-block");
-            currentInvoice = parseInt(currentInvoice);
-            var billData = await purchaseService.getOneBilldataEx(currentInvoice);
-            var orderDate = billData.fields.OrderDate;
-            var fromDate = orderDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingBills = await sideBarService.getAllBillListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var billList = followingBills.tbilllist;
-            for (var i=0; i < billList.length; i++) {
-                var objDetails = {
-                    type: "TBillEx",
-                    fields: {
-                        ID: billList[i].PurchaseOrderID,
-                        Deleted: true,
-                        // OrderStatus: "Deleted",
-                        SupplierName: $('#edtSupplierName').val()||'',
-                        BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0,
-                        TotalAmountInc: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
+        setTimeout(async function(){
+        
+        swal({
+            title: 'Delete Bill',
+            text: "Do you wish to delete this transaction and all others associated with it moving forward?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+          }).then(async (result) => {
+            if (result.value) {
+                var url = FlowRouter.current().path;
+                var getso_id = url.split("?id=");
+                var currentInvoice = getso_id[getso_id.length - 1];
+                let billTotal = $('#grandTotal').text();
+                var objDetails = "";
+                if (getso_id[1]) {
+                    $(".fullScreenSpin").css("display", "inline-block");
+                    currentInvoice = parseInt(currentInvoice);
+                    var billData = await purchaseService.getOneBilldataEx(currentInvoice);
+                    var orderDate = billData.fields.OrderDate;
+                    var fromDate = orderDate.substring(0, 10);
+                    var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+                    var followingBills = await sideBarService.getAllBillListData(
+                        fromDate,
+                        toDate,
+                        false,
+                        initialReportLoad,
+                        0
+                    );
+                    var billList = followingBills.tbilllist;
+                    for (var i=0; i < billList.length; i++) {
+                        var objDetails = {
+                            type: "TBillEx",
+                            fields: {
+                                ID: billList[i].PurchaseOrderID,
+                                Deleted: true,
+                                // OrderStatus: "Deleted",
+                                SupplierName: $('#edtSupplierName').val()||'',
+                                BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0,
+                                TotalAmountInc: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
+                            }
+                        };
+                        var result = await purchaseService.saveBillEx(objDetails);
                     }
+                }
+                if(FlowRouter.current().queryParams.trans){
+                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                }else{
+                    FlowRouter.go('/billlist?success=true');
                 };
-                var result = await purchaseService.saveBillEx(objDetails);
+                $('.modal-backdrop').css('display','none');
+                $("#deleteLineModal").modal("toggle");
             }
-        }
-        if(FlowRouter.current().queryParams.trans){
-            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
-        }else{
-            FlowRouter.go('/billlist?success=true');
-        };
-        $('.modal-backdrop').css('display','none');
-        $("#deleteLineModal").modal("toggle");
+        });
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteBill': function(event) {
         playDeleteAudio();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -7369,12 +7710,14 @@ Template.billcard.events({
           };
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
         let templateObject = Template.instance();
-        let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
+        setTimeout(function(){
+        let taxcodeList = templateObject.taxraterecords.get();
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblBillLine tbody>tr').length > 1) {
             this.click;
@@ -7494,6 +7837,7 @@ Template.billcard.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
@@ -7502,10 +7846,15 @@ Template.billcard.events({
         }, delayTimeAfterSound);
     },
     'click .btnSave': (event, templateObject) => {
-        saveCurrencyHistory();
+        playSaveAudio();
         //let templateObject = Template.instance();
-        let suppliername = $('#edtSupplierName');
         let purchaseService = new PurchaseBoardService();
+        let uploadedItems = templateObject.uploadedFiles.get();
+        setTimeout(function(){
+        saveCurrencyHistory();
+        
+        let suppliername = $('#edtSupplierName');
+        
         let termname = $('#sltTerms').val() || '';
         if (termname === '') {
             swal({
@@ -7604,7 +7953,7 @@ Template.billcard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentBill = getso_id[getso_id.length - 1];
-            let uploadedItems = templateObject.uploadedFiles.get();
+            
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
             let foreignCurrencyFields = {}
@@ -8179,7 +8528,7 @@ Template.billcard.events({
                 LoadingOverlay.hide();
             });
         }
-
+    }, delayTimeAfterSound);
     },
     'click .chkAccountName': function(event) {
       if ($(event.target).is(':checked')) {
@@ -8383,6 +8732,7 @@ Template.billcard.events({
     },
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
+        let templateObject = Template.instance();
         setTimeout(async function(){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
@@ -8411,7 +8761,7 @@ Template.billcard.events({
         lineItems.push(lineItemObj);
       });
 
-      let templateObject = Template.instance();
+      
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);

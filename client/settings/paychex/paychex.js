@@ -58,9 +58,11 @@ Template.paychex.events({
   },
   'click #savePaychexSettings': async function(){
     playSaveAudio();
+    let templateObject = Template.instance();
+    setTimeout(async function(){
     $('.fullScreenSpin').css('display','block');
     let settingObject = [];
-    const templateObject = Template.instance();
+    
     let settingDetails = templateObject.settingDetails.get();
     if( settingDetails.length > 0 ){
         for (const item of settingDetails) {
@@ -145,6 +147,7 @@ Template.paychex.events({
         }
         
     }
+}, delayTimeAfterSound);
   }
   
 });

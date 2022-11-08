@@ -26,13 +26,13 @@
                                         <div class="col-8">
                                             <div class="form-group">
                                                 <label>Name</label>
-                                                <input type="text" class="form-control edtProcessName" id="edtProcessName" name="edtProcessName"  style="background-color: rgb(255,255,255);" value="{{processrecord.name}}"/>
+                                                <input type="text" class="form-control edtProcessName" id="edtProcessName" name="edtProcessName"  style="background-color: rgb(255,255,255);" value="{{processrecord.KeyValue}}"/>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <label>Daily Hours</label>
-                                                <input type="text" class="form-control edtDailyHours" id="edtDailyHours" name="edtDailyHours" style="background-color: rgb(255,255,255);" value="{{processrecord.dailyHours}}"/>
+                                                <input type="text" class="form-control edtDailyHours" id="edtDailyHours" name="edtDailyHours" style="background-color: rgb(255,255,255);" value="{{processrecord.DailyHours}}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -40,7 +40,7 @@
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <label>Description</label>
-                                                <input type="text" class="form-control edtDescription" id="edtDescription" name="edtDescription" style="background-color: #fff;" value="{{processrecord.description}}"/>
+                                                <input type="text" class="form-control edtDescription" id="edtDescription" name="edtDescription" style="background-color: #fff;" value="{{processrecord.Description}}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -49,20 +49,20 @@
                                             <div class="form-group">
                                                 <label>Hourly Labour Cost</label>
                                                 <div class="input-box">
-                                                    <input type="text" class="form-control edtHourlyCost" id="edtHourlyCost" name="edtHourlyCost" value="{{processrecord.hourlyCost}}"/>
+                                                    <input type="text" class="form-control edtHourlyCost" id="edtHourlyCost" name="edtHourlyCost" value="{{processrecord.HourlyLabourCost}}"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <label>Cost of Goods Sold</label>
-                                                <select type="search" class="form-control edtCOGS" id="edtCOGS" name="edtCOGS" value="{{processrecord.cogs}}"></select>
+                                                <select type="search" class="form-control edtCOGS" id="edtCOGS" name="edtCOGS" value="{{processrecord.COGS}}"></select>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <label>Expense Account</label>
-                                                <select type="search" class="form-control edtExpenseAccount" id="edtExpenseAccount" name="edtExpenseAccount" value="{{processrecord.expenseAccount}}"></select>
+                                                <select type="search" class="form-control edtExpenseAccount" id="edtExpenseAccount" name="edtExpenseAccount" value="{{processrecord.ExpenseAccount}}"></select>
                                             </div>
                                         </div>
                                     </div>
@@ -72,20 +72,20 @@
                                             <div class="form-group">
                                                 <label>Hourly Overhead Cost</label>
                                                 <div class="input-box">
-                                                    <input type="text" class="form-control edtHourlyCost edtHourlyOverheadCost" id="edtHourlyOverheadCost" name="edtHourlyOverheadCost" value="{{processrecord.oHourlyCost}}"/>
+                                                    <input type="text" class="form-control edtHourlyCost edtHourlyOverheadCost" id="edtHourlyOverheadCost" name="edtHourlyOverheadCost" value="{{processrecord.OHourlyCost}}"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <label>Cost of Goods Sold</label>
-                                                <select type="search" class="form-control edtOverheadCOGS" id="edtOverheadCOGS" name="edtOverheadCOGS" value="{{processrecord.oCOGS}}"></select>
+                                                <select type="search" class="form-control edtOverheadCOGS" id="edtOverheadCOGS" name="edtOverheadCOGS" value="{{processrecord.OCOGS}}"></select>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <label>Expense Account</label>
-                                                <select type="search" class="form-control edtOverheadExpenseAccount" id="edtOverheadExpenseAccount" name="edtOverheadExpenseAccount" value="{{processrecord.oExpenseAccount}}"></select>
+                                                <select type="search" class="form-control edtOverheadExpenseAccount" id="edtOverheadExpenseAccount" name="edtOverheadExpenseAccount" value="{{processrecord.OExpense}}"></select>
                                             </div>
                                         </div>
                                     </div>
@@ -97,14 +97,14 @@
                                                     <div class="form-group">
                                                         <label>Total Hourly Costs</label>
                                                         <div class="input-box">
-                                                            <input type="text" class="form-control edtTotalHourlyCosts" id="edtTotalHourlyCosts" value="{{processrecord.totalHCost}}" name="edtTotalHourlyCosts" disabled/>
+                                                            <input type="text" class="form-control edtTotalHourlyCosts" id="edtTotalHourlyCosts" value="{{processrecord.TotalHourlyCost}}" name="edtTotalHourlyCosts" disabled/>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
                                                     <div class="form-group">
                                                         <label>Inventory Asset Wastage</label>
-                                                        <select type="search" class="form-control edtWastage" id="edtWastage" name="edtWastage" value="{{processrecord.wastage}}"></select>
+                                                        <select type="search" class="form-control edtWastage" id="edtWastage" name="edtWastage" value="{{processrecord.Wastage}}"></select>
                                                     </div>
                                                 </div>
                                             </div>

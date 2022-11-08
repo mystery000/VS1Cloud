@@ -366,12 +366,12 @@ Template.addaccountpop.events({
 
     'click .btnSaveAccountPOP': function () {
         playSaveAudio();
-        setTimeout(function(){
-        var url = FlowRouter.current().path;
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let accountService = new AccountService();
         let organisationService = new OrganisationService();
+        setTimeout(function(){
+        var url = FlowRouter.current().path;
+        $('.fullScreenSpin').css('display', 'inline-block');
         let forTransaction = false;
         let accSelected = $('#accSelected').val();
         if ($('#showOnTransactions').is(':checked')) {
@@ -902,6 +902,9 @@ Template.addaccountpop.events({
     },
     'click .btnDeleteAccount': function () {
         playDeleteAudio();
+        let templateObject = Template.instance();
+        let accountService = new AccountService();
+        setTimeout(function(){
         swal({
             title: 'Delete Account',
             text: "Are you sure you want to Delete Account?",
@@ -911,8 +914,7 @@ Template.addaccountpop.events({
         }).then((result) => {
             if (result.value) {
                 $('.fullScreenSpin').css('display', 'inline-block');
-                let templateObject = Template.instance();
-                let accountService = new AccountService();
+                
                 let accountID = $('#edtAccountID').val();
 
                 if (accountID == "") {
@@ -954,6 +956,7 @@ Template.addaccountpop.events({
 
             } else {}
         });
+    }, delayTimeAfterSound);
     }
 })
 

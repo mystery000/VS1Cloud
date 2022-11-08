@@ -616,9 +616,11 @@ Template.taxRatesSettings.onRendered(function () {
       if (mainData.IsUSRegionTax || mainData.Country == "United States") {
         templateObject.isChkUSRegionTax.set(true);
         $(".btnSubTaxes").show();
+        $(".btnTaxSummary").show();
         $("#edtTaxRate").prop("disabled", true);
       } else {
         $(".btnSubTaxes").hide();
+        $(".btnTaxSummary").hide();
         $("#edtTaxRate").prop("disabled", false);
       }
       templateObject.getTaxRates();
@@ -963,6 +965,7 @@ Template.taxRatesSettings.events({
   },
   "click .btnSaveDefaultTax": function () {
     playSaveAudio();
+    setTimeout(function(){
     let purchasetaxcode = $("input[name=optradioP]:checked").val() || "";
     let salestaxcode = $("input[name=optradioS]:checked").val() || "";
 
@@ -1053,7 +1056,8 @@ Template.taxRatesSettings.events({
           }
         });
       });
-  },
+    }, delayTimeAfterSound);
+    },
   "keydown #edtTaxRate": numberInputValidate,
   "keydown #subTaxPercent": numberInputValidate,
   "keydown #subTaxCapAmt": numberInputValidate,
@@ -1070,6 +1074,8 @@ Template.taxRatesSettings.events({
   "click .btnSaveSubTax": function () {
     playSaveAudio();
     let templateObject = Template.instance();
+    setTimeout(function(){
+    
     let edtSubTaxLineId = $("#edtSubTaxLineId").val();
     let subTaxId = $('#subTaxCode').val();
     let subTaxCodes = templateObject.subtaxcodes.get();
@@ -1117,12 +1123,14 @@ Template.taxRatesSettings.events({
     $('#edtTaxRate').val(Math.min(taxPercent, 100));
 
     $('#addSubTaxModal').modal('hide');
+  }, delayTimeAfterSound);
   },
   'click .btnSaveTaxRate': function () {
     playSaveAudio();
     let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display', 'inline-block');
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
+    $('.fullScreenSpin').css('display', 'inline-block');
     let taxtID = $('#edtTaxID').val();
     let taxName = $('#edtTaxName').val();
     let taxDesc = $('#edtTaxDesc').val();
@@ -1302,6 +1310,7 @@ Template.taxRatesSettings.events({
       $('.fullScreenSpin').css('display', 'none');
 
     }
+  }, delayTimeAfterSound);
   },
   'click .btnAddTaxRate': function () {
     $('#add-tax-title').text('Add New Tax Rate');
@@ -1370,6 +1379,7 @@ Template.taxRatesSettings.events({
   'click .btnDeleteTaxRate': function () {
     playDeleteAudio();
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let taxCodeId = $('#selectDeleteLineID').val();
 
     let objDetails = {
@@ -1413,6 +1423,7 @@ Template.taxRatesSettings.events({
         });
         $(".fullScreenSpin").css("display", "none");
       });
+    }, delayTimeAfterSound);
   },
   "click .btnBack": function (event) {
     playCancelAudio();

@@ -189,72 +189,75 @@
                     user-select: none;
                 }
             </style>
-            <div class="card shadow mb-4 newcardb" id="newcardb" style="margin: 8px;">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="text-primary font-weight-bold m-0">Employees</h6>
-                </div>
-                <div class="card-body text-nowrap cardB">
-                    <div class="sideSearch">
-                        <div class="form-group pull-right" style="width: 95%; margin-bottom: 0; margin-right: 8px;">
-                            <input style="margin: 4px;" type="text" class="inputSearch search form-control" placeholder="Search...">
-                        </div>
-                        <span class="counter pull-right"></span>
-                        <style>
-                            .empColor {
-                                height: 18px;
-                                width: 18px;
-                                border-radius: 50%;
-                                display: inline-block;
-                                margin-right: 4px;
-                                text-align: center;
-                                font-size: 12px;
-                            }
-
-                            .empPriority {
-                                color: #ffffff;
-                            }
-                        </style>
-                        <table id="tblEmployeeSideList" name="tblEmployeeSideList" class="table table-hover table-bordered results tblEmployeeSideList">
-                            <thead>
-                            <tr>
-                                <th>Employee</th>
-                            </tr>
-                            <tr class="warning no-result">
-                                <td colspan="4"><i class="fa fa-warning"></i> No result</td>
-                            </tr>
-                            </thead>
-                            <tbody id='external-events-list'>
-                            <!-- <div id='external-events'>
-<div > -->
-                            {{#if employeerecords}}
-                                {{#each item in employeerecords}}
-                                    <tr id="{{item.id}}">
-                                        <td>
-                                            <div class='fc-event fc-daygrid-event fc-daygrid-block-event'>
-                                                {{#if item.color}}
-                                                    <div class='fc-event-main'>
-                                                            <span class="empColor" style="background: {{item.color}};">
-                                                                <span class="empPriority">{{item.priority}}</span>
-                                                            </span>
-                                                        {{item.employeeName}}
-                                                        <span id="employeeID" class="employeeID" style="display: none;">{{item.id}}</span>
-                                                        <span id="employeeName" class="employeeName" style="display: none;">{{item.employeeName}}</span>
-                                                    </div>
-                                                {{else}}
-                                                    <div class='fc-event-main'>
-                                                        {{item.employeeName}} <span id="employeeID" style="display: none;">{{item.id}}</span>
-                                                    </div>
-                                                {{/if}}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                {{/each}}
-                            {{/if}}
-                            </tbody>
-                        </table>
+            {{# draggablePanel 
+                xs=12
+                defaultPosition=defaultPosition
+                key=key
+                id="newcardb"
+                headerClass="bankaccountschartheader"
+                headerColor="primary"
+                headerTitle="Employees"
+            }}
+                <div class="sideSearch">
+                    <div class="form-group pull-right" style="width: 95%; margin-bottom: 0; margin-right: 8px;">
+                        <input style="margin: 4px;" type="text" class="inputSearch search form-control" placeholder="Search...">
                     </div>
+                    <span class="counter pull-right"></span>
+                    <style>
+                        .empColor {
+                            height: 18px;
+                            width: 18px;
+                            border-radius: 50%;
+                            display: inline-block;
+                            margin-right: 4px;
+                            text-align: center;
+                            font-size: 12px;
+                        }
+
+                        .empPriority {
+                            color: #ffffff;
+                        }
+                    </style>
+                    <table id="tblEmployeeSideList" name="tblEmployeeSideList" class="table table-hover table-bordered results tblEmployeeSideList">
+                        <thead>
+                        <tr>
+                            <th>Employee</th>
+                        </tr>
+                        <tr class="warning no-result">
+                            <td colspan="4"><i class="fa fa-warning"></i> No result</td>
+                        </tr>
+                        </thead>
+                        <tbody id='external-events-list'>
+                        <!-- <div id='external-events'>
+    <div > -->
+                        {{#if employeerecords}}
+                            {{#each item in employeerecords}}
+                                <tr id="{{item.id}}">
+                                    <td>
+                                        <div class='fc-event fc-daygrid-event fc-daygrid-block-event'>
+                                            {{#if item.color}}
+                                                <div class='fc-event-main'>
+                                                        <span class="empColor" style="background: {{item.color}};">
+                                                            <span class="empPriority">{{item.priority}}</span>
+                                                        </span>
+                                                    {{item.employeeName}}
+                                                    <span id="employeeID" class="employeeID" style="display: none;">{{item.id}}</span>
+                                                    <span id="employeeName" class="employeeName" style="display: none;">{{item.employeeName}}</span>
+                                                </div>
+                                            {{else}}
+                                                <div class='fc-event-main'>
+                                                    {{item.employeeName}} <span id="employeeID" style="display: none;">{{item.id}}</span>
+                                                </div>
+                                            {{/if}}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                        {{/if}}
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+            {{/draggablePanel}}
         </div>
         <div class="col-12 col-lg-12 colCalendar" id="colCalendar">
             <style>

@@ -2166,9 +2166,11 @@ Template.statementlist.events({
     },
     'click #emailbtn': async function () {
         playEmailAudio();
+        let templateObject = Template.instance();
+        setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#printstatmentdesign').css('display', 'block');
-        let templateObject = Template.instance();
+        
         let listIds = [];
         $('.chkBox').each(function () {
             if ($(this).is(':checked')) {
@@ -2317,13 +2319,15 @@ Template.statementlist.events({
         } else {
             $('.fullScreenSpin').css('display', 'none');
         }
+    }, delayTimeAfterSound);
     },
     'click .printConfirm ': async function (event) {
         playPrintAudio();
+        let templateObject = Template.instance();
+        setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'block');
         let attachment = [] ;
-        let templateObject = Template.instance();
-
+        
         let listIds = [];
 
         $('.chkBox').each(function () {
@@ -2388,7 +2392,7 @@ Template.statementlist.events({
                 }
             }
         });
-
+    }, delayTimeAfterSound);
     }
 });
 

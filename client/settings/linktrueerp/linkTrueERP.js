@@ -53,6 +53,8 @@ Template.linktrueerp.events({
 'click .btnSave': function () {
   playSaveAudio();
   var erpGet = erpDb();
+  setTimeout(function(){
+  
   $('.fullScreenSpin').css('display','inline-block');
   let firstName = $('.edtFirstName').val();
   let lastName = $('.edtLastName').val();
@@ -178,6 +180,7 @@ Template.linktrueerp.events({
   swal('Connection Failed', oPost.getResponseHeader('errormessage') +' Please try again!', 'error');
   }
   }
+}, delayTimeAfterSound);
 },
 'click .btnBack':function(event){
   playCancelAudio();

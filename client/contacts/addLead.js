@@ -1167,9 +1167,10 @@ Template.leadscard.events({
     },
     'click .btnSave': async function (event) {
         playSaveAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
+        let uploadedItems = templateObject.uploadedFiles.get();
+        setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'inline-block');
 
         let employeeName = $('#edtLeadEmployeeName').val();
@@ -1281,7 +1282,7 @@ Template.leadscard.events({
         let custField2 = $('#edtSaleCustField2').val()||'';
         let custField3 = $('#edtSaleCustField3').val()||'';
 
-        let uploadedItems = templateObject.uploadedFiles.get();
+        
 
         const url = FlowRouter.current().path;
         const getemp_id = url.split('?id=');
@@ -1570,9 +1571,11 @@ Template.leadscard.events({
     },
     'click .printConfirm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblCrmList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .btnRefresh': function () {
         Meteor._reload.reload();
@@ -1652,8 +1655,9 @@ Template.leadscard.events({
     },
     'click .btnSaveSettings': function (event) {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
         $('.lblCustomField1').html('');
         $('.lblCustomField2').html('');
         $('.lblCustomField3').html('');
@@ -1801,8 +1805,10 @@ Template.leadscard.events({
     },
     'click .btnDeleteLead': function (event) {
         playDeleteAudio();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
         if (!isNaN(currentId.id)) {
@@ -1835,6 +1841,7 @@ Template.leadscard.events({
             FlowRouter.go('/leadlist?success=true');
         }
         $('#deleteLeadModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnTask': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1848,6 +1855,7 @@ Template.leadscard.events({
     },
     'click .btnEmail': function (event) {
         playEmailAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
@@ -1858,6 +1866,7 @@ Template.leadscard.events({
         } else {
             $('.fullScreenSpin').css('display', 'none');
         }
+    }, delayTimeAfterSound);
     },
     'click .btnAppointment': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');

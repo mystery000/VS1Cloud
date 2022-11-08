@@ -15393,9 +15393,10 @@ Template.payrollrules.events({
 
    'click .btnSaveAllowance':function(){
     playSaveAudio();
-     let templateObject = Template.instance();
+    let templateObject = Template.instance();
+    let taxRateService = new TaxRateService();
+    setTimeout(function(){
      LoadingOverlay.show();
-     let taxRateService = new TaxRateService();
      let allowanceID = $('#edtAllowanceID').val()|| 0;
      let allowanceType = $('#edtAllowanceType').val()||'';
      let edtEarningsNameAllowance = $('#edtEarningsNameAllowance').val() || '';
@@ -15679,13 +15680,15 @@ Template.payrollrules.events({
 
 
      }
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnSaveRatePOP': (e, templateObject) => {
         playSaveAudio();
-        LoadingOverlay.show();
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
+        LoadingOverlay.show();
+        
 
         let rateTypeId = $('#edtRateID').val()|| 0;
         let ratetypedescription = $('#edtRateDescription').val()||'';
@@ -15859,14 +15862,15 @@ Template.payrollrules.events({
 
 
         }
+    }, delayTimeAfterSound);
     },
 
     'click .btnSaveGroup':function(){
         playSaveAudio();
         let templateObject = Template.instance();
-        LoadingOverlay.show();
         let taxRateService = new TaxRateService();
-
+        setTimeout(function(){
+        LoadingOverlay.show();
         let rateTypeId = $('#edtgroupID').val()|| 0;
         let ratetypedescription = $('#edtGroupDescription').val()||'';
 
@@ -16044,16 +16048,15 @@ Template.payrollrules.events({
 
 
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnSavefund':function(){
         playSaveAudio();
         let templateObject = Template.instance();
-        LoadingOverlay.show();
-
         let taxRateService = new TaxRateService();
-
+        setTimeout(function(){
+        LoadingOverlay.show();
         let fundTypeId = $('#edtfundID').val()|| 0;
         let fundtypedescription = $('#edtFundDescription').val()||'';
 
@@ -16230,17 +16233,16 @@ Template.payrollrules.events({
 
 
         }
-
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnSaveDeduction': function(){
         playSaveAudio();
         let templateObject = Template.instance();
+        let taxRateService = new TaxRateService();
+        setTimeout(function(){
         LoadingOverlay.show();
         let deductionName = $('#edtDeductionName').val()||'';
-        let taxRateService = new TaxRateService();
-
         let deductionID = $('#edtDeductionID').val()||'';
 
         let deductionType = $('#edtDeductionType').val();
@@ -16527,6 +16529,7 @@ Template.payrollrules.events({
 
 
         }
+    }, delayTimeAfterSound);
     },
 
 
@@ -16787,6 +16790,7 @@ Template.payrollrules.events({
 
    'click .btnSaveDefaultTax': (e, templateObject) => {
         playSaveAudio();
+        setTimeout(function(){
         templateObject.saveOvertimes();
 
         LoadingOverlay.show();
@@ -16934,12 +16938,14 @@ Template.payrollrules.events({
 
 
          }
-
-    },
+        }, delayTimeAfterSound);
+        },
 
     'click .saveSuperannuation': function(e){
+        playSaveAudio();
         let taxRateService = new TaxRateService();
         let templateObject = Template.instance();
+        setTimeout(function(){
         LoadingOverlay.show();
         let id  = $('#newSuperannuationFundId').val() || 0;
         let fundType = $('#edtFundType').val() || '';
@@ -17400,10 +17406,7 @@ Template.payrollrules.events({
 
 
          }
-
-
-
-
+        }, delayTimeAfterSound);
     },
 
    'click .newreiumbursement': function(){
@@ -19592,11 +19595,11 @@ Template.payrollrules.events({
     {
         playSaveAudio();
         let templateObject = Template.instance();
-        LoadingOverlay.show();
         let taxRateService = new TaxRateService();
         let accountService = new AccountService();
         let organisationService = new OrganisationService();
-
+        setTimeout(function(){
+        LoadingOverlay.show();
         let edtAccountId = $('#edtAccountID').val() || '';
         let accSelected = $('#accSelected').val() || '';
         let edtAccountName = $('#edtAccountName').val() || '';
@@ -19760,15 +19763,9 @@ Template.payrollrules.events({
                 swal('Account is not selected to edit!', '', 'warning');
                 e.preventDefault();
             }
-
-
-
-
-
          }
-
-
-    },
+        }, delayTimeAfterSound);
+        },
 
     'change #edtFundType':function(){
 
@@ -19827,6 +19824,7 @@ Template.payrollrules.events({
     'click .btnDeleteAllowance': function () {
       playDeleteAudio();
       let taxRateService = new TaxRateService();
+      setTimeout(function(){
       let allowanceId = $('#selectDeleteLineID').val()||0;
       LoadingOverlay.show();
 
@@ -19837,13 +19835,10 @@ Template.payrollrules.events({
               Active: false,
               DisplayName: "Allowances",
               Displayin:"ok"
-
-
           }
       };
 
       taxRateService.saveAllowance(objDetails).then(function (objDetails) {
-
 
          LoadingOverlay.hide();
          swal({
@@ -19894,12 +19889,14 @@ Template.payrollrules.events({
             });
 
       });
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteCalender': function () {
         playDeleteAudio();
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
+        
         let calenderid = $('#selectColDeleteLineID').val()||0;
         let calendername = $('#selectCalenderName').val()||0;
         LoadingOverlay.show();
@@ -19982,14 +19979,14 @@ Template.payrollrules.events({
 
 
         }
-
-
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteLeave': function () {
         playDeleteAudio();
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
+        
         let LeaveId = $('#selectLeaveDeleteLineID').val()||0;
         let LeaveName = $('#selectLeaveName').val()||0;
         let Type = $('#leave_type').val()|| '';
@@ -20154,14 +20151,14 @@ Template.payrollrules.events({
 
 
         }
-
-
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteHoliday': function () {
         playDeleteAudio();
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
+        
         let holidayid = $('#selectholidayDeleteLineID').val()||0;
         let holidayname = $('#selectholidayName').val()||0;
         LoadingOverlay.show();
@@ -20244,13 +20241,14 @@ Template.payrollrules.events({
             }
             });
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteEarnings':function()
     {
         playDeleteAudio();
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
         let earningid = $('#earningdeletename').val()||0;
         let type = $('#earningdeletetype').val()||0;
 
@@ -20734,14 +20732,13 @@ Template.payrollrules.events({
 
 
         }
-
-
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteSuperannuation': function () {
         playDeleteAudio();
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
         let superannutionid = $('#selectSuperannuationDeleteLineID').val()||0;
         let superannutionname = $('#selectSuperannuationName').val()||0;
 
@@ -20827,12 +20824,13 @@ Template.payrollrules.events({
                 }
                });
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteReimsument': function () {
         playDeleteAudio();
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
         let reid = $('#selectColReiDeleteLineID').val()||0;
         let ReiName = $('#seleclReiName').val()||0;
         LoadingOverlay.show();
@@ -20911,14 +20909,13 @@ Template.payrollrules.events({
                 }
             });
         }
-
-
-
+    }, delayTimeAfterSound);
     },
 
     'click .btnDeleteDeduction': function () {
         playDeleteAudio();
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
         let deductionID = $('#selectDeleteLineID').val()||0;
         let deductionAccountID = $('#selectAccountid').val()||0;
         let deductionAccount = $('#selectAccountname').val()||0;
@@ -20996,8 +20993,8 @@ Template.payrollrules.events({
             });
 
          });
-
-    },
+        }, delayTimeAfterSound);
+        },
 
 
     'click .btnAddNewDeduction': function(event) {
@@ -22307,7 +22304,6 @@ Template.payrollrules.events({
     //  "show.bs.modal #select-ratetype-modal": (e, ui) => {
     // },
     'change #overtimeRateType': (e, ui) => {
-        console.log('changed', e);
         let evalue = $(e.currentTarget).val();
 
         switch(evalue) {

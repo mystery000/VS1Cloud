@@ -2884,6 +2884,7 @@ Template.quoteslist.events({
     },
     'click .printConfirm' : function(event){
       playPrintAudio();
+      setTimeout(function(){
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -2916,7 +2917,8 @@ Template.quoteslist.events({
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblquotelist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
-    },
+      }, delayTimeAfterSound);
+      },
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display','inline-block');
         let currentDate = new Date();

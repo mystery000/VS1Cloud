@@ -140,8 +140,10 @@ Template.reportsAccountantSettings.helpers({
 Template.reportsAccountantSettings.events({
   "click #saveAccountantInfo": function (event) {
     playSaveAudio();
+    let templateObject = Template.instance();
+    setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    const templateObject = Template.instance();
+    
     let accountantID = 1;
     let firstName = $('#edtFirstName').val();
     let lastName = $('#edtLastName').val();
@@ -172,6 +174,7 @@ Template.reportsAccountantSettings.events({
     }).catch(function (err) {
         location.reload(true);
     });
+  }, delayTimeAfterSound);
   },
   "click .btnBack": function (event) {
     playCancelAudio();

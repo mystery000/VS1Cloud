@@ -95,9 +95,9 @@ Template.smssettings.events({
   },
   'click #saveTwilioSettings': async function() {
     playSaveAudio();
+    let templateObject = Template.instance();
+    setTimeout(async function(){
     $('.fullScreenSpin').css('display','inline-block');
-
-    const templateObject = Template.instance();
 
     //TODO: Save SMS Settings with API
     const allKeys = ["VS1SMSID", "VS1SMSToken", "VS1SMSPhone", "VS1HEADERSMSMSG", "VS1SAVESMSMSG", "VS1STARTSMSMSG", "VS1STOPSMSMSG"];
@@ -132,5 +132,6 @@ Template.smssettings.events({
         window.open('/settings','_self');
       } else if (result.dismiss === 'cancel') {}
     });
+  }, delayTimeAfterSound);
   }
 });

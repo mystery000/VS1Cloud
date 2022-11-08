@@ -2894,6 +2894,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
 
                 }, 1000);
                 //}
+                /*
                 templateObject.getProductClassQtyData = function () {
                     productService.getOneProductClassQtyData(currentProductID).then(function (data) {
                         $('.fullScreenSpin').css('display', 'none');
@@ -2920,6 +2921,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                     });
 
                 }
+                */
                 //templateObject.getProductClassQtyData();
                 //templateObject.getProductData();
             } else {
@@ -4680,10 +4682,12 @@ Template.dsmAppointmentsWidget.events({
     },
     'click #btnSaveRepeat': function () {
         playSaveAudio();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let repeatDays = templateObject.repeatDays.get();
         let appointmentService = new AppointmentService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
         let days = [];
         let week_day = "";
         let frequency = parseInt($('#frequency').val()) || 1;
@@ -4987,7 +4991,7 @@ Template.dsmAppointmentsWidget.events({
 
             }
         }
-
+    }, delayTimeAfterSound);
     },
     'click #createInvoice': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -6701,7 +6705,9 @@ Template.dsmAppointmentsWidget.events({
     },
     'click #btnSaveAppointment': async function() {
         playSaveAudio();
-        const templateObject = Template.instance();
+        let templateObject = Template.instance();
+        setTimeout(function(){
+        
         templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
@@ -6726,7 +6732,6 @@ Template.dsmAppointmentsWidget.events({
               $('#btnSaveAppointmentSubmit').trigger('click');
             }
         } else {
-            const templateObject = Template.instance();
             const smsSettings = templateObject.defaultSMSSettings.get();
             if (smsCustomer || smsUser) {
                 if (!smsSettings || !smsSettings.twilioAccountId) {
@@ -6751,7 +6756,6 @@ Template.dsmAppointmentsWidget.events({
                         }
                     });
                 } else {
-                    const templateObject = Template.instance();
                     $('#saveAppointmentModal').modal('show');
                     const accountName = $('#customer').val();
                     const employeeName = $('#employee_name').val();
@@ -6768,12 +6772,15 @@ Template.dsmAppointmentsWidget.events({
                 $('#btnSaveAppointmentSubmit').trigger('click');
             }
         }
+    }, delayTimeAfterSound);
     },
     'click .btnSaveIgnoreSMS': function() {
         playSaveAudio();
+        setTimeout(function(){
        $('#chkSMSCustomer').prop('checked', false);
         $('#chkSMSUser').prop('checked', false);
         $('#frmAppointment').trigger('submit');
+    }, delayTimeAfterSound);
     },
     'click #btnCloseStopAppointmentModal': function() {
         $('#stopAppointmentModal').modal('hide');
@@ -6787,7 +6794,9 @@ Template.dsmAppointmentsWidget.events({
     'click #btnSaveAppointmentSubmit': async function(e) {
         playSaveAudio();
         e.preventDefault();
-        const templateObject = Template.instance();
+        let templateObject = Template.instance();
+        setTimeout(async function(){
+        
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
         const customerPhone = $('#mobile').val();
@@ -6847,6 +6856,7 @@ Template.dsmAppointmentsWidget.events({
         } else {
             $('#frmAppointment').trigger('submit');
         }
+    }, delayTimeAfterSound);
     },
     'change #chkSMSCustomer': function() {
         if ($('#chkSMSCustomer').is(':checked')) {

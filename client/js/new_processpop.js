@@ -15,9 +15,11 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
+import {ManufacturingService} from '../manufacture/manufacturing-service';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let manufacturingService = new ManufacturingService();
 
 
 Template.new_processpop.onCreated(() => {
@@ -30,23 +32,22 @@ Template.new_processpop.onRendered(() => {
     const templateObject = Template.instance();
     var currentID = FlowRouter.current().queryParams.id;
     templateObject.getProcessDetail  = function() {
-        let tempArray = localStorage.getItem('TProcesses');
-        let processList = tempArray?JSON.parse(tempArray):[];
+        // let tempArray = localStorage.getItem('TProcesses');
+        // let processList = tempArray?JSON.parse(tempArray):[];
         let processDetail = {};
       
         let objDetail = {
-            id: currentID?currentID : processList.length + 1,
-            name: processDetail.name?processDetail.name: '',
-            dailyHours: processDetail.dailyHours?processDetail.dailyHours: '',
-            description: processDetail.description?processDetail.description: '',
-            hourlyCost: processDetail.hourlyLabourCost?processDetail.hourlyLabourCost: '',
-            cogs: processDetail.cogs?processDetail.cogs:'',
-            expenseAccount: processDetail.expenseAccount?processDetail.expenseAccount : '',
-            oHourlyCost: processDetail.oHourlyCost?processDetail.oHourlyCost: '',
-            oCOGS: processDetail.oCogs?processDetail.oCogs: '',
-            oExpenseAccount: processDetail.oExpense? processDetail.oExpense : '',
-            totalHCost: processDetail.totalHourlyCost?processDetail.totalHourlyCost: '',
-            wastage: processDetail.wastage?processDetail.wastage: ''
+            KeyValue: processDetail.name?processDetail.name: '',
+            DailyHours: processDetail.dailyHours?processDetail.dailyHours: '',
+            Description: processDetail.description?processDetail.description: '',
+            HourlyCost: processDetail.hourlyLabourCost?processDetail.hourlyLabourCost: '',
+            COGS: processDetail.cogs?processDetail.cogs:'',
+            ExpenseAccount: processDetail.expenseAccount?processDetail.expenseAccount : '',
+            OHourlyCost: processDetail.oHourlyCost?processDetail.oHourlyCost: '',
+            OCOGS: processDetail.oCogs?processDetail.oCogs: '',
+            OExpense: processDetail.oExpense? processDetail.oExpense : '',
+            TotalHourlyCost: processDetail.totalHourlyCost?processDetail.totalHourlyCost: '',
+            Wastage: processDetail.wastage?processDetail.wastage: ''
         }
 
         templateObject.processrecord.set(objDetail);        
@@ -75,22 +76,20 @@ Template.new_processpop.helpers({
 
 Template.new_processpop.events({
     'click #btnSaveProcess': function(event) {
-        playSaveAudio();
-        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentID = FlowRouter.current().queryParams.id;
         let tempArray = localStorage.getItem('TProcesses');
         let processes = tempArray?JSON.parse(tempArray):[];
         let processName = $('#edtName').val() || '';
         let processDescription = $('#edtDescription').val()|| '';
-        let dailyHours = $('#edtDailyHours').val()|| '';
-        let hourlyCost = $('#edtHourlyCost').val()|| '';
+        let dailyHours = parseInt($('#edtDailyHours').val())|| 0;
+        let hourlyCost = parseFloat($('#edtHourlyCost').val().replace(Currency, ''))|| 0;
         let cogs = $('#edtCOGS').val() || '';
         let expenseAccount = $('#edtExpenseAccount').val() || '';
-        let overheadHourlyCost = $('#edtHourlyOverheadCost').val() || '';
+        let overheadHourlyCost = parseFloat($('#edtHourlyOverheadCost').val().replace(Currency, '')) || 0;
         let overheadCOGS = $('#edtOverheadCOGS').val() || '';
         let overheadExpenseAcc = $('#edtOverheadExpenseAccount').val() || '';
-        let totalHourCost = $('#edtTotalHourlyCosts').val() || '';
+        let totalHourCost = parseFloat($('#edtTotalHourlyCosts').val().replace(Currency, '')) || 0;
         let wastage = $('#edtWastage').val() || '';
 
         if(processName == '') {
@@ -145,58 +144,63 @@ Template.new_processpop.events({
        
 
         let objDetail = {
-            type: 'TProcess',
+            type: 'TProcessStep',
             fields: {
-                id: -1,
-                name: processName,
-                description: processDescription,
-                dailyHours:  dailyHours,
-                hourlyLabourCost: hourlyCost,
-                cogs: cogs,
-                expenseAccount: expenseAccount,
-                oHourlyCost: overheadHourlyCost,
-                oCogs: overheadCOGS,
-                oExpense: overheadExpenseAcc,
-                totalHourlyCost: totalHourCost,
-                wastage: wastage
+                KeyValue: processName,
+                Description: processDescription,
+                DailyHours:  dailyHours,
+                HourlyLabourCost: praseInt(hourlyCost.replace(Currency, '')),
+                COGS: cogs,
+                ExpenseAccount: expenseAccount,
+                OHourlyCost: parseInt(overheadHourlyCost.replace(Currency, '')),
+                OCOGS: overheadCOGS,
+                OExpense: overheadExpenseAcc,
+                TotalHourlyCost: parseInt(totalHourCost.replace(Currency, '')),
+                Wastage: wastage
             }
         }
-        objDetail.fields.id = processes.length + 1
+        manufacturingService.saveProcessData(objDetail).then(function(){
+            manufacturingService.getAllProcessData().then(function(datareturn) {
+                addVS1Data('TProcessStep', JSON.stringify(datareturn)).then(function(dataupdate) {
+                    swal({
+                        title: 'Success',
+                        text: 'Process has been saved successfully',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Continue',
+                    }).then ((result)=>{
+                        $('.fullScreenSpin').css('display', 'none');
+                        let datatable = $('#tblProcessPopList').DataTable();
+                        let dataListProcess = [
+                            objDetail.fields.KeyValue || '',
+                            objDetail.fields.Description || '',
+                            objDetail.fields.DailyHours.toString() + Currency || $0,
+                            objDetail.fields.TotalHourlyCost.toString()+ Currency || 0.00,
+                            objDetail.fields.Wastage || '',
+                        ];
+                        datatable.row.add(dataListProcess).draw();
+                        $('#newProcessModal').modal('toggle');
+                        $('#processListModal').modal('toggle');
+                    })
+                }).catch(function(err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal("Something went wrong!", "", "error");
+                })
+            }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'none');
+                swal("Something went wrong!", "", "error");
+            })
+        }).catch(function(err) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal("Something went wrong!", "", "error");
+        })
 
-        processes.push(objDetail);
-        localStorage.setItem('TProcesses', JSON.stringify(processes))
-        $('.fullScreenSpin').css('display', 'none');
-        swal({
-            title: 'Success',
-            text: 'Process has been saved successfully',
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'Continue',
-        }).then ((result)=>{
-            let splashArrayAccountList = [];
-            let splashArrayProcessList = [];
-            let datatable = $('#tblProcessPopList').DataTable();
-            let dataListProcess = [
-                objDetail.fields.name || '',
-                objDetail.fields.description || '',
-                objDetail.fields.dailyHours || 0,
-                objDetail.fields.totalHourlyCost || 0.00,
-                objDetail.fields.wastage || '',
-            ];
-            datatable.row.add(dataListProcess).draw()
-            
-            $('#newProcessModal').modal('toggle');
-            $('#processListModal').modal('toggle');
-        });
-    }, delayTimeAfterSound);
+     
     },
 
     'click #btnCancel': function(event) {
-        playCancelAudio();
-        setTimeout(function(){
-            $('#newProcessModal').modal('toggle');
-            $('#processListModal').modal('toggle');
-        }, delayTimeAfterSound);
+        $('#newProcessModal').modal('toggle');
+        $('#processListModal').modal('toggle')
     },
 
     // 'click #edtCOGS': function (event) {

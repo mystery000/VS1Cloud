@@ -82,9 +82,9 @@ Template.mailchimpSettings.events({
 
   'click #saveMailchimpSettings': async function () {
     playSaveAudio();
+    let templateObject = Template.instance();
+    setTimeout(async function(){
     $('.fullScreenSpin').css('display', 'inline-block');
-
-    const templateObject = Template.instance();
 
     const allKeys = ["VS1MailchimpApiKey", "VS1MailchimpAudienceID", "VS1MailchimpCampaignID"]; 
     for (const eKey of allKeys) {
@@ -112,5 +112,6 @@ Template.mailchimpSettings.events({
         window.open('/settings', '_self');
       } else if (result.dismiss === 'cancel') { }
     });
+  }, delayTimeAfterSound);
   }
 });

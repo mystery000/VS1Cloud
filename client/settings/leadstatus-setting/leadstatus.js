@@ -51,7 +51,7 @@ Template.leadstatussettings.onRendered(function () {
     }
 
     templateObject.getLeadStatusData = function () {
-        getVS1Data('TLeadStatusType').then(function (dataObject) {
+        getVS1Data('TLeadStatus').then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getAllLeadStatus().then(function (data) {
                     setLeadStatusList(data);
@@ -232,7 +232,7 @@ Template.leadstatussettings.onRendered(function () {
                     let objUnqualified;
                     if (leadStatus.tleadstatustype.length == 0) {
                         objUnqualified = {
-                            type: "TLeadStatusType",
+                            type: "TLeadStatus",
                             fields: {
                                 TypeName: "Unqualified",
                                 Description: "Default Value",
@@ -243,7 +243,7 @@ Template.leadstatussettings.onRendered(function () {
                     } else {
                         let statusID = leadStatus.tleadstatustype[0].fields.ID;
                         objUnqualified = {
-                            type: "TLeadStatusType",
+                            type: "TLeadStatus",
                             fields: {
                                 Id: statusID,
                                 Active: true
@@ -261,7 +261,7 @@ Template.leadstatussettings.onRendered(function () {
                     let objOpportunity;
                     if (leadStatus.tleadstatustype.length == 0) {
                         objOpportunity = {
-                            type: "TLeadStatusType",
+                            type: "TLeadStatus",
                             fields: {
                                 TypeName: "Opportunity",
                                 Description: "Default Value",
@@ -272,7 +272,7 @@ Template.leadstatussettings.onRendered(function () {
                     } else {
                         let statusID = leadStatus.tleadstatustype[0].fields.ID;
                         objOpportunity = {
-                            type: "TLeadStatusType",
+                            type: "TLeadStatus",
                             fields: {
                                 Id: statusID,
                                 Active: true
@@ -290,7 +290,7 @@ Template.leadstatussettings.onRendered(function () {
                     let objQuoted;
                     if (leadStatus.tleadstatustype.length == 0) {
                         objQuoted = {
-                            type: "TLeadStatusType",
+                            type: "TLeadStatus",
                             fields: {
                                 TypeName: "Quoted",
                                 Description: "Default Value",
@@ -301,7 +301,7 @@ Template.leadstatussettings.onRendered(function () {
                     } else {
                         let statusID = leadStatus.tleadstatustype[0].fields.ID;
                         objQuoted = {
-                            type: "TLeadStatusType",
+                            type: "TLeadStatus",
                             fields: {
                                 Id: statusID,
                                 Active: true
@@ -580,9 +580,10 @@ Template.leadstatussettings.events({
     },
     'click .btnDeleteLeadStatus': function () {
         playDeleteAudio();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
-        let statusId = $('#selectDeleteLineID').val();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let statusId = $('#statusID').val();
         let objDetails = {
             type: "TLeadStatusType",
             fields: {
@@ -612,9 +613,11 @@ Template.leadstatussettings.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
+    }, delayTimeAfterSound);
     },
     'click .btnSaveLeadStatus': function () {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let objDetails = {};
         let statusName = $('#edtLeadStatusName').val() || '';
@@ -623,6 +626,7 @@ Template.leadstatussettings.events({
         statusEQPM = Number(statusEQPM.replace(/[^0-9.-]+/g, "")) || 1.0
         statusEQPM = statusEQPM.toString();
         let id = $('#statusID').val() || '';
+        alert(id);
         if (statusName === '') {
             swal('Lead Status name cannot be blank!', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
@@ -630,7 +634,7 @@ Template.leadstatussettings.events({
         } else {
             if (id == "") {
                 objDetails = {
-                    type: "TLeadStatusType",
+                    type: "TLeadStatus",
                     fields: {
                         TypeName: statusName,
                         Description: statusDesc,
@@ -640,7 +644,7 @@ Template.leadstatussettings.events({
                 }
             } else {
                 objDetails = {
-                    type: "TLeadStatusType",
+                    type: "TLeadStatus",
                     fields: {
                         Id: id,
                         TypeName: statusName,
@@ -653,7 +657,7 @@ Template.leadstatussettings.events({
 
             contactService.saveLeadStatusData(objDetails).then(function (result) {
                 sideBarService.getAllLeadStatus().then(function (dataReload) {
-                    addVS1Data('TLeadStatusType', JSON.stringify(dataReload)).then(function (datareturn) {
+                    addVS1Data('TLeadStatus', JSON.stringify(dataReload)).then(function (datareturn) {
                         Meteor._reload.reload();
                     }).catch(function (err) {
                         Meteor._reload.reload();
@@ -676,6 +680,7 @@ Template.leadstatussettings.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
+    }, delayTimeAfterSound);
     },
     'click .btnBack': function (event) {
         playCancelAudio();

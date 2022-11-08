@@ -279,7 +279,7 @@ Template.vatreturntransactionlist.onRendered(function() {
             var basreturnid = FlowRouter.current().queryParams.basreturnid;
             var transactionitem = FlowRouter.current().queryParams.transactionitem;
             if (basreturnid) {
-                getVS1Data('TBasReturn').then(function(dataObject) {
+                getVS1Data('TVatReturn').then(function(dataObject) {
                     if (dataObject.length > 0) {
                         let data = JSON.parse(dataObject[0].data);
                         for (let i = 0; i < data.length; i++) {

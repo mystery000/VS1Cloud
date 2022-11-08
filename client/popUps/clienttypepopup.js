@@ -431,8 +431,9 @@ Template.clienttypepopup.events({
     },
     'click .btnDeleteDClientType': function () {
         playDeleteAudio();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
         let deptId = $('#selectDeleteLineID').val();
 
         let objDetails = {
@@ -466,7 +467,7 @@ Template.clienttypepopup.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
-
+    }, delayTimeAfterSound);
     },
     'click #btnNewInvoice': function(event) {
         // FlowRouter.go('/invoicecard');

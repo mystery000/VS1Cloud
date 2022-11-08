@@ -1642,8 +1642,9 @@ Template.newproductpop.events({
   },
   "click #btnSaveProdPOP": async function (e) {
     playSaveAudio();
-    setTimeout(function(){
     let productService = new ProductService();
+    setTimeout(function(){
+    
     let productCode = $("#edtproductcode").val();
     let productName = $("#edtproductname").val();
     var objDetails = "";
@@ -3000,6 +3001,8 @@ Template.newproductpop.events({
     playDeleteAudio();
     let templateObject = Template.instance();
     let productService = new ProductService();
+    setTimeout(function(){
+    
     swal({
       title: "Delete Product",
       text: "Do you want to delete this Product?",
@@ -3051,6 +3054,7 @@ Template.newproductpop.events({
       } else {
       }
     });
+  }, delayTimeAfterSound);
   },
   "click .btnUpgradeToEssentials": function (event) {
     window.open("/companyappsettings", "_self");

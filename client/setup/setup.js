@@ -665,24 +665,32 @@ Template.setup.onRendered(function () {
     let tableHeaderList = [];
     let _taxRatesHeaders = [];
     let dataObject = await getVS1Data("TTaxcodeVS1");
+    let regionName = "Australia";
+    const dataListRet = await organisationService.getOrganisationDetail();
+    if( dataListRet.tcompanyinfo.length > 0 ){
+      let mainData = dataListRet.tcompanyinfo[0];
+      regionName = mainData.Country
+    }
     let _taxRateList = [];
     let data =
       dataObject.length == 0
-        ? await taxRateService.getTaxRateVS1()
+        ? await taxRateService.getTaxRateVS1( regionName )
         : JSON.parse(dataObject[0].data);
 
     if (data.ttaxcodevs1) {
       data.ttaxcodevs1.forEach((rate) => {
         let taxRate = (rate.Rate * 100).toFixed(2) + "%";
-        var dataList = {
-          id: rate.Id || "",
-          codename: rate.CodeName || "-",
-          description: rate.Description || "-",
-          region: rate.RegionName || "-",
-          rate: taxRate || "-",
-        };
+        if( rate.RegionName == regionName ){
+          var dataList = {
+            id: rate.Id || "",
+            codename: rate.CodeName || "-",
+            description: rate.Description || "-",
+            region: rate.RegionName || "-",
+            rate: taxRate || "-",
+          };
 
-        _taxRateList.push(dataList);
+          _taxRateList.push(dataList);
+        }
       });
 
       await templateObject.taxRates.set(_taxRateList);
@@ -4479,6 +4487,9 @@ Template.setup.events({
       document.getElementById("show_address_data").style.display = "block";
     }
   },
+  "click #edtCountry": async function (event) {
+    await clearData('TTaxcodeVS1');
+  },  
   "click #saveStep1": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     let companyID = 1;
@@ -5101,8 +5112,10 @@ Template.setup.events({
   },
   "click .btnSaveTaxRate": function () {
     playSaveAudio();
-    $(".fullScreenSpin").css("display", "inline-block");
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
+    $(".fullScreenSpin").css("display", "inline-block");
+    
     let taxtID = $("#edtTaxID").val();
     let taxName = $("#edtTaxName").val();
     let taxDesc = $("#edtTaxDesc").val();
@@ -5260,6 +5273,7 @@ Template.setup.events({
           LoadingOverlay.hide();
         });
     }
+  }, delayTimeAfterSound);
   },
   "click .btnAddTaxRate": function () {
     $("#add-tax-title").text("Add New Tax Rate");
@@ -5272,6 +5286,7 @@ Template.setup.events({
   "click .btnDeleteTaxRate": function () {
     playDeleteAudio();
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let taxCodeId = $("#selectDeleteLineID").val();
 
     let objDetails = {
@@ -5315,7 +5330,8 @@ Template.setup.events({
         });
         LoadingOverlay.hide();
       });
-  },
+    }, delayTimeAfterSound);
+    },
   "click #taxRatesTable tbody td.clickable": (e) => {
     TaxRatesEditListener(e);
   },
@@ -5563,6 +5579,7 @@ Template.setup.events({
   "click .btnDeletePaymentMethod": function () {
     playDeleteAudio();
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let paymentMethodId = $("#selectDeleteLineID").val();
 
     let objDetails = {
@@ -5606,11 +5623,14 @@ Template.setup.events({
         });
         LoadingOverlay.hide();
       });
-  },
+    }, delayTimeAfterSound);
+    },
   "click .btnSavePaymentMethod": function () {
     playSaveAudio();
-    $(".fullScreenSpin").css("display", "inline-block");
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
+    $(".fullScreenSpin").css("display", "inline-block");
+    
     let paymentMethodID = $("#edtPaymentMethodID").val();
     //let headerDept = $('#sltDepartment').val();
     let paymentName = $("#edtPaymentMethodName").val();
@@ -5774,6 +5794,7 @@ Template.setup.events({
           LoadingOverlay.hide();
         });
     }
+  }, delayTimeAfterSound);
   },
   "click .btnAddPaymentMethod": function () {
     let templateObject = Template.instance();
@@ -6053,8 +6074,8 @@ Template.setup.events({
   "click .btnDeleteTerms": function () {
     playDeleteAudio();
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
     let termsId = $("#selectDeleteLineID").val();
-
     let objDetails = {
       type: "TTerms",
       fields: {
@@ -6096,11 +6117,14 @@ Template.setup.events({
         });
         LoadingOverlay.hide();
       });
-  },
+    }, delayTimeAfterSound);
+    },
   "click .btnSaveTerms": function () {
     playSaveAudio();
-    $(".fullScreenSpin").css("display", "inline-block");
     let taxRateService = new TaxRateService();
+    setTimeout(function(){
+    $(".fullScreenSpin").css("display", "inline-block");
+    
     let termsID = $("#edtTermsID").val();
     let termsName = $("#edtName").val();
     let description = $("#edtDesc").val();
@@ -6348,6 +6372,7 @@ Template.setup.events({
           LoadingOverlay.hide();
         });
     }
+  }, delayTimeAfterSound);
   },
   "click .btnAddTerms":  (e, templateObject) => {
     $("#add-terms-title").text("Add New Term ");
@@ -6511,10 +6536,12 @@ Template.setup.events({
   // TODO: Step 5
   "click .btnSaveEmpPop": (e) => {
     playSaveAudio();
+    setTimeout(function(){
     $("#addEmployeeModal").modal("toggle");
 
     // const templateObject = Template.instance();
     // templateObject.loadEmployees(true);
+  }, delayTimeAfterSound);
   },
   "click .edit-employees-js": (e) => {
     $("#addEmployeeModal").modal("toggle");
@@ -7018,9 +7045,11 @@ Template.setup.events({
   // },
   "click .printConfirmEmployee": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblEmployeelist_wrapper .dt-buttons .btntabletopdf").click();
     LoadingOverlay.hide();
+  }, delayTimeAfterSound);
   },
   "click .templateDownload-employee": (e, templateObject) => {
     let utilityService = new UtilityService();
@@ -7469,8 +7498,10 @@ Template.setup.events({
   },
   "click .btnSaveStatus": function () {
     playSaveAudio();
-    $(".fullScreenSpin").css("display", "inline-block");
     let clientService = new SalesBoardService();
+    setTimeout(function(){
+    $(".fullScreenSpin").css("display", "inline-block");
+    
     let status = $("#status").val();
     let leadData = {
       type: "TLeadStatusType",
@@ -7534,6 +7565,7 @@ Template.setup.events({
         }
       });
     }
+  }, delayTimeAfterSound);
   },
   "blur .lineMemo": function (event) {
     var targetID = $(event.target).closest("tr").attr("id");
@@ -7779,6 +7811,7 @@ Template.setup.events({
   },
   // "click .btnSaveAccount": function (event) {
   //   let templateObject = Template.instance();
+  //     let uploadedItems = templateObject.uploadedFiles.get();
   //   let suppliername = $("#edtSupplierName");
   //   let purchaseService = new PurchaseBoardService();
   //   if (suppliername.val() === "") {
@@ -7862,7 +7895,7 @@ Template.setup.events({
   //     var url = FlowRouter.current().path;
   //     var getso_id = url.split("?id=");
   //     var currentCredit = getso_id[getso_id.length - 1];
-  //     let uploadedItems = templateObject.uploadedFiles.get();
+  
   //     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
   //     var objDetails = "";
   //     if (getso_id[1]) {
@@ -8409,6 +8442,7 @@ Template.setup.events({
   },
   "click .btnSaveGridSettings": function (event) {
     playSaveAudio();
+    setTimeout(function(){
     let lineItems = [];
 
     $(".columnSettings").each(function (index) {
@@ -8492,6 +8526,7 @@ Template.setup.events({
       }
     }
     $("#myModal2").modal("toggle");
+  }, delayTimeAfterSound);
   },
   "click .btnResetGridSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
@@ -9634,12 +9669,14 @@ Template.setup.events({
   },
   "click .printConfirm": (e) => {
     playPrintAudio();
+    setTimeout(function(){
     const type = $(e.currentTarget).attr("data-target");
     if (type) {
       LoadingOverlay.show();
       jQuery(`${type} .dt-buttons .btntabletopdf`).click();
       LoadingOverlay.hide();
     }
+  }, delayTimeAfterSound);
   },
 
   // STEP 6

@@ -120,6 +120,8 @@ Template.employeescard.onCreated(function () {
     templateObject.calendarOptions = new ReactiveVar([]);
     templateObject.allrepservicedata = new ReactiveVar([]);
 
+    templateObject.earningLines = new ReactiveVar([]);
+
 
     /* PayRun related vars */
     templateObject.payPeriods = new ReactiveVar([]);
@@ -3148,7 +3150,13 @@ Template.employeescard.onRendered(function () {
         }
     };
 
-    templateObject.getEarnings = async (employeeID = null) => {
+    /**
+     * 
+     * @param {integer} employeeID 
+     * @param {boolean} refresh 
+     * @returns {object[]} earnings
+     */
+    templateObject.getEarnings = async (employeeID = null, refresh =false) => {
         let data = await CachedHttp.get(erpObject.TPayTemplateEarningLine, async () => {
             const employeePayrolApis = new EmployeePayrollApi();
             const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
@@ -3167,16 +3175,23 @@ Template.employeescard.onRendered(function () {
         }, {
             useIndexDb: true,
             useLocalStorage: false,
+            forceOverride: refresh,
             validate: (cachedResponse) => {
                 return false;
             }
         });
 
-        data = data.response.tpaytemplateearningline.map((earning) => earning.fields);
+        let response = data.response;
+
+        let earningLines = response.tpaytemplateearningline.map((earning) => earning.fields);
         if(employeeID) {
-            data = data.filter((item) => parseInt( item.EmployeeID ) == parseInt( employeeID ));
+            earningLines = earningLines.filter((item) => parseInt( item.EmployeeID ) == parseInt( employeeID ));
         }
-        return data;
+
+
+        await templateObject.earningLines.set(earningLines);
+      
+        return earningLines;
     }
 
     templateObject.saveEarningLocalDB = async function(){
@@ -3201,7 +3216,7 @@ Template.employeescard.onRendered(function () {
     };
 
     templateObject.getPayEarningLines = async function(){
-        let useData = await templateObject.getEarnings(employeeID);
+        let earningLines = await templateObject.getEarnings(employeeID);
         // let dataObject = await getVS1Data('TPayTemplateEarningLine')
         // if (dataObject.length == 0) {
         //     data = await templateObject.saveEarningLocalDB();
@@ -3217,16 +3232,16 @@ Template.employeescard.onRendered(function () {
         //     }
         // });
 
-        await templateObject.payTemplateEarningLineInfo.set(useData);
+        await templateObject.payTemplateEarningLineInfo.set(earningLines);
         await templateObject.setEarningLineDropDown();
-        if( useData.length ){
-            setTimeout(function () {
-                Array.prototype.forEach.call(useData, (item) => {
-                    $(`#ptEarningRate${item.ID}`).val( item.EarningRate );
-                    $(`#ptEarningAmount${item.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.Amount)|| 0.00 );
-                })
-            }, 500);
-        }
+        // if( earningLines.length ){
+        //     setTimeout(function () {
+        //         Array.prototype.forEach.call(earningLines, (item) => {
+        //             $(`#ptEarningRate${item.ID}`).val( item.EarningRate );
+        //             $(`#ptEarningAmount${item.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.Amount)|| 0.00 );
+        //         })
+        //     }, 500);
+        // }
 
     };
 
@@ -4122,13 +4137,13 @@ Template.employeescard.onRendered(function () {
 
     // Display pay template tab inputs
     templateObject.displayPayTempEarningLines = function() {
-        let payLines = templateObject.payTemplateEarningLineInfo.get();
-        if( payLines ){
-            Array.prototype.forEach.call(payLines, (item, index) => {
-                $('#ptEarningRate' + index).val(item.fields.EarningRate);
-                $('#ptEarningAmount' + index).val(item.fields.Amount);
-            })
-        }
+        // let payLines = templateObject.payTemplateEarningLineInfo.get();
+        // if( payLines ){
+        //     Array.prototype.forEach.call(payLines, (item, index) => {
+        //         $('#ptEarningRate' + index).val(item.fields.EarningRate);
+        //         $('#ptEarningAmount' + index).val(item.fields.Amount);
+        //     })
+        // }
     }
 
     templateObject.displayPayTempDeductionLines = function() {
@@ -4164,52 +4179,52 @@ Template.employeescard.onRendered(function () {
     }
 
     templateObject.setEarningLineDropDown = function(){
-        setTimeout( function () {
-            $('.earningLineDropDown').editableSelect();
-            $('.earningLineDropDown').editableSelect().on('click.editable-select', async function (e, li) {
-                let $search = $(this);
-                let offset = $search.offset();
-                let dropDownID = $search.attr('id')
-                $('#edtEarningDropDownID').val(dropDownID);
-                templateObject.currentDrpDownID.set(dropDownID);
-                let searchName = e.target.value || '';
-                if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                    $('#earningRateSettingsModal').modal('show');
-                } else {
-                    if (searchName.replace(/\s/g, '') == '') {
-                        $('#earningRateSettingsModal').modal('show');
-                        return false
-                    }
-                    let data = {};
-                    let dataObject = await getVS1Data('TEarnings');
-                    if ( dataObject.length > 0) {
-                        data = JSON.parse(dataObject[0].data);
-                        let tEarnings = data.tearnings.filter((item) => {
-                            if( item.fields.EarningsName == searchName ){
-                                return item;
-                            }
-                        });
-                        $('#headerEarningLabel').text('Edit Earning');
-                        $('#earningRateForm')[0].reset();
-                        $('#addEarningsLineModal').modal('hide');
-                        if( tEarnings.length > 0 ){
-                            let earningRate = tEarnings[0];
-                            $('#earningID').val(earningRate.fields.ID)
-                            $('#edtEarningsName').val(earningRate.fields.EarningsName)
-                            $('#edtEarningsType').val(earningRate.fields.EarningType)
-                            $('#edtDisplayName').val(earningRate.fields.EarningsDisplayName)
-                            $('#edtRateType').val(earningRate.fields.EarningsRateType)
-                            $('#edtExpenseAccount').val(earningRate.fields.ExpenseAccount)
-                            $('#formCheck-ExemptPAYG').prop('checked', earningRate.fields.EarningsExemptPaygWithholding)
-                            $('#formCheck-ExemptSuperannuation').prop('checked', earningRate.fields.EarningsExemptSuperannuationGuaranteeCont)
-                            $('#formCheck-ExemptReportable').prop('checked', earningRate.fields.EarningsReportableW1onActivityStatement)
-                        }
-                        $('#earningRateSettingsModal').modal('hide');
-                        $('#ordinaryTimeEarningsModal').modal('show');
-                    }
-                }
-            });
-        }, 500)
+        // setTimeout( function () {
+        //     $('.earningLineDropDown').editableSelect();
+        //     $('.earningLineDropDown').editableSelect().on('click.editable-select', async function (e, li) {
+        //         let $search = $(this);
+        //         let offset = $search.offset();
+        //         let dropDownID = $search.attr('id')
+        //         $('#edtEarningDropDownID').val(dropDownID);
+        //         templateObject.currentDrpDownID.set(dropDownID);
+        //         let searchName = e.target.value || '';
+        //         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+        //             $('#earningRateSettingsModal').modal('show');
+        //         } else {
+        //             if (searchName.replace(/\s/g, '') == '') {
+        //                 $('#earningRateSettingsModal').modal('show');
+        //                 return false
+        //             }
+        //             let data = {};
+        //             let dataObject = await getVS1Data('TEarnings');
+        //             if ( dataObject.length > 0) {
+        //                 data = JSON.parse(dataObject[0].data);
+        //                 let tEarnings = data.tearnings.filter((item) => {
+        //                     if( item.fields.EarningsName == searchName ){
+        //                         return item;
+        //                     }
+        //                 });
+        //                 $('#headerEarningLabel').text('Edit Earning');
+        //                 $('#earningRateForm')[0].reset();
+        //                 $('#addEarningsLineModal').modal('hide');
+        //                 if( tEarnings.length > 0 ){
+        //                     let earningRate = tEarnings[0];
+        //                     $('#earningID').val(earningRate.fields.ID)
+        //                     $('#edtEarningsName').val(earningRate.fields.EarningsName)
+        //                     $('#edtEarningsType').val(earningRate.fields.EarningType)
+        //                     $('#edtDisplayName').val(earningRate.fields.EarningsDisplayName)
+        //                     $('#edtRateType').val(earningRate.fields.EarningsRateType)
+        //                     $('#edtExpenseAccount').val(earningRate.fields.ExpenseAccount)
+        //                     $('#formCheck-ExemptPAYG').prop('checked', earningRate.fields.EarningsExemptPaygWithholding)
+        //                     $('#formCheck-ExemptSuperannuation').prop('checked', earningRate.fields.EarningsExemptSuperannuationGuaranteeCont)
+        //                     $('#formCheck-ExemptReportable').prop('checked', earningRate.fields.EarningsReportableW1onActivityStatement)
+        //                 }
+        //                 $('#earningRateSettingsModal').modal('hide');
+        //                 $('#ordinaryTimeEarningsModal').modal('show');
+        //             }
+        //         }
+        //     });
+        // }, 500)
     }
 
     templateObject.setDeductionLineDropDown = function() {
@@ -4382,6 +4397,8 @@ Template.employeescard.onRendered(function () {
      * It will just deactivate it
      */
     templateObject.deactivateEmployee  = async () => {
+        playDeleteAudio();
+        setTimeout(async function(){
         LoadingOverlay.show();
         let employeeId = FlowRouter.current().queryParams.id;
 
@@ -4397,11 +4414,10 @@ Template.employeescard.onRendered(function () {
 
             try {
                 const response = await contactService.saveEmployeeEx(objDetails);
-                playDeleteAudio();
-                setTimeout(() => {
-                    LoadingOverlay.hide(0);
-                    FlowRouter.go('/employeelist?success=true');
-                }, 1000);
+                
+                LoadingOverlay.hide(0);
+                FlowRouter.go('/employeelist?success=true');
+                
             } catch(e) {
                 LoadingOverlay.hide(0);
                 const result =  await swal({
@@ -4432,26 +4448,24 @@ Template.employeescard.onRendered(function () {
                 window.open('/', '_self');
             } else if (result.dismiss === 'cancel') {}
         }
-
-
         $('#deleteEmployeeModal').modal('toggle');
-
+    }, delayTimeAfterSound);
     }
 
     //On Click Earnings List
-    $(document).on("click", "#tblEarnings tbody tr", function (e) {
-        const table = $(this);
-        let earningsName = table.find(".colEarningsNames").text()||'';
-        let earningsID = table.find(".colEarningsID").text()||'';
-        let account = table.find(".colEarningsAccounts").text()||'';
-        let searchFilterID = templateObject.currentDrpDownID.get()
-        $('#' + searchFilterID).val(earningsName);
-        $('#' + searchFilterID + 'ID').val(earningsID);
-        if( searchFilterID == 'earningRateSelect'){
-            $('#expenseAccount').val(account)
-        }
-        $('#earningRateSettingsModal').modal('toggle');
-    });
+    // $(document).on("click", "#tblEarnings tbody tr", function (e) {
+    //     const table = $(this);
+    //     let earningsName = table.find(".colEarningsNames").text()||'';
+    //     let earningsID = table.find(".colEarningsID").text()||'';
+    //     let account = table.find(".colEarningsAccounts").text()||'';
+    //     let searchFilterID = templateObject.currentDrpDownID.get()
+    //     $('#' + searchFilterID).val(earningsName);
+    //     $('#' + searchFilterID + 'ID').val(earningsID);
+    //     if( searchFilterID == 'earningRateSelect'){
+    //         $('#expenseAccount').val(account)
+    //     }
+    //     $('#earningRateSettingsModal').modal('toggle');
+    // });
     //On Click Deduction List
     $(document).on("click", "#tblDeductions tbody tr", function (e) {
         const table = $(this);
@@ -4571,6 +4585,238 @@ Template.employeescard.onRendered(function () {
     templateObject.initPayPeriods();
 
 });
+
+/**
+ * This will contain only clean code
+ * Please void all duplications
+ */
+Template.employeescard.onRendered(function() {
+    const currentEmployeeId = parseInt(FlowRouter.current().queryParams.id || 0);
+
+    this.earnings = {
+      /**
+       *
+       * @param {integer} employeeID
+       * @param {boolean} refresh
+       * @returns {Promise<object[]>} earnings
+       */
+      load: async (employeeID = null, refresh = false) => {
+        let data = await CachedHttp.get(
+          erpObject.TPayTemplateEarningLine,
+          async () => {
+            const employeePayrolApis = new EmployeePayrollApi();
+            const employeePayrolEndpoint =
+              employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TPayTemplateEarningLine
+              );
+            employeePayrolEndpoint.url.searchParams.append(
+              "ListType",
+              "'Detail'"
+            );
+
+            const response = await employeePayrolEndpoint.fetch();
+            if (response.ok == true) {
+              return await response.json();
+            }
+            return null;
+          },
+          {
+            forceOverride: refresh,
+            validate: (cachedResponse) => {
+              return true;
+            },
+          }
+        );
+
+        let response = data.response;
+
+        let earningLines = response.tpaytemplateearningline.map(
+          (earning) => earning.fields
+        );
+        if (employeeID) {
+          earningLines = earningLines.filter(
+            (item) => parseInt(item.EmployeeID) == parseInt(employeeID)
+          );
+        }
+
+        await this.earningLines.set(earningLines);
+
+        return earningLines;
+      },
+      /**
+       *
+       * @param {integer} earningId
+       */
+      delete: async (earningId) => {
+        LoadingOverlay.show();
+        // Here ask for removal first
+
+        const result = await swal({
+          title: "Delete Earning Line",
+          text: "Are you sure you want to Delete this Earning Line?",
+          type: "question",
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+        });
+
+        if (result.value) {
+          // $(e.target).parents('.earningLinesContainer').remove();
+
+          const employeePayrolApis = new EmployeePayrollApi();
+          // now we have to make the post request to save the data in database
+          const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateEarningLine
+          );
+
+          let earningSettings = new PayTemplateEarningLine({
+            type: "TPayTemplateEarningLine",
+            fields: new PayTemplateEarningLineFields({
+              ID: earningId,
+              Active: false,
+            }),
+          });
+
+          const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(earningSettings),
+          });
+
+          // then refresh the list only
+          if (ApiResponse.ok) {
+            // refresh
+            await this.earnings.load(currentEmployeeId, true);
+          }
+        }
+
+        LoadingOverlay.hide();
+      },
+      /**
+       * 
+       * @returns 
+       */
+      add: async (
+        fields = {
+          EarningRate: $("#earningRateSelect").val(),
+          CalculationType: $("input[name=calculationType]:checked").val(),
+          ExpenseAccount: $("#expenseAccount").val(),
+        }
+      ) => {
+        // let EarningRate = $('#earningRateSelect').val();
+        // let CalculationType = $('input[name=calculationType]:checked').val();
+        // let ExpenseAccount = $('#expenseAccount').val();
+
+        if (fields.EarningRate == "") {
+          handleValidationError(
+            "Please select Earning Rate!",
+            "earningRateSelect"
+          );
+          return false;
+        }
+
+        if (fields.CalculationType == "") {
+          handleValidationError(
+            "Please select Calculation Type!",
+            "calculationType"
+          );
+          return false;
+        }
+
+        if (fields.ExpenseAccount == "") {
+          handleValidationError(
+            "Please enter Expense Account!",
+            "expenseAccount"
+          );
+          return false;
+        }
+
+        LoadingOverlay.show();
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+          employeePayrolApis.collectionNames.TPayTemplateEarningLine
+        );
+
+        let payEarningLines = new PayTemplateEarningLine({
+          type: "TPayTemplateEarningLine",
+          fields: new PayTemplateEarningLineFields({
+            ID: 0,
+            EmployeeID: currentEmployeeId,
+            // EarningRate: EarningRate,
+            // CalculationType: CalculationType,
+            // ExpenseAccount: ExpenseAccount,
+            Amount: 0,
+            Active: true,
+            ...fields,
+          }),
+        });
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+          method: "POST",
+          headers: ApiService.getPostHeaders(),
+          body: JSON.stringify(payEarningLines),
+        });
+
+        if (ApiResponse.ok == true) {
+          // Load all the earnings Line from Database
+          $("input[name=calculationType]:checked").attr("checked", false);
+          $("#expenseAccount").val("");
+          $("#earningRateSelect").val("");
+          $("#addEarningsLineModal").modal("hide");
+
+          LoadingOverlay.hide(0);
+          const result = await swal({
+            title: "Earning Line added successfully",
+            text: "",
+            type: "success",
+            showCancelButton: false,
+            confirmButtonText: "OK",
+          });
+
+          if (result.value) {
+            LoadingOverlay.show();
+            await this.earnings.load(currentEmployeeId, true);
+            LoadingOverlay.hide();
+          }
+        } else {
+          LoadingOverlay.hide(0);
+          const result = await swal({
+            title: "Oooops...",
+            text: error,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          });
+
+          if (result.value) {
+            await this.earnings.add(fields);
+          }
+        }
+
+      },
+    };
+
+
+
+    /**
+     * Load inside of this function everything needed on first page launch
+     * No need to load everything that we might not even check.
+     */
+    this.initPage  = async () => {
+        LoadingOverlay.show();
+
+
+
+
+
+        LoadingOverlay.hide();
+    }
+   
+    // this.initPage();
+
+});
+
+
 Template.employeescard.events({
     // 'click #edtResidencyStatus': (e, ui) => {
     //     ui.AppTableModalData.set({
@@ -5269,13 +5515,12 @@ Template.employeescard.events({
     },
     'click .btnSave': async (e, templateObject) => {
         playSaveAudio();
-        setTimeout(async function(){
         await templateObject.saveSelectedProduct();
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();
+        let uploadedItems = templateObject.uploadedFiles.get();
+        setTimeout(async function(){
         LoadingOverlay.show();
-
-
         let title = $('#edtTitle').val();
         let firstname = $('#edtFirstName').val();
         if (firstname === '') {
@@ -5320,7 +5565,7 @@ Template.employeescard.events({
         let custField2 = $('#edtSaleCustField2').val()||'';
         let custField3 = $('#edtSaleCustField3').val()||'';
         let priorityData = $('#edtPriority').val() || '';
-        let uploadedItems = templateObject.uploadedFiles.get();
+        
         let notes = $('#txaNotes').val();
         const url = FlowRouter.current().path;
         const getemp_id = url.split('?id=');
@@ -6346,8 +6591,8 @@ Template.employeescard.events({
     // Save LeaveRequest Popup
     'click #btnSaveLeaveRequest': async function(event) {
         playSaveAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
+        setTimeout(async function(){
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let ID = $('#edtLeaveRequestID').val();
@@ -6468,8 +6713,8 @@ Template.employeescard.events({
     // Save AssignLeaveType Popup
     'click #btnSaveAssignLeaveType': async function(event) {
         playSaveAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
+        setTimeout(async function(){
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
 
@@ -6712,100 +6957,101 @@ Template.employeescard.events({
         $('.statusUnsaved').show();
     },
     // Pay Template Tab
-    'click #addEarningsLine': async function(){
-        let templateObject = Template.instance();
-        let currentId = FlowRouter.current().queryParams;
-        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+    'click #addEarningsLine': (e, ui) => {
+        ui.earnings.add();
+        // let templateObject = Template.instance();
+        // let currentId = FlowRouter.current().queryParams;
+        // let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
 
-        let EarningRate = $('#earningRateSelect').val();
-        let CalculationType = $('input[name=calculationType]:checked').val();
-        let ExpenseAccount = $('#expenseAccount').val();
+        // let EarningRate = $('#earningRateSelect').val();
+        // let CalculationType = $('input[name=calculationType]:checked').val();
+        // let ExpenseAccount = $('#expenseAccount').val();
 
-        if( EarningRate == ""){
-            handleValidationError('Please select Earning Rate!', 'earningRateSelect');
-            return false
-        }
+        // if( EarningRate == ""){
+        //     handleValidationError('Please select Earning Rate!', 'earningRateSelect');
+        //     return false
+        // }
 
-        if( CalculationType == ""){
-            handleValidationError('Please select Calculation Type!', 'calculationType');
-            return false
-        }
+        // if( CalculationType == ""){
+        //     handleValidationError('Please select Calculation Type!', 'calculationType');
+        //     return false
+        // }
 
-        if( ExpenseAccount == ""){
-            handleValidationError('Please enter Expense Account!', 'expenseAccount');
-            return false
-        }
+        // if( ExpenseAccount == ""){
+        //     handleValidationError('Please enter Expense Account!', 'expenseAccount');
+        //     return false
+        // }
 
-        $('.fullScreenSpin').css('display', 'block');
-        const employeePayrolApis = new EmployeePayrollApi();
-        // now we have to make the post request to save the data in database
-        const apiEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TPayTemplateEarningLine
-        );
+        // $('.fullScreenSpin').css('display', 'block');
+        // const employeePayrolApis = new EmployeePayrollApi();
+        // // now we have to make the post request to save the data in database
+        // const apiEndpoint = employeePayrolApis.collection.findByName(
+        //     employeePayrolApis.collectionNames.TPayTemplateEarningLine
+        // );
 
-        let payEarningLines = new PayTemplateEarningLine({
-                type: 'TPayTemplateEarningLine',
-                fields: new PayTemplateEarningLineFields({
-                    ID: 0,
-                    EmployeeID: employeeID,
-                    EarningRate: EarningRate,
-                    CalculationType: CalculationType,
-                    ExpenseAccount: ExpenseAccount,
-                    Amount: 0,
-                    Active: true
-                })
-            });
-        try {
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(payEarningLines),
-            });
+        // let payEarningLines = new PayTemplateEarningLine({
+        //         type: 'TPayTemplateEarningLine',
+        //         fields: new PayTemplateEarningLineFields({
+        //             ID: 0,
+        //             EmployeeID: employeeID,
+        //             EarningRate: EarningRate,
+        //             CalculationType: CalculationType,
+        //             ExpenseAccount: ExpenseAccount,
+        //             Amount: 0,
+        //             Active: true
+        //         })
+        //     });
+        // try {
+        //     const ApiResponse = await apiEndpoint.fetch(null, {
+        //         method: "POST",
+        //         headers: ApiService.getPostHeaders(),
+        //         body: JSON.stringify(payEarningLines),
+        //     });
 
-            if (ApiResponse.ok == true) {
-                // Load all the earnings Line from Database
-                await templateObject.saveEarningLocalDB();
-                await templateObject.getPayEarningLines();
-                $('input[name=calculationType]:checked').attr('checked', false);
-                $('#expenseAccount').val('');
-                $('#earningRateSelect').val('');
-                $('#addEarningsLineModal').modal('hide');
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Earning Line added successfully',
-                    text: '',
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.value) {
-                        if (result.value) {}
-                    }
-                });
-            }else{
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Oooops...',
-                    text: ApiResponse.headers.get('errormessage'),
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {}
-                });
-            }
-        } catch (error) {
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: 'Oooops...',
-                text: error,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
-            }).then((result) => {
-                if (result.value) {}
-            });
-        }
+        //     if (ApiResponse.ok == true) {
+        //         // Load all the earnings Line from Database
+        //         await templateObject.saveEarningLocalDB();
+        //         await templateObject.getPayEarningLines();
+        //         $('input[name=calculationType]:checked').attr('checked', false);
+        //         $('#expenseAccount').val('');
+        //         $('#earningRateSelect').val('');
+        //         $('#addEarningsLineModal').modal('hide');
+        //         $('.fullScreenSpin').css('display', 'none');
+        //         swal({
+        //             title: 'Earning Line added successfully',
+        //             text: '',
+        //             type: 'success',
+        //             showCancelButton: false,
+        //             confirmButtonText: 'OK'
+        //         }).then((result) => {
+        //             if (result.value) {
+        //                 if (result.value) {}
+        //             }
+        //         });
+        //     }else{
+        //         $('.fullScreenSpin').css('display', 'none');
+        //         swal({
+        //             title: 'Oooops...',
+        //             text: ApiResponse.headers.get('errormessage'),
+        //             type: 'error',
+        //             showCancelButton: false,
+        //             confirmButtonText: 'Try Again'
+        //         }).then((result) => {
+        //             if (result.value) {}
+        //         });
+        //     }
+        // } catch (error) {
+        //     $('.fullScreenSpin').css('display', 'none');
+        //     swal({
+        //         title: 'Oooops...',
+        //         text: error,
+        //         type: 'error',
+        //         showCancelButton: false,
+        //         confirmButtonText: 'Try Again'
+        //     }).then((result) => {
+        //         if (result.value) {}
+        //     });
+        // }
     },
     'click #addDeductionLine': async function(){
         let templateObject = Template.instance();
@@ -7154,99 +7400,100 @@ Template.employeescard.events({
     //         break;
     //     }
     // },
-    'click .removePayTempEarning': async function(e){
-        let templateObject = Template.instance();
-        let deleteID = $(e.target).data('id');
-        swal({
-            title: 'Delete Deduction Line',
-            text: "Are you sure you want to Delete this Earning Line?",
-            type: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Yes'
-        }).then( async (result) => {
-            if (result.value) {
-                $('.fullScreenSpin').css('display', 'block');
-                // $(e.target).parents('.earningLinesContainer').remove();
+    'click .removePayTempEarning': (e, ui) => {
+        let deleteID = $(e.currentTarget).attr('earning-id');
+        // ui.removeEarning(deleteID);
+        ui.earnings.delete(deleteID);
+        // swal({
+        //     title: 'Delete Earning Line',
+        //     text: "Are you sure you want to Delete this Earning Line?",
+        //     type: 'question',
+        //     showCancelButton: true,
+        //     confirmButtonText: 'Yes'
+        // }).then( async (result) => {
+        //     if (result.value) {
+        //         $('.fullScreenSpin').css('display', 'block');
+        //         // $(e.target).parents('.earningLinesContainer').remove();
 
-                const employeePayrolApis = new EmployeePayrollApi();
-                // now we have to make the post request to save the data in database
-                const apiEndpoint = employeePayrolApis.collection.findByName(
-                    employeePayrolApis.collectionNames.TPayTemplateEarningLine
-                );
+        //         const employeePayrolApis = new EmployeePayrollApi();
+        //         // now we have to make the post request to save the data in database
+        //         const apiEndpoint = employeePayrolApis.collection.findByName(
+        //             employeePayrolApis.collectionNames.TPayTemplateEarningLine
+        //         );
 
-                let earningSettings =  new PayTemplateEarningLine({
-                    type: "TPayTemplateEarningLine",
-                    fields: new PayTemplateEarningLineFields({
-                        ID: deleteID,
-                        Active: false,
-                    }),
-                })
+        //         let earningSettings =  new PayTemplateEarningLine({
+        //             type: "TPayTemplateEarningLine",
+        //             fields: new PayTemplateEarningLineFields({
+        //                 ID: deleteID,
+        //                 Active: false,
+        //             }),
+        //         })
 
-                try {
-                    const ApiResponse = await apiEndpoint.fetch(null, {
-                        method: "POST",
-                        headers: ApiService.getPostHeaders(),
-                        body: JSON.stringify(earningSettings),
-                    });
+        //         try {
+        //             const ApiResponse = await apiEndpoint.fetch(null, {
+        //                 method: "POST",
+        //                 headers: ApiService.getPostHeaders(),
+        //                 body: JSON.stringify(earningSettings),
+        //             });
 
-                    if (ApiResponse.ok == true) {
-                        // Save into indexDB
-                        let dataObject = await getVS1Data('TPayTemplateEarningLine');
-                        if ( dataObject.length > 0) {
-                            data = JSON.parse(dataObject[0].data);
-                            if( data.tpaytemplateearningline.length > 0 ){
-                                let useData = data.tpaytemplateearningline.map( (item) => {
-                                    if( deleteID == item.fields.ID ){
-                                        item.fields.Active = false;
-                                    }
-                                    return item;
-                                });
-                                let updatedObj = {
-                                    tpaytemplateearningline: useData
-                                }
-                                await addVS1Data('TPayTemplateEarningLine', JSON.stringify(updatedObj))
-                                // Bind with html content
-                                await templateObject.payTemplateEarningLineInfo.set(useData);
-                            }
-                        }
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: 'Earning Line deleted successfully',
-                            text: '',
-                            type: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.value) {
-                                if (result.value) {}
-                            }
-                        });
-                    }else{
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: 'Oooops...',
-                            text: ApiResponse.headers.get('errormessage'),
-                            type: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Try Again'
-                        }).then((result) => {
-                            if (result.value) {}
-                        });
-                    }
-                } catch (error) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Oooops...',
-                        text: error,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                        if (result.value) {}
-                    });
-                }
-            }
-        });
+        //             if (ApiResponse.ok == true) {
+        //                 // Save into indexDB
+        //                 let dataObject = await getVS1Data('TPayTemplateEarningLine');
+        //                 if ( dataObject.length > 0) {
+        //                     data = JSON.parse(dataObject[0].data);
+        //                     if( data.tpaytemplateearningline.length > 0 ){
+        //                         let useData = data.tpaytemplateearningline.map( (item) => {
+        //                             if( deleteID == item.fields.ID ){
+        //                                 item.fields.Active = false;
+        //                             }
+        //                             return item;
+        //                         });
+        //                         let updatedObj = {
+        //                             tpaytemplateearningline: useData
+        //                         }
+        //                         await addVS1Data('TPayTemplateEarningLine', JSON.stringify(updatedObj))
+        //                         // Bind with html content
+        //                         await templateObject.payTemplateEarningLineInfo.set(useData);
+        //                     }
+        //                 }
+        //                 $('.fullScreenSpin').css('display', 'none');
+        //                 swal({
+        //                     title: 'Earning Line deleted successfully',
+        //                     text: '',
+        //                     type: 'success',
+        //                     showCancelButton: false,
+        //                     confirmButtonText: 'OK'
+        //                 }).then((result) => {
+        //                     if (result.value) {
+        //                         if (result.value) {}
+        //                     }
+        //                 });
+        //             }else{
+        //                 $('.fullScreenSpin').css('display', 'none');
+        //                 swal({
+        //                     title: 'Oooops...',
+        //                     text: ApiResponse.headers.get('errormessage'),
+        //                     type: 'error',
+        //                     showCancelButton: false,
+        //                     confirmButtonText: 'Try Again'
+        //                 }).then((result) => {
+        //                     if (result.value) {}
+        //                 });
+        //             }
+        //         } catch (error) {
+        //             $('.fullScreenSpin').css('display', 'none');
+        //             swal({
+        //                 title: 'Oooops...',
+        //                 text: error,
+        //                 type: 'error',
+        //                 showCancelButton: false,
+        //                 confirmButtonText: 'Try Again'
+        //             }).then((result) => {
+        //                 if (result.value) {}
+        //             });
+        //         }
+        //     }
+        // });
     },
     'click .removePayTempDeduction': async function(e){
         let templateObject = Template.instance();
@@ -8505,15 +8752,15 @@ Template.employeescard.events({
 
             if( earningLines.length > 0 ){
                 for (const item of earningLines) {
-                    if( item.fields.Active == true ){
-                        let EarningRate = $(`#ptEarningRate${item.fields.ID}`).val();
-                        let amount = $(`#ptEarningAmount${item.fields.ID}`).val();
+                    if( item.Active == true ){
+                        let EarningRate = $(`#ptEarningRate${item.ID}`).val();
+                        let amount = $(`#ptEarningAmount${item.ID}`).val();
                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
                         tPayTemplateEarningLine.push({
                             type: "TPayTemplateEarningLine",
                             fields: {
-                                ID: item.fields.ID,
+                                ID: item.ID,
                                 EarningRate: EarningRate,
                                 Amount: parseFloat( amount ),
                                 Active: true,
@@ -9807,9 +10054,11 @@ Template.employeescard.events({
     'click .printConfirm': function (event) {
         playPrintAudio();
         LoadingOverlay.show();
+        setTimeout(function(){
 
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .btnRefresh': function () {
         Meteor._reload.reload();
@@ -9895,9 +10144,9 @@ Template.employeescard.events({
     },
     'click .btnSaveSettings': function (event) {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
-
+        setTimeout(function(){
+        
         $('.lblCustomField1').html('');
         $('.lblCustomField2').html('');
         $('.lblCustomField3').html('');
@@ -10155,9 +10404,9 @@ Template.employeescard.events({
         }
     },
     'click .btnDeleteEmployee': (e, ui) => {
-
-        ui.deactivateEmployee();
-        // playDeleteAudio();
+        let templateObject = Template.instance();
+        templateObject.deactivateEmployee();
+        
         // LoadingOverlay.show();
         // let templateObject = Template.instance();
         // let contactService2 = new ContactService();
@@ -10350,6 +10599,8 @@ Template.employeescard.events({
     "click .btnDeleteAssignLeaveType": function (e){
         playDeleteAudio();
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
         let deleteID = $(e.target).data('id') || '';
         swal({
             title: 'Delete Assign Leave Type',
@@ -10437,6 +10688,7 @@ Template.employeescard.events({
                 }
             }
         });
+    }, delayTimeAfterSound);
     },
     "click .removeLeaveRequest": function(e){
         let templateObject = Template.instance();
@@ -10525,6 +10777,8 @@ Template.employeescard.events({
     "click .btnDeletePayNote": function (e){
         playDeleteAudio();
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
         let deleteID = $(e.target).data('id') || '';
         swal({
             title: 'Delete Note',
@@ -10611,6 +10865,7 @@ Template.employeescard.events({
                 }
             }
         });
+    }, delayTimeAfterSound);
     },
     "click #btnEditAssignLeaveType": function (e){
         setTimeout(()=>{
@@ -10700,7 +10955,41 @@ Template.employeescard.events({
 
     "click input#edtPayPeriod": (e, ui) => {
         $('#SelectPayRunModal').modal("show");
-    }
+    },
+    "click .earningLineDropDown": (e, ui) => {
+        $(e.currentTarget).addClass('paste-earnings');
+        $('#earningRateSettingsModal').modal('show');
+    },
+
+    "click #expenseAccount": (e, ui) => {
+        $(e.currentTarget).addClass('paste-expenses');
+    },
+    "click #tblAccount tbody tr": (e, ui) => {
+        const id = $(e.currentTarget).find('.colAccountID').text();
+        const accountName = $(e.currentTarget).find('.productName').text();
+        $(".paste-expenses").val(accountName);
+        $(".paste-expenses").attr('account-id', id);
+        $(".paste-expenses").removeClass('paste-expenses')
+    },
+
+    "click #tblEarnings tbody tr": (e, ui) => {
+        const tr = $(e.currentTarget);
+        const id = parseInt(tr.find('.colEarningsID').text());
+        const earningName = tr.find('.colEarningsNames').text();
+
+        let earningsName = tr.find(".colEarningsNames").text()||'';
+        let earningsID = tr.find(".colEarningsID").text()||'';
+        let account = tr.find(".colEarningsAccounts").text()||'';
+        let searchFilterID = ui.currentDrpDownID.get();
+        $('#' + searchFilterID).val(earningsName);
+        $('#' + searchFilterID + 'ID').val(earningsID);
+        if( searchFilterID == 'earningRateSelect'){
+            $('#expenseAccount').val(account)
+        }
+        $('#earningRateSettingsModal').modal('toggle');
+    },
+
+   
 });
 
 Template.employeescard.helpers({
@@ -10796,14 +11085,14 @@ Template.employeescard.helpers({
         let utilityService = new UtilityService();
         return utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
     },
-    formatPrice( amount ){
-        let utilityService = new UtilityService();
-        if( isNaN(amount) || !amount){
-            amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-            amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-        }
-        return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
-    },
+    // formatPrice( amount ){
+    //     let utilityService = new UtilityService();
+    //     if( isNaN(amount) || !amount){
+    //         amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+    //         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    //     }
+    //     return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    // },
     formatPercent( percentVal ){
         if( isNaN(percentVal) ){
             percentVal = ( percentVal === undefined || percentVal === null || percentVal.length === 0) ? 0 : percentVal;
@@ -10936,5 +11225,9 @@ Template.employeescard.helpers({
     includePayroll: () => {
         let isPayroll = Session.get('CloudPayrollModule') || false;
         return isPayroll;
-    }
+    },
+    earningLines: () => {
+        return Template.instance().earningLines.get();
+    },
+    formatPrice: (price) => GlobalFunctions.formatPrice(price)
 });

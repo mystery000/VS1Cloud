@@ -36,7 +36,7 @@ Template.clienttypesettings.onRendered(function () {
     // });
 
     $('#tblClienttypeList tbody').on("click", "tr", function () {
-        $('#add-clienttype-title').text('Edit Client Type');
+        $('#add-clienttype-title').text('Edit Customer Type');
         let targetID = $(event.target).closest('tr').attr('id');
         let typeDescription = $(event.target).closest('tr').find('.colDescription').text();
         let typeName = $(event.target).closest('tr').find('.colTypeName').text();
@@ -77,10 +77,10 @@ Template.clienttypesettings.events({
         // Meteor._reload.reload();
     },
     'click .btnAddClientType': async function () {
-        await $('#add-clienttype-title').text('Add New Client Type');
+        await $('#add-clienttype-title').text('Add New Customer Type');
         $('#edtClientTypeName').val("");
         $('#txaDescription').val("");
-        $('.btnDeleteClientType').hide();
+        //$('.btnDeleteClientType').hide();
 
     },
      'click .btnAddNewClientType': function () {
@@ -95,8 +95,9 @@ Template.clienttypesettings.events({
     },
     'click .btnDeleteClientType': function () {
         playDeleteAudio();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
         let clientTypeId = $('#edtClientTypeID').val();
 
         let objDetails = {
@@ -130,12 +131,14 @@ Template.clienttypesettings.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnSaveDept': function () {
         playSaveAudio();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
         let objDetails ={};
         //let headerDept = $('#sltDepartment').val();
         let custType = $('#edtClientTypeName').val();
@@ -202,6 +205,7 @@ Template.clienttypesettings.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
+    }, delayTimeAfterSound);
     },
 
     'click .btnBack': function (event) {
@@ -240,8 +244,9 @@ Template.clienttypesettings.events({
     },
     'click .btnSaveRoom': function () {
         playSaveAudio();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
 
         var parentdept = $('#sltDepartmentList').val();
         var newroomname = $('#newRoomName').val();
@@ -264,6 +269,7 @@ Template.clienttypesettings.events({
 
             $('.fullScreenSpin').css('display', 'none');
         });
+    }, delayTimeAfterSound);
     },
 });
 

@@ -175,7 +175,7 @@
                     </div>
                 </div>
 
-                <div class="btn-group btnNav vs1ButtonMargin" >
+                <div class="btn-group btnNav vs1ButtonMargin btnBasReturnGroup" style="display:none">
                     <button type="button" class="btn btn-primary btnBasReturn" id="btnBasReturn"><i class="fas fa-user" style="margin-right: 5px;"></i>BAS Return</button>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu">
@@ -183,8 +183,17 @@
                         <a class="dropdown-item btnNewBasReturn pointer" id="btnNewBasReturn">+ New BAS Return</a>
                     </div>
                 </div>
+                <div class="btn-group btnNav vs1ButtonMargin btnVatReturnGroup"  style="display:none">
+                    <button type="button" class="btn btn-primary btnVatReturn" id="btnVatReturn"><i class="fas fa-user" style="margin-right: 5px;"></i>VAT Return</button>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item btnVatReturn pointer" id="btnVatReturn">VAT Return List</a>
+                        <a class="dropdown-item btnNewVatReturn pointer" id="btnNewVatReturn">+ New VAT Return</a>
+                    </div>
+                </div>
+                <button class="btn btnNav btn-primary vs1ButtonMargin btnTaxSummary" type="button" style="display:none"><i class="fas fa-user" style="padding-right: 5px;"></i>Tax Summary</button>
             </div>
-            {{#if showSetupFinishedAlert }}
+            {{#if equals isSetupFinished false}}
                 <div class="col-2 setupIncompleatedMsg text-danger">
                     <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
                 </div>

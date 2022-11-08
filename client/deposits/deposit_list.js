@@ -1558,6 +1558,7 @@ Template.depositlist.events({
     },
     'click .printConfirm' : function(event){
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblDepositList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
@@ -1570,6 +1571,7 @@ Template.depositlist.events({
         //      pdf.save('depositlist.pdf');
         //      $('#html-2-pdfwrapper').css('display','none');
         //  });
+    }, delayTimeAfterSound);
     }
 
 

@@ -14,6 +14,7 @@ import moment from "moment";
 import Datehandler from "../DateHandler";
 import {getEarnings, getOvertimes, getRateTypes} from "../settings/payroll-settings/payrollrules";
 import TableHandler from "../js/Table/TableHandler";
+import PayrollSettingsOvertimes, {PayrollSettingOvertime} from "../js/Api/Model/PayrollSettingsOvertimes";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -291,18 +292,17 @@ Template.timesheetdetail.onRendered(function () {
       filteredByDay[index].push(dailyHour);
     }));
 
-
-    filteredByDay.forEach((dailyHours) => {
+    filteredByDay.forEach(dailyHours => {
       let total = {
         hours: 0,
         dailyHours: dailyHours
       };
-      dailyHours.forEach((dailyHour) => {
+      dailyHours.forEach(dailyHour => {
         total.date = dailyHour.date;
         total.hours += dailyHour.hours;
       });
       dailyTotals.push(total);
-    })
+    });
 
     return dailyTotals;
   };
@@ -386,12 +386,82 @@ Template.timesheetdetail.onRendered(function () {
     return buildEarningsLines(trs);
   };
 
+  this.generateHourlyRates = totals => {
+    const overtimeRules = this.overtimes.get();
+
+    // This will check if it is weeke end or not
+    const isWeekend = total => {
+      // Saturday is 5, Sunday is 6
+
+      return [6, 0].includes(moment(total.date).day());
+    };
+
+    // WARNING: Dont touch this function unless you know what you do
+    // This has been minutiously written
+    const findRightOvertimeRule = total => {
+      // if is weekend, get the mataching day rule
+      if (isWeekend(total)) {
+        return overtimeRules.filter(o => o.day == moment(total.date).format("dddd").toLowerCase());
+      }
+      // else going to filter by Hourly Rate types
+      let inWeekRules = overtimeRules.filter(o => o.rateType.Description == "Hourly Rate");
+      // once filtered, sort them by hours
+      inWeekRules = inWeekRules.sort((a, b) => b.hours - a.hours);
+
+      // here we get only the applyable rules to total.hours
+      let rulesToApply = inWeekRules.filter(rule => total.hours > rule.hours);
+      return rulesToApply;
+    };
+
+    const calculateEarningAmount = (earnings = [], startAmount = 0.0) => {
+      earnings.forEach(earning => {
+        startAmount += earning.amount;
+      });
+      return startAmount;
+    };
+
+    /**
+         *
+         * @param {*} total
+         * @param {PayrollSettingsOvertimes[]} rulesToApply
+         */
+    const applyRules = (total, rulesToApply) => {
+      // once sorted
+      // while hoursCredit is > 0, apply the correct overtime rule until it finishes
+      let hoursCredit = total.hours;
+      let earnings = [];
+
+      // Aproach one, using a foreach by rules
+      rulesToApply.forEach(overtimeRule => {
+        //if(hoursCredit > overtimeRule.hours) {
+        const hoursRemaining = hoursCredit - overtimeRule.hours; // 20 - 9.5 = 10.5 of extra hours
+        hoursCredit = overtimeRule.hours;
+
+        earnings.push({
+          overtime: overtimeRule, calculatedHours: hoursRemaining, // for 20 minus 9.5 i get 10.5 hours,
+          amount: hoursRemaining * overtimeRule.hourlyMultiplier
+        });
+        //}
+      });
+      return earnings;
+    };
+
+    totals.forEach(total => {
+      const rules = findRightOvertimeRule(total);
+      const earnings = applyRules(total, rules);
+      total.earnings = earnings;
+      total.totalEarningAmount = calculateEarningAmount(earnings);
+    });
+    return totals;
+  };
+
   this.approveTimeSheet = async () => {
     try {
       LoadingOverlay.show();
       const timesheet = await this.timesheet.get();
       const hours = await this.calculateWeeklyHours();
       const earningLines = this.buildNewObject();
+      const totals = this.generateHourlyRates(buildSumOfDailyHours(earningLines));
 
       let objectDataConverted = {
         type: erpObject.TTimeSheet,
@@ -408,7 +478,7 @@ Template.timesheetdetail.onRendered(function () {
       const objToSave = {
         timeSheetId: id,
         earningLines: earningLines,
-        total: buildSumOfDailyHours(earningLines),
+        totals: totals
       };
 
       await this._saveTimeSheetDetails(objToSave);
@@ -448,6 +518,7 @@ Template.timesheetdetail.onRendered(function () {
     const timesheet = await this.timesheet.get();
     const hours = await this.calculateWeeklyHours();
     const earningLines = this.buildNewObject();
+    const totals = this.generateHourlyRates(buildSumOfDailyHours(earningLines));
 
     let objectDataConverted = {
       type: erpObject.TTimeSheet,
@@ -464,7 +535,7 @@ Template.timesheetdetail.onRendered(function () {
     const objToSave = {
       timeSheetId: id,
       earningLines: earningLines,
-      total: buildSumOfDailyHours(earningLines),
+      totals: totals
     };
 
     await this._saveTimeSheetDetails(objToSave);
@@ -490,7 +561,8 @@ Template.timesheetdetail.onRendered(function () {
       const timesheet = await this.timesheet.get();
       const hours = await this.calculateWeeklyHours();
       const earningLines = this.buildNewObject();
-      
+      const totals = this.generateHourlyRates(buildSumOfDailyHours(earningLines));
+
       let objectDataConverted = {
         type: erpObject.TTimeSheet,
         fields: {
@@ -506,9 +578,9 @@ Template.timesheetdetail.onRendered(function () {
       const objToSave = {
         timeSheetId: id,
         earningLines: earningLines,
-        total: buildSumOfDailyHours(earningLines),
+        totals: totals
+        // dailyEarnings: generateHourlyRates(total)
       };
-     
 
       await this._saveTimeSheetDetails(objToSave);
 
@@ -532,6 +604,7 @@ Template.timesheetdetail.onRendered(function () {
     const timesheet = await this.timesheet.get();
     const hours = await this.calculateWeeklyHours();
     const earningLines = this.buildNewObject();
+    const totals = this.generateHourlyRates(buildSumOfDailyHours(earningLines));
 
     let objectDataConverted = {
       type: erpObject.TTimeSheet,
@@ -549,7 +622,7 @@ Template.timesheetdetail.onRendered(function () {
     const objToSave = {
       timeSheetId: id,
       earningLines: earningLines,
-      total: buildSumOfDailyHours(earningLines),
+      totals: totals
     };
 
     await this._saveTimeSheetDetails(objToSave);
@@ -757,7 +830,9 @@ Template.timesheetdetail.events({
   },
   "click .btnDeleteRow": function (e) {
     playDeleteAudio();
+    setTimeout(function(){
     $(e.target).parents("tr").remove();
+  }, delayTimeAfterSound);
   },
 
   "click #tblTimeSheetInner tbody .select-rate-js": (e, ui) => {

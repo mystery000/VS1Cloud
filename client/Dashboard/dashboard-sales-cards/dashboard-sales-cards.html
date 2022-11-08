@@ -33,176 +33,235 @@
             color: #333;
         }
     </style>
-    <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
-         data-default-position="0" position="0" card-active="true" card-key="dashboard-sales-performance-new-leads">
-        <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-             title="This Lead count for last 3 months where status is ”Unqualified”">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col-md-12 card-inner-heading mb-3">
-                        New Leads
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="”My Metric” is Leads with my name">
-                        <h5>My Metric</h5>
-                        <h6 class="text-primary" id="new-leads-my-metric"></h6>
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="”Team Average” is all leads for the same period">
-                        <h5>Team Average</h5>
-                        <h6 class="light-dark-text" id="new-leads-team-avg"></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
-         data-default-position="1" position="1" card-active="true" card-key="dashboard-sales-performance-new-oppertunities">
-        <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-             title="This is the Lead count for last 3 months where status is “Opportunity”">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col-md-12 card-inner-heading mb-3">
-                        New Opportunities
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="”My Metric” is Leads with my name">
-                        <h5>My Metric</h5>
-                        <h6 class="text-primary" id="new-opptertunties-my-metric"></h6>
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="”Team Average” is all leads for the same period">
-                        <h5>Team Average</h5>
-                        <h6 class="light-dark-text" id="new-opptertunties-team-avg"></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
-        data-default-position="2" position="2" card-active="true" card-key="dashboard-sales-performance-won-oppertunities">
-        <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-            title="This is the Lead/Customer count for last 3 months where an Invoice has been made">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body sp-won-oppertunities" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col-md-12 card-inner-heading mb-3">
-                        Won Opportunities
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="”My Metric” is Lead/Customer with my name">
-                        <h5>My Metric</h5>
-                        <h6 class="text-primary" id="won-opptertunties-my-metric"></h6>
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="”Team Average” is all Lead/Customer for the same period">
-                        <h5>Team Average</h5>
-                        <h6 class="light-dark-text" id="won-opptertunties-team-avg"></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
-        data-default-position="3" position="3" card-active="true" card-key="dashboard-sales-performance-gap-to-quota">
-        <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-            title="This is the value of Invoices for last 3 months">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col-md-12 card-inner-heading mb-3" data-toggle="tooltip" title="If more than “Quota” on employee card show “In Front” and colour Numbers green. If less than “Quota” on employee card show “Behind” and colour Numbers Red.">
-                        <div class="col-md-12 card-inner-heading mb-3">
-                            Gap to Quota
-                        </div>
-                        <div class="col-md-12 card-inner-matrics">
-                            <h6 class="text-danger mt-3" id="gap-to-quota"></h6>
-                            <h5 id="gap-to-quota-label" style="margin-bottom:0px"></h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
-        data-default-position="4" position="4" card-active="true" card-key="dashboard-sales-performance-win-rate">
-        <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-            title="This is the Quote count for last 3 months where it is converted to an invoice">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col-md-12 card-inner-heading mb-3">
-                        Win Rate %
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="“My Metric” is Lead/Customer with my name">
-                        <h5>My Metric</h5>
-                        <h6 class="text-primary" id="win-rate-my-metric"></h6>
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="“Team Average” is all Lead/Customer for the same period">
-                        <h5>Team Average</h5>
-                        <h6 class="light-dark-text" id="win-rate-team-avg"></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
-        data-default-position="5" position="5" card-active="true" card-key="dashboard-sales-performance-avg-sale">
-        <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip="" title="This is the average time taken where Lead/Customer status is converted from “Unqualified” to “Invoiced”">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col-md-12 card-inner-heading mb-3">
-                        Average Sales Cycle
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="“My Metric” is Lead/Customer with my name">
-                        <h5>My Metric</h5>
-                        <h6 class="text-primary" id="avg-sales-cycle-my-metric"></h6>
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="“Team Average” is all Lead/Customer for the same period">
-                        <h5>Team Average</h5>
-                        <h6 class="light-dark-text" id="avg-sales-cycle-team-avg"></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-5 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
-        data-default-position="6" position="6" card-active="true" card-key="dashboard-sales-performance-pipeline">
-        <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-            title="This is the quotes from Lead/Customer for last 3 months where the quote has not been converted to an invoice.">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body" style="cursor: pointer;">
-                <div class="row align-items-center no-gutters">
-                    <div class="col-md-12 card-inner-heading mb-3">
-                        Pipeline Amount
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="“My Metric” is Lead/Customer with my name">
-                        <h5>My Metric</h5>
-                        <h6 class="text-primary" id="pipeline-amount-my-metric"></h6>
-                    </div>
-                    <div class="col-md-6 card-inner-matrics" data-toggle="tooltip" title="“Team Average” is all Lead/Customer for the same period">
-                        <h5>Team Average</h5>
-                        <h6 class="light-dark-text" id="pipeline-amount-team-avg"></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- New Leads -->
+    {{# kpiCard md=3
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=0
+        position=0
+        cardActive=true
+        cardKey="dashboard-sales-performance-new-leads"
+        highlightColor="primary"
+        tooltipTitle="This Lead count for last 3 months where status is ”Unqualified”"
+    }}
+        {{> kpiCardTitle
+            title="New Leads"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Leads with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="new-leads-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="new-leads-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- New Opportunities -->
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=1
+        position=1
+        cardActive=true
+        cardKey="dashboard-sales-performance-new-oppertunities"
+        highlightColor="primary"
+        tooltipTitle="This is the Lead count for last 3 months where status is “Opportunity”"
+    }}
+        {{> kpiCardTitle
+            title="New Opportunities"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Leads with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="new-opptertunties-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="new-opptertunties-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Won Opportunities -->
+    {{# kpiCard md=3
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=2
+        position=2
+        cardActive=true
+        cardKey="dashboard-sales-performance-won-oppertunities"
+        highlightColor="primary"
+        tooltipTitle="This is the Lead/Customer count for last 3 months where an Invoice has been made"
+    }}
+        {{> kpiCardTitle
+            title="Won Opportunities"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Lead/Customer with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="won-opptertunties-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads/Customer for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="won-opptertunties-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Gap to Quota -->
+    {{# kpiCard md=2
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=3
+        position=3
+        cardActive=true
+        cardKey="dashboard-sales-performance-gap-to-quota"
+        highlightColor="primary"
+        tooltipTitle="This is the value of Invoices for last 3 months"
+    }}
+        {{> kpiCardTitle
+            title="Gap to Quota"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Lead/Customer with my name"
+                title="Behind"
+                valueColor="primary"
+                id="gap-to-quota"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Win Rate % -->
+    {{# kpiCard md=3
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=4
+        position=4
+        cardActive=true
+        cardKey="dashboard-sales-performance-win-rate"
+        highlightColor="primary"
+        tooltipTitle="This is the Quote count for last 3 months where it is converted to an invoice"
+    }}
+        {{> kpiCardTitle
+            title="Win Rate %"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Lead/Customer with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="win-rate-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads/Customer for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="win-rate-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Average Sales Cycle -->
+    {{# kpiCard md=4
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=5
+        position=5
+        cardActive=true
+        cardKey="dashboard-sales-performance-avg-sale"
+        highlightColor="primary"
+        tooltipTitle="This is the average time taken where Lead/Customer status is converted from “Unqualified” to “Invoiced”"
+    }}
+        {{> kpiCardTitle
+            title="Average Sales Cycle"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Lead/Customer with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="avg-sales-cycle-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads/Customer for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="avg-sales-cycle-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
+
+    <!-- Pipeline Amount -->
+    {{# kpiCard md=5
+        cardID=0
+        chartGroup="dashboardSales"
+        defaultPosition=6
+        position=6
+        cardActive=true
+        cardKey="dashboard-sales-performance-pipeline"
+        highlightColor="primary"
+        tooltipTitle="This is the quotes from Lead/Customer for last 3 months where the quote has not been converted to an invoice."
+    }}
+        {{> kpiCardTitle
+            title="Pipeline Amount"
+            size="medium"
+            color="dark"
+            textTransform=""
+            align="center"
+        }}
+        {{# kpiCardBody}}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”My Metric” is Lead/Customer with my name"
+                title="My Metric"
+                valueColor="primary"
+                id="pipeline-amount-my-metric"
+            }}
+            {{> kpiCardMultiValueItem
+                tooltipTitle="”Team Average” is all leads/Customer for the same period"
+                title="Team Average"
+                valueColor="dark"
+                id="pipeline-amount-team-avg"
+            }}
+        {{/kpiCardBody}}
+    {{/kpiCard}}
 </template>

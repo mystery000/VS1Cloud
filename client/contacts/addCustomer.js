@@ -2404,9 +2404,10 @@ Template.customerscard.events({
     },
     'click .btnSaveDept': function () {
         playSaveAudio();
+        let contactService = new ContactService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService = new ContactService();
+        
 
         //let headerDept = $('#sltDepartment').val();
         let custType = $('#edtClientTypeName').val();
@@ -2580,9 +2581,11 @@ Template.customerscard.events({
     },
     'click .btnSave': async function (e) {
         playSaveAudio();
-        setTimeout(async function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
+        let uploadedItems = templateObject.uploadedFiles.get();
+        setTimeout(async function(){
+        
         $('.fullScreenSpin').css('display', 'inline-block');
         let company = $('#edtCustomerCompany').val()||'';
         let email = $('#edtCustomerEmail').val()||'';
@@ -2651,7 +2654,7 @@ Template.customerscard.events({
         let custField3 = $('#edtCustomField3').val()||'';
         let custField4 = $('#edtCustomField4').val()||'';
         let customerType = $('#sltCustomerType').val()||'';
-        let uploadedItems = templateObject.uploadedFiles.get();
+        
         let sourceName = $('#leadSource').val()||'';
         let repName = $('#leadRep').val()||'';
         let status = $('#leadStatus').val()||'';
@@ -2844,9 +2847,10 @@ Template.customerscard.events({
     },
     'click .btnSaveJob': function (event) {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
+        setTimeout(function(){
+        
         $('.fullScreenSpin').css('display', 'inline-block');
 
         let companyJob = $('#edtJobCustomerCompany').val()||'';
@@ -3306,21 +3310,27 @@ Template.customerscard.events({
     },
     'click .printConfirmTransaction': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .printConfirmCrm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblCrmList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .printConfirmJob': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .btnRefresh': function () {
         Meteor._reload.reload();
@@ -3526,8 +3536,8 @@ Template.customerscard.events({
     },
     'click .btnSaveSettings': function (event) {
         playSaveAudio();
-        setTimeout(function(){
         let templateObject = Template.instance();
+        setTimeout(function(){
         $('.lblCustomField1').html('');
         $('.lblCustomField2').html('');
         $('.lblCustomField3').html('');
@@ -3823,8 +3833,10 @@ Template.customerscard.events({
     },
     'click .btnDeleteCustomer': function (event) {
         playDeleteAudio();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
         if (!isNaN(currentId.id)) {
@@ -3857,6 +3869,7 @@ Template.customerscard.events({
             FlowRouter.go('/customerlist?success=true');
         }
         $('#deleteCustomerModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnCustomerTask': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -3870,6 +3883,7 @@ Template.customerscard.events({
     },
     'click .btnCustomerEmail': function (event) {
         playEmailAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
@@ -3879,6 +3893,7 @@ Template.customerscard.events({
         } else {
           $('.fullScreenSpin').css('display', 'none');
         }
+    }, delayTimeAfterSound);
     },
     'click .btnCustomerAppointment': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -3942,6 +3957,7 @@ Template.customerscard.events({
     },
     'click .btnJobEmail': function (event) {
         playEmailAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.jobid)) {
@@ -3950,6 +3966,7 @@ Template.customerscard.events({
         } else {
           $('.fullScreenSpin').css('display', 'none');
         }
+    }, delayTimeAfterSound);
     },
     'click .btnJobAppointment': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');

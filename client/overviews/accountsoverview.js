@@ -12,6 +12,7 @@ import { ReceiptService } from "../receipts/receipt-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let receiptService = new ReceiptService();
+let organisationService = new OrganisationService();
 Template.accountsoverview.inheritsHooksFrom('non_transactional_list');
 Template.accountsoverview.onCreated(function() {
     const templateObject = Template.instance();
@@ -24,6 +25,7 @@ Template.accountsoverview.onCreated(function() {
     templateObject.isBankAccount.set(false);
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+    templateObject.setupFinished = new ReactiveVar();
 });
 
 Template.accountsoverview.onRendered(function() {
@@ -44,6 +46,23 @@ Template.accountsoverview.onRendered(function() {
     let needAddOfficeSupplies = true;
     let needAddTravel = true;
     let needAddVehicle = true;
+
+
+    if(Session.get("ERPLoggedCountry") == "United States of America"){
+        $(".btnTaxSummary").show();
+        $(".btnBasReturnGroup").hide();
+        $(".btnVatReturnGroup").hide();
+    }
+    else if(Session.get("ERPLoggedCountry") == "Australia"){
+        $(".btnTaxSummary").hide();
+        $(".btnBasReturnGroup").show();        
+        $(".btnVatReturnGroup").hide();
+    }
+    else if(Session.get("ERPLoggedCountry") == "South Africa"){
+        $(".btnTaxSummary").hide();
+        $(".btnBasReturnGroup").hide();
+        $(".btnVatReturnGroup").show();
+    }
 
 
   // set initial table rest_data
@@ -1407,6 +1426,20 @@ Template.accountsoverview.onRendered(function() {
     //     $("#taxRateListModal").modal("toggle");
     //   });
     // });
+    templateObject.checkSetupWizardFinished = async function () {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+        if( setupFinished === null || setupFinished ===  "" ){
+            let setupInfo = await organisationService.getSetupInfo();
+            if( setupInfo.tcompanyinfo.length > 0 ){
+                let data = setupInfo.tcompanyinfo[0];
+                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+                templateObject.setupFinished.set(data.IsSetUpWizard)
+            }
+        }else{
+            templateObject.setupFinished.set(setupFinished)
+        }
+    }
+    templateObject.checkSetupWizardFinished();
     tableResize();
 });
 
@@ -1428,6 +1461,15 @@ Template.accountsoverview.events({
     },
     "click #btnNewBasReturn": function(event) {
     FlowRouter.go("/basreturn");
+    },
+    "click #btnVatReturn": function(event) {
+        FlowRouter.go("/vatreturnlist");
+        },
+    "click #btnNewVatReturn": function(event) {
+        FlowRouter.go("/vatreturn");
+    },
+    "click .btnTaxSummary": function(event) {
+        FlowRouter.go("/taxsummaryreport");
     },
     "click .exportbtn": function() {
         $(".fullScreenSpin").css("display", "inline-block");
@@ -1492,11 +1534,11 @@ Template.accountsoverview.events({
     },
     "click .btnSaveAccount": function() {
         playSaveAudio();
-        setTimeout(function(){
-        $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
         let accountService = new AccountService();
         let organisationService = new OrganisationService();
+        setTimeout(function(){
+        $(".fullScreenSpin").css("display", "inline-block");
         let forTransaction = false;
         let isHeader = false;
         let useReceiptClaim = false;
@@ -2118,6 +2160,8 @@ Template.accountsoverview.events({
     },
     "click .btnDeleteAccount": function() {
         playDeleteAudio();
+        let templateObject = Template.instance();
+        let accountService = new AccountService();
         swal({
             title: "Delete Account",
             text: "Are you sure you want to Delete Account?",
@@ -2127,10 +2171,7 @@ Template.accountsoverview.events({
         }).then((result) => {
             if (result.value) {
                 $(".fullScreenSpin").css("display", "inline-block");
-                let templateObject = Template.instance();
-                let accountService = new AccountService();
                 let accountID = $("#edtAccountID").val();
-
                 if (accountID === "") {
                     window.open("/accountsoverview", "_self");
                 } else {
@@ -2340,9 +2381,9 @@ Template.accountsoverview.events({
     },
     'click #addReceiptCategoryModal .btnSave': function(event) {
         playSaveAudio();
+        let receiptService = new ReceiptService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let receiptService = new ReceiptService();
         let receiptCategoryID = $('#edtReceiptCategoryID').val();
         let receiptCategoryName = $('#edtReceiptCategoryName').val();
         if (receiptCategoryName == '') {
@@ -2394,35 +2435,35 @@ Template.accountsoverview.events({
             doSaveReceiptCategory(objDetails);
         }
 
-        function doSaveReceiptCategory(objDetails) {
-            receiptService.saveReceiptCategory(objDetails).then(function(objDetails) {
-                sideBarService.getReceiptCategory().then(function(dataReload) {
-                    addVS1Data('TReceiptCategory', JSON.stringify(dataReload)).then(function(datareturn) {
-                        location.reload(true);
-                    }).catch(function(err) {
-                        location.reload(true);
-                    });
+      }, delayTimeAfterSound);
+      function doSaveReceiptCategory(objDetails) {
+        receiptService.saveReceiptCategory(objDetails).then(function(objDetails) {
+            sideBarService.getReceiptCategory().then(function(dataReload) {
+                addVS1Data('TReceiptCategory', JSON.stringify(dataReload)).then(function(datareturn) {
+                    location.reload(true);
                 }).catch(function(err) {
                     location.reload(true);
                 });
             }).catch(function(err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                        // Meteor._reload.reload();
-                    } else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-                $('.fullScreenSpin').css('display', 'none');
+                location.reload(true);
             });
-        }
-      }, delayTimeAfterSound);
+        }).catch(function(err) {
+            swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {
+                    // Meteor._reload.reload();
+                } else if (result.dismiss === 'cancel') {
+
+                }
+            });
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    }
     },
 });
 
@@ -2493,13 +2534,8 @@ Template.accountsoverview.helpers({
         }
         return transactionTableLastUpdated;
     },
-    showSetupFinishedAlert: () => {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
-        if (setupFinished == true || setupFinished == "true") {
-            return false;
-        } else {
-            return true;
-        }
+    isSetupFinished: () => {
+        return Template.instance().setupFinished.get();
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();

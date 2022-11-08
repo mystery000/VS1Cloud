@@ -1,3 +1,6 @@
+import { SideBarService } from '../../../js/sidebar-service'
+let sideBarService = new SideBarService();
+
 Template.fixedassetcard.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -7,6 +10,14 @@ Template.fixedassetcard.onCreated(function () {
 
 Template.fixedassetcard.onRendered(function () {
   $('#edtAssetType').editableSelect();
+  $('#edtAssetType').editableSelect().on('click.editable-select', function (e, li) {
+    $('#selectLineID').val('sltJobTerms');
+    const $each = $(this);
+    const offset = $each.offset();
+    const assetTypeName = e.target.value || '';
+    editableAssetType(e, $each, offset, assetTypeName);
+  });
+
   $('#edtBoughtFrom').editableSelect();
   $('#edtDepartment').editableSelect();
   $('#edtDepreciationType').editableSelect();
@@ -28,4 +39,8 @@ Template.fixedassetcard.onRendered(function () {
     changeYear: true,
     yearRange: "-90:+10",
   });
+
+  function editableAssetType(e, $each, offset, assetTypeName) {
+    $('#fixedAssetTypeListModal').modal('toggle');
+  }
 });

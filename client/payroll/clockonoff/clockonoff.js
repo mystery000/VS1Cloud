@@ -703,10 +703,10 @@ Template.employeetimeclock.events({
   },
   'click .btnSaveTimeSheet': function () {
     playSaveAudio();
-    setTimeout(function(){
-    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
+    setTimeout(function(){
+    $('.fullScreenSpin').css('display', 'inline-block');
     //let timesheetID = $('#edtTimesheetID').val();
     var employeeName = $('.employee_name').val();
     var jobName = $('#sltJob').val();
@@ -804,15 +804,19 @@ Template.employeetimeclock.events({
   },
   'click .printConfirm': function (event) {
     playPrintAudio();
+    setTimeout(function(){
     $('.fullScreenSpin').css('display', 'inline-block');
     jQuery('#tblTimeSheet_wrapper .dt-buttons .btntabletopdf').click();
     $('.fullScreenSpin').css('display', 'none');
+  }, delayTimeAfterSound);
   },
   'click .btnDeleteTimeSheet': function () {
     playDeleteAudio();
-    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
+    setTimeout(function(){
+    $('.fullScreenSpin').css('display', 'inline-block');
+    
     let timesheetID = $('#edtTimesheetID').val();
 
     if (timesheetID == "") {
@@ -845,8 +849,7 @@ Template.employeetimeclock.events({
         $('.fullScreenSpin').css('display', 'none');
       });
     }
-
-
+  }, delayTimeAfterSound);
   },
   'blur .cashamount': function (event) {
     let inputUnitPrice = parseFloat($(event.target).val()) || 0;

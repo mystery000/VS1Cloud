@@ -2848,6 +2848,7 @@ Template.basreturn.events({
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $(".printBasReturn").show();
         $("a").attr("href", "/");
         document.title = "BAS Return";
@@ -2861,6 +2862,7 @@ Template.basreturn.events({
             $("a").attr("href", "#");
             $(".printBasReturn").hide();
         }, 100);
+    }, delayTimeAfterSound);
     },
     'click .btnRemove': function(event) {
         let templateObject = Template.instance();
@@ -2897,6 +2899,8 @@ Template.basreturn.events({
     'click .btnDelete': function(event) {
         playDeleteAudio();
         let templateObject = Template.instance();
+        setTimeout(function(){
+        
 
         if (templateObject.getId.get()) {
             swal({
@@ -2939,6 +2943,7 @@ Template.basreturn.events({
                 } else {}
             });
         }
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();

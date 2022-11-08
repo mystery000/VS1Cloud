@@ -1933,11 +1933,11 @@ Template.accounttypepop.events({
     },
     'click .btnSaveAccount': function () {
         playSaveAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let accountService = new AccountService();
         let organisationService = new OrganisationService();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
         let forTransaction = false;
 
         if ($('#showOnTransactions').is(':checked')) {
@@ -2299,9 +2299,11 @@ Template.accounttypepop.events({
     },
     'click .printConfirm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblAccountOverview_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .templateDownload': function () {
         let utilityService = new UtilityService();
@@ -2511,6 +2513,9 @@ Template.accounttypepop.events({
     },
     'click .btnDeleteAccount': function () {
         playDeleteAudio();
+        let templateObject = Template.instance();
+        let accountService = new AccountService();
+        setTimeout(function(){
         swal({
             title: 'Delete Account',
             text: "Are you sure you want to Delete Account?",
@@ -2520,8 +2525,6 @@ Template.accounttypepop.events({
         }).then((result) => {
             if (result.value) {
                 $('.fullScreenSpin').css('display', 'inline-block');
-                let templateObject = Template.instance();
-                let accountService = new AccountService();
                 let accountID = $('#edtAccountID').val();
 
                 if (accountID == "") {
@@ -2563,6 +2566,7 @@ Template.accounttypepop.events({
 
             } else {}
         });
+    }, delayTimeAfterSound);
     }
 })
 

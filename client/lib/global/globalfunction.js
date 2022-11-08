@@ -698,7 +698,7 @@ checkSetupFinished = function () {
               localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
               return data.IsSetUpWizard;
             }
-          }        
+          }     
         }
     });
   }else{

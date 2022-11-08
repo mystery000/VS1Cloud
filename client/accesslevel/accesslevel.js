@@ -334,9 +334,9 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
      },
      'click .btnGlobalSaveNOT': function () {
       playSaveAudio();
+      let templateObject = Template.instance();
+      let accesslevelService = new AccessLevelService();
       setTimeout(function(){
-       let templateObject = Template.instance();
-       let accesslevelService = new AccessLevelService();
         var erpGet = erpDb();
 
        let empInputValue = templateObject.$("#sltEmployeeName").val();
@@ -457,13 +457,6 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                   }
 
 
-
-
-
-
-
-
-
                   if((radioValue == 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                     isInventory = true;
                     Session.setPersistent('CloudInventoryModule', isInventory);
@@ -575,26 +568,6 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                     Session.setPersistent('CloudSettingsModule', isSettings);
                   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   }
                 }).catch(function (err) {
 
@@ -680,14 +653,6 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                       isDashboard = false;
                       Session.setPersistent('CloudDashboardModule', isDashboard);
                     }
-
-
-
-
-
-
-
-
 
                     if((radioValue == 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                       isInventory = true;
@@ -799,27 +764,6 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                       isSettings = false;
                       Session.setPersistent('CloudSettingsModule', isSettings);
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     }
                   }).catch(function (err) {
 
@@ -873,10 +817,9 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
  },
      'click .btnSaveAccess': function () {
       playSaveAudio();
+      let templateObject = Template.instance();
+      let accesslevelService = new AccessLevelService();
       setTimeout(function(){
-       let templateObject = Template.instance();
-       let accesslevelService = new AccessLevelService();
-
        let empInputValue = templateObject.$("#sltEmployeeName").val();
 
 

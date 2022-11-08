@@ -710,7 +710,8 @@ Template.allChartLists.events({
     },
     "click #btnDone": async () => {
         playSaveAudio();
-        const templateObject = Template.instance();
+        let templateObject = Template.instance();
+        setTimeout(async function(){
         $(".fullScreenSpin").css("display", "inline-block");
         await saveCharts();
         await chartsEditor.disable();
@@ -719,6 +720,7 @@ Template.allChartLists.events({
 
         $(".fullScreenSpin").css("display", "none");
         Meteor._reload.reload();
+    }, delayTimeAfterSound);
     },
 });
 

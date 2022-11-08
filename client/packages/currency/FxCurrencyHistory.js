@@ -952,6 +952,7 @@ Template.FxCurrencyHistory.events({
   },
   "click .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     LoadingOverlay.show();
     // jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletopdf").click();
 
@@ -964,6 +965,7 @@ Template.FxCurrencyHistory.events({
       },
     });
     LoadingOverlay.hide();
+  }, delayTimeAfterSound);
   },
   "click .btnRefresh": function () {
     LoadingOverlay.show();

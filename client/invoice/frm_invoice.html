@@ -678,14 +678,17 @@
 
                                     </div>
                                 </div>
+                                {{#if isCurrencyEnable}}
+                                    {{> CurrencyWidget rate="sell" row="true"}}
+                                {{/if}}
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3">
                                 <div class="row">
-                                    {{#if isCurrencyEnable}}
+                                    <!-- {{#if isCurrencyEnable}}
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                         {{> CurrencyWidget rate="sell"}}
                                     </div>
-                                    {{/if}}
+                                    {{/if}} -->
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                         <div class="row">
                                             <div class="col-12">
@@ -1073,7 +1076,7 @@
                                 }
                             </style>
 
-                            {{> deletepop itemName1="Invoice" itemName2="invoice" button1="btnDeleteInvoice" button2="btnDeleteFollowingInvoices"}}
+                            {{> deletepop itemName1="Invoice" itemName2="invoice" itemName3="Invoice" button1="btnDeleteInvoice" button2="btnDeleteFollowingInvoices"}}
 
                             <style>
                                 th.colAmountEx {
@@ -2161,7 +2164,7 @@
             {{> lotnumberpop}}
         </div>
         <div class="modal fade" role="dialog" tabindex="-1" id="availableSerialNumberModal">
-         {{> availableserialnumberpop}}
+            {{> availableserialnumberpop}}
         </div>
         <div class="modal fade" role="dialog" tabindex="-1" id="availableLotNumberModal">
             {{> availablelotnumberpop}}
@@ -2238,6 +2241,9 @@
 
         <div class="modal fade" role="dialog" tabindex="-1" id="UOMListModal">
             {{> uomlistpop}}
+        </div>
+        <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+            {{> copyfrequencypop}}
         </div>
         <!--
         <div class="modal fade" role="dialog" tabindex="-1" id="newUOMModal">
