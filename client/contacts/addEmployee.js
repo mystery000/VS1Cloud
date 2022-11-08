@@ -8251,7 +8251,11 @@ Template.employeescard.events({
             let TFNExemption = $("#edtTfnExemption").val();
             let EmploymentBasis = $("#edtEmploymentBasis").val();
             let ResidencyStatus = $("#edtResidencyStatus").val();
-            let EdtPayPeriod = $("#edtPayPeriod").attr('calendar-id') || '';
+
+            // We should use the ID of the selected calendar and not the text value
+            // let EdtPayPeriod = $("#edtPayPeriod").attr('calendar-id') || '';
+            let EdtPayPeriod = $("#edtPayPeriod").val() || '';
+
             let FirstPayDate = $("#edtFirstPayDate").val();
             let StartingDate = $("#dtStartingDate").val();
             let FirstName = $("#edtFirstName").val();
@@ -8448,7 +8452,10 @@ Template.employeescard.events({
             let bankAccountName = $("#bankAccountName").val();
             let bankAccountBSB = $("#bankAccountBSB").val();
             let bankAccountNo = $("#bankAccountNo").val();
-            let EdtPayPeriod = $("#edtPayPeriod").attr('calendar-id') || '';;
+              // We should use the ID of the selected calendar and not the text value
+            // let EdtPayPeriod = $("#edtPayPeriod").attr('calendar-id') || '';
+            let EdtPayPeriod = $("#edtPayPeriod").val() || '';
+        
             let FirstPayDate = $("#edtFirstPayDate").val();
             if( FirstPayDate == "" ){
                 handleValidationError('Please select First Pay Date in Taxes Tab!', 'edtFirstPayDate');
