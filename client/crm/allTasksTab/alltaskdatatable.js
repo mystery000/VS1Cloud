@@ -2895,7 +2895,7 @@ Template.alltaskdatatable.events({
           // AddToFavourite: swtNewCrmProjectFavorite,
         },
       };
-      
+
       crmService.updateProject(objDetails).then(function (data) {
         templateObject.getTProjectList();
 
@@ -3512,7 +3512,7 @@ Template.alltaskdatatable.events({
       };
 
       $(".fullScreenSpin").css("display", "inline-block");
-      
+
       crmService.updateLabel(objDetails).then(function (objDetails) {
         templateObject.getAllLabels();
         $(".fullScreenSpin").css("display", "none");
