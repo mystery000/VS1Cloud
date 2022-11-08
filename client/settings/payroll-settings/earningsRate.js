@@ -9,6 +9,10 @@ import { EmployeePayrollService } from '../../js/employeepayroll-service';
 import { ProductService } from "../../product/product-service";
 import '../../lib/global/indexdbstorage.js';
 import 'jquery-editable-select';
+import LoadingOverlay from '../../LoadingOverlay';
+import CachedHttp from '../../lib/global/CachedHttp';
+import erpObject from '../../lib/global/erp-objects';
+import TableHandler from '../../js/Table/TableHandler';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -31,6 +35,7 @@ Template.earningRateSettings.onCreated(function() {
 
   templateObject.earningRates = new ReactiveVar([]);
   templateObject.earningTypes = new ReactiveVar([]);
+  templateObject.earnings = new ReactiveVar([]);
 });
 
 Template.earningRateSettings.onRendered(function() {
@@ -53,56 +58,174 @@ Template.earningRateSettings.onRendered(function() {
         });
     };
 
-templateObject.saveDataLocalDB = async () => {
+    templateObject.saveDataLocalDB = async () => {
 
-    const employeePayrolApis = new EmployeePayrollApi();
-    // now we have to make the post request to save the data in database
-    const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-        employeePayrolApis.collectionNames.TEarnings
-    );
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TEarnings
+        );
 
-    employeePayrolEndpoint.url.searchParams.append(
-        "ListType",
-        "'Detail'"
-    );                
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );                
+        
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if( employeePayrolEndpointJsonResponse.tearnings.length ){
+                await addVS1Data('TEarnings', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            return employeePayrolEndpointJsonResponse
+        }  
+        return '';      
+    }
+
+    /**
+     * This will load earning types
+     * Hardcoded for now
+     */
+    templateObject.getEarningTypes = async (refresh = false) => {
+
+        const earningTypes = [
+            "Ordinary Time Earnings",
+            "Overtime Earnings",
+            "Employment Termnination Payments",
+            "Lump Sum E",
+            "Bonuses & Commissions",
+            "Lump Sum W",
+            "Directors Fees"
+        ].map(t => {
+            return {
+                value: t,
+                text: t
+            }
+        });
+
+        await templateObject.earningTypes.set(earningTypes);
+
+    }
+
+
+    templateObject.loadEarnings = async (refresh = false) => {
+        let data = await CachedHttp.get(erpObject.TEarnings, async () => {
+            const employeePayrolApis = new EmployeePayrollApi();
+            // now we have to make the post request to save the data in database
+            const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TEarnings
+            );
+        
+            employeePayrolEndpoint.url.searchParams.append(
+                "ListType",
+                "'Detail'"
+            );                
+            
+            const response = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+            if (response.ok == true) {
+                let earnings = await response.json();
+                if( earnings.tearnings.length ){
+                    return earnings.tearnings;
+                }
+                return null;
+            }  
+
+            return null;
+        }, {
+            refresh: refresh,
+            validate: (cachedResponse) => {
+                return true;
+            }
+        });
+
+        console.log('response', data);
+
     
-    const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
-    if (employeePayrolEndpointResponse.ok == true) {
-        employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-        if( employeePayrolEndpointJsonResponse.tearnings.length ){
-            await addVS1Data('TEarnings', JSON.stringify(employeePayrolEndpointJsonResponse))
-        }
-        return employeePayrolEndpointJsonResponse
-    }  
-    return '';      
-}
+        // const resp = await getVS1Data(erpObject.TEarningData);
+        // let data = resp.length > 0 ? JSON.parse(resp[0].data) : [];
+        const response  = data.response;
 
-/**
- * This will load earning types
- * Hardcoded for now
- */
-templateObject.getEarningTypes = async (refresh = false) => {
+        let earnings = response.map(e => e.fields != undefined ? e.fields : e);
 
-    const earningTypes = [
-        "Ordinary Time Earnings",
-        "Overtime Earnings",
-        "Employment Termnination Payments",
-        "Lump Sum E",
-        "Bonuses & Commissions",
-        "Lump Sum W",
-        "Directors Fees"
-    ].map(t => {
-        return {
-            value: t,
-            text: t
-        }
-    });
+        console.log('earnings', earnings);
 
-    await templateObject.earningTypes.set(earningTypes);
+        await templateObject.earnings.set(earnings);
 
-}
+        setTimeout(function () {
+            $('#earningRateSettingsModal #tblEarnings').DataTable({
+                ...TableHandler.getDefaultTableConfiguration("tblEarnings"),
+                "order": [[0, "asc"]],
+                action: function () {
+                    $('#earningRateSettingsModal #tblEarnings').DataTable().ajax.reload();
+                },
+                // "fnDrawCallback": function (oSettings) {
+                //     $('.paginate_button.page-item').removeClass('disabled');
+                //     $('#tblEarnings_ellipsis').addClass('disabled');
+                //     if (oSettings._iDisplayLength == -1) {
+                //         if (oSettings.fnRecordsDisplay() > 150) {
 
+                //         }
+                //     } else {
+
+                //     }
+                //     if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                //         $('.paginate_button.page-item.next').addClass('disabled');
+                //     }
+
+                //     $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                //         .on('click', function () {
+                //             // $('.fullScreenSpin').css('display', 'inline-block');
+                //             var splashArrayEarningListDupp = new Array();
+                //             let dataLenght = oSettings._iDisplayLength;
+                //             let customerSearch = $('#tblEarnings_filter input').val();
+
+
+
+                //         });
+                //     setTimeout(function () {
+                //         MakeNegative();
+                //     }, 100);
+                // },
+                // "fnInitComplete": function () {
+                //   $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#add-tblEarnings_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
+                //   $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
+
+                // }
+
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+
+            }).on('column-reorder', function () {
+
+            }).on('length.dt', function (e, settings, len) {
+            //// $('.fullScreenSpin').css('display', 'inline-block');
+            let dataLenght = settings._iDisplayLength;
+            splashArrayEarningList = [];
+            if (dataLenght == -1) {
+                LoadingOverlay.hide();
+
+            } else {
+                if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                    LoadingOverlay.hide();
+                } else {
+
+                }
+            }
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            });
+
+
+        }, 300);
+
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+    }
 
     templateObject.getEarnings = async function(){
         try {
@@ -245,7 +368,7 @@ templateObject.getEarningTypes = async (refresh = false) => {
                         }, 100);
                     },
                     "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
+                        $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#add-tblEarnings_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
                         $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
                     }
 
@@ -289,7 +412,7 @@ templateObject.getEarningTypes = async (refresh = false) => {
             $('.fullScreenSpin').css('display', 'none');
         }
     };
-    templateObject.getEarnings();
+    //templateObject.getEarnings();
 
     templateObject.getAllTaxCodes = function() {
         getVS1Data("TTaxcodeVS1").then(function(dataObject) {
@@ -502,6 +625,12 @@ templateObject.getEarningTypes = async (refresh = false) => {
         });
     };
 
+    templateObject.editEarning = async (id) => {
+        $('#add-tblEarnings_modal').modal('show');
+        $('#add-tblEarnings_modal').attr('earning-id', id);
+
+    }
+
     // setTimeout(function() {
     //     templateObject.getAllTaxCodes();
     //     templateObject.getEarningTypes();
@@ -510,6 +639,7 @@ templateObject.getEarningTypes = async (refresh = false) => {
     templateObject.initData = async (refresh = false) => {
         await templateObject.getAllTaxCodes(refresh);
         await templateObject.getEarningTypes(refresh);
+        await templateObject.loadEarnings(refresh);
     }
 
     templateObject.initData();
@@ -791,18 +921,18 @@ templateObject.getEarningTypes = async (refresh = false) => {
                     $('#formCheck-ExemptReportable').prop('checked', earningRate.fields.EarningsReportableW1onActivityStatement)
                 }
                 $('#earningRateSettingsModal').modal('hide');
-                $('#ordinaryTimeEarningsModal').modal('show');
+                $('#add-tblEarnings_modal').modal('show');
             }
         }
     });
 
-    $(document).on("click", "#tblEarnings tbody tr", function (e) {
-        var table = $(this);
-        let earningRateID = templateObject.currentDrpDownID.get();
-        let earningRate = table.find(".colEarningsNames").text()||'';
-        $('#' + earningRateID).val(earningRate);
-        $('#earningRateSettingsModal').modal('toggle');
-    });
+    // $(document).on("click", "#tblEarnings tbody tr", function (e) {
+    //     var table = $(this);
+    //     let earningRateID = templateObject.currentDrpDownID.get();
+    //     let earningRate = table.find(".colEarningsNames").text()||'';
+    //     $('#' + earningRateID).val(earningRate);
+    //     $('#earningRateSettingsModal').modal('toggle');
+    // });
 
     $(document).on("click", "#tblratetypelist tbody tr", function (e) {
         var table = $(this);
@@ -909,7 +1039,7 @@ Template.earningRateSettings.events({
                             $('#edtEarningsName').val(dataSearchName)
                             $('#earningRateSettingsModal').modal('hide');
                             $('#addEarningsLineModal').modal('hide');
-                            $('#ordinaryTimeEarningsModal').modal('show');
+                            $('#add-tblEarnings_modal').modal('show');
                         }
                     });
                 }
@@ -991,7 +1121,7 @@ Template.earningRateSettings.events({
                 await templateObject.getEarnings();
                 let drpDownID = $('#edtEarningDropDownID').val();
                 $('#' + drpDownID).val(EarningsName);
-                $('#ordinaryTimeEarningsModal').modal('hide');
+                $('#add-tblEarnings_modal').modal('hide');
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Earning Rate saved successfully',
@@ -1029,13 +1159,31 @@ Template.earningRateSettings.events({
             });  
         }
     },
+    "click #tblEarnings tbody tr": (e, ui) => {
+        var table = $(e.currentTarget);
+        let earningRateID = ui.currentDrpDownID.get();
+        let earningRate = table.find(".colEarningsNames").text()||'';
+        $('#' + earningRateID).val(earningRate);
+        $('#earningRateSettingsModal').modal('toggle');
+    },
+    // "click .tblEarnings tbody tr": (e, ui) => {
+    //     const earningId = $(e.currentTarget).attr('earning-id');
+    //     console.log(e, earningId);
+
+    //     ui.editEarning(earningId);
+    // }
 });
 
 Template.earningRateSettings.helpers({
     datatablerecords: () => {
         return Template.instance().datatablerecords.get();
     },
-    earningTypes: () => Template.instance().earningTypes.get()
+    earningTypes: () => {
+        return Template.instance().earningTypes.get();
+    },
+    earnings: () => {
+        return Template.instance().earnings.get();
+    },
 });
 
 //

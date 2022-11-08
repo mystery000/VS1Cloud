@@ -3756,120 +3756,145 @@ Template.employeescard.onRendered(function () {
         return '';
     };
 
-    templateObject.getEmployeePaySettings = async () => {
-        try {
-            // EmployeePayrollApi fetch data from indexDB
-            let data = [];
-            let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
-            if( TEmployeepaysettings.length == 0 ){
-                data = templateObject.saveEmployeePaySettingsLocalDB();
-            }else{
-                data = JSON.parse(TEmployeepaysettings[0].data);
+    templateObject.getEmployeePaySettings = async (refresh = false) => {
+
+        let data = await CachedHttp.get(erpObject.TEmployeepaysettings, async () => {
+            return await contactService.getOneEmployeeDataEx(employeeID);
+        }, {
+            refresh: refresh,
+            validate: (cachedResponse) => {
+                return true;
             }
+        });
 
-            let useData = EmployeePaySettings.fromList(
-                data.temployeepaysettings
-            ).filter((item) => {
-                if (item.fields.Employeeid == employeeID) {
-                    return item;
-                }
-            });
+        data = data.response;
 
-            let employeePaySettings = {}
-            let objEmployeePaySettings = {}
-            if( useData.length == 0 ){
-                let ePaySettings = await contactService.getOneEmployeeDataEx(employeeID);
-                if( ePaySettings ){
-                    objEmployeePaySettings = {
-                        ID: 0,
-                        Payperiod: "",
-                        EmployeeName: ePaySettings.fields.EmployeeName,
-                        StartingDate: "",
-                        BankAccountName: "",
-                        BankAccountBSB: "",
-                        BankAccountNo: "",
-                        StatementText: "",
-                        AnnualSalary: 0,
-                        EarningYTD: 0,
-                        NextPayDate: moment().format('YYYY-MM-DD'),
-                        AnnSalary: 0,
-                        TFN: ePaySettings.fields.TFN,
-                        Country: ePaySettings.fields.Country,
-                        TaxFreeThreshold: false,
-                        TFNExemption: "",
-                        EmploymentBasis: "",
-                        ResidencyStatus: "",
-                        StudyTrainingSupportLoan: false,
-                        EligibleToReceiveLeaveLoading: false,
-                        OtherTaxOffsetClaimed: false,
-                        UpwardvariationRequested: false,
-                        SeniorandPensionersTaxOffsetClaimed: false,
-                        HasApprovedWithholdingVariation: false,
-                    }
-                }
-                templateObject.employeePaySettings.set(objEmployeePaySettings);
-            }else{
-                employeePaySettings = useData[0]
-                objEmployeePaySettings = {
-                    ID: employeePaySettings.fields.ID,
-                    Payperiod: employeePaySettings.fields.Payperiod,
-                    StartingDate: moment(employeePaySettings.fields.StartingDate).format("DD/MM/YYYY"),
-                    EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
-                    BankAccountName: employeePaySettings.fields.BankAccountName,
-                    BankAccountBSB: employeePaySettings.fields.BankAccountBSB,
-                    BankAccountNo: employeePaySettings.fields.BankAccountNo,
-                    StatementText: employeePaySettings.fields.Statement,
-                    AnnualSalary: employeePaySettings.fields.AnnualSalary,
-                    EarningYTD: employeePaySettings.fields.EarningYTD,
-                    NextPayDate: employeePaySettings.fields.NextPayDate,
-                    AnnSalary: employeePaySettings.fields.Employee.fields.Wages * 12,
-                    TFN: employeePaySettings.fields.Employee.fields.TFN,
-                    Country: employeePaySettings.fields.Employee.fields.Country,
-                    TaxFreeThreshold: employeePaySettings.fields.Employee.fields.TaxFreeThreshold ? employeePaySettings.fields.Employee.fields.TaxFreeThreshold : false,
+        let employeesPaySettings = data.temployeepaysettings.map(e => e.fields);
+        let employeePaySettings = employeesPaySettings.find(e => e.Employeeid == employeeID);
 
-                    TFNExemption: employeePaySettings.fields.Employee.fields.CgtExempt ? employeePaySettings.fields.Employee.fields.CgtExempt : "",
-                    EmploymentBasis: employeePaySettings.fields.Employee.fields.BasisOfPayment ? employeePaySettings.fields.Employee.fields.BasisOfPayment : "",
-                    ResidencyStatus: employeePaySettings.fields.Employee.fields.Resident,
-                    StudyTrainingSupportLoan: employeePaySettings.fields.Employee.fields.StudentLoanIndicator ? employeePaySettings.fields.Employee.fields.StudentLoanIndicator : false,
-                    EligibleToReceiveLeaveLoading: employeePaySettings.fields.Employee.fields.PaySuperonLeaveLoading ? employeePaySettings.fields.Employee.fields.PaySuperonLeaveLoading : false,
-                    OtherTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed ? employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed : false,
-                    UpwardvariationRequested: employeePaySettings.fields.Employee.fields.UpwardvariationRequested ? employeePaySettings.fields.Employee.fields.UpwardvariationRequested : false,
-                    SeniorandPensionersTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.Pensioner ? employeePaySettings.fields.Employee.fields.Pensioner : false,
-                    HasApprovedWithholdingVariation: employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation ? employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation : false,
-                }
+        await templateObject.employeePaySettings.set(employeePaySettings);
 
-                templateObject.employeePaySettings.set(objEmployeePaySettings);
+        await templateObject.employeePayInfos.set(employeePaySettings);
 
-                templateObject.employeePayInfos.set(employeePaySettings);
 
-                $(`#edtTfnExemption option[value='${objEmployeePaySettings.TFNExemption}']`).attr('selected', 'selected');
-                $(`#edtEmploymentBasis option[value='${objEmployeePaySettings.EmploymentBasis}']`).attr('selected', 'selected');
-                $(`#edtResidencyStatus option[value='${objEmployeePaySettings.ResidencyStatus}']`).attr('selected', 'selected');
-            }
-        } catch(err) {
-            let employeePayrollService = new EmployeePayrollService();
-            let data = await employeePayrollService.getAllEmployeePaySettings('All',0)
-            for (let i = 0; i < data.temployeepaysettings.length; i++) {
-                if (parseInt(data.temployeepaysettings[i].fields.Employeeid) === parseInt(employeeID)) {
+        $(`#edtTfnExemption option[value='${employeePaySettings.Employee.fields.CgtExempt}']`).attr('selected', 'selected');
+        $(`#edtEmploymentBasis option[value='${employeePaySettings.Employee.fields.BasisOfPayment}']`).attr('selected', 'selected');
+        $(`#edtResidencyStatus option[value='${employeePaySettings.Employee.fields.Resident}']`).attr('selected', 'selected');
 
-                    $('.fullScreenSpin').css('display', 'none');
-                    let lineItems = [];
 
-                    let payInfo = {
-                        ID: data.temployeepaysettings[i].fields.ID,
-                        Payperiod: "",
-                        StartingDate: "",
-                        EmployeeID: data.temployeepaysettings[i].fields.Employeeid,
-                        EmployeeName: data.temployeepaysettings[i].fields.Employee.fields.EmployeeName,
-                        AnnSalary: data.temployeepaysettings[i].fields.Employee.fields.Wages * 12,
-                        TFN: data.temployeepaysettings[i].fields.Employee.fields.TFN,
-                        Country: data.temployeepaysettings[i].fields.Employee.fields.Country,
-                        TaxFreeThreshold: data.temployeepaysettings[i].fields.Employee.fields.TaxFreeThreshold,
-                    };
-                    templateObject.employeePayInfos.set(payInfo);
-                }
-            }
-        }
+        // try {
+        //     // EmployeePayrollApi fetch data from indexDB
+        //     let data = [];
+        //     let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
+        //     if( TEmployeepaysettings.length == 0 ){
+        //         data = templateObject.saveEmployeePaySettingsLocalDB();
+        //     }else{
+        //         data = JSON.parse(TEmployeepaysettings[0].data);
+        //     }
+
+        //     let useData = EmployeePaySettings.fromList(
+        //         data.temployeepaysettings
+        //     ).filter((item) => {
+        //         if (item.fields.Employeeid == employeeID) {
+        //             return item;
+        //         }
+        //     });
+
+        //     let employeePaySettings = {}
+        //     let objEmployeePaySettings = {}
+        //     if( useData.length == 0 ){
+        //         let ePaySettings = await contactService.getOneEmployeeDataEx(employeeID);
+        //         if( ePaySettings ){
+        //             objEmployeePaySettings = {
+        //                 ID: 0,
+        //                 Payperiod: "",
+        //                 EmployeeName: ePaySettings.fields.EmployeeName,
+        //                 StartingDate: "",
+        //                 BankAccountName: "",
+        //                 BankAccountBSB: "",
+        //                 BankAccountNo: "",
+        //                 StatementText: "",
+        //                 AnnualSalary: 0,
+        //                 EarningYTD: 0,
+        //                 NextPayDate: moment().format('YYYY-MM-DD'),
+        //                 AnnSalary: 0,
+        //                 TFN: ePaySettings.fields.TFN,
+        //                 Country: ePaySettings.fields.Country,
+        //                 TaxFreeThreshold: false,
+        //                 TFNExemption: "",
+        //                 EmploymentBasis: "",
+        //                 ResidencyStatus: "",
+        //                 StudyTrainingSupportLoan: false,
+        //                 EligibleToReceiveLeaveLoading: false,
+        //                 OtherTaxOffsetClaimed: false,
+        //                 UpwardvariationRequested: false,
+        //                 SeniorandPensionersTaxOffsetClaimed: false,
+        //                 HasApprovedWithholdingVariation: false,
+        //             }
+        //         }
+        //         templateObject.employeePaySettings.set(objEmployeePaySettings);
+        //     }else{
+        //         employeePaySettings = useData[0]
+        //         objEmployeePaySettings = {
+        //             ID: employeePaySettings.fields.ID,
+        //             Payperiod: employeePaySettings.fields.Payperiod,
+        //             StartingDate: moment(employeePaySettings.fields.StartingDate).format("DD/MM/YYYY"),
+        //             EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
+        //             BankAccountName: employeePaySettings.fields.BankAccountName,
+        //             BankAccountBSB: employeePaySettings.fields.BankAccountBSB,
+        //             BankAccountNo: employeePaySettings.fields.BankAccountNo,
+        //             StatementText: employeePaySettings.fields.Statement,
+        //             AnnualSalary: employeePaySettings.fields.AnnualSalary,
+        //             EarningYTD: employeePaySettings.fields.EarningYTD,
+        //             NextPayDate: employeePaySettings.fields.NextPayDate,
+        //             AnnSalary: employeePaySettings.fields.Employee.fields.Wages * 12,
+        //             TFN: employeePaySettings.fields.Employee.fields.TFN,
+        //             Country: employeePaySettings.fields.Employee.fields.Country,
+        //             TaxFreeThreshold: employeePaySettings.fields.Employee.fields.TaxFreeThreshold ? employeePaySettings.fields.Employee.fields.TaxFreeThreshold : false,
+
+        //             TFNExemption: employeePaySettings.fields.Employee.fields.CgtExempt ? employeePaySettings.fields.Employee.fields.CgtExempt : "",
+        //             EmploymentBasis: employeePaySettings.fields.Employee.fields.BasisOfPayment ? employeePaySettings.fields.Employee.fields.BasisOfPayment : "",
+        //             ResidencyStatus: employeePaySettings.fields.Employee.fields.Resident,
+        //             StudyTrainingSupportLoan: employeePaySettings.fields.Employee.fields.StudentLoanIndicator ? employeePaySettings.fields.Employee.fields.StudentLoanIndicator : false,
+        //             EligibleToReceiveLeaveLoading: employeePaySettings.fields.Employee.fields.PaySuperonLeaveLoading ? employeePaySettings.fields.Employee.fields.PaySuperonLeaveLoading : false,
+        //             OtherTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed ? employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed : false,
+        //             UpwardvariationRequested: employeePaySettings.fields.Employee.fields.UpwardvariationRequested ? employeePaySettings.fields.Employee.fields.UpwardvariationRequested : false,
+        //             SeniorandPensionersTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.Pensioner ? employeePaySettings.fields.Employee.fields.Pensioner : false,
+        //             HasApprovedWithholdingVariation: employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation ? employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation : false,
+        //         }
+
+        //         templateObject.employeePaySettings.set(objEmployeePaySettings);
+
+        //         templateObject.employeePayInfos.set(employeePaySettings);
+
+        //         $(`#edtTfnExemption option[value='${objEmployeePaySettings.TFNExemption}']`).attr('selected', 'selected');
+        //         $(`#edtEmploymentBasis option[value='${objEmployeePaySettings.EmploymentBasis}']`).attr('selected', 'selected');
+        //         $(`#edtResidencyStatus option[value='${objEmployeePaySettings.ResidencyStatus}']`).attr('selected', 'selected');
+        //     }
+        // } catch(err) {
+        //     let employeePayrollService = new EmployeePayrollService();
+        //     let data = await employeePayrollService.getAllEmployeePaySettings('All',0)
+        //     for (let i = 0; i < data.temployeepaysettings.length; i++) {
+        //         if (parseInt(data.temployeepaysettings[i].fields.Employeeid) === parseInt(employeeID)) {
+
+        //             $('.fullScreenSpin').css('display', 'none');
+        //             let lineItems = [];
+
+        //             let payInfo = {
+        //                 ID: data.temployeepaysettings[i].fields.ID,
+        //                 Payperiod: "",
+        //                 StartingDate: "",
+        //                 EmployeeID: data.temployeepaysettings[i].fields.Employeeid,
+        //                 EmployeeName: data.temployeepaysettings[i].fields.Employee.fields.EmployeeName,
+        //                 AnnSalary: data.temployeepaysettings[i].fields.Employee.fields.Wages * 12,
+        //                 TFN: data.temployeepaysettings[i].fields.Employee.fields.TFN,
+        //                 Country: data.temployeepaysettings[i].fields.Employee.fields.Country,
+        //                 TaxFreeThreshold: data.temployeepaysettings[i].fields.Employee.fields.TaxFreeThreshold,
+        //             };
+        //             templateObject.employeePayInfos.set(payInfo);
+        //         }
+        //     }
+        // }
     }
     templateObject.getEmployeePaySettings();
 
@@ -8251,7 +8276,11 @@ Template.employeescard.events({
             let TFNExemption = $("#edtTfnExemption").val();
             let EmploymentBasis = $("#edtEmploymentBasis").val();
             let ResidencyStatus = $("#edtResidencyStatus").val();
-            let EdtPayPeriod = $("#edtPayPeriod").attr('calendar-id') || '';
+
+            // We should use the ID of the selected calendar and not the text value
+            // let EdtPayPeriod = $("#edtPayPeriod").attr('calendar-id') || '';
+            let EdtPayPeriod = $("#edtPayPeriod").val() || '';
+
             let FirstPayDate = $("#edtFirstPayDate").val();
             let StartingDate = $("#dtStartingDate").val();
             let FirstName = $("#edtFirstName").val();
@@ -8355,8 +8384,8 @@ Template.employeescard.events({
                     body: JSON.stringify(employeePaySettings),
                 });
                 if (ApiResponse.ok == true) {
-                    await templateObject.saveEmployeePaySettingsLocalDB();
-                    await templateObject.getEmployeePaySettings();
+                    // await templateObject.saveEmployeePaySettingsLocalDB();
+                    await templateObject.getEmployeePaySettings(true);
                     $('.statusUnsaved').hide();
                     $('.statusSaved').show();
                     $('.fullScreenSpin').css('display', 'none');
@@ -8448,7 +8477,10 @@ Template.employeescard.events({
             let bankAccountName = $("#bankAccountName").val();
             let bankAccountBSB = $("#bankAccountBSB").val();
             let bankAccountNo = $("#bankAccountNo").val();
-            let EdtPayPeriod = $("#edtPayPeriod").attr('calendar-id') || '';;
+              // We should use the ID of the selected calendar and not the text value
+            // let EdtPayPeriod = $("#edtPayPeriod").attr('calendar-id') || '';
+            let EdtPayPeriod = $("#edtPayPeriod").val() || '';
+        
             let FirstPayDate = $("#edtFirstPayDate").val();
             if( FirstPayDate == "" ){
                 handleValidationError('Please select First Pay Date in Taxes Tab!', 'edtFirstPayDate');
@@ -8500,8 +8532,8 @@ Template.employeescard.events({
                 });
 
                 if (ApiResponse.ok == true) {
-                    await templateObject.saveEmployeePaySettingsLocalDB();
-                    await templateObject.getEmployeePaySettings();
+                    // await templateObject.saveEmployeePaySettingsLocalDB();
+                    await templateObject.getEmployeePaySettings(true);
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Bank Accounts Saved Successfully',

@@ -13,6 +13,7 @@ export default class Employee {
 
     this.earnings = [];
     this.earningTotal = 0.0;
+    this.earningsPayTemplates = [];
 
     this.taxTotal = 0.0;
     this.taxes = null;
@@ -44,9 +45,70 @@ export default class Employee {
 
   /**
      * This will load earnings of this employee
+     * load from timesheets
      * @returns
      */
-  async getEarnings() {
+  async getEarnings({
+    timesheets = null
+  }, refresh = false) {
+    if (!timesheets) {
+      let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
+        const contactService = new ContactService();
+        return await contactService.getAllTimeSheetList();
+      }, {
+        forceOverride: refresh,
+        validate: cachedResponse => {
+          return true;
+        }
+      });
+      data = data.response;
+      timesheets = data.ttimesheet.map(t => t.fields);
+    }
+
+    console.log('timsheets of employee', timesheets);
+    
+    timesheets.forEach((t, index) => {
+      if (t.Status == "") {
+        t.Status = "Draft";
+      }
+    });
+
+    // We want only aproved ones
+    timesheets = timesheets.filter(time => time.Status == "Approved");
+
+    // let data = await CachedHttp.get(erpObject.TPayTemplateEarningLine, async () => {
+    //   const employeePayrolApis = new EmployeePayrollApi();
+    //   const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TPayTemplateEarningLine);
+    //   employeePayrolEndpoint.url.searchParams.append("ListType", "'Detail'");
+
+    //   const response = await employeePayrolEndpoint.fetch();
+    //   if (response.ok == true) {
+    //     return await response.json();
+    //   }
+    //   return null;
+    // }, {
+    //   useIndexDb: true,
+    //   useLocalStorage: false,
+    //   validate: cachedResponse => {
+    //     return false;
+    //   }
+    // });
+
+    // data = data.response.tpaytemplateearningline.map(earning => earning.fields);
+    // if (this.fields.ID) {
+    //   data = data.filter(item => parseInt(item.EmployeeID) == parseInt(this.fields.ID));
+    //   this.earnings = data;
+    //   this.calculateEarnings();
+    // }
+
+    // return data;
+  }
+
+  /**
+     * This will get all PayRoll pay template of the employee
+     * @module PayRoll
+     */
+  async getEarningPayTemplates(refresh = false) {
     let data = await CachedHttp.get(erpObject.TPayTemplateEarningLine, async () => {
       const employeePayrolApis = new EmployeePayrollApi();
       const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TPayTemplateEarningLine);
@@ -58,21 +120,20 @@ export default class Employee {
       }
       return null;
     }, {
-      useIndexDb: true,
-      useLocalStorage: false,
+      forceOverride: refresh,
       validate: cachedResponse => {
-        return false;
+        return true;
       }
     });
 
-    data = data.response.tpaytemplateearningline.map(earning => earning.fields);
+    let response = data.response;
+
+    let earningLines = response.tpaytemplateearningline.map(earning => earning.fields);
     if (this.fields.ID) {
-      data = data.filter(item => parseInt(item.EmployeeID) == parseInt(this.fields.ID));
-      this.earnings = data;
-      this.calculateEarnings();
+      this.earningsPayTemplates = earningLines.filter(item => parseInt(item.EmployeeID) == parseInt(this.fields.ID));
     }
 
-    return data;
+    return this.earningsPayTemplates;
   }
 
   incrementEarnings(amount = 0.0) {
@@ -143,8 +204,8 @@ export default class Employee {
   }
 
   /**
-   * TODO: We should calculate with tax
-   */
+     * TODO: We should calculate with tax
+     */
   calculateNetPay() {
     const earnings = this.earningTotal;
     const tax = 0.0; // we should calculate this

@@ -5,6 +5,7 @@ import Datehandler from "../../DateHandler";
 import GlobalFunctions from "../../GlobalFunctions";
 import {OrganisationService} from "../../js/organisation-service";
 import {SideBarService} from "../../js/sidebar-service";
+import TableHandler from "../../js/Table/TableHandler";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import LoadingOverlay from "../../LoadingOverlay";
@@ -25,21 +26,31 @@ Template.SelectPayCalendar.onCreated(function () {
 Template.SelectPayCalendar.onRendered(() => {
   const templateObject = Template.instance();
 
-  templateObject.loadCalendars = async () => {
+  templateObject.loadCalendars = async (refresh = false) => {
     LoadingOverlay.show();
     let data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
       return await sideBarService.getCalender(initialBaseDataLoad, 0);
     }, {
-      useIndexDb: true,
-      useLocalStorage: false,
+      forceOverride: refresh,
       validate: cachedResponse => {
-        return false;
+        return true;
       }
     });
     data = data.response;
 
     let calendars = data.tpayrollcalendars.map(c => c.fields);
-    templateObject.calendarPeriods.set(calendars);
+    await templateObject.calendarPeriods.set(calendars);
+
+    setTimeout(() => {
+      $("#SelectPayRunModal #tblPayCalendars").DataTable({
+        ...TableHandler.getDefaultTableConfiguration('tblPayCalendars', {
+          showPlusButton: false,
+          showSearchButton: false
+          
+        })
+      });
+    }, 300)
+
 
     LoadingOverlay.hide();
   };
@@ -80,7 +91,7 @@ Template.SelectPayCalendar.events({
     $("#payperiod").val("");
   },
 
-  "click .savenewcalender": (e, ui) => {
+  "click .savenewcalender, click add-tblPayCalendars": (e, ui) => {
     LoadingOverlay.show();
     let taxRateService = new TaxRateService();
     let oldpaycalenderid = $("#paycalendarId").val() || 0;
@@ -320,8 +331,13 @@ Template.SelectPayCalendar.events({
     const periods = ui.calendarPeriods.get();
     const selectPeriod = periods.find(p => p.ID);
 
+    console.log(FlowRouter.current().path);
+
+    $(".paste-selected-pay-period-name-js").attr("calendar-id", selectPeriod.ID);
+    $(".paste-selected-pay-period-name-js").val(`${selectPeriod.PayrollCalendarName} (${selectPeriod.PayrollCalendarPayPeriod})`);
+    
     $(".paste-selected-pay-period-js").attr("calendar-id", selectPeriod.ID);
-    $(".paste-selected-pay-period-js").val(`${selectPeriod.PayrollCalendarName} (${selectPeriod.PayrollCalendarPayPeriod})`);
+    $(".paste-selected-pay-period-js").val(selectPeriod.PayrollCalendarPayPeriod);
 
     $("#SelectPayRunModal").modal("hide");
   }
