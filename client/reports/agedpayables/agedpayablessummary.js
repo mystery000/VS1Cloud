@@ -34,7 +34,7 @@ Template.agedpayablessummary.onCreated(() => {
 
 Template.agedpayablessummary.onRendered(function() {
   LoadingOverlay.show();
- // const templateObject = Template.instance();
+ const templateObject = Template.instance();
 
 //   let salesOrderTable;
 //   var splashArray = new Array();
@@ -110,7 +110,7 @@ Template.agedpayablessummary.onRendered(function() {
       defaultOptions = {
         fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
         toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: false
+        ignoreDate: true
       };
     }
     this.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
@@ -151,7 +151,7 @@ Template.agedpayablessummary.onRendered(function() {
 
 
     if (data.tapreport.length) {
-     // localStorage.setItem("VS1AgedPayablesSummary_Report", JSON.stringify(data) || "");
+     localStorage.setItem("VS1AgedPayablesSummary_Report", JSON.stringify(data) || "");
       let records = [];
       let reportrecords = [];
       let allRecords = [];
@@ -445,6 +445,7 @@ Template.agedpayablessummary.onRendered(function() {
       }
     } else {
       this.records.set([]);
+      this.reportrecords.set([]);
       this.grandrecords.set(null);
     }
     
@@ -709,6 +710,7 @@ Template.agedpayablessummary.events({
     // localStorage.setItem('VS1AgedPayablesSummary_Report', '');
     // localStorage.setItem('VS1AgedPayablesSummary_Card', '');
     // let templateObject = Template.instance();
+    localStorage.setItem('VS1AgedPayablesSummary_Report', '');
     $('#dateFrom').attr('readonly', true);
     $('#dateTo').attr('readonly', true);
     templateObject.dateAsAt.set("Current Date");
@@ -816,6 +818,7 @@ Template.agedpayablessummary.events({
    * This is the new way to handle any modification on the date fields
    */
     "change #dateTo, change #dateFrom": (e, templateObject) => {
+      localStorage.setItem('VS1AgedPayablesSummary_Report', '');
       templateObject.loadReport(
         GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
         GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 

@@ -196,10 +196,18 @@ Template.stockmovementreport.onRendered(() => {
 });
 
 Template.stockmovementreport.events({
-  "click .btnRefresh": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1StockMovement_Report", "");
-    Meteor._reload.reload();
+  "click .btnRefresh": async function () {
+    // $(".fullScreenSpin").css("display", "inline-block");
+    // localStorage.setItem("VS1StockMovement_Report", "");
+    // Meteor._reload.reload();
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    const options = await templateObject.reportOptions.get();
+    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    let ignoreDate = options.ignoreDate || false;
+    localStorage.setItem('VS1StockMovement_Report', '');
+    await templateObject.setReportOptions(ignoreDate, dateFrom, dateTo);
   },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");
