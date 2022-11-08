@@ -484,12 +484,12 @@ Template.vs1_report_template.helpers({
   loggedCompany: () => {
       return localStorage.getItem('mySession') || '';
   },
-  tablename: () => {
-      return Template.instance().tablename.get();
-  },
-  tabledisplayname: () => {
-      return Template.instance().tabledisplayname.get();
-  },
+  // tablename: () => {
+  //     return Template.instance().tablename.get();
+  // },
+  // tabledisplayname: () => {
+  //     return Template.instance().tabledisplayname.get();
+  // },
   report_displayfields: () => {
     return Template.instance().report_displayfields.get();
   },
