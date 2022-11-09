@@ -54,6 +54,7 @@ Template.alltaskdatatable.onCreated(function () {
 });
 
 Template.alltaskdatatable.onRendered(function () {
+ 
   let templateObject = Template.instance();
   templateObject.selected_id.set(0);
   templateObject.selected_ttodo.set(null);
@@ -3114,14 +3115,14 @@ Template.alltaskdatatable.events({
     }
   },
 
-  "click #editCrmProjectColor": function (e) {
-    $('button').each(function () {
-      var target = $(this);
-      if (target.text() == 'Other...' || target.val() == 'Other...') {
-        target.remove();
-      }
-    });
-  },
+  // "click #editCrmProjectColor": function (e) {
+  //   $('button').each(function () {
+  //     var target = $(this);
+  //     if (target.text() == 'Other...' || target.val() == 'Other...') {
+  //       target.remove();
+  //     }
+  //   });
+  // },
 
   // submit edit project
   "click .btnEditCrmProject": function (e) {
@@ -3238,7 +3239,10 @@ Template.alltaskdatatable.events({
       setTimeout(function () {
         if (clickCount == 1) {
 
-          $("#newProjectTasksModal").modal("toggle");
+          // this modal is for displaying task list of the project
+          // $("#newProjectTasksModal").modal("toggle");
+          $("#editCrmProject").modal("toggle");
+
           let id = e.target.dataset.id;
           $("#editProjectID").val(id);
 

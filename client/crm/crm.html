@@ -756,10 +756,14 @@
 
   <div style="margin-top: -24px;">
 
-    <header style="padding: 16px;padding-bottom: 24px;">
+    <header style="padding: 16px;padding-bottom: 24px; display: flex; justify-content: space-between;">
       <h2 style="margin: 14px;margin-bottom: 0px;"><span id="crm_header_title">CRM Overview</span>
         {{> crm_help_modal}}
       </h2>
+      <div>
+        <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#settingsModal"
+          style="margin: 14px 14px 0 0;"><i class="icon ion-android-more-horizontal"></i></a>
+      </div>
     </header>
 
     {{> leadbarchart}}
@@ -825,5 +829,7 @@
       </div>
     </div>
   </div>
+
+  {{> settingsModal}}
 
 </template>
