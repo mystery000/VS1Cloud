@@ -9390,15 +9390,24 @@ Template.billcard.events({
                 const toConvert = $(tr).find('.convert-to-foreign:not(.hiddenColumn)');
                 const rate = $("#exchange_rate").val();
     
-                toConvert.forEach((element) => {
-                    const mainClass = element.classList[0];
-                    const mainValueElement = document.querySelector(`#tblBillLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
+                toConvert.each((index, element) => {
+                    const mainClass = element.classList[0]; // we get the class of the non foreign html 
+                    const mainElement = $(tr).find(`td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`); //document.querySelector(`#tblBillLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
     
-                    let value = mainValueElement.childElementCount > 0 ?
-                        $(mainValueElement).find('input').val() :
-                        mainValueElement.innerText;
+                    const targetElement = $(tr).find(`td.${mainClass}.convert-to-foreign:not(.hiddenColumn)`);
+                    
+                    
+                    let value = $(mainElement).children().length > 0 ?
+                        $(mainElement).find('input').val() :
+                        $(mainElement).text();
+
                     value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
-                    $(element).text(value);
+                  
+                    if(targetElement.children().length > 0) {
+                        $(targetElement).find("input").val(value);
+                    } else {
+                        $(targetElement).text(value);
+                    }
     
                 })
             })
