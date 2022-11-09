@@ -74,7 +74,9 @@ Template.non_transactional_list.onRendered(function() {
     }else if (url.includes("/uomSettings")) {
       currenttablename = "tblUOMList"; //Done Something Here;
     }else if (url.includes("/bomlist")){
-      currenttablename = "tblBOMList"
+      currenttablename = "tblBOMList";
+    }else if (url.includes("/supplierlist")){
+      currenttablename = "tblSupplierlist"; //Done Something Here;
     }
     templateObject.tablename.set(currenttablename);
 
@@ -216,6 +218,25 @@ Template.non_transactional_list.onRendered(function() {
               { index: 3, label: 'raws', class: 'colRaws', active: true, display: true },
               { index: 4, label: 'attachments', class: 'colAttachments', active: true, display: true }
             ];
+        }else if(currenttablename == "tblSupplierlist") { //Done Something Here
+            reset_data = [
+              { index: 0, label: '#ID', class: 'colSupplierID', active: false, display: true },
+              { index: 1, label: 'Company', class: 'colCompany', active: true, display: true},
+              { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true},
+              { index: 3, label: 'AP Balance', class: 'colARBalance', active: true, display: true },
+              { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true },
+              { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true },
+              { index: 6, label: 'Credit Limit', class: 'colCreditLimi', active: true, display: true },
+              { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true },
+              { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true },
+              { index: 9, label: 'Country', class: 'colCountry', active: true, display: true },
+              { index: 10, label: 'Email', class: 'colEmail', active: false, display: true },
+              { index: 11, label: 'Account No', class: 'colAccountNo', active: false, display: true },
+              { index: 12, label: 'Client Number', class: 'colClientNo', active: false, display: true },
+              { index: 13, label: 'Job Title', class: 'colJobTitle', active: false, display: true },
+              { index: 14, label: 'Comments', class: 'colNotes', active: true, display: true },
+              { index: 15, label: 'Status', class: 'colStatus', active: true, display: true }
+            ];
           }
         templateObject.reset_data.set(reset_data);
       }
@@ -259,7 +280,7 @@ Template.non_transactional_list.onRendered(function() {
     return;
   }
         templateObject.showCustomFieldDisplaySettings = async function(reset_data){
-      //function showCustomFieldDisplaySettings(reset_data) {
+            //function showCustomFieldDisplaySettings(reset_data) {
         let custFields = [];
         let customData = {};
         let customFieldCount = reset_data.length;
@@ -1425,6 +1446,350 @@ Template.non_transactional_list.onRendered(function() {
   }
 
       //Do Something Here
+      //Supplier List Data
+      templateObject.getSupplierListData = async function (deleteFilter = false) {
+        var customerpage = 0;
+        getVS1Data('TSupplierVS1List1').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+                    await addVS1Data('TSupplierVS1List', JSON.stringify(data));
+                    templateObject.displaySuppliersListData(data);
+                }).catch(function (err) {
+
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displaySuppliersListData(data);
+            }
+        }).catch(function (err) {
+          sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+              await addVS1Data('TSupplierVS1List', JSON.stringify(data));
+              templateObject.displaySuppliersListData(data);
+          }).catch(function (err) {
+
+          });
+        });
+      }
+      templateObject.displaySuppliersListData = async function (data) {
+          console.log(data);
+        var splashArraySuppliersList = new Array();
+        let lineItems = [];
+        let lineItemObj = {};
+        let deleteFilter = false;
+        if(data.Params.Search.replace(/\s/g, "") == ""){
+          deleteFilter = true;
+        }else{
+          deleteFilter = false;
+        };
+
+    for (let i = 0; i < data.tsuppliervs1list.length; i++) {
+      let mobile = "";
+      //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
+      let linestatus = '';
+      if (data.tsuppliervs1list[i].Active == true) {
+          linestatus = "";
+      } else if (data.tsuppliervs1list[i].Active == false) {
+          linestatus = "In-Active";
+      };
+
+      let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.APBalance) || 0.00;
+      let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.ExcessAmount) || 0.00;
+      let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
+      let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.SupplierCreditLimit) || 0.00;
+      let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
+
+      var dataList = [
+          data.tsuppliervs1list[i].fields.ID || '',
+          data.tsuppliervs1list[i].fields.ClientName || '',
+          data.tsuppliervs1list[i].fields.ContactName || '',
+          data.tsuppliervs1list[i].fields.Phone || '',
+          arBalance || 0.00,
+          creditBalance || 0.00,
+          balance || 0.00,
+          creditLimit || 0.00,
+          salesOrderBalance || 0.00,
+          data.tsuppliervs1list[i].fields.Email || '',
+          data.tsuppliervs1list[i].fields.AccountNo || '',
+          data.tsuppliervs1list[i].fields.ClientNo || '',
+          data.tsuppliervs1list[i].fields.JobTitle || '',
+          data.tsuppliervs1list[i].fields.Notes || '',
+          data.tsuppliervs1list[i].fields.Suburb || '',
+          data.tsuppliervs1list[i].fields.Country || '',
+
+          data.tsuppliervs1list[i].BillStreet || '',
+          data.tsuppliervs1list[i].BillStreet2 || '',
+          data.tsuppliervs1list[i].BillState || '',
+          data.tsuppliervs1list[i].BillPostCode || '',
+          data.tsuppliervs1list[i].Billcountry || '',
+      ];
+
+        splashArraySuppliersList.push(dataList);
+        templateObject.transactiondatatablerecords.set(splashArraySuppliersList);
+    }
+
+    if (templateObject.transactiondatatablerecords.get()) {
+        setTimeout(function () {
+            MakeNegative();
+        }, 100);
+    }
+    //$('.fullScreenSpin').css('display','none');
+    setTimeout(function () {
+        //$('#'+currenttablename).removeClass('hiddenColumn');
+        $('#'+currenttablename).DataTable({
+            data: splashArraySuppliersList,
+            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            columnDefs: [
+                {
+                targets: 0,
+                className: "colSupplierID colID hiddenColumn",
+                width: "10px",
+                createdCell: function (td, cellData, rowData, row, col) {
+                  $(td).closest("tr").attr("id", rowData[0]);
+                }},
+                {
+                  targets: 1,
+                  className: "colCompany",
+                },
+                {
+                  targets: 2,
+                  className: "colPhone",
+                  width: "100px",
+                },
+                {
+                  targets: 3,
+                  className: "colAPBalance",
+                  width: "100px",
+                },
+                {
+                  targets: 4,
+                  className: "colCreditBalance",
+                  width: "115px",
+                },
+                {
+                  targets: 5,
+                  className: "colBalance",
+                  width: "95px",
+                },
+                {
+                  targets: 6,
+                  className: "colCreditLimit",
+                  width: "100px",
+                },
+                {
+                  targets: 7,
+                  className: "colSalesOrderBalance",
+                  width: "100px",
+                },
+                {
+                  targets: 8,
+                  className: "colSuburb",
+                  width: "100px",
+                },
+                {
+                  targets: 9,
+                  className: "colCountry",
+                  width: "120px",
+                },
+                {
+                  targets: 10,
+                  className: "colEmail hiddenColumn",
+                },
+                {
+                  targets: 11,
+                  className: "colAccountNo hiddenColumn",
+                },
+                {
+                  targets: 12,
+                  className: "colClientNo hiddenColumn",
+                },
+                {
+                  targets: 13,
+                  className: "colJobTitle hiddenColumn",
+                },
+                {
+                  targets: 14,
+                  className: "colNotes",
+                },
+                {
+                  targets: 15,
+                  className: "colStatus",
+                }
+            ],
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "Suppliers List",
+                    orientation:'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },{
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'Suppliers List',
+                    filename: "Suppliers List",
+                    exportOptions: {
+                        columns: ':visible',
+                        stripHtml: false
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    title: '',
+                    download: 'open',
+                    className: "btntabletoexcel hiddenColumn",
+                    filename: "Suppliers List",
+                    orientation:'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            pageLength: initialDatatableLoad,
+            lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+            info: true,
+            responsive: true,
+            "order": [[1, "asc"]],
+            action: function () {
+                $('#'+currenttablename).DataTable().ajax.reload();
+            },
+            "fnDrawCallback": function (oSettings) {
+                $('.paginate_button.page-item').removeClass('disabled');
+                $('#'+currenttablename+'_ellipsis').addClass('disabled');
+                if (oSettings._iDisplayLength == -1) {
+                    if (oSettings.fnRecordsDisplay() > 150) {
+
+                    }
+                } else {
+
+                }
+                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                    $('.paginate_button.page-item.next').addClass('disabled');
+                }
+
+                $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+              $('.fullScreenSpin').css('display', 'inline-block');
+              //var splashArrayCustomerListDupp = new Array();
+              let dataLenght = oSettings._iDisplayLength;
+              let customerSearch = $('#'+currenttablename+'_filter input').val();
+
+                sideBarService.getAllSuppliersDataVS1(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+
+                for (let j = 0; j < dataObjectnew.tsuppliervs1list.length; j++) {
+                  let mobile = sideBarService.changeDialFormat(dataObjectnew.tsuppliervs1list[j].Mobile, dataObjectnew.tsuppliervs1list[j].Country);
+                  let linestatus = '';
+                  if (dataObjectnew.tsuppliervs1list[j].Active == true) {
+                      linestatus = "";
+                  } else if (dataObjectnew.tsuppliervs1list[j].Active == false) {
+                      linestatus = "In-Active";
+                  };
+
+                  let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.APBalance) || 0.00;
+                  let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.ExcessAmount) || 0.00;
+                  let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.Balance) || 0.00;
+                  let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.SupplierCreditLimit) || 0.00;
+                  let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.Balance) || 0.00;
+
+                    var dataListDupp = [
+                        dataObjectnew.tsuppliervs1list[j].fields.ID || '',
+                      dataObjectnew.tsuppliervs1list[j].fields.ClientName || '',
+                      dataObjectnew.tsuppliervs1list[j].fields.ContactName || '',
+                      dataObjectnew.tsuppliervs1list[j].fields.Phone || '',
+                      arBalance || 0.00,
+                      creditBalance || 0.00,
+                      balance || 0.00,
+                      creditLimit || 0.00,
+                      salesOrderBalance || 0.00,
+                      dataObjectnew.tsuppliervs1list[j].fields.Email || '',
+                      dataObjectnew.tsuppliervs1list[j].fields.AccountNo || '',
+                      dataObjectnew.tsuppliervs1list[j].fields.ClientNo || '',
+                      dataObjectnew.tsuppliervs1list[j].fields.JobTitle || '',
+                      dataObjectnew.tsuppliervs1list[j].fields.Notes || '',
+                      dataObjectnew.tsuppliervs1list[j].fields.Suburb || '',
+                      dataObjectnew.tsuppliervs1list[j].fields.Country || '',
+
+                      dataObjectnew.tsuppliervs1list[j].BillStreet || '',
+                      dataObjectnew.tsuppliervs1list[j].BillStreet2 || '',
+                      dataObjectnew.tsuppliervs1list[j].BillState || '',
+                      dataObjectnew.tsuppliervs1list[j].BillPostCode || '',
+                      dataObjectnew.tsuppliervs1list[j].Billcountry || '',
+                    ];
+
+                    splashArraySuppliersList.push(dataListDupp);
+                }
+                let uniqueChars = [...new Set(splashArraySuppliersList)];
+                templateObject.transactiondatatablerecords.set(uniqueChars);
+                var datatable = $('#'+currenttablename).DataTable();
+                datatable.clear();
+                datatable.rows.add(uniqueChars);
+                datatable.draw(false);
+                setTimeout(function () {
+                  $('#'+currenttablename).dataTable().fnPageChange('last');
+                }, 400);
+
+                $('.fullScreenSpin').css('display', 'none');
+
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+
+              });
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
+            },
+            language: { search: "",searchPlaceholder: "Search List..." },
+            "fnInitComplete": function (oSettings) {
+                  if(data.Params.Search.replace(/\s/g, "") == ""){
+                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                  }else{
+                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                  }
+                  $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+            },
+            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                let countTableData = data.Params.Count || 0; //get count from API data
+
+                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+            }
+
+        }).on('page', function () {
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
+        }).on('column-reorder', function () {
+
+        }).on('length.dt', function (e, settings, len) {
+
+          $(".fullScreenSpin").css("display", "inline-block");
+          let dataLenght = settings._iDisplayLength;
+          if (dataLenght == -1) {
+            if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+              $(".fullScreenSpin").css("display", "none");
+            } else {
+              $(".fullScreenSpin").css("display", "none");
+            }
+          } else {
+            $(".fullScreenSpin").css("display", "none");
+          }
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
+        });
+        $(".fullScreenSpin").css("display", "none");
+    }, 0);
+
+    $('div.dataTables_filter input').addClass('form-control form-control-sm');
+  }
+
       //Client Type List Data
       templateObject.getClientTypeListData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
@@ -1942,7 +2307,7 @@ Template.non_transactional_list.onRendered(function() {
           });
         });
       }
-    templateObject.displayDepartmentListData = async function (data) {
+      templateObject.displayDepartmentListData = async function (data) {
     var splashArrayDepartmentList = new Array();
     let lineItems = [];
     let lineItemObj = {};
@@ -3110,7 +3475,6 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.displayBOMListData(bomProducts)
 
       }
-
       templateObject.displayBOMListData = async function (bomProducts) {
               var splashArrayBOMList = new Array();
               let lineItems = [];
@@ -3324,6 +3688,8 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getUOMListData();
         }else if(currenttablename == "tblBOMList") {
             templateObject.getBOMListData();
+        }else if(currenttablename == "tblSupplierlist") {
+            templateObject.getSupplierListData();
         }
       tableResize();
     });
@@ -3363,6 +3729,9 @@ Template.non_transactional_list.events({
     }else if(currenttablename == "tblUOMList"){
       await clearData('TUOMList');
       templateObject.getUOMListData(true);
+    }else if(currenttablename == "tblSupplierlist"){
+      await clearData('TSupplierVS1List');
+      templateObject.getSupplierListData(true);
     }
 
     },
@@ -3405,6 +3774,9 @@ Template.non_transactional_list.events({
     }else if(currenttablename == "tblUOMList"){
       await clearData('TUOMList');
       templateObject.getUOMListData(false);
+    }else if(currenttablename == "tblSupplierlist"){
+      await clearData('TSupplierVS1List');
+      templateObject.getSupplierListData(false);
     }
 
     },

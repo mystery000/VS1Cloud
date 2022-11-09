@@ -951,6 +951,43 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSupplierVS1, options);
   }
 
+  getAllSuppliersDataVS1List(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+          IgnoreDates:true,
+          orderby: '"Company asc"',
+          //Search: "Active = true",
+        };
+      } else {
+        options = {
+          // IgnoreDates:true,
+          // orderby: '"Company asc"',
+          //Search: "Active = true",
+          // LimitCount: parseInt(limitcount),
+          // LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+          orderby: '"Company asc"',
+          IgnoreDates:true,
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"Company asc"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TSupplierVS1List, options);
+  }
+
   getCustomersDataByName(dataSearchName) {
     var options = "";
     options = {
