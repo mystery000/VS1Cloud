@@ -275,7 +275,7 @@ Template.alltaskdatatable.onRendered(function () {
             //   $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
             // }
           },
-          width: "100px",
+          width: "200px",
         },
         {
           targets: 3,
@@ -1825,7 +1825,7 @@ Template.alltaskdatatable.onRendered(function () {
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
           },
-          width: "100px",
+          width: "200px",
         },
         {
           targets: 3,
