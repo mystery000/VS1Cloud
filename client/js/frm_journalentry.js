@@ -2028,6 +2028,8 @@ Template.journalentrycard.events({
         let purchaseService = new PurchaseBoardService();
         let i = 0;
         setTimeout(async function(){
+            $("#basedOnFrequency").prop('checked', true);
+            $('#edtFrequencyDetail').css('display', 'flex');
           $(".ofMonthList input[type=checkbox]").each(function() {
             $(this).prop('checked', false);
           });
