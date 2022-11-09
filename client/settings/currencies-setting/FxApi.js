@@ -80,11 +80,15 @@ class FxApi {
     amount = 1,
     callback = result => {}
   }) {
+    const credentials = await this.getEmployeeFxCurrencyCredentials();
+    if(!credentials) {
+      return false;
+    }
+
     const response = await fetch(`https://xecdapi.xe.com/v1/convert_from.json/?to=${to}&from=${from}&amount=${amount}&inverse=true`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Basic " + (
-        await this.getEmployeeFxCurrencyCredentials())
+        Authorization: "Basic " + credentials
       }
     });
 
@@ -130,12 +134,16 @@ class FxApi {
   async getEmployeeFxCurrencyCredentials(ApiID = "userheight41774646", ApiKey = "lgfqm73fb3id5vmqhnnfkgkk0v") {
     // here we need to load from db the user credentials
     const credentials = await getXeCurrencyKeys();
-    ApiID = credentials.ApiClientId;
-    ApiKey = credentials.ApiSecretKey;
-
-    const encoded = Base64.encode(`${ApiID}:${ApiKey}`);
-
-    return encoded;
+    if(credentials != false) {
+      ApiID = credentials.ApiClientId;
+      ApiKey = credentials.ApiSecretKey;
+  
+      const encoded = Base64.encode(`${ApiID}:${ApiKey}`);
+  
+      return encoded;
+    }
+   
+    return undefined;
   }
 }
 
