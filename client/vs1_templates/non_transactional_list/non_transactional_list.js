@@ -4,11 +4,13 @@ import { CoreService } from '../../js/core-service';
 import {UtilityService} from "../../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../../js/sidebar-service';
+import {ProductService} from '../../product/product-service';
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
+let productService = new ProductService();
 Template.non_transactional_list.inheritsHooksFrom('export_import_print_display_button');
 
 Template.non_transactional_list.onCreated(function(){
@@ -71,6 +73,8 @@ Template.non_transactional_list.onRendered(function() {
       currenttablename = "tblTermsList"; //Done Something Here;
     }else if (url.includes("/uomSettings")) {
       currenttablename = "tblUOMList"; //Done Something Here;
+    }else if (url.includes("/bomlist")){
+      currenttablename = "tblBOMList"
     }
     templateObject.tablename.set(currenttablename);
 
@@ -204,6 +208,14 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 12, label: 'Volume', class: 'colUOMVolume', active: true, display: true, width: "100" },
                 { index: 13, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
               ];
+          }else if(currenttablename == "tblBOMList") { //Do Something Here
+            reset_data = [
+              { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true },
+              { index: 1, label: 'Product Name', class: 'colName', active: true, display: true},
+              { index: 2, label: 'Process', class: 'colProcess', active: true, display: true },
+              { index: 3, label: 'raws', class: 'colRaws', active: true, display: true },
+              { index: 4, label: 'attachments', class: 'colAttachments', active: true, display: true }
+            ];
           }
         templateObject.reset_data.set(reset_data);
       }
@@ -3047,6 +3059,228 @@ Template.non_transactional_list.onRendered(function() {
 
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
           }
+
+      templateObject.getBOMListData = async function () {
+        // var customerpage = 0;
+        // getVS1Data('"TProcTreeVS1"').then(function (dataObject) {
+        //     if (dataObject.length == 0) {
+        //         productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
+        //             await addVS1Data('TProcTreeVS1', JSON.stringify(data));
+        //             templateObject.displayBOMListData(data); //Call this function to display data on the table
+        //         }).catch(function (err) {
+                  
+        //         });
+        //     } else {
+        //         let data = JSON.parse(dataObject[0].data);
+        //         templateObject.displayBOMListData(data); //Call this function to display data on the table
+        //     }
+        // }).catch(function (err) {
+        //   productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
+        //       //await addVS1Data('TTermsVS1List', JSON.stringify(data));
+        //       templateObject.displayBOMListData(data); //Call this function to display data on the table
+        //   }).catch(function (err) {
+
+        //   });
+        // });
+        let bomProducts = [];
+        let tempArray = localStorage.getItem('TProcTree');
+        bomProducts = tempArray?JSON.parse(tempArray):[];
+        templateObject.displayBOMListData(bomProducts)
+        
+      }
+
+      templateObject.displayBOMListData = async function (bomProducts) {
+              var splashArrayBOMList = new Array();
+              let lineItems = [];
+              let lineItemObj = {};
+              
+
+              for (let i = 0; i < bomProducts.length; i++) {
+                // for (let i = 0; i < data.tproctree.length; i++) {
+                //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
+                let subs = bomProducts[i].fields.subs;
+                let rawName  = ""
+                for (let j = 0; j<subs.length; j++) {
+                  if(j == 0) {rawName += subs[j].productName}
+                  else{rawName += ", "+subs[j].productName}
+                }
+
+                var dataList = [
+                  bomProducts[i].fields.ID || "1",
+                  bomProducts[i].fields.productName || "", //product name -- should be changed on TProcTree
+                  bomProducts[i].fields.process || "",
+                  // bomProducts[i].fields.Description || "",
+                  rawName || '',
+                  bomProducts[i].fields.attachments.length == 0?'No Attachment':bomProducts[i].fields.attachments.length > 0 ? bomProducts[i].fields.attachments.length.toString() + " attachments": "no attachmetns"
+                ];
+
+                splashArrayBOMList.push(dataList);
+                      
+                templateObject.transactiondatatablerecords.set(splashArrayBOMList);
+               
+              }
+
+              
+              if (templateObject.transactiondatatablerecords.get()) {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+              }
+
+              // if (templateObject.transactiondatatablerecords.get()) {
+              //     setTimeout(function () {
+              //         MakeNegative();
+              //     }, 100);
+              // }
+              $('.fullScreenSpin').css('display','none');
+              setTimeout(function () {
+                  //$('#'+currenttablename).removeClass('hiddenColumn');
+                  $('#'+currenttablename).DataTable({
+                      data: splashArrayBOMList,
+                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                      columnDefs: [
+                          {
+                          targets: 0,
+                          className: "colTermsID colID hiddenColumn",
+                          width: "10px",
+                          createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                          }},
+                          {
+                            targets: 1,
+                            className: "colProductName",
+                            // width: "150px",
+                          },
+                          {
+                            targets: 2,
+                            className: "colProcess",
+                            // width: "100px",
+                          },
+                          {
+                            targets: 3,
+                            className: "colRaws",
+                            // width: "50px",
+                        },
+                          {
+                            targets: 4,
+                            className: "colAttachments",
+                            // width: "80px",
+                          }
+
+
+                      ],
+                      buttons: [
+                          {
+                              extend: 'csvHtml5',
+                              text: '',
+                              download: 'open',
+                              className: "btntabletocsv hiddenColumn",
+                              filename: "BOM product structures",
+                              orientation:'portrait',
+                              exportOptions: {
+                                  columns: ':visible'
+                              }
+                          },{
+                              extend: 'print',
+                              download: 'open',
+                              className: "btntabletopdf hiddenColumn",
+                              text: '',
+                              title: 'BOM Product Structure',
+                              filename: "BOM Product Structure",
+                              exportOptions: {
+                                  columns: ':visible',
+                                  stripHtml: false
+                              }
+                          },
+                          {
+                              extend: 'excelHtml5',
+                              title: '',
+                              download: 'open',
+                              className: "btntabletoexcel hiddenColumn",
+                              filename: "BOM Product Structure",
+                              orientation:'portrait',
+                              exportOptions: {
+                                  columns: ':visible'
+                              }
+
+                          }],
+                      select: true,
+                      destroy: true,
+                      colReorder: true,
+                      pageLength: initialDatatableLoad,
+                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                      info: true,
+                      responsive: true,
+                      "order": [[1, "asc"]],
+                      action: function () {
+                          $('#'+currenttablename).DataTable().ajax.reload();
+                      },
+                      "fnDrawCallback": function (oSettings) {
+                          $('.paginate_button.page-item').removeClass('disabled');
+                          $('#'+currenttablename+'_ellipsis').addClass('disabled');
+                          if (oSettings._iDisplayLength == -1) {
+                              if (oSettings.fnRecordsDisplay() > 150) {
+
+                              }
+                          } else {
+
+                          }
+                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                              $('.paginate_button.page-item.next').addClass('disabled');
+                          }
+
+                          $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+
+
+                        });
+                      setTimeout(function () {
+                          MakeNegative();
+                      }, 100);
+                      },
+                      language: { search: "",searchPlaceholder: "Search List..." },
+                      "fnInitComplete": function (oSettings) {
+                            // if(deleteFilter){
+                            //   $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                            // }else{
+                            //   $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                            // }
+                            $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+                      },
+                      "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                          //let countTableData = data.Params.Count || 0; //get count from API data
+
+                          //return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                      }
+
+                  }).on('page', function () {
+                      setTimeout(function () {
+                          MakeNegative();
+                      }, 100);
+                  }).on('column-reorder', function () {
+
+                  }).on('length.dt', function (e, settings, len) {
+
+                    $(".fullScreenSpin").css("display", "inline-block");
+                    let dataLenght = settings._iDisplayLength;
+                    if (dataLenght == -1) {
+                      if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                      } else {
+                        $(".fullScreenSpin").css("display", "none");
+                      }
+                    } else {
+                      $(".fullScreenSpin").css("display", "none");
+                    }
+                      setTimeout(function () {
+                          MakeNegative();
+                      }, 100);
+                  });
+                  $(".fullScreenSpin").css("display", "none");
+              }, 0);
+
+              $('div.dataTables_filter input').addClass('form-control form-control-sm');
+      }
+
         //Check URL to make right call.
         if(currenttablename == "tblcontactoverview"){
             templateObject.getContactOverviewData();
@@ -3066,6 +3300,8 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getTermsData();
         }else if(currenttablename == "tblUOMList"){
             templateObject.getUOMListData();
+        }else if(currenttablename == "tblBOMList") {
+            templateObject.getBOMListData();
         }
       tableResize();
     });

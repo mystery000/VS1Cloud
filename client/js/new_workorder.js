@@ -408,6 +408,7 @@ Template.new_workorder.events({
         workorders = [...workorders, objDetail];
         localStorage.setItem('TWorkorders', JSON.stringify(workorders));
 
+        
         let bomStructure = templateObject.bomStructure.get();
 
         let totalWorkOrders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): []
@@ -941,6 +942,22 @@ Template.new_workorder.events({
 
     },
 
+    'click #BOMSetupModal .btn-product-build': function(event) {
+        let rows = $(event.target).closest('div.product-content').find('div.productRow');
+        for(let i = 1; i < rows.length; i++){
+            $(rows[i]).remove();
+        }
+        $(event.target).removeClass('btn-product-build')
+        $(event.target).removeClass('btn-success')
+        $(event.target).addClass('btn-from-stock')
+        $(event.target).addClass('btn-danger')
+        $(event.target).text('FROM STOCK')
+        $(rows[0]).find('.edtProcessName').editableSelect();
+        $(rows[0]).find('.edtProcessName').prop('disabled', true)
+        $(rows[0]).find('.edtProcessNote').prop('disabled', true)
+        $(rows[0]).find('.edtProcessName').css('background-color', '')
+    },
+
     'click #BOMSetupModal .btnAddSubProduct': function(event) {
         let button  = $(event.target).closest('button.btnAddSubProduct');
         let tempObject = Template.instance();
@@ -1016,102 +1033,9 @@ Template.new_workorder.events({
             mainOrderSaved = false;
         }
 
-        // if(builtCount == 0 && bomProduct[currentBOMIndex].fields.subs.length == $('#BOMSetupModal .product-content').length-2) {
-        //     finalStructure = currentBOMStructure;
-        //     //global save action
-        //     templateObject.bomStructure.set(finalStructure);
-        //     swal('BOM Settings Successfully Saved', '', 'success');
-
-        //     let productContents = $('#BOMSetupModal').find('.product-content');
-        //     for (let l = 1; l < productContents.length -1; l++) {
-        //         $(productContents[l]).remove()
-        //     }
-        //     $('#BOMSetupModal').modal('toggle');
-        // } else {
-            // if(builtCount > 0) {
-            //     for(let n = 0; n<builtCount; n++ ) {
-            //         let buildButtons = $('.btn-product-build');
-            //         let targetButton = buildButtons[n];
-            //         let subProductName = $(targetButton).closest('div.productRow').find('.edtProductName').val();
-            //         let tempLine = JSON.parse(JSON.stringify(currentRecord.line))
-            //         tempLine.fields.Qty = currentRecord.line.fields.Qty * (parseFloat($(targetButton).closest('div.productRow').find('.edtQuantity').val()))||1;
-            //         let objDetail = {
-            //             ID: templateObject.salesOrderId.get() + '_' + (count + n + 1).toString(),
-            //             Customer: $('#edtCustomerName').val() || '',
-            //             OrderTo: $('#txabillingAddress').text() || '',
-            //             PONumber: $('#ponumber').val()||'',
-            //             SaleDate: $('#dtSODate').val() || '',
-            //             DueDate: currentRecord.duedate,
-            //             Line: tempLine,
-            //             BOM: templateObject.bomStructure.get(),
-            //             SalesOrderID: templateObject.salesOrderId.get(),
-            //             StartTime: new Date(),
-            //             InProgress: true
-            //         }
-
-
-            //         getVS1Data('TProductVS1').then(function(dataObject) {
-            //             if(dataObject.length == 0) {
-            //                 productService.getOneProductdatavs1byname(subProductName).then(function(data){
-
-            //                     let line = JSON.parse(JSON.stringify(objDetail.Line));
-            //                     line.fields.ProductName = subProductName;
-            //                     line.fields.Product_Description = dataObject.tproduct[0].fields.ProductDescription;
-            //                     line.fields.ProductID = dataObject.tproduct[0].fields.ID;
-            //                     objDetail.Line = line;
-
-            //                     let tempArray = localStorage.getItem('TWorkorders');
-            //                     let workorders = tempArray?JSON.parse(tempArray): [];
-            //                     workorders = [...workorders, objDetail];
-            //                     localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-            //                 })
-            //             }else {
-            //                 let data = JSON.parse(dataObject[0].data);
-            //                 let useData = data.tproductvs1;
-            //                 for(let i=0 ; i< useData.length; i++) {
-            //                     if(useData[i].fields.ProductName == subProductName) {
-            //                             let line = JSON.parse(JSON.stringify(objDetail.Line));
-            //                             line.fields.ProductName = subProductName;
-            //                             line.fields.Product_Description = useData[i].fields.ProductDescription;
-            //                             line.fields.ProductID = useData[i].fields.ID;
-            //                             objDetail.Line = line;
-            //                             let tempArray = localStorage.getItem('TWorkorders');
-            //                             let workorders = tempArray?JSON.parse(tempArray): [];
-            //                             workorders = [...workorders, objDetail];
-            //                             localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-            //                     }
-            //                 }
-            //             }
-            //         }).catch(function(err){
-            //             productService.getOneProductdatavs1byname(subProductName).then(function(data){
-
-            //                 line.fields.ProductName = subProductName;
-            //                 line.fields.Product_Description = dataObject.tproduct[0].fields.ProductDescription;
-            //                 line.fields.ProductID = dataObject.tproduct[0].fields.ID;
-            //                 objDetail.Line = line;
-            //                 let tempArray = localStorage.getItem('TWorkorders');
-            //                 let workorders = tempArray?JSON.parse(tempArray): [];
-            //                 workorders = [...workorders, objDetail];
-            //                 localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-            //             }).catch(function(error){
-
-            //             })
-            //         })
-
-            //     }
-            //     saveMainBOMStructure();
-            // } else {
+       
                 saveMainBOMStructure();
-            // }
-        // }
-
-        // templateObject.bomStructure.set(finalStructure);
-        // swal('BOM Settings Successfully Saved', '', 'success');
-        // let productContents = $('#BOMSetupModal').find('.product-content');
-        // for (let l = 1; l < productContents.length -1; l++) {
-        //     $(productContents[l]).remove()
-        // }
-        // $('#BOMSetupModal').modal('toggle');
+           
     }, delayTimeAfterSound);
     function saveMainBOMStructure() {
         let mainProductName = $('#edtMainProductName').val();
@@ -1381,4 +1305,12 @@ Template.new_workorder.events({
             $('.fullScreenSpin').css('display', 'none')
         }
     },
+
+    'click .btnBack': function(event) {
+        if(FlowRouter.current().queryParams.salesorderid) {
+            FlowRouter.go('/salesordercard?id='+FlowRouter.current().queryParams.salesorderid)
+        }else{
+            FlowRouter.go('/workorderlist')
+        }
+    }
 })
