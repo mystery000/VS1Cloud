@@ -958,15 +958,15 @@ export class SideBarService extends BaseService {
         options = {
           IgnoreDates:true,
           orderby: '"Company asc"',
-          //Search: "Active = true",
+          Search: "Active = true",
         };
       } else {
         options = {
-          // IgnoreDates:true,
-          // orderby: '"Company asc"',
-          //Search: "Active = true",
-          // LimitCount: parseInt(limitcount),
-          // LimitFrom: parseInt(limitfrom),
+          IgnoreDates:true,
+          orderby: '"Company asc"',
+          Search: "Active = true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
         };
       }
     }else{
