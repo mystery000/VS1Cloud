@@ -2323,6 +2323,8 @@ Template.alltaskdatatable.events({
           supplierID = contactID;
         }
 
+        let completed = $('#chkComplete_taskEdit').prop("checked");
+
         var objDetails = {
           type: "Tprojecttasks",
           fields: {
@@ -2334,7 +2336,8 @@ Template.alltaskdatatable.events({
             SupplierID: supplierID,
             AssignID: assignId,
             AssignName: assignName,
-            ContactName: contactName
+            ContactName: contactName,
+            Completed: completed
           },
         };
         $(".fullScreenSpin").css("display", "inline-block");
@@ -3964,16 +3967,16 @@ function openEditTaskModal(id, type) {
       let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
 
       if (selected_record.Completed) {
-        $('#lblComplete_taskEditLabel').removeClass('chk_complete');
-        $('#lblComplete_taskEditLabel').addClass('chk_uncomplete');
-        $('#chkComplete_taskEdit').removeClass('chk_complete');
-        $('#chkComplete_taskEdit').addClass('chk_uncomplete');
+        // $('#lblComplete_taskEditLabel').removeClass('chk_complete');
+        // $('#lblComplete_taskEditLabel').addClass('chk_uncomplete');
+        // $('#chkComplete_taskEdit').removeClass('chk_complete');
+        // $('#chkComplete_taskEdit').addClass('chk_uncomplete');
         $('#chkComplete_taskEdit').prop("checked", true);
       } else {
-        $('#lblComplete_taskEditLabel').removeClass('chk_uncomplete');
-        $('#lblComplete_taskEditLabel').addClass('chk_complete');
-        $('#chkComplete_taskEdit').removeClass('chk_uncomplete');
-        $('#chkComplete_taskEdit').addClass('chk_complete');
+        // $('#lblComplete_taskEditLabel').removeClass('chk_uncomplete');
+        // $('#lblComplete_taskEditLabel').addClass('chk_complete');
+        // $('#chkComplete_taskEdit').removeClass('chk_uncomplete');
+        // $('#chkComplete_taskEdit').addClass('chk_complete');
         $('#chkComplete_taskEdit').prop("checked", false);
       }
 
