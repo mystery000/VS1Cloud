@@ -116,15 +116,15 @@ class FxApi {
       : onNull;
   }
 
-  async saveCurrencies(currencies, callback = (response = null, error = null) => {}) {
+  async saveCurrencies(currencies, callback = async (response = null, error = null) => {}) {
     let taxRateService = new TaxRateService();
 
     try {
       const response = await taxRateService.saveCurrencies({type: "TCurrency", objects: currencies});
 
-      callback(response);
+      await callback(response);
     } catch (error) {
-      callback(null, error);
+      await callback(null, error);
     }
   }
 
