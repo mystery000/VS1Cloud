@@ -4,6 +4,7 @@ import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 
+Template.uomSettings.inheritsHooksFrom('non_transactional_list');
 Template.uomSettings.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -28,17 +29,10 @@ Template.uomSettings.onRendered(function() {
 
 
     $('#tblUOMList tbody').on( 'click', 'tr', function () {
-    var listData = $(this).closest('tr').attr('id');
-
-    var isSalesDefault = false;
-    var isPurchaseDefault = false;
-    if(listData){
+        var isSalesDefault = false;
+        var isPurchaseDefault = false;
       $('#add-uom-title').text('Edit UOM');
-      //$('#isformcreditcard').removeAttr('checked');
-      if (listData !== '') {
-        listData = Number(listData);
-
-       var uomID = listData || '';
+       var uomID = $(this).closest('tr').attr('id');
        var uomName = $(event.target).closest("tr").find(".colUOMName").text() || '';
        var uomDescription = $(event.target).closest("tr").find(".colUOMDesc").text() || '';
        var uomProduct = $(event.target).closest("tr").find(".colUOMProduct").text() || '';
@@ -57,19 +51,6 @@ Template.uomSettings.onRendered(function() {
          isPurchaseDefault = true;
        }
 
-       $('#edtUOMID').val(uomID);
-       $('#edtUnitName').val(uomName);
-       $('#edtUnitName').prop('readonly', true);
-       $('#txaUnitDescription').val(uomDescription);
-       $('#sltProduct').val(uomProduct);
-       $('#edtUnitMultiplier').val(unitMultiplier);
-       $('#edtUnitWeight').val(uomWeight);
-       $('#edtNoOfBoxes').val(uomNoOfBoxes);
-       $('#edtHeight').val(uomNoOfBoxes);
-       $('#edtWidth').val(uomNoOfBoxes);
-       $('#edtLength').val(uomNoOfBoxes);
-       $('#edtVolume').val(uomNoOfBoxes);
-
        if(isSalesDefault == true){
          templateObject.includeSalesDefault.set(true);
        }else{
@@ -82,12 +63,19 @@ Template.uomSettings.onRendered(function() {
          templateObject.includePurchaseDefault.set(false);
        }
 
-      $(this).closest('tr').attr('data-target', '#newUomModal');
-      $(this).closest('tr').attr('data-toggle', 'modal');
-
-    }
-
-    }
+       $('#edtUOMID').val(uomID);
+       $('#edtUnitName').val(uomName);
+       $('#edtUnitName').prop('readonly', true);
+       $('#txaUnitDescription').val(uomDescription);
+       $('#sltProduct').val(uomProduct);
+       $('#edtUnitMultiplier').val(unitMultiplier);
+       $('#edtUnitWeight').val(uomWeight);
+       $('#edtNoOfBoxes').val(uomNoOfBoxes);
+       $('#edtHeight').val(uomNoOfBoxes);
+       $('#edtWidth').val(uomNoOfBoxes);
+       $('#edtLength').val(uomNoOfBoxes);
+       $('#edtVolume').val(uomNoOfBoxes);
+       $('#newUomModal').modal('show');
 
     });
 
@@ -108,74 +96,70 @@ Template.uomSettings.events({
     'click .btnRefresh': function () {
       $('.fullScreenSpin').css('display','inline-block');
       sideBarService.getUOMDataList().then(function(dataReload) {
-              addVS1Data('TUnitOfMeasure',JSON.stringify(dataReload)).then(function (datareturn) {
-                location.reload(true);
-              }).catch(function (err) {
-                location.reload(true);
-              });
-            }).catch(function(err) {
-            location.reload(true);
-            });
+          addVS1Data('TUnitOfMeasure',JSON.stringify(dataReload)).then(function (datareturn) {
+              Meteor._reload.reload();
+          }).catch(function (err) {
+              Meteor._reload.reload();
+          });
+      }).catch(function (err) {
+          Meteor._reload.reload();
+      });
     },
     'click .btnDeleteUOM': function () {
-      playDeleteAudio();
-      setTimeout(function(){
-      let taxRateService = new TaxRateService();
-      let uomId = $('#selectDeleteLineID').val();
+          playDeleteAudio();
+          let taxRateService = new TaxRateService();
+          setTimeout(function(){
+          let uomId = $('#edtUOMID').val();
+          let objDetails = {
+              type: "TUnitOfMeasure",
+              fields: {
+                  Id: parseInt(uomId),
+                  Active: false
+              }
+          };
 
-
-      let objDetails = {
-          type: "TUnitOfMeasure",
-          fields: {
-              Id: parseInt(uomId),
-              Active: false
-          }
-      };
-
-      taxRateService.saveUOM(objDetails).then(function (objDetails) {
-        sideBarService.getUOMDataList().then(function(dataReload) {
-              addVS1Data('TUOMVS1',JSON.stringify(dataReload)).then(function (datareturn) {
-                Meteor._reload.reload();
+            taxRateService.saveUOM(objDetails).then(function (objDetails) {
+            sideBarService.getUOMDataList().then(function(dataReload) {
+              addVS1Data('TUnitOfMeasure',  JSON.stringify(dataReload)).then(function (datareturn) {
+                 Meteor._reload.reload();
               }).catch(function (err) {
-                Meteor._reload.reload();
+                 Meteor._reload.reload();
               });
-            }).catch(function(err) {
-              Meteor._reload.reload();
-            });
-      }).catch(function (err) {
-        swal({
-        title: 'Oooops...',
-        text: err,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Try Again'
-        }).then((result) => {
-        if (result.value) {
-         Meteor._reload.reload();
-        } else if (result.dismiss === 'cancel') {
-
-        }
-        });
-          $('.fullScreenSpin').css('display','none');
       });
-    }, delayTimeAfterSound);
-    },
+
+      }).catch(function (err) {
+          swal({
+              title: 'Oooops...',
+              text: err,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonText: 'Try Again'
+          }).then((result) => {
+              if (result.value) {
+                  Meteor._reload.reload();
+              } else if (result.dismiss === 'cancel') {}
+          });
+          $('.fullScreenSpin').css('display', 'none');
+      });
+  }, delayTimeAfterSound);
+  },
     'click .btnSaveUOM': function () {
       playSaveAudio();
-      setTimeout(function(){
-      $('.fullScreenSpin').css('display','inline-block');
       let taxRateService = new TaxRateService();
+      setTimeout(function(){
+      //$('.fullScreenSpin').css('display','inline-block');
+      let objDetails = '';
       let uomID = $('#edtUOMID').val();
-      let uomName = $('#edtUnitName').val();
-      let uomDescription = $('#txaUnitDescription').val();
-      let uomProduct = $('#sltProduct').val();
-      let uomMultiplier = $('#edtUnitMultiplier').val();
-      let uomWeight = $('#edtUnitWeight').val();
-      let uomNonOfBoxes = $('#edtNoOfBoxes').val();
-      let uomHeight = $('#edtHeight').val();
-      let uomWidth = $('#edtWidth').val();
-      let uomLength = $('#edtLength').val();
-      let uomVolume = $('#edtVolume').val();
+      let uomName = $('#edtUnitName').val() || '';
+      let uomDescription = $('#txaUnitDescription').val() || '';
+      let uomProduct = $('#sltProduct').val() || '';
+      let uomMultiplier = $('#edtUnitMultiplier').val() || 0;
+      let uomWeight = $('#edtUnitWeight').val() || 0;
+      let uomNonOfBoxes = $('#edtNoOfBoxes').val() || 0;
+      let uomHeight = $('#edtHeight').val() || 0;
+      let uomWidth = $('#edtWidth').val() || 0;
+      let uomLength = $('#edtLength').val() || 0;
+      let uomVolume = $('#edtVolume').val() || 0;
 
       let isSalesdefault = false;
       let isPurchasedefault = false;
@@ -192,7 +176,6 @@ Template.uomSettings.events({
         isPurchasedefault = false;
       }
 
-      let objDetails = '';
       if (uomName === ''){
       $('.fullScreenSpin').css('display','none');
       Bert.alert('<strong>WARNING:</strong> Unit Name cannot be blank!', 'warning');
@@ -210,30 +193,29 @@ Template.uomSettings.events({
                  UOMName: uomName,
                  UnitDescription: uomDescription,
                  ProductName: uomProduct,
-                 UnitMultiplier: uomMultiplier||0,
+                 Multiplier: parseFloat(uomMultiplier)||0,
                  PurchasesDefault: isPurchasedefault,
-                 Salesdefault: isSalesdefault,
-                 UOMWeight: uomWeight||0,
-                 NoOfBoxes: uomNonOfBoxes||0,
-                 Height: uomHeight||0,
-                 Length: uomLength||0,
-                 Width: uomWidth||0,
-                 Volume: uomVolume||0,
-                 PublishOnVS1:true
+                 SalesDefault: isSalesdefault,
+                 Weight: parseFloat(uomWeight)||0,
+                 NoOfBoxes: parseFloat(uomNonOfBoxes)||0,
+                 Height: parseFloat(uomHeight)||0,
+                 Length: parseFloat(uomLength)||0,
+                 Width: parseFloat(uomWidth)||0,
+                 Volume: parseFloat(uomVolume)||0,
+                 //PublishOnVS1:true
              }
          };
 
          taxRateService.saveUOM(objDetails).then(function (objDetails) {
            sideBarService.getUOMVS1().then(function(dataReload) {
-              addVS1Data('TUnitOfMeasure',JSON.stringify(dataReload)).then(function (datareturn) {
-                Meteor._reload.reload();
+              addVS1Data('TUnitOfMeasure', JSON.stringify(dataReload)).then(function (datareturn) {
+                 Meteor._reload.reload();
               }).catch(function (err) {
-                Meteor._reload.reload();
+                 Meteor._reload.reload();
               });
-            }).catch(function(err) {
-              Meteor._reload.reload();
-            });
-         }).catch(function (err) {
+      });
+
+      }).catch(function (err) {
            swal({
            title: 'Oooops...',
            text: err,
@@ -257,30 +239,29 @@ Template.uomSettings.events({
                  UOMName: uomName,
                  UnitDescription: uomDescription,
                  ProductName: uomProduct,
-                 UnitMultiplier: uomMultiplier||0,
+                 Multiplier: parseFloat(uomMultiplier)||0,
                  PurchasesDefault: isPurchasedefault,
-                 Salesdefault: isSalesdefault,
-                 UOMWeight: uomWeight||0,
-                 NoOfBoxes: uomNonOfBoxes||0,
-                 Height: uomHeight||0,
-                 Length: uomLength||0,
-                 Width: uomWidth||0,
-                 Volume: uomVolume||0,
-                 PublishOnVS1:true
+                 SalesDefault: isSalesdefault,
+                 Weight: parseFloat(uomWeight)||0,
+                 NoOfBoxes: parseFloat(uomNonOfBoxes)||0,
+                 Height: parseFloat(uomHeight)||0,
+                 Length: parseFloat(uomLength)||0,
+                 Width: parseFloat(uomWidth)||0,
+                 Volume: parseFloat(uomVolume)||0,
+                 //PublishOnVS1:true
              }
          };
 
          taxRateService.saveUOM(objDetails).then(function (objDetails) {
            sideBarService.getUOMVS1().then(function(dataReload) {
-              addVS1Data('TUnitOfMeasure',JSON.stringify(dataReload)).then(function (datareturn) {
-                Meteor._reload.reload();
+              addVS1Data('TUnitOfMeasure', JSON.stringify(dataReload)).then(function (datareturn) {
+                 Meteor._reload.reload();
               }).catch(function (err) {
-                Meteor._reload.reload();
+                 Meteor._reload.reload();
               });
-            }).catch(function(err) {
-              Meteor._reload.reload();
-            });
-         }).catch(function (err) {
+      });
+
+      }).catch(function (err) {
            swal({
            title: 'Oooops...',
            text: err,
@@ -306,29 +287,28 @@ Template.uomSettings.events({
               UOMName: uomName,
               UnitDescription: uomDescription,
               ProductName: uomProduct,
-              UnitMultiplier: uomMultiplier||0,
+              Multiplier: parseFloat(uomMultiplier)||0,
               PurchasesDefault: isPurchasedefault,
-              Salesdefault: isSalesdefault,
-              UOMWeight: uomWeight||0,
-              NoOfBoxes: uomNonOfBoxes||0,
-              Height: uomHeight||0,
-              Length: uomLength||0,
-              Width: uomWidth||0,
-              Volume: uomVolume||0,
-              PublishOnVS1:true
+              SalesDefault: isSalesdefault,
+              Weight: parseFloat(uomWeight)||0,
+              NoOfBoxes: parseFloat(uomNonOfBoxes)||0,
+              Height: parseFloat(uomHeight)||0,
+              Length: parseFloat(uomLength)||0,
+              Width: parseFloat(uomWidth)||0,
+              Volume: parseFloat(uomVolume)||0,
+              //PublishOnVS1:true
           }
       };
 
       taxRateService.saveUOM(objDetails).then(function (objDetails) {
         sideBarService.getUOMVS1().then(function(dataReload) {
-              addVS1Data('TUnitOfMeasure1',JSON.stringify(dataReload)).then(function (datareturn) {
-                Meteor._reload.reload();
+              addVS1Data('TUnitOfMeasure', JSON.stringify(dataReload)).then(function (datareturn) {
+                 Meteor._reload.reload();
               }).catch(function (err) {
-                Meteor._reload.reload();
+                 Meteor._reload.reload();
               });
-            }).catch(function(err) {
-              Meteor._reload.reload();
-            });
+      });
+
       }).catch(function (err) {
         swal({
         title: 'Oooops...',
