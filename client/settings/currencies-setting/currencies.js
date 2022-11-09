@@ -1556,7 +1556,7 @@ export const updateAllCurrencies = (employeeId,
 
         const result = await swal({
           title: "Update in progress",
-          text: "Do you wish to add an account ?",
+         // text: "Do you wish to add an account ?",
           type: "question",
           showCancelButton: false,
           confirmButtonText: "Ok",
