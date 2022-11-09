@@ -21073,7 +21073,7 @@ Template.new_invoice.events({
     }
   },
 
-  'change .exchange-rate-js, change input.colAmount': (e, ui) => {
+  'change .exchange-rate-js, change input.lineUnitPrice': (e, ui) => {
 
 
       setTimeout(() => {
