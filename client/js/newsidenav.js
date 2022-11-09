@@ -8707,6 +8707,12 @@ Template.newsidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
+    'click #sidecampaignlist': function(event) {
+      event.preventDefault();
+      FlowRouter.go('/campaign-list');
+      let templateObject = Template.instance();
+      templateObject.getSetSideNavFocus();
+    },
     'click #sidenavmailchimp': function(event) {
         event.preventDefault();
         if (FlowRouter.current().path == "/crmoverview") {

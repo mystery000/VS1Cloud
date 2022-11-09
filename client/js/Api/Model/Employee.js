@@ -65,7 +65,7 @@ export default class Employee {
       timesheets = data.ttimesheet.map(t => t.fields);
     }
 
-    console.log('timsheets of employee', timesheets);
+    
     
     timesheets.forEach((t, index) => {
       if (t.Status == "") {

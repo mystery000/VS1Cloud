@@ -2399,7 +2399,7 @@ Template.vs1login.onRendered(function () {
                                             })
                                         })
                                       }
-                                    //   await getLogonEmails();
+                                      await getLogonEmails();
 
 
                                       dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;

@@ -85,14 +85,14 @@ Template.billcard.onCreated(() => {
 });
 Template.billcard.onRendered(() => {
     let templateObject = Template.instance();
-    $('#onEventSettings').css('display', 'none');
     $('#edtFrequencyDetail').css('display', 'none');
-    $('#basedOnFrequency').prop('checked', false);
-    $('#basedOnPrint').prop('checked', false);
-    $('#basedOnSave').prop('checked', false);
-    $('#basedOnTransactionDate').prop('checked', false);
-    $('#basedOnDueDate').prop('checked', false);
-    $('#basedOnEvent').prop('checked', false);
+    // $('#onEventSettings').css('display', 'none');
+    // $('#basedOnFrequency').prop('checked', false);
+    // $('#basedOnPrint').prop('checked', false);
+    // $('#basedOnSave').prop('checked', false);
+    // $('#basedOnTransactionDate').prop('checked', false);
+    // $('#basedOnDueDate').prop('checked', false);
+    // $('#basedOnEvent').prop('checked', false);
     $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
       showOn: 'button',
       buttonText: 'Show Date',
@@ -5451,28 +5451,28 @@ Template.billcard.helpers({
 });
 
 Template.billcard.events({
-    'click input.basedOnSettings': function (event) {
-        if (event.target.id == "basedOnEvent") {
-            const value = $(event.target).prop('checked');
-            if (value) {
-                $('#onEventSettings').css('display', 'block');
-                $('#settingsOnEvents').prop('checked', true);
-            } else {
-                $('#onEventSettings').css('display', 'none');
-                $('#settingsOnEvents').prop('checked', false);
-                $('#settingsOnLogout').prop('checked', false);
-            }
-        } else if (event.target.id == 'basedOnFrequency') {
-            const value = $(event.target).prop('checked');
-            if(value) {
-                $('#edtFrequencyDetail').css('display', 'flex');
-                $('#basedOnSettingsTitle').css('border-top-width', '1px');
-            }else {
-                $('#edtFrequencyDetail').css('display', 'none');
-                $('#basedOnSettingsTitle').css('border-top-width', '0px');
-            }
-        }
-      },
+    // 'click input.basedOnSettings': function (event) {
+    //     if (event.target.id == "basedOnEvent") {
+    //         const value = $(event.target).prop('checked');
+    //         if (value) {
+    //             $('#onEventSettings').css('display', 'block');
+    //             $('#settingsOnEvents').prop('checked', true);
+    //         } else {
+    //             $('#onEventSettings').css('display', 'none');
+    //             $('#settingsOnEvents').prop('checked', false);
+    //             $('#settingsOnLogout').prop('checked', false);
+    //         }
+    //     } else if (event.target.id == 'basedOnFrequency') {
+    //         const value = $(event.target).prop('checked');
+    //         if(value) {
+    //             $('#edtFrequencyDetail').css('display', 'flex');
+    //             $('#basedOnSettingsTitle').css('border-top-width', '1px');
+    //         }else {
+    //             $('#edtFrequencyDetail').css('display', 'none');
+    //             $('#basedOnSettingsTitle').css('border-top-width', '0px');
+    //         }
+    //     }
+    //   },
       'click input[name="frequencyRadio"]': function (event) {
         if (event.target.id == "frequencyMonthly") {
             document.getElementById("monthlySettings").style.display = "block";
@@ -5528,6 +5528,8 @@ Template.billcard.events({
         let purchaseService = new PurchaseBoardService();
     let i = 0;
     setTimeout(async function(){
+        $("#basedOnFrequency").prop('checked', true);
+      $('#edtFrequencyDetail').css('display', 'flex');
       $(".ofMonthList input[type=checkbox]").each(function() {
         $(this).prop('checked', false);
       });
@@ -5548,25 +5550,25 @@ Template.billcard.events({
         var subFinishDate = finishDate.substring(0, 10);
         var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
         var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
-        if (selectedType == "basedOnEvent") {
-          $("#basedOnEvent").prop('checked', true);
-          $('#onEventSettings').css('display', 'block');
-          $('#settingsOnEvents').prop('checked', true);
-        } else {
-          $("#basedOnEvent").prop('checked', false);
-          $('#onEventSettings').css('display', 'none');
-          $('#settingsOnEvents').prop('checked', false);
-          $('#settingsOnLogout').prop('checked', false);
-        }
-        if (selectedType == 'basedOnFrequency') {
-          $("#basedOnFrequency").prop('checked', true);
-          $('#edtFrequencyDetail').css('display', 'flex');
-          $('#basedOnSettingsTitle').css('border-top-width', '1px');
-        } else {
-          $("#basedOnFrequency").prop('checked', false);
-          $('#edtFrequencyDetail').css('display', 'none');
-          $('#basedOnSettingsTitle').css('border-top-width', '0px');
-        }
+        // if (selectedType == "basedOnEvent") {
+        //   $("#basedOnEvent").prop('checked', true);
+        //   $('#onEventSettings').css('display', 'block');
+        //   $('#settingsOnEvents').prop('checked', true);
+        // } else {
+        //   $("#basedOnEvent").prop('checked', false);
+        //   $('#onEventSettings').css('display', 'none');
+        //   $('#settingsOnEvents').prop('checked', false);
+        //   $('#settingsOnLogout').prop('checked', false);
+        // }
+        // if (selectedType == 'basedOnFrequency') {
+        //   $("#basedOnFrequency").prop('checked', true);
+        //   $('#edtFrequencyDetail').css('display', 'flex');
+        //   $('#basedOnSettingsTitle').css('border-top-width', '1px');
+        // } else {
+        //   $("#basedOnFrequency").prop('checked', false);
+        //   $('#edtFrequencyDetail').css('display', 'none');
+        //   $('#basedOnSettingsTitle').css('border-top-width', '0px');
+        // }
         var arrFrequencyVal = frequencyVal.split("@");
         var radioFrequency = arrFrequencyVal[0];
         $("#" + radioFrequency).prop('checked', true);

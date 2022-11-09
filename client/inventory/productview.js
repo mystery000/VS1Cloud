@@ -14,23 +14,6 @@ let utilityService = new UtilityService();
 let productService = new ProductService();
 let accSelected = "";
 let taxSelected = "";
-var subStructure = {
-    process: 'Process-1',
-    mats: [
-        {
-            name: 'Payment',
-            qty: '0.75'
-        },
-        {
-            name: 'Rounding',
-            qty: '3'
-        },
-        {
-            name: '$Discount',
-            qty: '2.5'
-        },
-    ]
-}
 
 Template.productview.onCreated(() => {
     const templateObject = Template.instance();
@@ -1896,7 +1879,7 @@ Template.productview.onRendered(function() {
                             lockextrasell: data.fields.LockExtraSell,
                             customfield1: data.fields.CUSTFLD1,
                             customfield2: data.fields.CUSTFLD2,
-                            //totalqtyinstock : totalquantity,
+                            totalqtyinstock : data.fields.TotalQtyInStock,
                             barcode: data.fields.BARCODE,
                             // data.fields.TotalQtyInStock,
                             totalqtyonorder: data.fields.TotalQtyOnOrder,
@@ -2079,7 +2062,7 @@ Template.productview.onRendered(function() {
                                 lockextrasell: useData[i].fields.LockExtraSell,
                                 customfield1: useData[i].fields.CUSTFLD1,
                                 customfield2: useData[i].fields.CUSTFLD2,
-                                //totalqtyinstock : totalquantity,
+                                totalqtyinstock : useData[i].fields.TotalQtyInStock,
                                 barcode: useData[i].fields.BARCODE,
                                 // useData[i].fields.TotalQtyInStock,
                                 totalqtyonorder: useData[i].fields.TotalQtyOnOrder,
@@ -2245,7 +2228,7 @@ Template.productview.onRendered(function() {
                                 lockextrasell: data.fields.LockExtraSell,
                                 customfield1: data.fields.CUSTFLD1,
                                 customfield2: data.fields.CUSTFLD2,
-                                //totalqtyinstock : totalquantity,
+                                totalqtyinstock : TotalQtyInStock,
                                 barcode: data.fields.BARCODE,
                                 // data.fields.TotalQtyInStock,
                                 totalqtyonorder: data.fields.TotalQtyOnOrder,
@@ -2417,7 +2400,7 @@ Template.productview.onRendered(function() {
                         lockextrasell: data.fields.LockExtraSell,
                         customfield1: data.fields.CUSTFLD1,
                         customfield2: data.fields.CUSTFLD2,
-                        //totalqtyinstock : totalquantity,
+                        totalqtyinstock : data.fields.TotalQtyInStock,
                         barcode: data.fields.BARCODE,
                         // data.fields.TotalQtyInStock,
                         totalqtyonorder: data.fields.TotalQtyOnOrder,
@@ -3346,6 +3329,7 @@ Template.productview.onRendered(function() {
                                 //totalqtyinstock : totalquantity,
                                 barcode: useData[i].fields.BARCODE,
                                 // useData[i].fields.TotalQtyInStock,
+                                totalqtyinstock: useData[i].fields.TotalQtyInStock,
                                 totalqtyonorder: useData[i].fields.TotalQtyOnOrder,
                                 //productclass :lineItems
                             };
@@ -3492,6 +3476,7 @@ Template.productview.onRendered(function() {
                                 //totalqtyinstock : totalquantity,
                                 barcode: data.tproduct[0].fields.BARCODE,
                                 // data.fields.TotalQtyInStock,
+                                totalqtyinstock: data.tproduct[0].fields.TotalQtyInStock,
                                 totalqtyonorder: data.tproduct[0].fields.TotalQtyOnOrder,
                                 //productclass :lineItems
                             };
@@ -3643,6 +3628,7 @@ Template.productview.onRendered(function() {
                         barcode: data.tproduct[0].fields.BARCODE,
                         // data.fields.TotalQtyInStock,
                         totalqtyonorder: data.tproduct[0].fields.TotalQtyOnOrder,
+                        totalqtyinstock: data.tproduct[0].fields.TotalQtyInStock,
                         //productclass :lineItems
                     };
                     setTimeout(async function() {
@@ -4037,7 +4023,8 @@ Template.productview.onRendered(function() {
             //totalqtyinstock : totalquantity,
             barcode: '',
             // data.fields.TotalQtyInStock,
-            totalqtyonorder: 0
+            totalqtyonorder: 0,
+            totalqtynstock: 0
                 //productclass :lineItems
         };
 
@@ -4078,6 +4065,7 @@ Template.productview.onRendered(function() {
                     lockextrasell: '',
                     barcode: '',
                     totalqtyonorder: 0,
+                    totalqtyinstock: 0,
 
                 };
 
@@ -4107,7 +4095,7 @@ Template.productview.onRendered(function() {
                         lockextrasell: '',
                         barcode: '',
                         totalqtyonorder: 0,
-
+                        totalqtyinstock: 0
                     };
 
                     templateObject.records.set(productrecord);
@@ -4602,7 +4590,7 @@ Template.productview.events({
                     };
                     productService.saveProductService(objServiceDetails).then(function(objServiceDetails) {});
                 };
-
+                saveBOMStructure()
                 sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(dataReload) {
                     addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
                         FlowRouter.go('/inventorylist?success=true');
@@ -4724,7 +4712,7 @@ Template.productview.events({
                             };
                             productService.saveProductService(objServiceDetails).then(function(objServiceDetails) {});
                         };
-
+                        saveBOMStructure();
                         sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(dataReload) {
                             addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
                                 FlowRouter.go('/inventorylist?success=true');
@@ -4840,7 +4828,7 @@ Template.productview.events({
                             };
                             productService.saveProductService(objServiceDetails).then(function(objServiceDetails) {});
                         };
-
+                        saveBOMStructure();
                         sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(dataReload) {
                             addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
                                 FlowRouter.go('/inventorylist?success=true');
@@ -4960,6 +4948,9 @@ Template.productview.events({
                         productService.saveProductService(objServiceDetails).then(function(objServiceDetails) {});
                     };
 
+                    saveBOMStructure()
+                    
+
                     sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(dataReload) {
                         addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
                             FlowRouter.go('/inventorylist?success=true');
@@ -4987,6 +4978,35 @@ Template.productview.events({
             });
 
         }
+
+        function saveBOMStructure() {
+            let bomObject = templateObject.bomStructure.get();
+
+            let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')):[];
+    
+            let existIndex = bomProducts.findIndex(product =>{
+                return product.fields.productName == bomObject.fields.productName;
+            })
+    
+            let temp = JSON.parse(JSON.stringify(bomObject));
+            temp.fields.productDescription = templateObject.records.get().salesdescription
+            if(templateObject.isManufactured.get() == true) {
+                if(existIndex > -1) {
+                    bomProducts.splice(existIndex, 1, bomObject)
+                }else {
+                    bomProducts.push(bomObject);
+                }
+            } else {
+                bomProducts = bomProducts.filter(product => {
+                    return product.fields.productName != bomObject.fields.productName;
+                })
+            }
+    
+            localStorage.setItem('TProcTree', JSON.stringify(bomProducts));
+        }
+
+        
+                    
     }, delayTimeAfterSound);
     },
     'click .btnBack': function(event) {
@@ -6004,8 +6024,12 @@ Template.productview.events({
             }
 
             templateObject.showSubButton.set(true);
-            // let colProcess = $(selEle).closest('.productRow').find('.edtProcessName');
-            // $(colProcess).val(bomProducts[existIndex].fields.process)
+            let colProcess = $(selEle).closest('.productRow').find('.edtProcessName');
+            $(colProcess).val(bomProducts[existIndex].fields.process)
+            $(colProcess).attr('disabled', 'true');
+            let colProcessNote = $(selEle).closest('.productRow').find('.edtProcessNote');
+            $(colProcessNote).val(bomProducts[existIndex].fields.processNote)
+            $(colProcessNote).attr('disabled', 'true');
         }
 
         // getVS1Data('TProductVS1').then(function(dataObject){
@@ -6158,21 +6182,22 @@ Template.productview.events({
             type: 'TProcTree',
             fields: objDetails
         }
+        tempObject.bomStructure.set(object);
 
 
-        let existIndex = bomProducts.findIndex(product =>{
-            return product.fields.productName == object.fields.productName;
-        })
-        if(existIndex > -1) {
-            bomProducts.splice(existIndex, 1, object)
-        }else {
-            bomProducts.push(object);
-        }
+        // let existIndex = bomProducts.findIndex(product =>{
+        //     return product.fields.productName == object.fields.productName;
+        // })
+        // if(existIndex > -1) {
+        //     bomProducts.splice(existIndex, 1, object)
+        // }else {
+        //     bomProducts.push(object);
+        // }
 
-        localStorage.setItem('TProcTree', JSON.stringify(bomProducts));
+        // localStorage.setItem('TProcTree', JSON.stringify(bomProducts));
         swal('BOM Settings Successfully Saved', '', 'success');
-        tempObject.bomProducts.set(JSON.parse(localStorage.getItem('TProcTree')))
-        let productContents = $('#BOMSetupModal').find('.product-content');
+        // tempObject.bomProducts.set(JSON.parse(localStorage.getItem('TProcTree')))
+        // let productContents = $('#BOMSetupModal').find('.product-content');
         for (let l = 1; l < productContents.length -1; l++) {
             $(productContents[l]).remove()
         }

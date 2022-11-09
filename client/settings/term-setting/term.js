@@ -2,7 +2,10 @@ import {TaxRateService} from "../settings-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
+
 let sideBarService = new SideBarService();
+Template.termsettings.inheritsHooksFrom('non_transactional_list');
+
 Template.termsettings.onCreated(function(){
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -29,7 +32,7 @@ Template.termsettings.onCreated(function(){
 });
 
 Template.termsettings.onRendered(function() {
-    $('.fullScreenSpin').css('display','inline-block');
+    //$('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     const dataTableList = [];
@@ -39,108 +42,80 @@ Template.termsettings.onRendered(function() {
 
 
 $('#tblTermsList tbody').on( 'click', 'tr', function () {
-var listData = $(this).closest('tr').attr('id');
-var is7days = false;
-var is30days = false;
-var isEOM = false;
-var isEOMPlus = false;
-var isSalesDefault = false;
-var isPurchaseDefault = false;
-if(listData){
-  $('#add-terms-title').text('Edit Term Settings');
-  //$('#isformcreditcard').removeAttr('checked');
-  if (listData !== '') {
-    listData = Number(listData);
-    //taxRateService.getOneTerms(listData).then(function (data) {
-
-   var termsID = listData || '';
-   var termsName = $(event.target).closest("tr").find(".colName").text() || '';
-   var description = $(event.target).closest("tr").find(".colDescription").text() || '';
-   var days =  $(event.target).closest("tr").find(".colIsDays").text() || 0;
-   //let isDays = data.fields.IsDays || '';
-   if($(event.target).closest("tr").find(".colIsEOM .chkBox").is(':checked')){
-     isEOM = true;
-   }
-
-   if($(event.target).closest("tr").find(".colIsEOMPlus .chkBox").is(':checked')){
-     isEOMPlus = true;
-   }
-
-   if($(event.target).closest("tr").find(".colCustomerDef .chkBox").is(':checked')){
-     isSalesDefault = true;
-   }
-
-   if($(event.target).closest("tr").find(".colSupplierDef .chkBox").is(':checked')){
-     isPurchaseDefault = true;
-   }
-
-   if(isEOM == true || isEOMPlus ==  true){
-     isDays = false;
-   }else{
-     isDays = true;
-   }
+    //var listData = $(this).closest('tr').attr('id');
+    var is7days = false;
+    var is30days = false;
+    var isEOM = false;
+    var isEOMPlus = false;
+    var isSalesDefault = false;
+    var isPurchaseDefault = false;
 
 
-   $('#edtTermsID').val(termsID);
-   $('#edtName').val(termsName);
-   $('#edtName').prop('readonly', true);
-   $('#edtDesc').val(description);
-   $('#edtDays').val(days);
+    $('#add-terms-title').text('Edit Term Settings');
+       let termsID = $(this).closest('tr').attr('id') || 0;
+       let termsName = $(event.target).closest("tr").find(".colName").text() || '';
+       let description = $(event.target).closest("tr").find(".colDescription").text() || '';
+       let days =  $(event.target).closest("tr").find(".colIsDays").text() || 0;
+       if($(event.target).closest("tr").find(".colIsEOM .chkBox").is(':checked')){
+         isEOM = true;
+       }
+       if($(event.target).closest("tr").find(".colIsEOMPlus .chkBox").is(':checked')){
+         isEOMPlus = true;
+       }
+       if($(event.target).closest("tr").find(".colCustomerDef .chkBox").is(':checked')){
+         isSalesDefault = true;
+       }
+       if($(event.target).closest("tr").find(".colSupplierDef .chkBox").is(':checked')){
+         isPurchaseDefault = true;
+       }
+       if(isEOM == true || isEOMPlus ==  true){
+         isDays = false;
+       }else{
+         isDays = true;
+       }
+       //Call on switch templates (include...)
+       if((isDays == true) && (days == 0)){
+         templateObject.includeCOD.set(true);
+       }else{
+         templateObject.includeCOD.set(false);
+       }
+       if((isDays == true) && (days == 30)){
+         templateObject.include30Days.set(true);
+       }else{
+         templateObject.include30Days.set(false);
+       }
+       if(isEOM == true){
+         templateObject.includeEOM.set(true);
+       }else{
+         templateObject.includeEOM.set(false);
+       }
+       if(isEOMPlus == true){
+         templateObject.includeEOMPlus.set(true);
+       }else{
+         templateObject.includeEOMPlus.set(false);
+       }
+       if(isSalesDefault == true){
+         templateObject.includeSalesDefault.set(true);
+       }else{
+         templateObject.includeSalesDefault.set(false);
+       }
+       if(isPurchaseDefault == true){
+         templateObject.includePurchaseDefault.set(true);
+       }else{
+         templateObject.includePurchaseDefault.set(false);
+       }
 
+       $('#edtTermsID').val(termsID);
+       $('#edtName').val(termsName);
+       $('#edtName').prop('readonly', true);
+       $('#edtDesc').val(description);
+       $('#edtDays').val(days);
+       $('#myModalTerms').modal('show');
 
-   // if((isDays == true) && (days == 7)){
-   //   templateObject.include7Days.set(true);
-   // }else{
-   //   templateObject.include7Days.set(false);
-   // }
-   if((isDays == true) && (days == 0)){
-     templateObject.includeCOD.set(true);
-   }else{
-     templateObject.includeCOD.set(false);
-   }
+    // }
+    // }
 
-   if((isDays == true) && (days == 30)){
-     templateObject.include30Days.set(true);
-   }else{
-     templateObject.include30Days.set(false);
-   }
-
-   if(isEOM == true){
-     templateObject.includeEOM.set(true);
-   }else{
-     templateObject.includeEOM.set(false);
-   }
-
-   if(isEOMPlus == true){
-     templateObject.includeEOMPlus.set(true);
-   }else{
-     templateObject.includeEOMPlus.set(false);
-   }
-
-
-   if(isSalesDefault == true){
-     templateObject.includeSalesDefault.set(true);
-   }else{
-     templateObject.includeSalesDefault.set(false);
-   }
-
-   if(isPurchaseDefault == true){
-     templateObject.includePurchaseDefault.set(true);
-   }else{
-     templateObject.includePurchaseDefault.set(false);
-   }
-
-  //});
-
-
-  $(this).closest('tr').attr('data-target', '#myModalTerms');
-  $(this).closest('tr').attr('data-toggle', 'modal');
-
-}
-
-}
-
-});
+    });
 });
 
 
@@ -160,25 +135,26 @@ Template.termsettings.events({
     $(".fullScreenSpin").css("display", "none");
   },
   'click .btnRefresh': function () {
-    $('.fullScreenSpin').css('display','inline-block');
-    sideBarService.getTermsVS1().then(function(dataReload) {
-            addVS1Data('TTermsVS1',JSON.stringify(dataReload)).then(function (datareturn) {
-              location.reload(true);
-            }).catch(function (err) {
-              location.reload(true);
-            });
-          }).catch(function(err) {
-          location.reload(true);
+      let taxRateService = new TaxRateService();
+      sideBarService.getTermsVS1().then(function (dataReload) {
+          addVS1Data('TTermsVS1', JSON.stringify(dataReload)).then(function (datareturn) {
+              Meteor._reload.reload();
+          }).catch(function (err) {
+              Meteor._reload.reload();
           });
-  },
+      }).catch(function (err) {
+          Meteor._reload.reload();
+      });
+      // Meteor._reload.reload();
+    },
   'click .btnDeleteTerms': function () {
     playDeleteAudio();
     let taxRateService = new TaxRateService();
     setTimeout(function(){
-    
-    let termsId = $('#selectDeleteLineID').val();
+    //$('.fullScreenSpin').css('display', 'inline-block');
+    let termsId = $('#edtTermsID').val();
     let objDetails = {
-        type: "TTermsVS1",
+        type: "TTerms",
         fields: {
             Id: parseInt(termsId),
             Active: false
@@ -187,7 +163,7 @@ Template.termsettings.events({
 
     taxRateService.saveTerms(objDetails).then(function (objDetails) {
       sideBarService.getTermsVS1().then(function(dataReload) {
-            addVS1Data('TTermsVS1',JSON.stringify(dataReload)).then(function (datareturn) {
+            addVS1Data('TTerms',JSON.stringify(dataReload)).then(function (datareturn) {
               Meteor._reload.reload();
             }).catch(function (err) {
               Meteor._reload.reload();
@@ -218,7 +194,7 @@ Template.termsettings.events({
     let taxRateService = new TaxRateService();
     setTimeout(function(){
     $('.fullScreenSpin').css('display','inline-block');
-    
+
     let termsID = $('#edtTermsID').val();
     let termsName = $('#edtName').val();
     let description = $('#edtDesc').val();

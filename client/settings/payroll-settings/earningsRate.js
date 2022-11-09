@@ -139,7 +139,7 @@ Template.earningRateSettings.onRendered(function() {
             }
         });
 
-        console.log('response', data);
+        
 
     
 
@@ -149,7 +149,7 @@ Template.earningRateSettings.onRendered(function() {
 
         let earnings = response.map(e => e.fields != undefined ? e.fields : e);
 
-        console.log('earnings', earnings);
+       
 
         await templateObject.earnings.set(earnings);
 
@@ -1166,12 +1166,7 @@ Template.earningRateSettings.events({
         $('#' + earningRateID).val(earningRate);
         $('#earningRateSettingsModal').modal('toggle');
     },
-    // "click .tblEarnings tbody tr": (e, ui) => {
-    //     const earningId = $(e.currentTarget).attr('earning-id');
-    //     console.log(e, earningId);
-
-    //     ui.editEarning(earningId);
-    // }
+   
 });
 
 Template.earningRateSettings.helpers({

@@ -180,7 +180,7 @@ Template.timesheetdetail.onRendered(function () {
 
     data = _.groupBy(data, "EarningRate");
 
-    console.log("pay tempaltes", data);
+   
     this.earnings.set(data);
     return data;
   };
@@ -789,7 +789,7 @@ Template.timesheetdetail.onRendered(function () {
     // Lets load the timesheet data
     let timesheetDetails = await this.loadTimeSheetDetails();
 
-    console.log("timsheetdetails", timesheetDetails);
+   
 
     if (timesheetDetails == undefined) {
       setTimeout(() => {

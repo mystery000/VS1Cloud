@@ -97,7 +97,7 @@ Template.clienttypesettings.events({
         playDeleteAudio();
         let contactService = new ContactService();
         setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
+        //$('.fullScreenSpin').css('display', 'inline-block');
         let clientTypeId = $('#edtClientTypeID').val();
 
         let objDetails = {
@@ -110,11 +110,11 @@ Template.clienttypesettings.events({
 
         contactService.saveClientTypeData(objDetails).then(function (objDetails) {
             sideBarService.getClientTypeData().then(function (dataReload) {
-                    addVS1Data('TClientType', JSON.stringify(dataReload)).then(function (datareturn) {
-                       Meteor._reload.reload();
-                    }).catch(function (err) {
-                       Meteor._reload.reload();
-                    });
+                addVS1Data('TClientType', JSON.stringify(dataReload)).then(function (datareturn) {
+                   Meteor._reload.reload();
+                }).catch(function (err) {
+                   Meteor._reload.reload();
+                });
         });
 
         }).catch(function (err) {
@@ -138,7 +138,7 @@ Template.clienttypesettings.events({
         let contactService = new ContactService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         let objDetails ={};
         //let headerDept = $('#sltDepartment').val();
         let custType = $('#edtClientTypeName').val();

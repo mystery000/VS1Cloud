@@ -2328,3 +2328,12 @@ authenticatedRoutes.route('/serviceloglist', {
         });
     }
 });
+
+authenticatedRoutes.route('/bomlist', {
+    name: 'bom_list',
+    action(){
+        BlazeLayout.render('layout', {
+            yield: 'bom_list'
+        })
+    }
+})

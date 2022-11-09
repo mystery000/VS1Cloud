@@ -431,93 +431,28 @@
                     </div>
                 </div>
 
-                <!-- Start Attachemt -->
-                <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4>Upload Attachments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body" style="padding: 0px;">
-                                <div class="divTable" id="file-display">
-                                    <!-- <div class="uploaded-element-header">
-                                     <span class="uploaded-on uploaded-header">Upload a file</span>
-                          </div> -->
-                                    <div class="col inboxcol1">
-                                        <img src="/icons/nofiles_icon.jpg" class="" style="width:100%;">
-                                    </div>
-                                    <div class="col inboxcol2" style="text-align: center;">
-                                        <div>Upload files or add files from the file library.</div>
-                                        {{#if isMobileDevices}}
-                                            <div>Capture copies of receipt's or take photo's of completed jobs.</div>
-                                        {{/if}}
-                                        <p style="color: #ababab;">Only users with access to your company can view these files</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-
-                                {{#if isMobileDevices}}
-                                    <input type="file" id="img-attachment-upload" style="display:none" accept="image/*" capture="camera">
-                                    <button class="btn btn-primary btnUploadFile img_new_attachment_btn" type="button"><i class="fas fa-camera" style="margin-right: 5px;"></i>Capture</button>
-
-                                    <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png">
-                                {{else}}
-                                    <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
-                                           .pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef,
-                                           .pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg,
-                                           image/gif,image/png,image/bmp,image/tiff,application/pdf,
-                                           application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-                                           application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-                                           application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,
-                                           application/vnd.oasis.opendocument.formula,text/csv,text/plain,text/rtf,message/rfc822,
-                                           application/vnd.ms-outlook,application/vnd.oasis.opendocument.spreadsheet,
-                                           application/vnd.oasis.opendocument.text,application/x-iwork-keynote-sffkey,
-                                           application/vnd.apple.keynote,application/x-iwork-pages-sffpages,
-                                           application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers,
-                                           application/vnd.apple.numbers,application/zip,application/rar,
-                                           application/x-zip-compressed,application/x-zip,application/x-7z-compressed">
-                                {{/if}}
-                                <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button>
-                                <button class="btn btn-success closeModal" data-dismiss="modal" type="button" style="margin-right: 5px;" autocomplete="off">
-                                    <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                                </button>
-                                <!-- <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button> -->
-                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                            </div>
+                <!-- VS1 Attachemt  Template-->
+                {{# vs1_attachments}}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                    <h4 class="modal-title">{{uploadedFile.name}}</h4>
+                </div>
+                <div class="modal-body">
+                    {{#if uploadedFile.image}}
+                        <div class="image-previewer">
+                            <img src="{{uploadedFile.link}}">
                         </div>
+                    {{else}}
+                        <div class=" default-file {{uploadedFile.class}}">
+
+                        </div>
+                    {{/if}}
+                    <div class="download_button">
+                        <a class="new_create_btn btn btn-primary" id="downloadButton" download="{{uploadedFile.name}}" href="{{uploadedFile.link}}">Download</a>
                     </div>
                 </div>
-                <!-- END Attachments -->
-
-                <!-- View File Attachemt -->
-                <div id="files_view" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">x</button>
-                                <h4 class="modal-title">{{uploadedFile.name}}</h4>
-                            </div>
-                            <div class="modal-body">
-                                {{#if uploadedFile.image}}
-                                    <div class="image-previewer">
-                                        <img src="{{uploadedFile.link}}">
-                                    </div>
-                                {{else}}
-                                    <div class=" default-file {{uploadedFile.class}}">
-
-                                    </div>
-                                {{/if}}
-                                <div class="download_button">
-                                    <a class="new_create_btn btn btn-primary" id="downloadButton" download="{{uploadedFile.name}}" href="{{uploadedFile.link}}">Download</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End View File attachment -->
-
+                {{/vs1_attachments}}
+                <!-- End Attachemt  Template-->
                 <div class="row" style="background-color: #ededed;">
 
                     {{#if equals invoicerecord.ispaid true}}
@@ -561,167 +496,102 @@
                         </div>
                         <div class="row" style="margin: 16px 16px 0px 16px;">
                             <div class="col-12 col-md-6 col-lg-2 col-xl-3">
-                                <div class="form-group"><label>Billing Address</label>
+                              {{# vs1_textarea label="Billing Address" row="5" id="txabillingAddress" name="txabillingAddress"}}{{invoicerecord.invoiceToDesc}}{{/vs1_textarea}}
+                                <!-- <div class="form-group"><label>Billing Address</label>
                                     <textarea class="form-control" rows="5" id="txabillingAddress" name="txabillingAddress">{{invoicerecord.invoiceToDesc}}</textarea>
-                                </div>
+                                </div> -->
                             </div>
-                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-                                <div class="row">
-                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                                        <div class="row">
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY">
-                                                    <label>Sale Date</label>
-                                                    <div class="input-group date" style="cursor: pointer;">
-                                                        <input type="text" class="form-control" id="dtSODate" name="dtSODate" value="{{invoicerecord.saledate}}">
-                                                        <div class="input-group-addon" style="">
-                                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label>Reference</label>
-                                                    <input class="form-control form-control" type="text" id="edtRef" name="edtRef" value="{{invoicerecord.reference}}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                                        <div class="row">
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label>P.O. Number</label>
-                                                    <input class="form-control form-control" type="text" id="ponumber" name="ponumber" value="{{invoicerecord.custPONumber}}">
-                                                    <input class="form-control form-control" type="hidden" id="firstname" value="{{invoicerecord.firstname}}">
-                                                    <input class="form-control form-control" type="hidden" id="lastname" value="{{invoicerecord.lastname}}">
-                                                </div>
-                                            </div>
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                <div class="form-group"><label>Department</label>
-                                                    <select type="search" class="form-control" id="sltDept" name="sltDept" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                    </select>
-                                                    <!-- <select class="form-control" id="sltDept" name="sltDept" style="cursor: pointer;">
-                                                        {{#each item in deptrecords}}
-                                                            {{#if equals item.department invoicerecord.department }}
-                                                                <option value="{{invoicerecord.department}}" selected="">{{invoicerecord.department}}</option>
-                                                            {{else}}
-                                                                <option value="{{item.department}}">{{item.department}}</option>
-                                                            {{/if}}
-                                                        {{/each}}
-                                                    </select> -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                            <div class="col-12 col-md-6 col-lg-9 col-xl-9">
+                            <div class="row">
+                              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                                  <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY">
+                                      <label>Sale Date</label>
+                                      <div class="input-group date" style="cursor: pointer;">
+                                          <input type="text" class="form-control" id="dtSODate" name="dtSODate" value="{{invoicerecord.saledate}}">
+                                          <div class="input-group-addon" style="">
+                                              <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                          </div>
+                                      </div>
+                                      <div style="display:none!important;">
+                                        <input  type="text" class="form-control" id="dtDueDate" name="dtDueDate" value="{{invoicerecord.duedate}}">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                                <div class="form-group">
+                                      <label>P.O. Number</label>
+                                      <input class="form-control form-control" type="text" id="ponumber" name="ponumber" value="{{invoicerecord.custPONumber}}">
+                                      <input class="form-control form-control" type="hidden" id="firstname" value="{{invoicerecord.firstname}}">
+                                      <input class="form-control form-control" type="hidden" id="lastname" value="{{invoicerecord.lastname}}">
+                                  </div>
+                              </div>
+                              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                                <div class="form-group"><label>Terms</label>
+                                  <select type="search" class="form-control" id="sltTerms" name="sltTerms" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                  </select>
                                 </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-                                <div class="row">
-                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                                        <div class="row">
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                <div class="form-group"><label>Terms</label>
-                                                    <select type="search" class="form-control" id="sltTerms" name="sltTerms" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                    </select>
+                              </div>
+                              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                                  <div class="form-group">
+                                    <label>Status</label>
+                                      <select type="search" class="form-control" id="sltStatus" name="sltStatus" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                      </select>
 
-                                                    <!-- <select class="form-control" id="sltTerms" name="sltTerms" style="cursor: pointer;">
-                                                        {{#if equals invoicerecord.termsName ''}}
-                                                            <option value="" selected="selected"></option>
-                                                        {{/if}}
-                                                        {{#each item in termrecords}}
-                                                            {{#if equals item.termsname invoicerecord.termsName }}
-                                                                <option value="{{invoicerecord.termsName}}" selected="">{{invoicerecord.termsName}}</option>
-                                                            {{else}}
-                                                            {{/if}}
-                                                        {{/each}}
-                                                    </select> -->
-                                                </div>
-                                            </div>
+                                  </div>
+                              </div>
+                              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                                  <div class="form-group">
+                                    <label>Reference</label>
+                                      <input class="form-control form-control" type="text" id="edtRef" name="edtRef" value="{{invoicerecord.reference}}">
+                                  </div>
+                              </div>
 
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                                        <div class="row">
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label>Status</label>
-                                                    <select type="search" class="form-control" id="sltStatus" name="sltStatus" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                    </select>
-                                                    <!-- <select class="form-control" id="sltStatus" name="sltStatus" style="cursor: pointer;">
-                                                        <option value="{{invoicerecord.status}}" selected="">{{invoicerecord.status}}</option>
-                                                        {{#each item in statusrecords}}
-                                                            {{#if equals item.orderstatus invoicerecord.status }}
-                                                                <option value="{{invoicerecord.status}}" selected="">{{invoicerecord.status}}</option>
-                                                            {{else}}
-                                                                <option value="{{item.orderstatus}}">{{item.orderstatus}}</option>
-                                                            {{/if}}
-                                                        {{/each}}
-                                                    </select> -->
-                                                </div>
-                                            </div>
-
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                <div class="form-group" style="display: none;">
-                                                    <label>Due Date</label>
-                                                    <div class="input-group date" style="cursor: pointer;">
-                                                        <input type="text" class="form-control" id="dtDueDate" name="dtDueDate" value="{{invoicerecord.duedate}}">
-                                                        <div class="input-group-addon">
-                                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                {{#if isCurrencyEnable}}
-                                    {{> CurrencyWidget rate="sell" row="true"}}
+                              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                                  <div class="form-group"><label>Department</label>
+                                      <select type="search" class="form-control" id="sltDept" name="sltDept" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                      </select>
+                                  </div>
+                              </div>
+                              {{#if isCurrencyEnable}}
+                                    {{> CurrencyWidget rate="sell" trans="true"}}
                                 {{/if}}
-                            </div>
-                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-                                <div class="row">
-                                    <!-- {{#if isCurrencyEnable}}
-                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                                        {{> CurrencyWidget rate="sell"}}
-                                    </div>
-                                    {{/if}} -->
-                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="one box checkbox1div"
-                                                    style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                                    <div class="form-group">
-                                                        <label class="lblCustomField1">{{custfields.[0].custfieldlabel}}</label>
-                                                        <input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="{{invoicerecord.saleCustField1}}" custfieldid=''>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="two box checkbox2div"
-                                                    style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                                    <div class="form-group">
-                                                        <label class="lblCustomField2">{{custfields.[1].custfieldlabel}}<br></label>
-                                                        <input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value="{{invoicerecord.saleCustField2}}" custfieldid=''>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="two box checkbox3div"
-                                                    style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                                    <div class="form-group">
-                                                        <label class="lblCustomField2">{{custfields.[2].custfieldlabel}}<br></label>
-                                                        <input class="form-control form-control" type="text" id="edtSaleCustField3" name="edtSaleCustField3" value="{{invoicerecord.saleCustField3}}" custfieldid=''>
-                                                    </div>
-                                                </div>
-                                            </div>
+                              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                                  <div class="form-group">
+                                    <div class="one box checkbox1div"
+                                          style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                          <div class="form-group">
+                                              <label class="lblCustomField1">{{custfields.[0].custfieldlabel}}</label>
+                                              <input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="{{invoicerecord.saleCustField1}}" custfieldid=''>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+
+                              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                                  <div class="form-group">
+                                    <div class="two box checkbox2div"
+                                        style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                        <div class="form-group">
+                                            <label class="lblCustomField2">{{custfields.[1].custfieldlabel}}<br></label>
+                                            <input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value="{{invoicerecord.saleCustField2}}" custfieldid=''>
                                         </div>
                                     </div>
+                                  </div>
+                              </div>
 
-                                </div>
+                              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                                  <div class="form-group">
+                                    <div class="two box checkbox3div"
+                                         style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                         <div class="form-group">
+                                             <label class="lblCustomField2">{{custfields.[2].custfieldlabel}}<br></label>
+                                             <input class="form-control form-control" type="text" id="edtSaleCustField3" name="edtSaleCustField3" value="{{invoicerecord.saleCustField3}}" custfieldid=''>
+                                         </div>
+                                     </div>
+                                  </div>
+                              </div>
+
+                            </div>
                             </div>
 
                         </div>
@@ -731,9 +601,10 @@
                                 <div class="row">
                                     <div class="col-12 col-md-4">
                                         <div class="collapse" id="collapse-notes" style="margin-top: 8px;">
-                                            <div class="form-group"><label>Shipping Address</label>
+                                            <!-- <div class="form-group"><label>Shipping Address</label>
                                                 <textarea class="form-control" rows="3" id="txaShipingInfo" name="txaShipingInfo">{{invoicerecord.shipToDesc}}</textarea>
-                                            </div>
+                                            </div> -->
+                                            {{# vs1_textarea label="Shipping Address" row="3" id="txaShipingInfo" name="txaShipingInfo"}}{{invoicerecord.shipToDesc}}{{/vs1_textarea}}
                                         </div>
                                     </div>
                                 </div>
@@ -1357,40 +1228,23 @@
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-6">
-                                <div class="form-group"><label>Comments</label>
-                                    <textarea class="form-control" rows="6" id="txaComment" name="txaComment">{{invoicerecord.comments}}</textarea>
-                                </div>
+                              {{# vs1_textarea label="Comments" row="6" id="txaComment" name="txaComment"}}{{invoicerecord.comments}}{{/vs1_textarea}}
                             </div>
                             <div class="col-12 col-md-6">
-                                <div class="form-group"><label>Picking Instructions</label>
-                                    <textarea class="form-control" rows="6" id="txapickmemo" name="txapickmemo">{{invoicerecord.pickmemo}}</textarea>
-                                </div>
+                              {{# vs1_textarea label="Picking Instructions" row="6" id="txapickmemo" name="txapickmemo"}}{{invoicerecord.pickmemo}}{{/vs1_textarea}}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-1">
                                 <div class="row justify-content-left desktopButtons" style=" margin-left:0px;">
-
-                                    <div class="custom-control custom-switch">
-
-                                        <input class="custom-control-input chkGlobalSettings" id="choosetemplate" type="checkbox" style="cursor: pointer;">
-                                        <label class="custom-control-label" style="width:131px;cursor: pointer;" for="choosetemplate">Choose Template</label>
-
-                                    </div>
-                                    <!-- <div class="form-group" style="margin-right: 35px; Width:50%; font-size: 15px;">
-                                     <input class="custom-control-input btnchousetemplate btnFooter"  data-toggle="modal" data-target="#templateselection" type="checkbox" id="choosetemplate" style="font-size: 22px;" autocomplete="off">
-                                     <label class="custom-control-label" for="choosetemplate">Choose Template</label>
-                                    </div> -->
-                                    <!-- <button class="btn btn-primary btnchousetemplate btnFooter" data-toggle="modal" data-target="#templateselection" type="button" >
-                                        <i class="fa fa-file" style="padding-right: 8px;"></i> Choose Template
-                                    </button> -->
-
+                                    {{> toggle_button className="chkGlobalSettings" id="choosetemplate" width="131px" for="choosetemplate" displayName="Choose Template"}}
                                 </div>
-
                             </div>
                             <div class="col-12 col-md-12">
                                 <div class="row justify-content-center desktopButtons">
-                                    <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 14px;margin-top: 0px;width: 100px;">
+                                  {{# transaction_buttons_bottom margin="14px" }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
+                                  {{/transaction_buttons_bottom}}
+                                    <!-- <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 14px;margin-top: 0px;width: 100px;">
                                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save
                                     </button>
 
@@ -1398,13 +1252,11 @@
                                         <i class="fa fa-print" style="padding-right: 8px;"></i>Print
                                     </button>
 
-                                    <a class="btn btn-primary btn_Attachment btnFooter" role="button" style="margin: 14px;margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-                                        {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                                    </a>
+
 
                                     <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 14px;margin-top: 0px;width: 100px;">
                                         <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                                    </button>
+                                    </button> -->
                                 </div>
                             </div>
                         </div>
@@ -1542,7 +1394,9 @@
                     </div>
                 </div>
                 <div class="row justify-content-center mobileButtons" style="display: none;">
-                    <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
+                    {{# transaction_buttons_bottom margin="12px" }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
+                    {{/transaction_buttons_bottom}}
+                    <!-- <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save
                     </button>
 
@@ -1556,7 +1410,7 @@
 
                     <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
                         <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                    </button>
+                    </button> -->
                 </div>
                 <div class="printID" style="display: none;"></div>
                 <style>
@@ -2116,140 +1970,7 @@
 
         </div>
 
-        <!-- Modal print-button -modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
-            {{> productlistpop}}
-        </div>
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
-            {{> newproductpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-            {{> addcustomerpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="termsListModal">
-            {{> termlistpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="newTermsModal">
-            {{> newtermspop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
-            {{> departmentpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
-            {{> newdepartmentpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="statusPopModal">
-            {{> statuspop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="newStatusPopModal">
-            {{> newstatuspop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="newCustomFieldPop">
-            {{> customfieldformpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="serialNumberModal">
-            {{> serialnumberpop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="lotNumberModal">
-            {{> lotnumberpop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="availableSerialNumberModal">
-            {{> availableserialnumberpop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="availableLotNumberModal">
-            {{> availablelotnumberpop}}
-        </div>
-
-        <!-- <div class="modal fade" role="dialog" tabindex="-1" id="customFieldList">
-            <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4>Customer Field Values</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" style="width: 100%; display:none;" id="selectCustFieldID" name="selectCustFieldID" readonly="">
-                        <style>
-                            .colCustField {
-                                width: 3% !important;
-                            }
-                        </style>
-                        <table id="custListType" style="width:100%" class="dataTable table table-hover table-striped table-bordered custListType">
-                            <thead>
-                                <tr class="dnd-moved">
-                                    <th class="th colCustField" style="width:3%!important">ID</th>
-                                    <th class="th colFieldName">Custom Field Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- End Modal Product -->
-        <!-- Start of Status Modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="statusModal">
-            <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
-                <div class="modal-content">
-                    <form id="newstatus" name="newstatus">
-                        <div class="modal-header">
-                            <h4>Add New Lead Status</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        </div>
-                        <div class="modal-body" style="padding: 24px;">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                        <label>Status</label>
-                                        <input type="text" id="status" name="status" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-success btnSaveStatus" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                            <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!-- End of Status Modal -->
-        <!-- Modal Tax Rate -modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
-            {{> taxratelistpop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
-            {{> newtaxratepop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="taxDetailModal">
-            {{> taxdetailpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="UOMListModal">
-            {{> uomlistpop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
-            {{> copyfrequencypop}}
-        </div>
-        <!--
-        <div class="modal fade" role="dialog" tabindex="-1" id="newUOMModal">
-            {{> newuompop}}
-        </div> -->
-        <!-- End Modal Tax Rate -->
     </div>
 
     <!-- Start Help Video Modal -->
@@ -2472,22 +2193,9 @@
     <!-- End HTML Email -->
     <div id="elementH"></div>
 
-    <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
-            <div class="modal-content customerListContent">
-                <div class="modal-header">
-                    <h4>Customer List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
-                    <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>
-                    {{> customerlistpop}}
+    <!-- This a template with all VS1 POP Modal used for Transactions -->
+    {{> all_transaction_modals}}
 
-                </div>
-                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <script>
         modalDraggable();
     </script>

@@ -294,6 +294,7 @@ const erpObject = {
     TEmployeeList: "TEmployeeList",
     TAccountVS1List:"TAccountVS1List",
     TEmailHistory: "TEmailHistory",
+    TSupplierVS1List:"TSupplierVS1List"
 };
 
 export default erpObject;

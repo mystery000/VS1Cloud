@@ -291,7 +291,7 @@ Template.payrolloverview.onRendered(function () {
     });
     templateObject.timeSheetList.set(timesheets);
 
-    console.log('timsheets', timesheets);
+    
 
     // TODO: Datable jquery to be added
 

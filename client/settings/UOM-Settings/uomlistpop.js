@@ -2,7 +2,9 @@ import {TaxRateService} from "../settings-service";
 import {ReactiveVar} from 'meteor/reactive-var';
 import {SideBarService} from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
+
 let sideBarService = new SideBarService();
+Template.uomlistpop.inheritsHooksFrom('non_transactional_list');
 Template.uomlistpop.onCreated(function() {
   const templateObject = Template.instance();
 });
@@ -12,7 +14,9 @@ Template.uomlistpop.onRendered(function() {
   let taxRateService = new TaxRateService();
   const dataTableList = [];
   const tableHeaderList = [];
+
   var splashArrayUOMList = new Array();
+
   templateObject.getAllUOMs = function () {
       getVS1Data('TUnitOfMeasure').then(function (dataObject) {
           if (dataObject.length == 0) {
@@ -22,15 +26,19 @@ Template.uomlistpop.onRendered(function() {
                   let inventoryData = [];
                   for (let i = 0; i < data.tunitofmeasure.length; i++) {
                       var dataListUOM = [
-                          data.tunitofmeasure[i].fields.ID || '',
-                          data.tunitofmeasure[i].fields.UOMName || '',
-                          data.tunitofmeasure[i].fields.Description || '-',
-                          data.tunitofmeasure[i].fields.ProductName || '',
+                          data.tunitofmeasure[i].fields.ID || "",
+                          data.tunitofmeasure[i].fields.UOMName || "",
+                          data.tunitofmeasure[i].fields.UnitDescription || "",
+                          data.tunitofmeasure[i].fields.ProductName || "",
                           data.tunitofmeasure[i].fields.Multiplier || 0,
                           data.tunitofmeasure[i].fields.SalesDefault || false,
                           data.tunitofmeasure[i].fields.PurchasesDefault || false,
                           data.tunitofmeasure[i].fields.Weight || 0,
-                          data.tunitofmeasure[i].fields.NoOfBoxes || 0
+                          data.tunitofmeasure[i].fields.NoOfBoxes || 0,
+                          data.tunitofmeasure[i].fields.Height || 0,
+                          data.tunitofmeasure[i].fields.Width || 0,
+                          data.tunitofmeasure[i].fields.Length || 0,
+                          data.tunitofmeasure[i].fields.Volume || 0
                       ];
 
                       splashArrayUOMList.push(dataListUOM);
@@ -104,7 +112,11 @@ Template.uomlistpop.onRendered(function() {
                     data.tunitofmeasure[i].fields.SalesDefault || false,
                     data.tunitofmeasure[i].fields.PurchasesDefault || false,
                     data.tunitofmeasure[i].fields.Weight || 0,
-                    data.tunitofmeasure[i].fields.NoOfBoxes || 0
+                    data.tunitofmeasure[i].fields.NoOfBoxes || 0,
+                    data.tunitofmeasure[i].fields.Height || 0,
+                    data.tunitofmeasure[i].fields.Width || 0,
+                    data.tunitofmeasure[i].fields.Length || 0,
+                    data.tunitofmeasure[i].fields.Volume || 0
                   ];
 
 

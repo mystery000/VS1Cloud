@@ -221,16 +221,16 @@
                                             {{#if records}}
                                                 {{#each value in records}}
                                                     <tr>
-                                                        <td style="font-weight: 800;" colspan="7">{{ value.EmployeeName }}</td>
+                                                        <td style="font-weight: 800;" colspan="7">{{ value.EmployeeID }}</td>
                                                     </tr>
                                                     {{#each item in value.records}}
                                                     <tr>
                                                         <td></td>
-                                                        <td><a href="{{redirectionType item}}">{{ formatDate item.fields.Date }}</a></td>
-                                                        <td><a href="{{redirectionType item}}">{{ item.fields.LeaveType }}</a></td>
-                                                        <td><a href="{{redirectionType item}}">{{ item.fields.PayID }}</a></td>
-                                                        <td><a href="{{redirectionType item}}">{{ item.fields.AccrualType }}</a></td>
-                                                        <td><a href="{{redirectionType item}}">{{ floatValue item.fields.AccruedHours }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ formatDate item.Date }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ item.LeaveType }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ item.PayID }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ item.AccrualType }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ floatValue item.AccruedHours }}</a></td>
                                                     
                                                         {{#if isOnlyDefaultActive }}
                                                                 {{#if currencyList}}
