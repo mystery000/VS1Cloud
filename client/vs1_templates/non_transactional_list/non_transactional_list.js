@@ -2762,7 +2762,7 @@ Template.non_transactional_list.onRendered(function() {
         getVS1Data('TUnitOfMeasure').then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getUOMDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-                    //await addVS1Data('TUnitOfMeasure', JSON.stringify(data));
+                    await addVS1Data('TUnitOfMeasure', JSON.stringify(data));
                     templateObject.displayUOMListData(data); //Call this function to display data on the table
                 }).catch(function (err) {
 
@@ -2773,7 +2773,7 @@ Template.non_transactional_list.onRendered(function() {
             }
         }).catch(function (err) {
           sideBarService.getUOMDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-              //await addVS1Data('TUnitOfMeasure', JSON.stringify(data));
+              await addVS1Data('TUnitOfMeasure', JSON.stringify(data));
               templateObject.displayUOMListData(data); //Call this function to display data on the table
           }).catch(function (err) {
 
@@ -2984,17 +2984,39 @@ Template.non_transactional_list.onRendered(function() {
                               linestatus = "In-Active";
                           };
 
+                          //Check if Sales defaultis checked
+                          if(dataObjectnew.tunitofmeasure[j].fields.SalesDefault == true){
+                              tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-'+dataObjectnew.tunitofmeasure[j].fields.ID+'" checked><label class="custom-control-label chkBox" for="swtSalesDefault-'+dataObjectnew.tunitofmeasure[j].fields.ID+'"></label></div>';
+                          }else{
+                              tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-'+dataObjectnew.tunitofmeasure[j].fields.ID+'"><label class="custom-control-label chkBox" for="swtSalesDefault-'+dataObjectnew.tunitofmeasure[j].fields.ID+'"></label></div>';
+                          };
+                          //Check if Purchase default is checked
+                          if(dataObjectnew.tunitofmeasure[i].fields.PurchasesDefault == true){
+                              tdPurchaseDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'"></label></div>';
+                          }else{
+                              tdPurchaseDef= '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'"><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'"></label></div>';
+                          };
 
                             var dataListDupp = [
-                              dataObjectnew.clienttypelist[j].ID || "",
-                              dataObjectnew.clienttypelist[j].TypeName || "",
-                              dataObjectnew.clienttypelist[j].TypeDescription || "",
+                              dataObjectnew.tunitofmeasure[j].fields.ID || '',
+                              dataObjectnew.tunitofmeasure[j].fields.UOMName || '',
+                              dataObjectnew.tunitofmeasure[j].fields.UnitDescription || '',
+                              data.tunitofmeasure[j].fields.ProductName || '',
+                              dataObjectnew.tunitofmeasure[ij].fields.Multiplier || 0,
+                              tdSupplierDef,
+                              tdPurchaseDef,
+                              dataObjectnew.tunitofmeasure[j].fields.Weight || 0,
+                              dataObjectnew.tunitofmeasure[j].fields.NoOfBoxes || 0,
+                              dataObjectnew.tunitofmeasure[j].fields.Height || 0,
+                              dataObjectnew.tunitofmeasure[j].fields.Width || 0,
+                              dataObjectnew.tunitofmeasure[j].fields.Length || 0,
+                              dataObjectnew.tunitofmeasure[j].fields.Volume || 0,
                               linestatus,
                             ];
 
                             splashArrayUOMList.push(dataListDupp);
-                            //}
                         }
+
                         let uniqueChars = [...new Set(splashArrayUOMList)];
                         templateObject.transactiondatatablerecords.set(uniqueChars);
                         var datatable = $('#'+currenttablename).DataTable();
@@ -3068,7 +3090,7 @@ Template.non_transactional_list.onRendered(function() {
         //             await addVS1Data('TProcTreeVS1', JSON.stringify(data));
         //             templateObject.displayBOMListData(data); //Call this function to display data on the table
         //         }).catch(function (err) {
-                  
+
         //         });
         //     } else {
         //         let data = JSON.parse(dataObject[0].data);
@@ -3086,14 +3108,14 @@ Template.non_transactional_list.onRendered(function() {
         let tempArray = localStorage.getItem('TProcTree');
         bomProducts = tempArray?JSON.parse(tempArray):[];
         templateObject.displayBOMListData(bomProducts)
-        
+
       }
 
       templateObject.displayBOMListData = async function (bomProducts) {
               var splashArrayBOMList = new Array();
               let lineItems = [];
               let lineItemObj = {};
-              
+
 
               for (let i = 0; i < bomProducts.length; i++) {
                 // for (let i = 0; i < data.tproctree.length; i++) {
@@ -3115,12 +3137,12 @@ Template.non_transactional_list.onRendered(function() {
                 ];
 
                 splashArrayBOMList.push(dataList);
-                      
+
                 templateObject.transactiondatatablerecords.set(splashArrayBOMList);
-               
+
               }
 
-              
+
               if (templateObject.transactiondatatablerecords.get()) {
                 setTimeout(function () {
                     MakeNegative();
