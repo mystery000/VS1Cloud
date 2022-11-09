@@ -1930,7 +1930,7 @@ Template.non_transactional_list.onRendered(function() {
           });
         });
       }
-      templateObject.displayDepartmentListData = async function (data) {
+    templateObject.displayDepartmentListData = async function (data) {
     var splashArrayDepartmentList = new Array();
     let lineItems = [];
     let lineItemObj = {};
@@ -2072,8 +2072,8 @@ Template.non_transactional_list.onRendered(function() {
 
                 sideBarService.getAllTDepartmentList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
 
-                for (let j = 0; j < dataObjectnew.temployeelist.length; j++) {
-                  let mobile = sideBarService.changeDialFormat(dataObjectnew.temployeelist[j].Mobile, dataObjectnew.tdeptclass[j].Country);
+                for (let j = 0; j < dataObjectnew.tdeptclass.length; j++) {
+                  let mobile = sideBarService.changeDialFormat(dataObjectnew.tdeptclass[j].Mobile, dataObjectnew.tdeptclass[j].Country);
                   let linestatus = '';
                   if (dataObjectnew.tdeptclass[j].Active == true) {
                       linestatus = "";
@@ -2083,10 +2083,10 @@ Template.non_transactional_list.onRendered(function() {
 
 
                     var dataListDupp = [
-                      dataObjectnew.tdeptclass[i].fields.ID || "",
-                      dataObjectnew.tdeptclass[i].fields.DeptClassName || "",
-                      dataObjectnew.tdeptclass[i].fields.Description || "",
-                      dataObjectnew.tdeptclass[i].fields.SiteCode || "",
+                      dataObjectnew.tdeptclass[j].fields.ID || "",
+                      dataObjectnew.tdeptclass[j].fields.DeptClassName || "",
+                      dataObjectnew.tdeptclass[j].fields.Description || "",
+                      dataObjectnew.tdeptclass[j].fields.SiteCode || "",
                       linestatus || "",
                     ];
 
@@ -2318,7 +2318,48 @@ Template.non_transactional_list.onRendered(function() {
                         }
 
                         $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                      $('.fullScreenSpin').css('display', 'inline-block');
+                      //var splashArrayCustomerListDupp = new Array();
+                      let dataLenght = oSettings._iDisplayLength;
+                      let customerSearch = $('#'+currenttablename+'_filter input').val();
 
+                        sideBarService.getAllTPaymentMethodList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+
+                        for (let j = 0; j < dataObjectnew.tpaymentmethodvs1.length; j++) {
+                          let mobile = sideBarService.changeDialFormat(dataObjectnew.tpaymentmethodvs1[j].Mobile, dataObjectnew.tpaymentmethodvs1[j].Country);
+                          let linestatus = '';
+                          if (dataObjectnew.tpaymentmethodvs1[j].Active == true) {
+                              linestatus = "";
+                          } else if (dataObjectnew.tpaymentmethodvs1[j].Active == false) {
+                              linestatus = "In-Active";
+                          };
+
+
+                            var dataListDupp = [
+                              dataObjectnew.tpaymentmethodvs1[j].fields.ID || "",
+                              dataObjectnew.tpaymentmethodvs1[j].fields.PaymentMethodName || "",
+                              tdIsCreditCard,
+                              linestatus,
+                            ];
+
+                            splashArrayPaymentMethodList.push(dataListDupp);
+                            //}
+                        }
+                        let uniqueChars = [...new Set(splashArrayPaymentMethodList)];
+                        templateObject.transactiondatatablerecords.set(uniqueChars);
+                        var datatable = $('#'+currenttablename).DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                        setTimeout(function () {
+                          $('#'+currenttablename).dataTable().fnPageChange('last');
+                        }, 400);
+
+                        $('.fullScreenSpin').css('display', 'none');
+
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
 
                       });
                     setTimeout(function () {
@@ -2386,7 +2427,7 @@ Template.non_transactional_list.onRendered(function() {
               }
           }).catch(function (err) {
             sideBarService.getTermsDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-                //await addVS1Data('TTermsVS1List', JSON.stringify(data));
+                await addVS1Data('TTermsVS1List', JSON.stringify(data));
                 templateObject.displayTermsListData(data); //Call this function to display data on the table
             }).catch(function (err) {
 
@@ -2406,6 +2447,7 @@ Template.non_transactional_list.onRendered(function() {
               // };
 
               for (let i = 0; i < data.ttermsvs1.length; i++) {
+                let mobile = "";
                 //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
                 let linestatus = '';
                 if (data.ttermsvs1[i].fields.Active == true) {
@@ -2455,12 +2497,8 @@ Template.non_transactional_list.onRendered(function() {
                   linestatus,
                 ];
 
-                //if (data.temployeelist[i].EmployeeName.replace(/\s/g, "") !== "") {
                   splashArrayTermsList.push(dataList);
                   templateObject.transactiondatatablerecords.set(splashArrayTermsList);
-                //}
-
-                //}
               }
 
               if (templateObject.transactiondatatablerecords.get()) {
@@ -2585,7 +2623,77 @@ Template.non_transactional_list.onRendered(function() {
                           }
 
                           $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        //var splashArrayCustomerListDupp = new Array();
+                        let dataLenght = oSettings._iDisplayLength;
+                        let customerSearch = $('#'+currenttablename+'_filter input').val();
 
+                          sideBarService.getAllTTermsList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+
+                          for (let j = 0; j < dataObjectnew.ttermsvs1.length; j++) {
+                            // let mobile = sideBarService.changeDialFormat(dataObjectnew.ttermsvs1[j].Mobile, dataObjectnew.ttermsvs1[j].Country);
+                            let linestatus = '';
+                            if (dataObjectnew.ttermsvs1[j].Active == true) {
+                                linestatus = "";
+                            } else if (dataObjectnew.ttermsvs1[j].Active == false) {
+                                linestatus = "In-Active";
+                            };
+
+                            //Check if EOM is checked
+                            if(dataObjectnew.ttermsvs1[i].fields.IsEOM == true){
+                                tdEOM = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseom-'+dataObjectnew.ttermsvs1[i].fields.ID+'" checked><label class="custom-control-label chkBox" for="iseom-'+dataObjectnew.ttermsvs1[i].fields.ID+'"></label></div>';
+                            }else{
+                                tdEOM = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseom-'+dataObjectnew.ttermsvs1[i].fields.ID+'"><label class="custom-control-label chkBox" for="iseom-'+dataObjectnew.ttermsvs1[i].fields.ID+'"></label></div>';
+                            };
+                            //Check if EOM Plus is checked
+                            if(dataObjectnew.ttermsvs1[i].fields.IsEOMPlus == true){
+                                tdEOMPlus = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+dataObjectnew.ttermsvs1[i].fields.ID+'" checked><label class="custom-control-label chkBox" for="iseomplus-'+dataObjectnew.ttermsvs1[i].fields.ID+'"></label></div>';
+                            }else{
+                                tdEOMPlus = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+dataObjectnew.ttermsvs1[i].fields.ID+'"><label class="custom-control-label chkBox" for="iseomplus-'+dataObjectnew.ttermsvs1[i].fields.ID+'"></label></div>';
+                            };
+                            //Check if Customer Default is checked // //isSalesdefault
+                            if(dataObjectnew.ttermsvs1[i].fields.isSalesdefault == true){
+                                tdCustomerDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-'+dataObjectnew.ttermsvs1[i].fields.ID+'" checked><label class="custom-control-label chkBox" for="isSalesdefault-'+dataObjectnew.ttermsvs1[i].fields.ID+'"></label></div>';
+                            }else{
+                                tdCustomerDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-'+dataObjectnew.ttermsvs1[i].fields.ID+'"><label class="custom-control-label chkBox" for="isSalesdefault-'+dataObjectnew.ttermsvs1[i].fields.ID+'"></label></div>';
+                            };
+                            //Check if Supplier Default is checked // isPurchasedefault
+                            if(dataObjectnew.ttermsvs1[i].fields.isPurchasedefault == true){
+                                tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isPurchasedefault-'+dataObjectnew.ttermsvs1[i].fields.ID+'" checked><label class="custom-control-label chkBox" for="isPurchasedefault-'+dataObjectnew.ttermsvs1[i].fields.ID+'"></label></div>';
+                            }else{
+                                tdSupplierDef= '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+dataObjectnew.ttermsvs1[i].fields.ID+'"><label class="custom-control-label chkBox" for="isPurchasedefault-'+dataObjectnew.ttermsvs1[i].fields.ID+'"></label></div>';
+                            };
+
+                              var dataListDupp = [
+                                dataObjectnew.ttermsvs1[j].fields.ID || "",
+                                dataObjectnew.ttermsvs1[j].fields.TermsName || "",
+                                dataObjectnew.ttermsvs1[j].fields.Days || "",
+                                tdEOM,
+                                tdEOMPlus,
+                                dataObjectnew.ttermsvs1[j].fields.Description || "",
+                                tdCustomerDef,
+                                tdSupplierDef,
+                                linestatus,
+                              ];
+
+                              splashArrayTermsList.push(dataListDupp);
+                              //}
+                          }
+                          let uniqueChars = [...new Set(splashArrayTermsList)];
+                          templateObject.transactiondatatablerecords.set(uniqueChars);
+                          var datatable = $('#'+currenttablename).DataTable();
+                          datatable.clear();
+                          datatable.rows.add(uniqueChars);
+                          datatable.draw(false);
+                          setTimeout(function () {
+                            $('#'+currenttablename).dataTable().fnPageChange('last');
+                          }, 400);
+
+                          $('.fullScreenSpin').css('display', 'none');
+
+                          }).catch(function (err) {
+                              $('.fullScreenSpin').css('display', 'none');
+                          });
 
                         });
                       setTimeout(function () {
