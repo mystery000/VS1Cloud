@@ -1,21 +1,5 @@
-<!--
-    xs: integer,
-    sm: integer,
-    md: integer,
-    lg: integer,
-    xl: integer,
-    id: string,
-    defaultPosition: integer,
-    key: string,
-    headerClass: string,
-    bodyClass: string,
-    headerColor: string (primary, info, warning ...),
-    headerTitle: string ,
-    hrefDetails: string (i.e. "/abc"),
-    editModalID: string
- -->
- <template name="draggablePanel">
-    <div class="col-auto col-xs-{{xs}} col-sm-{{sm}} col-md-{{md}} col-lg-{{lg}} col-xl-{{xl}} sortable-chart-widget-js hideelement"
+<template name="draggablePanel">
+    <div class="draggable-panel col-xs-{{xs}} col-sm-{{sm}} col-md-{{md}} col-lg-{{lg}} col-xl-{{xl}} sortable-chart-widget-js hideelement"
     data-default-position="{{defaultPosition}}" data-default-class="col-md-{{md}}"
     id=""
     key="{{key}}">

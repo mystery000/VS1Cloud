@@ -429,17 +429,20 @@ Template.allChartLists.onRendered(function () {
                     // Default charts
                     let defaultClass = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-class');
                     let defaultPosition = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-position');
+                    let storeObj = null;
+                    if(localStorage.getItem(chart.fields._chartSlug))
+                        storeObj = JSON.parse(localStorage.getItem(chart.fields._chartSlug));
                     $(`[key='${chart.fields._chartSlug}']`).addClass(defaultClass);
-                    $(`[key='${chart.fields._chartSlug}']`).attr('position', defaultPosition);
+                    $(`[key='${chart.fields._chartSlug}']`).attr('position', storeObj ? storeObj.position : defaultPosition);
                     $(`[key='${chart.fields._chartSlug}']`).attr('width', '100%');
-                    $(`[key='${chart.fields._chartSlug}']`).css('height', "auto");
+                    $(`[key='${chart.fields._chartSlug}']`).css('height', storeObj && storeObj.height && storeObj.height != 0 ? storeObj.height + "px" : "auto");
                     $(`[key='${chart.fields._chartSlug}'] .ui-resizable`).css(
                         "width",
-                        "100%"
+                        storeObj && storeObj.width && storeObj.width != 0 ? storeObj.width + "px" : "100%"
                     );
                     $(`[key='${chart.fields._chartSlug}'] .ui-resizable`).css(
                         "height",
-                        "auto"
+                        storeObj && storeObj.height && storeObj.height != 0 ? storeObj.height + "px" : "auto"
                     );
                     if (chart.fields.ChartGroup == _chartGroup && chart.fields.Active == true) {
                         defaultChartList.push(chart.fields._chartSlug);
@@ -585,8 +588,8 @@ Template.allChartLists.onRendered(function () {
             // Set default chart list
             $('.card-visibility').each(function () {
                 $(this).find('.cardShowBtn .far').removeClass('fa-eye');
-                let position = $(this).data('default-position');
-                $(this).attr('position', position);
+                // let position = $(this).data('default-position');
+                // $(this).attr('position', position);
                 $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
                 $(this).attr("card-active", 'false');
             })
