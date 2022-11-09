@@ -65,6 +65,20 @@ export default class resizableCharts {
             $(ui.element[0]).parents(".sortable-chart-widget-js").css("width", chartWidth);
             $(ui.element[0]).parents(".sortable-chart-widget-js").css("height", chartHeight);
 
+            if(localStorage.getItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'))){
+              let storeObj = JSON.parse(localStorage.getItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug')))
+              localStorage.setItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'), JSON.stringify({
+                position: storeObj.position,
+                width: chartWidth,
+                height: chartHeight
+              }));
+            }else{
+              localStorage.setItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'), JSON.stringify({
+                position: $(ui.element[0]).parents(".sortable-chart-widget-js").attr("position"),
+                width: chartWidth,
+                height: chartHeight
+              }));
+            }
         },
       });
     }, timeOut);
