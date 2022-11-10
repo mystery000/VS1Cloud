@@ -12567,7 +12567,8 @@ Template.new_salesorder.events({
         playSaveAudio();
         let templateObject = Template.instance();      
         let salesService = new SalesBoardService();
-        let selectedType = '';
+        // let selectedType = '';
+        let selectedType = "basedOnFrequency";
         let frequencyVal = '';
         let startDate = '';
         let finishDate = '';
@@ -12585,25 +12586,26 @@ Template.new_salesorder.events({
         
         const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
         let basedOnTypeTexts = '';
-        let basedOnTypeAttr = '';
+        // let basedOnTypeAttr = '';
+        let basedOnTypeAttr = 'F,';
         setTimeout(async function(){
-          basedOnTypes.each(function () {
-            if ($(this).prop('checked')) {
-              selectedType = $(this).attr('id');
-              if (selectedType === "basedOnFrequency") { basedOnTypeAttr += 'F,'}
-              if (selectedType === "basedOnPrint") { basedOnTypeTexts += 'On Print, '; basedOnTypeAttr += 'P,'; }
-              if (selectedType === "basedOnSave") { basedOnTypeTexts += 'On Save, '; basedOnTypeAttr += 'S,'; }
-              if (selectedType === "basedOnTransactionDate") { basedOnTypeTexts += 'On Transaction Date, '; basedOnTypeAttr += 'T,'; }
-              if (selectedType === "basedOnDueDate") { basedOnTypeTexts += 'On Due Date, '; basedOnTypeAttr += 'D,'; }
-              if (selectedType === "basedOnOutstanding") { basedOnTypeTexts += 'If Outstanding, '; basedOnTypeAttr += 'O,'; }
-              if (selectedType === "basedOnEvent") {
-                if ($('#settingsOnEvents').prop('checked')) { basedOnTypeTexts += 'On Event(On Logon), '; basedOnTypeAttr += 'EN,'; }
-                if ($('#settingsOnLogout').prop('checked')) { basedOnTypeTexts += 'On Event(On Logout), '; basedOnTypeAttr += 'EU,'; }
-              }
-            }
-          });
-          if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
-          if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
+        //   basedOnTypes.each(function () {
+        //     if ($(this).prop('checked')) {
+        //       selectedType = $(this).attr('id');
+        //       if (selectedType === "basedOnFrequency") { basedOnTypeAttr += 'F,'}
+        //       if (selectedType === "basedOnPrint") { basedOnTypeTexts += 'On Print, '; basedOnTypeAttr += 'P,'; }
+        //       if (selectedType === "basedOnSave") { basedOnTypeTexts += 'On Save, '; basedOnTypeAttr += 'S,'; }
+        //       if (selectedType === "basedOnTransactionDate") { basedOnTypeTexts += 'On Transaction Date, '; basedOnTypeAttr += 'T,'; }
+        //       if (selectedType === "basedOnDueDate") { basedOnTypeTexts += 'On Due Date, '; basedOnTypeAttr += 'D,'; }
+        //       if (selectedType === "basedOnOutstanding") { basedOnTypeTexts += 'If Outstanding, '; basedOnTypeAttr += 'O,'; }
+        //       if (selectedType === "basedOnEvent") {
+        //         if ($('#settingsOnEvents').prop('checked')) { basedOnTypeTexts += 'On Event(On Logon), '; basedOnTypeAttr += 'EN,'; }
+        //         if ($('#settingsOnLogout').prop('checked')) { basedOnTypeTexts += 'On Event(On Logout), '; basedOnTypeAttr += 'EU,'; }
+        //       }
+        //     }
+        //   });
+        //   if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
+        //   if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
     
           let formId = parseInt($("#formid").val());
           let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
