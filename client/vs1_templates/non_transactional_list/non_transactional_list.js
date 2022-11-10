@@ -1451,7 +1451,7 @@ Template.non_transactional_list.onRendered(function() {
       //Supplier List Data
       templateObject.getSupplierListData = async function (deleteFilter = false) {
         var customerpage = 0;
-        getVS1Data('TSupplierVS1List1').then(function (dataObject) {
+        getVS1Data('TSupplierVS1List').then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
                     await addVS1Data('TSupplierVS1List', JSON.stringify(data));
@@ -1473,7 +1473,7 @@ Template.non_transactional_list.onRendered(function() {
         });
       }
       templateObject.displaySuppliersListData = async function (data) {
-          console.log(data);
+        console.log(data);
         var splashArraySuppliersList = new Array();
         let lineItems = [];
         let lineItemObj = {};
@@ -1494,35 +1494,29 @@ Template.non_transactional_list.onRendered(function() {
           linestatus = "In-Active";
       };
 
-      let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.APBalance) || 0.00;
-      let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.ExcessAmount) || 0.00;
-      let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
-      let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.SupplierCreditLimit) || 0.00;
-      let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
+      let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].ARBalance) || 0.00;
+      let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].ExcessAmount) || 0.00;
+      let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].Balance) || 0.00;
+      let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].SupplierCreditLimit) || 0.00;
+      let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].Balance) || 0.00;
 
       var dataList = [
-          data.tsuppliervs1list[i].fields.ID || '',
-          data.tsuppliervs1list[i].fields.ClientName || '',
-          data.tsuppliervs1list[i].fields.ContactName || '',
-          data.tsuppliervs1list[i].fields.Phone || '',
+          data.tsuppliervs1list[i].ClientID || '',
+          data.tsuppliervs1list[i].Company || '',
+          data.tsuppliervs1list[i].Phone || '',
           arBalance || 0.00,
           creditBalance || 0.00,
           balance || 0.00,
           creditLimit || 0.00,
           salesOrderBalance || 0.00,
-          data.tsuppliervs1list[i].fields.Email || '',
-          data.tsuppliervs1list[i].fields.AccountNo || '',
-          data.tsuppliervs1list[i].fields.ClientNo || '',
-          data.tsuppliervs1list[i].fields.JobTitle || '',
-          data.tsuppliervs1list[i].fields.Notes || '',
-          data.tsuppliervs1list[i].fields.Suburb || '',
-          data.tsuppliervs1list[i].fields.Country || '',
-
-          data.tsuppliervs1list[i].BillStreet || '',
-          data.tsuppliervs1list[i].BillStreet2 || '',
-          data.tsuppliervs1list[i].BillState || '',
-          data.tsuppliervs1list[i].BillPostCode || '',
-          data.tsuppliervs1list[i].Billcountry || '',
+          data.tsuppliervs1list[i].Suburb || '',
+          data.tsuppliervs1list[i].Country || '',
+          data.tsuppliervs1list[i].Email || '',
+          data.tsuppliervs1list[i].AccountNo || '',
+          data.tsuppliervs1list[i].ClientNo || '',
+          data.tsuppliervs1list[i].JobTitle || '',
+          data.tsuppliervs1list[i].Notes || '',
+          linestatus,
       ];
 
         splashArraySuppliersList.push(dataList);
@@ -1694,35 +1688,34 @@ Template.non_transactional_list.onRendered(function() {
                       linestatus = "In-Active";
                   };
 
-                  let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.APBalance) || 0.00;
-                  let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.ExcessAmount) || 0.00;
-                  let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.Balance) || 0.00;
-                  let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.SupplierCreditLimit) || 0.00;
-                  let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.Balance) || 0.00;
+                  let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].APBalance) || 0.00;
+                  let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].ExcessAmount) || 0.00;
+                  let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].Balance) || 0.00;
+                  let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].SupplierCreditLimit) || 0.00;
+                  let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].Balance) || 0.00;
 
                     var dataListDupp = [
-                        dataObjectnew.tsuppliervs1list[j].fields.ID || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.ClientName || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.ContactName || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.Phone || '',
-                      arBalance || 0.00,
-                      creditBalance || 0.00,
-                      balance || 0.00,
-                      creditLimit || 0.00,
-                      salesOrderBalance || 0.00,
-                      dataObjectnew.tsuppliervs1list[j].fields.Email || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.AccountNo || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.ClientNo || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.JobTitle || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.Notes || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.Suburb || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.Country || '',
-
-                      dataObjectnew.tsuppliervs1list[j].BillStreet || '',
-                      dataObjectnew.tsuppliervs1list[j].BillStreet2 || '',
-                      dataObjectnew.tsuppliervs1list[j].BillState || '',
-                      dataObjectnew.tsuppliervs1list[j].BillPostCode || '',
-                      dataObjectnew.tsuppliervs1list[j].Billcountry || '',
+                        dataObjectnew.tsuppliervs1list[j].ClientID || '',
+                        dataObjectnew.tsuppliervs1list[j].Company || '',
+                        dataObjectnew.tsuppliervs1list[j].Phone || '',
+                        arBalance || 0.00,
+                        creditBalance || 0.00,
+                        balance || 0.00,
+                        creditLimit || 0.00,
+                        salesOrderBalance || 0.00,
+                        dataObjectnew.tsuppliervs1list[j].Suburb || '',
+                        dataObjectnew.tsuppliervs1list[j].Country || '',
+                        dataObjectnew.tsuppliervs1list[j].Email || '',
+                        dataObjectnew.tsuppliervs1list[j].AccountNo || '',
+                        dataObjectnew.tsuppliervs1list[j].ClientNo || '',
+                        dataObjectnew.tsuppliervs1list[j].JobTitle || '',
+                        dataObjectnew.tsuppliervs1list[j].Notes || '',
+                        linestatus,
+                      // dataObjectnew.tsuppliervs1list[j].BillStreet || '',
+                      // dataObjectnew.tsuppliervs1list[j].BillStreet2 || '',
+                      // dataObjectnew.tsuppliervs1list[j].BillState || '',
+                      // dataObjectnew.tsuppliervs1list[j].BillPostCode || '',
+                      // dataObjectnew.tsuppliervs1list[j].Billcountry || '',
                     ];
 
                     splashArraySuppliersList.push(dataListDupp);

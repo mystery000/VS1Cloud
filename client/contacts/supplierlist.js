@@ -58,6 +58,12 @@ Template.supplierlist.onRendered(function() {
 });
 
 Template.supplierlist.events({
+    "click #tblSupplierlist tbody tr": (e, ui) => {
+        const id = $(e.currentTarget).attr('id');
+        if(id){
+            FlowRouter.go(`/supplierscard?id=${id}`);
+        }
+    },
     'click #btnNewSupplier': function(event) {
         FlowRouter.go('/supplierscard');
     },
@@ -107,29 +113,34 @@ Template.supplierlist.events({
                 let lineItemObj = {};
                 if (data.tsuppliervs1list.length > 0) {
                     for (let i = 0; i < data.tsuppliervs1list.length; i++) {
-
-                        let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.APBalance) || 0.00;
-                        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.ExcessAmount) || 0.00;
-                        let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
-                        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.SupplierCreditLimit) || 0.00;
-                        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
+                        let linestatus = '';
+                        if (data.tsuppliervs1list[i].Active == true) {
+                            linestatus = "";
+                        } else if (data.tsuppliervs1list[i].Active == false) {
+                            linestatus = "In-Active";
+                        };
+                        let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].ARBalance) || 0.00;
+                        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].ExcessAmount) || 0.00;
+                        let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].Balance) || 0.00;
+                        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].SupplierCreditLimit) || 0.00;
+                        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].Balance) || 0.00;
                         var dataList = {
-                            id: data.tsuppliervs1list[i].fields.ID || '',
-                            company: data.tsuppliervs1list[i].fields.ClientName || '',
-                            contactname: data.tsuppliervs1list[i].fields.ContactName || '',
-                            phone: data.tsuppliervs1list[i].fields.Phone || '',
+                            id: data.tsuppliervs1list[i].ClientID || '',
+                            company: data.tsuppliervs1list[i].Company || '',
+                            phone: data.tsuppliervs1list[i].Phone || '',
                             arbalance: arBalance || 0.00,
                             creditbalance: creditBalance || 0.00,
                             balance: balance || 0.00,
                             creditlimit: creditLimit || 0.00,
                             salesorderbalance: salesOrderBalance || 0.00,
-                            email: data.tsuppliervs1list[i].fields.Email || '',
-                            accountno: data.tsuppliervs1list[i].fields.AccountNo || '',
-                            clientno: data.tsuppliervs1list[i].fields.ClientNo || '',
-                            jobtitle: data.tsuppliervs1list[i].fields.JobTitle || '',
-                            notes: data.tsuppliervs1list[i].fields.Notes || '',
-                            suburb: data.tsuppliervs1list[i].fields.Suburb || '',
-                            country: data.tsuppliervs1list[i].fields.Country || ''
+                            suburb: data.tsuppliervs1list[i].Suburb || '',
+                            country: data.tsuppliervs1list[i].Country || '',
+                            email: data.tsuppliervs1list[i].Email || '',
+                            accountno: data.tsuppliervs1list[i].AccountNo || '',
+                            clientno: data.tsuppliervs1list[i].ClientNo || '',
+                            jobtitle: data.tsuppliervs1list[i].JobTitle || '',
+                            notes: data.tsuppliervs1list[i].Notes || '',
+                            status:linestatus
                         };
 
                         dataTableList.push(dataList);
@@ -137,34 +148,6 @@ Template.supplierlist.events({
 
                     templateObject.datatablerecords.set(dataTableList);
 
-                    let item = templateObject.datatablerecords.get();
-                    $('.fullScreenSpin').css('display', 'none');
-                    if (dataTableList) {
-                        var datatable = $('#tblSupplierlist').DataTable();
-                        $("#tblSupplierlist > tbody").empty();
-                        for (let x = 0; x < item.length; x++) {
-                            $("#tblSupplierlist > tbody").append(
-                                ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
-                                '<td contenteditable="false" class="colCompany">' + item[x].company + '</td>' +
-                                '<td contenteditable="false" class="colPhone">' + item[x].phone + '</td>' +
-                                '<td contenteditable="false" class="colARBalance" >' + item[x].arbalance + '</td>' +
-                                '<td contenteditable="false" class="colCreditBalance">' + item[x].creditbalance + '</td>' +
-                                '<td contenteditable="false" class="colBalance">' + item[x].balance + '</td>' +
-                                '<td contenteditable="false" class="colCreditLimit">' + item[x].creditlimit + '</td>' +
-                                '<td contenteditable="false" class="colSalesOrderBalance">' + item[x].salesorderbalance + '</td>' +
-                                '<td contenteditable="false" class="colSuburb">' + item[x].suburb + '</td>' +
-                                '<td contenteditable="false" class="colCountry">' + item[x].country + '</td>' +
-                                '<td contenteditable="false" class="colEmail hiddenColumn">' + item[x].email + '</td>' +
-                                '<td contenteditable="false" class="colAccountNo hiddenColumn">' + item[x].accountno + '</td>' +
-                                '<td contenteditable="false" class="colClientNo hiddenColumn">' + item[x].clientno + '</td>' +
-                                '<td contenteditable="false" class="colJobTitle hiddenColumn">' + item[x].jobtitle + '</td>' +
-                                '<td contenteditable="false" class="colNotes">' + item[x].notes + '</td>' +
-                                '</tr>');
-
-                        }
-                        $('.dataTables_info').html('Showing 1 to ' + data.tsuppliervs1list.length + ' of ' + data.tsuppliervs1list.length + ' entries');
-
-                    }
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
@@ -358,28 +341,15 @@ Template.supplierlist.events({
         $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();
 
-        sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad,0).then(function(dataSuppliers) {
-            addVS1Data('TSupplierVS1List',JSON.stringify(dataSuppliers));
-        });
-
-        sideBarService.getAllAppointmentPredList().then(function (dataPred) {
-            addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
-              sideBarService.getAllTEmployeeList(initialBaseDataLoad,0,false).then(function(data) {
-                  addVS1Data('TSupplierVS1List',JSON.stringify(data)).then(function (datareturn) {
-                      window.open('/supplierlist','_self');
-                  }).catch(function (err) {
-                      window.open('/supplierlist','_self');
-                  });
-              }).catch(function(err) {
-                  window.open('/supplierlist','_self');
-              });
-            }).catch(function (err) {
-              window.open('/supplierlist','_self');
+        sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function(data) {
+            addVS1Data('TSupplierVS1List', JSON.stringify(data)).then(function(datareturn) {
+                window.open('/supplierlist', '_self');
+            }).catch(function(err) {
+                window.open('/supplierlist', '_self');
             });
-        }).catch(function (err) {
-          window.open('/supplierlist','_self');
+        }).catch(function(err) {
+            window.open('/supplierlist', '_self');
         });
-
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
