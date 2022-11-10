@@ -757,16 +757,21 @@
                     </div>
 
                     <div class="modal-footer">
+                        {{#if equals accessStartStopOnly true}}
+                            <button class="btn btn-primary btnCreateInvoice" type="button" style="margin: 14px;" id="btnCreateInvoiceDisable" name="btnCreateInvoiceDisable"><span>Create Invoice</span></button>
+                            <button class="btn btn-primary btnCopyOptions" type="button" style="margin: 14px;" id="btnCopyOptionsDisable" name="btnCopyOptionsDisable" disabled><span>Copy Appointment</span></button>
+                        {{else}}
+                            <button class="btn btn-primary btnCreateInvoice" type="button" style="margin: 14px;" id="btnCreateInvoice" name="btnCreateInvoice">Create Invoice</button>
+                            <button class="btn btn-primary btnCopyOptions" type="button" style="margin: 14px;" id="btnCopyOptions" name="btnCopyOptions">Copy Appointment</button>
+                        {{/if}}
                         <button class="btn btn-success btnSaveAppointment" type="button" style="margin: 14px;" id="btnSaveAppointment" name="btnSaveAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                         {{#if equals accessStartStopOnly true}}
                             <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDeleteDisbale" name="btnDeleteDisbale" disabled><i class="fas fa-trash-alt" style="margin-right: 5px;"></i><span>Delete</span></button>
-                            <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button>
+                            <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button> -->                            
                         {{else}}
                             <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDelete" name="btnDelete"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
-                            <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptions" name="btnOptions"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button>
+                            <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptions" name="btnOptions"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button> -->
                         {{/if}}
-
-
 
                         <!-- Start Appointment Modal to choose Start Appointment SMS Message -->
                         <div class="modal fade" role="dialog" id="startAppointmentModal">
@@ -877,6 +882,10 @@
                 </div>
             </div>
         </form>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+        {{> copyfrequencypop}}
     </div>
 
     <div class="modal fade" role="dialog" id="frmOptions">
@@ -1365,6 +1374,8 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
     </div>
     <!-- END Attachments -->
 
+    {{> deletepop itemName1="Appointment" itemName2="appointment" itemName3="Appointment" button1="btnDeleteAppointment" button2="btnDeleteFollowingAppointments"}}
+    
     <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
         {{> payrollproductlistpop}}
     </div>
