@@ -248,11 +248,19 @@ export class ReportService extends BaseService {
     );
   }
 
-  getPayHistory(dateFrom, dateTo, ignoreDate = false, periodType) {
+  getPayHistory(dateFrom, dateTo, ignoreDate = false, periodType = "") {
     let options = "";
     if (ignoreDate == true) {
       options = {
         IgnoreDates: ignoreDate,
+        PeriodType: '"' + periodType + '"',
+        ListType: "'Detail'",
+      };
+    } else if( periodType ){
+      options = {
+        IgnoreDates: ignoreDate,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
         PeriodType: '"' + periodType + '"',
         ListType: "'Detail'",
       };
@@ -261,7 +269,6 @@ export class ReportService extends BaseService {
         IgnoreDates: ignoreDate,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        PeriodType: '"' + periodType + '"',
         ListType: "'Detail'",
       };
     }

@@ -6,7 +6,9 @@ import { TaxRateService } from "../../settings/settings-service";
 import GlobalFunctions from "../../GlobalFunctions";
 import moment from "moment";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import Datehandler from "../../DateHandler";
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
+
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -30,33 +32,33 @@ Template.generalledger.onRendered(() => {
 
   let taxRateService = new TaxRateService();
   let utilityService = new UtilityService();
-  let salesOrderTable;
-  var splashArray = new Array();
-  var today = moment().format("DD/MM/YYYY");
-  var currentDate = new Date();
-  var begunDate = moment(currentDate).format("DD/MM/YYYY");
-  let fromDateMonth = currentDate.getMonth() + 1;
-  let fromDateDay = currentDate.getDate();
-  if (currentDate.getMonth() + 1 < 10) {
-    fromDateMonth = "0" + (currentDate.getMonth() + 1);
-  }
+  // let salesOrderTable;
+  // var splashArray = new Array();
+  // var today = moment().format("DD/MM/YYYY");
+  // var currentDate = new Date();
+  // var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  // let fromDateMonth = currentDate.getMonth() + 1;
+  // let fromDateDay = currentDate.getDate();
+  // if (currentDate.getMonth() + 1 < 10) {
+  //   fromDateMonth = "0" + (currentDate.getMonth() + 1);
+  // }
 
-  let imageData = localStorage.getItem("Image");
-  if (imageData) {
-    $("#uploadedImage").attr("src", imageData);
-    $("#uploadedImage").attr("width", "50%");
-  }
+  // let imageData = localStorage.getItem("Image");
+  // if (imageData) {
+  //   $("#uploadedImage").attr("src", imageData);
+  //   $("#uploadedImage").attr("width", "50%");
+  // }
 
-  let prevMonth = moment().subtract(1, 'months').format('MM')
+  // let prevMonth = moment().subtract(1, 'months').format('MM')
 
 
 
-  if (currentDate.getDate() < 10) {
-    fromDateDay = "0" + currentDate.getDate();
-  }
+  // if (currentDate.getDate() < 10) {
+  //   fromDateDay = "0" + currentDate.getDate();
+  // }
   // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-  var fromDate =
-    fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
+  // var fromDate =
+  //   fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
   // templateObject.dateAsAt.set(begunDate);
   const dataTableList = [];
   const deptrecords = [];
@@ -86,6 +88,12 @@ Template.generalledger.onRendered(() => {
 
   // $("#dateFrom").val(fromDate);
   // $("#dateTo").val(begunDate);
+
+  templateObject.initDate = () => {
+    Datehandler.initOneMonth();
+  };
+
+  templateObject.initDate();
 
   templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
@@ -601,13 +609,12 @@ Template.generalledger.onRendered(() => {
       $(".fullScreenSpin").css("display", "none");
     }
   };
-  // templateObject.setReportOptions();
-  var currentDate2 = new Date();
-  var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
 
-  let getDateFrom =currentDate2.getFullYear() +"-" +currentDate2.getMonth() +"-" +currentDate2.getDate();
-
-  // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+  templateObject.getGeneralLedgerReports(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+    false
+  );
 
   templateObject.getDepartments = function () {
     reportService.getDepartment().then(function (data) {
@@ -687,31 +694,64 @@ Template.generalledger.events({
 
     LoadingOverlay.hide();
   },
-  // "click td a": async function (event) {
-  //   let id = $(event.target).closest("tr").attr("id").split("item-value-");
-  //   var accountName = id[1].split("_").join(" ");
-  //   let toDate = moment($("#dateTo").val())
-  //     .clone()
-  //     .endOf("month")
-  //     .format("YYYY-MM-DD");
-  //   let fromDate = moment($("#dateFrom").val())
-  //     .clone()
-  //     .startOf("year")
-  //     .format("YYYY-MM-DD");
-  //   //Session.setPersistent('showHeader',true);
-  //   await clearData("TAccountRunningBalanceReport");
-  //   window.open(
-  //     "/balancetransactionlist?accountName=" +
-  //       accountName +
-  //       "&toDate=" +
-  //       toDate +
-  //       "&fromDate=" +
-  //       fromDate +
-  //       "&isTabItem=" +
-  //       false,
-  //     "_self"
-  //   );
-  // },
+  "click td a": async function (event) {
+    let id = $(event.target).closest("tr").attr("id").split("item-value-");
+    var accountName = id[1].split("_").join(" ");
+    let toDate = moment($("#dateTo").val())
+      .clone()
+      .endOf("month")
+      .format("YYYY-MM-DD");
+    let fromDate = moment($("#dateFrom").val())
+      .clone()
+      .startOf("year")
+      .format("YYYY-MM-DD");
+    //Session.setPersistent('showHeader',true);
+    await clearData("TAccountRunningBalanceReport");
+    window.open(
+      "/balancetransactionlist?accountName=" +
+        accountName +
+        "&toDate=" +
+        toDate +
+        "&fromDate=" +
+        fromDate +
+        "&isTabItem=" +
+        false,
+      "_self"
+    );
+  },
+  "click #ignoreDate":  (e, templateObject) => {
+    templateObject.getGeneralLedgerReports(
+      null, 
+      null, 
+      true
+    )
+  },
+  "click #dropdownDateRang": function (e) {
+    let dateRangeID = e.target.id;
+    $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
+    $("#selectedDateRange").show();
+    if (dateRangeID == "thisMonth") {
+      document.getElementById("selectedDateRange").value = "This Month";
+    } else if (dateRangeID == "thisQuarter") {
+      document.getElementById("selectedDateRange").value = "This Quarter";
+    } else if (dateRangeID == "thisFinYear") {
+      document.getElementById("selectedDateRange").value =
+        "This Financial Year";
+    } else if (dateRangeID == "lastMonth") {
+      document.getElementById("selectedDateRange").value = "Last Month";
+    } else if (dateRangeID == "lastQuarter") {
+      document.getElementById("selectedDateRange").value = "Last Quarter";
+    } else if (dateRangeID == "lastFinYear") {
+      document.getElementById("selectedDateRange").value =
+        "Last Financial Year";
+    } else if (dateRangeID == "monthToDate") {
+      document.getElementById("selectedDateRange").value = "Month to Date";
+    } else if (dateRangeID == "quarterToDate") {
+      document.getElementById("selectedDateRange").value = "Quarter to Date";
+    } else if (dateRangeID == "finYearToDate") {
+      document.getElementById("selectedDateRange").value = "Year to Date";
+    }
+  },
   // "change #dateTo": function () {
   //   let templateObject = Template.instance();
   //   $(".fullScreenSpin").css("display", "inline-block");
@@ -1034,7 +1074,15 @@ Template.generalledger.events({
         type: 'warning',
         confirmButtonText: 'Ok'
       })
-  }
+  },  
+  "change #dateTo, change #dateFrom": (e, templateObject) => {
+    templateObject.getGeneralLedgerReports(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+    )
+  },
+  ...Datehandler.getDateRangeEvents()
 });
 
 Template.generalledger.helpers({
@@ -1226,9 +1274,9 @@ Template.generalledger.helpers({
   grandrecords: () => {
     return Template.instance().grandrecords.get();
   },
-  // dateAsAt: () => {
-  //   return Template.instance().dateAsAt.get() || "-";
-  // },
+  dateAsAt: () => {
+    return Template.instance().dateAsAt.get() || "-";
+  },
   companyname: () => {
     return loggedCompany;
   },
