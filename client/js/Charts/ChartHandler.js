@@ -11,7 +11,7 @@ export default class ChartHandler {
     const charts = $(".chart-visibility");
 
     for (let i = 0; i <= charts.length; i++) {
-      $(charts[i]).attr("position", i);
+      $(charts[i]).attr("position", i);      
     }
   }
 
@@ -64,8 +64,23 @@ export default class ChartHandler {
     const apiEndpoint = dashboardApis.collection.findByName(
       dashboardApis.collectionNames.Tvs1dashboardpreferences
     );
-
+    
     Array.prototype.forEach.call(charts, (chart) => {
+      if(localStorage.getItem($(chart).attr("chart-slug"))){
+        let storeObj = JSON.parse(localStorage.getItem($(chart).attr("chart-slug")))
+        localStorage.setItem($(chart).attr("chart-slug"), JSON.stringify({
+          position: $(chart).attr("position"),
+          width: storeObj.width ? storeObj.width : 0,
+          height: storeObj.height ? storeObj.height : 0
+        }));
+      }else{
+        localStorage.setItem($(chart).attr("chart-slug"), JSON.stringify({
+          position: $(chart).attr("position"),
+          width: 0,
+          height: 0
+        }));
+      }      
+
       chartList.push(
         new Tvs1ChartDashboardPreference({
           type: "Tvs1dashboardpreferences",
@@ -94,12 +109,13 @@ export default class ChartHandler {
         type: "Tvs1dashboardpreferences",
         objects:chartList
     };
+    
     const ApiResponse = await apiEndpoint.fetch(null, {
       method: "POST",
       headers: ApiService.getPostHeaders(),
       body: JSON.stringify(chartJSON),
     });
-
+    
     if (ApiResponse.ok == true) {
       const jsonResponse = await ApiResponse.json();
     }
@@ -168,6 +184,7 @@ export default class ChartHandler {
     if (dashboardPreferencesEndpointResponse.ok == true) {
       dashboardPreferencesEndpointJsonResponse = await dashboardPreferencesEndpointResponse.json();
     }
+    
     await addVS1Data('Tvs1dashboardpreferences', JSON.stringify(dashboardPreferencesEndpointJsonResponse))
     return true
   }

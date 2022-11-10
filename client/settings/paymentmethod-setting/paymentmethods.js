@@ -5,6 +5,9 @@ import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
+
+Template.paymentmethodSettings.inheritsHooksFrom('non_transactional_list');
+
 Template.paymentmethodSettings.onCreated(function(){
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -22,7 +25,7 @@ Template.paymentmethodSettings.onCreated(function(){
 });
 
 Template.paymentmethodSettings.onRendered(function() {
-    $('.fullScreenSpin').css('display','inline-block');
+    //$('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     const dataTableList = [];
@@ -264,23 +267,23 @@ Template.paymentmethodSettings.events({
     $(".fullScreenSpin").css("display", "none");
   },
   'click .btnRefresh': function () {
-    $('.fullScreenSpin').css('display','inline-block');
-    sideBarService.getPaymentMethodDataVS1().then(function(dataReload) {
-        addVS1Data('TPaymentMethod',JSON.stringify(dataReload)).then(function (datareturn) {
-        location.reload(true);
-        }).catch(function (err) {
-          location.reload(true);
-        });
-    }).catch(function(err) {
-        location.reload(true);
-    });
+      sideBarService.getPaymentMethodDataVS1().then(function (dataReload) {
+          addVS1Data('TPaymentMethod', JSON.stringify(dataReload)).then(function (datareturn) {
+              Meteor._reload.reload();
+          }).catch(function (err) {
+              Meteor._reload.reload();
+          });
+      }).catch(function (err) {
+          Meteor._reload.reload();
+      });
+      // Meteor._reload.reload();
   },
   'click .btnDeletePaymentMethod': function () {
     playDeleteAudio();
     let taxRateService = new TaxRateService();
     setTimeout(function(){
-    
-    let paymentMethodId = $('#selectDeleteLineID').val();
+
+    let paymentMethodId = $('#edtPaymentMethodID').val();
     let objDetails = {
         type: "TPaymentMethod",
         fields: {
@@ -322,7 +325,7 @@ Template.paymentmethodSettings.events({
     let taxRateService = new TaxRateService();
     setTimeout(function(){
     $('.fullScreenSpin').css('display','inline-block');
-    
+
     let paymentMethodID = $('#edtPaymentMethodID').val();
     //let headerDept = $('#sltDepartment').val();
     let paymentName = $('#edtPaymentMethodName').val();

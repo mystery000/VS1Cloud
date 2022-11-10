@@ -27,7 +27,7 @@ export default class draggableCharts {
             if( $(ui.item[0]).hasClass("editCharts") == false ){
               await ChartHandler.buildPositions();
               await ChartHandler.saveCharts();
-              await ChartHandler.saveChartsInLocalDB();
+              await ChartHandler.saveChartsInLocalDB();              
             } 
             $(".fullScreenSpin").css("display", "none");
           },

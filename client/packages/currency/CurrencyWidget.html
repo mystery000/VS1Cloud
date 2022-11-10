@@ -10,7 +10,7 @@
             /* padding: 0.75rem; */
             /* border-radius: 0.5rem; */
             /* max-width: 200px; */
-            
+
             display: flex;
             flex-wrap: wrap;
             margin-right: -.75rem;
@@ -51,6 +51,19 @@
 
 
     {{else}}
+      {{#if trans}}
+        <div class="col-12 col-md-6 col-lg-4 col-xl-2" type="{{rate}}">
+            <div class="form-group">
+              {{> currencydropdown}}
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-2" type="{{rate}}">
+            <div class="form-group">
+            {{> CurrencyRate }}
+            </div>
+        </div>
+      {{else}}
         <style>
             .currency-module {
                 display: flex;
@@ -61,7 +74,7 @@
                 /* padding: 0.75rem; */
                 /* border-radius: 0.5rem; */
                 /* max-width: 200px; */
-                
+
             }
 
             .currency-module>div {
@@ -77,10 +90,11 @@
                 {{> CurrencyRate }}
             </div>
         </div>
+      {{/if}}
     {{/if}}
 
 
-   
+
 
     <div class="modal fade" role="dialog" tabindex="-1" id="currencyModal">
         {{> currencypop}}

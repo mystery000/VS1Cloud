@@ -54,6 +54,7 @@ Template.alltaskdatatable.onCreated(function () {
 });
 
 Template.alltaskdatatable.onRendered(function () {
+ 
   let templateObject = Template.instance();
   templateObject.selected_id.set(0);
   templateObject.selected_ttodo.set(null);
@@ -275,7 +276,7 @@ Template.alltaskdatatable.onRendered(function () {
             //   $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
             // }
           },
-          width: "100px",
+          width: "200px",
         },
         {
           targets: 3,
@@ -1825,7 +1826,7 @@ Template.alltaskdatatable.onRendered(function () {
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
           },
-          width: "100px",
+          width: "200px",
         },
         {
           targets: 3,
@@ -2322,6 +2323,8 @@ Template.alltaskdatatable.events({
           supplierID = contactID;
         }
 
+        let completed = $('#chkComplete_taskEdit').prop("checked");
+
         var objDetails = {
           type: "Tprojecttasks",
           fields: {
@@ -2333,7 +2336,8 @@ Template.alltaskdatatable.events({
             SupplierID: supplierID,
             AssignID: assignId,
             AssignName: assignName,
-            ContactName: contactName
+            ContactName: contactName,
+            Completed: completed
           },
         };
         $(".fullScreenSpin").css("display", "inline-block");
@@ -3114,14 +3118,14 @@ Template.alltaskdatatable.events({
     }
   },
 
-  "click #editCrmProjectColor": function (e) {
-    $('button').each(function () {
-      var target = $(this);
-      if (target.text() == 'Other...' || target.val() == 'Other...') {
-        target.remove();
-      }
-    });
-  },
+  // "click #editCrmProjectColor": function (e) {
+  //   $('button').each(function () {
+  //     var target = $(this);
+  //     if (target.text() == 'Other...' || target.val() == 'Other...') {
+  //       target.remove();
+  //     }
+  //   });
+  // },
 
   // submit edit project
   "click .btnEditCrmProject": function (e) {
@@ -3238,7 +3242,10 @@ Template.alltaskdatatable.events({
       setTimeout(function () {
         if (clickCount == 1) {
 
-          $("#newProjectTasksModal").modal("toggle");
+          // this modal is for displaying task list of the project
+          // $("#newProjectTasksModal").modal("toggle");
+          $("#editCrmProject").modal("toggle");
+
           let id = e.target.dataset.id;
           $("#editProjectID").val(id);
 
@@ -3960,16 +3967,16 @@ function openEditTaskModal(id, type) {
       let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
 
       if (selected_record.Completed) {
-        $('#lblComplete_taskEditLabel').removeClass('chk_complete');
-        $('#lblComplete_taskEditLabel').addClass('chk_uncomplete');
-        $('#chkComplete_taskEdit').removeClass('chk_complete');
-        $('#chkComplete_taskEdit').addClass('chk_uncomplete');
+        // $('#lblComplete_taskEditLabel').removeClass('chk_complete');
+        // $('#lblComplete_taskEditLabel').addClass('chk_uncomplete');
+        // $('#chkComplete_taskEdit').removeClass('chk_complete');
+        // $('#chkComplete_taskEdit').addClass('chk_uncomplete');
         $('#chkComplete_taskEdit').prop("checked", true);
       } else {
-        $('#lblComplete_taskEditLabel').removeClass('chk_uncomplete');
-        $('#lblComplete_taskEditLabel').addClass('chk_complete');
-        $('#chkComplete_taskEdit').removeClass('chk_uncomplete');
-        $('#chkComplete_taskEdit').addClass('chk_complete');
+        // $('#lblComplete_taskEditLabel').removeClass('chk_uncomplete');
+        // $('#lblComplete_taskEditLabel').addClass('chk_complete');
+        // $('#chkComplete_taskEdit').removeClass('chk_uncomplete');
+        // $('#chkComplete_taskEdit').addClass('chk_complete');
         $('#chkComplete_taskEdit').prop("checked", false);
       }
 

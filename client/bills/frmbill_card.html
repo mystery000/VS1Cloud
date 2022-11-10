@@ -1021,11 +1021,11 @@
 
                                             <td style="min-width: 170px;" class="colAmountEx {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input class="lineAmount colAmount highlightInput colAmountExChange" type="text" value="{{item.unitPrice}}"></td>
                                             {{#if isForeignEnabled}}
-                                                <td style="min-width: 170px;" class="colAmountEx convert-to-foreign {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPrice}}</td>
+                                                <td style="min-width: 170px;" class="colAmountEx convert-to-foreign {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input class="highlightInput" value="{{ convertToForeignAmount item.unitPrice}}"></td>
                                             {{/if}}
                                             <td class="colAmountInc  {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input class="lineAmount colAmount highlightInput colAmountIncChange" type="text" value="{{item.unitPriceInc}}"></td>
                                             {{#if isForeignEnabled}}
-                                                <td class="colAmountInc convert-to-foreign   {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPriceInc}}</td>
+                                                <td class="colAmountInc convert-to-foreign   {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input class="highlightInput" value="{{ convertToForeignAmount item.unitPriceInc}}"></td>
                                             {{/if}}
 
                                             <td class="th colFixedAsset {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnFixedAsset"  style="margin-left: 40px; font-size: 22px;" ></i></td>

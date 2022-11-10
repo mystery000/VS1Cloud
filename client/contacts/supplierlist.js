@@ -9,6 +9,7 @@ import { OrganisationService } from "../js/organisation-service";
 let organisationService = new OrganisationService;
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+Template.supplierlist.inheritsHooksFrom('non_transactional_list');
 Template.supplierlist.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -21,7 +22,7 @@ Template.supplierlist.onCreated(function() {
 });
 
 Template.supplierlist.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
+    //$('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
     const customerList = [];
@@ -34,727 +35,12 @@ Template.supplierlist.onRendered(function() {
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSupplierlist', function(error, result) {
-        if (error) {
-
-        } else {
-            if (result) {
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
+    $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
+        const listData = $(this).closest('tr').attr('id');
+        if(listData){
+            FlowRouter.go('/employeescard?id=' + listData);
         }
     });
-
-    function MakeNegative() {
-        $('td').each(function() {
-            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-        });
-    };
-
-    templateObject.resetData = function(dataVal) {
-        window.open('/supplierlist?page=last', '_self');
-    }
-
-    templateObject.getSuppliers = function() {
-
-        getVS1Data('TSupplierVS1').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function(data) {
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    addVS1Data('TSupplierVS1', JSON.stringify(data));
-                    for (let i = 0; i < data.tsuppliervs1.length; i++) {
-                        let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.APBalance) || 0.00;
-                        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.ExcessAmount) || 0.00;
-                        let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.Balance) || 0.00;
-                        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.SupplierCreditLimit) || 0.00;
-                        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.Balance) || 0.00;
-                        var dataList = {
-                            id: data.tsuppliervs1[i].fields.ID || '',
-                            company: data.tsuppliervs1[i].fields.ClientName || '',
-                            contactname: data.tsuppliervs1[i].fields.ContactName || '',
-                            phone: data.tsuppliervs1[i].fields.Phone || '',
-                            arbalance: arBalance || 0.00,
-                            creditbalance: creditBalance || 0.00,
-                            balance: balance || 0.00,
-                            creditlimit: creditLimit || 0.00,
-                            salesorderbalance: salesOrderBalance || 0.00,
-                            email: data.tsuppliervs1[i].fields.Email || '',
-                            accountno: data.tsuppliervs1[i].fields.AccountNo || '',
-                            clientno: data.tsuppliervs1[i].fields.ClientNo || '',
-                            jobtitle: data.tsuppliervs1[i].fields.JobTitle || '',
-                            notes: data.tsuppliervs1[i].fields.Notes || '',
-                            suburb: data.tsuppliervs1[i].fields.Suburb || '',
-                            country: data.tsuppliervs1[i].fields.Country || ''
-                        };
-
-                        dataTableList.push(dataList);
-                    }
-
-                    templateObject.datatablerecords.set(dataTableList);
-
-                    if (templateObject.datatablerecords.get()) {
-
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSupplierlist', function(error, result) {
-                            if (error) {
-
-                            } else {
-                                if (result) {
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if (hiddenColumn == true) {
-
-                                            $("." + columnClass + "").addClass('hiddenColumn');
-                                            $("." + columnClass + "").removeClass('showColumn');
-                                        } else if (hiddenColumn == false) {
-                                            $("." + columnClass + "").removeClass('hiddenColumn');
-                                            $("." + columnClass + "").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-
-
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    }
-
-                    $('.fullScreenSpin').css('display', 'none');
-                    setTimeout(function() {
-                        $('#tblSupplierlist').DataTable({
-
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            buttons: [{
-                                    extend: 'csvHtml5',
-                                    text: '',
-                                    download: 'open',
-                                    className: "btntabletocsv hiddenColumn",
-                                    filename: "Supplier List - " + moment().format(),
-                                    orientation: 'portrait',
-                                    exportOptions: {
-                                        columns: ':visible'
-                                    }
-                                }, {
-                                    extend: 'print',
-                                    download: 'open',
-                                    className: "btntabletopdf hiddenColumn",
-                                    text: '',
-                                    title: 'Supplier List',
-                                    filename: "Supplier List - " + moment().format(),
-                                    exportOptions: {
-                                        columns: ':visible',
-                                        stripHtml: false
-                                    }
-                                },
-                                {
-                                    extend: 'excelHtml5',
-                                    title: '',
-                                    download: 'open',
-                                    className: "btntabletoexcel hiddenColumn",
-                                    filename: "Supplier List - " + moment().format(),
-                                    orientation: 'portrait',
-                                    exportOptions: {
-                                        columns: ':visible'
-                                    }
-
-                                }
-                            ],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            // bStateSave: true,
-                            // rowId: 0,
-                            pageLength: initialDatatableLoad,
-                            lengthMenu: [
-                                [initialDatatableLoad, -1],
-                                [initialDatatableLoad, "All"]
-                            ],
-                            info: true,
-                            responsive: true,
-                            "order": [
-                                [1, "asc"]
-                            ],
-                            action: function() {
-                                $('#tblSupplierlist').DataTable().ajax.reload();
-                            },
-                            "fnDrawCallback": function(oSettings) {
-                                setTimeout(function() {
-                                    MakeNegative();
-                                }, 100);
-                            },
-                            language: { search: "",searchPlaceholder: "Search List..." },
-                            "fnInitComplete": function() {
-                                $("<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierlist_filter");
-                            }
-
-                        }).on('page', function() {
-
-                            let draftRecord = templateObject.datatablerecords.get();
-                            templateObject.datatablerecords.set(draftRecord);
-                        }).on('column-reorder', function() {
-
-                        }).on('length.dt', function(e, settings, len) {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        });
-
-                        // $('#tblSupplierlist').DataTable().column( 0 ).visible( true );
-                        $('.fullScreenSpin').css('display', 'none');
-                    }, 0);
-
-                    var columns = $('#tblSupplierlist th');
-                    let sTible = "";
-                    let sWidth = "";
-                    let sIndex = "";
-                    let sVisible = "";
-                    let columVisible = false;
-                    let sClass = "";
-                    $.each(columns, function(i, v) {
-                        if (v.hidden == false) {
-                            columVisible = true;
-                        }
-                        if ((v.className.includes("hiddenColumn"))) {
-                            columVisible = false;
-                        }
-                        sWidth = v.style.width.replace('px', "");
-                        let datatablerecordObj = {
-                            sTitle: v.innerText || '',
-                            sWidth: sWidth || '',
-                            sIndex: v.cellIndex || 0,
-                            sVisible: columVisible || false,
-                            sClass: v.className || ''
-                        };
-                        tableHeaderList.push(datatablerecordObj);
-                    });
-                    templateObject.tableheaderrecords.set(tableHeaderList);
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                    $('#tblSupplierlist tbody').on('click', 'tr', function() {
-                        var listData = $(this).closest('tr').attr('id');
-                        if (listData) {
-                            FlowRouter.go('/supplierscard?id=' + listData);
-                        }
-                    });
-
-                }).catch(function(err) {
-                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                    $('.fullScreenSpin').css('display', 'none');
-                    // Meteor._reload.reload();
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tsuppliervs1;
-                let lineItems = [];
-                let lineItemObj = {};
-                for (let i = 0; i < useData.length; i++) {
-                    let arBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.APBalance) || 0.00;
-                    let creditBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.ExcessAmount) || 0.00;
-                    let balance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance) || 0.00;
-                    let creditLimit = utilityService.modifynegativeCurrencyFormat(useData[i].fields.SupplierCreditLimit) || 0.00;
-                    let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance) || 0.00;
-                    var dataList = {
-                        id: useData[i].fields.ID || '',
-                        company: useData[i].fields.ClientName || '',
-                        contactname: useData[i].fields.ContactName || '',
-                        phone: useData[i].fields.Phone || '',
-                        arbalance: arBalance || 0.00,
-                        creditbalance: creditBalance || 0.00,
-                        balance: balance || 0.00,
-                        creditlimit: creditLimit || 0.00,
-                        salesorderbalance: salesOrderBalance || 0.00,
-                        email: useData[i].fields.Email || '',
-                        accountno: useData[i].fields.AccountNo || '',
-                        clientno: useData[i].fields.ClientNo || '',
-                        jobtitle: useData[i].fields.JobTitle || '',
-                        notes: useData[i].fields.Notes || '',
-                        suburb: useData[i].fields.Suburb || '',
-                        country: useData[i].fields.Country || ''
-                    };
-
-                    dataTableList.push(dataList);
-                    //}
-                }
-
-                templateObject.datatablerecords.set(dataTableList);
-
-                if (templateObject.datatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSupplierlist', function(error, result) {
-                        if (error) {
-
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
-                    $('#tblSupplierlist').DataTable({
-
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                                extend: 'csvHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "Supplier List - " + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Supplier List',
-                                filename: "Supplier List - " + moment().format(),
-                                exportOptions: {
-                                    columns: ':visible',
-                                    stripHtml: false
-                                }
-                            },
-                            {
-                                extend: 'excelHtml5',
-                                title: '',
-                                download: 'open',
-                                className: "btntabletoexcel hiddenColumn",
-                                filename: "Supplier List - " + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-
-                            }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [1, "asc"]
-                        ],
-                        action: function() {
-                            $('#tblSupplierlist').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblSupplierlist_ellipsis').addClass('disabled');
-
-                            if (oSettings._iDisplayLength == -1) {
-                                if (oSettings.fnRecordsDisplay() > 150) {
-                                    $('.paginate_button.page-item.previous').addClass('disabled');
-                                    $('.paginate_button.page-item.next').addClass('disabled');
-                                }
-                            } else {
-
-                            }
-                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                .on('click', function() {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    let dataLenght = oSettings._iDisplayLength;
-
-                                    sideBarService.getAllSuppliersDataVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                        getVS1Data('TSupplierVS1').then(function(dataObjectold) {
-                                            if (dataObjectold.length == 0) {
-
-                                            } else {
-                                                let dataOld = JSON.parse(dataObjectold[0].data);
-
-                                                var thirdaryData = $.merge($.merge([], dataObjectnew.tsuppliervs1), dataOld.tsuppliervs1);
-                                                let objCombineData = {
-                                                    tsuppliervs1: thirdaryData
-                                                }
-
-
-                                                addVS1Data('TSupplierVS1', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                    templateObject.resetData(objCombineData);
-                                                    $('.fullScreenSpin').css('display', 'none');
-                                                }).catch(function(err) {
-                                                    $('.fullScreenSpin').css('display', 'none');
-                                                });
-
-                                            }
-                                        }).catch(function(err) {
-
-                                        });
-
-                                    }).catch(function(err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-
-                                });
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function() {
-                            let urlParametersPage = FlowRouter.current().queryParams.page;
-                            if (urlParametersPage) {
-                                this.fnPageChange('last');
-                            }
-                            $("<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierlist_filter");
-
-
-                        },
-
-
-
-                    }).on('page', function() {
-
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {
-
-                    }).on('length.dt', function(e, settings, len) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        let dataLenght = settings._iDisplayLength;
-                        if (dataLenght == -1) {
-                            if (settings.fnRecordsDisplay() > initialDatatableLoad) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            } else {
-                                sideBarService.getAllSuppliersDataVS1('All', 1).then(function(dataNonBo) {
-
-                                    addVS1Data('TSupplierVS1', JSON.stringify(dataNonBo)).then(function(datareturn) {
-                                        templateObject.resetData(dataNonBo);
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    }).catch(function(err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-                                }).catch(function(err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                            }
-                        } else {
-                            if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            } else {
-                                sideBarService.getAllSuppliersDataVS1(dataLenght, 0).then(function(dataNonBo) {
-
-                                    addVS1Data('TSupplierVS1', JSON.stringify(dataNonBo)).then(function(datareturn) {
-                                        templateObject.resetData(dataNonBo);
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    }).catch(function(err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-                                }).catch(function(err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                            }
-                        }
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    });
-
-                    // $('#tblSupplierlist').DataTable().column( 0 ).visible( true );
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 0);
-
-                var columns = $('#tblSupplierlist th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || 0,
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblSupplierlist tbody').on('click', 'tr', function() {
-                    var listData = $(this).closest('tr').attr('id');
-                    if (listData) {
-                        FlowRouter.go('/supplierscard?id=' + listData);
-                    }
-                });
-
-            }
-        }).catch(function(err) {
-            sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function(data) {
-                let lineItems = [];
-                let lineItemObj = {};
-                addVS1Data('TSupplierVS1', JSON.stringify(data));
-                for (let i = 0; i < data.tsuppliervs1.length; i++) {
-                    let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.APBalance) || 0.00;
-                    let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.ExcessAmount) || 0.00;
-                    let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.Balance) || 0.00;
-                    let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.SupplierCreditLimit) || 0.00;
-                    let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.Balance) || 0.00;
-                    var dataList = {
-                        id: data.tsuppliervs1[i].fields.ID || '',
-                        company: data.tsuppliervs1[i].fields.ClientName || '',
-                        contactname: data.tsuppliervs1[i].fields.ContactName || '',
-                        phone: data.tsuppliervs1[i].fields.Phone || '',
-                        arbalance: arBalance || 0.00,
-                        creditbalance: creditBalance || 0.00,
-                        balance: balance || 0.00,
-                        creditlimit: creditLimit || 0.00,
-                        salesorderbalance: salesOrderBalance || 0.00,
-                        email: data.tsuppliervs1[i].fields.Email || '',
-                        accountno: data.tsuppliervs1[i].fields.AccountNo || '',
-                        clientno: data.tsuppliervs1[i].fields.ClientNo || '',
-                        jobtitle: data.tsuppliervs1[i].fields.JobTitle || '',
-                        notes: data.tsuppliervs1[i].fields.Notes || '',
-                        suburb: data.tsuppliervs1[i].fields.Suburb || '',
-                        country: data.tsuppliervs1[i].fields.Country || ''
-                    };
-
-                    dataTableList.push(dataList);
-                    //}
-                }
-
-                templateObject.datatablerecords.set(dataTableList);
-
-                if (templateObject.datatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSupplierlist', function(error, result) {
-                        if (error) {
-
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
-                    $('#tblSupplierlist').DataTable({
-
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                                extend: 'csvHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "Supplier List - " + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Supplier List',
-                                filename: "Supplier List - " + moment().format(),
-                                exportOptions: {
-                                    columns: ':visible',
-                                    stripHtml: false
-                                }
-                            },
-                            {
-                                extend: 'excelHtml5',
-                                title: '',
-                                download: 'open',
-                                className: "btntabletoexcel hiddenColumn",
-                                filename: "Supplier List - " + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-
-                            }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [0, "asc"]
-                        ],
-                        action: function() {
-                            $('#tblSupplierlist').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function() {
-                            $("<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierlist_filter");
-                        }
-                    }).on('page', function() {
-
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {
-
-                    }).on('length.dt', function(e, settings, len) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    });
-
-                    // $('#tblSupplierlist').DataTable().column( 0 ).visible( true );
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 0);
-
-                var columns = $('#tblSupplierlist th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || 0,
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblSupplierlist tbody').on('click', 'tr', function() {
-                    var listData = $(this).closest('tr').attr('id');
-                    if (listData) {
-                        FlowRouter.go('/supplierscard?id=' + listData);
-                    }
-                });
-
-            }).catch(function(err) {
-                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                $('.fullScreenSpin').css('display', 'none');
-                // Meteor._reload.reload();
-            });
-        });
-
-    }
-
-    templateObject.getSuppliers();
-
-    $('#tblSupplierlist tbody').on('click', 'tr', function() {
-        var listData = $(this).closest('tr').attr('id');
-        if (listData) {
-            FlowRouter.go('/supplierscard?id=' + listData);
-        }
-
-    });
-
     templateObject.checkSetupWizardFinished = async function () {
         let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
         if( setupFinished === null || setupFinished ===  "" ){
@@ -769,101 +55,7 @@ Template.supplierlist.onRendered(function() {
         }
     }
     templateObject.checkSetupWizardFinished();
-
-    tableResize();
-
-
-
-     // set initial table rest_data
-     function init_reset_data() {
-        let bsbname = "Branch Code";
-        if (Session.get("ERPLoggedCountry") === "Australia") {
-            bsbname = "BSB";
-        }
-
-        let reset_data = [
-          { index: 0, label: '#ID', class: 'SupplierID', active: false, display: true, width: "" },
-          { index: 1, label: 'Company', class: 'Company', active: true, display: true, width: "200" },
-          { index: 2, label: 'Phone', class: 'Phone', active: true, display: true, width: "95" },
-          { index: 3, label: 'AP Balance', class: 'ARBalance', active: true, display: true, width: "80" },
-          { index: 4, label: 'Credit Balance', class: 'CreditBalance', active: true, display: true, width: "80" },
-          { index: 5, label: 'Balance', class: 'Balance', active: true, display: true, width: "80" },
-          { index: 6, label: 'Credit Limit', class: 'CreditLimit', active: true, display: true, width: "80" },
-          { index: 7, label: 'Order Balance', class: 'SalesOrderBalance', active: true, display: true, width: "80" },
-          { index: 8, label: 'City/Suburb', class: 'Suburb', active: true, display: true, width: "100" },
-          { index: 9, label: 'Country', class: 'Country', active: true, display: true, width: "100" },
-          { index: 10, label: 'Email', class: 'Email', active: false, display: true, width: "" },
-          { index: 11, label: 'Account No', class: 'AccountNo', active: false, display: true, width: "" },
-          { index: 12, label: 'Custom Field 1', class: 'ClientNo', active: false, display: true, width: "" },
-          { index: 13, label: 'Custom Field 2', class: 'JobTitle', active: false, display: true, width: "" },
-          { index: 14, label: 'Comments', class: 'Notes', active: true, display: true, width: "" },
-        ];
-
-        let templateObject = Template.instance();
-        templateObject.reset_data.set(reset_data);
-      }
-      init_reset_data();
-      // set initial table rest_data
-
-
-      // custom field displaysettings
-      templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-        let templateObject = Template.instance();
-        let reset_data = templateObject.reset_data.get();
-        showCustomFieldDisplaySettings(reset_data);
-
-        try {
-          getVS1Data("VS1_Customize").then(function (dataObject) {
-            if (dataObject.length == 0) {
-              sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-                  // reset_data = data.ProcessLog.CustomLayout.Columns;
-                  reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                  showCustomFieldDisplaySettings(reset_data);
-              }).catch(function (err) {
-              });
-            } else {
-              let data = JSON.parse(dataObject[0].data);
-              if(data.ProcessLog.Obj.CustomLayout.length > 0){
-               for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-                 if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                   reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                   showCustomFieldDisplaySettings(reset_data);
-                 }
-               }
-             };
-              // handle process here
-            }
-          });
-        } catch (error) {
-        }
-        return;
-      }
-
-      function showCustomFieldDisplaySettings(reset_data) {
-
-        let custFields = [];
-        let customData = {};
-        let customFieldCount = reset_data.length;
-
-        for (let r = 0; r < customFieldCount; r++) {
-          customData = {
-            active: reset_data[r].active,
-            id: reset_data[r].index,
-            custfieldlabel: reset_data[r].label,
-            class: reset_data[r].class,
-            display: reset_data[r].display,
-            width: reset_data[r].width ? reset_data[r].width : ''
-          };
-          custFields.push(customData);
-        }
-        templateObject.displayfields.set(custFields);
-      }
-
-      templateObject.initCustomFieldDisplaySettings("", "tblSupplierlist");
-      // set initial table rest_data  //
-
 });
-
 
 Template.supplierlist.events({
     'click #btnNewSupplier': function(event) {
@@ -913,35 +105,34 @@ Template.supplierlist.events({
                 $(".btnRefreshSuppliers").removeClass('btnSearchAlert');
                 let lineItems = [];
                 let lineItemObj = {};
-                if (data.tsuppliervs1.length > 0) {
-                    for (let i = 0; i < data.tsuppliervs1.length; i++) {
+                if (data.tsuppliervs1list.length > 0) {
+                    for (let i = 0; i < data.tsuppliervs1list.length; i++) {
 
-                        let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.APBalance) || 0.00;
-                        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.ExcessAmount) || 0.00;
-                        let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.Balance) || 0.00;
-                        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.SupplierCreditLimit) || 0.00;
-                        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.Balance) || 0.00;
+                        let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.APBalance) || 0.00;
+                        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.ExcessAmount) || 0.00;
+                        let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
+                        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.SupplierCreditLimit) || 0.00;
+                        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
                         var dataList = {
-                            id: data.tsuppliervs1[i].fields.ID || '',
-                            company: data.tsuppliervs1[i].fields.ClientName || '',
-                            contactname: data.tsuppliervs1[i].fields.ContactName || '',
-                            phone: data.tsuppliervs1[i].fields.Phone || '',
+                            id: data.tsuppliervs1list[i].fields.ID || '',
+                            company: data.tsuppliervs1list[i].fields.ClientName || '',
+                            contactname: data.tsuppliervs1list[i].fields.ContactName || '',
+                            phone: data.tsuppliervs1list[i].fields.Phone || '',
                             arbalance: arBalance || 0.00,
                             creditbalance: creditBalance || 0.00,
                             balance: balance || 0.00,
                             creditlimit: creditLimit || 0.00,
                             salesorderbalance: salesOrderBalance || 0.00,
-                            email: data.tsuppliervs1[i].fields.Email || '',
-                            accountno: data.tsuppliervs1[i].fields.AccountNo || '',
-                            clientno: data.tsuppliervs1[i].fields.ClientNo || '',
-                            jobtitle: data.tsuppliervs1[i].fields.JobTitle || '',
-                            notes: data.tsuppliervs1[i].fields.Notes || '',
-                            suburb: data.tsuppliervs1[i].fields.Suburb || '',
-                            country: data.tsuppliervs1[i].fields.Country || ''
+                            email: data.tsuppliervs1list[i].fields.Email || '',
+                            accountno: data.tsuppliervs1list[i].fields.AccountNo || '',
+                            clientno: data.tsuppliervs1list[i].fields.ClientNo || '',
+                            jobtitle: data.tsuppliervs1list[i].fields.JobTitle || '',
+                            notes: data.tsuppliervs1list[i].fields.Notes || '',
+                            suburb: data.tsuppliervs1list[i].fields.Suburb || '',
+                            country: data.tsuppliervs1list[i].fields.Country || ''
                         };
 
                         dataTableList.push(dataList);
-                        //}
                     }
 
                     templateObject.datatablerecords.set(dataTableList);
@@ -971,7 +162,7 @@ Template.supplierlist.events({
                                 '</tr>');
 
                         }
-                        $('.dataTables_info').html('Showing 1 to ' + data.tsuppliervs1.length + ' of ' + data.tsuppliervs1.length + ' entries');
+                        $('.dataTables_info').html('Showing 1 to ' + data.tsuppliervs1list.length + ' of ' + data.tsuppliervs1list.length + ' entries');
 
                     }
                 } else {
@@ -1164,17 +355,31 @@ Template.supplierlist.events({
         $('.fullScreenSpin').css('display', 'none');
     },
     'click .btnRefresh': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();
-        sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function(data) {
-            addVS1Data('TSupplierVS1', JSON.stringify(data)).then(function(datareturn) {
-                window.open('/supplierlist', '_self');
-            }).catch(function(err) {
-                window.open('/supplierlist', '_self');
-            });
-        }).catch(function(err) {
-            window.open('/supplierlist', '_self');
+
+        sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad,0).then(function(dataSuppliers) {
+            addVS1Data('TSupplierVS1List',JSON.stringify(dataSuppliers));
         });
+
+        sideBarService.getAllAppointmentPredList().then(function (dataPred) {
+            addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
+              sideBarService.getAllTEmployeeList(initialBaseDataLoad,0,false).then(function(data) {
+                  addVS1Data('TSupplierVS1List',JSON.stringify(data)).then(function (datareturn) {
+                      window.open('/supplierlist','_self');
+                  }).catch(function (err) {
+                      window.open('/supplierlist','_self');
+                  });
+              }).catch(function(err) {
+                  window.open('/supplierlist','_self');
+              });
+            }).catch(function (err) {
+              window.open('/supplierlist','_self');
+            });
+        }).catch(function (err) {
+          window.open('/supplierlist','_self');
+        });
+
     },
     'click .printConfirm': function(event) {
         playPrintAudio();

@@ -1,0 +1,10 @@
+<template name="transaction_calculation">
+  <div class="{{rowClass}}">
+      <div class="col-{{col1}}" style="padding: 0px;">
+          <p data-toggle="{{tooltip}}" data-placement="{{top}}" title="{{title}}" class="{{classP1}}">{{displayName}}</p>
+      </div>
+      <div class="col-{{col2}}" style="padding: 0px;">
+          <p data-toggle="{{tooltip}}" data-placement="{{top}}" title="{{title}}" class="{{classP2}}" id="{{id}}" name="{{name}}">{{> Template.contentBlock}}</p>
+      </div>
+  </div>
+</template>

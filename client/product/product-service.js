@@ -371,9 +371,20 @@ export class ProductService extends BaseService {
         return this.getList(this.ERPObjects.TInvoiceEx, options);
     }
 
-    getAllBOMProducts() {
-        let options = {
-            ListType: 'detail'
+    getAllBOMProducts(limitcount, limitfrom) {
+        let options = "";
+        if (limitcount == "All") {
+            options = {
+                ListType: "Detail",
+                // orderby: '"Description asc"',
+            };
+        } else {
+            options = {
+            // orderby: '"Description asc"',
+            ListType: "Detail",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+            };
         }
         return this.getList(this.ERPObjects.TProcTree, options);
     }

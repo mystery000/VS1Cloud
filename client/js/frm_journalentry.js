@@ -98,14 +98,14 @@ Template.journalentrycard.onCreated(() => {
 });
 Template.journalentrycard.onRendered(() => {
     let templateObject = Template.instance();
-    $('#onEventSettings').css('display', 'none');
     $('#edtFrequencyDetail').css('display', 'none');
-    $('#basedOnFrequency').prop('checked', false);
-    $('#basedOnPrint').prop('checked', false);
-    $('#basedOnSave').prop('checked', false);
-    $('#basedOnTransactionDate').prop('checked', false);
-    $('#basedOnDueDate').prop('checked', false);
-    $('#basedOnEvent').prop('checked', false);
+    // $('#onEventSettings').css('display', 'none');
+    // $('#basedOnFrequency').prop('checked', false);
+    // $('#basedOnPrint').prop('checked', false);
+    // $('#basedOnSave').prop('checked', false);
+    // $('#basedOnTransactionDate').prop('checked', false);
+    // $('#basedOnDueDate').prop('checked', false);
+    // $('#basedOnEvent').prop('checked', false);
     $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
       showOn: 'button',
       buttonText: 'Show Date',
@@ -1951,28 +1951,28 @@ Template.journalentrycard.helpers({
 });
 
 Template.journalentrycard.events({
-    'click input.basedOnSettings': function (event) {
-        if (event.target.id == "basedOnEvent") {
-            const value = $(event.target).prop('checked');
-            if (value) {
-                $('#onEventSettings').css('display', 'block');
-                $('#settingsOnEvents').prop('checked', true);
-            } else {
-                $('#onEventSettings').css('display', 'none');
-                $('#settingsOnEvents').prop('checked', false);
-                $('#settingsOnLogout').prop('checked', false);
-            }
-        } else if (event.target.id == 'basedOnFrequency') {
-            const value = $(event.target).prop('checked');
-            if(value) {
-                $('#edtFrequencyDetail').css('display', 'flex');
-                $('#basedOnSettingsTitle').css('border-top-width', '1px');
-            }else {
-                $('#edtFrequencyDetail').css('display', 'none');
-                $('#basedOnSettingsTitle').css('border-top-width', '0px');
-            }
-        }
-      },
+    // 'click input.basedOnSettings': function (event) {
+    //     if (event.target.id == "basedOnEvent") {
+    //         const value = $(event.target).prop('checked');
+    //         if (value) {
+    //             $('#onEventSettings').css('display', 'block');
+    //             $('#settingsOnEvents').prop('checked', true);
+    //         } else {
+    //             $('#onEventSettings').css('display', 'none');
+    //             $('#settingsOnEvents').prop('checked', false);
+    //             $('#settingsOnLogout').prop('checked', false);
+    //         }
+    //     } else if (event.target.id == 'basedOnFrequency') {
+    //         const value = $(event.target).prop('checked');
+    //         if(value) {
+    //             $('#edtFrequencyDetail').css('display', 'flex');
+    //             $('#basedOnSettingsTitle').css('border-top-width', '1px');
+    //         }else {
+    //             $('#edtFrequencyDetail').css('display', 'none');
+    //             $('#basedOnSettingsTitle').css('border-top-width', '0px');
+    //         }
+    //     }
+    //   },
       'click input[name="frequencyRadio"]': function (event) {
         if (event.target.id == "frequencyMonthly") {
             document.getElementById("monthlySettings").style.display = "block";
@@ -2028,6 +2028,8 @@ Template.journalentrycard.events({
         let purchaseService = new PurchaseBoardService();
         let i = 0;
         setTimeout(async function(){
+            $("#basedOnFrequency").prop('checked', true);
+            $('#edtFrequencyDetail').css('display', 'flex');
           $(".ofMonthList input[type=checkbox]").each(function() {
             $(this).prop('checked', false);
           });
@@ -2139,7 +2141,8 @@ Template.journalentrycard.events({
         playSaveAudio();
         let templateObject = Template.instance();      
         let purchaseService = new PurchaseBoardService();
-        let selectedType = '';
+        // let selectedType = '';
+        let selectedType = "basedOnFrequency";
         let frequencyVal = '';
         let startDate = '';
         let finishDate = '';
@@ -2155,27 +2158,28 @@ Template.journalentrycard.events({
         let dailyRadioOption = '';
         let everyDays = '';
         
-        const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
+        // const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
         let basedOnTypeTexts = '';
-        let basedOnTypeAttr = '';
+        // let basedOnTypeAttr = '';
+        let basedOnTypeAttr = 'F,';
         setTimeout(async function(){
-          basedOnTypes.each(function () {
-            if ($(this).prop('checked')) {
-              selectedType = $(this).attr('id');
-              if (selectedType === "basedOnFrequency") { basedOnTypeAttr += 'F,'}
-              if (selectedType === "basedOnPrint") { basedOnTypeTexts += 'On Print, '; basedOnTypeAttr += 'P,'; }
-              if (selectedType === "basedOnSave") { basedOnTypeTexts += 'On Save, '; basedOnTypeAttr += 'S,'; }
-              if (selectedType === "basedOnTransactionDate") { basedOnTypeTexts += 'On Transaction Date, '; basedOnTypeAttr += 'T,'; }
-              if (selectedType === "basedOnDueDate") { basedOnTypeTexts += 'On Due Date, '; basedOnTypeAttr += 'D,'; }
-              if (selectedType === "basedOnOutstanding") { basedOnTypeTexts += 'If Outstanding, '; basedOnTypeAttr += 'O,'; }
-              if (selectedType === "basedOnEvent") {
-                if ($('#settingsOnEvents').prop('checked')) { basedOnTypeTexts += 'On Event(On Logon), '; basedOnTypeAttr += 'EN,'; }
-                if ($('#settingsOnLogout').prop('checked')) { basedOnTypeTexts += 'On Event(On Logout), '; basedOnTypeAttr += 'EU,'; }
-              }
-            }
-          });
-          if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
-          if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
+        //   basedOnTypes.each(function () {
+        //     if ($(this).prop('checked')) {
+        //       selectedType = $(this).attr('id');
+        //       if (selectedType === "basedOnFrequency") { basedOnTypeAttr += 'F,'}
+        //       if (selectedType === "basedOnPrint") { basedOnTypeTexts += 'On Print, '; basedOnTypeAttr += 'P,'; }
+        //       if (selectedType === "basedOnSave") { basedOnTypeTexts += 'On Save, '; basedOnTypeAttr += 'S,'; }
+        //       if (selectedType === "basedOnTransactionDate") { basedOnTypeTexts += 'On Transaction Date, '; basedOnTypeAttr += 'T,'; }
+        //       if (selectedType === "basedOnDueDate") { basedOnTypeTexts += 'On Due Date, '; basedOnTypeAttr += 'D,'; }
+        //       if (selectedType === "basedOnOutstanding") { basedOnTypeTexts += 'If Outstanding, '; basedOnTypeAttr += 'O,'; }
+        //       if (selectedType === "basedOnEvent") {
+        //         if ($('#settingsOnEvents').prop('checked')) { basedOnTypeTexts += 'On Event(On Logon), '; basedOnTypeAttr += 'EN,'; }
+        //         if ($('#settingsOnLogout').prop('checked')) { basedOnTypeTexts += 'On Event(On Logout), '; basedOnTypeAttr += 'EU,'; }
+        //       }
+        //     }
+        //   });
+        //   if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
+        //   if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
     
           let formId = parseInt($("#formid").val());
           let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');

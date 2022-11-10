@@ -1490,8 +1490,32 @@ Template.currenciessettings.helpers({
  * This function will update all currencies
  */
 export const updateAllCurrencies = (employeeId, 
-  onSuccess = () => {}, 
-  onError = () => {}) => {
+  onSuccess = async () => {
+    const result = await swal({
+      title: "Update completed",
+      //text: "Do you wish to add an account ?",
+      type: "success",
+      showCancelButton: false,
+      confirmButtonText: "Ok",
+    });
+
+    if(result.value) {
+
+    }
+  }, 
+  onError = async () => {
+    const result = await swal({
+      title: "Oooops...",
+      text: "Couldn't update currencies",
+      type: "error", 
+      showCancelButton: true, 
+      confirmButtonText: "Try Again"
+    });
+
+    if (result.value) {
+      $('.synbutton').trigger('click');
+    } else if (result.dismiss === "cancel") {}
+  }) => {
   // let completeCount = 0;
   // let completeCountEnd = 1;
   LoadingOverlay.show();
@@ -1524,11 +1548,23 @@ export const updateAllCurrencies = (employeeId,
     // get all rates from xe currency
     FxApi.getAllRates({
       from: defaultCurrencyCode,
-      callback: response => {
+      callback: async response => {
         /**
          * List of Xe currencies
          */
         const xeCurrencies = response.to;
+
+        const result = await swal({
+          title: "Update in progress",
+         // text: "Do you wish to add an account ?",
+          type: "success",
+          showCancelButton: false,
+          confirmButtonText: "Ok",
+        });
+    
+        // if (result.value) {
+        // } else if (result.dismiss === "cancel") {
+        // }
 
         currencies.forEach((currency, index) => {
          currencies[index].BuyRate = FxApi.findBuyRate(currency.Code, xeCurrencies);
@@ -1545,20 +1581,16 @@ export const updateAllCurrencies = (employeeId,
         });
 
         // Now we need to save this
-        FxApi.saveCurrencies(formatedList, (response, error) => {
+        await FxApi.saveCurrencies(formatedList, async (response, error) => {
           if(response) {
             LoadingOverlay.hide();
-            onSuccess();
+            await onSuccess();
             $('.btnRefresh').trigger('click');
           } else if(error) {
             LoadingOverlay.hide();
-            onError();
+            await onError();
 
-            swal({title: "Oooops...", text: "Couldn't update currencies", type: "error", showCancelButton: true, confirmButtonText: "Try Again"}).then(result => {
-              if (result.value) {
-                $('.synbutton').trigger('click');
-              } else if (result.dismiss === "cancel") {}
-            });
+          
           }
         });
       }

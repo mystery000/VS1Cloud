@@ -83,4 +83,8 @@ export class AppointmentService extends BaseService {
         return this.getList(this.ERPObjects.TAppointment, options);
     }
 
+    getOneAppointmentdataEx(id) {
+
+        return this.getOneById(this.ERPObjects.TAppointment, id);
+    }
 }
