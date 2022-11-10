@@ -28,6 +28,8 @@ Template.export_import_print_display_button.events({
           currenttablename = "tblTermsList";
         }else if (url.includes("/uomSettings")) {
           currenttablename = "tblUOMList";
+        }else if (url.includes('/bomlist')) {
+          currenttablename = "tblBOMList";
         }else if (url.includes("/supplierlist")) {
           currenttablename = "tblSupplierlist";
         };

@@ -115,6 +115,7 @@ Template.processlistpopup.onRendered(function(e){
                                 }, 100);
                                 let draftRecord = templateObject.custdatatablerecords.get();
                                 templateObject.custdatatablerecords.set(draftRecord);
+                                $('.fullScreenSpin').css('display', 'none')
                             }).on('column-reorder', function () {
                     
                             }).on('length.dt', function (e, settings, len) {
@@ -133,6 +134,7 @@ Template.processlistpopup.onRendered(function(e){
                             }
                     
                             });
+                            $('.fullScreenSpin').css('display', 'none')
                         }, 1000);
                     }
                 })
@@ -152,7 +154,6 @@ Template.processlistpopup.onRendered(function(e){
                         splashArrayProcessList.push(dataListProcess);
                     })
 
-                     
                     setTimeout(function () {
                         $('#tblProcessPopList').DataTable({
                             data: splashArrayProcessList,
@@ -202,12 +203,12 @@ Template.processlistpopup.onRendered(function(e){
                                 }
                                 setTimeout(function () {
                                     // MakeNegative();
+                                    
                                 }, 100);
                             },
                             "fnInitComplete": function (oSettings) {
                                 $("<button class='btn btn-primary btnAddNewProcess' data-dismiss='modal' data-toggle='modal' data-target='#addCustomerModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i>New Process</button>").insertAfter("#tblProcessPopList_filter");
                                 $("<button class='btn btn-primary btnRefreshProcess' type='button' id='btnRefreshProcess' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblProcessPopList_filter");
-                
                                 // let urlParametersPage = FlowRouter.current().queryParams.page;
                                 // if (urlParametersPage) {
                                 //     this.fnPageChange('last');
@@ -221,6 +222,7 @@ Template.processlistpopup.onRendered(function(e){
                             }, 100);
                             let draftRecord = templateObject.custdatatablerecords.get();
                             templateObject.custdatatablerecords.set(draftRecord);
+                            $('.fullScreenSpin').css('display', 'none')
                         }).on('column-reorder', function () {
                 
                         }).on('length.dt', function (e, settings, len) {
@@ -239,6 +241,7 @@ Template.processlistpopup.onRendered(function(e){
                         }
                 
                         });
+                        $('.fullScreenSpin').css('display', 'none')
                     }, 1000);
                 }
             }
@@ -327,6 +330,7 @@ Template.processlistpopup.onRendered(function(e){
                             }, 100);
                             let draftRecord = templateObject.custdatatablerecords.get();
                             templateObject.custdatatablerecords.set(draftRecord);
+                            $('.fullScreenSpin').css('display', 'none')
                         }).on('column-reorder', function () {
                 
                         }).on('length.dt', function (e, settings, len) {
@@ -345,6 +349,7 @@ Template.processlistpopup.onRendered(function(e){
                         }
                 
                         });
+                        $('.fullScreenSpin').css('display', 'none')
                     }, 1000);
                 }
             }).catch(function(err){

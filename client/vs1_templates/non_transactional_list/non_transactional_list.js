@@ -214,11 +214,13 @@ Template.non_transactional_list.onRendered(function() {
             reset_data = [
               { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true },
               { index: 1, label: 'Product Name', class: 'colName', active: true, display: true},
-              { index: 2, label: 'Process', class: 'colProcess', active: true, display: true },
-              { index: 3, label: 'raws', class: 'colRaws', active: true, display: true },
-              { index: 4, label: 'attachments', class: 'colAttachments', active: true, display: true }
+              { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true},
+              { index: 3, label: 'Process', class: 'colProcess', active: true, display: true },
+              { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true },
+              { index: 5, label: 'raws', class: 'colRaws', active: true, display: true },
+              { index: 6, label: 'attachments', class: 'colAttachments', active: true, display: true }
             ];
-        }else if(currenttablename == "tblSupplierlist") { //Done Something Here
+          }else if(currenttablename == "tblSupplierlist") { //Done Something Here
             reset_data = [
               { index: 0, label: '#ID', class: 'colSupplierID', active: false, display: true },
               { index: 1, label: 'Company', class: 'colCompany', active: true, display: true},
@@ -3494,8 +3496,10 @@ Template.non_transactional_list.onRendered(function() {
                 var dataList = [
                   bomProducts[i].fields.ID || "1",
                   bomProducts[i].fields.productName || "", //product name -- should be changed on TProcTree
+                  bomProducts[i].fields.productDescription || "",
                   bomProducts[i].fields.process || "",
-                  // bomProducts[i].fields.Description || "",
+                  bomProducts[i].fields.totalQtyInStock || 0,
+                  // bomProducts[i].fields.subs || [],
                   rawName || '',
                   bomProducts[i].fields.attachments.length == 0?'No Attachment':bomProducts[i].fields.attachments.length > 0 ? bomProducts[i].fields.attachments.length.toString() + " attachments": "no attachmetns"
                 ];

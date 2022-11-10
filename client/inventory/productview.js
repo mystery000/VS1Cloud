@@ -4990,6 +4990,7 @@ Template.productview.events({
     
             let temp = JSON.parse(JSON.stringify(bomObject));
             temp.fields.productDescription = templateObject.records.get().salesdescription
+            temp.fields.totalQtyInStock = templateObject.records.get().totalqtyinstock;
             if(templateObject.isManufactured.get() == true) {
                 if(existIndex > -1) {
                     bomProducts.splice(existIndex, 1, bomObject)
@@ -6206,7 +6207,6 @@ Template.productview.events({
         // tempObject.isManufactured.set(true);
         }, delayTimeAfterSound);
     },
-
 
     'click .btn-print-bom': function(event) {
         playPrintAudio();

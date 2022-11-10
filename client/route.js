@@ -2336,4 +2336,13 @@ authenticatedRoutes.route('/bomlist', {
             yield: 'bom_list'
         })
     }
+});
+
+authenticatedRoutes.route('/bomsetupcard', {
+    name: 'bom_setup',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'bom_setup'
+        })
+    }
 })

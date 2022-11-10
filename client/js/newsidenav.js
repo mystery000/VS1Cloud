@@ -768,7 +768,7 @@ Template.newsidenav.onRendered(function() {
                 $('.collapse').collapse('hide');
                 $('#sidenavfixedAssets').removeClass('active');
                 $('#sidenavshipping').addClass('active');
-            }else if ((currentLoc == "/processlist")|| (currentLoc == '/workordercard') || (currentLoc == '/workorderlist')) {
+            }else if ((currentLoc == "/processlist")|| (currentLoc == '/workordercard') || (currentLoc == '/workorderlist') || (currentLoc == '/bomlist')) {
               $('#sidenavaccounts').removeClass('active');
                 $('#sidenavbanking').removeClass('active');
                 $('#sidenavdashbaord').removeClass('active');
@@ -7776,7 +7776,12 @@ Template.newsidenav.events({
       FlowRouter.go('/processlist');
       let templateObject = Template.instance();
       templateObject.getSetSideNavFocus();
-    },'click #sidenavnewworkorder': function(event) {
+    }, 'click #sidenavbomList': function(event) {
+      event.preventDefault();
+      FlowRouter.go('/bomlist');
+      let templatObject = Template.instance();
+      templateObject.getSetSideNavFocus();
+    }, 'click #sidenavnewworkorder': function(event) {
       event.preventDefault();
       FlowRouter.go('/workordercard');
       let templatObject = Template.instance();
