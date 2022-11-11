@@ -19,6 +19,8 @@ import { saveCurrencyHistory } from "../packages/currency/CurrencyWidget";
 import { getCurrentCurrencySymbol } from "../popUps/currnecypopup";
 import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentcard";
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
+import CachedHttp from "../lib/global/CachedHttp";
+import erpObject from "../lib/global/erp-objects";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -3648,11 +3650,13 @@ Template.new_invoice.onRendered(function() {
       templateObject.getInvoiceData = function () {
         getVS1Data("TInvoiceEx")
           .then(function (dataObject) {
+            
             if (dataObject.length == 0) {
               let customerData = templateObject.clientrecords.get();
               accountService
                 .getOneInvoicedataEx(currentInvoice)
                 .then(function (data) {
+
                   templateObject.singleInvoiceData.set(data);
                   let cust_result = customerData.filter((cust_data) => {
                     return cust_data.customername == data.fields.CustomerName;
@@ -4159,6 +4163,7 @@ Template.new_invoice.onRendered(function() {
               let data = JSON.parse(dataObject[0].data);
 
               let useData = data.tinvoiceex;
+         
               let customerData = templateObject.clientrecords.get();
 
               var added = false;
@@ -4186,6 +4191,7 @@ Template.new_invoice.onRendered(function() {
                   //   }
                   // });
                   templateObject.singleInvoiceData.set(useData[d]);
+          
                   let lineItems = [];
                   let lineItemObj = {};
                   let lineItemsTable = [];
@@ -7478,6 +7484,36 @@ Template.new_invoice.onRendered(function() {
         break;
     }
   };
+
+
+  /**
+   * This is a rewrite of getting invoiceÒ
+   */
+  this.loadInvoice = async (refresh = false) => {
+    const id = FlowRouter.current().queryParams.id;
+
+    let data = await CachedHttp.get(erpObject.TInvoiceEx, async () => {
+      return await accountService.getOneInvoicedataEx(id);
+    }, {
+      forceOverride: refresh,
+      validate: (cachedResponse) => {
+        return true;
+      }
+    });
+
+    data = data.response;
+    let invoices = data.tinvoiceex.map(i => i.fields);
+    let invoice = null;
+
+    if(id) {
+      invoice = invoices.find(i => i.ID);
+    }
+
+    console.log('new invoice loader', data);
+
+  }
+
+  //this.loadInvoice();
 
   let table;
   if (
@@ -14191,8 +14227,8 @@ Template.new_invoice.events({
               fields: {
                 ID: currentInvoice,
                 CustomerName: customer,
-                //ForeignExchangeCode: currencyCode
-                // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                ForeignExchangeCode: currencyCode,
+                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                 Lines: splashLineArray,
                 InvoiceToDesc: billingAddress,
                 SaleDate: saleDate,
@@ -14215,8 +14251,8 @@ Template.new_invoice.events({
               type: "TInvoiceEx",
               fields: {
                 CustomerName: customer,
-                //ForeignExchangeCode: currencyCode
-                // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                ForeignExchangeCode: currencyCode,
+                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                 Lines: splashLineArray,
                 InvoiceToDesc: billingAddress,
                 SaleDate: saleDate,
@@ -18021,8 +18057,8 @@ Template.new_invoice.events({
             fields: {
               ID: currentInvoice,
               CustomerName: customer,
-              //ForeignExchangeCode: currencyCode
-              // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+              ForeignExchangeCode: currencyCode,
+              ForeignExchangeRate: parseFloat(ForeignExchangeRate),
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
               SaleDate: saleDate,
@@ -18046,8 +18082,8 @@ Template.new_invoice.events({
             type: "TInvoiceEx",
             fields: {
               CustomerName: customer,
-              //ForeignExchangeCode: currencyCode
-              // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+              ForeignExchangeCode: currencyCode,
+              ForeignExchangeRate: parseFloat(ForeignExchangeRate),
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
               SaleDate: saleDate,
@@ -19618,8 +19654,8 @@ Template.new_invoice.events({
           fields: {
             ID: currentInvoice,
             CustomerName: customer,
-            //ForeignExchangeCode: currencyCode
-            // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            ForeignExchangeCode: currencyCode,
+            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
             Lines: splashLineArray,
             InvoiceToDesc: billingAddress,
             SaleDate: saleDate,
@@ -19642,8 +19678,8 @@ Template.new_invoice.events({
           type: "TInvoiceEx",
           fields: {
             CustomerName: customer,
-            //ForeignExchangeCode: currencyCode
-            // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            ForeignExchangeCode: currencyCode,
+            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
             Lines: splashLineArray,
             InvoiceToDesc: billingAddress,
             SaleDate: saleDate,
