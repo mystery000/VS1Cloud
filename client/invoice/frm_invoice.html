@@ -483,7 +483,7 @@
                                     <div class="form-group"><label>Customer Email</label>
                                         <input class="form-control form-control" type="text" id="edtCustomerEmail" name="edtCustomerEmail" customerid=" " customerfirstname=" " customerlastname=" ">
                                     </div>
-                                    <div class="custom-control custom-control-inline custom-switch d-xl-flex align-items-xl-center" style="margin: 0px 16px;padding: -2px;padding-left: 24px;width: 100%;">
+                                    <div class="custom-control custom-control-inline custom-switch d-xl-flex align-items-xl-center divEmailSelect" style="margin: 0px 16px;padding: -2px;padding-left: 24px;width: 110%;">
                                         <div class="form-group" style="margin-right: 35px; Width:50%; font-size: 15px;">
                                             <input class="custom-control-input chkEmailCopy" type="checkbox" id="formCheck-1" style="font-size: 22px;"><label class="custom-control-label" for="formCheck-1">Email Customer</label>
                                         </div>
@@ -494,6 +494,22 @@
                                 </div>
                             </div>
                         </div>
+                        <style>
+                            @media (min-width: 1200px) {
+                             .row-middle .col-xl-2 {
+                                flex: 0 0 24.66667%;
+                                max-width: 24.66667%;
+                             }
+                             }
+
+                            @media (min-width: 1300px) {
+                              .row-middle .col-xl-2 {
+                                  flex: 0 0 16.66667%;
+                                  max-width: 16.66667%;
+                              }
+                            }
+
+                        </style>
                         <div class="row" style="margin: 16px 16px 0px 16px;">
                             <div class="col-12 col-md-6 col-lg-2 col-xl-3">
                               {{# vs1_textarea label="Billing Address" row="5" id="txabillingAddress" name="txabillingAddress"}}{{invoicerecord.invoiceToDesc}}{{/vs1_textarea}}
@@ -501,8 +517,8 @@
                                     <textarea class="form-control" rows="5" id="txabillingAddress" name="txabillingAddress">{{invoicerecord.invoiceToDesc}}</textarea>
                                 </div> -->
                             </div>
-                            <div class="col-12 col-md-6 col-lg-9 col-xl-9">
-                            <div class="row">
+                            <div class="col-12 col-md-6 col-lg-8 col-xl-9 ">
+                            <div class="row row-middle">
                               <div class="col-12 col-md-6 col-lg-4 col-xl-2">
                                   <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY">
                                       <label>Sale Date</label>
@@ -1000,9 +1016,12 @@
                                 .colPaid {
                                     display: block !important;
                                 }
+                                .table-bordered{
+                                    border: 1px solid #e3e6f0!important;
+                               }
                             </style>
                             {{#if displayfields}}
-                            <table id="tblInvoiceLine" style="width:100%" class="table table-striped table-bordered tblInvoiceLine">
+                            <table id="tblInvoiceLine" style="width:100%" class="dataTable table table-striped table-bordered tblInvoiceLine">
                                 <thead>
                                   <tr class="dnd-moved">
                                     {{#each displayfield in displayfields}}
@@ -1242,8 +1261,9 @@
                             </div>
                             <div class="col-12 col-md-12">
                                 <div class="row justify-content-center desktopButtons">
-                                  {{# transaction_buttons_bottom margin="14px" }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                                  {{/transaction_buttons_bottom}}
+                                  <!-- {{# transaction_buttons_bottom margin="14px" }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
+                                  {{/transaction_buttons_bottom}} -->
+                                    {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
                                     <!-- <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 14px;margin-top: 0px;width: 100px;">
                                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save
                                     </button>
@@ -1309,93 +1329,23 @@
                             <textarea class="form-control" rows="4" id="txapickmemo" name="txapickmemo">{{invoicerecord.pickmemo}}</textarea>
                         </div>
                     </div> -->
-                    <div class="col-12 col-md-6 col-lg-4 col-xl-2" id="totalSection" style="padding-right: 1.5rem; padding-left: 1.5rem;">
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Subtotal</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_total" name="subtotal_total">{{invoicerecord.SubTotal}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Tax</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_tax" name="subtotal_tax">{{invoicerecord.TotalTax}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Net</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_nett" name="subtotal_nett">{{invoicerecord.Total}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 1px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="lead">Discount</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="lead" id="subtotal_discount" name="subtotal_discount">{{invoicerecord.TotalDiscount}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 1px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead leadTotal">TOTAL</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead leadTotal" id="grandTotal" name="grandTotal">{{invoicerecord.Total}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 3px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                {{#if equals invoicerecord.isPartialPaid true}}
-                                    <p class="lead text-success pointer btnTransactionPaid" id=""><i class="fas fa-comments-dollar paidIcon"></i> Paid</p>
-                                {{else}}
-                                    <p class="lead">Paid</p>
-                                {{/if}}
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="totalPaidAmt" name="totalPaidAmt">{{invoicerecord.totalPaid}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Due</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="totalBalanceDue" name="totalBalanceDue">{{invoicerecord.balanceDue}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 3px solid #696969;" />
-                                <p style="display:none;" id="totalBalanceDue" name="totalBalanceDue">{{invoicerecord.balanceDue}}</p>
-                            </div>
-                        </div>
-                    </div>
+                    {{> transaction_calculation
+                    isPartialPaid=invoicerecord.isPartialPaid
+                    SubTotal=invoicerecord.SubTotal
+                    TotalTax=invoicerecord.TotalTax
+                    NetTotal=invoicerecord.Total
+                    TotalDiscount=invoicerecord.TotalDiscount
+                    Total=invoicerecord.Total
+                    TotalPaid=invoicerecord.totalPaid
+                    BalanceDue=invoicerecord.balanceDue
+                    }}
+          
                 </div>
                 <div class="row justify-content-center mobileButtons" style="display: none;">
-                    {{# transaction_buttons_bottom margin="12px" }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                    {{/transaction_buttons_bottom}}
+                    <!-- {{# transaction_buttons_bottom margin="12px" AttachmentCount=attachmentCount }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
+                    {{/transaction_buttons_bottom}} -->
+
+                    {{> transaction_buttons_bottom margin="12px" AttachmentCount=attachmentCount }}
                     <!-- <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save
                     </button>
