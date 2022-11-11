@@ -46,7 +46,7 @@ export default class TableHandler {
       onResize: e => {
         var table = $(e.currentTarget); //reference to the resized table
         let tableName = table.attr("id");
-        if (tableName != "tblBasReturnList") {
+        if ((tableName != "tblBasReturnList") && (tableName != "tblInvoiceLine")) {
           this.saveTableColumns(tableName);
         }
         let tableWidth = [];

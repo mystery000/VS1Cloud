@@ -220,7 +220,7 @@ Template.new_invoice.onRendered(function() {
   }
 
   // set initial table rest_data
-  function init_reset_data() {
+  templateObject.init_reset_data = function(){
     let reset_data = [
       { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
       { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
@@ -264,7 +264,7 @@ Template.new_invoice.onRendered(function() {
     let templateObject = Template.instance();
     templateObject.reset_data.set(reset_data);
   }
-  init_reset_data();
+  templateObject.init_reset_data();
   // set initial table rest_data
 
   templateObject.getTemplateInfoNew = function () {
@@ -1167,7 +1167,7 @@ Template.new_invoice.onRendered(function() {
                     UnitOfMeasure:
                       data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
                   };
-                  
+
                   var dataListTable = [
                     data.fields.Lines[i].fields.ProductName || "",
                     data.fields.Lines[i].fields.ProductDescription || "",
@@ -1281,7 +1281,7 @@ Template.new_invoice.onRendered(function() {
               ispaid: false,
               isPartialPaid: false,
             };
-            
+
             $("#edtCustomerName").val(data.fields.CustomerName);
             $("#sltTerms").val(data.fields.TermsName);
             $("#sltDept").val(data.fields.SaleClassName);
@@ -1751,7 +1751,7 @@ Template.new_invoice.onRendered(function() {
                     ispaid: data.fields.IsPaid,
                     isPartialPaid: isPartialPaid,
                   };
-                  
+
                   $("#edtCustomerName").val(data.fields.CustomerName);
                   $("#sltTerms").val(data.fields.TermsName);
                   $("#sltDept").val(data.fields.SaleClassName);
@@ -2301,7 +2301,7 @@ Template.new_invoice.onRendered(function() {
                     ispaid: useData[d].fields.IsPaid,
                     isPartialPaid: isPartialPaid,
                   };
-                  
+
                   $("#edtCustomerName").val(useData[d].fields.CustomerName);
                   $("#sltTerms").val(useData[d].fields.TermsName);
                   $("#sltDept").val(useData[d].fields.SaleClassName);
@@ -3934,7 +3934,7 @@ Template.new_invoice.onRendered(function() {
                     ispaid: data.fields.IsPaid,
                     isPartialPaid: isPartialPaid,
                   };
-                  
+
                   $("#edtCustomerName").val(data.fields.CustomerName);
                   $("#sltStatus").val(data.fields.SalesStatus);
                   $("#sltDept").val(data.fields.SaleClassName);
@@ -4238,7 +4238,7 @@ Template.new_invoice.onRendered(function() {
                       minimumFractionDigits: 2,
                     });
 
-                  
+
                   if (useData[d].fields.Lines.length) {
                     for (let i = 0; i < useData[d].fields.Lines.length; i++) {
                       let AmountGbp =
@@ -4480,7 +4480,7 @@ Template.new_invoice.onRendered(function() {
                     ispaid: useData[d].fields.IsPaid,
                     isPartialPaid: isPartialPaid,
                   };
-                  
+
                   $("#edtCustomerName").val(useData[d].fields.CustomerName);
                   $("#sltTerms").val(useData[d].fields.TermsName);
                   $("#sltDept").val(useData[d].fields.SaleClassName);
@@ -4970,7 +4970,7 @@ Template.new_invoice.onRendered(function() {
                       isPartialPaid: isPartialPaid,
                       deleted: data.fields.Deleted,
                     };
-                    
+
                     $("#edtCustomerName").val(data.fields.CustomerName);
                     $("#sltStatus").val(data.fields.SalesStatus);
                     $("#sltDept").val(data.fields.SaleClassName);
@@ -5399,7 +5399,7 @@ Template.new_invoice.onRendered(function() {
                   ispaid: data.fields.IsPaid,
                   isPartialPaid: isPartialPaid,
                 };
-                
+
                 $("#edtCustomerName").val(data.fields.CustomerName);
                 $("#sltStatus").val(data.fields.SalesStatus);
                 $("#sltDept").val(data.fields.SaleClassName);
@@ -5853,7 +5853,7 @@ Template.new_invoice.onRendered(function() {
               ispaid: false,
               isPartialPaid: false,
             };
-            
+
             $("#edtCustomerName").val(data.fields.CustomerName);
             $("#sltStatus").val(data.fields.SalesStatus);
             $("#sltDept").val(data.fields.SaleClassName);
@@ -6260,7 +6260,7 @@ Template.new_invoice.onRendered(function() {
               ispaid: false,
               isPartialPaid: false,
             };
-            
+
             $("#edtCustomerName").val(data.fields.CustomerName);
             $("#sltStatus").val(data.fields.SalesStatus);
             $("#sltDept").val(data.fields.SaleClassName);
@@ -12979,14 +12979,15 @@ Template.new_invoice.onRendered(function () {
    templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
-    showCustomFieldDisplaySettings(reset_data);
+    templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
+
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
             reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-            showCustomFieldDisplaySettings(reset_data);
+            templateObject.showCustomFieldDisplaySettings(reset_data);
           }).catch(function (err) {
           });
         } else {
@@ -12995,24 +12996,23 @@ Template.new_invoice.onRendered(function () {
            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
              if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-               showCustomFieldDisplaySettings(reset_data);
+               templateObject.showCustomFieldDisplaySettings(reset_data);
              }
            }
          };
           // handle process here
         }
       });
+
     } catch (error) {
     }
     return;
   }
 
-  function showCustomFieldDisplaySettings(reset_data) {
-
+  templateObject.showCustomFieldDisplaySettings = async function(reset_data){
     let custFields = [];
     let customData = {};
     let customFieldCount = reset_data.length;
-
     for (let r = 0; r < customFieldCount; r++) {
       customData = {
         active: reset_data[r].active,
@@ -13073,7 +13073,7 @@ Template.new_invoice.onRendered(function () {
 
     // then open the product modal
 
-   
+
 
 
 
@@ -13755,7 +13755,7 @@ Template.new_invoice.events({
       } else {
           $("#frequencyModal").modal('toggle');
       }
-  },  
+  },
   "click .btnRefreshCustomField": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
@@ -17117,7 +17117,7 @@ Template.new_invoice.events({
         } else {
           $(".linkText").attr("href", "#");
         }
-        
+
         let completeTabRecord;
         let doc = new jsPDF("p", "pt", "a4");
         var source = document.getElementById("html-2-pdfwrapper");
@@ -17420,7 +17420,7 @@ Template.new_invoice.events({
     let templateObject = Template.instance();
     let salesService = new SalesBoardService();
     setTimeout(async function(){
-    
+
     swal({
       title: 'Delete Invoice',
       text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -17487,7 +17487,7 @@ Template.new_invoice.events({
     let salesService = new SalesBoardService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    
+
     var url = FlowRouter.current().path;
     var getso_id = url.split("?id=");
     var currentInvoice = getso_id[getso_id.length - 1];
@@ -17551,7 +17551,7 @@ Template.new_invoice.events({
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
     setTimeout(function(){
-    
+
     let taxcodeList = templateObject.taxraterecords.get();
     let selectLineID = $("#selectDeleteLineID").val();
     if ($("#tblInvoiceLine tbody>tr").length > 1) {
@@ -17765,7 +17765,7 @@ Template.new_invoice.events({
     let uploadedItems = templateObject.uploadedFiles.get();
     setTimeout(function(){
     saveCurrencyHistory();
-    
+
     let stripe_id = templateObject.accountID.get();
     let stripe_fee_method = templateObject.stripe_fee_method.get();
     let lineItems = [];
@@ -17773,7 +17773,7 @@ Template.new_invoice.events({
     let customername = $("#edtCustomerName");
     let name = $("#edtCustomerEmail").attr("customerfirstname");
     let surname = $("#edtCustomerEmail").attr("customerlastname");
-    
+
     let termname = $("#sltTerms").val() || "";
     if (termname === "") {
       swal({
@@ -17992,7 +17992,7 @@ Template.new_invoice.events({
       var url = FlowRouter.current().path;
       var getso_id = url.split("?id=");
       var currentInvoice = getso_id[getso_id.length - 1];
-      
+
       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
       let ForeignExchangeRate = $('#exchange_rate').val();
       var objDetails = "";
@@ -19196,7 +19196,7 @@ Template.new_invoice.events({
       lineItems.push(lineItemObj);
     });
 
-    
+
     let reset_data = templateObject.reset_data.get();
     reset_data = reset_data.filter(redata => redata.display == false);
     lineItems.push(...reset_data);
@@ -20260,7 +20260,7 @@ Template.new_invoice.events({
   },
   "click #btnCopyInvoice": async function () {
     playCopyAudio();
-    let templateObject = Template.instance();      
+    let templateObject = Template.instance();
     let salesService = new SalesBoardService();
     let i = 0;
     setTimeout(async function(){
@@ -20529,7 +20529,7 @@ Template.new_invoice.events({
   //       var url = FlowRouter.current().path;
   //       var getso_id = url.split("?id=");
   //       var currentInvoice = getso_id[getso_id.length - 1];
-  
+
   //       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
   //       let ForeignExchangeRate = $('#exchange_rate').val();
   //       var objDetails = "";
@@ -20727,7 +20727,7 @@ Template.new_invoice.events({
   },
   'click .btnSaveFrequency': async function () {
     playSaveAudio();
-    let templateObject = Template.instance();      
+    let templateObject = Template.instance();
     let salesService = new SalesBoardService();
     // let selectedType = '';
     let selectedType = "basedOnFrequency";
@@ -20745,7 +20745,7 @@ Template.new_invoice.events({
     let selectDays = '';
     let dailyRadioOption = '';
     let everyDays = '';
-    
+
     // const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
     let basedOnTypeTexts = '';
     // let basedOnTypeAttr = '';
@@ -21085,18 +21085,18 @@ Template.new_invoice.events({
             const rate = $("#exchange_rate").val();
 
             toConvert.each((index, element) => {
-                const mainClass = element.classList[0]; // we get the class of the non foreign html 
+                const mainClass = element.classList[0]; // we get the class of the non foreign html
                 const mainElement = $(tr).find(`td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`); //document.querySelector(`#tblBillLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
 
                 const targetElement = $(tr).find(`td.${mainClass}.convert-to-foreign:not(.hiddenColumn)`);
-                
-                
+
+
                 let value = $(mainElement).children().length > 0 ?
                     $(mainElement).find('input').val() :
                     $(mainElement).text();
 
                 value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
-              
+
                 if(targetElement.children().length > 0) {
                     $(targetElement).find("input").val(value);
                 } else {
