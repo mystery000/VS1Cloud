@@ -25,7 +25,7 @@ Template.vs1_report_template.onCreated(function(){
     templateObject.selectedFile = new ReactiveVar();
     templateObject.report_displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
-    templateObject.dateAsAt = new ReactiveVar();
+    // templateObject.dateAsAt = new ReactiveVar();
 });
 
 Template.vs1_report_template.onRendered(function() {
@@ -332,7 +332,7 @@ Template.vs1_report_template.helpers({
   report_displayfields: () => {
     return Template.instance().report_displayfields.get();
   },
-  dateAsAt: () => {
-    return Template.instance().dateAsAt.get() || "-";
-  },
+  // dateAsAt: () => {
+  //   return Template.instance().dateAsAt.get() || "-";
+  // },
 });
