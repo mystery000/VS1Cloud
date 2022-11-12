@@ -21,6 +21,8 @@ Template.appointmenttimelist.onCreated(function() {
 });
 
 Template.appointmenttimelist.onRendered(function() {
+    localStorage.setItem("appt_historypage", "");
+
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let accountService = new AccountService();
@@ -1230,10 +1232,11 @@ Template.appointmenttimelist.onRendered(function() {
         document.getElementById("frmAppointment").reset();
         var id = $(this).closest('tr').attr('id');
         var logid = $(this).closest('tr').attr('logid');
-        if(logid != undefined && logid > 0){
+        if (logid != undefined && logid > 0) {
+            localStorage.setItem("appt_historypage", "appointmenttimelist");
             window.open('appointments?id=' + id + '&logid=' + logid, '_self');
-        }
-        else{
+        } else {
+            localStorage.setItem("appt_historypage", "appointmenttimelist");
             window.open('appointments?id=' + id, '_self');
         }
     });
@@ -1242,6 +1245,7 @@ Template.appointmenttimelist.onRendered(function() {
 
 Template.appointmenttimelist.events({
     'click #btnAppointment': function(event) {
+        localStorage.setItem("appt_historypage", "appointmenttimelist");
         FlowRouter.go('/appointments');
     },
     'click .btnRefresh': function() {
@@ -1651,11 +1655,11 @@ Template.appointmenttimelist.events({
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#tblappointmenttimelist_wrapper .dt-buttons .btntabletopdf').click();
-        $('.fullScreenSpin').css('display', 'none');
-    }, delayTimeAfterSound);
+        setTimeout(function() {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            jQuery('#tblappointmenttimelist_wrapper .dt-buttons .btntabletopdf').click();
+            $('.fullScreenSpin').css('display', 'none');
+        }, delayTimeAfterSound);
     },
     'click #check-all': function(event) {
         if ($(event.target).is(':checked')) {
