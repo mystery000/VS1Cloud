@@ -35,10 +35,10 @@ Template.supplierlist.onRendered(function() {
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
 
-    $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
+    $('#tblSupplierlist tbody').on( 'click', 'tr', function () {
         const listData = $(this).closest('tr').attr('id');
         if(listData){
-            FlowRouter.go('/employeescard?id=' + listData);
+            FlowRouter.go('/supplierscard?id=' + listData);
         }
     });
     templateObject.checkSetupWizardFinished = async function () {
@@ -58,27 +58,14 @@ Template.supplierlist.onRendered(function() {
 });
 
 Template.supplierlist.events({
+    "click #tblSupplierlist tbody tr": (e, ui) => {
+        const id = $(e.currentTarget).attr('id');
+        if(id){
+            FlowRouter.go(`/supplierscard?id=${id}`);
+        }
+    },
     'click #btnNewSupplier': function(event) {
         FlowRouter.go('/supplierscard');
-    },
-    'click .chkDatatable': function(event) {
-        var columns = $('#tblSupplierlist th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
     },
     'keyup #tblSupplierlist_filter input': function(event) {
         if ($(event.target).val() != '') {
@@ -107,29 +94,34 @@ Template.supplierlist.events({
                 let lineItemObj = {};
                 if (data.tsuppliervs1list.length > 0) {
                     for (let i = 0; i < data.tsuppliervs1list.length; i++) {
-
-                        let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.APBalance) || 0.00;
-                        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.ExcessAmount) || 0.00;
-                        let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
-                        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.SupplierCreditLimit) || 0.00;
-                        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
+                        let linestatus = '';
+                        if (data.tsuppliervs1list[i].Active == true) {
+                            linestatus = "";
+                        } else if (data.tsuppliervs1list[i].Active == false) {
+                            linestatus = "In-Active";
+                        };
+                        let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].ARBalance) || 0.00;
+                        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].ExcessAmount) || 0.00;
+                        let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].Balance) || 0.00;
+                        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].SupplierCreditLimit) || 0.00;
+                        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].Balance) || 0.00;
                         var dataList = {
-                            id: data.tsuppliervs1list[i].fields.ID || '',
-                            company: data.tsuppliervs1list[i].fields.ClientName || '',
-                            contactname: data.tsuppliervs1list[i].fields.ContactName || '',
-                            phone: data.tsuppliervs1list[i].fields.Phone || '',
+                            id: data.tsuppliervs1list[i].ClientID || '',
+                            company: data.tsuppliervs1list[i].Company || '',
+                            phone: data.tsuppliervs1list[i].Phone || '',
                             arbalance: arBalance || 0.00,
                             creditbalance: creditBalance || 0.00,
                             balance: balance || 0.00,
                             creditlimit: creditLimit || 0.00,
                             salesorderbalance: salesOrderBalance || 0.00,
-                            email: data.tsuppliervs1list[i].fields.Email || '',
-                            accountno: data.tsuppliervs1list[i].fields.AccountNo || '',
-                            clientno: data.tsuppliervs1list[i].fields.ClientNo || '',
-                            jobtitle: data.tsuppliervs1list[i].fields.JobTitle || '',
-                            notes: data.tsuppliervs1list[i].fields.Notes || '',
-                            suburb: data.tsuppliervs1list[i].fields.Suburb || '',
-                            country: data.tsuppliervs1list[i].fields.Country || ''
+                            suburb: data.tsuppliervs1list[i].Suburb || '',
+                            country: data.tsuppliervs1list[i].Country || '',
+                            email: data.tsuppliervs1list[i].Email || '',
+                            accountno: data.tsuppliervs1list[i].AccountNo || '',
+                            clientno: data.tsuppliervs1list[i].ClientNo || '',
+                            jobtitle: data.tsuppliervs1list[i].JobTitle || '',
+                            notes: data.tsuppliervs1list[i].Notes || '',
+                            status:linestatus
                         };
 
                         dataTableList.push(dataList);
@@ -137,34 +129,6 @@ Template.supplierlist.events({
 
                     templateObject.datatablerecords.set(dataTableList);
 
-                    let item = templateObject.datatablerecords.get();
-                    $('.fullScreenSpin').css('display', 'none');
-                    if (dataTableList) {
-                        var datatable = $('#tblSupplierlist').DataTable();
-                        $("#tblSupplierlist > tbody").empty();
-                        for (let x = 0; x < item.length; x++) {
-                            $("#tblSupplierlist > tbody").append(
-                                ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
-                                '<td contenteditable="false" class="colCompany">' + item[x].company + '</td>' +
-                                '<td contenteditable="false" class="colPhone">' + item[x].phone + '</td>' +
-                                '<td contenteditable="false" class="colARBalance" >' + item[x].arbalance + '</td>' +
-                                '<td contenteditable="false" class="colCreditBalance">' + item[x].creditbalance + '</td>' +
-                                '<td contenteditable="false" class="colBalance">' + item[x].balance + '</td>' +
-                                '<td contenteditable="false" class="colCreditLimit">' + item[x].creditlimit + '</td>' +
-                                '<td contenteditable="false" class="colSalesOrderBalance">' + item[x].salesorderbalance + '</td>' +
-                                '<td contenteditable="false" class="colSuburb">' + item[x].suburb + '</td>' +
-                                '<td contenteditable="false" class="colCountry">' + item[x].country + '</td>' +
-                                '<td contenteditable="false" class="colEmail hiddenColumn">' + item[x].email + '</td>' +
-                                '<td contenteditable="false" class="colAccountNo hiddenColumn">' + item[x].accountno + '</td>' +
-                                '<td contenteditable="false" class="colClientNo hiddenColumn">' + item[x].clientno + '</td>' +
-                                '<td contenteditable="false" class="colJobTitle hiddenColumn">' + item[x].jobtitle + '</td>' +
-                                '<td contenteditable="false" class="colNotes">' + item[x].notes + '</td>' +
-                                '</tr>');
-
-                        }
-                        $('.dataTables_info').html('Showing 1 to ' + data.tsuppliervs1list.length + ' of ' + data.tsuppliervs1list.length + ' entries');
-
-                    }
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
@@ -190,159 +154,6 @@ Template.supplierlist.events({
             $(".btnRefresh").trigger("click");
         }
     },
-    'click .resetTable': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblSupplierlist' });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({ _id: checkPrefDetails._id }, function(err, idTag) {
-                        if (err) {
-
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
-    },
-    'click .saveTable': function(event) {
-        let lineItems = [];
-        $('.columnSettings').each(function(index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
-
-            lineItems.push(lineItemObj);
-        });
-
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblSupplierlist' });
-                if (checkPrefDetails) {
-                    CloudPreference.update({ _id: checkPrefDetails._id }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'tblSupplierlist',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'tblSupplierlist',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-                }
-            }
-        }
-        $('#myModal2').modal('toggle');
-    },
-    'blur .divcolumn': function(event) {
-        let columData = $(event.target).text();
-
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('#tblSupplierlist').DataTable();
-        var title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-
-    },
-    'change .rngRange': function(event) {
-        let range = $(event.target).val();
-        $(event.target).closest("div.divColWidth").find(".spWidth").html(range + 'px');
-
-        let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblSupplierlist th');
-        $.each(datable, function(i, v) {
-
-            if (v.innerText == columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css('width', range + 'px');
-
-            }
-        });
-
-    },
-    'click .btnOpenSettings': function(event) {
-        let templateObject = Template.instance();
-        var columns = $('#tblSupplierlist th');
-
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i, v) {
-            if (v.hidden == false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
     'click .exportbtn': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblSupplierlist_wrapper .dt-buttons .btntabletocsv').click();
@@ -355,32 +166,30 @@ Template.supplierlist.events({
         $('.fullScreenSpin').css('display', 'none');
     },
     'click .btnRefresh': function() {
-        $('.fullScreenSpin').css('display','inline-block');
+        $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
-
-        sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad,0).then(function(dataSuppliers) {
-            addVS1Data('TSupplierVS1List',JSON.stringify(dataSuppliers));
-        });
-
-        sideBarService.getAllAppointmentPredList().then(function (dataPred) {
-            addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
-              sideBarService.getAllTEmployeeList(initialBaseDataLoad,0,false).then(function(data) {
-                  addVS1Data('TSupplierVS1List',JSON.stringify(data)).then(function (datareturn) {
-                      window.open('/supplierlist','_self');
+        sideBarService.getAllSuppliersDataVS1List(initialDataLoad, 0).then(function (data) {
+            addVS1Data("TSupplierVS1List", JSON.stringify(data)).then(function (datareturn) {
+              sideBarService.getAllSuppliersDataVS1List(initialDataLoad, 0, false).then(function (dataUsers) {
+                addVS1Data('TSupplierVS1List', JSON.stringify(dataUsers)).then(function (datareturn) {
+                    window.open("/supplierlist", "_self");
                   }).catch(function (err) {
-                      window.open('/supplierlist','_self');
+                    window.open("/supplierlist", "_self");
                   });
-              }).catch(function(err) {
-                  window.open('/supplierlist','_self');
               });
-            }).catch(function (err) {
-              window.open('/supplierlist','_self');
+              }).catch(function (err) {
+                window.open("/supplierlist", "_self");
+              });
+          }).catch(function (err) {
+            sideBarService.getAllSuppliersDataVS1List().then(function (dataUsers) {
+              addVS1Data('TSupplierVS1List', JSON.stringify(dataUsers)).then(function (datareturn) {
+                  window.open("/supplierlist", "_self");
+                }).catch(function (err) {
+                  window.open("/supplierlist", "_self");
+                });
             });
-        }).catch(function (err) {
-          window.open('/supplierlist','_self');
-        });
-
-    },
+          });
+      },
     'click .printConfirm': function(event) {
         playPrintAudio();
         setTimeout(function(){
@@ -467,9 +276,6 @@ Template.supplierlist.events({
             }
 
         }
-
-
-
     },
     'click .btnImport': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -502,7 +308,7 @@ Template.supplierlist.events({
                             //taxCode = results.data[i+1][12]!== undefined? results.data[i+1][12] :'NT';
 
                             objDetails = {
-                                type: "TSupplier",
+                                type: "TSupplierVS1List",
                                 fields: {
                                     ClientName: results.data[i + 1][0],
                                     FirstName: firstName || '',

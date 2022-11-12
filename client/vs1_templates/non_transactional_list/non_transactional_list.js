@@ -214,28 +214,34 @@ Template.non_transactional_list.onRendered(function() {
             reset_data = [
               { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true },
               { index: 1, label: 'Product Name', class: 'colName', active: true, display: true},
-              { index: 2, label: 'Process', class: 'colProcess', active: true, display: true },
-              { index: 3, label: 'raws', class: 'colRaws', active: true, display: true },
-              { index: 4, label: 'attachments', class: 'colAttachments', active: true, display: true }
+              { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true},
+              { index: 3, label: 'Process', class: 'colProcess', active: true, display: true },
+              { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true },
+              { index: 5, label: 'raws', class: 'colRaws', active: true, display: true },
+              { index: 6, label: 'attachments', class: 'colAttachments', active: true, display: true }
             ];
-        }else if(currenttablename == "tblSupplierlist") { //Done Something Here
+          }else if(currenttablename == "tblSupplierlist") { //Done Something Here
             reset_data = [
-              { index: 0, label: '#ID', class: 'colSupplierID', active: false, display: true },
-              { index: 1, label: 'Company', class: 'colCompany', active: true, display: true},
-              { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true},
-              { index: 3, label: 'AP Balance', class: 'colARBalance', active: true, display: true },
-              { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true },
-              { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true },
-              { index: 6, label: 'Credit Limit', class: 'colCreditLimi', active: true, display: true },
-              { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true },
-              { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true },
-              { index: 9, label: 'Country', class: 'colCountry', active: true, display: true },
-              { index: 10, label: 'Email', class: 'colEmail', active: false, display: true },
-              { index: 11, label: 'Account No', class: 'colAccountNo', active: false, display: true },
-              { index: 12, label: 'Client Number', class: 'colClientNo', active: false, display: true },
-              { index: 13, label: 'Job Title', class: 'colJobTitle', active: false, display: true },
-              { index: 14, label: 'Comments', class: 'colNotes', active: true, display: true },
-              { index: 15, label: 'Status', class: 'colStatus', active: true, display: true }
+              { index: 0, label: '#ID', class: 'colSupplierID', active: false, display: true,  width: "10"},
+              { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200"},
+              { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
+              { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "115"},
+              { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "170"},
+              { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "90"},
+              { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "115"},
+              { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "200"},
+              { index: 8, label: 'Email', class: 'colEmail', active: false, display: true, width: "200"},
+              { index: 9, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "200"},
+              { index: 10, label: 'Client Number', class: 'colClientNo', active: true, display: true, width: "120"},
+              { index: 11, label: 'Job Title', class: 'colJobTitle', active: true, display: true, width: "120"},
+              { index: 12, label: 'Custom Field 1', class: 'colCustomField1', active: false, display: true, width: "120"},
+              { index: 13, label: 'Custom Field 2', class: 'colCustomField2', active: false, display: true, width: "120"},
+              { index: 14, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120"},
+              { index: 15, label: 'State', class: 'colState', active: false, display: true, width: "120"},
+              { index: 16, label: 'Post Code', class: 'colPostcode', active: false, display: true, width: "80"},
+              { index: 17, label: 'Country', class: 'colCountry', active: false, display: true, width: "200"},
+              { index: 18, label: 'Comments', class: 'colNotes', active: true, display: true, width: ""},
+              { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
             ];
           }
         templateObject.reset_data.set(reset_data);
@@ -243,10 +249,6 @@ Template.non_transactional_list.onRendered(function() {
       templateObject.init_reset_data();
 
       // set initial table rest_data
-
-
-      // custom field displaysettings
-
         templateObject.initCustomFieldDisplaySettings = function(data, listType){
   //function initCustomFieldDisplaySettings(data, listType) {
     let templateObject = Template.instance();
@@ -254,7 +256,6 @@ Template.non_transactional_list.onRendered(function() {
     templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
-
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
@@ -1449,7 +1450,7 @@ Template.non_transactional_list.onRendered(function() {
       //Supplier List Data
       templateObject.getSupplierListData = async function (deleteFilter = false) {
         var customerpage = 0;
-        getVS1Data('TSupplierVS1List1').then(function (dataObject) {
+        getVS1Data('TSupplierVS1List').then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
                     await addVS1Data('TSupplierVS1List', JSON.stringify(data));
@@ -1471,7 +1472,7 @@ Template.non_transactional_list.onRendered(function() {
         });
       }
       templateObject.displaySuppliersListData = async function (data) {
-          console.log(data);
+        console.log(data);
         var splashArraySuppliersList = new Array();
         let lineItems = [];
         let lineItemObj = {};
@@ -1492,38 +1493,37 @@ Template.non_transactional_list.onRendered(function() {
           linestatus = "In-Active";
       };
 
-      let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.APBalance) || 0.00;
-      let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.ExcessAmount) || 0.00;
-      let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
-      let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.SupplierCreditLimit) || 0.00;
-      let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].fields.Balance) || 0.00;
+      let arBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].ARBalance) || 0.00;
+      let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].ExcessAmount) || 0.00;
+      let balance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].Balance) || 0.00;
+      let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].SupplierCreditLimit) || 0.00;
+      let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].Balance) || 0.00;
 
       var dataList = [
-          data.tsuppliervs1list[i].fields.ID || '',
-          data.tsuppliervs1list[i].fields.ClientName || '',
-          data.tsuppliervs1list[i].fields.ContactName || '',
-          data.tsuppliervs1list[i].fields.Phone || '',
+          data.tsuppliervs1list[i].ClientID || '',
+          data.tsuppliervs1list[i].Company || '',
+          data.tsuppliervs1list[i].Phone || '',
           arBalance || 0.00,
           creditBalance || 0.00,
           balance || 0.00,
           creditLimit || 0.00,
           salesOrderBalance || 0.00,
-          data.tsuppliervs1list[i].fields.Email || '',
-          data.tsuppliervs1list[i].fields.AccountNo || '',
-          data.tsuppliervs1list[i].fields.ClientNo || '',
-          data.tsuppliervs1list[i].fields.JobTitle || '',
-          data.tsuppliervs1list[i].fields.Notes || '',
-          data.tsuppliervs1list[i].fields.Suburb || '',
-          data.tsuppliervs1list[i].fields.Country || '',
-
-          data.tsuppliervs1list[i].BillStreet || '',
-          data.tsuppliervs1list[i].BillStreet2 || '',
-          data.tsuppliervs1list[i].BillState || '',
-          data.tsuppliervs1list[i].BillPostCode || '',
-          data.tsuppliervs1list[i].Billcountry || '',
+          data.tsuppliervs1list[i].Email || '',
+          data.tsuppliervs1list[i].AccountNo || '',
+          data.tsuppliervs1list[i].ClientNo || '',
+          data.tsuppliervs1list[i].JobTitle || '',
+          data.tsuppliervs1list[i].CUSTFLD1 || '',
+          data.tsuppliervs1list[i].CUSTFLD2 || '',
+          data.tsuppliervs1list[i].Suburb || '',
+          data.tsuppliervs1list[i].POState || '',
+          data.tsuppliervs1list[i].Postcode || '',
+          data.tsuppliervs1list[i].Country || '',
+          data.tsuppliervs1list[i].Notes || '',
+          linestatus,
       ];
-
+      console.log(dataList);
         splashArraySuppliersList.push(dataList);
+
         templateObject.transactiondatatablerecords.set(splashArraySuppliersList);
     }
 
@@ -1532,9 +1532,9 @@ Template.non_transactional_list.onRendered(function() {
             MakeNegative();
         }, 100);
     }
-    //$('.fullScreenSpin').css('display','none');
+    $('.fullScreenSpin').css('display','none');
     setTimeout(function () {
-        //$('#'+currenttablename).removeClass('hiddenColumn');
+        console.log(splashArraySuppliersList);
         $('#'+currenttablename).DataTable({
             data: splashArraySuppliersList,
             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1549,70 +1549,96 @@ Template.non_transactional_list.onRendered(function() {
                 {
                   targets: 1,
                   className: "colCompany",
+                  width: "200px",
                 },
                 {
                   targets: 2,
                   className: "colPhone",
-                  width: "100px",
-                },
-                {
-                  targets: 3,
-                  className: "colAPBalance",
-                  width: "100px",
-                },
-                {
-                  targets: 4,
-                  className: "colCreditBalance",
-                  width: "115px",
-                },
-                {
-                  targets: 5,
-                  className: "colBalance",
                   width: "95px",
                 },
                 {
+                  targets: 3,
+                  className: "colARBalance text-right",
+                  width: "115px",
+                },
+                {
+                  targets: 4,
+                  className: "colCreditBalance text-right",
+                  width: "170px",
+                },
+                {
+                  targets: 5,
+                  className: "colBalance text-right",
+                  width: "90px",
+                },
+                {
                   targets: 6,
-                  className: "colCreditLimit",
-                  width: "100px",
+                  className: "colCreditLimit text-right hiddenColumn",
+                  width: "115px",
                 },
                 {
                   targets: 7,
-                  className: "colSalesOrderBalance",
-                  width: "100px",
+                  className: "colSalesOrderBalance text-right",
+                  width: "200px",
                 },
                 {
                   targets: 8,
-                  className: "colSuburb",
-                  width: "100px",
+                  className: "colEmail hiddenColumn",
+                  width: "200px",
                 },
                 {
                   targets: 9,
-                  className: "colCountry",
-                  width: "120px",
+                  className: "colAccountNo",
+                   width: "200px",
                 },
                 {
                   targets: 10,
-                  className: "colEmail hiddenColumn",
+                  className: "colClientNo",
+                  width: "120px",
                 },
                 {
                   targets: 11,
-                  className: "colAccountNo hiddenColumn",
+                  className: "colJobTitle",
+                  width: "120px",
                 },
                 {
                   targets: 12,
-                  className: "colClientNo hiddenColumn",
+                  className: "colCustomField1 hiddenColumn",
+                  width: "120px",
                 },
                 {
                   targets: 13,
-                  className: "colJobTitle hiddenColumn",
+                  className: "colCustomField2 hiddenColumn",
+                  width: "120px",
                 },
                 {
                   targets: 14,
-                  className: "colNotes",
+                  className: "colSuburb hiddenColumn",
+                  width: "120px",
                 },
                 {
                   targets: 15,
+                  className: "colState hiddenColumn",
+                  width: "120px",
+                },
+                {
+                  targets: 16,
+                  className: "colPostcode hiddenColumn",
+                  width: "80px",
+                },
+                {
+                  targets: 17,
+                  className: "colCountry hiddenColumn",
+                  width: "200px",
+                },
+                {
+                  targets: 18,
+                  className: "colNotes",
+                },
+                {
+                  targets: 19,
                   className: "colStatus",
+                  width: "100px",
                 }
             ],
             buttons: [
@@ -1692,35 +1718,38 @@ Template.non_transactional_list.onRendered(function() {
                       linestatus = "In-Active";
                   };
 
-                  let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.APBalance) || 0.00;
-                  let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.ExcessAmount) || 0.00;
-                  let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.Balance) || 0.00;
-                  let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.SupplierCreditLimit) || 0.00;
-                  let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].fields.Balance) || 0.00;
+                  let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].ARBalance) || 0.00;
+                  let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].ExcessAmount) || 0.00;
+                  let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].Balance) || 0.00;
+                  let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].SupplierCreditLimit) || 0.00;
+                  let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].Balance) || 0.00;
 
                     var dataListDupp = [
-                        dataObjectnew.tsuppliervs1list[j].fields.ID || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.ClientName || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.ContactName || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.Phone || '',
-                      arBalance || 0.00,
-                      creditBalance || 0.00,
-                      balance || 0.00,
-                      creditLimit || 0.00,
-                      salesOrderBalance || 0.00,
-                      dataObjectnew.tsuppliervs1list[j].fields.Email || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.AccountNo || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.ClientNo || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.JobTitle || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.Notes || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.Suburb || '',
-                      dataObjectnew.tsuppliervs1list[j].fields.Country || '',
-
-                      dataObjectnew.tsuppliervs1list[j].BillStreet || '',
-                      dataObjectnew.tsuppliervs1list[j].BillStreet2 || '',
-                      dataObjectnew.tsuppliervs1list[j].BillState || '',
-                      dataObjectnew.tsuppliervs1list[j].BillPostCode || '',
-                      dataObjectnew.tsuppliervs1list[j].Billcountry || '',
+                        dataObjectnew.tsuppliervs1list[j].ClientID || '',
+                        dataObjectnew.tsuppliervs1list[j].Company || '',
+                        dataObjectnew.tsuppliervs1list[j].Phone || '',
+                        arBalance || 0.00,
+                        creditBalance || 0.00,
+                        balance || 0.00,
+                        creditLimit || 0.00,
+                        salesOrderBalance || 0.00,
+                        dataObjectnew.tsuppliervs1list[j].Email || '',
+                        dataObjectnew.tsuppliervs1list[j].AccountNo || '',
+                        dataObjectnew.tsuppliervs1list[j].ClientNo || '',
+                        dataObjectnew.tsuppliervs1list[j].JobTitle || '',
+                        dataObjectnew.tsuppliervs1list[j].CUSTFLD1 || '',
+                        dataObjectnew.tsuppliervs1list[j].CUSTFLD2 || '',
+                        dataObjectnew.tsuppliervs1list[j].Suburb || '',
+                        dataObjectnew.tsuppliervs1list[j].POState || '',
+                        dataObjectnew.tsuppliervs1list[j].Postcode || '',
+                        dataObjectnew.tsuppliervs1list[j].Country || '',
+                        dataObjectnew.tsuppliervs1list[j].Notes || '',
+                        linestatus,
+                      // dataObjectnew.tsuppliervs1list[j].BillStreet || '',
+                      // dataObjectnew.tsuppliervs1list[j].BillStreet2 || '',
+                      // dataObjectnew.tsuppliervs1list[j].BillState || '',
+                      // dataObjectnew.tsuppliervs1list[j].BillPostCode || '',
+                      // dataObjectnew.tsuppliervs1list[j].Billcountry || '',
                     ];
 
                     splashArraySuppliersList.push(dataListDupp);
@@ -3494,8 +3523,10 @@ Template.non_transactional_list.onRendered(function() {
                 var dataList = [
                   bomProducts[i].fields.ID || "1",
                   bomProducts[i].fields.productName || "", //product name -- should be changed on TProcTree
+                  bomProducts[i].fields.productDescription || "",
                   bomProducts[i].fields.process || "",
-                  // bomProducts[i].fields.Description || "",
+                  bomProducts[i].fields.totalQtyInStock || 0,
+                  // bomProducts[i].fields.subs || [],
                   rawName || '',
                   bomProducts[i].fields.attachments.length == 0?'No Attachment':bomProducts[i].fields.attachments.length > 0 ? bomProducts[i].fields.attachments.length.toString() + " attachments": "no attachmetns"
                 ];
