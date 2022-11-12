@@ -151,16 +151,15 @@ Template.leaveaccruedreport.onRendered(() => {
     // }
     const result = new Array();
     if(data){
-      data.tleaveaccruallist.map((y) => {
-        let index = result.findIndex(x => x.EmployeeID == y.EmployeeID)
+      data.tleaveaccruals.map((y) => {
+        let index = result.findIndex(x => x.EmployeeID == y.fields.EmployeeID)
         if(index == -1) {
-          result.push({ EmployeeID:y.EmployeeID, records: [y]})
+          result.push({ EmployeeID:y.fields.EmployeeID, EmployeeName:y.fields.EmployeeName, records: [y]})
         } else {
           result[index].records.push(y)
         }
       });
     }
-
     templateObject.records.set(result);
     // setTimeout(function() {
     //     MakeNegative();
@@ -444,7 +443,7 @@ Template.leaveaccruedreport.helpers({
   calculateHourPriceConvert: (item, currencyData) => {
 
     let utilityService = new UtilityService();
-    let amount = item.AccruedHours * item.CurrentHourlyRate
+    let amount = item.fields.AccruedHours * item.fields.CurrentHourlyRate
     if( isNaN( amount ) ){
         amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
@@ -547,7 +546,7 @@ Template.leaveaccruedreport.helpers({
   },
   calculateHourPrice: (item) => {
     let utilityService = new UtilityService();
-    let amount = item.AccruedHours * item.CurrentHourlyRate
+    let amount = item.fields.AccruedHours * item.fields.CurrentHourlyRate
     if( isNaN( amount ) ){
         amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;

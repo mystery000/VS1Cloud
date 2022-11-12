@@ -356,83 +356,20 @@ Template.inventorylist.onRendered(function() {
 
                             $(".fullScreenSpin").css("display", "none");
                             setTimeout(function() {
-                                let displayfields = templateObject.displayfields.get(); 
+                                let columnData = [];
+                                let displayfields = templateObject.displayfields.get();
+                                if( displayfields.length > 0 ){
+                                    displayfields.forEach(function( item ){
+                                        columnData.push({
+                                            className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
+                                            targets: [item.id],
+                                        })
+                                    });
+                                }
                                 $("#tblInventoryOverview").dataTable({
                                     data: splashArrayProductList,
                                     sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                    columnDefs: [{
-                                            className: ( displayfields[0].active )? "colProductID" : "colProductID hiddenColumn",
-                                            targets: [0],
-                                        },
-                                        {
-                                            className: ( displayfields[1].active )? "colProductName" : "colProductName hiddenColumn",
-                                            targets: [1],
-                                        },
-                                        {
-                                            className: ( displayfields[2].active )? "colSalesDescription" : "colSalesDescription hiddenColumn",
-                                            targets: [2],
-                                        },
-                                        {
-                                            className: ( displayfields[3].active )? "colAvailable text-right" : "colAvailable text-right hiddenColumn",
-                                            targets: [3],
-                                        },
-                                        {
-                                            className: ( displayfields[4].active )? "colOnSO text-right" : "colOnSO text-right hiddenColumn",
-                                            targets: [4],
-                                        },
-                                        {
-                                            className: ( displayfields[5].active )? "colOnBO text-right" : "colOnBO text-right hiddenColumn",
-                                            targets: [5],
-                                        },
-                                        {
-                                            className: ( displayfields[6].active )? "colInStock text-right" : "colInStock text-right hiddenColumn",
-                                            targets: [6],
-                                        },
-                                        {
-                                            className: ( displayfields[7].active )? "colOnOrder text-right" : "colOnOrder text-right hiddenColumn",
-                                            targets: [7]
-                                        },
-                                        {
-                                            className: ( displayfields[8].active )? "colCostPrice text-right" : "colCostPrice text-right hiddenColumn",
-                                            targets: [8],
-                                        },
-                                        {
-                                            className: ( displayfields[9].active )? "colCostPriceInc  text-right" : "colCostPriceInc  text-right hiddenColumn",
-                                            targets: [9]
-                                        },
-                                        {
-                                            className: ( displayfields[10].active )? "colSalePrice text-right" : "colSalePrice text-right hiddenColumn",
-                                            targets: [10],
-                                        },
-                                        {
-                                            className: ( displayfields[11].active )? "colSalePriceInc  text-right" : "colSalePriceInc  text-right hiddenColumn",
-                                            targets: [11],
-                                        },
-                                        {
-                                            className: ( displayfields[12].active )? "colSerialNo  text-center" : "colSerialNo  text-center hiddenColumn",
-                                            targets: [12],
-                                        },
-                                        {
-                                            className: ( displayfields[13].active )? "colBarcode" : "colBarcode hiddenColumn",
-                                            targets: [13],
-                                        },
-                                        {
-                                            className: ( displayfields[14].active )? "colDepartment" : "colDepartment hiddenColumn",
-                                            targets: [14]
-                                        },
-                                        {
-                                            className: ( displayfields[15].active )? "colPurchaseDescription" : "colPurchaseDescription hiddenColumn",
-                                            targets: [15]
-                                        },
-                                        {
-                                            className: ( displayfields[16].active )? "colProdCustField1" : "colProdCustField1 hiddenColumn",
-                                            targets: [16]
-                                        },
-                                        {
-                                            className: ( displayfields[17].active )? "colProdCustField2" : "colProdCustField2 hiddenColumn",
-                                            targets: [17]
-                                        },
-                                    ],
+                                    columnDefs: columnData,
                                       select: true,
                                       destroy: true,
                                       colReorder: true,
@@ -630,83 +567,20 @@ Template.inventorylist.onRendered(function() {
 
                     $(".fullScreenSpin").css("display", "none");
                     setTimeout(function() {
+                        let columnData = [];
                         let displayfields = templateObject.displayfields.get();
+                        if( displayfields.length > 0 ){
+                            displayfields.forEach(function( item ){
+                                columnData.push({
+                                    className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
+                                    targets: [item.id],
+                                })
+                            });
+                        }
                         $("#tblInventoryOverview").dataTable({
                                 data: splashArrayProductList,
                                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                columnDefs: [{
-                                        className: ( displayfields[0].active )? "colProductID" : "colProductID hiddenColumn",
-                                        targets: [0],
-                                    },
-                                    {
-                                        className: ( displayfields[1].active )? "colProductName" : "colProductName hiddenColumn",
-                                        targets: [1],
-                                    },
-                                    {
-                                        className: ( displayfields[2].active )? "colSalesDescription" : "colSalesDescription hiddenColumn",
-                                        targets: [2],
-                                    },
-                                    {
-                                        className: ( displayfields[3].active )? "colAvailable text-right" : "colAvailable text-right hiddenColumn",
-                                        targets: [3],
-                                    },
-                                    {
-                                        className: ( displayfields[4].active )? "colOnSO text-right" : "colOnSO text-right hiddenColumn",
-                                        targets: [4],
-                                    },
-                                    {
-                                        className: ( displayfields[5].active )? "colOnBO text-right" : "colOnBO text-right hiddenColumn",
-                                        targets: [5],
-                                    },
-                                    {
-                                        className: ( displayfields[6].active )? "colInStock text-right" : "colInStock text-right hiddenColumn",
-                                        targets: [6],
-                                    },
-                                    {
-                                        className: ( displayfields[7].active )? "colOnOrder text-right" : "colOnOrder text-right hiddenColumn",
-                                        targets: [7]
-                                    },
-                                    {
-                                        className: ( displayfields[8].active )? "colCostPrice text-right" : "colCostPrice text-right hiddenColumn",
-                                        targets: [8],
-                                    },
-                                    {
-                                        className: ( displayfields[9].active )? "colCostPriceInc  text-right" : "colCostPriceInc  text-right hiddenColumn",
-                                        targets: [9]
-                                    },
-                                    {
-                                        className: ( displayfields[10].active )? "colSalePrice text-right" : "colSalePrice text-right hiddenColumn",
-                                        targets: [10],
-                                    },
-                                    {
-                                        className: ( displayfields[11].active )? "colSalePriceInc  text-right" : "colSalePriceInc  text-right hiddenColumn",
-                                        targets: [11],
-                                    },
-                                    {
-                                        className: ( displayfields[12].active )? "colSerialNo  text-center" : "colSerialNo  text-center hiddenColumn",
-                                        targets: [12],
-                                    },
-                                    {
-                                        className: ( displayfields[13].active )? "colBarcode" : "colBarcode hiddenColumn",
-                                        targets: [13],
-                                    },
-                                    {
-                                        className: ( displayfields[14].active )? "colDepartment" : "colDepartment hiddenColumn",
-                                        targets: [14]
-                                    },
-                                    {
-                                        className: ( displayfields[15].active )? "colPurchaseDescription" : "colPurchaseDescription hiddenColumn",
-                                        targets: [15]
-                                    },
-                                    {
-                                        className: ( displayfields[16].active )? "colProdCustField1" : "colProdCustField1 hiddenColumn",
-                                        targets: [16]
-                                    },
-                                    {
-                                        className: ( displayfields[17].active )? "colProdCustField2" : "colProdCustField2 hiddenColumn",
-                                        targets: [17]
-                                    },
-                                ],
+                                columnDefs: columnData,
                                 select: true,
                                 destroy: true,
                                 colReorder: true,
@@ -900,83 +774,20 @@ Template.inventorylist.onRendered(function() {
 
                         $(".fullScreenSpin").css("display", "none");
                         setTimeout(function() {
+                            let columnData = [];
                             let displayfields = templateObject.displayfields.get();
+                            if( displayfields.length > 0 ){
+                                displayfields.forEach(function( item ){
+                                    columnData.push({
+                                        className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
+                                        targets: [item.id],
+                                    })
+                                });
+                            }
                             $("#tblInventoryOverview").dataTable({
                                   data: splashArrayProductList,
                                   sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                  columnDefs: [{
-                                        className: ( displayfields[0].active )? "colProductID" : "colProductID hiddenColumn",
-                                        targets: [0],
-                                    },
-                                    {
-                                        className: ( displayfields[1].active )? "colProductName" : "colProductName hiddenColumn",
-                                        targets: [1],
-                                    },
-                                    {
-                                        className: ( displayfields[2].active )? "colSalesDescription" : "colSalesDescription hiddenColumn",
-                                        targets: [2],
-                                    },
-                                    {
-                                        className: ( displayfields[3].active )? "colAvailable text-right" : "colAvailable text-right hiddenColumn",
-                                        targets: [3],
-                                    },
-                                    {
-                                        className: ( displayfields[4].active )? "colOnSO text-right" : "colOnSO text-right hiddenColumn",
-                                        targets: [4],
-                                    },
-                                    {
-                                        className: ( displayfields[5].active )? "colOnBO text-right" : "colOnBO text-right hiddenColumn",
-                                        targets: [5],
-                                    },
-                                    {
-                                        className: ( displayfields[6].active )? "colInStock text-right" : "colInStock text-right hiddenColumn",
-                                        targets: [6],
-                                    },
-                                    {
-                                        className: ( displayfields[7].active )? "colOnOrder text-right" : "colOnOrder text-right hiddenColumn",
-                                        targets: [7]
-                                    },
-                                    {
-                                        className: ( displayfields[8].active )? "colCostPrice text-right" : "colCostPrice text-right hiddenColumn",
-                                        targets: [8],
-                                    },
-                                    {
-                                        className: ( displayfields[9].active )? "colCostPriceInc  text-right" : "colCostPriceInc  text-right hiddenColumn",
-                                        targets: [9]
-                                    },
-                                    {
-                                        className: ( displayfields[10].active )? "colSalePrice text-right" : "colSalePrice text-right hiddenColumn",
-                                        targets: [10],
-                                    },
-                                    {
-                                        className: ( displayfields[11].active )? "colSalePriceInc  text-right" : "colSalePriceInc  text-right hiddenColumn",
-                                        targets: [11],
-                                    },
-                                    {
-                                        className: ( displayfields[12].active )? "colSerialNo  text-center" : "colSerialNo  text-center hiddenColumn",
-                                        targets: [12],
-                                    },
-                                    {
-                                        className: ( displayfields[13].active )? "colBarcode" : "colBarcode hiddenColumn",
-                                        targets: [13],
-                                    },
-                                    {
-                                        className: ( displayfields[14].active )? "colDepartment" : "colDepartment hiddenColumn",
-                                        targets: [14]
-                                    },
-                                    {
-                                        className: ( displayfields[15].active )? "colPurchaseDescription" : "colPurchaseDescription hiddenColumn",
-                                        targets: [15]
-                                    },
-                                    {
-                                        className: ( displayfields[16].active )? "colProdCustField1" : "colProdCustField1 hiddenColumn",
-                                        targets: [16]
-                                    },
-                                    {
-                                        className: ( displayfields[17].active )? "colProdCustField2" : "colProdCustField2 hiddenColumn",
-                                        targets: [17]
-                                    },
-                                ],
+                                  columnDefs: columnData,
                                   select: true,
                                   destroy: true,
                                   colReorder: true,
@@ -1526,23 +1337,23 @@ Template.inventorylist.events({
         let tableName = "tblInventoryOverview";
         let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
         let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-        $(".fullScreenSpin").css("display", "none");
         if(added) {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+              $(".fullScreenSpin").css("display", "none");
               addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-          });
-            swal({
-              title: 'SUCCESS',
-              text: "Display settings is updated!",
-              type: 'success',
-              showCancelButton: false,
-              confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.value) {
-                   $('#myInventoryModal').modal('hide');
-                   Meteor._reload.reload();
-                }
-            });
+              swal({
+                title: 'SUCCESS',
+                text: "Display settings is updated!",
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+              }).then((result) => {
+                  if (result.value) {
+                     $('#myInventoryModal').modal('hide');
+                     Meteor._reload.reload();
+                  }
+              });
+          });            
         } else {
           swal("Something went wrong!", "", "error");
         }
