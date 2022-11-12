@@ -59,7 +59,6 @@ Template.generalledger.onRendered(() => {
   // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
   // var fromDate =
   //   fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
-  // templateObject.dateAsAt.set(begunDate);
   const dataTableList = [];
   const deptrecords = [];
   // $("#date-input,#dateTo,#dateFrom").datepicker({
@@ -121,7 +120,11 @@ Template.generalledger.onRendered(() => {
   };
 
   templateObject.getGeneralLedgerReports = function (dateFrom,dateTo,ignoreDate) {
+    
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+
     if (!localStorage.getItem("VS1GeneralLedger_Report")) {
+      LoadingOverlay.show();
       reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, ignoreDate).then(function (data) {
           let totalRecord = [];
           let grandtotalRecord = [];
@@ -360,13 +363,13 @@ Template.generalledger.onRendered(() => {
             records.push(recordObj);
             templateObject.records.set(records);
             templateObject.grandrecords.set("");
-            $(".fullScreenSpin").css("display", "none");
           }
+          LoadingOverlay.hide();
         }).catch(function (err) {
-          //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else {
+      LoadingOverlay.show();
       let data = JSON.parse(localStorage.getItem("VS1GeneralLedger_Report"));
       let totalRecord = [];
       let grandtotalRecord = [];
@@ -606,7 +609,7 @@ Template.generalledger.onRendered(() => {
         $(".fullScreenSpin").css("display", "none");
       templateObject.grandrecords.set("");
       }
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
     }
   };
 
@@ -718,14 +721,7 @@ Template.generalledger.events({
         false,
       "_self"
     );
-  },
-  "click #ignoreDate":  (e, templateObject) => {
-    templateObject.getGeneralLedgerReports(
-      null, 
-      null, 
-      true
-    )
-  },
+  },  
   "click #dropdownDateRang": function (e) {
     let dateRangeID = e.target.id;
     $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
@@ -752,6 +748,23 @@ Template.generalledger.events({
       document.getElementById("selectedDateRange").value = "Year to Date";
     }
   },
+  "click #ignoreDate":  (e, templateObject) => {
+    templateObject.getGeneralLedgerReports(
+      null, 
+      null, 
+      true
+    )
+  },
+  "change #dateTo, change #dateFrom": (e) => {
+    let templateObject = Template.instance();
+    localStorage.setItem("VS1GeneralLedger_Report", "");
+    templateObject.getGeneralLedgerReports(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+    )
+  },
+  ...Datehandler.getDateRangeEvents(),
   // "change #dateTo": function () {
   //   let templateObject = Template.instance();
   //   $(".fullScreenSpin").css("display", "inline-block");
@@ -1074,15 +1087,7 @@ Template.generalledger.events({
         type: 'warning',
         confirmButtonText: 'Ok'
       })
-  },  
-  "change #dateTo, change #dateFrom": (e, templateObject) => {
-    templateObject.getGeneralLedgerReports(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
-      false
-    )
-  },
-  ...Datehandler.getDateRangeEvents()
+  },   
 });
 
 Template.generalledger.helpers({
