@@ -222,7 +222,7 @@ export default class Datehandler {
       "click #thisQuarter": (e, templateObject) => {
         Datehandler.thisQuarter(Datehandler.defaultFormat, templateObject);
       },
-      "click #thisFinYear": (e, templateObject) => {
+      "click #thisfinancialyear": (e, templateObject) => {
         Datehandler.thisFinYear(Datehandler.defaultFormat, templateObject);
       },
       "click #previousweek": (e, templateObject) => {

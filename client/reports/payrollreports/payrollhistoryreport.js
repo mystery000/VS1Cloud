@@ -33,6 +33,10 @@ Template.payrollhistoryreport.onRendered(() => {
     Datehandler.initOneMonth();
   };
 
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  };
+
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
     if (imageData) {
@@ -66,7 +70,7 @@ Template.payrollhistoryreport.onRendered(() => {
   // };
   templateObject.getPayHistory = async (dateFrom, dateTo, ignoreDate = false) => {
     LoadingOverlay.show();
-
+    templateObject.setDateAs( dateFrom );
     let data = await CachedHttp.get(erpObject.TPayHistory, async () => {
       return await reportService.getPayHistory( dateFrom, dateTo, ignoreDate);
     }, {
@@ -89,21 +93,9 @@ Template.payrollhistoryreport.onRendered(() => {
         return false;
       }
     })
-
-    data = data.response;
-    if (!localStorage.getItem('VS1PayrollHistory_Report')) {
-      const options = await templateObject.reportOptions.get();
-      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let ignoreDate = options.ignoreDate || false;
-      data = await reportService.getPayHistory( dateFrom, dateTo, ignoreDate);
-      if( data.tpayhistory.length > 0 ){
-        localStorage.setItem('VS1PayrollHistory_Report', JSON.stringify(data)||'');
-      }
-    }else{
-      data = JSON.parse(localStorage.getItem('VS1PayrollHistory_Report'));
-    }
+    
     let paySlipReport = [];
+    data = data.response;
     if( data.tpayhistory.length > 0 ){
         let employeeGroups = [];
         // employeeGroups = await objectGrouping(data.tpayhistory, "Employeeid");
@@ -165,8 +157,8 @@ Template.payrollhistoryreport.onRendered(() => {
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
-    );
-
+  );
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
   LoadingOverlay.hide();
 });
 
@@ -289,7 +281,9 @@ Template.payrollhistoryreport.events({
     }
   },
   "click #ignoreDate":  (e, templateObject) => {
-    templateObject.getGeneralLedgerReports(
+    $("#dateFrom").attr("readonly", true);
+    $("#dateTo").attr("readonly", true);
+    templateObject.getPayHistory(
       null, 
       null, 
       true
