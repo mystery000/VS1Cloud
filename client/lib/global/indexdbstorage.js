@@ -113,6 +113,7 @@ openDb = function(dbName) {
             db.createObjectStore("TProductJPGPicture", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProductWeb", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProspectEx", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TProspectList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TRepairs", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TRefundSale", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TRegionalOptions", { keyPath: "EmployeeEmail" });
