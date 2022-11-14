@@ -32,6 +32,8 @@ Template.export_import_print_display_button.events({
           currenttablename = "tblBOMList";
         }else if (url.includes("/supplierlist")) {
           currenttablename = "tblSupplierlist";
+        }else if (url.includes("/leadlist")) {
+          currenttablename = "tblLeadlist";
         };
 
         let getTableName = currenttablename||'';

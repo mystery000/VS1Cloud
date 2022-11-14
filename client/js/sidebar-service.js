@@ -988,6 +988,52 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSupplierVS1List, options);
   }
 
+  getNewLeadByNameOrID(dataSearchName) {
+    let options = "";
+    options = {
+      ListType: "Detail",
+      select: '[Company] f7like "' + dataSearchName + '"',
+    };
+    return this.getList(this.ERPObjects.TProspect, options);
+  }
+
+  getAllLeadDataList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+          IgnoreDates:true,
+          orderby: '"Company asc"',
+          Search: "Active = true",
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"Company asc"',
+          Search: "Active = true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+          orderby: '"Company asc"',
+          IgnoreDates:true,
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"Company asc"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TProspectList, options);
+  }
+
   getCustomersDataByName(dataSearchName) {
     var options = "";
     options = {
@@ -1257,43 +1303,6 @@ export class SideBarService extends BaseService {
       };
     }
     return this.getList(this.ERPObjects.TLeads, options);
-  }
-
-  getAllLeadDataList(limitcount, limitfrom, deleteFilter) {
-    let options = "";
-    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
-      if (limitcount == "All") {
-        options = {
-          IgnoreDates:true,
-          orderby: '"Company asc"',
-          Search: "Active = true",
-        };
-      } else {
-        options = {
-          IgnoreDates:true,
-          orderby: '"Company asc"',
-          Search: "Active = true",
-          LimitCount: parseInt(limitcount),
-          LimitFrom: parseInt(limitfrom),
-        };
-      }
-    }else{
-      if (limitcount == "All") {
-        options = {
-          orderby: '"Company asc"',
-          IgnoreDates:true,
-        };
-      } else {
-        options = {
-          IgnoreDates:true,
-          orderby: '"Company asc"',
-          LimitCount: parseInt(limitcount),
-          LimitFrom: parseInt(limitfrom),
-        };
-      }
-    }
-
-    return this.getList(this.ERPObjects.TProspectList, options);
   }
 
   getAllEmployeesDataVS1(limitcount, limitfrom) {
