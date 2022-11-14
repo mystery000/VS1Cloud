@@ -7,6 +7,7 @@ import GlobalFunctions from "../../GlobalFunctions";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import Datehandler from "../../DateHandler";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -29,57 +30,7 @@ Template.payrollhistoryreport.onRendered(() => {
   LoadingOverlay.show();
 
   templateObject.initDate = () => {
-    const currentDate = new Date();
-
-    /**
-     * This will init dates
-     */
-    let begunDate = moment(currentDate).format("DD/MM/YYYY");
-    templateObject.dateAsAt.set(begunDate);
-
-    let fromDateMonth = currentDate.getMonth() + 1;
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-
-    let prevMonth = moment().subtract(1, "months").format("MM");
-
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-    var fromDate =
-      fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
-
-    $("#date-input,#dateTo,#dateFrom").datepicker({
-      showOn: "button",
-      buttonText: "Show Date",
-      buttonImageOnly: true,
-      buttonImage: "/img/imgCal2.png",
-      dateFormat: "dd/mm/yy",
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-90:+10",
-      onChangeMonthYear: function (year, month, inst) {
-        // Set date to picker
-        $(this).datepicker(
-          "setDate",
-          new Date(year, inst.selectedMonth, inst.selectedDay)
-        );
-        // Hide (close) the picker
-        // $(this).datepicker('hide');
-        // // Change ttrigger the on change function
-        // $(this).trigger('change');
-      },
-    });
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    //--------- END OF DATE ---------------//
+    Datehandler.initOneMonth();
   };
 
   templateObject.initUploadedImage = () => {
@@ -89,30 +40,30 @@ Template.payrollhistoryreport.onRendered(() => {
       $("#uploadedImage").attr("width", "50%");
     }
   };
-  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
-    let defaultOptions = templateObject.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.fromDate = formatDateFrom;
-      defaultOptions.toDate = formatDateTo;
-      defaultOptions.ignoreDate = ignoreDate;
-    } else {
-      defaultOptions = {
-        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
-        toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
-      };
-    }
-    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
-      $('.edtReportDates').attr('disabled', true);
-      templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
-    }
-    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
-    await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getPayHistory( defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate );
-  };
+  // templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  //   let defaultOptions = templateObject.reportOptions.get();
+  //   if (defaultOptions) {
+  //     defaultOptions.fromDate = formatDateFrom;
+  //     defaultOptions.toDate = formatDateTo;
+  //     defaultOptions.ignoreDate = ignoreDate;
+  //   } else {
+  //     defaultOptions = {
+  //       fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+  //       toDate: moment().format("YYYY-MM-DD"),
+  //       ignoreDate: true
+  //     };
+  //   }
+  //   templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+  //   $('.edtReportDates').attr('disabled', false)
+  //   if( ignoreDate == true ){
+  //     $('.edtReportDates').attr('disabled', true);
+  //     templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
+  //   }
+  //   $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+  //   $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
+  //   await templateObject.reportOptions.set(defaultOptions);
+  //   await templateObject.getPayHistory( defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate );
+  // };
   templateObject.getPayHistory = async (dateFrom, dateTo, ignoreDate = false) => {
     LoadingOverlay.show();
 
@@ -337,99 +288,23 @@ Template.payrollhistoryreport.events({
       $(".table tbody tr").show();
     }
   },
-  "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1PayrollHistory_Report', '');
-    let templateObject = Template.instance();
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    localStorage.setItem('VS1PayrollHistory_Report', '');
-    await templateObject.setReportOptions(false, dateFrom, dateTo);
-    $(".fullScreenSpin").css("display", "none");
+  "click #ignoreDate":  (e, templateObject) => {
+    templateObject.getGeneralLedgerReports(
+      null, 
+      null, 
+      true
+    )
   },
-  "click #lastMonth": async function () {
-    // LoadingOverlay.hide();
-    // localStorage.setItem('VS1PayrollHistory_Report', '');
+  "change #dateTo, change #dateFrom": (e) => {
     let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-    // $(".fullScreenSpin").css("display", "none");
-
+    localStorage.setItem("VS1PayrollHistory_Report", "");
     templateObject.getPayHistory(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
       false
-      );
-    templateObject.dateAsAt.set(moment(endDate).format('DD/MM/YYYY'));
-
+    )
   },
-  "click #lastQuarter": async function () {
-    // LoadingOverlay.hide();
-    // localStorage.setItem('VS1PayrollHistory_Report', '');
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-    // $(".fullScreenSpin").css("display", "none");
-
-    templateObject.getPayHistory(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-      false
-      );
-    templateObject.dateAsAt.set(moment(endDate).format('DD/MM/YYYY'));
-
-  },
-  "click #last12Months": async function () {
-    // LoadingOverlay.hide();
-    // localStorage.setItem('VS1PayrollHistory_Report', '');
-    let templateObject = Template.instance();
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-
-    var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
-    templateObject.dateAsAt.set(begunDate);
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
-    await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    // $(".fullScreenSpin").css("display", "none");
-
-    templateObject.getPayHistory(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-      false
-      );
-      var newdate = $("#dateTo").val();
-      templateObject.dateAsAt.set(newdate);
-  },
-  "click #ignoreDate": async function () {
-    // LoadingOverlay.hide();
-    // localStorage.setItem('VS1PayrollHistory_Report', '');
-    let templateObject = Template.instance();
-    templateObject.dateAsAt.set("Current Date");
-    await templateObject.setReportOptions(true);
-    // $(".fullScreenSpin").css("display", "none");
-
-    templateObject.getPayHistory(null, null, false);
-  },
-
-
+  ...Datehandler.getDateRangeEvents(),
     // CURRENCY MODULE //
     ...FxGlobalFunctions.getEvents(),
     "click .currency-modal-save": (e) => {

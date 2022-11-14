@@ -66,6 +66,22 @@ export default class Datehandler {
     // $("#dateTo").trigger("change");
   }
 
+  static todayDate( format = "DD/MM/YYYY", templateObject = null ){
+    let dateFrom = moment().format("YYYY-MM-DD");
+    let dateTo = moment().format("YYYY-MM-DD");
+
+    this.domDateFromUpdate(dateFrom, format, templateObject);
+    this.domDateToUpdate(dateTo, format);
+  }
+
+  static currentWeek( format = "DD/MM/YYYY", templateObject = null ){
+    let dateFrom = moment().startOf('week').format("YYYY-MM-DD");
+    let dateTo = moment().endOf('week').format("YYYY-MM-DD");
+
+    this.domDateFromUpdate(dateFrom, format, templateObject);
+    this.domDateToUpdate(dateTo, format);
+  }
+
   static lastMonth(format = "DD/MM/YYYY", templateObject = null) {
     let dateFrom = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let dateTo = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
@@ -93,6 +109,31 @@ export default class Datehandler {
   static finYearToDate(format = "DD/MM/YYYY", templateObject = null) {
     const dateFrom = moment().month("january").startOf("month").format("YYYY-MM-DD");
     const dateTo = moment().format("YYYY-MM-DD");
+
+    this.domDateFromUpdate(dateFrom, format, templateObject);
+    this.domDateToUpdate(dateTo, format);
+  }
+
+  static previousWeek(format = "DD/MM/YYYY", templateObject = null){
+    const dateFrom =  moment().subtract(1, "week").startOf('week').format("YYYY-MM-DD");
+    const dateTo = moment().subtract(1, "week").endOf('week').format("YYYY-MM-DD");
+
+    this.domDateFromUpdate(dateFrom, format, templateObject);
+    this.domDateToUpdate(dateTo, format);
+  }
+
+  static previousMonth( format = "DD/MM/YYYY", templateObject = null ){
+    const dateFrom =  moment().subtract(1, "month").startOf('month').format("YYYY-MM-DD");
+    const dateTo = moment().subtract(1, "month").endOf('month').format("YYYY-MM-DD");
+
+    this.domDateFromUpdate(dateFrom, format, templateObject);
+    this.domDateToUpdate(dateTo, format);
+  }
+
+  
+  static previousQuarter( format = "DD/MM/YYYY", templateObject = null ){
+    const dateFrom =  moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+    const dateTo = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
 
     this.domDateFromUpdate(dateFrom, format, templateObject);
     this.domDateToUpdate(dateTo, format);
@@ -166,6 +207,12 @@ export default class Datehandler {
      */
   static getDateRangeEvents() {
     return {
+      "click #today": (e, templateObject) => {
+        Datehandler.todayDate(Datehandler.defaultFormat, templateObject);
+      },
+      "click #thisweek": (e, templateObject) => {
+        Datehandler.currentWeek(Datehandler.defaultFormat, templateObject);
+      },      
       "click #last12Months": (e, templateObject) => {
         Datehandler.last12Months(Datehandler.defaultFormat, templateObject);
       },
@@ -177,6 +224,18 @@ export default class Datehandler {
       },
       "click #thisFinYear": (e, templateObject) => {
         Datehandler.thisFinYear(Datehandler.defaultFormat, templateObject);
+      },
+      "click #previousweek": (e, templateObject) => {
+        Datehandler.previousWeek(Datehandler.defaultFormat, templateObject);
+      },
+      "click #previousmonth": (e, templateObject) => {
+        Datehandler.previousMonth(Datehandler.defaultFormat, templateObject);
+      },   
+      "click #previousquarter": (e, templateObject) => {
+        Datehandler.previousQuarter(Datehandler.defaultFormat, templateObject);
+      },
+      "click #previousfinancialyear": (e, templateObject) => {        
+        Datehandler.lastFinYear(Datehandler.defaultFormat, templateObject);
       },
       "click #lastMonth": (e, templateObject) => {
         Datehandler.lastMonth(Datehandler.defaultFormat, templateObject);
