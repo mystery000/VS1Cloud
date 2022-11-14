@@ -1259,6 +1259,43 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TLeads, options);
   }
 
+  getAllLeadDataList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+          IgnoreDates:true,
+          orderby: '"Company asc"',
+          Search: "Active = true",
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"Company asc"',
+          Search: "Active = true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+          orderby: '"Company asc"',
+          IgnoreDates:true,
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"Company asc"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TProspectList, options);
+  }
+
   getAllEmployeesDataVS1(limitcount, limitfrom) {
     let options = "";
     if (limitcount == "All") {
