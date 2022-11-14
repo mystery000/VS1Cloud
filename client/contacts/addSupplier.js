@@ -661,6 +661,9 @@ Template.supplierscard.onRendered(function () {
             // taxcode:data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
         };
 
+
+        $('#sltCurrency').val(data.fields.ForeignExchangeCode || CountryAbbr);
+
         if((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2)
             && (data.fields.State === data.fields.BillState)&& (data.fields.Postcode === data.fields.Postcode)
             && (data.fields.Country === data.fields.Billcountry)){
