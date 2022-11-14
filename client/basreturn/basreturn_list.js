@@ -69,7 +69,7 @@ Template.basreturnlist.onRendered(function() {
 
     templateObject.getAllBasReturnData = function() {
 
-        getVS1Data('TBasReturn').then(function(dataObject) {
+        getVS1Data('TBASReturn').then(function(dataObject) {
             if (dataObject.length == 0) {
                 // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                 //     let lineItems = [];
@@ -1014,20 +1014,20 @@ Template.basreturnlist.events({
     },
     "click .printConfirm": function(event) {
         playPrintAudio();
-        setTimeout(function(){
-        $(".fullScreenSpin").css("display", "inline-block");
-        jQuery("#tblBasReturnList_wrapper .dt-buttons .btntabletopdf").click();
-        $(".fullScreenSpin").css("display", "none");
-        // $('#html-2-pdfwrapper').css('display','block');
-        // var pdf =  new jsPDF('portrait','mm','a4');
-        // new jsPDF('p', 'pt', 'a4');
-        //   pdf.setFontSize(18);
-        //   var source = document.getElementById('html-2-pdfwrapper');
-        //   pdf.addHTML(source, function () {
-        //      pdf.save('journalentrylist.pdf');
-        //      $('#html-2-pdfwrapper').css('display','none');
-        //  });
-    }, delayTimeAfterSound);
+        setTimeout(function() {
+            $(".fullScreenSpin").css("display", "inline-block");
+            jQuery("#tblBasReturnList_wrapper .dt-buttons .btntabletopdf").click();
+            $(".fullScreenSpin").css("display", "none");
+            // $('#html-2-pdfwrapper').css('display','block');
+            // var pdf =  new jsPDF('portrait','mm','a4');
+            // new jsPDF('p', 'pt', 'a4');
+            //   pdf.setFontSize(18);
+            //   var source = document.getElementById('html-2-pdfwrapper');
+            //   pdf.addHTML(source, function () {
+            //      pdf.save('journalentrylist.pdf');
+            //      $('#html-2-pdfwrapper').css('display','none');
+            //  });
+        }, delayTimeAfterSound);
     },
     // CURRENCY MODULE //
     ...FxGlobalFunctions.getEvents(),

@@ -310,8 +310,8 @@ openDb = function(dbName) {
             db.createObjectStore('TReceiptCategory', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TCorrespondence', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TEftOptions', { keyPath: "EmployeeEmail" });
-            db.createObjectStore('TBasReturn', { keyPath: "EmployeeEmail" });
-            db.createObjectStore('TVatReturn', { keyPath: "EmployeeEmail" });
+            db.createObjectStore('TBASReturn', { keyPath: "EmployeeEmail" });
+            db.createObjectStore('TVATReturn', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Customize', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Dashboard', { keyPath: "EmployeeEmail" });
             db.createObjectStore("TPayrollSettingOvertimes", { keyPath: "EmployeeEmail" });
@@ -321,11 +321,11 @@ openDb = function(dbName) {
             db.createObjectStore("TServiceLog", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TServiceLogList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TPayRunHistory", { keyPath: "EmployeeEmail" });
-            db.createObjectStore('TProcessStep', {keyPath: 'EmployeeEmail'});
-            db.createObjectStore('TProjectTasks', {keyPath: 'EmployeeEmail'});
-            db.createObjectStore('TProjectTasksList', {keyPath: 'EmployeeEmail'});
-            db.createObjectStore('TBasedOnType', {keyPath:'EmployeeEmail'});
-            db.createObjectStore('TProcTreeVS1', {keyPath: 'EmployeeEmail'});
+            db.createObjectStore('TProcessStep', { keyPath: 'EmployeeEmail' });
+            db.createObjectStore('TProjectTasks', { keyPath: 'EmployeeEmail' });
+            db.createObjectStore('TProjectTasksList', { keyPath: 'EmployeeEmail' });
+            db.createObjectStore('TBasedOnType', { keyPath: 'EmployeeEmail' });
+            db.createObjectStore('TProcTreeVS1', { keyPath: 'EmployeeEmail' });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });
