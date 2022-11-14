@@ -660,6 +660,7 @@ Template.supplierscard.onRendered(function () {
             // openingbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
             // taxcode:data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
         };
+
         if((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2)
             && (data.fields.State === data.fields.BillState)&& (data.fields.Postcode === data.fields.Postcode)
             && (data.fields.Country === data.fields.Billcountry)){
