@@ -68,7 +68,7 @@ export default class TableHandler {
 
   async saveTableColumns(tableName) {
     let lineItems = [];
-    $(".fullScreenSpin").css("display", "inline-block");
+    //$(".fullScreenSpin").css("display", "inline-block");
     $(`#${tableName} thead tr th`).each(function (index) {
       var $tblrow = $(this);
       var fieldID = $tblrow.attr("data-col-index") || 0;
@@ -98,18 +98,18 @@ export default class TableHandler {
       let employeeId = parseInt(Session.get("mySessionEmployeeLoggedID")) || 0;
       let sideBarService = new SideBarService();
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-      $(".fullScreenSpin").css("display", "none");
+      //$(".fullScreenSpin").css("display", "none");
       if (added) {
         sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get("mySessionEmployeeLoggedID")), "").then(function (dataCustomize) {
           addVS1Data("VS1_Customize", JSON.stringify(dataCustomize));
         }).catch(function (err) {});
-        swal({title: "SUCCESS", text: "Display settings is updated!", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(result => {
-          if (result.value) {
-            $(".fullScreenSpin").css("display", "none");
-          }
-        });
+        // swal({title: "SUCCESS", text: "Display settings is updated!", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(result => {
+        //   if (result.value) {
+        //     //$(".fullScreenSpin").css("display", "none");
+        //   }
+        // });
       } else {
-        swal("Something went wrong!", "", "error");
+        // swal("Something went wrong!", "", "error");
       }
     } catch (error) {
       $(".fullScreenSpin").css("display", "none");
