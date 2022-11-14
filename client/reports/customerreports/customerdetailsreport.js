@@ -42,8 +42,6 @@ Template.customerdetailsreport.onRendered(() => {
     Datehandler.initOneMonth();
   };
 
-  templateObject.initDate();
-
   templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
@@ -178,32 +176,6 @@ Template.customerdetailsreport.onRendered(() => {
 });
 
 Template.customerdetailsreport.events({
-  "click #dropdownDateRang": function (e) {
-    let dateRangeID = e.target.id;
-    $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
-    $("#selectedDateRange").show();
-    if (dateRangeID == "thisMonth") {
-      document.getElementById("selectedDateRange").value = "This Month";
-    } else if (dateRangeID == "thisQuarter") {
-      document.getElementById("selectedDateRange").value = "This Quarter";
-    } else if (dateRangeID == "thisFinYear") {
-      document.getElementById("selectedDateRange").value =
-        "This Financial Year";
-    } else if (dateRangeID == "lastMonth") {
-      document.getElementById("selectedDateRange").value = "Last Month";
-    } else if (dateRangeID == "lastQuarter") {
-      document.getElementById("selectedDateRange").value = "Last Quarter";
-    } else if (dateRangeID == "lastFinYear") {
-      document.getElementById("selectedDateRange").value =
-        "Last Financial Year";
-    } else if (dateRangeID == "monthToDate") {
-      document.getElementById("selectedDateRange").value = "Month to Date";
-    } else if (dateRangeID == "quarterToDate") {
-      document.getElementById("selectedDateRange").value = "Quarter to Date";
-    } else if (dateRangeID == "finYearToDate") {
-      document.getElementById("selectedDateRange").value = "Year to Date";
-    }
-  },
   "click #ignoreDate":  (e, templateObject) => {
     templateObject.getCustomerDetailReportData(
       null, 

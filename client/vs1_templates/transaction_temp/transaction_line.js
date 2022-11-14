@@ -1,0 +1,164 @@
+import { ReactiveVar } from 'meteor/reactive-var';
+import { CoreService } from '../../js/core-service';
+import {UtilityService} from "../../utility-service";
+import '../../lib/global/indexdbstorage.js';
+import { SideBarService } from '../../js/sidebar-service';
+import TableHandler from '../../js/Table/TableHandler';
+let sideBarService = new SideBarService();
+let utilityService = new UtilityService();
+
+const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (Inc)"];
+
+//Template.transaction_line.inheritsHelpersFrom('new_invoice');
+// Template.new_invoice.inheritsEventsFrom('transaction_line');
+// Template.new_invoice.inheritsHooksFrom('transaction_line');
+
+Template.transaction_line.onCreated(function(){
+  const templateObject = Template.instance();
+  templateObject.isForeignEnabled = new ReactiveVar(false);
+  templateObject.displayfields = new ReactiveVar([]);
+  templateObject.reset_data = new ReactiveVar([]);
+
+});
+Template.transaction_line.onRendered(function() {
+  let templateObject = Template.instance();
+  let currenttranstablename = templateObject.data.tablename||"";
+  // set initial table rest_data
+  templateObject.init_reset_data = function() {
+      let reset_data = [
+          { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
+          { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
+          { index: 2, label: "Qty", class: "Qty", width: "50", active: true, display: true },
+          { index: 3, label: "Ordered", class: "Ordered", width: "75", active: true, display: true },
+          { index: 4, label: "Shipped", class: "Shipped", width: "75", active: true, display: true },
+          { index: 5, label: "BO", class: "BackOrder", width: "75", active: true, display: true },
+          { index: 6, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
+          { index: 7, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
+          { index: 8, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
+          { index: 9, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
+          { index: 10, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
+          { index: 11, label: "Tax Rate", class: "TaxRate", width: "91", active: false, display: true },
+          { index: 12, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
+          { index: 13, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
+          { index: 14, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
+          { index: 15, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
+          { index: 16, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
+          { index: 17, label: "Units", class: "Units", width: "95", active: false, display: true },
+      ];
+
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+      let isBOnShippedQty = Session.get("CloudSalesQtyOnly");
+      if (isBOnShippedQty) {
+          reset_data[2].display = true;
+          reset_data[3].display = false;
+          reset_data[4].display = false;
+          reset_data[5].display = false;
+      } else {
+          reset_data[2].display = false;
+          reset_data[3].display = true;
+          reset_data[4].display = true;
+          reset_data[5].display = true;
+      }
+      if (isBatchSerialNoTracking) {
+          reset_data[14].display = true;
+      } else {
+          reset_data[14].display = false;
+      }
+
+      let templateObject = Template.instance();
+      templateObject.reset_data.set(reset_data);
+  }
+  templateObject.init_reset_data();
+  // set initial table rest_data
+
+  // custom field displaysettings
+  templateObject.initCustomFieldDisplaySettings = function(data, listType) {
+      let templateObject = Template.instance();
+      let reset_data = templateObject.reset_data.get();
+      templateObject.showCustomFieldDisplaySettings(reset_data);
+
+      try {
+
+          getVS1Data("VS1_Customize").then(function(dataObject) {
+              if (dataObject.length == 0) {
+                  sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
+                      reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                      templateObject.showCustomFieldDisplaySettings(reset_data);
+                  }).catch(function(err) {});
+              } else {
+                  let data = JSON.parse(dataObject[0].data);
+                  if (data.ProcessLog.Obj.CustomLayout.length > 0) {
+                      for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+                          if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
+                              reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                              templateObject.showCustomFieldDisplaySettings(reset_data);
+                          }
+                      }
+                  };
+                  // handle process here
+              }
+          });
+
+      } catch (error) {}
+      return;
+  }
+
+  templateObject.showCustomFieldDisplaySettings = async function(reset_data) {
+      let custFields = [];
+      let customData = {};
+      let customFieldCount = reset_data.length;
+      for (let r = 0; r < customFieldCount; r++) {
+          customData = {
+              active: reset_data[r].active,
+              id: reset_data[r].index,
+              custfieldlabel: reset_data[r].label,
+              class: reset_data[r].class,
+              display: reset_data[r].display,
+              width: reset_data[r].width ? reset_data[r].width : ''
+          };
+          custFields.push(customData);
+      }
+      templateObject.displayfields.set(custFields);
+  }
+
+  templateObject.initCustomFieldDisplaySettings("", currenttranstablename);
+
+  console.log(templateObject);
+
+});
+
+Template.transaction_line.events({
+
+});
+
+Template.transaction_line.helpers({
+  // custom field displaysettings
+  displayfields: () => {
+      return Template.instance().displayfields.get();
+  },
+
+  displayFieldColspan: (displayfield, isForeignEnabled) => {
+      if (foreignCols.includes(displayfield.custfieldlabel)) {
+          if (isForeignEnabled == true) {
+              return 2
+          }
+          return 1;
+      }
+      return 1;
+  },
+
+  subHeaderForeign: (displayfield) => {
+
+      if (foreignCols.includes(displayfield.custfieldlabel)) {
+          return true;
+      }
+      return false;
+  },
+  convertToForeignAmount: (amount) => {
+      return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+  }
+});
+
+Template.registerHelper("equals", function (a, b) {
+  return a === b;
+});

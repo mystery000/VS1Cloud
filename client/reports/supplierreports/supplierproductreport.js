@@ -29,7 +29,6 @@ Template.supplierproductreport.onRendered(() => {
   
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
-    
   };
 
 
