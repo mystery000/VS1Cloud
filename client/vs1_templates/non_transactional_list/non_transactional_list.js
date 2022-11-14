@@ -103,6 +103,7 @@ Template.non_transactional_list.onRendered(function() {
               { index: 15, label: 'State', class: 'colState', active: false, display: true, width: "120" },
               { index: 16, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
               { index: 17, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
+              { index: 18, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ];
           }else if(currenttablename == "tblEmployeelist") {
                reset_data = [
@@ -225,23 +226,24 @@ Template.non_transactional_list.onRendered(function() {
               { index: 0, label: '#ID', class: 'colSupplierID', active: false, display: true,  width: "10"},
               { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200"},
               { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
-              { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "115"},
-              { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "170"},
-              { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "90"},
-              { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "115"},
-              { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "200"},
+              { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90"},
+              { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110"},
+              { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80"},
+              { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "90"},
+              { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120"},
               { index: 8, label: 'Email', class: 'colEmail', active: false, display: true, width: "200"},
-              { index: 9, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "200"},
-              { index: 10, label: 'Client Number', class: 'colClientNo', active: true, display: true, width: "120"},
-              { index: 11, label: 'Job Title', class: 'colJobTitle', active: true, display: true, width: "120"},
+              { index: 9, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "200"},
+              { index: 10, label: 'Client Number', class: 'colClientNo', active: false, display: true, width: "120"},
+              { index: 11, label: 'Job Title', class: 'colJobTitle', active: false, display: true, width: "120"},
               { index: 12, label: 'Custom Field 1', class: 'colCustomField1', active: false, display: true, width: "120"},
               { index: 13, label: 'Custom Field 2', class: 'colCustomField2', active: false, display: true, width: "120"},
               { index: 14, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120"},
               { index: 15, label: 'State', class: 'colState', active: false, display: true, width: "120"},
               { index: 16, label: 'Post Code', class: 'colPostcode', active: false, display: true, width: "80"},
               { index: 17, label: 'Country', class: 'colCountry', active: false, display: true, width: "200"},
-              { index: 18, label: 'Comments', class: 'colNotes', active: true, display: true, width: ""},
-              { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
+              { index: 18, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
+              { index: 19, label: 'Comments', class: 'colNotes', active: true, display: true, width: ""},
+
             ];
           }
         templateObject.reset_data.set(reset_data);
@@ -403,6 +405,14 @@ Template.non_transactional_list.onRendered(function() {
                 salesOrderBalance = Currency + "0.00";
               }
 
+              let linestatus = '';
+              if (data.terpcombinedcontactsvs1[i].Active == true) {
+                  linestatus = "";
+              } else if (data.terpcombinedcontactsvs1[i].Active == false) {
+                  linestatus = "In-Active";
+              };
+
+
               var dataList = [
                 data.terpcombinedcontactsvs1[i].ID || "",
                 data.terpcombinedcontactsvs1[i].name || "",
@@ -422,6 +432,7 @@ Template.non_transactional_list.onRendered(function() {
                 data.terpcombinedcontactsvs1[i].state|| "",
                 data.terpcombinedcontactsvs1[i].postcode|| "",
                 "",
+                linestatus,
               ];
 
 
@@ -536,6 +547,11 @@ Template.non_transactional_list.onRendered(function() {
                           targets: 17,
                           className: "colCountry hiddenColumn",
                           width: "200px",
+                        },
+                        {
+                          targets: 18,
+                          className: "colStatus",
+                          width: "100px",
                         }
                     ],
                     buttons: [
@@ -635,6 +651,13 @@ Template.non_transactional_list.onRendered(function() {
                             clienttype = " ";
                           }
 
+                          let linestatus = '';
+                          if (dataObjectnew.terpcombinedcontactsvs1[j].Active == true) {
+                              linestatus = "";
+                          } else if (dataObjectnew.terpcombinedcontactsvs1[j].Active == false) {
+                              linestatus = "In-Active";
+                          };
+
                           let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance) || 0.0;
                           let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance) || 0.0;
                           let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].Balance) ||0.0;
@@ -677,6 +700,7 @@ Template.non_transactional_list.onRendered(function() {
                               dataObjectnew.terpcombinedcontactsvs1[j].state|| "",
                               dataObjectnew.terpcombinedcontactsvs1[j].postcode|| "",
                               "",
+                              linestatus
                             ];
 
                             splashArrayContactOverview.push(dataListContactDupp);
@@ -1517,8 +1541,8 @@ Template.non_transactional_list.onRendered(function() {
           data.tsuppliervs1list[i].POState || '',
           data.tsuppliervs1list[i].Postcode || '',
           data.tsuppliervs1list[i].Country || '',
-          data.tsuppliervs1list[i].Notes || '',
           linestatus,
+          data.tsuppliervs1list[i].Notes || '',
       ];
         splashArraySuppliersList.push(dataList);
         templateObject.transactiondatatablerecords.set(splashArraySuppliersList);
@@ -1555,27 +1579,27 @@ Template.non_transactional_list.onRendered(function() {
                 {
                   targets: 3,
                   className: "colARBalance text-right",
-                  width: "115px",
+                  width: "90px",
                 },
                 {
                   targets: 4,
                   className: "colCreditBalance text-right",
-                  width: "170px",
+                  width: "110px",
                 },
                 {
                   targets: 5,
                   className: "colBalance text-right",
-                  width: "90px",
+                  width: "80px",
                 },
                 {
                   targets: 6,
                   className: "colCreditLimit text-right hiddenColumn",
-                  width: "115px",
+                  width: "90px",
                 },
                 {
                   targets: 7,
                   className: "colSalesOrderBalance text-right",
-                  width: "200px",
+                  width: "120px",
                 },
                 {
                   targets: 8,
@@ -1584,17 +1608,17 @@ Template.non_transactional_list.onRendered(function() {
                 },
                 {
                   targets: 9,
-                  className: "colAccountNo",
+                  className: "colAccountNo hiddenColumn",
                    width: "200px",
                 },
                 {
                   targets: 10,
-                  className: "colClientNo",
+                  className: "colClientNo hiddenColumn",
                   width: "120px",
                 },
                 {
                   targets: 11,
-                  className: "colJobTitle",
+                  className: "colJobTitle hiddenColumn",
                   width: "120px",
                 },
                 {
@@ -1629,12 +1653,12 @@ Template.non_transactional_list.onRendered(function() {
                 },
                 {
                   targets: 18,
-                  className: "colNotes",
+                  className: "colStatus",
+                  width: "100px",
                 },
                 {
                   targets: 19,
-                  className: "colStatus",
-                  width: "100px",
+                  className: "colNotes",
                 }
             ],
             buttons: [
@@ -1703,10 +1727,10 @@ Template.non_transactional_list.onRendered(function() {
               let dataLenght = oSettings._iDisplayLength;
               let customerSearch = $('#'+currenttablename+'_filter input').val();
 
-                sideBarService.getAllSuppliersDataVS1(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+                sideBarService.getAllSuppliersDataVS1List(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
 
                 for (let j = 0; j < dataObjectnew.tsuppliervs1list.length; j++) {
-                  let mobile = sideBarService.changeDialFormat(dataObjectnew.tsuppliervs1list[j].Mobile, dataObjectnew.tsuppliervs1list[j].Country);
+
                   let linestatus = '';
                   if (dataObjectnew.tsuppliervs1list[j].Active == true) {
                       linestatus = "";
@@ -1739,13 +1763,8 @@ Template.non_transactional_list.onRendered(function() {
                         dataObjectnew.tsuppliervs1list[j].POState || '',
                         dataObjectnew.tsuppliervs1list[j].Postcode || '',
                         dataObjectnew.tsuppliervs1list[j].Country || '',
-                        dataObjectnew.tsuppliervs1list[j].Notes || '',
                         linestatus,
-                      // dataObjectnew.tsuppliervs1list[j].BillStreet || '',
-                      // dataObjectnew.tsuppliervs1list[j].BillStreet2 || '',
-                      // dataObjectnew.tsuppliervs1list[j].BillState || '',
-                      // dataObjectnew.tsuppliervs1list[j].BillPostCode || '',
-                      // dataObjectnew.tsuppliervs1list[j].Billcountry || '',
+                        dataObjectnew.tsuppliervs1list[j].Notes || '',
                     ];
 
                     splashArraySuppliersList.push(dataListDupp);
@@ -1763,6 +1782,7 @@ Template.non_transactional_list.onRendered(function() {
                 $('.fullScreenSpin').css('display', 'none');
 
                 }).catch(function (err) {
+                  console.log(err);
                     $('.fullScreenSpin').css('display', 'none');
                 });
 
