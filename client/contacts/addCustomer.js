@@ -2807,11 +2807,12 @@ Template.customerscard.events({
                 CUSTFLD2: custField2,
                 CUSTFLD3: custField3,
                 // CUSTFLD4: custField4,
-                Discount: parseFloat(permanentDiscount)||0,
+                Discount: parseFloat(permanentDiscount) || 0,
                 Status: status,
                 SourceName: sourceName,
                 RepName: repName,
                 //CUSTFLD12: salesQuota,
+                ForeignExchangeCode: $("#sltCurrency").val(),
             }
         };
         contactService.saveCustomerEx(objDetails).then(function (objDetails) {

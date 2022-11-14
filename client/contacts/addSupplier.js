@@ -1930,7 +1930,8 @@ Template.supplierscard.events({
                     BankAccountNo: BankAccountNo,
                     BankName: BankName,
                     SwiftCode: SwiftCode,
-                    RoutingNumber: RoutingNumber
+                    RoutingNumber: RoutingNumber,
+                    ForeignExchangeCode: $("#sltCurrency").val(),
 
                 }
             };
@@ -1987,7 +1988,8 @@ Template.supplierscard.events({
                         BankAccountNo: BankAccountNo,
                         BankName: BankName,
                         SwiftCode: SwiftCode,
-                        RoutingNumber: RoutingNumber
+                        RoutingNumber: RoutingNumber,
+                        ForeignExchangeCode: $("#sltCurrency").val(),
                     }
                 };
             } else {
@@ -2038,7 +2040,8 @@ Template.supplierscard.events({
                         BankAccountNo: BankAccountNo,
                         BankName: BankName,
                         SwiftCode: SwiftCode,
-                        RoutingNumber: RoutingNumber
+                        RoutingNumber: RoutingNumber,
+                        ForeignExchangeCode: $("#sltCurrency").val(),
                     }
                 };
             }
