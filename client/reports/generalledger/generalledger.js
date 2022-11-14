@@ -94,34 +94,13 @@ Template.generalledger.onRendered(() => {
 
   templateObject.initDate();
 
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
-    let defaultOptions = templateObject.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.fromDate = formatDateFrom;
-      defaultOptions.toDate = formatDateTo;
-      defaultOptions.ignoreDate = ignoreDate;
-    } else {
-      defaultOptions = {
-        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
-        toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
-      };
-    }
-    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
-      $('.edtReportDates').attr('disabled', true);
-      templateObject.dateAsAt.set("Current Date");
-    }
-    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
-    await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getGeneralLedgerReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
   };
 
   templateObject.getGeneralLedgerReports = function (dateFrom,dateTo,ignoreDate) {
     
-    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+    templateObject.setDateAs(dateFrom);
 
     if (!localStorage.getItem("VS1GeneralLedger_Report")) {
       LoadingOverlay.show();
@@ -618,6 +597,8 @@ Template.generalledger.onRendered(() => {
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
+  
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
 
   templateObject.getDepartments = function () {
     reportService.getDepartment().then(function (data) {
