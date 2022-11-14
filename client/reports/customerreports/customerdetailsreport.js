@@ -4,6 +4,7 @@ import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import GlobalFunctions from "../../GlobalFunctions";
+import Datehandler from "../../DateHandler";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 
 const reportService = new ReportService();
@@ -31,61 +32,17 @@ function MakeNegative() {
 }
 
 Template.customerdetailsreport.onRendered(() => {
-  const templateObject = Template.instance();
   LoadingOverlay.show();
+  const templateObject = Template.instance();
 
+  let taxRateService = new TaxRateService();
+  let utilityService = new UtilityService();
+  
   templateObject.initDate = () => {
-    const currentDate = new Date();
-
-    /**
-     * This will init dates
-     */
-    let begunDate = moment(currentDate).format("DD/MM/YYYY");
-    templateObject.dateAsAt.set(begunDate);
-
-    let fromDateMonth = currentDate.getMonth() + 1;
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-
-    let prevMonth = moment().subtract(1, "months").format("MM");
-
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-    var fromDate = fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
-
-    $("#date-input,#dateTo,#dateFrom").datepicker({
-      showOn: "button",
-      buttonText: "Show Date",
-      buttonImageOnly: true,
-      buttonImage: "/img/imgCal2.png",
-      dateFormat: "dd/mm/yy",
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-90:+10",
-      onChangeMonthYear: function (year, month, inst) {
-        // Set date to picker
-        $(this).datepicker(
-          "setDate",
-          new Date(year, inst.selectedMonth, inst.selectedDay)
-        );
-        // Hide (close) the picker
-        // $(this).datepicker('hide');
-        // // Change ttrigger the on change function
-        // $(this).trigger('change');
-      },
-    });
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    //--------- END OF DATE ---------------//
+    Datehandler.initOneMonth();
   };
+
+  templateObject.initDate();
 
   templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
@@ -221,73 +178,49 @@ Template.customerdetailsreport.onRendered(() => {
 });
 
 Template.customerdetailsreport.events({
-  "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1CustomerDetails_Report', '');
-    let templateObject = Template.instance();
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    await templateObject.setReportOptions(false, dateFrom, dateTo);
-    // $(".fullScreenSpin").css("display", "none");
-  },
-  "click #lastMonth": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1CustomerDetails_Report', '');
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-    // $(".fullScreenSpin").css("display", "none");
-  },
-  "click #lastQuarter": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1CustomerDetails_Report', '');
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-    // $(".fullScreenSpin").css("display", "none");
-  },
-  "click #last12Months": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1CustomerDetails_Report', '');
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
+  "click #dropdownDateRang": function (e) {
+    let dateRangeID = e.target.id;
+    $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
+    $("#selectedDateRange").show();
+    if (dateRangeID == "thisMonth") {
+      document.getElementById("selectedDateRange").value = "This Month";
+    } else if (dateRangeID == "thisQuarter") {
+      document.getElementById("selectedDateRange").value = "This Quarter";
+    } else if (dateRangeID == "thisFinYear") {
+      document.getElementById("selectedDateRange").value =
+        "This Financial Year";
+    } else if (dateRangeID == "lastMonth") {
+      document.getElementById("selectedDateRange").value = "Last Month";
+    } else if (dateRangeID == "lastQuarter") {
+      document.getElementById("selectedDateRange").value = "Last Quarter";
+    } else if (dateRangeID == "lastFinYear") {
+      document.getElementById("selectedDateRange").value =
+        "Last Financial Year";
+    } else if (dateRangeID == "monthToDate") {
+      document.getElementById("selectedDateRange").value = "Month to Date";
+    } else if (dateRangeID == "quarterToDate") {
+      document.getElementById("selectedDateRange").value = "Quarter to Date";
+    } else if (dateRangeID == "finYearToDate") {
+      document.getElementById("selectedDateRange").value = "Year to Date";
     }
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-
-    var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
-    templateObject.dateAsAt.set(begunDate);
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
-    await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    // $(".fullScreenSpin").css("display", "none");
   },
-  "click #ignoreDate": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", true);
-    $("#dateTo").attr("readonly", true);
-    localStorage.setItem('VS1CustomerDetails_Report', '');
+  "click #ignoreDate":  (e, templateObject) => {
+    templateObject.getCustomerDetailReportData(
+      null, 
+      null, 
+      true
+    )
+  },
+  "change #dateTo, change #dateFrom": (e) => {
     let templateObject = Template.instance();
-    templateObject.dateAsAt.set("Current Date");
-    await templateObject.setReportOptions(true);
-    // $(".fullScreenSpin").css("display", "none");
+    localStorage.setItem("VS1GeneralLedger_Report", "");
+    templateObject.getCustomerDetailReportData(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+    )
   },
+  ...Datehandler.getDateRangeEvents(),
   "click #btnSummary": function () {
     FlowRouter.go("/customersummaryreport");
   },
