@@ -155,7 +155,7 @@ Template.vatreturn.onRendered(function() {
             }
         }
 
-        getVS1Data('TVatReturn').then(function(dataObject) {
+        getVS1Data('TVATReturn').then(function(dataObject) {
             if (dataObject.length == 0) {
                 // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                 //     let lineItems = [];
@@ -1530,7 +1530,7 @@ Template.vatreturn.onRendered(function() {
                     templateObject.getId.set(getid[1]);
                     templateObject.pageTitle.set("Edit VAT Return");
 
-                    // getVS1Data('TVatReturn').then(function(dataObject) {
+                    // getVS1Data('TVATReturn').then(function(dataObject) {
                     //     if (dataObject.length > 0) {
                     //         let data = JSON.parse(dataObject[0].data);
                     //         for (let i = 0; i < data.length; i++) {
@@ -2500,7 +2500,7 @@ Template.vatreturn.events({
     //                         swal('VAT Return Description cannot be blank!', '', 'warning');
     //                         $('.fullScreenSpin').css('display', 'none');
     //                     } else {
-    //                         getVS1Data('TVatReturn').then(function(dataObject) {
+    //                         getVS1Data('TVATReturn').then(function(dataObject) {
     //                             if (dataObject.length > 0) {
     //                                 dataArray = JSON.parse(dataObject[0].data);
     //                             }
@@ -2879,10 +2879,10 @@ Template.vatreturn.events({
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
-        $(".printVatReturn").show();
+        $(".printVATReturn").show();
         $("a").attr("href", "/");
         document.title = "VAT Return";
-        $(".printVatReturn").print({
+        $(".printVATReturn").print({
             title: document.title + " | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
             mediaPrint: false,
@@ -2890,7 +2890,7 @@ Template.vatreturn.events({
 
         setTimeout(function() {
             $("a").attr("href", "#");
-            $(".printVatReturn").hide();
+            $(".printVATReturn").hide();
         }, 100);
     },
     'click .btnRemove': function(event) {
@@ -2939,7 +2939,7 @@ Template.vatreturn.events({
                 }).then((result) => {
                     if (result.value) {
                         $('.fullScreenSpin').css('display', 'inline-block');
-                        getVS1Data('TVatReturn').then(function(dataObject) {
+                        getVS1Data('TVATReturn').then(function(dataObject) {
                             if (dataObject.length > 0) {
                                 let dataArray = JSON.parse(dataObject[0].data);
                                 dataArray.forEach((item, j) => {
@@ -2947,7 +2947,7 @@ Template.vatreturn.events({
                                         dataArray.splice(j, 1);
                                     }
                                 });
-                                addVS1Data('TVatReturn', JSON.stringify(dataArray)).then(function(datareturn) {
+                                addVS1Data('TVATReturn', JSON.stringify(dataArray)).then(function(datareturn) {
                                     FlowRouter.go('/vatreturnlist');
                                     $('.modal-backdrop').css('display', 'none');
                                     $('.fullScreenSpin').css('display', 'none');
@@ -3160,207 +3160,207 @@ Template.vatreturn.events({
                 swal('VAT Return Description cannot be blank!', '', 'warning');
                 $('.fullScreenSpin').css('display', 'none');
             } else {
-                getVS1Data('TVatReturn').then(function(dataObject) {
+                getVS1Data('TVATReturn').then(function(dataObject) {
                     if (dataObject.length > 0) {
                         dataArray = JSON.parse(dataObject[0].data);
                     }
                 });
 
-                // setTimeout(function() {
-                //     let vatnumber = (dataArray.length) ? (parseInt(dataArray[0].basNumber) + 1) : 1;
-                //     let jsonObj = {
-                //         vatNumber: vatnumber,
-                //         description: description,
-                //         departmentId: departmentId,
-                //         accountingMethod: accountingMethod,
-                //         vatReturnTab1: {
-                //             datemethod: datemethod,
-                //             startDate: startDate,
-                //             endDate: endDate,
-                //             tab1tax1: {
-                //                 amount: tax1cost,
-                //                 taxcodes: taxcodes1
-                //             },
-                //             tab1tax1a: {
-                //                 amount: tax1acost,
-                //                 taxcodes: taxcodes1a
-                //             },
-                //             tab1tax2: {
-                //                 amount: tax2cost,
-                //                 taxcodes: taxcodes2
-                //             },
-                //             tab1tax2a: {
-                //                 amount: tax2acost,
-                //                 taxcodes: taxcodes2a
-                //             },
-                //             tab1tax3: {
-                //                 amount: tax3cost,
-                //                 taxcodes: taxcodes3
-                //             },
-                //             tab1tax4: {
-                //                 amount: tax4cost,
-                //             },
-                //             tab1tax4a: {
-                //                 amount: tax4acost,
-                //             },
-                //             tab1tax5: {
-                //                 amount: tax5cost,
-                //                 taxcodes: taxcodes5
-                //             },
-                //             tab1tax6: {
-                //                 amount: tax6cost,
-                //             },
-                //             tab1tax7: {
-                //                 amount: tax7cost,
-                //                 taxcodes: taxcodes7
-                //             },
-                //             tab1tax8: {
-                //                 amount: tax8cost,
-                //             },
-                //             tab1tax9: {
-                //                 amount: tax9cost,
-                //             },
-                //             tab1tax10: {
-                //                 amount: tax10cost,
-                //                 taxcodes: taxcodes10
-                //             },
-                //             tab1tax11: {
-                //                 amount: tax11cost,
-                //             },
-                //             tab1tax12: {
-                //                 amount: tax12cost,
-                //                 taxcodes: taxcodes12
-                //             },
-                //             tab1tax13: {
-                //                 amount: tax13cost,
-                //             }
-                //         },
-                //         vatReturnTab2: {
-                //             datemethod: datemethodT2,
-                //             startDate: startDateT2,
-                //             endDate: endDateT2,
-                //             tab2tax14: {
-                //                 amount: tax14cost,
-                //                 taxcodes: taxcodes14
-                //             },
-                //             tab2tax14a: {
-                //                 amount: tax14acost,
-                //                 taxcodes: taxcodes14a
-                //             },
-                //             tab2tax15: {
-                //                 amount: tax15cost,
-                //                 taxcodes: taxcodes15
-                //             },
-                //             tab2tax15a: {
-                //                 amount: tax15acost,
-                //                 taxcodes: taxcodes15a
-                //             },
-                //             tab2tax16: {
-                //                 amount: tax16cost,
-                //                 taxcodes: taxcodes16
-                //             },
-                //             tab2tax17: {
-                //                 amount: tax17cost,
-                //                 taxcodes: taxcodes17
-                //             },
-                //             tab2tax18: {
-                //                 amount: tax18cost,
-                //                 taxcodes: taxcodes18
-                //             },
-                //             tab2tax19: {
-                //                 amount: tax19cost,
-                //             },
-                //             tab2tax20: {
-                //                 amount: tax20cost,
-                //             },
-                //         },
-                //         vatReturnTab3: {
-                //             datemethod: datemethodT3,
-                //             startDate: startDateT3,
-                //             endDate: endDateT3,
-                //             tab3tax21: {
-                //                 amount: tax21cost,
-                //                 taxcodes: taxcodes21
-                //             },
-                //             tab3tax22: {
-                //                 amount: tax22cost,
-                //                 taxcodes: taxcodes22
-                //             },
-                //             tab3tax23: {
-                //                 amount: tax23cost,
-                //             },
-                //             tab3tax24: {
-                //                 amount: tax24cost,
-                //             },
-                //             tab3tax25: {
-                //                 amount: tax25cost,
-                //             },
-                //             tab3tax26: {
-                //                 amount: tax26cost,
-                //                 taxcodes: taxcodes26
-                //             },
-                //             tab3tax27: {
-                //                 amount: tax27cost,
-                //                 taxcodes: taxcodes27
-                //             },
-                //             tab3tax28: {
-                //                 amount: tax28cost,
-                //             },
-                //             tab3tax29: {
-                //                 amount: tax29cost,
-                //             },
-                //             tab3tax30: {
-                //                 amount: tax30cost,
-                //                 taxcodes: taxcodes30
-                //             },
-                //             tab3tax31: {
-                //                 amount: tax31cost,
-                //                 taxcodes: taxcodes31
-                //             },
-                //             tab3tax32: {
-                //                 amount: tax32cost,
-                //             },
-                //             tab3tax33: {
-                //                 amount: tax33cost,
-                //             },
-                //             tab3tax34: {
-                //                 amount: tax34cost,
-                //                 taxcodes: taxcodes34
-                //             },
-                //             tab3tax35: {
-                //                 amount: tax35cost,
-                //                 taxcodes: taxcodes35
-                //             },
-                //             tab3tax36: {
-                //                 amount: tax36cost,
-                //             },
-                //             tab3tax37: {
-                //                 amount: tax37cost,
-                //             },
-                //             tab3tax38: {
-                //                 amount: tax38cost,
-                //             },
-                //         },
-                //     }
+                setTimeout(function() {
+                    let vatnumber = (dataArray.length) ? (parseInt(dataArray[0].basNumber) + 1) : 1;
+                    let jsonObj = {
+                        vatNumber: vatnumber,
+                        description: description,
+                        departmentId: departmentId,
+                        accountingMethod: accountingMethod,
+                        vatReturnTab1: {
+                            datemethod: datemethod,
+                            startDate: startDate,
+                            endDate: endDate,
+                            tab1tax1: {
+                                amount: tax1cost,
+                                taxcodes: taxcodes1
+                            },
+                            tab1tax1a: {
+                                amount: tax1acost,
+                                taxcodes: taxcodes1a
+                            },
+                            tab1tax2: {
+                                amount: tax2cost,
+                                taxcodes: taxcodes2
+                            },
+                            tab1tax2a: {
+                                amount: tax2acost,
+                                taxcodes: taxcodes2a
+                            },
+                            tab1tax3: {
+                                amount: tax3cost,
+                                taxcodes: taxcodes3
+                            },
+                            tab1tax4: {
+                                amount: tax4cost,
+                            },
+                            tab1tax4a: {
+                                amount: tax4acost,
+                            },
+                            tab1tax5: {
+                                amount: tax5cost,
+                                taxcodes: taxcodes5
+                            },
+                            tab1tax6: {
+                                amount: tax6cost,
+                            },
+                            tab1tax7: {
+                                amount: tax7cost,
+                                taxcodes: taxcodes7
+                            },
+                            tab1tax8: {
+                                amount: tax8cost,
+                            },
+                            tab1tax9: {
+                                amount: tax9cost,
+                            },
+                            tab1tax10: {
+                                amount: tax10cost,
+                                taxcodes: taxcodes10
+                            },
+                            tab1tax11: {
+                                amount: tax11cost,
+                            },
+                            tab1tax12: {
+                                amount: tax12cost,
+                                taxcodes: taxcodes12
+                            },
+                            tab1tax13: {
+                                amount: tax13cost,
+                            }
+                        },
+                        vatReturnTab2: {
+                            datemethod: datemethodT2,
+                            startDate: startDateT2,
+                            endDate: endDateT2,
+                            tab2tax14: {
+                                amount: tax14cost,
+                                taxcodes: taxcodes14
+                            },
+                            tab2tax14a: {
+                                amount: tax14acost,
+                                taxcodes: taxcodes14a
+                            },
+                            tab2tax15: {
+                                amount: tax15cost,
+                                taxcodes: taxcodes15
+                            },
+                            tab2tax15a: {
+                                amount: tax15acost,
+                                taxcodes: taxcodes15a
+                            },
+                            tab2tax16: {
+                                amount: tax16cost,
+                                taxcodes: taxcodes16
+                            },
+                            tab2tax17: {
+                                amount: tax17cost,
+                                taxcodes: taxcodes17
+                            },
+                            tab2tax18: {
+                                amount: tax18cost,
+                                taxcodes: taxcodes18
+                            },
+                            tab2tax19: {
+                                amount: tax19cost,
+                            },
+                            tab2tax20: {
+                                amount: tax20cost,
+                            },
+                        },
+                        vatReturnTab3: {
+                            datemethod: datemethodT3,
+                            startDate: startDateT3,
+                            endDate: endDateT3,
+                            tab3tax21: {
+                                amount: tax21cost,
+                                taxcodes: taxcodes21
+                            },
+                            tab3tax22: {
+                                amount: tax22cost,
+                                taxcodes: taxcodes22
+                            },
+                            tab3tax23: {
+                                amount: tax23cost,
+                            },
+                            tab3tax24: {
+                                amount: tax24cost,
+                            },
+                            tab3tax25: {
+                                amount: tax25cost,
+                            },
+                            tab3tax26: {
+                                amount: tax26cost,
+                                taxcodes: taxcodes26
+                            },
+                            tab3tax27: {
+                                amount: tax27cost,
+                                taxcodes: taxcodes27
+                            },
+                            tab3tax28: {
+                                amount: tax28cost,
+                            },
+                            tab3tax29: {
+                                amount: tax29cost,
+                            },
+                            tab3tax30: {
+                                amount: tax30cost,
+                                taxcodes: taxcodes30
+                            },
+                            tab3tax31: {
+                                amount: tax31cost,
+                                taxcodes: taxcodes31
+                            },
+                            tab3tax32: {
+                                amount: tax32cost,
+                            },
+                            tab3tax33: {
+                                amount: tax33cost,
+                            },
+                            tab3tax34: {
+                                amount: tax34cost,
+                                taxcodes: taxcodes34
+                            },
+                            tab3tax35: {
+                                amount: tax35cost,
+                                taxcodes: taxcodes35
+                            },
+                            tab3tax36: {
+                                amount: tax36cost,
+                            },
+                            tab3tax37: {
+                                amount: tax37cost,
+                            },
+                            tab3tax38: {
+                                amount: tax38cost,
+                            },
+                        },
+                    }
 
-                //     if (templateObject.getId.get()) {
-                //         dataArray.forEach((item, j) => {
-                //             if (item.vatNumber == templateObject.getId.get()) {
-                //                 dataArray[j] = jsonObj;
-                //                 dataArray[j].vatNumber = templateObject.getId.get();
-                //             }
-                //         });
-                //     } else {
-                //         dataArray.unshift(jsonObj);
-                //     }
+                    if (templateObject.getId.get()) {
+                        dataArray.forEach((item, j) => {
+                            if (item.vatNumber == templateObject.getId.get()) {
+                                dataArray[j] = jsonObj;
+                                dataArray[j].vatNumber = templateObject.getId.get();
+                            }
+                        });
+                    } else {
+                        dataArray.unshift(jsonObj);
+                    }
 
-                //     addVS1Data('TVatReturn', JSON.stringify(dataArray)).then(function(datareturn) {
-                //         $('.fullScreenSpin').css('display', 'none');
-                //         FlowRouter.go('/vatreturnlist');
-                //     }).catch(function(err) {
-                //         $('.fullScreenSpin').css('display', 'none');
-                //     });
-                // }, 500);
+                    addVS1Data('TVATReturn', JSON.stringify(dataArray)).then(function(datareturn) {
+                        $('.fullScreenSpin').css('display', 'none');
+                        FlowRouter.go('/vatreturnlist');
+                    }).catch(function(err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                }, 500);
             }
         }, delayTimeAfterSound);
     },

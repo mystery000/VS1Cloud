@@ -240,6 +240,38 @@ Template.basreturn.onRendered(function() {
                                 $("#accountingmethod1").prop('checked', false);
                                 $("#accountingmethod2").prop('checked', true);
                             }
+
+                            if (dataList.tab1datemethod == "Quarterly") {
+                                $("#datemethod1").prop('checked', true);
+                                $("#datemethod2").prop('checked', false);
+                            } else {
+                                $("#datemethod1").prop('checked', false);
+                                $("#datemethod2").prop('checked', true);
+                            }
+
+                            if (dataList.tab2datemethod == "Quarterly") {
+                                $("#datemethod1-t2").prop('checked', true);
+                                $("#datemethod2-t2").prop('checked', false);
+                            } else {
+                                $("#datemethod1-t2").prop('checked', false);
+                                $("#datemethod2-t2").prop('checked', true);
+                            }
+
+                            if (dataList.tab2datemethod2 == "Quarterly") {
+                                $("#datemethod1-t2-2").prop('checked', true);
+                                $("#datemethod2-t2-2").prop('checked', false);
+                            } else {
+                                $("#datemethod1-t2-2").prop('checked', false);
+                                $("#datemethod2-t2-2").prop('checked', true);
+                            }
+
+                            if (dataList.tab3datemethod == "Quarterly") {
+                                $("#datemethod1-t3").prop('checked', true);
+                                $("#datemethod2-t3").prop('checked', false);
+                            } else {
+                                $("#datemethod1-t3").prop('checked', false);
+                                $("#datemethod2-t3").prop('checked', true);
+                            }
                         }
                         if ($("#previousStartDate").val() == "" && dataList.tab1startDate != "" && dataList.tab1endDate != "") {
                             $("#previousStartDate").val(dataList.tab1startDate);
@@ -3156,7 +3188,6 @@ Template.basreturn.events({
                 // Bert.alert('<strong>WARNING:</strong> BAS Return Description cannot be blank!', 'warning');
                 swal('BAS Return Description cannot be blank!', '', 'warning');
                 $('.fullScreenSpin').css('display', 'none');
-                e.preventDefault();
             } else {
                 getVS1Data('TBASReturn').then(function(dataObject) {
                     if (dataObject.length > 0) {
