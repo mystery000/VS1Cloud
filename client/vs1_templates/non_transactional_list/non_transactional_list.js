@@ -1472,7 +1472,6 @@ Template.non_transactional_list.onRendered(function() {
         });
       }
       templateObject.displaySuppliersListData = async function (data) {
-        console.log(data);
         var splashArraySuppliersList = new Array();
         let lineItems = [];
         let lineItemObj = {};
@@ -1521,9 +1520,7 @@ Template.non_transactional_list.onRendered(function() {
           data.tsuppliervs1list[i].Notes || '',
           linestatus,
       ];
-      console.log(dataList);
         splashArraySuppliersList.push(dataList);
-
         templateObject.transactiondatatablerecords.set(splashArraySuppliersList);
     }
 
@@ -1534,7 +1531,6 @@ Template.non_transactional_list.onRendered(function() {
     }
     $('.fullScreenSpin').css('display','none');
     setTimeout(function () {
-        console.log(splashArraySuppliersList);
         $('#'+currenttablename).DataTable({
             data: splashArraySuppliersList,
             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -3924,13 +3920,11 @@ Template.non_transactional_list.events({
         },
       "click .exportbtn": async function () {
           $(".fullScreenSpin").css("display", "inline-block");
-          alert('here 2');
           let currenttablename = await templateObject.tablename.get()||'';
           jQuery('#'+currenttablename+'_wrapper .dt-buttons .btntabletocsv').click();
           $(".fullScreenSpin").css("display", "none");
         },
       "click .printConfirm": async function (event) {
-          alert('here 1');
           $(".fullScreenSpin").css("display", "inline-block");
           let currenttablename = await templateObject.tablename.get()||'';
           jQuery('#'+currenttablename+'_wrapper .dt-buttons .btntabletopdf').click();

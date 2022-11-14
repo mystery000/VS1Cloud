@@ -217,10 +217,10 @@ Template.vatreturntransactionlist.onRendered(function() {
                         // this.fnPageChange("last");
                         $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnTransactionList_filter");
                     },
-                    "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                      let countTableData = data.Params.Count || 0; //get count from API data
+                    "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                        let countTableData = data.Params.Count || 0; //get count from API data
 
-                        return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                        return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                     }
 
                 }).on('page', function() {
@@ -279,7 +279,7 @@ Template.vatreturntransactionlist.onRendered(function() {
             var basreturnid = FlowRouter.current().queryParams.basreturnid;
             var transactionitem = FlowRouter.current().queryParams.transactionitem;
             if (basreturnid) {
-                getVS1Data('TVatReturn').then(function(dataObject) {
+                getVS1Data('TVATReturn').then(function(dataObject) {
                     if (dataObject.length > 0) {
                         let data = JSON.parse(dataObject[0].data);
                         for (let i = 0; i < data.length; i++) {
