@@ -4,6 +4,7 @@ import {UtilityService} from "../../utility-service";
 import '../../lib/global/indexdbstorage.js';
 import { SideBarService } from '../../js/sidebar-service';
 import TableHandler from '../../js/Table/TableHandler';
+import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -116,9 +117,16 @@ Template.transaction_line.onRendered(function() {
               display: reset_data[r].display,
               width: reset_data[r].width ? reset_data[r].width : ''
           };
+
+          if(reset_data[r].active == true){
+            $('#'+currenttranstablename+' .'+reset_data[r].class).removeClass('hiddenColumn');
+          }else if(reset_data[r].active == false){
+            $('#'+currenttranstablename+' .'+reset_data[r].class).addClass('hiddenColumn');
+          };
           custFields.push(customData);
       }
-      templateObject.displayfields.set(custFields);
+      await templateObject.displayfields.set(custFields);
+      $('.dataTable').resizable();
   }
 
   templateObject.initCustomFieldDisplaySettings("", currenttranstablename);

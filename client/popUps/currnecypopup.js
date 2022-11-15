@@ -171,8 +171,8 @@ Template.currencypop.onRendered(function () {
         // bStateSave: true,
         // rowId: 0,
         paging: false,
-        scrollY: "400px",
-        scrollCollapse: true,
+        // scrollY: "400px",
+        // scrollCollapse: true,
         info: true,
         responsive: true,
         order: [
