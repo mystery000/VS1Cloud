@@ -5,16 +5,15 @@ export default class Datehandler {
 
   static domDateFromUpdate(date, format = "DD/MM/YYYY", templateObject = null) {
     $("#dateFrom").val(moment(date).format(format));
-    // $("#dateFrom").trigger("change");
+    $("#dateFrom").trigger("change");
     if (templateObject != null) {
       templateObject.dateAsAt.set(moment(date).format("DD/MM/YYYY"));
     }
-    $(".edtReportDates").trigger("change");
   }
 
   static domDateToUpdate(date, format = "DD/MM/YYYY") {
     $("#dateTo").val(moment(date).format(format));
-    $("#dateTo").trigger("change");
+    // $("#dateTo").trigger("change");
   }
 
   static initOneMonth() {

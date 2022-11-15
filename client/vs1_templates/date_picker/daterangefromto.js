@@ -13,10 +13,10 @@ Template.daterangefromto.onRendered(function() {
 
   var url = FlowRouter.current().path;
   templateObject.loadDateRange = () => {
-    templateObject.singleDateReport.set(false);
-    if (url.includes("/executivesummaryreport")) {
+    templateObject.singleDateReport.set(false);    
+    if( url.includes("/balancesheetreport") || url.includes("/exeprofitabilityreport") ||  url.includes("/executivesummaryreport") || url.includes("/exebalancesheetreport") || url.includes("/execashreport") || url.includes("/exeincomereport") ||  url.includes("/exeperformancereport") || url.includes("/exepositionreport")) {
       templateObject.singleDateReport.set(true);
-    }
+    } 
   }
   templateObject.initDate();
   templateObject.loadDateRange();

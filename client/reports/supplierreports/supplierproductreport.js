@@ -31,6 +31,10 @@ Template.supplierproductreport.onRendered(() => {
     Datehandler.initOneMonth();
   };
 
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  };
+
 
   templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
@@ -149,7 +153,7 @@ Template.supplierproductreport.onRendered(() => {
 
   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
     LoadingOverlay.show();
-    
+    templateObject.setDateAs(dateFrom);
     let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
       return await  await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
     }, {
@@ -225,48 +229,15 @@ Template.supplierproductreport.onRendered(() => {
        LoadingOverlay.hide();
       }, 1000);
     }  
-    let defaultOptions = templateObject.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.fromDate = formatDateFrom;
-      defaultOptions.toDate = formatDateTo;
-      defaultOptions.ignoreDate = ignoreDate;
-    } else {
-      defaultOptions = {
-        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
-        toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
-      };
-    }
-    templateObject.dateAsAt.set(moment(dateFrom).format('DD/MM/YYYY'));
-    $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
-      $('.edtReportDates').attr('disabled', true);
-      templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
-    }
   }
-  
 
-
-
-  templateObject.initUploadedImage = () => {
-    let imageData = localStorage.getItem("Image");
-    if (imageData) {
-      $("#uploadedImage").attr("src", imageData);
-      $("#uploadedImage").attr("width", "50%");
-    }
-  };
-
-  templateObject.setReportOptions();
   templateObject.initDate();
-  templateObject.initUploadedImage();
-  //templateObject.setReportOptions();
-
-  // templateObject.loadReport(
-  //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-  //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
-  //   false
-  // );
- 
+  templateObject.loadReport(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+    false
+  );
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) );
  
 });
 
@@ -388,21 +359,6 @@ Template.supplierproductreport.events({
       $(".table tbody tr").show();
     }
   },
-  "change .edtReportDates": (e, templateObject) => {
-    // LoadingOverlay.show();
-    // localStorage.setItem('VS1SupplierProduct_Report', '');
-    // let templateObject = Template.instance();
-    // var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    // var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    // await templateObject.setReportOptions(false, dateFrom, dateTo);
-    // //LoadingOverlay.hide();
-
-    templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
-      false
-    );
-  },
   // "click #lastMonth": async function () {
   //   LoadingOverlay.show();
   //   localStorage.setItem('VS1SupplierProduct_Report', '');
@@ -463,7 +419,7 @@ Template.supplierproductreport.events({
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
-    templateObject.setReportOptions(true);
+    templateObject.loadReport(null, null, true);
   },
 
   // CURRENCY MODULE //
@@ -537,7 +493,6 @@ Template.supplierproductreport.events({
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
       false
     );
-    templateObject.dateAsAt.set($('#dateTo').val());
   },
   ...Datehandler.getDateRangeEvents()
 });
