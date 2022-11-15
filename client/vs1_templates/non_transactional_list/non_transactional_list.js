@@ -2154,7 +2154,7 @@ setTimeout(function () {
                     dataObjectnew.tprospectlist[j].CUSTFLD2 || '',
                     dataObjectnew.tprospectlist[j].Street || '',
                     dataObjectnew.tprospectlist[j].Suburb || '',
-                    dataObjectnew.tsuppliervs1list[j].POState || '',
+                    dataObjectnew.tprospectlist[j].POState || '',
                     dataObjectnew.tprospectlist[j].Postcode || '',
                     dataObjectnew.tprospectlist[j].Country || '',
                     linestatus,
@@ -2162,6 +2162,7 @@ setTimeout(function () {
                 ];
 
                 splashArrayLeadList.push(dataListDupp);
+
             }
             let uniqueChars = [...new Set(splashArrayLeadList)];
             templateObject.transactiondatatablerecords.set(uniqueChars);
