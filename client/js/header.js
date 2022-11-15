@@ -23,11 +23,12 @@ import {
 import {
     SideBarService
 } from '../js/sidebar-service';
-
+import { AccountService } from '../accounts/account-service';
 let utilityService = new UtilityService();
 let productService = new ProductService();
 let organizationService = new OrganisationService();
 let sideBarService = new SideBarService();
+let accountService = new AccountService();
 Template.header.onCreated(function() {
     const templateObject = Template.instance();
 
@@ -1470,6 +1471,25 @@ Template.header.onRendered(function() {
 
         })
     };
+    templateObject.getBankDescription = function() {
+        accountService.getOneAccountByName("BANK").then(function (data) {
+            let bankDesc = data.taccountvs1[0].fields.Description;
+            localStorage.setItem('vs1companyBankDesc', bankDesc);
+        }).catch(function(err) {
+            $('.process').addClass('killProgressBar');
+            swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {} else if (result.dismiss === 'cancel') {
+
+                }
+            });
+        });
+    }
     templateObject.getCompanyInfo = function() {
 
         organizationService.getCompanyInfo().then(function(data) {
@@ -1494,7 +1514,7 @@ Template.header.onRendered(function() {
             let companyTradingName = data.tcompanyinfo[0].TradingName || '';
 
             let companyAccountant = data.tcompanyinfo[0].Contact || '';
-
+            let companyCountry = data.tcompanyinfo[0].PoCountry || '';
             let bankDetails = "Bank Name: " + bankName + "\n" + "Account Name: " + accountName + "\n Bank Account: " + accNo + "\nBSB: " + bsb + "\n Swift Code: " + swiftCode + "\n" + "Routing No: " + routingNo;
             Session.setPersistent('vs1companyName', companyName);
             Session.setPersistent('vs1companyaddress1', companyaddress1);
@@ -1511,6 +1531,7 @@ Template.header.onRendered(function() {
             Session.setPersistent('vs1companyBankName1', bankDetails);
             Session.setPersistent('vs1companyCompanyPOBox', bankDetails);
             Session.setPersistent('vs1companyReg', companyReg);
+            Session.setPersistent('vs1companyCountry', companyCountry);
             localStorage.setItem('vs1companyBankName', bankName);
             localStorage.setItem('vs1companyBankAccountName', accountName);
             localStorage.setItem('vs1companyBankAccountNo', accNo);
@@ -1571,6 +1592,7 @@ Template.header.onRendered(function() {
 
     var LoggedDB = erpGet.ERPDatabase;
     if (loggedUserEventFired) {
+        templateObject.getBankDescription();
         templateObject.getCompanyInfo();
         $(document).ready(function() {
             let checkGreenTrack = Session.get('isGreenTrack') || false;
