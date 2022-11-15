@@ -305,7 +305,7 @@ Template.non_transactional_list.onRendered(function() {
       });
 
     } catch (error) {
-        console.log(error);
+
     }
     return;
   }
@@ -1886,7 +1886,6 @@ Template.non_transactional_list.onRendered(function() {
     });
   }
     templateObject.displayLeadListData = async function (data) {
-        console.log(data); //check data
     var splashArrayLeadList = new Array();
     let lineItems = [];
     let lineItemObj = {};

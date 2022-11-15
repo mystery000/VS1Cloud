@@ -176,12 +176,12 @@
       }
   </style>
 
-  <div class="card-body rounded" style="padding-bottom: 0px !important;padding-top: 0px !important;">
+  <div class="card-body rounded transTable" style="padding-bottom: 0px !important;padding-top: 0px !important;">
       <!-- Remove p-5 to resize the form -->
       <!-- Start {{> optionNav}} -->
       <div class="d-xl-flex justify-content-xl-end">
           <div>
-            <a class="btn" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
+            <a class="btn btnOpenTranSettings" role="button" data-toggle="modal" href="#"><i class="icon ion-android-more-horizontal"></i></a>
           </div>
       </div>
       <!-- END -->
@@ -323,7 +323,7 @@
                 <tr class="dnd-moved">
                  {{#each displayfield in displayfields}}
                    {{#if displayfield.display}}
-                   <th colspan="{{displayFieldColspan displayfield isForeignEnabled}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                   <th data-class="{{displayfield.class}}" thclass="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" colspan="{{displayFieldColspan displayfield isForeignEnabled}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
                      {{displayfield.custfieldlabel}}
                      {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
                        {{else}}
@@ -490,7 +490,7 @@
   </div>
 
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+  <div class="modal fade {{tablename}}_Modal" role="dialog" tabindex="-1" id="myModal2">
       <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
           <div class="modal-content">
               <div class="modal-header">
