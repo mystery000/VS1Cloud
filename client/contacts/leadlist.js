@@ -4,7 +4,11 @@ import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { OrganisationService } from "../js/organisation-service";
+let organisationService = new OrganisationService;
 let sideBarService = new SideBarService();
+let utilityService = new UtilityService();
+Template.leadlist.inheritsHooksFrom('non_transactional_list');
 Template.leadlist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -12,283 +16,42 @@ Template.leadlist.onCreated(function(){
     templateObject.selectedFile = new ReactiveVar();
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+    templateObject.setupFinished = new ReactiveVar();
 });
 
 Template.leadlist.onRendered(function() {
-    $('.fullScreenSpin').css('display','inline-block');
-    let contactService = new ContactService();
     let templateObject = Template.instance();
-    let splashArrayLeadList = [];
+    let contactService = new ContactService();
+    const customerList = [];
+    let salesOrderTable;
+    var splashArray = new Array();
+    const dataTableList = [];
     const tableHeaderList = [];
-    if(FlowRouter.current().queryParams.success){
-       $('.btnRefresh').addClass('btnRefreshAlert');
+
+    if (FlowRouter.current().queryParams.success) {
+        $('.btnRefresh').addClass('btnRefreshAlert');
     }
-
-    templateObject.getLeads = function () {
-        // use API TProspectEx instead of TLeads
-        getVS1Data('TProspectEx').then(function(dataObject) {
-            if (dataObject.length === 0) {
-                sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function (data) {
-                    addVS1Data('TProspectEx', JSON.stringify(data));
-                    setAllLeads(data);
-                }).catch(function (err) {
-                    $('.fullScreenSpin').css('display', 'none');
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                setAllLeads(data);
-            }
-        }).catch(function(err) {
-            sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TProspectEx', JSON.stringify(data));
-                setAllLeads(data);
-            }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        });
-    };
-    function setAllLeads(data) {
-        let lineItems = [];
-        let lineItemObj = {};
-        for (let i = 0; i < data.tprospect.length; i++) {
-            // const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
-            // const city = contactContacts?contactContacts.fields.ContactCity:'';
-            let mobile = contactService.changeMobileFormat(data.tprospect[i].fields.Mobile);
-            const dataList = {
-                id: data.tprospect[i].fields.ID || '',
-                employeeName: data.tprospect[i].fields.ClientName || '',
-                firstName: data.tprospect[i].fields.FirstName || '',
-                lastName: data.tprospect[i].fields.LastName || '',
-                phone: data.tprospect[i].fields.Phone || '',
-                mobile: mobile || '',
-                email: data.tprospect[i].fields.Email || '',
-                department: data.tprospect[i].fields.CompanyName || '',
-                address: data.tprospect[i].fields.Street || '',
-                surburb: data.tprospect[i].fields.Suburb || '',
-                // country: data.tprospect[i].fields.MarketingContacts.fields.Country || '',
-                city: data.tprospect[i].fields.Street2 || '',
-            };
-            if(data.tprospect[i].fields.ClientName.replace(/\s/g, '') !== ''){
-                splashArrayLeadList.push(dataList);
-            }
-        }
-        templateObject.datatablerecords.set(splashArrayLeadList);
-        if (templateObject.datatablerecords.get()){
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblLeadlist', function(error, result){
-                if(error){
-
-                } else {
-                    if(result){
-                        for (let i = 0; i < result.customFields.length; i++) {
-                            let customcolumn = result.customFields;
-                            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                            let hiddenColumn = customcolumn[i].hidden;
-                            let columnClass = columHeaderUpdate.split('.')[1];
-                            if(hiddenColumn === true){
-                                $("."+columnClass+"").addClass('hiddenColumn');
-                                $("."+columnClass+"").removeClass('showColumn');
-                            }else if(hiddenColumn === false){
-                                $("."+columnClass+"").removeClass('hiddenColumn');
-                                $("."+columnClass+"").addClass('showColumn');
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        setTimeout(function () {
-            $('#tblLeadlist').DataTable({
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                buttons: [
-                    {
-                        extend: 'csvHtml5',
-                        text: '',
-                        download: 'open',
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "Lead List - "+ moment().format(),
-                        orientation:'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },{
-                        extend: 'print',
-                        download: 'open',
-                        className: "btntabletopdf hiddenColumn",
-                        text: '',
-                        title: 'Lead List',
-                        filename: "Lead List - "+ moment().format(),
-                        exportOptions: {
-                            columns: ':visible',
-                            stripHtml: false
-                        }
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        title: '',
-                        download: 'open',
-                        className: "btntabletoexcel hiddenColumn",
-                        filename: "Lead List - "+ moment().format(),
-                        orientation:'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-
-                    }],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                // bStateSave: true,
-                // rowId: 0,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                info: true,
-                responsive: true,
-                "order": [[ 1, "asc" ]],
-                action: function () {
-                    $('#tblLeadlist').DataTable().ajax.reload();
-                },
-                language: { search: "",searchPlaceholder: "Search List..." },
-                "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnRefreshLeads' type='button' id='btnRefreshLeads' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeadlist_filter");
-                }
-
-            }).on('page', function () {
-
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-            }).on('column-reorder', function () {
-
-            });
-        }, 0);
-        const columns = $('#tblLeadlist th');
-        let sWidth = "";
-        let columVisible = false;
-        $.each(columns, function(i,v) {
-            if(v.hidden === false){
-                columVisible =  true;
-            }
-            if((v.className.includes("hiddenColumn"))){
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
-        $('.fullScreenSpin').css('display', 'none');
-    }
-    templateObject.getLeads();
 
     $('#tblLeadlist tbody').on( 'click', 'tr', function () {
         const listData = $(this).closest('tr').attr('id');
         if(listData){
-            $('.fullScreenSpin').css('display', 'inline-block');
-            contactService.getOneLeadDataEx(listData).then(leadDetail => {
-                if(leadDetail.fields.IsCustomer == true) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({ title: 'Notice', text: 'This lead has been converted to customer. Will open customer card', type: 'info', showCancelButton: false, confirmButtonText: 'OK' }).then((result) => { FlowRouter.go('/customerscard?id=' + listData); $('.fullScreenSpin').css('display', 'none');});
-                }else {
-                    FlowRouter.go('/leadscard?id=' + listData);
-                    $('.fullScreenSpin').css('display', 'none');
-                }
-            })
+            FlowRouter.go('/leadscard?id=' + listData);
         }
     });
-    tableResize();
-
-
-     // set initial table rest_data
-     function init_reset_data() {
-        let bsbname = "Branch Code";
-        if (Session.get("ERPLoggedCountry") === "Australia") {
-            bsbname = "BSB";
-        }
-
-        let reset_data = [
-          { index: 0, label: '', class: 'LeadId', active: false, display: true, width: "" },
-          { index: 1, label: 'Lead Name', class: 'LeadName', active: true, display: true, width: "80" },
-          { index: 2, label: 'First Name', class: 'FirstName', active: true, display: true, width: "80" },
-          { index: 3, label: 'Last Name', class: 'LastName', active: true, display: true, width: "80" },
-          { index: 4, label: 'Phone', class: 'Phone', active: true, display: true, width: "80" },
-          { index: 5, label: 'Mobile', class: 'Mobile', active: true, display: true, width: "80" },
-          { index: 6, label: 'Email', class: 'Email', active: true, display: true, width: "80" },
-          { index: 7, label: 'Department', class: 'Department', active: true, display: true, width: "120" },
-          { index: 8, label: 'Address', class: 'Address', active: true, display: true, width: "120" },
-          { index: 9, label: 'Suburb', class: 'Suburb', active: true, display: true, width: "200" },
-          { index: 10, label: 'City', class: 'City', active: true, display: true, width: "200" },
-
-        ];
-
-        let templateObject = Template.instance();
-        templateObject.reset_data.set(reset_data);
-      }
-      init_reset_data();
-      // set initial table rest_data
-
-
-      // custom field displaysettings
-      templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-        let templateObject = Template.instance();
-        let reset_data = templateObject.reset_data.get();
-        showCustomFieldDisplaySettings(reset_data);
-
-        try {
-          getVS1Data("VS1_Customize").then(function (dataObject) {
-            if (dataObject.length == 0) {
-              sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-                  // reset_data = data.ProcessLog.CustomLayout.Columns;
-                  reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                  showCustomFieldDisplaySettings(reset_data);
-              }).catch(function (err) {
-              });
-            } else {
-              let data = JSON.parse(dataObject[0].data);
-              if(data.ProcessLog.Obj.CustomLayout.length > 0){
-               for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-                 if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                   reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                   showCustomFieldDisplaySettings(reset_data);
-                 }
-               }
-             };
-              // handle process here
+    templateObject.checkSetupWizardFinished = async function () {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+        if( setupFinished === null || setupFinished ===  "" ){
+            let setupInfo = await organisationService.getSetupInfo();
+            if( setupInfo.tcompanyinfo.length > 0 ){
+                let data = setupInfo.tcompanyinfo[0];
+                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+                templateObject.setupFinished.set(data.IsSetUpWizard)
             }
-          });
-        } catch (error) {
+        }else{
+            templateObject.setupFinished.set(setupFinished)
         }
-        return;
-      }
-
-      function showCustomFieldDisplaySettings(reset_data) {
-
-        let custFields = [];
-        let customData = {};
-        let customFieldCount = reset_data.length;
-
-        for (let r = 0; r < customFieldCount; r++) {
-          customData = {
-            active: reset_data[r].active,
-            id: reset_data[r].index,
-            custfieldlabel: reset_data[r].label,
-            class: reset_data[r].class,
-            display: reset_data[r].display,
-            width: reset_data[r].width ? reset_data[r].width : ''
-          };
-          custFields.push(customData);
-        }
-        templateObject.displayfields.set(custFields);
-      }
-
-      templateObject.initCustomFieldDisplaySettings("", "tblLeadlist");
-      // set initial table rest_data  //
-
+    }
+    templateObject.checkSetupWizardFinished();
 });
 
 Template.leadlist.events({
@@ -305,198 +68,83 @@ Template.leadlist.events({
              $(".btnRefreshLeads").trigger("click");
           }
       },
-    'click .btnRefreshLeads':function(event){
-        let contactService = new ContactService();
-        let templateObject = Template.instance();
-        const dataTableList = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let dataSearchName = $('#tblLeadlist_filter input').val();
-        if (dataSearchName.replace(/\s/g, '') !== '') {
-            sideBarService.getLeadByNameOrID(dataSearchName).then(function (data) {
-                $(".btnRefreshLeads").removeClass('btnSearchAlert');
-                if (data.tprospect.length > 0) {
-                    for (let i=0; i< data.tprospect.length; i++) {
-                        // const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
-                        // const city = contactContacts?contactContacts.fields.ContactCity:'';
-                        let mobile = contactService.changeMobileFormat(data.tprospect[i].fields.Mobile)
-                        const dataList = {
-                            id: data.tprospect[i].fields.ID || '',
-                            employeeName: data.tprospect[i].fields.ClientName || '',
-                            firstName: data.tprospect[i].fields.FirstName || '',
-                            lastName: data.tprospect[i].fields.LastName || '',
-                            phone: data.tprospect[i].fields.Phone || '',
-                            mobile: mobile || '',
-                            email: data.tprospect[i].fields.Email || '',
-                            department: data.tprospect[i].fields.CompanyName || '',
-                            address: data.tprospect[i].fields.Street || '',
-                            surburb: data.tprospect[i].fields.Suburb || '',
-                            // country: data.tprospect[i].fields.MarketingContacts.fields.Country || '',
-                            city: data.tprospect[i].fields.Street2 || '',
-                        };
-                        if(data.tprospect[i].fields.ClientName.replace(/\s/g, '') !== ''){
-                            dataTableList.push(dataList);
-                        }
-                    }
-                    templateObject.datatablerecords.set(dataTableList);
-                    let item = templateObject.datatablerecords.get();
-                    $('.fullScreenSpin').css('display', 'none');
-                    if (dataTableList) {
-                        const datatable = $('#tblLeadlist').DataTable();
-                        $("#tblLeadlist > tbody").empty();
-                        for (let x = 0; x < item.length; x++) {
-                            $("#tblLeadlist > tbody").append(
-                                ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
-                                '<td contenteditable="false" class="colLeadId hiddenColumn">' + item[x].id + '</td>' +
-                                '<td contenteditable="false" class="colLeadName" >' + item[x].employeeName + '</td>' +
-                                '<td contenteditable="false" class="colFirstName" >' + item[x].firstName + '</td>' +
-                                '<td contenteditable="false" class="colLastName">' + item[x].lastName + '</td>' +
-                                '<td contenteditable="false" class="colPhone">' + item[x].phone + '</td>' +
-                                '<td contenteditable="false" class="colMobile">' + item[x].mobile + '</td>' +
-                                '<td contenteditable="false" class="colEmail">' + item[x].email + '</td>' +
-                                '<td contenteditable="false" class="colDepartment">' + item[x].department + '</td>' +
-                                '<td contenteditable="false" class="colAddress">' + item[x].address + '</td>' +
-                                '<td contenteditable="false" class="colSuburb">' + item[x].surburb + '</td>' +
-                                '<td contenteditable="false" class="colCity">' + item[x].city + '</td>' +
-                                '</tr>');
-                        }
-                        $('.dataTables_info').html('Showing 1 to ' + data.tprospect.length + ' of ' + data.tprospect.length + ' entries');
+      'click .btnRefreshLeads': function(event) {
+          let templateObject = Template.instance();
+          let utilityService = new UtilityService();
+          let tableProductList;
+          const dataTableList = [];
+          var splashArrayInvoiceList = new Array();
+          const lineExtaSellItems = [];
+          $('.fullScreenSpin').css('display', 'inline-block');
+          let dataSearchName = $('#tblLeadlist_filter input').val();
+          if (dataSearchName.replace(/\s/g, '') != '') {
+              sideBarService.getNewLeadByNameOrID(dataSearchName).then(function(data) {
+                  $(".btnRefreshLeads").removeClass('btnSearchAlert');
+                  let lineItems = [];
+                  let lineItemObj = {};
+                  if (data.tprospectlist.length > 0) {
+                      for (let i = 0; i < data.tprospectlist.length; i++) {
+                          let linestatus = '';
+                          if (data.tprospectlist[i].Active == true) {
+                              linestatus = "";
+                          } else if (data.tprospectlist[i].Active == false) {
+                              linestatus = "In-Active";
+                          };
+                          let arBalance = utilityService.modifynegativeCurrencyFormat(data.tprospectlist[i].ARBalance) || 0.00;
+                          let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tprospectlist[i].ExcessAmount) || 0.00;
+                          let balance = utilityService.modifynegativeCurrencyFormat(data.tprospectlist[i].Balance) || 0.00;
+                          let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tprospectlist[i].SupplierCreditLimit) || 0.00;
+                          let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tprospectlist[i].Balance) || 0.00;
+                          var dataList = {
+                              id: data.tprospectlist[i].ClientID || '',
+                              company: data.tprospectlist[i].Company || '',
+                              phone: data.tprospectlist[i].Phone || '',
+                              arbalance: arBalance || 0.00,
+                              creditbalance: creditBalance || 0.00,
+                              balance: balance || 0.00,
+                              creditlimit: creditLimit || 0.00,
+                              salesorderbalance: salesOrderBalance || 0.00,
+                              address: data.tprospectlist[i].Street || '',
+                              suburb: data.tprospectlist[i].Suburb || '',
+                              country: data.tprospectlist[i].Country || '',
+                              email: data.tprospectlist[i].Email || '',
+                              accountno: data.tprospectlist[i].AccountNo || '',
+                              clientno: data.tprospectlist[i].ClientNo || '',
+                              jobtitle: data.tprospectlist[i].JobTitle || '',
+                              notes: data.tprospectlist[i].Notes || '',
+                              status:linestatus
+                          };
 
-                    }
-                } else {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Question',
-                        text: "Leads does not exist, would you like to create it?",
-                        type: 'question',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No'
-                    }).then((result) => {
-                        if (result.value) {
-                            FlowRouter.go('/leadscard');
-                        } else if (result.dismiss === 'cancel') {
-                            //$('#productListModal').modal('toggle');
-                        }
-                    });
-                }
-            }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-          $(".btnRefresh").trigger("click");
-        }
-    },
-    'click .resetTable' : function(event){
-        let checkPrefDetails = getCheckPrefDetails(); //tblEmployeelist
-        if (checkPrefDetails) {
-            CloudPreference.remove({_id:checkPrefDetails._id}, function(err, idTag) {
-                if (err) {
+                          dataTableList.push(dataList);
+                      }
 
-                } else {
-                    Meteor._reload.reload();
-                }
-            });
-        }
-    },
-    'click .saveTable' : function(event){
-        let lineItems = [];
-        $('.columnSettings').each(function (index) {
-            const $tblrow = $(this);
-            const colTitle = $tblrow.find(".divcolumn").text() || '';
-            const colWidth = $tblrow.find(".custom-range").val() || 0;
-            const colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            const colHidden = !$tblrow.find(".custom-control-input").is(':checked');
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            };
+                      templateObject.datatablerecords.set(dataTableList);
 
-            lineItems.push(lineItemObj);
-        });
-        let checkPrefDetails = getCheckPrefDetails();
-        if (checkPrefDetails) {
-            CloudPreference.update({_id: checkPrefDetails._id},{$set: { userid: clientID,username:clientUsername,useremail:clientEmail,
-                                                                       PrefGroup:'salesform',PrefName:'tblLeadlist',published:true,
-                                                                       customFields:lineItems,
-                                                                       updatedAt: new Date() }}, function(err, idTag) {
-                if (err) {
-                    $('#myModal2').modal('toggle');
-                } else {
-                    $('#myModal2').modal('toggle');
-                }
-            });
+                  } else {
+                      $('.fullScreenSpin').css('display', 'none');
+                      swal({
+                          title: 'Question',
+                          text: "Lead does not exist, would you like to create it?",
+                          type: 'question',
+                          showCancelButton: true,
+                          confirmButtonText: 'Yes',
+                          cancelButtonText: 'No'
+                      }).then((result) => {
+                          if (result.value) {
+                              FlowRouter.go('/leadscard');
+                          } else if (result.dismiss === 'cancel') {
+                              //$('#productListModal').modal('toggle');
+                          }
+                      });
+                  }
 
-        } else {
-            CloudPreference.insert({ userid: clientID,username:clientUsername,useremail:clientEmail,
-                                    PrefGroup:'salesform',PrefName:'tblEmployeelist',published:true,
-                                    customFields:lineItems,
-                                    createdAt: new Date() }, function(err, idTag) {
-                if (err) {
-                    $('#myModal2').modal('toggle');
-                } else {
-                    $('#myModal2').modal('toggle');
-
-                }
-            });
-        }
-        $('#myModal2').modal('toggle');
-    },
-    'blur .divcolumn' : function(event){
-        let columData = $(event.target).text();
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        const datable = $('#tblLeadlist').DataTable();
-        const title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-    },
-    'change .rngRange' : function(event){
-        let range = $(event.target).val();
-        $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
-
-        let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        const datable = $('#tblLeadlist th');
-        $.each(datable, function(i,v) {
-            if(v.innerText === columnDataValue){
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("."+replaceClass+"").css('width',range+'px');
-
-            }
-        });
-
-    },
-    'click .btnOpenSettings' : function(event){
-        let templateObject = Template.instance();
-        const columns = $('#tblLeadlist th');
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i,v) {
-            if(v.hidden === false){
-                columVisible =  true;
-            }
-            if((v.className.includes("hiddenColumn"))){
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
+              }).catch(function(err) {
+                  $('.fullScreenSpin').css('display', 'none');
+              });
+          } else {
+              $(".btnRefresh").trigger("click");
+          }
+      },
     'click .exportbtn': function () {
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblLeadlist_wrapper .dt-buttons .btntabletocsv').click();
@@ -508,24 +156,31 @@ Template.leadlist.events({
         jQuery('#tblLeadlist_wrapper .dt-buttons .btntabletoexcel').click();
         $('.fullScreenSpin').css('display','none');
     },
-    'click .btnRefresh': function () {
-        $('.fullScreenSpin').css('display','inline-block');
-        sideBarService.getAllLeads(initialBaseDataLoad,0).then(function(data) {
-            addVS1Data('TProspectEx',JSON.stringify(data)).then(function (datareturn) {
-                setTimeout(function () {
-                    window.open('/leadlist','_self');
-                }, 2000);
-            }).catch(function (err) {
-                setTimeout(function () {
-                    window.open('/leadlist','_self');
-                }, 2000);
+    'click .btnRefresh': function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        sideBarService.getAllLeadDataList(initialDataLoad, 0).then(function (data) {
+            addVS1Data("TProspectList", JSON.stringify(data)).then(function (datareturn) {
+              sideBarService.getAllLeadDataList(initialDataLoad, 0, false).then(function (dataUsers) {
+                addVS1Data('TProspectList', JSON.stringify(dataUsers)).then(function (datareturn) {
+                    window.open("/leadlist", "_self");
+                  }).catch(function (err) {
+                    window.open("/leadlist", "_self");
+                  });
+              });
+              }).catch(function (err) {
+                window.open("/leadlist", "_self");
+              });
+          }).catch(function (err) {
+            sideBarService.getAllLeadDataList().then(function (dataUsers) {
+              addVS1Data('TProspectList', JSON.stringify(dataUsers)).then(function (datareturn) {
+                  window.open("/leadlist", "_self");
+                }).catch(function (err) {
+                  window.open("/leadlist", "_self");
+                });
             });
-        }).catch(function(err) {
-            setTimeout(function () {
-                window.open('/leadlist','_self');
-            }, 2000);
-        });
-    },
+          });
+      },
     'click .printConfirm' : function(event){
         playPrintAudio();
         setTimeout(function(){
@@ -633,7 +288,7 @@ Template.leadlist.events({
 
                         for (let i = 0; i < results.data.length -1; i++) {
                             objDetails = {
-                                type: "TProspect",
+                                type: "TProspectList",
                                 fields:
                                 {
                                     EmployeeName: results.data[i+1][0],
@@ -674,30 +329,33 @@ Template.leadlist.events({
 });
 
 Template.leadlist.helpers({
-    datatablerecords : () => {
-        return Template.instance().datatablerecords.get().sort(function(a, b){
-            if (a.employeeName === 'NA') {
+    datatablerecords: () => {
+        return Template.instance().datatablerecords.get().sort(function(a, b) {
+            if (a.company == 'NA') {
                 return 1;
-            }
-            else if (b.employeeName === 'NA') {
+            } else if (b.company == 'NA') {
                 return -1;
             }
-            return (a.employeeName.toUpperCase() > b.employeeName.toUpperCase()) ? 1 : -1;
+            return (a.company.toUpperCase() > b.company.toUpperCase()) ? 1 : -1;
         });
     },
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblLeadlist'});
+        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblLeadlist' });
     },
-    loggedCompany: () => {
-        return localStorage.getItem('mySession') || '';
+    getSkippedSteps() {
+        let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
+        return setupUrl[1];
     },
+    // custom fields displaysettings
     displayfields: () => {
         return Template.instance().displayfields.get();
     },
-
+    isSetupFinished: () => {
+        return Template.instance().setupFinished.get();
+    },
 });
 
 function getCheckPrefDetails() {

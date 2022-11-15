@@ -90,37 +90,12 @@ Template.stockvaluereport.onRendered(() => {
     }
   };
 
-  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
-    let defaultOptions = templateObject.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.fromDate = formatDateFrom;
-      defaultOptions.toDate = formatDateTo;
-      defaultOptions.ignoreDate = ignoreDate;
-    } else {
-      defaultOptions = {
-        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
-        toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: false
-      };
-    }
-    let begunDate = moment(formatDateTo).format("DD/MM/YYYY");
-    templateObject.dateAsAt.set(begunDate);
-    $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
-      $('.edtReportDates').attr('disabled', true);
-      templateObject.dateAsAt.set("Current Date");
-    }
-    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
-    await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($("#dateFrom").val()),
-      GlobalFunctions.convertYearMonthDay($("#dateTo").val()),
-      defaultOptions.ignoreDate
-    );
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
   };
 
   templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
+    templateObject.setDateAs(dateFrom);
     LoadingOverlay.show();
     // let data = [];
     // if (!localStorage.getItem('VS1StockValue_Report')) {
@@ -207,8 +182,15 @@ Template.stockvaluereport.onRendered(() => {
 
     LoadingOverlay.hide();
   }
+  templateObject.loadReport(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+    false
+  );
+  
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
 
-  templateObject.setReportOptions();
+  // templateObject.setReportOptions();
 
 
   templateObject.initDate();
@@ -471,14 +453,21 @@ Template.stockvaluereport.events({
   //     currentDate2.getDate();
   //     templateObject.setReportOptions(false, getDateFrom, getLoadDate);
   // },
-  "click #ignoreDate": function () {
-    let templateObject = Template.instance();
-    LoadingOverlay.show();
+  // "click #ignoreDate": function () {
+  //   let templateObject = Template.instance();
+  //   LoadingOverlay.show();
+  //   $("#dateFrom").attr("readonly", true);
+  //   $("#dateTo").attr("readonly", true);
+  //   templateObject.dateAsAt.set("Current Date");
+  //   templateObject.(true);
+  // },
+  "click #ignoreDate":  (e, templateObject) => {
     localStorage.setItem("VS1StockValue_Report", "");
-    $("#dateFrom").attr("readonly", true);
-    $("#dateTo").attr("readonly", true);
-    templateObject.dateAsAt.set("Current Date");
-    templateObject.setReportOptions(true);
+    templateObject.loadReport(
+      null, 
+      null, 
+      true
+    )
   },
 
  // CURRENCY MODULE //
@@ -547,12 +536,14 @@ Template.stockvaluereport.events({
   /**
    * This is the new way to handle any modification on the date fields
    */
-   "change #dateTo, change #dateFrom": (e, templateObject) => {
+   "change #dateTo, change #dateFrom": (e) => {
+    let templateObject = Template.instance();
+    localStorage.setItem("VS1StockValue_Report", "");
     templateObject.loadReport(
       GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
       false
-    );
+    )
   },
   ...Datehandler.getDateRangeEvents()
 });

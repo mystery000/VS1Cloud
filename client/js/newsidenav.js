@@ -7779,12 +7779,12 @@ Template.newsidenav.events({
     }, 'click #sidenavbomList': function(event) {
       event.preventDefault();
       FlowRouter.go('/bomlist');
-      let templatObject = Template.instance();
+      let templateObject = Template.instance();
       templateObject.getSetSideNavFocus();
     }, 'click #sidenavnewworkorder': function(event) {
       event.preventDefault();
       FlowRouter.go('/workordercard');
-      let templatObject = Template.instance();
+      let templateObject = Template.instance();
       templateObject.getSetSideNavFocus();
     }, 'click #sidenavnewworkorderlist': function(event) {
       event.preventDefault();

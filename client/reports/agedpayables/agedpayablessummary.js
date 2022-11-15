@@ -92,6 +92,10 @@ Template.agedpayablessummary.onRendered(function() {
     this.dateAsAt.set("Current Date");
   };
 
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  };
+
   this.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
     if (imageData) {
@@ -100,42 +104,10 @@ Template.agedpayablessummary.onRendered(function() {
     }
   };
 
-  this.setReportOptions = async ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) => {
-    let defaultOptions = this.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.fromDate = formatDateFrom;
-      defaultOptions.toDate = formatDateTo;
-      defaultOptions.ignoreDate = ignoreDate;
-    } else {
-      defaultOptions = {
-        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
-        toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
-      };
-    }
-    this.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
-      $('.edtReportDates').attr('disabled', true);
-      this.dateAsAt.set("Current Date");
-    }
-    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
-    await this.reportOptions.set(defaultOptions);
-    await this.loadReport(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
-  };
- 
-
   let contactID = FlowRouter.current().queryParams.contactid ||'';
   this.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
 
-    this.dateAsAt.set(dateFrom);
-    $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
-      $('.edtReportDates').attr('disabled', true);
-      this.dateAsAt.set("Current Date");
-    }
-
+    templateObject.setDateAs( dateFrom );
     LoadingOverlay.show();
     let data = await CachedHttp.get(erpObject.TAPReport, async () => {
       return await reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate, contactID);
@@ -148,7 +120,6 @@ Template.agedpayablessummary.onRendered(function() {
     });
 
     data = data.response;
-
 
     if (data.tapreport.length) {
      localStorage.setItem("VS1AgedPayablesSummary_Report", JSON.stringify(data) || "");
@@ -481,7 +452,12 @@ Template.agedpayablessummary.onRendered(function() {
 
     this.initDate();
     this.initUploadedImage();
-    this.setReportOptions(false);
+    this.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
+    );
+    this.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
     TemplateInjector.addDepartments(this);
 
 });
@@ -651,15 +627,6 @@ Template.agedpayablessummary.events({
     //
     // });
   },
-  "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1AgedPayablesSummary_Report', '');
-    let templateObject = Template.instance();
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    await templateObject.setReportOptions(false, dateFrom, dateTo);
-
-  },
   // "click #lastMonth": async function () {
   //   $(".fullScreenSpin").css("display", "inline-block");
   //   localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -707,17 +674,23 @@ Template.agedpayablessummary.events({
   //   await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
 
   // },
-  "click #ignoreDate": async (e, templateObject) => {
-   
-    // localStorage.setItem('VS1AgedPayablesSummary_Report', '');
-    // localStorage.setItem('VS1AgedPayablesSummary_Card', '');
-    // let templateObject = Template.instance();
-    localStorage.setItem('VS1AgedPayablesSummary_Report', '');
-    $('#dateFrom').attr('readonly', true);
-    $('#dateTo').attr('readonly', true);
-    templateObject.dateAsAt.set("Current Date");
-    await templateObject.setReportOptions(true);
-
+  "click #ignoreDate": function () {
+    let templateObject = Template.instance();
+    LoadingOverlay.show();
+    localStorage.setItem("VS1AgedPayablesSummary_Report", "");
+    $("#dateFrom").attr("readonly", true);
+    $("#dateTo").attr("readonly", true);
+    templateObject.loadReport(null, null, true);
+  },
+  "change #dateTo, change #dateFrom": (e) => {
+    let templateObject = Template.instance();
+    LoadingOverlay.show();
+    localStorage.setItem("VS1AgedPayablesSummary_Report", "");
+    templateObject.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
+    )
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();

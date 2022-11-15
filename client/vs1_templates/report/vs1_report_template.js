@@ -31,33 +31,15 @@ Template.vs1_report_template.onCreated(function(){
 Template.vs1_report_template.onRendered(function() {
   let templateObject = Template.instance();
 
-  // // Load Date
-  // $("#date-input,#dateTo,#dateFrom").datepicker({
-  //   showOn: "button",
-  //   buttonText: "Show Date",
-  //   buttonImageOnly: true,
-  //   buttonImage: "/img/imgCal2.png",
-  //   dateFormat: "dd/mm/yy",
-  //   showOtherMonths: true,
-  //   selectOtherMonths: true,
-  //   changeMonth: true,
-  //   changeYear: true,
-  //   yearRange: "-90:+10",
-  //   onChangeMonthYear: function (year, month, inst) {
-  //     // Set date to picker
-  //     $(this).datepicker(
-  //       "setDate",
-  //       new Date(year, inst.selectedMonth, inst.selectedDay)
-  //     );
-  //     // Hide (close) the picker
-  //     // $(this).datepicker('hide');
-  //     // // Change ttrigger the on change function
-  //     // $(this).trigger('change');
-  //   },
-  // });
-  // $("#dateFrom").val(moment().subtract(1, "months").format("DD/MM/YYYY"));
-  // $("#dateTo").val(moment().format("DD/MM/YYYY"));
-  // templateObject.dateAsAt.set(moment().subtract(1, "months").format("DD/MM/YYYY"));
+  templateObject.initUploadedImage = () => {
+    let imageData = localStorage.getItem("Image");
+    if (imageData) {
+      $("#uploadedImage").attr("src", imageData);
+      $("#uploadedImage").attr("width", "50%");
+    }
+  };
+
+  templateObject.initUploadedImage();
 
   var url = FlowRouter.current().path;
   let currenttablename = "";
@@ -88,7 +70,7 @@ Template.vs1_report_template.onRendered(function() {
     }
     templateObject.reset_data.set(reset_data);
   }
-  templateObject.init_reset_data();
+  // templateObject.init_reset_data();
 
   // custom field displaysettings
 
@@ -150,7 +132,7 @@ Template.vs1_report_template.onRendered(function() {
       await templateObject.report_displayfields.set(custFields);
       $('.dataTable').resizable();
     }
-    templateObject.initCustomFieldDisplaySettings("", currenttablename);
+    // templateObject.initCustomFieldDisplaySettings("", currenttablename);
 
     templateObject.resetData = function (dataVal) {
         location.reload();
