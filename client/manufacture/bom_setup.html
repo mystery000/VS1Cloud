@@ -13,7 +13,7 @@
             <div style="padding: 0px 12px;">
                 <div class="col-12 col-xl-10 col-xxl-8 mx-auto">
                     <div class="card shadow mb-4">
-                        <div class="card-body p-3 rounded" id="bom-setup-card">
+                        <!-- <div class="card-body p-3 rounded" id="bom-setup-card">
                             <form>
                                 <style>
                                     .productRow {
@@ -92,10 +92,8 @@
                                     <div class="d-flex productRow">
                                         <div class="colProduct form-group d-flex">
                                             <button class="btn btn-primary btnAddProduct" style="width: 29%;">Product+</button>
-                                            <!-- <select class="edtProductName edtRaw form-control" id="edtRaw" type="search" style="width: 30%"></select> -->
                                         </div>
                                         <div class="colQty form-group">
-                                            <!-- <input type="text" class="form-control edtQuantity w-100" value="1"/> -->
                                         </div>
                                         <div class="colProcess form-group">
                                         </div>
@@ -106,7 +104,8 @@
                                     </div>
                                 </div>
                             </form>
-                        </div>
+                        </div> -->
+                        {{> bom_template}}
                         <div class="card-footer p-3 rounded d-flex align-items-center justify-content-center px-3" style="border-top-width: 0px; gap: 15px " >
                             <button class="btn btn-success btn-save-bom" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
                             <button class="btn btn-primary btn-print-bom" type="button"><i class="fa fa-print" style="padding-right: 8px;"></i>Print</button>
@@ -119,10 +118,5 @@
         </div>
         
     </div>
-    <div class="modal fade productListModal" id="productListModal">
-        {{> productlistpop}}
-    </div>
-    <div class="modal fade processListModal" id="processListModal">
-        {{> processlistpopup}}
-    </div>
+    
 </template>
