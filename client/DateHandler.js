@@ -9,6 +9,7 @@ export default class Datehandler {
     if (templateObject != null) {
       templateObject.dateAsAt.set(moment(date).format("DD/MM/YYYY"));
     }
+    $(".edtReportDates").trigger("change");
   }
 
   static domDateToUpdate(date, format = "DD/MM/YYYY") {
