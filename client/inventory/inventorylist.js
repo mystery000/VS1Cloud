@@ -1353,7 +1353,7 @@ Template.inventorylist.events({
                      Meteor._reload.reload();
                   }
               });
-          });            
+          });
         } else {
           swal("Something went wrong!", "", "error");
         }
@@ -1967,7 +1967,7 @@ Template.inventorylist.events({
         playSaveAudio();
         let productService = new ProductService();
         setTimeout(function(){
-        
+
         let productCode = $("#edtproductvs1code").val();
         let productName = $("#edtproductvs1name").val();
         if (productName == "") {
@@ -2187,6 +2187,9 @@ Template.inventorylist.events({
     },
     "click .btnSNTrack": function(event) {
         FlowRouter.go("/serialnumberlist");
+    },
+    "click .btnLotTrack": function(event) {
+        FlowRouter.go("/lotnumberlist");
     },
     "click .newProduct": function(event) {
         FlowRouter.go("/productview");

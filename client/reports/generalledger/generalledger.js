@@ -730,6 +730,7 @@ Template.generalledger.events({
     }
   },
   "click #ignoreDate":  (e, templateObject) => {
+    localStorage.setItem("VS1GeneralLedger_Report", "");
     templateObject.getGeneralLedgerReports(
       null, 
       null, 

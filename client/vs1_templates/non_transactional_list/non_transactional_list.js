@@ -305,7 +305,7 @@ Template.non_transactional_list.onRendered(function() {
       });
 
     } catch (error) {
-        console.log(error);
+
     }
     return;
   }
@@ -1886,7 +1886,6 @@ Template.non_transactional_list.onRendered(function() {
     });
   }
     templateObject.displayLeadListData = async function (data) {
-        console.log(data); //check data
     var splashArrayLeadList = new Array();
     let lineItems = [];
     let lineItemObj = {};
@@ -2155,7 +2154,7 @@ setTimeout(function () {
                     dataObjectnew.tprospectlist[j].CUSTFLD2 || '',
                     dataObjectnew.tprospectlist[j].Street || '',
                     dataObjectnew.tprospectlist[j].Suburb || '',
-                    dataObjectnew.tsuppliervs1list[j].POState || '',
+                    dataObjectnew.tprospectlist[j].POState || '',
                     dataObjectnew.tprospectlist[j].Postcode || '',
                     dataObjectnew.tprospectlist[j].Country || '',
                     linestatus,
@@ -2163,6 +2162,7 @@ setTimeout(function () {
                 ];
 
                 splashArrayLeadList.push(dataListDupp);
+
             }
             let uniqueChars = [...new Set(splashArrayLeadList)];
             templateObject.transactiondatatablerecords.set(uniqueChars);

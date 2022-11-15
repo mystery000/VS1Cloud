@@ -220,7 +220,6 @@ Template.dsmResalescomparision.onRendered(() => {
     //     setTimeout(function() {
     //         let getData = JSON.parse(localStorage.getItem('VS1SalesEmpReport_dash'));
 
-    //         console.log("===", getData);
 
     //         let sortedArray = [];
     //         sortedArray = getData.sort(function(a, b) {
