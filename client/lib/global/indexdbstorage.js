@@ -113,6 +113,7 @@ openDb = function(dbName) {
             db.createObjectStore("TProductJPGPicture", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProductWeb", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProspectEx", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TProspectList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TRepairs", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TRefundSale", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TRegionalOptions", { keyPath: "EmployeeEmail" });
@@ -310,8 +311,8 @@ openDb = function(dbName) {
             db.createObjectStore('TReceiptCategory', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TCorrespondence', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TEftOptions', { keyPath: "EmployeeEmail" });
-            db.createObjectStore('TBasReturn', { keyPath: "EmployeeEmail" });
-            db.createObjectStore('TVatReturn', { keyPath: "EmployeeEmail" });
+            db.createObjectStore('TBASReturn', { keyPath: "EmployeeEmail" });
+            db.createObjectStore('TVATReturn', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Customize', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Dashboard', { keyPath: "EmployeeEmail" });
             db.createObjectStore("TPayrollSettingOvertimes", { keyPath: "EmployeeEmail" });
@@ -321,11 +322,11 @@ openDb = function(dbName) {
             db.createObjectStore("TServiceLog", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TServiceLogList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TPayRunHistory", { keyPath: "EmployeeEmail" });
-            db.createObjectStore('TProcessStep', {keyPath: 'EmployeeEmail'});
-            db.createObjectStore('TProjectTasks', {keyPath: 'EmployeeEmail'});
-            db.createObjectStore('TProjectTasksList', {keyPath: 'EmployeeEmail'});
-            db.createObjectStore('TBasedOnType', {keyPath:'EmployeeEmail'});
-            db.createObjectStore('TProcTreeVS1', {keyPath: 'EmployeeEmail'});
+            db.createObjectStore('TProcessStep', { keyPath: 'EmployeeEmail' });
+            db.createObjectStore('TProjectTasks', { keyPath: 'EmployeeEmail' });
+            db.createObjectStore('TProjectTasksList', { keyPath: 'EmployeeEmail' });
+            db.createObjectStore('TBasedOnType', { keyPath: 'EmployeeEmail' });
+            db.createObjectStore('TProcTreeVS1', { keyPath: 'EmployeeEmail' });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });
@@ -586,7 +587,7 @@ getStoreToDelete = async function(email) {
 openDbCheckVersion = async function() {
     var promiseversion = new Promise((resolve, reject) => {
         var versionExists = false;
-        let dbReqVersion = indexedDB.open('TDatabaseVersion', 98);
+        let dbReqVersion = indexedDB.open('TDatabaseVersion', 99);
         dbReqVersion.onsuccess = function() {
             resolve(versionExists);
         };

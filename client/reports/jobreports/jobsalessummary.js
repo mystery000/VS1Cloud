@@ -6,6 +6,7 @@ import { TaxRateService } from "../../settings/settings-service";
 import JobSalesApi from "../../js/Api/JobSaleApi";
 import CachedHttp from "../../lib/global/CachedHttp";
 import GlobalFunctions from "../../GlobalFunctions";
+import Datehandler from "../../DateHandler";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 
 let reportService = new ReportService();
@@ -30,57 +31,13 @@ Template.jobsalessummary.onRendered(() => {
   const jobSalesApi = new JobSalesApi();
   LoadingOverlay.show();
   templateObject.initDate = () => {
-    const currentDate = new Date();
+    Datehandler.initOneMonth();
+  };
 
-    /**
-     * This will init dates
-     */
-    let begunDate = moment(currentDate).format("DD/MM/YYYY");
-    templateObject.dateAsAt.set(begunDate);
+  templateObject.initDate();
 
-    let fromDateMonth = currentDate.getMonth() + 1;
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-
-    let prevMonth = moment().subtract(1, "months").format("MM");
-
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-    var fromDate =
-      fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
-
-    $("#date-input,#dateTo,#dateFrom").datepicker({
-      showOn: "button",
-      buttonText: "Show Date",
-      buttonImageOnly: true,
-      buttonImage: "/img/imgCal2.png",
-      dateFormat: "dd/mm/yy",
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-90:+10",
-      onChangeMonthYear: function (year, month, inst) {
-        // Set date to picker
-        $(this).datepicker(
-          "setDate",
-          new Date(year, inst.selectedMonth, inst.selectedDay)
-        );
-        // Hide (close) the picker
-        // $(this).datepicker('hide');
-        // // Change ttrigger the on change function
-        // $(this).trigger('change');
-      },
-    });
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    //--------- END OF DATE ---------------//
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
   };
 
   templateObject.initUploadedImage = () => {
@@ -92,6 +49,7 @@ Template.jobsalessummary.onRendered(() => {
   };
 
   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate = false) => {
+    templateObject.setDateAs(dateFrom);
     LoadingOverlay.show();
 
 
@@ -155,6 +113,7 @@ Template.jobsalessummary.onRendered(() => {
 
 
   templateObject.initDate();
+  templateObject.setDateAs();
   templateObject.initUploadedImage();
 
 
@@ -284,150 +243,150 @@ Template.jobsalessummary.events({
       $(".table tbody tr").show();
     }
   },
-  "click #lastMonth": function () {
-    let templateObject = Template.instance();
+  // "click #lastMonth": function () {
+  //   let templateObject = Template.instance();
   
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
+  //   $("#dateFrom").attr("readonly", false);
+  //   $("#dateTo").attr("readonly", false);
+  //   var currentDate = new Date();
 
-    var prevMonthLastDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      0
-    );
-    var prevMonthFirstDate = new Date(
-      currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1),
-      (currentDate.getMonth() - 1 + 12) % 12,
-      1
-    );
+  //   var prevMonthLastDate = new Date(
+  //     currentDate.getFullYear(),
+  //     currentDate.getMonth(),
+  //     0
+  //   );
+  //   var prevMonthFirstDate = new Date(
+  //     currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1),
+  //     (currentDate.getMonth() - 1 + 12) % 12,
+  //     1
+  //   );
 
-    var formatDateComponent = function (dateComponent) {
-      return (dateComponent < 10 ? "0" : "") + dateComponent;
-    };
+  //   var formatDateComponent = function (dateComponent) {
+  //     return (dateComponent < 10 ? "0" : "") + dateComponent;
+  //   };
 
-    var formatDate = function (date) {
-      return (
-        formatDateComponent(date.getDate()) +
-        "/" +
-        formatDateComponent(date.getMonth() + 1) +
-        "/" +
-        date.getFullYear()
-      );
-    };
+  //   var formatDate = function (date) {
+  //     return (
+  //       formatDateComponent(date.getDate()) +
+  //       "/" +
+  //       formatDateComponent(date.getMonth() + 1) +
+  //       "/" +
+  //       date.getFullYear()
+  //     );
+  //   };
 
-    var formatDateERP = function (date) {
-      return (
-        date.getFullYear() +
-        "-" +
-        formatDateComponent(date.getMonth() + 1) +
-        "-" +
-        formatDateComponent(date.getDate())
-      );
-    };
+  //   var formatDateERP = function (date) {
+  //     return (
+  //       date.getFullYear() +
+  //       "-" +
+  //       formatDateComponent(date.getMonth() + 1) +
+  //       "-" +
+  //       formatDateComponent(date.getDate())
+  //     );
+  //   };
 
-    var fromDate = formatDate(prevMonthFirstDate);
-    var toDate = formatDate(prevMonthLastDate);
+  //   var fromDate = formatDate(prevMonthFirstDate);
+  //   var toDate = formatDate(prevMonthLastDate);
 
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(toDate);
+  //   $("#dateFrom").val(fromDate);
+  //   $("#dateTo").val(toDate);
 
-    var getLoadDate = formatDateERP(prevMonthLastDate);
-    let getDateFrom = formatDateERP(prevMonthFirstDate);
-    templateObject.dateAsAt.set(fromDate);
+  //   var getLoadDate = formatDateERP(prevMonthLastDate);
+  //   let getDateFrom = formatDateERP(prevMonthFirstDate);
+  //   templateObject.dateAsAt.set(fromDate);
 
-    // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
-    templateObject.loadReport(getDateFrom, getLoadDate, false);
-  },
-  "click #lastQuarter": function () {
-    let templateObject = Template.instance();
+  //   // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+  //   templateObject.loadReport(getDateFrom, getLoadDate, false);
+  // },
+  // "click #lastQuarter": function () {
+  //   let templateObject = Template.instance();
   
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  //   $("#dateFrom").attr("readonly", false);
+  //   $("#dateTo").attr("readonly", false);
+  //   var currentDate = new Date();
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-    function getQuarter(d) {
-      d = d || new Date();
-      var m = Math.floor(d.getMonth() / 3) + 2;
-      return m > 4 ? m - 4 : m;
-    }
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  //   function getQuarter(d) {
+  //     d = d || new Date();
+  //     var m = Math.floor(d.getMonth() / 3) + 2;
+  //     return m > 4 ? m - 4 : m;
+  //   }
 
-    var quarterAdjustment = (moment().month() % 3) + 1;
-    var lastQuarterEndDate = moment()
-      .subtract({ months: quarterAdjustment })
-      .endOf("month");
-    var lastQuarterStartDate = lastQuarterEndDate
-      .clone()
-      .subtract({ months: 2 })
-      .startOf("month");
+  //   var quarterAdjustment = (moment().month() % 3) + 1;
+  //   var lastQuarterEndDate = moment()
+  //     .subtract({ months: quarterAdjustment })
+  //     .endOf("month");
+  //   var lastQuarterStartDate = lastQuarterEndDate
+  //     .clone()
+  //     .subtract({ months: 2 })
+  //     .startOf("month");
 
-    var lastQuarterStartDateFormat =
-      moment(lastQuarterStartDate).format("DD/MM/YYYY");
-    var lastQuarterEndDateFormat =
-      moment(lastQuarterEndDate).format("DD/MM/YYYY");
+  //   var lastQuarterStartDateFormat =
+  //     moment(lastQuarterStartDate).format("DD/MM/YYYY");
+  //   var lastQuarterEndDateFormat =
+  //     moment(lastQuarterEndDate).format("DD/MM/YYYY");
 
-    templateObject.dateAsAt.set(lastQuarterStartDateFormat);
-    $("#dateFrom").val(lastQuarterStartDateFormat);
-    $("#dateTo").val(lastQuarterEndDateFormat);
+  //   templateObject.dateAsAt.set(lastQuarterStartDateFormat);
+  //   $("#dateFrom").val(lastQuarterStartDateFormat);
+  //   $("#dateTo").val(lastQuarterEndDateFormat);
 
-    let fromDateMonth = getQuarter(currentDate);
-    var quarterMonth = getQuarter(currentDate);
-    let fromDateDay = currentDate.getDate();
+  //   let fromDateMonth = getQuarter(currentDate);
+  //   var quarterMonth = getQuarter(currentDate);
+  //   let fromDateDay = currentDate.getDate();
 
-    var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
-    let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-    // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
-    templateObject.loadReport(getDateFrom, getLoadDate, false);
-  },
-  "click #last12Months": function () {
-    let templateObject = Template.instance();
+  //   var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
+  //   let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
+  //   // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+  //   templateObject.loadReport(getDateFrom, getLoadDate, false);
+  // },
+  // "click #last12Months": function () {
+  //   let templateObject = Template.instance();
    
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  //   $("#dateFrom").attr("readonly", false);
+  //   $("#dateTo").attr("readonly", false);
+  //   var currentDate = new Date();
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
-    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
+  //   let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+  //   let fromDateDay = currentDate.getDate();
+  //   if (currentDate.getMonth() + 1 < 10) {
+  //     fromDateMonth = "0" + (currentDate.getMonth() + 1);
+  //   }
+  //   if (currentDate.getDate() < 10) {
+  //     fromDateDay = "0" + currentDate.getDate();
+  //   }
 
-    var fromDate =
-      fromDateDay +
-      "/" +
-      fromDateMonth +
-      "/" +
-      Math.floor(currentDate.getFullYear() - 1);
-    templateObject.dateAsAt.set(begunDate);
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
+  //   var fromDate =
+  //     fromDateDay +
+  //     "/" +
+  //     fromDateMonth +
+  //     "/" +
+  //     Math.floor(currentDate.getFullYear() - 1);
+  //   templateObject.dateAsAt.set(begunDate);
+  //   $("#dateFrom").val(fromDate);
+  //   $("#dateTo").val(begunDate);
 
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom =
-      Math.floor(currentDate2.getFullYear() - 1) +
-      "-" +
-      Math.floor(currentDate2.getMonth() + 1) +
-      "-" +
-      currentDate2.getDate();
-    // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+  //   var currentDate2 = new Date();
+  //   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+  //   let getDateFrom =
+  //     Math.floor(currentDate2.getFullYear() - 1) +
+  //     "-" +
+  //     Math.floor(currentDate2.getMonth() + 1) +
+  //     "-" +
+  //     currentDate2.getDate();
+  //   // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
 
-    templateObject.loadReport(getDateFrom, getLoadDate, false);
+  //   templateObject.loadReport(getDateFrom, getLoadDate, false);
 
-  },
-  "click #ignoreDate":  (e, ui) => {
-    $("#dateFrom").attr("readonly", true);
-    $("#dateTo").attr("readonly", true);
-     ui.dateAsAt.set("Current Date");
-    // templateObject.getGeneralLedgerReports("", "", true);
-    ui.loadReport(null, null, true);
-  },
+  // },
+  // "click #ignoreDate":  (e, ui) => {
+  //   $("#dateFrom").attr("readonly", true);
+  //   $("#dateTo").attr("readonly", true);
+  //    ui.dateAsAt.set("Current Date");
+  //   // templateObject.getGeneralLedgerReports("", "", true);
+  //   ui.loadReport(null, null, true);
+  // },
 
   // CURRENCY MODULE
   ...FxGlobalFunctions.getEvents(),
@@ -489,7 +448,24 @@ Template.jobsalessummary.events({
         type: 'warning',
         confirmButtonText: 'Ok'
       })
-  }
+  },
+  "click #ignoreDate":  (e, templateObject) => {
+    templateObject.loadReport(
+      null, 
+      null, 
+      true
+    )
+  },
+  "change #dateTo, change #dateFrom": (e) => {
+    let templateObject = Template.instance();
+    localStorage.setItem("VS1JobSalesSummary_Report", "");
+    templateObject.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+    )
+  },
+  ...Datehandler.getDateRangeEvents(),
 });
 
 Template.jobsalessummary.helpers({

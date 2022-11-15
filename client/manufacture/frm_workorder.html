@@ -805,6 +805,16 @@
             {{> salesorderslistpop}}
         </div>
 
+
+        <style>
+            @media screen and (min-width: 1600px) {
+                #BOMSetupModal .modal-dialog {
+                    max-width: 1440px
+                }
+            }
+        </style>
+
+        {{#if showBOMModal}}
         <div class="modal fade" role="dialog" tabindex="-1" id="BOMSetupModal">
             <div class="modal-dialog modal-xl modal-centered" role="document">
                 <div class="modal-content" >
@@ -813,7 +823,8 @@
                         <button type="button" class="close" id="closeBOMSetupModal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
-                        <style>
+                        {{>bom_template}}
+                        <!-- <style>
                            #BOMSetupModal .productRow {
                                 margin-bottom: 0.5rem;
                                 gap: 0.5%;
@@ -889,10 +900,8 @@
                             <div class="d-flex productRow">
                                 <div class="colProduct form-group d-flex">
                                     <button class="btn btn-primary btnAddProduct" style="width: 29%;">Product+</button>
-                                    <!-- <select class="edtProductName edtRaw form-control" id="edtRaw" type="search" style="width: 30%"></select> -->
                                 </div>
                                 <div class="colQty form-group">
-                                    <!-- <input type="text" class="form-control edtQuantity w-100" value="1"/> -->
                                 </div>
                                 <div class="colProcess form-group">
                                 </div>
@@ -901,7 +910,7 @@
                                 <div class="colAttachment form-group"></div>
                                 <div class="colDelete"></div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="modal-footer d-flex align-items-center justify-content-center px-3" style="border-top-width: 0px; gap: 15px " >
                         <button class="btn btn-success btn-save-bom" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
@@ -911,6 +920,7 @@
                 </div>
             </div>
         </div>
+        {{/if}}
 
 
         <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">

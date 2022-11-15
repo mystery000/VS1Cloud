@@ -6,6 +6,7 @@ import GlobalFunctions from "../../GlobalFunctions";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import Datehandler from "../../DateHandler";
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
@@ -84,38 +85,15 @@ Template.executivesummaryreport.onCreated(function () {
 Template.executivesummaryreport.onRendered(() => {
   const templateObject = Template.instance();
   let currentDate = new Date();
-  $(document).ready(function () {
-    $("#balancedate").datepicker({
-      showOn: "button",
-      buttonText: "Show Date",
-      buttonImageOnly: true,
-      buttonImage: "/img/imgCal2.png",
-      dateFormat: "dd/mm/yy",
-      // dateFormat: 'yy-mm-dd',
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-90:+10",
-      onChangeMonthYear: function (year, month, inst) {
-        // Set date to picker
-        $(this).datepicker(
-          "setDate",
-          new Date(year, inst.selectedMonth, inst.selectedDay)
-        );
-        // Hide (close) the picker
-        // $(this).datepicker('hide');
-        // // Change ttrigger the on change function
-        // $(this).trigger('change');
-      },
-    });
+  templateObject.initDate = () => {
+    Datehandler.initOneMonth();
+  };
 
-    let imageData = localStorage.getItem("Image");
-    if (imageData) {
-      $("#uploadedImage").attr("src", imageData);
-      $("#uploadedImage").attr("width", "50%");
-    }
-  });
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  };
+
+  templateObject.initDate();
 
   let varianceRed = "#ff420e";
   let varianceGreen = "#579D1C"; //#1cc88a
@@ -223,6 +201,7 @@ Template.executivesummaryreport.onRendered(() => {
 
   templateObject.getDashboardExecutiveData = async (dateAsOf, dateChanged) => {
     LoadingOverlay.show();
+    templateObject.setDateAs( dateAsOf );
     try {
       let data = await reportService.getCardDataReport(dateAsOf);
       if (data.tcarddatareport) {
@@ -363,28 +342,15 @@ Template.executivesummaryreport.onRendered(() => {
   }
   templateObject.setTitleDE(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
   templateObject.setMonthsOnHeader(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-  var formatDate = moment(currentDate).format("DD/MM/YYYY")
-  templateObject.dateAsAt.set(formatDate);
-  $("#balancedate").val(formatDate);
-  var dateAsOf = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-  templateObject.getDashboardExecutiveData(dateAsOf, false);
+  templateObject.getDashboardExecutiveData(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    false
+  );
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
+
 });
 
 Template.executivesummaryreport.events({
-  "change .balancedate": function () {
-    let templateObject = Template.instance();
-    LoadingOverlay.show();
-    let balanceDate = $("#balancedate").val();
-    let arrDate = balanceDate.split("/");
-    // let formatBalDate = moment(balanceDate).format("YYYY-MM-DD");
-    let formatBalDate = arrDate[2] + "-" + arrDate[1] + "-" + arrDate[0];
-    templateObject.setTitleDE(arrDate[2], eval(arrDate[1]) - 1, arrDate[0]);
-    templateObject.setMonthsOnHeader(arrDate[2], eval(arrDate[1]) - 1, arrDate[0]);
-    templateObject.getDashboardExecutiveData(formatBalDate, true);
-    var formatDate = moment(formatBalDate).format("DD/MM/YYYY");
-    templateObject.dateAsAt.set(formatDate);
-    LoadingOverlay.hide();
-  },
   "change input[type='checkbox']": (event) => {
     // This should be global
     $(event.currentTarget).attr(
@@ -538,6 +504,25 @@ Template.executivesummaryreport.events({
       $(".table tbody tr").show();
     }
   },
+  "click #ignoreDate": function () {
+    let templateObject = Template.instance();
+    LoadingOverlay.show();
+    $("#dateFrom").attr("readonly", true);
+    templateObject.getDashboardExecutiveData(null, true);
+  },
+  "change .edtReportDates": (e) => {
+    let templateObject = Template.instance();
+    LoadingOverlay.show();
+    let balanceDate = $("#dateFrom").val();
+    let arrDate = balanceDate.split("/");
+    templateObject.setTitleDE(arrDate[2], eval(arrDate[1]) - 1, arrDate[0]);
+    templateObject.setMonthsOnHeader(arrDate[2], eval(arrDate[1]) - 1, arrDate[0]);
+    templateObject.getDashboardExecutiveData(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      false
+    )
+  },
+  ...Datehandler.getDateRangeEvents(),
   ...FxGlobalFunctions.getEvents(),
 });
 

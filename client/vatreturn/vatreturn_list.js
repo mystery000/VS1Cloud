@@ -64,12 +64,12 @@ Template.vatreturnlist.onRendered(function() {
     };
 
     templateObject.resetData = function(dataVal) {
-        window.open('/basreturnlist?page=last', '_self');
+        window.open('/vatreturnlist?page=last', '_self');
     }
 
-    templateObject.getAllBasReturnData = function() {
+    templateObject.getAllVATReturnData = function() {
 
-        getVS1Data('TVatReturn').then(function(dataObject) {
+        getVS1Data('TVATReturn').then(function(dataObject) {
             if (dataObject.length == 0) {
                 // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                 //     let lineItems = [];
@@ -129,7 +129,7 @@ Template.vatreturnlist.onRendered(function() {
                 //     $('.fullScreenSpin').css('display', 'none');
                 //     setTimeout(function() {
                 //         //$.fn.dataTable.moment('DD/MM/YY');
-                //         $('#tblBasReturnList').DataTable({
+                //         $('#tblVATReturnList').DataTable({
                 //             // dom: 'lBfrtip',
                 //             columnDefs: [
                 //                 { type: 'date', targets: 0 }
@@ -140,7 +140,7 @@ Template.vatreturnlist.onRendered(function() {
                 //                 text: '',
                 //                 download: 'open',
                 //                 className: "btntabletocsv hiddenColumn",
-                //                 filename: "basreturnlist_" + moment().format(),
+                //                 filename: "vatreturnlist_" + moment().format(),
                 //                 orientation: 'portrait',
                 //                 exportOptions: {
                 //                     columns: ':visible'
@@ -150,8 +150,8 @@ Template.vatreturnlist.onRendered(function() {
                 //                 download: 'open',
                 //                 className: "btntabletopdf hiddenColumn",
                 //                 text: '',
-                //                 title: 'BAS Return',
-                //                 filename: "basreturnlist_" + moment().format(),
+                //                 title: 'VAT Return',
+                //                 filename: "vatreturnlist_" + moment().format(),
                 //                 exportOptions: {
                 //                     columns: ':visible'
                 //                 }
@@ -171,13 +171,13 @@ Template.vatreturnlist.onRendered(function() {
                 //             ],
                 //             // "aaSorting": [[1,'desc']],
                 //             action: function() {
-                //                 $('#tblBasReturnList').DataTable().ajax.reload();
+                //                 $('#tblVATReturnList').DataTable().ajax.reload();
                 //             },
                 //             "fnDrawCallback": function(oSettings) {
                 //                 let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
 
                 //                 $('.paginate_button.page-item').removeClass('disabled');
-                //                 $('#tblBasReturnList_ellipsis').addClass('disabled');
+                //                 $('#tblVATReturnList_ellipsis').addClass('disabled');
 
                 //                 if (oSettings._iDisplayLength == -1) {
                 //                     if (oSettings.fnRecordsDisplay() > 150) {
@@ -274,7 +274,7 @@ Template.vatreturnlist.onRendered(function() {
                 //                 } else {
                 //                     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                 //                 }
-                //                 $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnList_filter");
+                //                 $("<button class='btn btn-primary btnRefreshVATReturn' type='button' id='btnRefreshVATReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
                 //                 $('.myvarFilterForm').appendTo(".colDateFilter");
                 //             },
                 //             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -319,7 +319,7 @@ Template.vatreturnlist.onRendered(function() {
                 //     });
                 //     templateObject.tableheaderrecords.set(tableHeaderList);
                 //     $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                //     $('#tblBasReturnList tbody').on('click', 'tr', function() {
+                //     $('#tblVATReturnList tbody').on('click', 'tr', function() {
                 //         var listData = $(this).closest('tr').attr('id');
                 //         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
 
@@ -327,7 +327,7 @@ Template.vatreturnlist.onRendered(function() {
                 //             if (checkDeleted == "Deleted") {
                 //                 swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
                 //             } else {
-                //                 FlowRouter.go('/basreturn?id=' + listData);
+                //                 FlowRouter.go('/vatreturn?id=' + listData);
                 //             }
                 //         }
                 //     });
@@ -339,20 +339,17 @@ Template.vatreturnlist.onRendered(function() {
                 let data = JSON.parse(dataObject[0].data);
                 for (let i = 0; i < data.length; i++) {
                     var dataList = {
-                        basnumber: data[i].basNumber || '',
+                        vatnumber: data[i].vatNumber || '',
                         description: data[i].description || '',
-                        tab1datemethod: (data[i].basReturnTab1.datemethod == "q") ? "Quarterly" : "Monthly",
-                        tab1startDate: (data[i].basReturnTab1.startDate == "0000-00-00") ? "" : data[i].basReturnTab1.startDate,
-                        tab1endDate: (data[i].basReturnTab1.startDate == "0000-00-00") ? "" : data[i].basReturnTab1.endDate,
-                        tab2datemethod: (data[i].basReturnTab2.datemethod == "q") ? "Quarterly" : "Monthly",
-                        tab2startDate: (data[i].basReturnTab2.startDate == "0000-00-00") ? "" : data[i].basReturnTab2.startDate,
-                        tab2endDate: (data[i].basReturnTab2.startDate == "0000-00-00") ? "" : data[i].basReturnTab2.endDate,
-                        tab2datemethod2: (data[i].basReturnTab2.datemethod_2 == "q") ? "Quarterly" : "Monthly",
-                        tab2startDate2: (data[i].basReturnTab2.startDate_2 == "0000-00-00") ? "" : data[i].basReturnTab2.startDate_2,
-                        tab2endDate2: (data[i].basReturnTab2.startDate_2 == "0000-00-00") ? "" : data[i].basReturnTab2.endDate_2,
-                        tab3datemethod: (data[i].basReturnTab3.datemethod == "q") ? "Quarterly" : "Monthly",
-                        tab3startDate: (data[i].basReturnTab3.startDate == "0000-00-00") ? "" : data[i].basReturnTab3.startDate,
-                        tab3endDate: (data[i].basReturnTab3.startDate == "0000-00-00") ? "" : data[i].basReturnTab3.endDate,
+                        tab1datemethod: (data[i].vatReturnTab1.datemethod == "q") ? "Quarterly" : "Monthly",
+                        tab1startDate: (data[i].vatReturnTab1.startDate == "0000-00-00") ? "" : data[i].vatReturnTab1.startDate,
+                        tab1endDate: (data[i].vatReturnTab1.startDate == "0000-00-00") ? "" : data[i].vatReturnTab1.endDate,
+                        tab2datemethod: (data[i].vatReturnTab2.datemethod == "q") ? "Quarterly" : "Monthly",
+                        tab2startDate: (data[i].vatReturnTab2.startDate == "0000-00-00") ? "" : data[i].vatReturnTab2.startDate,
+                        tab2endDate: (data[i].vatReturnTab2.startDate == "0000-00-00") ? "" : data[i].vatReturnTab2.endDate,
+                        tab3datemethod: (data[i].vatReturnTab3.datemethod == "q") ? "Quarterly" : "Monthly",
+                        tab3startDate: (data[i].vatReturnTab3.startDate == "0000-00-00") ? "" : data[i].vatReturnTab3.startDate,
+                        tab3endDate: (data[i].vatReturnTab3.startDate == "0000-00-00") ? "" : data[i].vatReturnTab3.endDate,
                     };
                     dataTableList.push(dataList);
                 }
@@ -368,19 +365,19 @@ Template.vatreturnlist.onRendered(function() {
                 $('.fullScreenSpin').css('display', 'none');
                 setTimeout(function() {
                     //$.fn.dataTable.moment('DD/MM/YY');
-                    $('#tblBasReturnList').DataTable({
+                    $('#tblVATReturnList').DataTable({
                         // dom: 'lBfrtip',
                         columnDefs: [
-                            { type: 'basnumber', targets: 0 }
+                            { type: 'vatnumber', targets: 0 }
                         ],
                         "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         buttons: [{
                             extend: 'excelHtml5',
                             text: '',
-                            title: 'BAS Return List',
+                            title: 'VAT Return List',
                             download: 'open',
                             className: "btntabletocsv hiddenColumn",
-                            filename: "basreturnlist_" + moment().format(),
+                            filename: "vatreturnlist_" + moment().format(),
                             orientation: 'portrait',
                             exportOptions: {
                                 columns: ':visible'
@@ -390,8 +387,8 @@ Template.vatreturnlist.onRendered(function() {
                             download: 'open',
                             className: "btntabletopdf hiddenColumn",
                             text: '',
-                            title: 'BAS Return List',
-                            filename: "basreturnlist_" + moment().format(),
+                            title: 'VAT Return List',
+                            filename: "vatreturnlist_" + moment().format(),
                             exportOptions: {
                                 columns: ':visible'
                             }
@@ -411,7 +408,7 @@ Template.vatreturnlist.onRendered(function() {
                         ],
                         // "aaSorting": [[1,'desc']],
                         action: function() {
-                            $('#tblBasReturnList').DataTable().ajax.reload();
+                            $('#tblVATReturnList').DataTable().ajax.reload();
                         },
                         "fnInitComplete": function() {
                             this.fnPageChange('last');
@@ -420,7 +417,7 @@ Template.vatreturnlist.onRendered(function() {
                             // } else {
                             //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                             // }
-                            $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnList_filter");
+                            $("<button class='btn btn-primary btnRefreshVATReturn' type='button' id='btnRefreshVATReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
                         "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -441,7 +438,7 @@ Template.vatreturnlist.onRendered(function() {
                     $('.fullScreenSpin').css('display', 'none');
                 }, 1000);
 
-                var columns = $('#tblBasReturnList th');
+                var columns = $('#tblVATReturnList th');
                 let sTible = "";
                 let sWidth = "";
                 let sIndex = "";
@@ -468,7 +465,7 @@ Template.vatreturnlist.onRendered(function() {
                 });
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblBasReturnList tbody').on('click', 'tr', function() {
+                $('#tblVATReturnList tbody').on('click', 'tr', function() {
                     var listData = $(this).closest('tr').attr('id');
                     var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
 
@@ -476,7 +473,7 @@ Template.vatreturnlist.onRendered(function() {
                         if (checkDeleted == "Deleted") {
                             swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
                         } else {
-                            FlowRouter.go('/basreturn?id=' + listData);
+                            FlowRouter.go('/vatreturn?id=' + listData);
                         }
                     }
                 });
@@ -541,7 +538,7 @@ Template.vatreturnlist.onRendered(function() {
             //     $('.fullScreenSpin').css('display', 'none');
             //     setTimeout(function() {
             //         //$.fn.dataTable.moment('DD/MM/YY');
-            //         $('#tblBasReturnList').DataTable({
+            //         $('#tblVATReturnList').DataTable({
             //             // dom: 'lBfrtip',
             //             columnDefs: [
             //                 { type: 'date', targets: 0 }
@@ -552,7 +549,7 @@ Template.vatreturnlist.onRendered(function() {
             //                 text: '',
             //                 download: 'open',
             //                 className: "btntabletocsv hiddenColumn",
-            //                 filename: "basreturnlist_" + moment().format(),
+            //                 filename:vatreturnlist_" + moment().format(),
             //                 orientation: 'portrait',
             //                 exportOptions: {
             //                     columns: ':visible'
@@ -562,8 +559,8 @@ Template.vatreturnlist.onRendered(function() {
             //                 download: 'open',
             //                 className: "btntabletopdf hiddenColumn",
             //                 text: '',
-            //                 title: 'BAS Return',
-            //                 filename: "basreturnlist_" + moment().format(),
+            //                 title: 'VAT Return',
+            //                 filename: "vatreturnlist_" + moment().format(),
             //                 exportOptions: {
             //                     columns: ':visible'
             //                 }
@@ -583,13 +580,13 @@ Template.vatreturnlist.onRendered(function() {
             //             ],
             //             // "aaSorting": [[1,'desc']],
             //             action: function() {
-            //                 $('#tblBasReturnList').DataTable().ajax.reload();
+            //                 $('#tblVATReturnList').DataTable().ajax.reload();
             //             },
             //             "fnDrawCallback": function(oSettings) {
             //                 let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
 
             //                 $('.paginate_button.page-item').removeClass('disabled');
-            //                 $('#tblBasReturnList_ellipsis').addClass('disabled');
+            //                 $('#tblVATReturnList_ellipsis').addClass('disabled');
 
             //                 if (oSettings._iDisplayLength == -1) {
             //                     if (oSettings.fnRecordsDisplay() > 150) {
@@ -686,7 +683,7 @@ Template.vatreturnlist.onRendered(function() {
             //                 } else {
             //                     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
             //                 }
-            //                 $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
+            //                 $("<button class='btn btn-primary btnRefreshVATReturn' type='button' id='btnRefreshVATReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
             //                 $('.myvarFilterForm').appendTo(".colDateFilter");
             //             },
             //             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -708,7 +705,7 @@ Template.vatreturnlist.onRendered(function() {
             //     }, 0);
 
 
-            //     var columns = $('#tblBasReturnList th');
+            //     var columns = $('#tblVATReturnList th');
             //     let sTible = "";
             //     let sWidth = "";
             //     let sIndex = "";
@@ -735,7 +732,7 @@ Template.vatreturnlist.onRendered(function() {
             //     });
             //     templateObject.tableheaderrecords.set(tableHeaderList);
             //     $('div.dataTables_filter input').addClass('form-control form-control-sm');
-            //     $('#tblBasReturnList tbody').on('click', 'tr', function() {
+            //     $('#tblVATReturnList tbody').on('click', 'tr', function() {
             //         var listData = $(this).closest('tr').attr('id');
             //         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
 
@@ -743,7 +740,7 @@ Template.vatreturnlist.onRendered(function() {
             //             if (checkDeleted == "Deleted") {
             //                 swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
             //             } else {
-            //                 FlowRouter.go('/basreturn?id=' + listData);
+            //                 FlowRouter.go('/vatreturn?id=' + listData);
             //             }
             //         }
             //     });
@@ -756,7 +753,7 @@ Template.vatreturnlist.onRendered(function() {
         });
     }
 
-    templateObject.getAllBasReturnData();
+    templateObject.getAllVATReturnData();
 
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
     let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
@@ -808,33 +805,33 @@ Template.vatreturnlist.events({
             addVS1Data("TJournalEntryList", JSON.stringify(dataJournal)).then(function(datareturn) {
                 sideBarService.getAllJournalEnrtryLinesList(initialDataLoad, 0).then(function(data) {
                     addVS1Data("TJournalEntryLines", JSON.stringify(data)).then(function(datareturn) {
-                        window.open("/basreturnlist", "_self");
+                        window.open("/vatreturnlist", "_self");
                     }).catch(function(err) {
-                        window.open("/basreturnlist", "_self");
+                        window.open("/vatreturnlist", "_self");
                     });
                 }).catch(function(err) {
-                    window.open("/basreturnlist", "_self");
+                    window.open("/vatreturnlist", "_self");
                 });
             }).catch(function(err) {
                 sideBarService.getAllJournalEnrtryLinesList(initialDataLoad, 0).then(function(data) {
                     addVS1Data("TJournalEntryLines", JSON.stringify(data)).then(function(datareturn) {
-                        window.open("/basreturnlist", "_self");
+                        window.open("/vatreturnlist", "_self");
                     }).catch(function(err) {
-                        window.open("/basreturnlist", "_self");
+                        window.open("/vatreturnlist", "_self");
                     });
                 }).catch(function(err) {
-                    window.open("/basreturnlist", "_self");
+                    window.open("/vatreturnlist", "_self");
                 });
             });
         }).catch(function(err) {
-            window.open("/basreturnlist", "_self");
+            window.open("/vatreturnlist", "_self");
         });
     },
-    "click #btnNewBasReturn": function(event) {
-        FlowRouter.go("/basreturn");
+    "click #btnNewVATReturn": function(event) {
+        FlowRouter.go("/vatreturn");
     },
     "click .chkDatatable": function(event) {
-        var columns = $("#tblBasReturnList th");
+        var columns = $("#tblVATReturnList th");
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
         $.each(columns, function(i, v) {
@@ -852,7 +849,7 @@ Template.vatreturnlist.events({
             }
         });
     },
-    "click .btnRefreshBasReturn": function(event) {
+    "click .btnRefreshVATReturn": function(event) {
         $(".btnRefresh").trigger("click");
     },
     "click .resetTable": function(event) {
@@ -956,7 +953,7 @@ Template.vatreturnlist.events({
 
     //     let columnDatanIndex = $(event.target).closest("div.columnSettings").attr("id");
 
-    //     var datable = $("#tblBasReturnList").DataTable();
+    //     var datable = $("#tblVATReturnList").DataTable();
     //     var title = datable.column(columnDatanIndex).header();
     //     $(title).html(columData);
     // },
@@ -966,7 +963,7 @@ Template.vatreturnlist.events({
 
     //     // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
     //     let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-    //     var datable = $("#tblBasReturnList th");
+    //     var datable = $("#tblVATReturnList th");
     //     $.each(datable, function(i, v) {
     //         if (v.innerText == columnDataValue) {
     //             let className = v.className;
@@ -977,7 +974,7 @@ Template.vatreturnlist.events({
     // },
     "click .btnOpenSettings": function(event) {
         let templateObject = Template.instance();
-        var columns = $("#tblBasReturnList th");
+        var columns = $("#tblVATReturnList th");
 
         const tableHeaderList = [];
         let sTible = "";
@@ -1009,13 +1006,13 @@ Template.vatreturnlist.events({
     },
     "click #exportbtn": function() {
         $(".fullScreenSpin").css("display", "inline-block");
-        jQuery("#tblBasReturnList_wrapper .dt-buttons .btntabletocsv").click();
+        jQuery("#tblVATReturnList_wrapper .dt-buttons .btntabletocsv").click();
         $(".fullScreenSpin").css("display", "none");
     },
     "click .printConfirm": function(event) {
         playPrintAudio();
         $(".fullScreenSpin").css("display", "inline-block");
-        jQuery("#tblBasReturnList_wrapper .dt-buttons .btntabletopdf").click();
+        jQuery("#tblVATReturnList_wrapper .dt-buttons .btntabletopdf").click();
         $(".fullScreenSpin").css("display", "none");
         // $('#html-2-pdfwrapper').css('display','block');
         // var pdf =  new jsPDF('portrait','mm','a4');

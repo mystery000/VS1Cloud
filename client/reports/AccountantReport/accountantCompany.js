@@ -1827,425 +1827,425 @@ Template.accountant_company.events({
         let templateObject = Template.instance();
         let accountService = new AccountService();
         let organisationService = new OrganisationService();
-        setTimeout(function(){
-        $(".fullScreenSpin").css("display", "inline-block");
-        
-        let forTransaction = false;
-        let isHeader = false;
-        let useReceiptClaim = false;
+        setTimeout(function() {
+            $(".fullScreenSpin").css("display", "inline-block");
 
-        if ($("#showOnTransactions").is(":checked")) {
-            forTransaction = true;
-        }
-        if ($("#useReceiptClaim").is(":checked")) {
-            useReceiptClaim = true;
-        }
+            let forTransaction = false;
+            let isHeader = false;
+            let useReceiptClaim = false;
 
-        if ($("#accountIsHeader").is(":checked")) {
-            isHeader = true;
-        }
+            if ($("#showOnTransactions").is(":checked")) {
+                forTransaction = true;
+            }
+            if ($("#useReceiptClaim").is(":checked")) {
+                useReceiptClaim = true;
+            }
 
-        let accountID = $("#edtAccountID").val();
-        var accounttype = $("#sltAccountType").val();
-        var accountname = $("#edtAccountName").val();
-        var accountno = $("#edtAccountNo").val();
-        var taxcode = $("#sltTaxCode").val();
-        var accountdesc = $("#txaAccountDescription").val();
-        var swiftCode = $("#swiftCode").val();
-        var routingNo = $("#routingNo").val();
-        // var comments = $('#txaAccountComments').val();
-        var bankname = $("#edtBankName").val();
-        var bankaccountname = $("#edtBankAccountName").val();
-        var bankbsb = $("#edtBSB").val();
-        var bankacountno = $("#edtBankAccountNo").val();
-        let isBankAccount = templateObject.isBankAccount.get();
-        let expenseCategory = $("#expenseCategory").val();
+            if ($("#accountIsHeader").is(":checked")) {
+                isHeader = true;
+            }
 
-        var expirydateTime = new Date($("#edtExpiryDate").datepicker("getDate"));
-        let cardnumber = $("#edtCardNumber").val();
-        let cardcvc = $("#edtCvc").val();
-        let expiryDate =
-            expirydateTime.getFullYear() +
-            "-" +
-            (expirydateTime.getMonth() + 1) +
-            "-" +
-            expirydateTime.getDate();
+            let accountID = $("#edtAccountID").val();
+            var accounttype = $("#sltAccountType").val();
+            var accountname = $("#edtAccountName").val();
+            var accountno = $("#edtAccountNo").val();
+            var taxcode = $("#sltTaxCode").val();
+            var accountdesc = $("#txaAccountDescription").val();
+            var swiftCode = $("#swiftCode").val();
+            var routingNo = $("#routingNo").val();
+            // var comments = $('#txaAccountComments').val();
+            var bankname = $("#edtBankName").val();
+            var bankaccountname = $("#edtBankAccountName").val();
+            var bankbsb = $("#edtBSB").val();
+            var bankacountno = $("#edtBankAccountNo").val();
+            let isBankAccount = templateObject.isBankAccount.get();
+            let expenseCategory = $("#expenseCategory").val();
 
-        let companyID = 1;
-        let data = "";
-        if (accountID == "") {
-            accountService
-                .getCheckAccountData(accountname)
-                .then(function(data) {
-                    accountID = parseInt(data.taccount[0].Id) || 0;
-                    data = {
-                        type: "TAccount",
-                        fields: {
-                            ID: accountID,
-                            // AccountName: accountname|| '',
-                            AccountNumber: accountno || "",
-                            // AccountTypeName: accounttype|| '',
-                            AccountGroup: expenseCategory || "", // Need to check if the field is right later
-                            Active: true,
-                            BankAccountName: bankaccountname || "",
-                            BankAccountNumber: bankacountno || "",
-                            BSB: bankbsb || "",
-                            Description: accountdesc || "",
-                            TaxCode: taxcode || "",
-                            PublishOnVS1: true,
-                            Extra: swiftCode,
-                            BankNumber: routingNo,
-                            IsHeader: isHeader,
-                            AllowExpenseClaim: useReceiptClaim,
-                            Required: forTransaction,
-                            CarNumber: cardnumber || "",
-                            CVC: cardcvc || "",
-                            ExpiryDate: expiryDate || "",
-                        },
-                    };
+            var expirydateTime = new Date($("#edtExpiryDate").datepicker("getDate"));
+            let cardnumber = $("#edtCardNumber").val();
+            let cardcvc = $("#edtCvc").val();
+            let expiryDate =
+                expirydateTime.getFullYear() +
+                "-" +
+                (expirydateTime.getMonth() + 1) +
+                "-" +
+                expirydateTime.getDate();
 
-                    accountService
-                        .saveAccount(data)
-                        .then(function(data) {
-                            if ($("#showOnTransactions").is(":checked")) {
-                                var objDetails = {
-                                    type: "TCompanyInfo",
-                                    fields: {
-                                        Id: companyID,
-                                        AccountNo: bankacountno,
-                                        BankBranch: swiftCode,
-                                        BankAccountName: bankaccountname,
-                                        BankName: bankname,
-                                        Bsb: bankbsb,
-                                        SiteCode: routingNo,
-                                        FileReference: accountname,
-                                    },
-                                };
-                                organisationService
-                                    .saveOrganisationSetting(objDetails)
-                                    .then(function(data) {
-                                        var accNo = bankacountno || "";
-                                        var swiftCode1 = swiftCode || "";
-                                        var bankAccName = bankaccountname || "";
-                                        var accountName = accountname || "";
-                                        var bsb = bankbsb || "";
-                                        var routingNo = routingNo || "";
+            let companyID = 1;
+            let data = "";
+            if (accountID == "") {
+                accountService
+                    .getCheckAccountData(accountname)
+                    .then(function(data) {
+                        accountID = parseInt(data.taccount[0].Id) || 0;
+                        data = {
+                            type: "TAccount",
+                            fields: {
+                                ID: accountID,
+                                // AccountName: accountname|| '',
+                                AccountNumber: accountno || "",
+                                // AccountTypeName: accounttype|| '',
+                                AccountGroup: expenseCategory || "", // Need to check if the field is right later
+                                Active: true,
+                                BankAccountName: bankaccountname || "",
+                                BankAccountNumber: bankacountno || "",
+                                BSB: bankbsb || "",
+                                Description: accountdesc || "",
+                                TaxCode: taxcode || "",
+                                PublishOnVS1: true,
+                                Extra: swiftCode,
+                                BankNumber: routingNo,
+                                IsHeader: isHeader,
+                                AllowExpenseClaim: useReceiptClaim,
+                                Required: forTransaction,
+                                CarNumber: cardnumber || "",
+                                CVC: cardcvc || "",
+                                ExpiryDate: expiryDate || "",
+                            },
+                        };
 
-                                        localStorage.setItem("vs1companyBankName", bankname);
-                                        localStorage.setItem(
-                                            "vs1companyBankAccountName",
-                                            bankAccName
-                                        );
-                                        localStorage.setItem("vs1companyBankAccountNo", accNo);
-                                        localStorage.setItem("vs1companyBankBSB", bsb);
-                                        localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                                        localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                                        sideBarService.getAccountListVS1().then(function(dataReload) {
-                                            addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
-                                                window.open("/accountant_company", "_self");
+                        accountService
+                            .saveAccount(data)
+                            .then(function(data) {
+                                if ($("#showOnTransactions").is(":checked")) {
+                                    var objDetails = {
+                                        type: "TCompanyInfo",
+                                        fields: {
+                                            Id: companyID,
+                                            AccountNo: bankacountno,
+                                            BankBranch: swiftCode,
+                                            BankAccountName: bankaccountname,
+                                            BankName: bankname,
+                                            Bsb: bankbsb,
+                                            SiteCode: routingNo,
+                                            FileReference: accountname,
+                                        },
+                                    };
+                                    organisationService
+                                        .saveOrganisationSetting(objDetails)
+                                        .then(function(data) {
+                                            var accNo = bankacountno || "";
+                                            var swiftCode1 = swiftCode || "";
+                                            var bankAccName = bankaccountname || "";
+                                            var accountName = accountname || "";
+                                            var bsb = bankbsb || "";
+                                            var routingNo = routingNo || "";
+
+                                            localStorage.setItem("vs1companyBankName", bankname);
+                                            localStorage.setItem(
+                                                "vs1companyBankAccountName",
+                                                bankAccName
+                                            );
+                                            localStorage.setItem("vs1companyBankAccountNo", accNo);
+                                            localStorage.setItem("vs1companyBankBSB", bsb);
+                                            localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
+                                            localStorage.setItem("vs1companyBankRoutingNo", routingNo);
+                                            sideBarService.getAccountListVS1().then(function(dataReload) {
+                                                addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
+                                                    window.open("/accountant_company", "_self");
+                                                }).catch(function(err) {
+                                                    window.open("/accountant_company", "_self");
+                                                });
                                             }).catch(function(err) {
                                                 window.open("/accountant_company", "_self");
                                             });
-                                        }).catch(function(err) {
+                                        })
+                                        .catch(function(err) {
+                                            sideBarService
+                                                .getAccountListVS1()
+                                                .then(function(dataReload) {
+                                                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                        .then(function(datareturn) {
+                                                            window.open("/accountant_company", "_self");
+                                                        })
+                                                        .catch(function(err) {
+                                                            window.open("/accountant_company", "_self");
+                                                        });
+                                                })
+                                                .catch(function(err) {
+                                                    window.open("/accountant_company", "_self");
+                                                });
+                                        });
+                                } else {
+                                    sideBarService
+                                        .getAccountListVS1()
+                                        .then(function(dataReload) {
+                                            addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                .then(function(datareturn) {
+                                                    window.open("/accountant_company", "_self");
+                                                })
+                                                .catch(function(err) {
+                                                    window.open("/accountant_company", "_self");
+                                                });
+                                        })
+                                        .catch(function(err) {
                                             window.open("/accountant_company", "_self");
                                         });
-                                    })
-                                    .catch(function(err) {
-                                        sideBarService
-                                            .getAccountListVS1()
-                                            .then(function(dataReload) {
-                                                addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                                                    .then(function(datareturn) {
-                                                        window.open("/accountant_company", "_self");
-                                                    })
-                                                    .catch(function(err) {
-                                                        window.open("/accountant_company", "_self");
-                                                    });
-                                            })
-                                            .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
-                                            });
-                                    });
-                            } else {
-                                sideBarService
-                                    .getAccountListVS1()
-                                    .then(function(dataReload) {
-                                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                                            .then(function(datareturn) {
-                                                window.open("/accountant_company", "_self");
-                                            })
-                                            .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
-                                            });
-                                    })
-                                    .catch(function(err) {
-                                        window.open("/accountant_company", "_self");
-                                    });
-                            }
-                        })
-                        .catch(function(err) {
-                            swal({
-                                title: "Oooops...",
-                                text: err,
-                                type: "error",
-                                showCancelButton: false,
-                                confirmButtonText: "Try Again",
-                            }).then((result) => {
-                                if (result.value) {
-                                    // Meteor._reload.reload();
-                                } else if (result.dismiss === "cancel") {}
+                                }
+                            })
+                            .catch(function(err) {
+                                swal({
+                                    title: "Oooops...",
+                                    text: err,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Try Again",
+                                }).then((result) => {
+                                    if (result.value) {
+                                        // Meteor._reload.reload();
+                                    } else if (result.dismiss === "cancel") {}
+                                });
+                                $(".fullScreenSpin").css("display", "none");
                             });
-                            $(".fullScreenSpin").css("display", "none");
-                        });
-                })
-                .catch(function(err) {
-                    data = {
-                        type: "TAccount",
-                        fields: {
-                            AccountName: accountname || "",
-                            AccountNumber: accountno || "",
-                            AccountTypeName: accounttype || "",
-                            AccountGroup: expenseCategory || "", // Need to check if the field is right later
-                            Active: true,
-                            BankAccountName: bankaccountname || "",
-                            BankAccountNumber: bankacountno || "",
-                            BSB: bankbsb || "",
-                            Description: accountdesc || "",
-                            TaxCode: taxcode || "",
-                            Extra: swiftCode,
-                            BankNumber: routingNo,
-                            PublishOnVS1: true,
-                            IsHeader: isHeader,
-                            AllowExpenseClaim: useReceiptClaim,
-                            Required: forTransaction,
-                            CarNumber: cardnumber || "",
-                            CVC: cardcvc || "",
-                            ExpiryDate: expiryDate || "",
-                        },
-                    };
-
-                    accountService
-                        .saveAccount(data)
-                        .then(function(data) {
-                            if ($("#showOnTransactions").is(":checked")) {
-                                var objDetails = {
-                                    type: "TCompanyInfo",
-                                    fields: {
-                                        Id: companyID,
-                                        AccountNo: bankacountno,
-                                        BankBranch: swiftCode,
-                                        BankAccountName: bankaccountname,
-                                        BankName: bankname,
-                                        Bsb: bankbsb,
-                                        SiteCode: routingNo,
-                                        FileReference: accountname,
-                                    },
-                                };
-                                organisationService
-                                    .saveOrganisationSetting(objDetails)
-                                    .then(function(data) {
-                                        var accNo = bankacountno || "";
-                                        var swiftCode1 = swiftCode || "";
-                                        var bankName = bankaccountname || "";
-                                        var accountName = accountname || "";
-                                        var bsb = bankbsb || "";
-                                        var routingNo = routingNo || "";
-                                        localStorage.setItem("vs1companyBankName", bankname);
-                                        localStorage.setItem(
-                                            "vs1companyBankAccountName",
-                                            bankAccName
-                                        );
-                                        localStorage.setItem("vs1companyBankAccountNo", accNo);
-                                        localStorage.setItem("vs1companyBankBSB", bsb);
-                                        localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                                        localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                                        sideBarService
-                                            .getAccountListVS1()
-                                            .then(function(dataReload) {
-                                                addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                                                    .then(function(datareturn) {
-                                                        window.open("/accountant_company", "_self");
-                                                    })
-                                                    .catch(function(err) {
-                                                        window.open("//company", "_self");
-                                                    });
-                                            })
-                                            .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
-                                            });
-                                    })
-                                    .catch(function(err) {
-                                        sideBarService
-                                            .getAccountListVS1()
-                                            .then(function(dataReload) {
-                                                addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                                                    .then(function(datareturn) {
-                                                        //window.open('/accountant_company', '_self');
-                                                    })
-                                                    .catch(function(err) {
-                                                        window.open("/accountant_company", "_self");
-                                                    });
-                                            })
-                                            .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
-                                            });
-                                    });
-                            } else {
-                                sideBarService
-                                    .getAccountListVS1()
-                                    .then(function(dataReload) {
-                                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                                            .then(function(datareturn) {
-                                                window.open("/accountant_company", "_self");
-                                            })
-                                            .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
-                                            });
-                                    })
-                                    .catch(function(err) {
-                                        window.open("/accountant_company", "_self");
-                                    });
-                            }
-                        })
-                        .catch(function(err) {
-                            swal({
-                                title: "Oooops...",
-                                text: err,
-                                type: "error",
-                                showCancelButton: false,
-                                confirmButtonText: "Try Again",
-                            }).then((result) => {
-                                if (result.value) {
-                                    Meteor._reload.reload();
-                                } else if (result.dismiss === "cancel") {}
-                            });
-                            $(".fullScreenSpin").css("display", "none");
-                        });
-                });
-        } else {
-            data = {
-                type: "TAccount",
-                fields: {
-                    ID: accountID,
-                    AccountName: accountname || "",
-                    AccountNumber: accountno || "",
-                    // AccountTypeName: accounttype || '',
-                    AccountGroup: expenseCategory || "", // Need to check if the field is right later
-                    Active: true,
-                    BankAccountName: bankaccountname || "",
-                    BankAccountNumber: bankacountno || "",
-                    BSB: bankbsb || "",
-                    Description: accountdesc || "",
-                    TaxCode: taxcode || "",
-                    Extra: swiftCode,
-                    BankNumber: routingNo,
-                    //Level4: bankname,
-                    PublishOnVS1: true,
-                    IsHeader: isHeader,
-                    AllowExpenseClaim: useReceiptClaim,
-                    Required: forTransaction,
-                    CarNumber: cardnumber || "",
-                    CVC: cardcvc || "",
-                    ExpiryDate: expiryDate || "",
-                },
-            };
-
-            accountService
-                .saveAccount(data)
-                .then(function(data) {
-                    if ($("#showOnTransactions").is(":checked")) {
-                        var objDetails = {
-                            type: "TCompanyInfo",
+                    })
+                    .catch(function(err) {
+                        data = {
+                            type: "TAccount",
                             fields: {
-                                Id: companyID,
-                                AccountNo: bankacountno,
-                                BankBranch: swiftCode,
-                                BankAccountName: bankaccountname,
-                                BankName: bankname,
-                                Bsb: bankbsb,
-                                SiteCode: routingNo,
-                                FileReference: accountname,
+                                AccountName: accountname || "",
+                                AccountNumber: accountno || "",
+                                AccountTypeName: accounttype || "",
+                                AccountGroup: expenseCategory || "", // Need to check if the field is right later
+                                Active: true,
+                                BankAccountName: bankaccountname || "",
+                                BankAccountNumber: bankacountno || "",
+                                BSB: bankbsb || "",
+                                Description: accountdesc || "",
+                                TaxCode: taxcode || "",
+                                Extra: swiftCode,
+                                BankNumber: routingNo,
+                                PublishOnVS1: true,
+                                IsHeader: isHeader,
+                                AllowExpenseClaim: useReceiptClaim,
+                                Required: forTransaction,
+                                CarNumber: cardnumber || "",
+                                CVC: cardcvc || "",
+                                ExpiryDate: expiryDate || "",
                             },
                         };
-                        organisationService
-                            .saveOrganisationSetting(objDetails)
+
+                        accountService
+                            .saveAccount(data)
                             .then(function(data) {
-                                var accNo = bankacountno || "";
-                                var swiftCode1 = swiftCode || "";
-                                var bankAccName = bankaccountname || "";
-                                var accountName = accountname || "";
-                                var bsb = bankbsb || "";
-                                var routingNo = routingNo || "";
-                                localStorage.setItem("vs1companyBankName", bankname);
-                                localStorage.setItem("vs1companyBankAccountName", bankAccName);
-                                localStorage.setItem("vs1companyBankAccountNo", accNo);
-                                localStorage.setItem("vs1companyBankBSB", bsb);
-                                localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                                localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                                sideBarService
-                                    .getAccountListVS1()
-                                    .then(function(dataReload) {
-                                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                                            .then(function(datareturn) {
-                                                window.open("/accountant_company", "_self");
-                                            })
-                                            .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
-                                            });
-                                    })
-                                    .catch(function(err) {
-                                        window.open("/accountant_company", "_self");
-                                    });
+                                if ($("#showOnTransactions").is(":checked")) {
+                                    var objDetails = {
+                                        type: "TCompanyInfo",
+                                        fields: {
+                                            Id: companyID,
+                                            AccountNo: bankacountno,
+                                            BankBranch: swiftCode,
+                                            BankAccountName: bankaccountname,
+                                            BankName: bankname,
+                                            Bsb: bankbsb,
+                                            SiteCode: routingNo,
+                                            FileReference: accountname,
+                                        },
+                                    };
+                                    organisationService
+                                        .saveOrganisationSetting(objDetails)
+                                        .then(function(data) {
+                                            var accNo = bankacountno || "";
+                                            var swiftCode1 = swiftCode || "";
+                                            var bankName = bankaccountname || "";
+                                            var accountName = accountname || "";
+                                            var bsb = bankbsb || "";
+                                            var routingNo = routingNo || "";
+                                            localStorage.setItem("vs1companyBankName", bankname);
+                                            localStorage.setItem(
+                                                "vs1companyBankAccountName",
+                                                bankAccName
+                                            );
+                                            localStorage.setItem("vs1companyBankAccountNo", accNo);
+                                            localStorage.setItem("vs1companyBankBSB", bsb);
+                                            localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
+                                            localStorage.setItem("vs1companyBankRoutingNo", routingNo);
+                                            sideBarService
+                                                .getAccountListVS1()
+                                                .then(function(dataReload) {
+                                                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                        .then(function(datareturn) {
+                                                            window.open("/accountant_company", "_self");
+                                                        })
+                                                        .catch(function(err) {
+                                                            window.open("//company", "_self");
+                                                        });
+                                                })
+                                                .catch(function(err) {
+                                                    window.open("/accountant_company", "_self");
+                                                });
+                                        })
+                                        .catch(function(err) {
+                                            sideBarService
+                                                .getAccountListVS1()
+                                                .then(function(dataReload) {
+                                                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                        .then(function(datareturn) {
+                                                            //window.open('/accountant_company', '_self');
+                                                        })
+                                                        .catch(function(err) {
+                                                            window.open("/accountant_company", "_self");
+                                                        });
+                                                })
+                                                .catch(function(err) {
+                                                    window.open("/accountant_company", "_self");
+                                                });
+                                        });
+                                } else {
+                                    sideBarService
+                                        .getAccountListVS1()
+                                        .then(function(dataReload) {
+                                            addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                .then(function(datareturn) {
+                                                    window.open("/accountant_company", "_self");
+                                                })
+                                                .catch(function(err) {
+                                                    window.open("/accountant_company", "_self");
+                                                });
+                                        })
+                                        .catch(function(err) {
+                                            window.open("/accountant_company", "_self");
+                                        });
+                                }
                             })
                             .catch(function(err) {
-                                sideBarService
-                                    .getAccountListVS1()
-                                    .then(function(dataReload) {
-                                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                                            .then(function(datareturn) {
-                                                window.open("/accountant_company", "_self");
-                                            })
-                                            .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
-                                            });
-                                    })
-                                    .catch(function(err) {
-                                        window.open("/accountant_company", "_self");
-                                    });
+                                swal({
+                                    title: "Oooops...",
+                                    text: err,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Try Again",
+                                }).then((result) => {
+                                    if (result.value) {
+                                        Meteor._reload.reload();
+                                    } else if (result.dismiss === "cancel") {}
+                                });
+                                $(".fullScreenSpin").css("display", "none");
                             });
-                    } else {
-                        sideBarService
-                            .getAccountListVS1()
-                            .then(function(dataReload) {
-                                addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                                    .then(function(datareturn) {
-                                        window.open("/accountant_company", "_self");
-                                    })
-                                    .catch(function(err) {
-                                        window.open("/accountant_company", "_self");
-                                    });
-                            })
-                            .catch(function(err) {
-                                window.open("/accountant_company", "_self");
-                            });
-                    }
-                })
-                .catch(function(err) {
-                    swal({
-                        title: "Oooops...",
-                        text: err,
-                        type: "error",
-                        showCancelButton: false,
-                        confirmButtonText: "Try Again",
-                    }).then((result) => {
-                        if (result.value) {
-                            Meteor._reload.reload();
-                        } else if (result.dismiss === "cancel") {}
                     });
-                    $(".fullScreenSpin").css("display", "none");
-                });
-        }
-    }, delayTimeAfterSound);
+            } else {
+                data = {
+                    type: "TAccount",
+                    fields: {
+                        ID: accountID,
+                        AccountName: accountname || "",
+                        AccountNumber: accountno || "",
+                        // AccountTypeName: accounttype || '',
+                        AccountGroup: expenseCategory || "", // Need to check if the field is right later
+                        Active: true,
+                        BankAccountName: bankaccountname || "",
+                        BankAccountNumber: bankacountno || "",
+                        BSB: bankbsb || "",
+                        Description: accountdesc || "",
+                        TaxCode: taxcode || "",
+                        Extra: swiftCode,
+                        BankNumber: routingNo,
+                        //Level4: bankname,
+                        PublishOnVS1: true,
+                        IsHeader: isHeader,
+                        AllowExpenseClaim: useReceiptClaim,
+                        Required: forTransaction,
+                        CarNumber: cardnumber || "",
+                        CVC: cardcvc || "",
+                        ExpiryDate: expiryDate || "",
+                    },
+                };
+
+                accountService
+                    .saveAccount(data)
+                    .then(function(data) {
+                        if ($("#showOnTransactions").is(":checked")) {
+                            var objDetails = {
+                                type: "TCompanyInfo",
+                                fields: {
+                                    Id: companyID,
+                                    AccountNo: bankacountno,
+                                    BankBranch: swiftCode,
+                                    BankAccountName: bankaccountname,
+                                    BankName: bankname,
+                                    Bsb: bankbsb,
+                                    SiteCode: routingNo,
+                                    FileReference: accountname,
+                                },
+                            };
+                            organisationService
+                                .saveOrganisationSetting(objDetails)
+                                .then(function(data) {
+                                    var accNo = bankacountno || "";
+                                    var swiftCode1 = swiftCode || "";
+                                    var bankAccName = bankaccountname || "";
+                                    var accountName = accountname || "";
+                                    var bsb = bankbsb || "";
+                                    var routingNo = routingNo || "";
+                                    localStorage.setItem("vs1companyBankName", bankname);
+                                    localStorage.setItem("vs1companyBankAccountName", bankAccName);
+                                    localStorage.setItem("vs1companyBankAccountNo", accNo);
+                                    localStorage.setItem("vs1companyBankBSB", bsb);
+                                    localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
+                                    localStorage.setItem("vs1companyBankRoutingNo", routingNo);
+                                    sideBarService
+                                        .getAccountListVS1()
+                                        .then(function(dataReload) {
+                                            addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                .then(function(datareturn) {
+                                                    window.open("/accountant_company", "_self");
+                                                })
+                                                .catch(function(err) {
+                                                    window.open("/accountant_company", "_self");
+                                                });
+                                        })
+                                        .catch(function(err) {
+                                            window.open("/accountant_company", "_self");
+                                        });
+                                })
+                                .catch(function(err) {
+                                    sideBarService
+                                        .getAccountListVS1()
+                                        .then(function(dataReload) {
+                                            addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                .then(function(datareturn) {
+                                                    window.open("/accountant_company", "_self");
+                                                })
+                                                .catch(function(err) {
+                                                    window.open("/accountant_company", "_self");
+                                                });
+                                        })
+                                        .catch(function(err) {
+                                            window.open("/accountant_company", "_self");
+                                        });
+                                });
+                        } else {
+                            sideBarService
+                                .getAccountListVS1()
+                                .then(function(dataReload) {
+                                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                        .then(function(datareturn) {
+                                            window.open("/accountant_company", "_self");
+                                        })
+                                        .catch(function(err) {
+                                            window.open("/accountant_company", "_self");
+                                        });
+                                })
+                                .catch(function(err) {
+                                    window.open("/accountant_company", "_self");
+                                });
+                        }
+                    })
+                    .catch(function(err) {
+                        swal({
+                            title: "Oooops...",
+                            text: err,
+                            type: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "Try Again",
+                        }).then((result) => {
+                            if (result.value) {
+                                Meteor._reload.reload();
+                            } else if (result.dismiss === "cancel") {}
+                        });
+                        $(".fullScreenSpin").css("display", "none");
+                    });
+            }
+        }, delayTimeAfterSound);
     },
 
     "change #sltAccountType": function(e) {
@@ -2299,21 +2299,21 @@ Template.accountant_company.events({
 
     "click .btnPrintReport": function(event) {
         playPrintAudio();
-        setTimeout(function(){
-        $(".printReport").show();
-        $("a").attr("href", "/");
-        document.title = "Company";
-        $(".printReport").print({
-            title: document.title + " | " + loggedCompany,
-            noPrintSelector: ".addSummaryEditor",
-            mediaPrint: false,
-        });
-
         setTimeout(function() {
-            $("a").attr("href", "#");
-            $(".printReport").hide();
-        }, 100);
-    }, delayTimeAfterSound);
+            $(".printReport").show();
+            $("a").attr("href", "/");
+            document.title = "Company";
+            $(".printReport").print({
+                title: document.title + " | " + loggedCompany,
+                noPrintSelector: ".addSummaryEditor",
+                mediaPrint: false,
+            });
+
+            setTimeout(function() {
+                $("a").attr("href", "#");
+                $(".printReport").hide();
+            }, 100);
+        }, delayTimeAfterSound);
     },
 
     "click .btnExportReport": function() {
@@ -2405,32 +2405,32 @@ Template.accountant_company.events({
 
     "click #btnSaveEditor": function(event) {
         playSaveAudio();
-        setTimeout(function(){
-        // $('#editor').wysiwyg();
-        let iframe = document.getElementById("editor_ifr");
-        var elmnt = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
+        setTimeout(function() {
+            // $('#editor').wysiwyg();
+            let iframe = document.getElementById("editor_ifr");
+            var elmnt = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
 
-        if ($("#editorType").val() == "title") {
-            $("#page-1-content").html(elmnt);
-            $("#page-1-content-prt").html(elmnt);
-        } else if ($("#editorType").val() == "order") {
-            $("#page-2-content").html(elmnt);
-            $("#page-2-content-prt").html(elmnt);
-        } else if ($("#editorType").val() == "summary") {
-            $("#page-3-content").html(elmnt);
-            $("#page-3-content-prt").html(elmnt);
-        } else if ($("#editorType").val() == "declaration") {
-            $("#page-4-content").html(elmnt);
-            $("#page-4-content-prt").html(elmnt);
-        } else if ($("#editorType").val() == "description-1") {
-            $("#page-9-content").html(elmnt);
-            $("#page-9-content-prt").html(elmnt + $("#page-10-content").html());
-        } else {
-            $("#page-10-content").html(elmnt);
-            $("#page-9-content-prt").html($("#page-9-content").html() + elmnt);
-        }
-        $('#editReportModal').modal('toggle');
-    }, delayTimeAfterSound);
+            if ($("#editorType").val() == "title") {
+                $("#page-1-content").html(elmnt);
+                $("#page-1-content-prt").html(elmnt);
+            } else if ($("#editorType").val() == "order") {
+                $("#page-2-content").html(elmnt);
+                $("#page-2-content-prt").html(elmnt);
+            } else if ($("#editorType").val() == "summary") {
+                $("#page-3-content").html(elmnt);
+                $("#page-3-content-prt").html(elmnt);
+            } else if ($("#editorType").val() == "declaration") {
+                $("#page-4-content").html(elmnt);
+                $("#page-4-content-prt").html(elmnt);
+            } else if ($("#editorType").val() == "description-1") {
+                $("#page-9-content").html(elmnt);
+                $("#page-9-content-prt").html(elmnt + $("#page-10-content").html());
+            } else {
+                $("#page-10-content").html(elmnt);
+                $("#page-9-content-prt").html($("#page-9-content").html() + elmnt);
+            }
+            $('#editReportModal').modal('toggle');
+        }, delayTimeAfterSound);
     },
 
     // "change #sltYear": function(event) {

@@ -7,6 +7,7 @@ import GlobalFunctions from "../../GlobalFunctions";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import Datehandler from "../../DateHandler";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -28,57 +29,7 @@ Template.leaveaccruedreport.onRendered(() => {
   LoadingOverlay.show();
 
   templateObject.initDate = () => {
-    const currentDate = new Date();
-
-    /**
-     * This will init dates
-     */
-    let begunDate = moment(currentDate).format("DD/MM/YYYY");
-    templateObject.dateAsAt.set(begunDate);
-
-    let fromDateMonth = currentDate.getMonth() + 1;
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-
-    let prevMonth = moment().subtract(1, "months").format("MM");
-
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-    var fromDate =
-      fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
-
-    $("#date-input,#dateTo,#dateFrom").datepicker({
-      showOn: "button",
-      buttonText: "Show Date",
-      buttonImageOnly: true,
-      buttonImage: "/img/imgCal2.png",
-      dateFormat: "dd/mm/yy",
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-90:+10",
-      onChangeMonthYear: function (year, month, inst) {
-        // Set date to picker
-        $(this).datepicker(
-          "setDate",
-          new Date(year, inst.selectedMonth, inst.selectedDay)
-        );
-        // Hide (close) the picker
-        // $(this).datepicker('hide');
-        // // Change ttrigger the on change function
-        // $(this).trigger('change');
-      },
-    });
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    //--------- END OF DATE ---------------//
+    Datehandler.initOneMonth();
   };
 
   templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
@@ -151,16 +102,15 @@ Template.leaveaccruedreport.onRendered(() => {
     // }
     const result = new Array();
     if(data){
-      data.tleaveaccruallist.map((y) => {
-        let index = result.findIndex(x => x.EmployeeID == y.EmployeeID)
+      data.tleaveaccruals.map((y) => {
+        let index = result.findIndex(x => x.EmployeeID == y.fields.EmployeeID)
         if(index == -1) {
-          result.push({ EmployeeID:y.EmployeeID, records: [y]})
+          result.push({ EmployeeID:y.fields.EmployeeID, EmployeeName:y.fields.EmployeeName, records: [y]})
         } else {
           result[index].records.push(y)
         }
       });
     }
-
     templateObject.records.set(result);
     // setTimeout(function() {
     //     MakeNegative();
@@ -305,58 +255,58 @@ Template.leaveaccruedreport.events({
       $(".table tbody tr").show();
     }
   },
-  "change .edtReportDates": async function () {
-    LoadingOverlay.show();
-    localStorage.setItem('VS1LeaveAccrued_Report', '');
-    let templateObject = Template.instance();
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    await templateObject.setReportOptions(false, dateFrom, dateTo);
-  },
-  "click #lastMonth": async function () {
-    LoadingOverlay.show();
-    localStorage.setItem('VS1LeaveAccrued_Report', '');
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-  },
-  "click #lastQuarter": async function () {
-    LoadingOverlay.show();
-    localStorage.setItem('VS1LeaveAccrued_Report', '');
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-  },
-  "click #last12Months": async function () {
-    LoadingOverlay.show();
-    localStorage.setItem('VS1LeaveAccrued_Report', '');
-    let templateObject = Template.instance();
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  // "change .edtReportDates": async function () {
+  //   LoadingOverlay.show();
+  //   localStorage.setItem('VS1LeaveAccrued_Report', '');
+  //   let templateObject = Template.instance();
+  //   var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+  //   var dateTo = new Date($("#dateTo").datepicker("getDate"));
+  //   await templateObject.setReportOptions(false, dateFrom, dateTo);
+  // },
+  // "click #lastMonth": async function () {
+  //   LoadingOverlay.show();
+  //   localStorage.setItem('VS1LeaveAccrued_Report', '');
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
+  //   let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
+  //   await templateObject.setReportOptions(false, fromDate, endDate);
+  // },
+  // "click #lastQuarter": async function () {
+  //   LoadingOverlay.show();
+  //   localStorage.setItem('VS1LeaveAccrued_Report', '');
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+  //   let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+  //   await templateObject.setReportOptions(false, fromDate, endDate);
+  // },
+  // "click #last12Months": async function () {
+  //   LoadingOverlay.show();
+  //   localStorage.setItem('VS1LeaveAccrued_Report', '');
+  //   let templateObject = Template.instance();
+  //   $("#dateFrom").attr("readonly", false);
+  //   $("#dateTo").attr("readonly", false);
+  //   var currentDate = new Date();
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
-    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
+  //   let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+  //   let fromDateDay = currentDate.getDate();
+  //   if (currentDate.getMonth() + 1 < 10) {
+  //     fromDateMonth = "0" + (currentDate.getMonth() + 1);
+  //   }
+  //   if (currentDate.getDate() < 10) {
+  //     fromDateDay = "0" + currentDate.getDate();
+  //   }
 
-    var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
-    templateObject.dateAsAt.set(begunDate);
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
+  //   var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
+  //   templateObject.dateAsAt.set(begunDate);
+  //   $("#dateFrom").val(fromDate);
+  //   $("#dateTo").val(begunDate);
 
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
-    await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-  },
+  //   var currentDate2 = new Date();
+  //   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+  //   let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
+  //   await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+  // },
   "click #ignoreDate": async function () {
     LoadingOverlay.show();
     localStorage.setItem('VS1LeaveAccrued_Report', '');
@@ -364,6 +314,18 @@ Template.leaveaccruedreport.events({
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
   },
+  "change #dateTo, change #dateFrom": (e) => {
+    let templateObject = Template.instance();
+    localStorage.setItem("VS1PayrollHistory_Report", "");
+    templateObject.setReportOptions(
+      false,
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val())
+    )
+  },
+  ...Datehandler.getDateRangeEvents(),
+    // CURRENCY MODULE //
+  ...FxGlobalFunctions.getEvents(),
 
   // CURRENCY MODULE //
   ...FxGlobalFunctions.getEvents(),
@@ -444,7 +406,7 @@ Template.leaveaccruedreport.helpers({
   calculateHourPriceConvert: (item, currencyData) => {
 
     let utilityService = new UtilityService();
-    let amount = item.AccruedHours * item.CurrentHourlyRate
+    let amount = item.fields.AccruedHours * item.fields.CurrentHourlyRate
     if( isNaN( amount ) ){
         amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
@@ -547,7 +509,7 @@ Template.leaveaccruedreport.helpers({
   },
   calculateHourPrice: (item) => {
     let utilityService = new UtilityService();
-    let amount = item.AccruedHours * item.CurrentHourlyRate
+    let amount = item.fields.AccruedHours * item.fields.CurrentHourlyRate
     if( isNaN( amount ) ){
         amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
