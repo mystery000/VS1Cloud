@@ -379,6 +379,7 @@ Template.transactionjournallist.events({
   //   await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
   // },
   "click #ignoreDate":  (e, templateObject) => {
+    localStorage.setItem("VS1TransactionJournal_Report", "");
     LoadingOverlay.show();
    // localStorage.setItem('VS1TransactionJournal_Report', '');
     // let templateObject = Template.instance();
@@ -455,6 +456,7 @@ Template.transactionjournallist.events({
    * This is the new way to handle any modification on the date fields
    */
    "change #dateTo, change #dateFrom": (e, templateObject) => {
+    localStorage.setItem("VS1TransactionJournal_Report", "");
     templateObject.loadReport(
       GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
