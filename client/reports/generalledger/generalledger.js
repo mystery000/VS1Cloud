@@ -59,7 +59,6 @@ Template.generalledger.onRendered(() => {
   // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
   // var fromDate =
   //   fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
-  // templateObject.dateAsAt.set(begunDate);
   const dataTableList = [];
   const deptrecords = [];
   // $("#date-input,#dateTo,#dateFrom").datepicker({
@@ -95,33 +94,16 @@ Template.generalledger.onRendered(() => {
 
   templateObject.initDate();
 
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
-    let defaultOptions = templateObject.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.fromDate = formatDateFrom;
-      defaultOptions.toDate = formatDateTo;
-      defaultOptions.ignoreDate = ignoreDate;
-    } else {
-      defaultOptions = {
-        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
-        toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
-      };
-    }
-    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
-      $('.edtReportDates').attr('disabled', true);
-      templateObject.dateAsAt.set("Current Date");
-    }
-    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
-    await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getGeneralLedgerReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
   };
 
   templateObject.getGeneralLedgerReports = function (dateFrom,dateTo,ignoreDate) {
+    
+    templateObject.setDateAs(dateFrom);
+
     if (!localStorage.getItem("VS1GeneralLedger_Report")) {
+      LoadingOverlay.show();
       reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, ignoreDate).then(function (data) {
           let totalRecord = [];
           let grandtotalRecord = [];
@@ -360,13 +342,13 @@ Template.generalledger.onRendered(() => {
             records.push(recordObj);
             templateObject.records.set(records);
             templateObject.grandrecords.set("");
-            $(".fullScreenSpin").css("display", "none");
           }
+          LoadingOverlay.hide();
         }).catch(function (err) {
-          //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else {
+      LoadingOverlay.show();
       let data = JSON.parse(localStorage.getItem("VS1GeneralLedger_Report"));
       let totalRecord = [];
       let grandtotalRecord = [];
@@ -606,7 +588,7 @@ Template.generalledger.onRendered(() => {
         $(".fullScreenSpin").css("display", "none");
       templateObject.grandrecords.set("");
       }
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
     }
   };
 
@@ -615,6 +597,8 @@ Template.generalledger.onRendered(() => {
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
+  
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
 
   templateObject.getDepartments = function () {
     reportService.getDepartment().then(function (data) {
@@ -718,14 +702,7 @@ Template.generalledger.events({
         false,
       "_self"
     );
-  },
-  "click #ignoreDate":  (e, templateObject) => {
-    templateObject.getGeneralLedgerReports(
-      null, 
-      null, 
-      true
-    )
-  },
+  },  
   "click #dropdownDateRang": function (e) {
     let dateRangeID = e.target.id;
     $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
@@ -752,6 +729,24 @@ Template.generalledger.events({
       document.getElementById("selectedDateRange").value = "Year to Date";
     }
   },
+  "click #ignoreDate":  (e, templateObject) => {
+    localStorage.setItem("VS1GeneralLedger_Report", "");
+    templateObject.getGeneralLedgerReports(
+      null, 
+      null, 
+      true
+    )
+  },
+  "change #dateTo, change #dateFrom": (e) => {
+    let templateObject = Template.instance();
+    localStorage.setItem("VS1GeneralLedger_Report", "");
+    templateObject.getGeneralLedgerReports(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+    )
+  },
+  ...Datehandler.getDateRangeEvents(),
   // "change #dateTo": function () {
   //   let templateObject = Template.instance();
   //   $(".fullScreenSpin").css("display", "inline-block");
@@ -969,50 +964,7 @@ Template.generalledger.events({
 //     var dateTo = new Date($("#dateTo").datepicker("getDate"));
 //     await templateObject.setReportOptions(false, dateFrom, dateTo);
 // },
-"click #lastMonth": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1GeneralLedger_Report', '');
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-},
-"click #lastQuarter": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1GeneralLedger_Report', '');
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-},
-"click #last12Months": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1GeneralLedger_Report', '');
-    let templateObject = Template.instance();
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-
-    var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
-    // templateObject.dateAsAt.set(begunDate);
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
-    await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-},
+// 
 // "click #ignoreDate": async function () {
 //     $(".fullScreenSpin").css("display", "inline-block");
 //     $("#dateFrom").attr("readonly", true);
@@ -1074,15 +1026,7 @@ Template.generalledger.events({
         type: 'warning',
         confirmButtonText: 'Ok'
       })
-  },  
-  "change #dateTo, change #dateFrom": (e, templateObject) => {
-    templateObject.getGeneralLedgerReports(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
-      false
-    )
-  },
-  ...Datehandler.getDateRangeEvents()
+  },   
 });
 
 Template.generalledger.helpers({

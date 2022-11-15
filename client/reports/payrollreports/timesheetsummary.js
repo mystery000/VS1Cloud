@@ -3,6 +3,9 @@ import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
+import Datehandler from "../../DateHandler";
+import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import GlobalFunctions from "../../GlobalFunctions";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -23,57 +26,11 @@ Template.timesheetsummary.onRendered(() => {
   LoadingOverlay.show();
 
   templateObject.initDate = () => {
-    const currentDate = new Date();
+    Datehandler.initOneMonth();
+  };
 
-    /**
-     * This will init dates
-     */
-    let begunDate = moment(currentDate).format("DD/MM/YYYY");
-    templateObject.dateAsAt.set(begunDate);
-
-    let fromDateMonth = currentDate.getMonth() + 1;
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-
-    let prevMonth = moment().subtract(1, "months").format("MM");
-
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-    var fromDate =
-      fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
-
-    $("#date-input,#dateTo,#dateFrom").datepicker({
-      showOn: "button",
-      buttonText: "Show Date",
-      buttonImageOnly: true,
-      buttonImage: "/img/imgCal2.png",
-      dateFormat: "dd/mm/yy",
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-90:+10",
-      onChangeMonthYear: function (year, month, inst) {
-        // Set date to picker
-        $(this).datepicker(
-          "setDate",
-          new Date(year, inst.selectedMonth, inst.selectedDay)
-        );
-        // Hide (close) the picker
-        // $(this).datepicker('hide');
-        // // Change ttrigger the on change function
-        // $(this).trigger('change');
-      },
-    });
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    //--------- END OF DATE ---------------//
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
   };
 
   templateObject.initUploadedImage = () => {
@@ -84,38 +41,11 @@ Template.timesheetsummary.onRendered(() => {
     }
   };
 
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
-    let defaultOptions = templateObject.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.fromDate = formatDateFrom;
-      defaultOptions.toDate = formatDateTo;
-      defaultOptions.ignoreDate = ignoreDate;
-    } else {
-      defaultOptions = {
-        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
-        toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
-      };
-    }
-    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
-      $('.edtReportDates').attr('disabled', true);
-      templateObject.dateAsAt.set("Current Date");
-    }
-    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
-    await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getTimeSheetEntry();
-  };
-  templateObject.getTimeSheetEntry = async function () {
+  templateObject.getTimeSheetEntry = async function (  dateFrom, dateTo, ignoreDate ) {
     LoadingOverlay.show();
     let data = [];
+    templateObject.setDateAs( dateFrom );
     if (!localStorage.getItem('VS1TimesheetSummary_Report')) {
-      const options = await templateObject.reportOptions.get();
-      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let ignoreDate = options.ignoreDate || false;
       data = await reportService.getTimeSheetEntry( dateFrom, dateTo, ignoreDate, '1 month');
       if( data.ttimesheetentry.length > 0 ){
         localStorage.setItem('VS1TimesheetSummary_Report', JSON.stringify(data)||'');
@@ -145,10 +75,14 @@ Template.timesheetsummary.onRendered(() => {
   };
   
 
-
   templateObject.initDate();
   templateObject.initUploadedImage();
-  templateObject.getTimeSheetEntry();
+  templateObject.getTimeSheetEntry(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+    false
+  );
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
   LoadingOverlay.hide();
 });
 
@@ -270,71 +204,88 @@ Template.timesheetsummary.events({
       $(".table tbody tr").show();
     }
   },
-  "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1TimesheetSummary_Report', '');
-    let templateObject = Template.instance();
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    await templateObject.setReportOptions(false, dateFrom, dateTo);
-    $(".fullScreenSpin").css("display", "none");
-  },
-  "click #lastMonth": async function () {
-    // $(".fullScreenSpin").css("display", "inline-block");
-    // localStorage.setItem('VS1TimesheetSummary_Report', '');
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
+  // "change .edtReportDates": async function () {
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   localStorage.setItem('VS1TimesheetSummary_Report', '');
+  //   let templateObject = Template.instance();
+  //   var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+  //   var dateTo = new Date($("#dateTo").datepicker("getDate"));
+  //   await templateObject.setReportOptions(false, dateFrom, dateTo);
+  //   $(".fullScreenSpin").css("display", "none");
+  // },
+  // "click #lastMonth": async function () {
+  //   // $(".fullScreenSpin").css("display", "inline-block");
+  //   // localStorage.setItem('VS1TimesheetSummary_Report', '');
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
+  //   let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
+  //   await templateObject.setReportOptions(false, fromDate, endDate);
    
-  },
-  "click #lastQuarter": async function () {
-    // $(".fullScreenSpin").css("display", "inline-block");
-    // localStorage.setItem('VS1TimesheetSummary_Report', '');
+  // },
+  // "click #lastQuarter": async function () {
+  //   // $(".fullScreenSpin").css("display", "inline-block");
+  //   // localStorage.setItem('VS1TimesheetSummary_Report', '');
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+  //   let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+  //   await templateObject.setReportOptions(false, fromDate, endDate);
+  //   // $(".fullScreenSpin").css("display", "none");
+  // },
+  // "click #last12Months": async function () {
+  //   // $(".fullScreenSpin").css("display", "inline-block");
+  //   // localStorage.setItem('VS1TimesheetSummary_Report', '');
+  //   let templateObject = Template.instance();
+  //   $("#dateFrom").attr("readonly", false);
+  //   $("#dateTo").attr("readonly", false);
+  //   var currentDate = new Date();
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+  //   let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+  //   let fromDateDay = currentDate.getDate();
+  //   if (currentDate.getMonth() + 1 < 10) {
+  //     fromDateMonth = "0" + (currentDate.getMonth() + 1);
+  //   }
+  //   if (currentDate.getDate() < 10) {
+  //     fromDateDay = "0" + currentDate.getDate();
+  //   }
+
+  //   var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
+  //   templateObject.dateAsAt.set(begunDate);
+  //   $("#dateFrom").val(fromDate);
+  //   $("#dateTo").val(begunDate);
+
+  //   var currentDate2 = new Date();
+  //   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+  //   let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
+  //   await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+  //   // $(".fullScreenSpin").css("display", "none");
+  // },
+  // "click #ignoreDate": async function () {
+  //   // $(".fullScreenSpin").css("display", "inline-block");
+  //   // localStorage.setItem('VS1TimesheetSummary_Report', '');
+  //   let templateObject = Template.instance();
+  //   templateObject.dateAsAt.set("Current Date");
+  //   await templateObject.setReportOptions(true);
+  //   // $(".fullScreenSpin").css("display", "none");
+  // },
+  "click #ignoreDate": function () {
     let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-    // $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.show();
+    localStorage.setItem("VS1TimesheetSummary_Report", "");
+    $("#dateFrom").attr("readonly", true);
+    $("#dateTo").attr("readonly", true);
+    templateObject.getTimeSheetEntry(null, null, true);
   },
-  "click #last12Months": async function () {
-    // $(".fullScreenSpin").css("display", "inline-block");
-    // localStorage.setItem('VS1TimesheetSummary_Report', '');
+  "change #dateTo, change #dateFrom": (e) => {
     let templateObject = Template.instance();
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-
-    var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
-    templateObject.dateAsAt.set(begunDate);
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
-    await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    // $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.show();
+    localStorage.setItem("VS1TimesheetSummary_Report", "");
+    templateObject.getTimeSheetEntry(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
+    )
   },
-  "click #ignoreDate": async function () {
-    // $(".fullScreenSpin").css("display", "inline-block");
-    // localStorage.setItem('VS1TimesheetSummary_Report', '');
-    let templateObject = Template.instance();
-    templateObject.dateAsAt.set("Current Date");
-    await templateObject.setReportOptions(true);
-    // $(".fullScreenSpin").css("display", "none");
-  },
-
   "click [href='#noInfoFound']": function () {
     swal({
         title: 'Information',
@@ -342,7 +293,9 @@ Template.timesheetsummary.events({
         type: 'warning',
         confirmButtonText: 'Ok'
       })
-  }
+  },
+  ...Datehandler.getDateRangeEvents(),
+  ...FxGlobalFunctions.getEvents()
 });
 
 Template.timesheetsummary.helpers({
