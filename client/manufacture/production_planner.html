@@ -1,0 +1,28 @@
+<template name="production_planner">
+    <div class="container-fluid salesmodule" style="padding-right: 0px;padding-left: 0px;">
+        <div class="fullScreenSpin fullScreenSpin_workorder" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <div>
+            <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;">
+                <h2 style="margin: 16px;" class="heading">
+                    Production Planner
+                    {{> helpbutton}}
+                </h2>
+            </header>
+            <div class="row">
+                <div class="mt-5 px-5 productionPlannerTable">
+                    <div class="d-flex">
+                        <div class="processName">Processes</div>
+                        <div class="tblHeader"></div>
+                    </div>
+                    <div class="d-flex mt-3">
+                        <div class="tblBody">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
