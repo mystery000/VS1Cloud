@@ -64,7 +64,7 @@ Template.opportunitiesStatus.onRendered(function() {
     async function renderCharts(formatDateFrom, formatDateTo, ignoreDate) {
         // leads comparison charts logic
         const dataProspectObject = await getVS1Data('TProspectEx');
-        // let leadsCount6Months = 0;
+        let leadsCount6Months = 0;
         let leadsStatus = {};
         if (dataProspectObject.length) {
             let { tprospect = [] } = JSON.parse(dataProspectObject[0].data);
@@ -74,16 +74,17 @@ Template.opportunitiesStatus.onRendered(function() {
             const fromDate = new Date(formatDateFrom);
             const toDate = new Date(formatDateTo);
 
-            tprospect.forEach(tprospect => {
-                if (fromDate <= new Date(tprospect.fiedls.CreationDate) && toDate >= new Date(tprospect.fiedls.CreationDate)) {
-                    // if (moment(tprospect.fiedls.CreationDate).unix() > momentUnix) {
-                    if (leadsstatustype[tprospect.fields.Status] != undefined) {
-                        leadsStatus[tprospect.fields.Status || 'Unqualified'] = {
-                            amount: isNaN(parseInt(leadsStatus[tprospect.fields.Status || 'Unqualified'])) ? 1 : parseInt(leadsStatus[tprospect.fields.Status || 'Unqualified'].amount) + 1,
-                            expect: isNaN(parseInt(leadsStatus[tprospect.fields.Status || 'Unqualified'])) ? parseInt(leadsstatustype[tprospect.fields.Status || 'Unqualified'].eqpm) : parseInt(leadsStatus[tprospect.fields.Status || 'Unqualified'].expect) + parseInt(leadsstatustype[tprospect.fields.Status || 'Unqualified'].eqpm)
+            tprospect.forEach(item => {
+                let creationDate = (item.fields.CreationDate) ? new Date(item.fields.CreationDate) : "";
+                if (fromDate <= creationDate && toDate >= creationDate) {
+                    // if (moment(item.fields.CreationDate).unix() > momentUnix) {
+                    if (leadsstatustype[item.fields.Status] != undefined) {
+                        leadsStatus[item.fields.Status || 'Unqualified'] = {
+                            amount: isNaN(parseInt(leadsStatus[item.fields.Status || 'Unqualified'])) ? 1 : parseInt(leadsStatus[item.fields.Status || 'Unqualified'].amount) + 1,
+                            expect: isNaN(parseInt(leadsStatus[item.fields.Status || 'Unqualified'])) ? parseInt(leadsstatustype[item.fields.Status || 'Unqualified'].eqpm) : parseInt(leadsStatus[item.fields.Status || 'Unqualified'].expect) + parseInt(leadsstatustype[item.fields.Status || 'Unqualified'].eqpm)
                         }
                     }
-                    // leadsCount6Months += 1;
+                    leadsCount6Months += 1;
                 }
             });
         }

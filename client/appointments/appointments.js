@@ -1535,8 +1535,8 @@ Template.appointments.onRendered(function() {
             const child1 = document.querySelector(".fc-appointments-button");
             if (child1 != null) {
                 const parent1 = child1.parentNode;
-                $(parent1).css("min-width", 712).css("text-align", "center");
-                $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
+                $(parent1).css("min-width", 714).css("text-align", "center");
+                $("#calendar .fc-toolbar-title").css("min-width", 275).css("text-align", "center");
             }
 
             let url = window.location.href;
@@ -2288,8 +2288,8 @@ Template.appointments.onRendered(function() {
             const child1 = document.querySelector(".fc-appointments-button");
             if (child1 != null) {
                 const parent1 = child1.parentNode;
-                $(parent1).css("min-width", 712).css("text-align", "center");
-                $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
+                $(parent1).css("min-width", 714).css("text-align", "center");
+                $("#calendar .fc-toolbar-title").css("min-width", 275).css("text-align", "center");
             }
 
             let url = window.location.href;
@@ -7676,8 +7676,8 @@ Template.appointments.onRendered(function() {
             const child1 = document.querySelector(".fc-appointments-button");
             if (child1 != null) {
                 const parent1 = child1.parentNode;
-                $(parent1).css("min-width", 712).css("text-align", "center");
-                $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
+                $(parent1).css("min-width", 714).css("text-align", "center");
+                $("#calendar .fc-toolbar-title").css("min-width", 275).css("text-align", "center");
             }
 
             let url = window.location.href;

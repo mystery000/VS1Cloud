@@ -2345,4 +2345,13 @@ authenticatedRoutes.route('/bomsetupcard', {
             yield: 'bom_setup'
         })
     }
+});
+
+authenticatedRoutes.route('/productionplanner', {
+    name: 'production_planner',
+    action() {
+        BlazeLayout.render('layout',{
+            yield: 'production_planner'
+        })
+    }
 })

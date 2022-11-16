@@ -42,7 +42,7 @@
         cardActive=true
         cardKey="dashboard-sales-performance-new-leads"
         highlightColor="primary"
-        tooltipTitle="This Lead count for last 3 months where status is ”Unqualified”"
+        tooltipTitle=newLeadsTooltip
     }}
         {{> kpiCardTitle
             title="New Leads"
@@ -76,7 +76,7 @@
         cardActive=true
         cardKey="dashboard-sales-performance-new-oppertunities"
         highlightColor="primary"
-        tooltipTitle="This is the Lead count for last 3 months where status is “Opportunity”"
+        tooltipTitle=newOpportunitiesTooltip
     }}
         {{> kpiCardTitle
             title="New Opportunities"
@@ -110,7 +110,7 @@
         cardActive=true
         cardKey="dashboard-sales-performance-won-oppertunities"
         highlightColor="primary"
-        tooltipTitle="This is the Lead/Customer count for last 3 months where an Invoice has been made"
+        tooltipTitle=wonOpportunitiesTooltip
     }}
         {{> kpiCardTitle
             title="Won Opportunities"
@@ -144,7 +144,7 @@
         cardActive=true
         cardKey="dashboard-sales-performance-gap-to-quota"
         highlightColor="primary"
-        tooltipTitle="This is the value of Invoices for last 3 months"
+        tooltipTitle=gapToQuotaTooltip
     }}
         {{> kpiCardTitle
             title="Gap to Quota"
@@ -172,7 +172,7 @@
         cardActive=true
         cardKey="dashboard-sales-performance-win-rate"
         highlightColor="primary"
-        tooltipTitle="This is the Quote count for last 3 months where it is converted to an invoice"
+        tooltipTitle=winRateTooltip
     }}
         {{> kpiCardTitle
             title="Win Rate %"
@@ -206,7 +206,7 @@
         cardActive=true
         cardKey="dashboard-sales-performance-avg-sale"
         highlightColor="primary"
-        tooltipTitle="This is the average time taken where Lead/Customer status is converted from “Unqualified” to “Invoiced”"
+        tooltipTitle=averageSalesCycleTooltip
     }}
         {{> kpiCardTitle
             title="Average Sales Cycle"
@@ -240,7 +240,7 @@
         cardActive=true
         cardKey="dashboard-sales-performance-pipeline"
         highlightColor="primary"
-        tooltipTitle="This is the quotes from Lead/Customer for last 3 months where the quote has not been converted to an invoice."
+        tooltipTitle=pipelineAmountTooltip
     }}
         {{> kpiCardTitle
             title="Pipeline Amount"

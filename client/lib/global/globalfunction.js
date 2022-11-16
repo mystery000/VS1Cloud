@@ -705,3 +705,11 @@ checkSetupFinished = function () {
     return setupFinished;
   }
 }
+
+convertDateFormatForPrint = function(pDate) {
+  let ret = "";
+  let sMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  let arrDate = pDate.split("/");
+  ret = arrDate[0] + "-" + sMonths[parseInt(arrDate[1]) - 1] + "-" + arrDate[2].substring(2, 4);
+  return ret;
+}
