@@ -38,6 +38,10 @@ Template.trialbalance.onRendered(() => {
 
   templateObject.initDate();
 
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  };
+
 
   // let salesOrderTable;
   // var splashArray = new Array();
@@ -50,13 +54,13 @@ Template.trialbalance.onRendered(() => {
   //   fromDateMonth = "0" + (currentDate.getMonth() + 1);
   // }
 
-  templateObject.initUploadedImage = () => {
-    let imageData = localStorage.getItem("Image");
-    if (imageData) {
-      $("#uploadedImage").attr("src", imageData);
-      $("#uploadedImage").attr("width", "50%");
-    }
-  };
+  // templateObject.initUploadedImage = () => {
+  //   let imageData = localStorage.getItem("Image");
+  //   if (imageData) {
+  //     $("#uploadedImage").attr("src", imageData);
+  //     $("#uploadedImage").attr("width", "50%");
+  //   }
+  // };
   // let imageData = localStorage.getItem("Image");
   // if (imageData) {
   //   $("#uploadedImage").attr("src", imageData);
@@ -538,7 +542,7 @@ Template.trialbalance.onRendered(() => {
    */
   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
     LoadingOverlay.show();
-
+    templateObject.setDateAs( dateFrom );
     let data = await CachedHttp.get(erpObject.TTrialBalanceReport, async () => {
       return await reportService.getTrialBalanceDetailsData(dateFrom, dateTo, ignoreDate);
     }, {
@@ -686,7 +690,6 @@ Template.trialbalance.onRendered(() => {
 
 
   templateObject.initDate();
-  templateObject.initUploadedImage();
   templateObject.getDepartments();
 
   templateObject.loadReport(
@@ -694,6 +697,7 @@ Template.trialbalance.onRendered(() => {
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
 });
 
 Template.trialbalance.events({

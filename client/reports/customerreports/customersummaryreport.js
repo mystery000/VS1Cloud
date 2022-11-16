@@ -41,17 +41,7 @@ Template.customersummaryreport.onRendered(() => {
     templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
   };
 
-  templateObject.initUploadedImage = () => {
-    let imageData = localStorage.getItem("Image");
-    if (imageData) {
-      $("#uploadedImage").attr("src", imageData);
-      $("#uploadedImage").attr("width", "50%");
-    }
-  };
-
-
   templateObject.initDate();
-  templateObject.initUploadedImage();
 
 
   templateObject.getCustomerDetailsHistory = async function (dateFrom, dateTo, ignoreDate) {
@@ -233,6 +223,7 @@ Template.customersummaryreport.events({
     }
   },
   "click #ignoreDate":  (e, templateObject) => {
+    localStorage.setItem("VS1CustomerSummary_Report", "");
     templateObject.getCustomerDetailsHistory(null, null, true)
   },
   "change #dateTo, change #dateFrom": (e) => {

@@ -31,12 +31,8 @@ Template.jobprofitabilityreport.onRendered(() => {
     Datehandler.initOneMonth();
   };
 
-  templateObject.initUploadedImage = () => {
-    let imageData = localStorage.getItem("Image");
-    if (imageData) {
-      $("#uploadedImage").attr("src", imageData);
-      $("#uploadedImage").attr("width", "50%");
-    }
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
   };
 
   templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
@@ -66,6 +62,7 @@ Template.jobprofitabilityreport.onRendered(() => {
 
   templateObject.loadReport = async  (dateFrom = null, dateTo = null, ignoreDate = false) => {
     LoadingOverlay.show();
+    templateObject.setDateAs( dateFrom );
     // let data = [];
     // if (!localStorage.getItem('VS1JobProfitability_Report')) {
     //   const options = await templateObject.reportOptions.get();
@@ -152,17 +149,17 @@ Template.jobprofitabilityreport.onRendered(() => {
     LoadingOverlay.hide();
   }
 
-  templateObject.setReportOptions();
+  // templateObject.setReportOptions();
 
 
   templateObject.initDate();
-  templateObject.initUploadedImage();
-
+  
   templateObject.loadReport(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
   LoadingOverlay.hide();
 });
 

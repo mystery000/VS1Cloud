@@ -34,7 +34,7 @@ Template.purchasesreport.onCreated(() => {
 Template.purchasesreport.onRendered(() => {
     $('.fullScreenSpin').css('display', 'inline-block');
     const templateObject = Template.instance();
-
+    var deptrecords = [];
     templateObject.initDate = () => {
         Datehandler.initOneMonth();
     };

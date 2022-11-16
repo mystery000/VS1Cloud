@@ -218,18 +218,7 @@ Template.binlocationslist.events({
     } else {
       $(".table tbody tr").show();
     }
-  },
-  "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    var dateFrom = moment(new Date($("#dateFrom").datepicker("getDate"))).format("DD/MM/YYYY");
-    var dateTo = moment(new Date($("#dateFrom").datepicker("getDate"))).format("DD/MM/YYYY");
-    localStorage.setItem('VS1BinLocations_Report', '');
-    // await templateObject.setReportOptions(false, dateFrom, dateTo);
-    $(".fullScreenSpin").css("display", "none");
-  },
-
-  
+  },  
   // CURRENCY MODULE //
   ...FxGlobalFunctions.getEvents(),
   "click .currency-modal-save": (e) => {

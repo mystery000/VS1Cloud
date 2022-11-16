@@ -25,6 +25,8 @@ Template.vs1_report_template.onCreated(function(){
     templateObject.selectedFile = new ReactiveVar();
     templateObject.report_displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+    templateObject.isAccountingMoreOption = new ReactiveVar();
+    templateObject.isTaxCodeOption = new ReactiveVar();    
     // templateObject.dateAsAt = new ReactiveVar();
 });
 
@@ -44,9 +46,11 @@ Template.vs1_report_template.onRendered(function() {
   var url = FlowRouter.current().path;
   let currenttablename = "";
   let displaytablename = "";
-  if (url.includes("/generalledger")) {
-    currenttablename = "generalledger";
-    displaytablename = "General Ledger";
+  templateObject.isAccountingMoreOption.set(false);
+  templateObject.isTaxCodeOption.set(false);
+  if (url.includes("/taxsummaryreport")) {
+    templateObject.isAccountingMoreOption.set(true);
+    templateObject.isTaxCodeOption.set(true);
   };
   templateObject.tablename.set(currenttablename);
   templateObject.tabledisplayname.set(displaytablename);
@@ -305,6 +309,13 @@ Template.vs1_report_template.helpers({
   loggedCompany: () => {
       return localStorage.getItem('mySession') || '';
   },
+  isAccountingMoreOption: () => {
+    return Template.instance().isAccountingMoreOption.get();;
+  },
+  isTaxCodeOption: () => {
+    return Template.instance().isTaxCodeOption.get();;
+  },
+  
   // tablename: () => {
   //     return Template.instance().tablename.get();
   // },
