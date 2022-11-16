@@ -3,33 +3,38 @@ import { ReactiveVar } from "meteor/reactive-var";
 let formatDateFrom;
 let formatDateTo;
 
-Template.dashboardManagerCharts.onCreated(function() {
-
+Template.dashboardSalesCards.onCreated(function() {
+    const templateObject = Template.instance();
+    templateObject.fromDate = new ReactiveVar([]);
+    templateObject.toDate = new ReactiveVar([]);
 });
 
-Template.dashboardSalesCards.onRendered(function () {
+Template.dashboardSalesCards.onRendered(function() {
     let templateObject = Template.instance();
-    templateObject.getDashboardData = function (fromDate,toDate,ignoreDate) {
-        getVS1Data('TProspectEx').then(function (dataObject) {
-            if(dataObject.length) {
-                let {tprospect = []} = JSON.parse(dataObject[0].data);
+    templateObject.getDashboardData = function(fromDate, toDate, ignoreDate) {
+        getVS1Data('TProspectEx').then(function(dataObject) {
+            if (dataObject.length) {
+                let { tprospect = [] } = JSON.parse(dataObject[0].data);
                 let myLeadsLast3Months = 0;
                 let teamAvgLast3Months = 0;
                 let myNewOpportunityLast3Months = 0;
                 let teamNewOpportunityLast3Months = 0;
                 let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
-                const momentUnix =  moment().subtract(3, 'months').unix();
-                tprospect.forEach(prospect  =>  {
-                    if(moment(prospect.fields.CreationDate).unix() > momentUnix && prospect.fields.Status === 'Unqualified') {
-                        teamAvgLast3Months +=1;
+                // const momentUnix = moment().subtract(3, 'months').unix();
+                const fromDate = new Date($("#dateFrom").datepicker("getDate"));
+                const toDate = new Date($("#dateTo").datepicker("getDate"));
+                tprospect.forEach(prospect => {
+                    const creationDate = new Date(prospect.fields.CreationDate);
+                    if (fromDate <= creationDate && toDate >= creationDate && prospect.fields.Status === 'Unqualified') {
+                        teamAvgLast3Months += 1;
                         if (loggedEmpID == prospect.fields.ID) {
-                            myLeadsLast3Months +=1;
+                            myLeadsLast3Months += 1;
                         }
                     }
-                    if(moment(prospect.fields.CreationDate).unix() > momentUnix && prospect.fields.Status === 'Opportunity') {
-                        teamNewOpportunityLast3Months +=1;
+                    if (fromDate <= creationDate && toDate >= creationDate && prospect.fields.Status === 'Opportunity') {
+                        teamNewOpportunityLast3Months += 1;
                         if (loggedEmpID == prospect.fields.ID) {
-                            myNewOpportunityLast3Months +=1;
+                            myNewOpportunityLast3Months += 1;
                         }
                     }
                 });
@@ -38,23 +43,26 @@ Template.dashboardSalesCards.onRendered(function () {
                 $('#new-opportunities-my-metric').text(myNewOpportunityLast3Months);
                 $('#new-opportunities-team-avg').text(teamNewOpportunityLast3Months);
             }
-        }).catch(function (err) {
+        }).catch(function(err) {
 
         });
-        getVS1Data('TInvoiceList').then(function (dataObject) {
+        getVS1Data('TInvoiceList').then(function(dataObject) {
             let totalInvoiceValueLast3Months = 0;
             let totalQuoteValueLast3Months = 0;
-            if(dataObject.length) {
-                let {tinvoicelist} = JSON.parse(dataObject[0].data);
+            if (dataObject.length) {
+                let { tinvoicelist } = JSON.parse(dataObject[0].data);
                 let myWonOpportunities = 0;
                 let teamWonOpportunities = 0;
                 let employeeName = Session.get('mySessionEmployee');
-                const momentUnix =  moment().subtract(3, 'months').unix();
-                tinvoicelist.forEach(tinvoice  =>  {
-                    if(moment(tinvoice.SaleDate).unix() > momentUnix) {
+                // const momentUnix = moment().subtract(3, 'months').unix();
+                const fromDate = new Date($("#dateFrom").datepicker("getDate"));
+                const toDate = new Date($("#dateTo").datepicker("getDate"));
+                tinvoicelist.forEach(tinvoice => {
+                    const saleDate = new Date(tinvoice.SaleDate);
+                    if (fromDate <= saleDate && toDate >= saleDate) {
                         totalInvoiceValueLast3Months += tinvoice.Balance;
                         teamWonOpportunities += 1;
-                        if(employeeName == tinvoice.EmployeeName) {
+                        if (employeeName == tinvoice.EmployeeName) {
                             myWonOpportunities += 1;
                         }
                     }
@@ -62,22 +70,22 @@ Template.dashboardSalesCards.onRendered(function () {
                 $('#won-opportunities-my-metric').text(myWonOpportunities.toFixed(2));
                 $('#won-opportunities-team-avg').text(teamWonOpportunities.toFixed(2));
             }
-            getVS1Data('TQuoteList').then(function (dataObject) {
-                if(dataObject.length) {
-                    let {tquotelist = []} = JSON.parse(dataObject[0].data);
+            getVS1Data('TQuoteList').then(function(dataObject) {
+                if (dataObject.length) {
+                    let { tquotelist = [] } = JSON.parse(dataObject[0].data);
                     const fromDate = new Date($("#dateFrom").datepicker("getDate"));
                     const toDate = new Date($("#dateTo").datepicker("getDate"));
-                    tquotelist.forEach(tquote  =>  {
+                    tquotelist.forEach(tquote => {
                         const saleDate = new Date(tquote.SaleDate);
-                        if(fromDate <= saleDate && toDate >= saleDate){
-                            if(!tquote.Converted) {
+                        if (fromDate <= saleDate && toDate >= saleDate) {
+                            if (!tquote.Converted) {
                                 totalQuoteValueLast3Months += tquote.Balance;
                             }
                         }
                     });
                 }
                 $('#gap-to-quota').text(`$ ${totalInvoiceValueLast3Months.toFixed(2)}`);
-                if(totalInvoiceValueLast3Months > totalQuoteValueLast3Months) {
+                if (totalInvoiceValueLast3Months > totalQuoteValueLast3Months) {
                     $('#gap-to-quota').removeClass('text-danger');
                     $('#gap-to-quota').addClass('text-success');
                     $('#gap-to-quota-label').html('In Front');
@@ -86,33 +94,31 @@ Template.dashboardSalesCards.onRendered(function () {
                     $('#gap-to-quota').addClass('text-danger');
                     $('#gap-to-quota-label').html('Behind');
                 }
-            }).catch(function (err) {
-            });
-        }).catch(function (err) {
-        });
-        getVS1Data('TQuoteList').then(function (dataObject) {
-            if(dataObject.length) {
-                let {tquotelist = []} = JSON.parse(dataObject[0].data);
+            }).catch(function(err) {});
+        }).catch(function(err) {});
+        getVS1Data('TQuoteList').then(function(dataObject) {
+            if (dataObject.length) {
+                let { tquotelist = [] } = JSON.parse(dataObject[0].data);
                 const fromDate = new Date($("#dateFrom").datepicker("getDate"));
                 const toDate = new Date($("#dateTo").datepicker("getDate"));
                 let [convertedQuotesCount, nonConvertedQuotesCount, convertedQuotesAmount] = [0, 0, 0, 0];
                 let [myConvertedQuotesCount, myNonConvertedQuotesCount, myConvertedQuotesAmount] = [0, 0, 0, 0];
                 let [myPipeLineAmount, teamPipeLineAmount] = [0, 0];
                 let employeeName = Session.get('mySessionEmployee');
-                tquotelist.forEach(tquote  =>  {
+                tquotelist.forEach(tquote => {
                     const saleDate = new Date(tquote.SaleDate);
-                    if(fromDate <= saleDate && toDate >= saleDate){
-                        if(tquote.Converted) {
-                            convertedQuotesCount +=1;
+                    if (fromDate <= saleDate && toDate >= saleDate) {
+                        if (tquote.Converted) {
+                            convertedQuotesCount += 1;
                             convertedQuotesAmount += tquote.Balance;
                         } else {
                             nonConvertedQuotesCount += 1;
                             teamPipeLineAmount += tquote.Balance;
                         }
 
-                        if(employeeName == tquote.EmployeeName) {
-                            if(tquote.Converted) {
-                                myConvertedQuotesCount +=1;
+                        if (employeeName == tquote.EmployeeName) {
+                            if (tquote.Converted) {
+                                myConvertedQuotesCount += 1;
                                 myConvertedQuotesAmount += tquote.Balance;
                             } else {
                                 myNonConvertedQuotesCount += 1;
@@ -126,32 +132,33 @@ Template.dashboardSalesCards.onRendered(function () {
                 $('#win-rate-my-metric').text(`${myWinRate} %`);
                 $('#win-rate-team-avg').text(`${teamWinRate} %`);
 
-                const myAvgSalesCycle = myConvertedQuotesAmount ? myConvertedQuotesAmount/30 : myConvertedQuotesAmount;
-                const teamAvgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount/30 : convertedQuotesAmount;
+                const myAvgSalesCycle = myConvertedQuotesAmount ? myConvertedQuotesAmount / 30 : myConvertedQuotesAmount;
+                const teamAvgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount / 30 : convertedQuotesAmount;
                 $('#avg-sales-cycle-my-metric').text(`${parseInt(myAvgSalesCycle)} day(s)`);
                 $('#avg-sales-cycle-team-avg').text(`${parseInt(teamAvgSalesCycle)} day(s)`);
 
                 $('#pipeline-amount-my-metric').text(`$ ${myPipeLineAmount.toFixed(2)}`);
                 $('#pipeline-amount-team-avg').text(`$ ${teamPipeLineAmount.toFixed(2)}`);
             }
-        }).catch(function (err) {
-        });
+        }).catch(function(err) {});
     }
-    templateObject.setDateVal = function () {
+    templateObject.setDateVal = function() {
         const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         const dateTo = new Date($("#dateTo").datepicker("getDate"));
-        formatDateFrom = dateFrom.getFullYear() +"-" +(dateFrom.getMonth() + 1) +"-" +dateFrom.getDate();
-        formatDateTo =dateTo.getFullYear() +"-" +(dateTo.getMonth() + 1) +  "-" +dateTo.getDate();
-        if ( $("#dateFrom").val() == "" && $("#dateTo").val() == "") {
+        templateObject.fromDate.set(dateFrom);
+        templateObject.toDate.set(dateTo);
+        formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+        formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+        if ($("#dateFrom").val() == "" && $("#dateTo").val() == "") {
             templateObject.getDashboardData(formatDateFrom, formatDateTo, true);
         } else {
             templateObject.getDashboardData(formatDateFrom, formatDateTo, false);
         }
     }
 
-    setTimeout(function(){
+    setTimeout(function() {
         templateObject.setDateVal();
-    },500);
+    }, 500);
 });
 
 // Listen to event to update reactive variable
@@ -194,7 +201,7 @@ Template.dashboardSalesCards.events({
         let toDate = new Date(formatDateTo);
         toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/invoicelist?fromDate=" + fromDate + "&toDate=" + toDate, '_self');
     },
     "click #won-opportunities-team-avg": (e) => {
         let fromDate = new Date(formatDateFrom);
@@ -202,7 +209,7 @@ Template.dashboardSalesCards.events({
         let toDate = new Date(formatDateTo);
         toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/invoicelist?fromDate=" + fromDate + "&toDate=" + toDate, '_self');
     },
     "click #gap-to-quota": (e) => {
         let fromDate = new Date(formatDateFrom);
@@ -210,7 +217,7 @@ Template.dashboardSalesCards.events({
         let toDate = new Date(formatDateTo);
         toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/quoteslist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/quoteslist?fromDate=" + fromDate + "&toDate=" + toDate, '_self');
     },
     "click #avg-sales-cycle-my-metric": (e) => {
         let fromDate = new Date(formatDateFrom);
@@ -218,7 +225,7 @@ Template.dashboardSalesCards.events({
         let toDate = new Date(formatDateTo);
         toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/quoteslist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/quoteslist?fromDate=" + fromDate + "&toDate=" + toDate, '_self');
     },
     "click #avg-sales-cycle-team-avg": (e) => {
         let fromDate = new Date(formatDateFrom);
@@ -226,7 +233,7 @@ Template.dashboardSalesCards.events({
         let toDate = new Date(formatDateTo);
         toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/quoteslist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/quoteslist?fromDate=" + fromDate + "&toDate=" + toDate, '_self');
     },
     "click #pipeline-amount-my-metric": (e) => {
         let fromDate = new Date(formatDateFrom);
@@ -234,7 +241,7 @@ Template.dashboardSalesCards.events({
         let toDate = new Date(formatDateTo);
         toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/quoteslist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/quoteslist?fromDate=" + fromDate + "&toDate=" + toDate, '_self');
     },
     "click #pipeline-amount-team-avg": (e) => {
         let fromDate = new Date(formatDateFrom);
@@ -242,10 +249,86 @@ Template.dashboardSalesCards.events({
         let toDate = new Date(formatDateTo);
         toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/quoteslist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/quoteslist?fromDate=" + fromDate + "&toDate=" + toDate, '_self');
     },
 });
 
 Template.dashboardSalesCards.helpers({
-
+    newLeadsTooltip: function() {
+        let templateObject = Template.instance();
+        const fromDate = templateObject.fromDate.get();
+        const toDate = templateObject.toDate.get();
+        let monthCount = (
+            toDate.getMonth() -
+            fromDate.getMonth() +
+            12 * (toDate.getFullYear() - fromDate.getFullYear())
+        );
+        return "This Lead count for last " + monthCount + " months where status is ”Unqualified”";
+    },
+    newOpportunitiesTooltip: function() {
+        let templateObject = Template.instance();
+        const fromDate = templateObject.fromDate.get();
+        const toDate = templateObject.toDate.get();
+        let monthCount = (
+            toDate.getMonth() -
+            fromDate.getMonth() +
+            12 * (toDate.getFullYear() - fromDate.getFullYear())
+        );
+        return "This is the Lead count for last " + monthCount + " months where status is “Opportunity”";
+    },
+    wonOpportunitiesTooltip: function() {
+        let templateObject = Template.instance();
+        const fromDate = templateObject.fromDate.get();
+        const toDate = templateObject.toDate.get();
+        let monthCount = (
+            toDate.getMonth() -
+            fromDate.getMonth() +
+            12 * (toDate.getFullYear() - fromDate.getFullYear())
+        );
+        return "This is the Lead/Customer count for last " + monthCount + " months where an Invoice has been made";
+    },
+    gapToQuotaTooltip: function() {
+        let templateObject = Template.instance();
+        const fromDate = templateObject.fromDate.get();
+        const toDate = templateObject.toDate.get();
+        let monthCount = (
+            toDate.getMonth() -
+            fromDate.getMonth() +
+            12 * (toDate.getFullYear() - fromDate.getFullYear())
+        );
+        return "This is the value of Invoices for last " + monthCount + " months";
+    },
+    winRateTooltip: function() {
+        let templateObject = Template.instance();
+        const fromDate = templateObject.fromDate.get();
+        const toDate = templateObject.toDate.get();
+        let monthCount = (
+            toDate.getMonth() -
+            fromDate.getMonth() +
+            12 * (toDate.getFullYear() - fromDate.getFullYear())
+        );
+        return "This is the Quote count for last " + monthCount + " months where it is converted to an invoice";
+    },
+    averageSalesCycleTooltip: function() {
+        let templateObject = Template.instance();
+        const fromDate = templateObject.fromDate.get();
+        const toDate = templateObject.toDate.get();
+        let monthCount = (
+            toDate.getMonth() -
+            fromDate.getMonth() +
+            12 * (toDate.getFullYear() - fromDate.getFullYear())
+        );
+        return "This is the average time taken where Lead/Customer status is converted from “Unqualified” to “Invoiced”";
+    },
+    pipelineAmountTooltip: function() {
+        let templateObject = Template.instance();
+        const fromDate = templateObject.fromDate.get();
+        const toDate = templateObject.toDate.get();
+        let monthCount = (
+            toDate.getMonth() -
+            fromDate.getMonth() +
+            12 * (toDate.getFullYear() - fromDate.getFullYear())
+        );
+        return "This is the quotes from Lead/Customer for last " + monthCount + " months where the quote has not been converted to an invoice.";
+    },
 });
