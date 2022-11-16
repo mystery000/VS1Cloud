@@ -1,8 +1,9 @@
 import {TaxRateService} from "../settings-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../../js/sidebar-service';
+import {UtilityService} from "../../utility-service";
 import '../../lib/global/indexdbstorage.js';
-
+import XLSX from 'xlsx';
 let sideBarService = new SideBarService();
 Template.termsettings.inheritsHooksFrom('non_transactional_list');
 
@@ -28,6 +29,7 @@ Template.termsettings.onCreated(function(){
   templateObject.includeSalesDefault.set(false);
   templateObject.includePurchaseDefault = new ReactiveVar();
   templateObject.includePurchaseDefault.set(false);
+  templateObject.selectedFile = new ReactiveVar();
 
 });
 
@@ -435,8 +437,162 @@ Template.termsettings.events({
         } else {
             event.preventDefault();
         }
-    }
+    },
+    // Import here
+    'click .templateDownload': function() {
+        let utilityService = new UtilityService();
+        let rows = [];
+        const filename = 'SampleTermsSetting' + '.csv';
+        rows[0] = ['Term', 'Days', 'EOM', 'EOM+', 'Description', 'Customer', 'Supplier'];
+        rows[1] = ['ABC','7', 'false', 'false', 'description', 'false', 'false'];
+        utilityService.exportToCsv(rows, filename, 'csv');
+    },
+    'click .templateDownloadXLSX': function(e) {
+        e.preventDefault(); //stop the browser from following
+        window.location.href = 'sample_imports/SampleTermsSetting.xlsx';
+    },
+    'click .btnUploadFile': function(event) {
+        $('#attachment-upload').val('');
+        $('.file-name').text('');
+        //$(".btnImport").removeAttr("disabled");
+        $('#attachment-upload').trigger('click');
 
+    },
+    'change #attachment-upload': function(e) {
+        let templateObj = Template.instance();
+        var filename = $('#attachment-upload')[0].files[0]['name'];
+        var fileExtension = filename.split('.').pop().toLowerCase();
+        var validExtensions = ["csv", "txt", "xlsx"];
+        var validCSVExtensions = ["csv", "txt"];
+        var validExcelExtensions = ["xlsx", "xls"];
+
+        if (validExtensions.indexOf(fileExtension) == -1) {
+            swal('Invalid Format', 'formats allowed are :' + validExtensions.join(', '), 'error');
+            $('.file-name').text('');
+            $(".btnImport").Attr("disabled");
+        } else if (validCSVExtensions.indexOf(fileExtension) != -1) {
+
+            $('.file-name').text(filename);
+            let selectedFile = event.target.files[0];
+
+            templateObj.selectedFile.set(selectedFile);
+            if ($('.file-name').text() != "") {
+                $(".btnImport").removeAttr("disabled");
+            } else {
+                $(".btnImport").Attr("disabled");
+            }
+        } else if (fileExtension == 'xlsx') {
+            $('.file-name').text(filename);
+            let selectedFile = event.target.files[0];
+            var oFileIn;
+            var oFile = selectedFile;
+            var sFilename = oFile.name;
+            // Create A File Reader HTML5
+            var reader = new FileReader();
+
+            // Ready The Event For When A File Gets Selected
+            reader.onload = function(e) {
+                var data = e.target.result;
+                data = new Uint8Array(data);
+                var workbook = XLSX.read(data, { type: 'array' });
+
+                var result = {};
+                workbook.SheetNames.forEach(function(sheetName) {
+                    var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    templateObj.selectedFile.set(sCSV);
+
+                    if (roa.length) result[sheetName] = roa;
+                });
+                // see the result, caution: it works after reader event is done.
+
+            };
+            reader.readAsArrayBuffer(oFile);
+
+            if ($('.file-name').text() != "") {
+                $(".btnImport").removeAttr("disabled");
+            } else {
+                $(".btnImport").Attr("disabled");
+            }
+
+        }
+    },
+    'click .btnImport': function() {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+        let taxRateService = new TaxRateService();
+        let objDetails;
+        let termDesc = '';
+        let isEOM = false;
+        let isEOMPlus = false;
+        let days = 0;
+        let isSalesdefault = false;
+        let isPurchasedefault = false;
+
+        Papa.parse(templateObject.selectedFile.get(), {
+            complete: function(results) {
+
+                if (results.data.length > 0) {
+                    if ((results.data[0][0] == "Terms Name") && (results.data[0][1] == "Description")) {
+
+                        let dataLength = results.data.length * 500;
+                        setTimeout(function() {
+                            $('.importTemplateModal').hide();
+                            $('.modal-backdrop').hide();
+                            FlowRouter.go('/departmentSettings?success=true');
+                            $('.fullScreenSpin').css('display', 'none');
+                        }, parseInt(dataLength));
+
+                        for (let i = 0; i < results.data.length - 1; i++) {
+                            days = results.data[i + 1][1] !== undefined ? results.data[i + 1][1] : 0;
+                            isEOM = results.data[i + 1][2] !== undefined ? results.data[i + 1][2] : false;
+                            isEOMPlus = results.data[i + 1][3] !== undefined ? results.data[i + 1][3] : false;
+                            termDesc = results.data[i + 1][4] !== undefined ? results.data[i + 1][4] : '';
+                            isPurchasedefault = results.data[i + 1][5] !== undefined ? results.data[i + 1][5] : false;
+                            isSalesdefault = results.data[i + 1][6] !== undefined ? results.data[i + 1][6] : false;
+                            objDetails = {
+                                type: "TTermsVS1",
+                                fields: {
+                                    TermsName: results.data[i + 1][0],
+                                    Days: days,
+                                    IsEOM: isEOM,
+                                    IsEOMPlus: isEOMPlus,
+                                    Description: termDesc,
+                                    isPurchasedefault: isPurchasedefault,
+                                    isSalesdefault: isSalesdefault,
+                                    Active: true
+                                }
+                            };
+                            if (results.data[i + 1][1]) {
+                                if (results.data[i + 1][1] !== "") {
+                                    taxRateService.saveTerms(objDetails).then(function(data) {
+                                        //$('.fullScreenSpin').css('display','none');
+                                        //  Meteor._reload.reload();
+                                    }).catch(function(err) {
+                                        //$('.fullScreenSpin').css('display','none');
+                                        swal({ title: 'Oooops...', text: err, type: 'error', showCancelButton: false, confirmButtonText: 'Try Again' }).then((result) => {
+                                            if (result.value) {
+                                                window.open('/departmentSettings?success=true', '_self');
+                                            } else if (result.dismiss === 'cancel') {
+                                                window.open('/departmentSettings?success=false', '_self');
+                                            }
+                                        });
+                                    });
+                                }
+                            }
+                        }
+
+                    } else {
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+                    }
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+                }
+            }
+        });
+    }
 
 });
 
