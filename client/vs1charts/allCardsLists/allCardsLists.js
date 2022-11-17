@@ -101,7 +101,7 @@ Template.allCardsLists.onRendered(function () {
                 $(`[chartgroup='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
             }
             $(".fullScreenSpin").css("display", "none");
-        }, 500);
+        }, 0);
     };
     templateObject.setCardPositions();
 
@@ -309,7 +309,7 @@ Template.allCardsLists.events({
               headers: ApiService.getPostHeaders(),
               body: JSON.stringify(resetCards),
             });
-        
+
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
                 $('.cardShowBtn').addClass('hideelement');
