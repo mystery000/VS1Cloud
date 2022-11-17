@@ -20,9 +20,13 @@ import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
+import CachedHttp from '../lib/global/CachedHttp';
+import erpObject from '../lib/global/erp-objects';
+import GlobalFunctions from '../GlobalFunctions';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let productService = new ProductService();
 let times = 0;
 let clickedInput = "";
 let isDropDown = false;
@@ -37,54 +41,58 @@ const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (I
 
 let defaultCurrencyCode = CountryAbbr;
 
-Template.new_salesorder.onCreated(() => {
-    const templateObject = Template.instance();
-    templateObject.isForeignEnabled = new ReactiveVar(false);
+Template.new_salesorder.onCreated(function() {
+    // const templateObject = Template.instance();
+    this.isForeignEnabled = new ReactiveVar(false);
 
-    templateObject.records = new ReactiveVar();
-    templateObject.CleintName = new ReactiveVar();
-    templateObject.Department = new ReactiveVar();
-    templateObject.Date = new ReactiveVar();
-    templateObject.DueDate = new ReactiveVar();
-    templateObject.SalesOrderNo = new ReactiveVar();
-    templateObject.RefNo = new ReactiveVar();
-    templateObject.Branding = new ReactiveVar();
-    templateObject.Currency = new ReactiveVar();
-    templateObject.Total = new ReactiveVar();
-    templateObject.Subtotal = new ReactiveVar();
-    templateObject.TotalTax = new ReactiveVar();
-    templateObject.salesorderrecord = new ReactiveVar({});
-    templateObject.taxrateobj = new ReactiveVar();
-    templateObject.Accounts = new ReactiveVar([]);
-    templateObject.SalesOrderId = new ReactiveVar();
-    templateObject.selectedCurrency = new ReactiveVar([]);
-    templateObject.inputSelectedCurrency = new ReactiveVar([]);
-    templateObject.currencySymbol = new ReactiveVar([]);
-    templateObject.deptrecords = new ReactiveVar();
-    templateObject.termrecords = new ReactiveVar();
-    templateObject.clientrecords = new ReactiveVar([]);
-    templateObject.taxraterecords = new ReactiveVar([]);
-    templateObject.taxcodes = new ReactiveVar([]);
-    templateObject.accountID = new ReactiveVar();
-    templateObject.stripe_fee_method = new ReactiveVar();
-    templateObject.uploadedFile = new ReactiveVar();
-    templateObject.uploadedFiles = new ReactiveVar([]);
-    templateObject.attachmentCount = new ReactiveVar();
-    templateObject.displayfields = new ReactiveVar([]);
-    templateObject.reset_data = new ReactiveVar([]);
+    this.records = new ReactiveVar();
+    this.CleintName = new ReactiveVar();
+    this.Department = new ReactiveVar();
+    this.Date = new ReactiveVar();
+    this.DueDate = new ReactiveVar();
+    this.SalesOrderNo = new ReactiveVar();
+    this.RefNo = new ReactiveVar();
+    this.Branding = new ReactiveVar();
+    this.Currency = new ReactiveVar();
+    this.Total = new ReactiveVar();
+    this.Subtotal = new ReactiveVar();
+    this.TotalTax = new ReactiveVar();
+    this.salesorderrecord = new ReactiveVar({});
+    this.taxrateobj = new ReactiveVar();
+    this.Accounts = new ReactiveVar([]);
+    this.SalesOrderId = new ReactiveVar();
+    this.selectedCurrency = new ReactiveVar([]);
+    this.inputSelectedCurrency = new ReactiveVar([]);
+    this.currencySymbol = new ReactiveVar([]);
+    this.deptrecords = new ReactiveVar();
+    this.termrecords = new ReactiveVar();
+    this.clientrecords = new ReactiveVar([]);
+    this.taxraterecords = new ReactiveVar([]);
+    this.taxcodes = new ReactiveVar([]);
+    this.accountID = new ReactiveVar();
+    this.stripe_fee_method = new ReactiveVar();
+    this.uploadedFile = new ReactiveVar();
+    this.uploadedFiles = new ReactiveVar([]);
+    this.attachmentCount = new ReactiveVar();
+    this.displayfields = new ReactiveVar([]);
+    this.reset_data = new ReactiveVar([]);
 
-    templateObject.address = new ReactiveVar();
-    templateObject.abn = new ReactiveVar();
-    templateObject.referenceNumber = new ReactiveVar();
-    templateObject.statusrecords = new ReactiveVar([]);
-    templateObject.record = new ReactiveVar({});
-    templateObject.productextrasellrecords = new ReactiveVar([]);
-    templateObject.defaultsaleterm = new ReactiveVar();
-    templateObject.subtaxcodes = new ReactiveVar([]);
-    templateObject.abletomakeworkorder = new ReactiveVar(false);
+    this.address = new ReactiveVar();
+    this.abn = new ReactiveVar();
+    this.referenceNumber = new ReactiveVar();
+    this.statusrecords = new ReactiveVar([]);
+    this.record = new ReactiveVar({});
+    this.productextrasellrecords = new ReactiveVar([]);
+    this.defaultsaleterm = new ReactiveVar();
+    this.subtaxcodes = new ReactiveVar([]);
+    this.abletomakeworkorder = new ReactiveVar(false);
+
+    this.saleOrders = new ReactiveVar([]);
+    this.saleOrder = new ReactiveVar();
+    this.products = new ReactiveVar([]);
 });
 
-Template.new_salesorder.onRendered(() => {
+Template.new_salesorder.onRendered(function () {
     let templateObject = Template.instance();
     $('#edtFrequencyDetail').css('display', 'none');
     // $('#onEventSettings').css('display', 'none');
@@ -2847,6 +2855,35 @@ Template.new_salesorder.onRendered(() => {
         templateObject.getSalesCustomFieldsList()
     },500);
 
+    /**
+     * 
+     * Loading the saleOrders
+     * Loading the current SaleOrder
+     */
+    this.loadSaleOrder = async (refresh = false) => {
+        const SaleOrderId = FlowRouter.current().queryParams.id;
+
+        let data = await CachedHttp.get(erpObject.TSalesOrderEx, async () => {
+            return await accountService.getOneSalesOrderdataEx(currentSalesOrder);
+        }, {
+            forceOverride: refresh,
+            validate: (cachedResponse) => {
+                return true;
+            }
+        });
+
+        data = data.response;
+        let saleOrders = data.tsalesorderex;
+        let saleOrder = saleOrders.find(s => s.fields.ID == SaleOrderId);
+
+        await this.saleOrders.set(saleOrders);
+        await this.saleOrder.set(saleOrder);
+
+
+    }
+
+    this.loadSaleOrder();
+
     let url = FlowRouter.current().path;
     let bankDetails = Session.get('vs1companyBankDetails') || '';
     //$('.bankDetails').html(bankDetails.replace(/[\r\n]/g, "<br />"));
@@ -5572,60 +5609,60 @@ Template.new_salesorder.onRendered(() => {
         $('#sltCurrency').editableSelect();
         $('#sltTerms').editableSelect();
         $('#sltDept').editableSelect();
-        $('#addRow').on('click', function() {
-          var getTableFields = [ $('#tblSalesOrderLine tbody tr .lineProductName')];
-          var checkEmptyFields;
-          for(var i=0;i< getTableFields.length;i++){
-            checkEmptyFields = getTableFields[i].filter(function(i,element) {
-                return $.trim($(this).val()) === '';
-            });
-          };
-          if (!checkEmptyFields.length) {
-            var rowData = $('#tblSalesOrderLine tbody>tr:last').clone(true);
-            let tokenid = Random.id();
-            $(".lineProductName", rowData).val("");
-            $(".lineProductDesc", rowData).text("");
-            $(".lineQty", rowData).val("");
-            $(".lineUnitPrice", rowData).val("");
-            $(".lineTaxRate", rowData).text("");
-            $(".lineTaxCode", rowData).val("");
-            $(".lineAmt", rowData).text("");
-            $(".lineTaxAmount", rowData).text("");
-            $(".lineDiscount", rowData).text("");
-            $(".lineProductName", rowData).attr("prodid", '');
-            rowData.attr('id', tokenid);
-            $("#tblSalesOrderLine tbody").append(rowData);
+        // $('#addRow').on('click', function() {
+        //   var getTableFields = [ $('#tblSalesOrderLine tbody tr .lineProductName')];
+        //   var checkEmptyFields;
+        //   for(var i=0;i< getTableFields.length;i++){
+        //     checkEmptyFields = getTableFields[i].filter(function(i,element) {
+        //         return $.trim($(this).val()) === '';
+        //     });
+        //   };
+        //   if (!checkEmptyFields.length) {
+        //     var rowData = $('#tblSalesOrderLine tbody>tr:last').clone(true);
+        //     let tokenid = Random.id();
+        //     $(".lineProductName", rowData).val("");
+        //     $(".lineProductDesc", rowData).text("");
+        //     $(".lineQty", rowData).val("");
+        //     $(".lineUnitPrice", rowData).val("");
+        //     $(".lineTaxRate", rowData).text("");
+        //     $(".lineTaxCode", rowData).val("");
+        //     $(".lineAmt", rowData).text("");
+        //     $(".lineTaxAmount", rowData).text("");
+        //     $(".lineDiscount", rowData).text("");
+        //     $(".lineProductName", rowData).attr("prodid", '');
+        //     rowData.attr('id', tokenid);
+        //     $("#tblSalesOrderLine tbody").append(rowData);
 
-            if ($('#printID').attr('id') != "") {
-                var rowData1 = $('.sales_print tbody>tr:last').clone(true);
-                $("#lineProductName", rowData1).text("");
-                $("#lineProductDesc", rowData1).text("");
-                $("#lineQty", rowData1).text("");
-                $("#lineOrdered", rowData1).text("");
-                $("#lineUnitPrice", rowData1).text("");
-                // $(".lineTaxRate", rowData).text("");
-                $("#lineTaxAmount", rowData1).text("");
-                $("#lineAmt", rowData1).text("");
-                $(".lineTaxAmount", rowData).text("");
-                $(".lineDiscount", rowData).text("");
-                $(".lineProductName", rowData).attr("prodid", '');
-                rowData1.attr('id', tokenid);
-                $(".sales_print tbody").append(rowData1);
-            }
+        //     if ($('#printID').attr('id') != "") {
+        //         var rowData1 = $('.sales_print tbody>tr:last').clone(true);
+        //         $("#lineProductName", rowData1).text("");
+        //         $("#lineProductDesc", rowData1).text("");
+        //         $("#lineQty", rowData1).text("");
+        //         $("#lineOrdered", rowData1).text("");
+        //         $("#lineUnitPrice", rowData1).text("");
+        //         // $(".lineTaxRate", rowData).text("");
+        //         $("#lineTaxAmount", rowData1).text("");
+        //         $("#lineAmt", rowData1).text("");
+        //         $(".lineTaxAmount", rowData).text("");
+        //         $(".lineDiscount", rowData).text("");
+        //         $(".lineProductName", rowData).attr("prodid", '');
+        //         rowData1.attr('id', tokenid);
+        //         $(".sales_print tbody").append(rowData1);
+        //     }
 
-            setTimeout(function() {
-                $('#' + tokenid + " .lineProductName").trigger('click');
-            }, 200);
-          }else{
-            $("#tblSalesOrderLine tbody tr").each(function (index) {
-                var $tblrow = $(this);
-                if ($tblrow.find(".lineProductName").val() == '') {
-                    $tblrow.find(".colProductName").addClass('boldtablealertsborder');
-                }
+        //     setTimeout(function() {
+        //         $('#' + tokenid + " .lineProductName").trigger('click');
+        //     }, 200);
+        //   }else{
+        //     $("#tblSalesOrderLine tbody tr").each(function (index) {
+        //         var $tblrow = $(this);
+        //         if ($tblrow.find(".lineProductName").val() == '') {
+        //             $tblrow.find(".colProductName").addClass('boldtablealertsborder');
+        //         }
 
-              });
-          }
-        });
+        //       });
+        //   }
+        // });
 
 
 
@@ -8057,6 +8094,103 @@ Template.new_salesorder.onRendered(function() {
     //$('#tblInventory').DataTable().column( 6 ).visible( false );
 });
 
+Template.new_salesorder.onRendered(function () {
+
+    this.loadProducts = async (refresh = false) => {
+        let data = await CachedHttp.get(erpObject.TProductVS1, async () => {
+            return await productService.getNewProductListVS1();
+        }, {
+            forceOverride: refresh,
+            validate: (cachedResponse) => {
+                return true;
+            }
+
+        });
+
+        data = data.response;
+
+        let products = data.tproductvs1;
+
+        await this.products.set(products);
+    }
+
+    this.addLine = () => {
+        let saleOrder = this.saleOrder.get();
+
+        let lines = saleOrder.fields.Lines || [];
+
+        // This will ad an empty line
+        lines.push({
+            vId: Random.id(),
+            type: "TSalesOrderLine",
+            fields: {
+            }
+        });
+
+        saleOrder.fields.Lines = lines;
+
+        this.saleOrder.set(saleOrder);
+
+        return lines;
+    }
+
+    this.removeLine = (id = 0) => {
+        let saleOrder = this.saleOrder.get();
+        let lines = saleOrder.fields.Lines || [];
+
+        let lineToRemove = lines.find(l => l.fields.ID == id);
+
+        lines = lines.filter(l => {
+            if(l.vId != undefined) {
+                // it is local virtual id
+                return l.vId != id;
+            } else if(l.fields.ID != undefined) {
+                return l.fields.ID != id;
+            } 
+        });
+
+        saleOrder.fields.Lines = lines;
+
+        this.saleOrder.set(saleOrder);
+
+        return lines;
+    }
+
+
+    this.addProductToVid = async (vId, productId) => {
+        let saleOrder = await this.saleOrder.get();
+        let lines = saleOrder.fields.Lines;
+
+        const findProductById = async (pId) => {
+            let products = await this.products.get();
+            products = products.map(p => p.fields);
+
+            return products.find(p => p.ID == pId);
+        }
+
+        await GlobalFunctions.asyncForEach(lines, async (line, i) => {
+            if(line.vId == vId) {
+                lines[i].fields = await findProductById(productId);
+              
+            }
+        })
+
+        saleOrder.fields.Lines = lines;
+
+
+        await this.saleOrder.set(saleOrder);
+    }
+    
+
+    this.initPage = async (refresh = false) => {
+
+        await this.loadProducts(refresh);
+
+    }
+
+    this.initPage();
+})
+
 Template.new_salesorder.helpers({
     isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
     getTemplateList: function () {
@@ -8239,6 +8373,7 @@ Template.new_salesorder.helpers({
         return defaultCurrencyCode;
     },
     convertToForeignAmount: (amount) => {
+      
         return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
     },
 
@@ -8262,6 +8397,19 @@ Template.new_salesorder.helpers({
     },
     abletomakeworkorder: ()=>{
         return Template.instance().abletomakeworkorder.get()
+    },
+
+    saleOrder: () => {
+        let _saleOrder = Template.instance().saleOrder.get();
+      
+
+        return _saleOrder.fields;
+    },
+    saleOrderLines: () => {
+        let _saleOrder = Template.instance().saleOrder.get();
+  
+
+        return _saleOrder.fields.Lines;
     }
 });
 
@@ -8926,241 +9074,241 @@ Template.new_salesorder.events({
             x.style.display = "none";
         }
     },
-    'click .lineProductName, keydown .lineProductName': function(event) {
-        let customername = $('#edtCustomerName').val();
-        var $earch = $(event.currentTarget);
-        var offset = $earch.offset();
-        $("#selectProductID").val('');
-        if (customername === '') {
-            swal('Customer has not been selected!', '', 'warning');
-            event.preventDefault();
-        } else {
-            var productDataName = $(event.target).val() || '';
-            if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-                $('#productListModal').modal('toggle');
-                var targetID = $(event.target).closest('tr').attr('id');
-                $('#selectLineID').val(targetID);
-                setTimeout(function() {
-                    $('#tblInventory_filter .form-control-sm').focus();
-                    $('#tblInventory_filter .form-control-sm').val('');
-                    $('#tblInventory_filter .form-control-sm').trigger("input");
+    // 'click .lineProductName, keydown .lineProductName': function(event) {
+    //     let customername = $('#edtCustomerName').val();
+    //     var $earch = $(event.currentTarget);
+    //     var offset = $earch.offset();
+    //     $("#selectProductID").val('');
+    //     if (customername === '') {
+    //         swal('Customer has not been selected!', '', 'warning');
+    //         event.preventDefault();
+    //     } else {
+    //         var productDataName = $(event.target).val() || '';
+    //         if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+    //             $('#productListModal').modal('toggle');
+    //             var targetID = $(event.target).closest('tr').attr('id');
+    //             $('#selectLineID').val(targetID);
+    //             setTimeout(function() {
+    //                 $('#tblInventory_filter .form-control-sm').focus();
+    //                 $('#tblInventory_filter .form-control-sm').val('');
+    //                 $('#tblInventory_filter .form-control-sm').trigger("input");
 
-                    var datatable = $('#tblInventory').DataTable();
-                    datatable.draw();
-                    $('#tblInventory_filter .form-control-sm').trigger("input");
+    //                 var datatable = $('#tblInventory').DataTable();
+    //                 datatable.draw();
+    //                 $('#tblInventory_filter .form-control-sm').trigger("input");
 
-                }, 500);
-            } else {
-                if (productDataName.replace(/\s/g, '') != '') {
-                    //FlowRouter.go('/productview?prodname=' + $(event.target).text());
-                    let lineExtaSellItems = [];
-                    let lineExtaSellObj = {};
-                    LoadingOverlay.show();
-                    getVS1Data('TProductVS1').then(function(dataObject) {
-                        if (dataObject.length == 0) {
-                            sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                                LoadingOverlay.hide();
-                                let lineItems = [];
-                                let lineItemObj = {};
-                                let currencySymbol = Currency;
-                                let totalquantity = 0;
-                                let productname = data.tproduct[0].fields.ProductName || '';
-                                let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
-                                let productprintName = data.tproduct[0].fields.ProductPrintName || '';
-                                let assetaccount = data.tproduct[0].fields.AssetAccount || '';
-                                let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
-                                let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
-                                let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
-                                let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
-                                let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
-                                let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
-                                let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
-                                let salesdescription = data.tproduct[0].fields.SalesDescription || '';
-                                let active = data.tproduct[0].fields.Active;
-                                let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
-                                let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
-                                let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
-                                let barcode = data.tproduct[0].fields.BARCODE || '';
-                                $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                                $('#add-product-title').text('Edit Product');
-                                $('#edtproductname').val(productname);
-                                $('#edtsellqty1price').val(sellqty1price);
-                                $('#txasalesdescription').val(salesdescription);
-                                $('#sltsalesacount').val(incomeaccount);
-                                $('#slttaxcodesales').val(taxcodesales);
-                                $('#edtbarcode').val(barcode);
-                                $('#txapurchasedescription').val(purchasedescription);
-                                $('#sltcogsaccount').val(cogsaccount);
-                                $('#slttaxcodepurchase').val(taxcodepurchase);
-                                $('#edtbuyqty1cost').val(buyqty1cost);
+    //             }, 500);
+    //         } else {
+    //             if (productDataName.replace(/\s/g, '') != '') {
+    //                 //FlowRouter.go('/productview?prodname=' + $(event.target).text());
+    //                 let lineExtaSellItems = [];
+    //                 let lineExtaSellObj = {};
+    //                 LoadingOverlay.show();
+    //                 getVS1Data('TProductVS1').then(function(dataObject) {
+    //                     if (dataObject.length == 0) {
+    //                         sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
+    //                             LoadingOverlay.hide();
+    //                             let lineItems = [];
+    //                             let lineItemObj = {};
+    //                             let currencySymbol = Currency;
+    //                             let totalquantity = 0;
+    //                             let productname = data.tproduct[0].fields.ProductName || '';
+    //                             let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
+    //                             let productprintName = data.tproduct[0].fields.ProductPrintName || '';
+    //                             let assetaccount = data.tproduct[0].fields.AssetAccount || '';
+    //                             let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
+    //                             let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
+    //                             let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
+    //                             let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
+    //                             let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
+    //                             let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
+    //                             let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
+    //                             let salesdescription = data.tproduct[0].fields.SalesDescription || '';
+    //                             let active = data.tproduct[0].fields.Active;
+    //                             let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
+    //                             let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
+    //                             let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
+    //                             let barcode = data.tproduct[0].fields.BARCODE || '';
+    //                             $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+    //                             $('#add-product-title').text('Edit Product');
+    //                             $('#edtproductname').val(productname);
+    //                             $('#edtsellqty1price').val(sellqty1price);
+    //                             $('#txasalesdescription').val(salesdescription);
+    //                             $('#sltsalesacount').val(incomeaccount);
+    //                             $('#slttaxcodesales').val(taxcodesales);
+    //                             $('#edtbarcode').val(barcode);
+    //                             $('#txapurchasedescription').val(purchasedescription);
+    //                             $('#sltcogsaccount').val(cogsaccount);
+    //                             $('#slttaxcodepurchase').val(taxcodepurchase);
+    //                             $('#edtbuyqty1cost').val(buyqty1cost);
 
-                                setTimeout(function() {
-                                    $('#newProductModal').modal('show');
-                                }, 500);
-                            }).catch(function(err) {
+    //                             setTimeout(function() {
+    //                                 $('#newProductModal').modal('show');
+    //                             }, 500);
+    //                         }).catch(function(err) {
 
-                                LoadingOverlay.hide();
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tproductvs1;
-                            var added = false;
+    //                             LoadingOverlay.hide();
+    //                         });
+    //                     } else {
+    //                         let data = JSON.parse(dataObject[0].data);
+    //                         let useData = data.tproductvs1;
+    //                         var added = false;
 
-                            for (let i = 0; i < data.tproductvs1.length; i++) {
-                                if (data.tproductvs1[i].fields.ProductName === productDataName) {
-                                    added = true;
-                                    LoadingOverlay.hide();
-                                    let lineItems = [];
-                                    let lineItemObj = {};
-                                    let currencySymbol = Currency;
-                                    let totalquantity = 0;
+    //                         for (let i = 0; i < data.tproductvs1.length; i++) {
+    //                             if (data.tproductvs1[i].fields.ProductName === productDataName) {
+    //                                 added = true;
+    //                                 LoadingOverlay.hide();
+    //                                 let lineItems = [];
+    //                                 let lineItemObj = {};
+    //                                 let currencySymbol = Currency;
+    //                                 let totalquantity = 0;
 
-                                    let productname = data.tproductvs1[i].fields.ProductName || '';
-                                    let productcode = data.tproductvs1[i].fields.PRODUCTCODE || '';
-                                    let productprintName = data.tproductvs1[i].fields.ProductPrintName || '';
-                                    let assetaccount = data.tproductvs1[i].fields.AssetAccount || '';
-                                    let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.BuyQty1Cost) || 0;
-                                    let cogsaccount = data.tproductvs1[i].fields.CogsAccount || '';
-                                    let taxcodepurchase = data.tproductvs1[i].fields.TaxCodePurchase || '';
-                                    let purchasedescription = data.tproductvs1[i].fields.PurchaseDescription || '';
-                                    let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.SellQty1Price) || 0;
-                                    let incomeaccount = data.tproductvs1[i].fields.IncomeAccount || '';
-                                    let taxcodesales = data.tproductvs1[i].fields.TaxCodeSales || '';
-                                    let salesdescription = data.tproductvs1[i].fields.SalesDescription || '';
-                                    let active = data.tproductvs1[i].fields.Active;
-                                    let lockextrasell = data.tproductvs1[i].fields.LockExtraSell || '';
-                                    let customfield1 = data.tproductvs1[i].fields.CUSTFLD1 || '';
-                                    let customfield2 = data.tproductvs1[i].fields.CUSTFLD2 || '';
-                                    let barcode = data.tproductvs1[i].fields.BARCODE || '';
-                                    $("#selectProductID").val(data.tproductvs1[i].fields.ID).trigger("change");
-                                    $('#add-product-title').text('Edit Product');
-                                    $('#edtproductname').val(productname);
-                                    $('#edtsellqty1price').val(sellqty1price);
-                                    $('#txasalesdescription').val(salesdescription);
-                                    $('#sltsalesacount').val(incomeaccount);
-                                    $('#slttaxcodesales').val(taxcodesales);
-                                    $('#edtbarcode').val(barcode);
-                                    $('#txapurchasedescription').val(purchasedescription);
-                                    $('#sltcogsaccount').val(cogsaccount);
-                                    $('#slttaxcodepurchase').val(taxcodepurchase);
-                                    $('#edtbuyqty1cost').val(buyqty1cost);
+    //                                 let productname = data.tproductvs1[i].fields.ProductName || '';
+    //                                 let productcode = data.tproductvs1[i].fields.PRODUCTCODE || '';
+    //                                 let productprintName = data.tproductvs1[i].fields.ProductPrintName || '';
+    //                                 let assetaccount = data.tproductvs1[i].fields.AssetAccount || '';
+    //                                 let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.BuyQty1Cost) || 0;
+    //                                 let cogsaccount = data.tproductvs1[i].fields.CogsAccount || '';
+    //                                 let taxcodepurchase = data.tproductvs1[i].fields.TaxCodePurchase || '';
+    //                                 let purchasedescription = data.tproductvs1[i].fields.PurchaseDescription || '';
+    //                                 let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.SellQty1Price) || 0;
+    //                                 let incomeaccount = data.tproductvs1[i].fields.IncomeAccount || '';
+    //                                 let taxcodesales = data.tproductvs1[i].fields.TaxCodeSales || '';
+    //                                 let salesdescription = data.tproductvs1[i].fields.SalesDescription || '';
+    //                                 let active = data.tproductvs1[i].fields.Active;
+    //                                 let lockextrasell = data.tproductvs1[i].fields.LockExtraSell || '';
+    //                                 let customfield1 = data.tproductvs1[i].fields.CUSTFLD1 || '';
+    //                                 let customfield2 = data.tproductvs1[i].fields.CUSTFLD2 || '';
+    //                                 let barcode = data.tproductvs1[i].fields.BARCODE || '';
+    //                                 $("#selectProductID").val(data.tproductvs1[i].fields.ID).trigger("change");
+    //                                 $('#add-product-title').text('Edit Product');
+    //                                 $('#edtproductname').val(productname);
+    //                                 $('#edtsellqty1price').val(sellqty1price);
+    //                                 $('#txasalesdescription').val(salesdescription);
+    //                                 $('#sltsalesacount').val(incomeaccount);
+    //                                 $('#slttaxcodesales').val(taxcodesales);
+    //                                 $('#edtbarcode').val(barcode);
+    //                                 $('#txapurchasedescription').val(purchasedescription);
+    //                                 $('#sltcogsaccount').val(cogsaccount);
+    //                                 $('#slttaxcodepurchase').val(taxcodepurchase);
+    //                                 $('#edtbuyqty1cost').val(buyqty1cost);
 
-                                    setTimeout(function() {
-                                        $('#newProductModal').modal('show');
-                                    }, 500);
-                                }
-                            }
-                            if (!added) {
-                                sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                                    LoadingOverlay.hide();
-                                    let lineItems = [];
-                                    let lineItemObj = {};
-                                    let currencySymbol = Currency;
-                                    let totalquantity = 0;
-                                    let productname = data.tproduct[0].fields.ProductName || '';
-                                    let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
-                                    let productprintName = data.tproduct[0].fields.ProductPrintName || '';
-                                    let assetaccount = data.tproduct[0].fields.AssetAccount || '';
-                                    let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
-                                    let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
-                                    let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
-                                    let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
-                                    let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
-                                    let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
-                                    let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
-                                    let salesdescription = data.tproduct[0].fields.SalesDescription || '';
-                                    let active = data.tproduct[0].fields.Active;
-                                    let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
-                                    let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
-                                    let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
-                                    let barcode = data.tproduct[0].fields.BARCODE || '';
-                                    $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                                    $('#add-product-title').text('Edit Product');
-                                    $('#edtproductname').val(productname);
-                                    $('#edtsellqty1price').val(sellqty1price);
-                                    $('#txasalesdescription').val(salesdescription);
-                                    $('#sltsalesacount').val(incomeaccount);
-                                    $('#slttaxcodesales').val(taxcodesales);
-                                    $('#edtbarcode').val(barcode);
-                                    $('#txapurchasedescription').val(purchasedescription);
-                                    $('#sltcogsaccount').val(cogsaccount);
-                                    $('#slttaxcodepurchase').val(taxcodepurchase);
-                                    $('#edtbuyqty1cost').val(buyqty1cost);
+    //                                 setTimeout(function() {
+    //                                     $('#newProductModal').modal('show');
+    //                                 }, 500);
+    //                             }
+    //                         }
+    //                         if (!added) {
+    //                             sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
+    //                                 LoadingOverlay.hide();
+    //                                 let lineItems = [];
+    //                                 let lineItemObj = {};
+    //                                 let currencySymbol = Currency;
+    //                                 let totalquantity = 0;
+    //                                 let productname = data.tproduct[0].fields.ProductName || '';
+    //                                 let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
+    //                                 let productprintName = data.tproduct[0].fields.ProductPrintName || '';
+    //                                 let assetaccount = data.tproduct[0].fields.AssetAccount || '';
+    //                                 let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
+    //                                 let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
+    //                                 let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
+    //                                 let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
+    //                                 let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
+    //                                 let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
+    //                                 let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
+    //                                 let salesdescription = data.tproduct[0].fields.SalesDescription || '';
+    //                                 let active = data.tproduct[0].fields.Active;
+    //                                 let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
+    //                                 let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
+    //                                 let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
+    //                                 let barcode = data.tproduct[0].fields.BARCODE || '';
+    //                                 $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+    //                                 $('#add-product-title').text('Edit Product');
+    //                                 $('#edtproductname').val(productname);
+    //                                 $('#edtsellqty1price').val(sellqty1price);
+    //                                 $('#txasalesdescription').val(salesdescription);
+    //                                 $('#sltsalesacount').val(incomeaccount);
+    //                                 $('#slttaxcodesales').val(taxcodesales);
+    //                                 $('#edtbarcode').val(barcode);
+    //                                 $('#txapurchasedescription').val(purchasedescription);
+    //                                 $('#sltcogsaccount').val(cogsaccount);
+    //                                 $('#slttaxcodepurchase').val(taxcodepurchase);
+    //                                 $('#edtbuyqty1cost').val(buyqty1cost);
 
-                                    setTimeout(function() {
-                                        $('#newProductModal').modal('show');
-                                    }, 500);
-                                }).catch(function(err) {
+    //                                 setTimeout(function() {
+    //                                     $('#newProductModal').modal('show');
+    //                                 }, 500);
+    //                             }).catch(function(err) {
 
-                                    LoadingOverlay.hide();
-                                });
-                            }
-                        }
-                    }).catch(function(err) {
+    //                                 LoadingOverlay.hide();
+    //                             });
+    //                         }
+    //                     }
+    //                 }).catch(function(err) {
 
-                        sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                            LoadingOverlay.hide();
-                            let lineItems = [];
-                            let lineItemObj = {};
-                            let currencySymbol = Currency;
-                            let totalquantity = 0;
-                            let productname = data.tproduct[0].fields.ProductName || '';
-                            let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
-                            let productprintName = data.tproduct[0].fields.ProductPrintName || '';
-                            let assetaccount = data.tproduct[0].fields.AssetAccount || '';
-                            let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
-                            let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
-                            let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
-                            let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
-                            let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
-                            let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
-                            let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
-                            let salesdescription = data.tproduct[0].fields.SalesDescription || '';
-                            let active = data.tproduct[0].fields.Active;
-                            let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
-                            let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
-                            let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
-                            let barcode = data.tproduct[0].fields.BARCODE || '';
-                            $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                            $('#add-product-title').text('Edit Product');
-                            $('#edtproductname').val(productname);
-                            $('#edtsellqty1price').val(sellqty1price);
-                            $('#txasalesdescription').val(salesdescription);
-                            $('#sltsalesacount').val(incomeaccount);
-                            $('#slttaxcodesales').val(taxcodesales);
-                            $('#edtbarcode').val(barcode);
-                            $('#txapurchasedescription').val(purchasedescription);
-                            $('#sltcogsaccount').val(cogsaccount);
-                            $('#slttaxcodepurchase').val(taxcodepurchase);
-                            $('#edtbuyqty1cost').val(buyqty1cost);
+    //                     sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
+    //                         LoadingOverlay.hide();
+    //                         let lineItems = [];
+    //                         let lineItemObj = {};
+    //                         let currencySymbol = Currency;
+    //                         let totalquantity = 0;
+    //                         let productname = data.tproduct[0].fields.ProductName || '';
+    //                         let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
+    //                         let productprintName = data.tproduct[0].fields.ProductPrintName || '';
+    //                         let assetaccount = data.tproduct[0].fields.AssetAccount || '';
+    //                         let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
+    //                         let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
+    //                         let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
+    //                         let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
+    //                         let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
+    //                         let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
+    //                         let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
+    //                         let salesdescription = data.tproduct[0].fields.SalesDescription || '';
+    //                         let active = data.tproduct[0].fields.Active;
+    //                         let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
+    //                         let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
+    //                         let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
+    //                         let barcode = data.tproduct[0].fields.BARCODE || '';
+    //                         $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+    //                         $('#add-product-title').text('Edit Product');
+    //                         $('#edtproductname').val(productname);
+    //                         $('#edtsellqty1price').val(sellqty1price);
+    //                         $('#txasalesdescription').val(salesdescription);
+    //                         $('#sltsalesacount').val(incomeaccount);
+    //                         $('#slttaxcodesales').val(taxcodesales);
+    //                         $('#edtbarcode').val(barcode);
+    //                         $('#txapurchasedescription').val(purchasedescription);
+    //                         $('#sltcogsaccount').val(cogsaccount);
+    //                         $('#slttaxcodepurchase').val(taxcodepurchase);
+    //                         $('#edtbuyqty1cost').val(buyqty1cost);
 
-                            setTimeout(function() {
-                                $('#newProductModal').modal('show');
-                            }, 500);
-                        }).catch(function(err) {
+    //                         setTimeout(function() {
+    //                             $('#newProductModal').modal('show');
+    //                         }, 500);
+    //                     }).catch(function(err) {
 
-                            LoadingOverlay.hide();
-                        });
+    //                         LoadingOverlay.hide();
+    //                     });
 
-                    });
-                } else {
-                    $('#productListModal').modal('toggle');
-                    var targetID = $(event.target).closest('tr').attr('id');
-                    $('#selectLineID').val(targetID);
-                    setTimeout(function() {
-                        $('#tblInventory_filter .form-control-sm').focus();
-                        $('#tblInventory_filter .form-control-sm').val('');
-                        $('#tblInventory_filter .form-control-sm').trigger("input");
+    //                 });
+    //             } else {
+    //                 $('#productListModal').modal('toggle');
+    //                 var targetID = $(event.target).closest('tr').attr('id');
+    //                 $('#selectLineID').val(targetID);
+    //                 setTimeout(function() {
+    //                     $('#tblInventory_filter .form-control-sm').focus();
+    //                     $('#tblInventory_filter .form-control-sm').val('');
+    //                     $('#tblInventory_filter .form-control-sm').trigger("input");
 
-                        var datatable = $('#tblInventory').DataTable();
-                        datatable.draw();
-                        $('#tblInventory_filter .form-control-sm').trigger("input");
+    //                     var datatable = $('#tblInventory').DataTable();
+    //                     datatable.draw();
+    //                     $('#tblInventory_filter .form-control-sm').trigger("input");
 
-                    }, 500);
-                }
-            }
-        }
-    },
+    //                 }, 500);
+    //             }
+    //         }
+    //     }
+    // },
     'click #productListModal #refreshpagelist': function() {
         LoadingOverlay.show();
         localStorage.setItem('VS1SalesProductList', '');
@@ -13468,7 +13616,36 @@ Template.new_salesorder.events({
           })
       }, 500);
 
-  }
+  },
+
+    "click #addRow": (e, ui) => {
+        ui.addLine();
+    },
+    "click #tblInventory tbody tr": async (e, ui) => {
+        const productTr = $(e.currentTarget);
+        const productName = productTr.find('.productName').text();
+        const productId = productTr.find('.colProuctPOPID').text();
+
+        const vId = $('.paste-product-here').attr('v-id');
+        await ui.addProductToVid(vId, productId);
+        $('.paste-product-here').removeClass('paste-product-here');
+        $('#productListModal').modal('toggle'); // show modal
+
+
+    },
+
+    'click .lineProductName, keydown .lineProductName': (event, ui) => {
+        let customername = $('#edtCustomerName').val();
+
+        if (customername === '') {
+            swal('Customer has not been selected!', '', 'warning');
+            event.preventDefault();
+        } else {
+            $('#productListModal').modal('toggle'); // show modal
+            $(event.currentTarget).addClass('paste-product-here');
+
+        }
+    },
 });
 
 Template.registerHelper('equals', function(a, b) {

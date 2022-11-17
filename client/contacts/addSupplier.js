@@ -660,6 +660,10 @@ Template.supplierscard.onRendered(function () {
             // openingbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
             // taxcode:data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
         };
+
+
+        $('#sltCurrency').val(data.fields.ForeignExchangeCode || CountryAbbr);
+
         if((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2)
             && (data.fields.State === data.fields.BillState)&& (data.fields.Postcode === data.fields.Postcode)
             && (data.fields.Country === data.fields.Billcountry)){
@@ -1930,7 +1934,8 @@ Template.supplierscard.events({
                     BankAccountNo: BankAccountNo,
                     BankName: BankName,
                     SwiftCode: SwiftCode,
-                    RoutingNumber: RoutingNumber
+                    RoutingNumber: RoutingNumber,
+                    ForeignExchangeCode: $("#sltCurrency").val(),
 
                 }
             };
@@ -1987,7 +1992,8 @@ Template.supplierscard.events({
                         BankAccountNo: BankAccountNo,
                         BankName: BankName,
                         SwiftCode: SwiftCode,
-                        RoutingNumber: RoutingNumber
+                        RoutingNumber: RoutingNumber,
+                        ForeignExchangeCode: $("#sltCurrency").val(),
                     }
                 };
             } else {
@@ -2038,7 +2044,8 @@ Template.supplierscard.events({
                         BankAccountNo: BankAccountNo,
                         BankName: BankName,
                         SwiftCode: SwiftCode,
-                        RoutingNumber: RoutingNumber
+                        RoutingNumber: RoutingNumber,
+                        ForeignExchangeCode: $("#sltCurrency").val(),
                     }
                 };
             }

@@ -37,7 +37,7 @@ const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (I
 
 let defaultCurrencyCode = CountryAbbr;
 
-Template.new_invoice.onCreated(() => {
+Template.new_invoice.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.isForeignEnabled = new ReactiveVar(false);
 
@@ -94,6 +94,9 @@ Template.new_invoice.onCreated(() => {
 
     templateObject.isbackorderredirect = new ReactiveVar();
     templateObject.isbackorderredirect.set(false);
+
+    this.customers = new ReactiveVar([]);
+    this.customer = new ReactiveVar();
 });
 
 Template.new_invoice.onRendered(function() {
@@ -970,6 +973,7 @@ Template.new_invoice.onRendered(function() {
             $("#sltTerms").val(templateObject.defaultsaleterm.get() || "");
         }, 300);
     }
+
 
     function getCustomerData(customerID) {
         getVS1Data("TCustomerVS1")
@@ -4049,7 +4053,7 @@ Template.new_invoice.onRendered(function() {
 
                                     if (useData[d].fields.Lines.length) {
                                         for (let i = 0; i < useData[d].fields.Lines.length; i++) {
-                                            console.log("----------", useData[d].fields.Lines[i]);
+                                        
                                             let AmountGbp =
                                                 currencySymbol +
                                                 "" +
@@ -4145,7 +4149,7 @@ Template.new_invoice.onRendered(function() {
                                                 getProductInfo = getProductInfo.split(" by ")[0];
                                                 productService.getProductStatus(getProductInfo).then(function(data) {
                                                         lineItemObj.itemID = data.tproductvs1[0].Id || 0;
-                                                        console.log(lineItemObj.itemID);
+                                                        
                                                         if (data.tproductvs1[0].Id) {
                                                             var dataListTable = [
                                                                 useData[d].fields.Lines[i].fields.ProductName || "",
@@ -8733,6 +8737,7 @@ Template.new_invoice.onRendered(function() {
     });
     /* On click Customer List */
     $(document).on("click", "#tblCustomerlist tbody tr", function(e) {
+
         const tableCustomer = $(this);
         $("#edtCustomerName").val(tableCustomer.find(".colCompany").text());
         $("#edtCustomerName").attr("custid", tableCustomer.find(".colID").text());
@@ -13110,6 +13115,44 @@ Template.new_invoice.onRendered(function() {
         }, 1000);
     });
 });
+
+/**
+ * This is going to be the place of where code will be refactored
+ */
+Template.new_invoice.onRendered(function() {
+
+    this.loadCustomers = async (refresh = false) => {
+        let data = await CachedHttp.get(erpObject.TCustomerVS1, async () => {
+            return await contactService.getOneCustomerDataEx(customerID);
+        }, {
+            forceOverride: refresh, 
+            validate: (cachedResponse) => {
+                return true;
+            }
+        });
+
+        data = data.response;
+        let customers = data.tcustomervs1.map(e => e.fields);
+        this.customers.set(customers);
+    };
+
+    
+
+    this.findCustomerById = async (id = 0) => {
+        const customers = await this.customers.get();
+        const customer = customers.find(c => c.ID == id);
+
+        await this.customer.set(customer);
+        return customers;
+
+    };
+
+    this.initPage = (refresh = false) => {
+        this.loadCustomers(refresh);
+    }
+
+    this.initPage();
+})
 
 Template.new_invoice.helpers({
     getTemplateList: function() {
@@ -20720,6 +20763,10 @@ Template.new_invoice.events({
     },
 
     "click #addRow": (e, ui) => {
+        // TODO: Logivs to change
+        // this is the bad way
+        // this code needs to rewritten
+        // and the logics should be different than cloning something from previous line
         var getTableFields = [$("#tblInvoiceLine tbody tr .lineProductName")];
         var checkEmptyFields;
 

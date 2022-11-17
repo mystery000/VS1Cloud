@@ -11,6 +11,8 @@ import 'jquery-editable-select';
 import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {CRMService} from "../crm/crm-service";
+import CachedHttp from "../lib/global/CachedHttp";
+import erpObject from "../lib/global/erp-objects";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -1185,61 +1187,73 @@ Template.customerscard.onRendered(function () {
 
     //$('#sltCustomerType').append('<option value="' + lineItemObj.custometype + '">' + lineItemObj.custometype + '</option>');
 
-    templateObject.getEmployeeData = function () {
-        getVS1Data('TCustomerVS1').then(function (dataObject) {
-            if (dataObject.length == 0) {
-                contactService.getOneCustomerDataEx(customerID).then(function (data) {
-                    setOneCustomerDataEx(data);
-                    // add to custom field
-                    // tempcode
-                    // setTimeout(function () {
-                    //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
-                    //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
-                    //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-                    // }, 5500);
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tcustomervs1;
-                let added = false;
-                for (let i = 0; i < useData.length; i++) {
-                    if (parseInt(useData[i].fields.ID) == parseInt(customerID)) {
-
-                    // add to custom field
-                    // tempcode
-                      // setTimeout(function () {
-                      //   $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
-                      //   $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
-                      //   $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
-                      // }, 5500);
-
-                        added = true;
-                        setOneCustomerDataEx(useData[i]);
-                        setTimeout(function () {
-                            const rowCount = $('.results tbody tr').length;
-                            $('.counter').text(rowCount + ' items');
-                        }, 500);
-                    }
-                }
-                if (!added) {
-                    contactService.getOneCustomerDataEx(customerID).then(function (data) {
-                        setOneCustomerDataEx(data);
-                        // tempcode
-                        // add to custom field
-                        // setTimeout(function () {
-                        //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
-                        //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
-                        //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-                        // }, 5500);
-                    });
-                }
+    templateObject.getEmployeeData = async ()  => {
+        let data = await CachedHttp.get(erpObject.TCustomerEx, async () => {
+            return await contactService.getOneCustomerDataEx(customerID);
+        }, {
+            validate: (cachedResponse) => {
+                return true;
             }
-        }).catch(function (err) {
-            contactService.getOneCustomerDataEx(customerID).then(function (data) {
-                $('.fullScreenSpin').css('display', 'none');
-                setOneCustomerDataEx(data);
-            });
         });
+
+        data = data.response;
+
+        setOneCustomerDataEx(data);
+
+        // getVS1Data('TCustomerVS1').then(function (dataObject) {
+        //     if (dataObject.length == 0) {
+        //         contactService.getOneCustomerDataEx(customerID).then(function (data) {
+        //             setOneCustomerDataEx(data);
+        //             // add to custom field
+        //             // tempcode
+        //             // setTimeout(function () {
+        //             //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+        //             //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+        //             //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+        //             // }, 5500);
+        //         });
+        //     } else {
+        //         let data = JSON.parse(dataObject[0].data);
+        //         let useData = data.tcustomervs1;
+        //         let added = false;
+        //         for (let i = 0; i < useData.length; i++) {
+        //             if (parseInt(useData[i].fields.ID) == parseInt(customerID)) {
+
+        //             // add to custom field
+        //             // tempcode
+        //               // setTimeout(function () {
+        //               //   $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
+        //               //   $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
+        //               //   $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
+        //               // }, 5500);
+
+        //                 added = true;
+        //                 setOneCustomerDataEx(useData[i]);
+        //                 setTimeout(function () {
+        //                     const rowCount = $('.results tbody tr').length;
+        //                     $('.counter').text(rowCount + ' items');
+        //                 }, 500);
+        //             }
+        //         }
+        //         if (!added) {
+        //             contactService.getOneCustomerDataEx(customerID).then(function (data) {
+        //                 setOneCustomerDataEx(data);
+        //                 // tempcode
+        //                 // add to custom field
+        //                 // setTimeout(function () {
+        //                 //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+        //                 //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+        //                 //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+        //                 // }, 5500);
+        //             });
+        //         }
+        //     }
+        // }).catch(function (err) {
+        //     contactService.getOneCustomerDataEx(customerID).then(function (data) {
+        //         $('.fullScreenSpin').css('display', 'none');
+        //         setOneCustomerDataEx(data);
+        //     });
+        // });
     };
     templateObject.getEmployeeDataByName = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
@@ -1359,9 +1373,12 @@ Template.customerscard.onRendered(function () {
             jobNumber: '',
             jobRegistration: '',
             discount:data.fields.Discount || 0,
-            jobclienttype:data.fields.ClientTypeName || ''
+            jobclienttype:data.fields.ClientTypeName || '',
+            ForeignExchangeCode: data.fields.ForeignExchangeCode || CountryAbbr,
 
         };
+
+        $('#sltCurrency').val(data.fields.ForeignExchangeCode || CountryAbbr);
 
         if ((data.fields.Street == data.fields.BillStreet) && (data.fields.Street2 == data.fields.BillStreet2)
             && (data.fields.State == data.fields.BillState) && (data.fields.Postcode == data.fields.Postcode)
@@ -2807,11 +2824,12 @@ Template.customerscard.events({
                 CUSTFLD2: custField2,
                 CUSTFLD3: custField3,
                 // CUSTFLD4: custField4,
-                Discount: parseFloat(permanentDiscount)||0,
+                Discount: parseFloat(permanentDiscount) || 0,
                 Status: status,
                 SourceName: sourceName,
                 RepName: repName,
                 //CUSTFLD12: salesQuota,
+                ForeignExchangeCode: $("#sltCurrency").val(),
             }
         };
         contactService.saveCustomerEx(objDetails).then(function (objDetails) {
