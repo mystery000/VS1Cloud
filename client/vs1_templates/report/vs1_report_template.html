@@ -30,6 +30,18 @@
                     width: 1000px;
                 }
             }
+            .tableExportDetailDiv td.text-right,
+            .text-center0,
+            .text-center1 {
+                text-align: right !important;
+            }
+            tr {
+                border-bottom: 1px solid #e3e6f0;
+            }
+            }
+            /* .printReport > .row > .col > p {
+                font-size: 1.5rem;
+            } */
             /* Remove Hyperlinks */
             @media print {
                 a:link {text-decoration: none !important;}
@@ -38,6 +50,15 @@
 
             .clsDateRange{
               margin:8px!important;
+            }
+            .printVisibleOnly {
+                display: none;
+            }
+            @media print {
+                .printVisibleOnly {
+                    display: inline-block;
+                    width: 100%;
+                }
             }
         </style>
         <div class="row no-gutters justify-content-center mb-3" style="padding: 32px;">
@@ -114,6 +135,17 @@
                             </div>
                         </div>
                         <div class="printReport">
+                            
+                            <div class="text-center printVisibleOnly">
+                                <style>
+                                    #uploadedImage2 {
+                                        margin: 0 auto 10px !important;
+                                        width: 100%;
+                                        max-width: 165px;
+                                    }
+                                </style>
+                                <img class="imageUpload img-fluid" id="uploadedImage2" src="assets/img/VS1.png">
+                            </div>
                             <div class="row">
                                 {{#if isTaxCodeOption }}
                                     <div class="col-12 col-md-4">

@@ -38,6 +38,8 @@ Template.vs1_report_template.onRendered(function() {
     if (imageData) {
       $("#uploadedImage").attr("src", imageData);
       $("#uploadedImage").attr("width", "50%");
+      $("#uploadedImage2").attr("src", imageData);
+      $("#uploadedImage2").attr("width", "50%");
     }
   };
 
@@ -280,6 +282,9 @@ Template.vs1_report_template.helpers({
   },
   isAccountingMoreOption: () => {
     return Template.instance().isAccountingMoreOption.get();;
+  },
+  companyname: () =>{
+    return loggedCompany;
   },
   isTaxCodeOption: () => {
     return Template.instance().isTaxCodeOption.get();;
