@@ -740,6 +740,17 @@
                              }
 
 
+
+                            .convert-to-foreign {
+                                display: none;
+                            }
+
+                            .convert-to-foreign.fx-enabled {
+                                display: table-cell;
+                            }
+                            .convert-to-foreign.hiddenColumn {
+                                display: none !important;
+                            }
                         </style>
                         {{#if displayfields}}
                         <table id="tblQuoteLine" style="width:100%" class="table table-striped table-bordered tblQuoteLine">
