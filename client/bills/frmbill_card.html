@@ -979,14 +979,21 @@
 
                                 .convert-to-foreign {
                                     display: none;
-                                 }
+                                }
 
-                                 .convert-to-foreign.fx-enabled {
+                                .convert-to-foreign.fx-enabled {
                                     display: table-cell;
-                                 }
-                                 .convert-to-foreign.hiddenColumn {
+                                }
+
+                                .convert-to-foreign.showColumn {
                                     display: none !important;
-                                 }
+                                }
+                                .convert-to-foreign.fx-enabled.showColumn {
+                                    display: table-cell !important;
+                                }
+                                .convert-to-foreign.fx-enabled.hiddenColumn {
+                                    display: none;
+                                }
                             </style>
 
                             <table id="tblBillLine" style="width:100%" class="table table-striped table-bordered tblBillLine">
