@@ -13268,10 +13268,10 @@ Template.new_invoice.helpers({
     },
     companyabn: () => {
         //Update Company ABN
-        let countryABNValue = "ABN: " + Session.get("vs1companyABN");
-        if (LoggedCountry == "South Africa") {
-            countryABNValue = "Vat No: " + Session.get("vs1companyABN");
-        }
+        let countryABNValue = Session.get("vs1companyABN");
+        // if (LoggedCountry == "South Africa") {
+        //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+        // }
         return countryABNValue;
     },
     companyReg: () => {
