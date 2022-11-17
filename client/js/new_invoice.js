@@ -20623,54 +20623,54 @@ Template.new_invoice.events({
         }
     },
 
-    "change .exchange-rate-js": (e, ui) => {
+    // "change .exchange-rate-js": (e, ui) => {
 
-        if (ui.isForeignEnabled.get() == true) {
+    //     if (ui.isForeignEnabled.get() == true) {
 
-            const targetCurrency = $('#sltCurrency').attr('currency-symbol') || getCurrentCurrencySymbol();
-            const trs = $('.dynamic-converter-js');
+    //         const targetCurrency = $('#sltCurrency').attr('currency-symbol') || getCurrentCurrencySymbol();
+    //         const trs = $('.dynamic-converter-js');
 
-            $(trs).each((index, tr) => {
+    //         $(trs).each((index, tr) => {
 
-                // convert to forign payment amount
-                const valueToConvert = $(tr).find("input.linePaymentamount.convert-from").val();
-                const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+    //             // convert to forign payment amount
+    //             const valueToConvert = $(tr).find("input.linePaymentamount.convert-from").val();
+    //             const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
 
-                $(tr).find('.linePaymentamount.convert-to').text(convertedValue);
-
-
-
-                // Convert oustanding to foriegn oustanding
-                const oustandingValueToConvert = $(tr).find('.lineOutstandingAmount.convert-from').text();
-                const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-                $(tr).find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+    //             $(tr).find('.linePaymentamount.convert-to').text(convertedValue);
 
 
-            });
 
-            // setTimeout(() => {
+    //             // Convert oustanding to foriegn oustanding
+    //             const oustandingValueToConvert = $(tr).find('.lineOutstandingAmount.convert-from').text();
+    //             const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+    //             $(tr).find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
 
-            //     const targetCurrency = $('#sltCurrency').attr('currency-symbol') || getCurrentCurrencySymbol();
-            //     // convert to forign payment amount
-            //     const valueToConvert = $(e.currentTarget).val();
-            //     const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
 
-            //     $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').text(convertedValue);
+    //         });
 
-            //     // Convert oustanding to foriegn oustanding
-            //     const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
-            //     const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-            //     $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+    //         // setTimeout(() => {
 
-            //     const appliedValue = calculateAppliedWithForeign("#tblPaymentcard .linePaymentamount.convert-to.foreign");
-            //     $('#edtApplied').val(targetCurrency +  appliedValue)
-            //     $('.appliedAmount').text(targetCurrency + appliedValue);
-            //     $('#edtForeignAmount').val(targetCurrency + appliedValue);
-            //   }, 500);
+    //         //     const targetCurrency = $('#sltCurrency').attr('currency-symbol') || getCurrentCurrencySymbol();
+    //         //     // convert to forign payment amount
+    //         //     const valueToConvert = $(e.currentTarget).val();
+    //         //     const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
 
-        }
+    //         //     $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').text(convertedValue);
 
-    },
+    //         //     // Convert oustanding to foriegn oustanding
+    //         //     const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
+    //         //     const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+    //         //     $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+
+    //         //     const appliedValue = calculateAppliedWithForeign("#tblPaymentcard .linePaymentamount.convert-to.foreign");
+    //         //     $('#edtApplied').val(targetCurrency +  appliedValue)
+    //         //     $('.appliedAmount').text(targetCurrency + appliedValue);
+    //         //     $('#edtForeignAmount').val(targetCurrency + appliedValue);
+    //         //   }, 500);
+
+    //     }
+
+    // },
 
     // add to custom field
     "click #edtSaleCustField1": function(e) {
@@ -20691,45 +20691,16 @@ Template.new_invoice.events({
         if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
             $(".foreign-currency-js").css("display", "block");
             ui.isForeignEnabled.set(true);
+            FxGlobalFunctions.toggleVisbilityOfValuesToConvert(true);
         } else {
             $(".foreign-currency-js").css("display", "none");
             ui.isForeignEnabled.set(false);
+            FxGlobalFunctions.toggleVisbilityOfValuesToConvert(false);
         }
     },
 
     'change .exchange-rate-js, change input.lineUnitPrice': (e, ui) => {
-
-
-        setTimeout(() => {
-
-            $('#tblInvoiceLine tbody').find('tr').each((index, tr) => {
-                const toConvert = $(tr).find('.convert-to-foreign:not(.hiddenColumn)');
-                const rate = $("#exchange_rate").val();
-
-                toConvert.each((index, element) => {
-                    const mainClass = element.classList[0]; // we get the class of the non foreign html
-                    const mainElement = $(tr).find(`td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`); //document.querySelector(`#tblBillLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-
-                    const targetElement = $(tr).find(`td.${mainClass}.convert-to-foreign:not(.hiddenColumn)`);
-
-
-                    let value = $(mainElement).children().length > 0 ?
-                        $(mainElement).find('input').val() :
-                        $(mainElement).text();
-
-                    value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
-
-                    if (targetElement.children().length > 0) {
-                        $(targetElement).find("input").val(value);
-                    } else {
-                        $(targetElement).text(value);
-                    }
-
-                })
-            })
-
-        }, 500);
-
+        FxGlobalFunctions.convertToForeignEveryFieldsInTableId("#tblInvoiceLine", new UtilityService());
     },
 
     "click #addRow": (e, ui) => {
@@ -20794,3 +20765,7 @@ Template.new_invoice.events({
 Template.registerHelper("equals", function(a, b) {
     return a === b;
 });
+
+export const convertToForeignCurrencyAllFieldsInTheTable = (tableId) => {
+
+}

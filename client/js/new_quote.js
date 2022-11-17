@@ -11350,26 +11350,30 @@ Template.new_quote.events({
         if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
             $(".foreign-currency-js").css("display", "block");
             ui.isForeignEnabled.set(true);
+
+            FxGlobalFunctions.toggleVisbilityOfValuesToConvert(true);
         } else {
             $(".foreign-currency-js").css("display", "none");
             ui.isForeignEnabled.set(false);
+            FxGlobalFunctions.toggleVisbilityOfValuesToConvert(false);
         }
     },
-    'change .exchange-rate-js': (e, ui) => {
-        setTimeout(() => {
-          const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
-          const rate = $("#exchange_rate").val();
-          toConvert.forEach((element) => {
-              const mainClass = element.classList[0];
-              const mainValueElement = document.querySelector(`#tblQuoteLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
+    'change .exchange-rate-js, change #tblQuoteLine tbody input': (e, ui) => {
+     FxGlobalFunctions.convertToForeignEveryFieldsInTableId("#tblQuoteLine");
+    //     setTimeout(() => {
+    //       const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
+    //       const rate = $("#exchange_rate").val();
+    //       toConvert.forEach((element) => {
+    //           const mainClass = element.classList[0];
+    //           const mainValueElement = document.querySelector(`#tblQuoteLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
 
-              let value = mainValueElement.childElementCount > 0 ?
-                  $(mainValueElement).find('input').val() :
-                  mainValueElement.innerText;
-              value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
-              $(element).text(value);
-          })
-      }, 500);
+    //           let value = mainValueElement.childElementCount > 0 ?
+    //               $(mainValueElement).find('input').val() :
+    //               mainValueElement.innerText;
+    //           value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
+    //           $(element).text(value);
+    //       })
+    //   }, 500);
     }
 });
 

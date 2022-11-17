@@ -9804,47 +9804,52 @@ Template.billcard.events({
         if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
             $(".foreign-currency-js").css("display", "block");
             ui.isForeignEnabled.set(true);
+            FxGlobalFunctions.toggleVisbilityOfValuesToConvert(true);
         } else {
             $(".foreign-currency-js").css("display", "none");
             ui.isForeignEnabled.set(false);
+            FxGlobalFunctions.toggleVisbilityOfValuesToConvert(false);
         }
     },
-
     'change .exchange-rate-js, change input.colAmount': (e, ui) => {
+        FxGlobalFunctions.convertToForeignEveryFieldsInTableId("#tblBillLine");
+    },
+
+    // 'change .exchange-rate-js, change input.colAmount': (e, ui) => {
 
 
-        setTimeout(() => {
+    //     setTimeout(() => {
 
-            $('#tblBillLine tbody').find('tr').each((index, tr) => {
-                const toConvert = $(tr).find('.convert-to-foreign:not(.hiddenColumn)');
-                const rate = $("#exchange_rate").val();
+    //         $('#tblBillLine tbody').find('tr').each((index, tr) => {
+    //             const toConvert = $(tr).find('.convert-to-foreign:not(.hiddenColumn)');
+    //             const rate = $("#exchange_rate").val();
     
-                toConvert.each((index, element) => {
-                    const mainClass = element.classList[0]; // we get the class of the non foreign html 
-                    const mainElement = $(tr).find(`td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`); //document.querySelector(`#tblBillLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
+    //             toConvert.each((index, element) => {
+    //                 const mainClass = element.classList[0]; // we get the class of the non foreign html 
+    //                 const mainElement = $(tr).find(`td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`); //document.querySelector(`#tblBillLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
     
-                    const targetElement = $(tr).find(`td.${mainClass}.convert-to-foreign:not(.hiddenColumn)`);
+    //                 const targetElement = $(tr).find(`td.${mainClass}.convert-to-foreign:not(.hiddenColumn)`);
                     
                     
-                    let value = $(mainElement).children().length > 0 ?
-                        $(mainElement).find('input').val() :
-                        $(mainElement).text();
+    //                 let value = $(mainElement).children().length > 0 ?
+    //                     $(mainElement).find('input').val() :
+    //                     $(mainElement).text();
 
-                    value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
+    //                 value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
                   
-                    if(targetElement.children().length > 0) {
-                        $(targetElement).find("input").val(value);
-                    } else {
-                        $(targetElement).text(value);
-                    }
+    //                 if(targetElement.children().length > 0) {
+    //                     $(targetElement).find("input").val(value);
+    //                 } else {
+    //                     $(targetElement).text(value);
+    //                 }
     
-                })
-            })
+    //             })
+    //         })
 
         
-        }, 500);
+    //     }, 500);
 
-    }
+    // }
 
 });
 

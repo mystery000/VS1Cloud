@@ -2,6 +2,7 @@ import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import LoadingOverlay from "../../LoadingOverlay";
 import {TaxRateService} from "../../settings/settings-service";
+import {UtilityService} from "../../utility-service";
 
 export default class FxGlobalFunctions {
   /**
@@ -21,22 +22,22 @@ export default class FxGlobalFunctions {
     // $(".exchange-rate-js").attr("disabled", false);
     // $("#exchange_rate").attr("disabled", false);
     const currency = await FxGlobalFunctions.loadDefaultCurrency(defaultCurrencyCode);
-    if( currency ){
+    if (currency) {
       const currencyCode = currency.Code;
       const currencySymbol = currency.CurrencySymbol || "$";
       const currencyRate = (
         $(".currency-js").attr("type") == "buy"
         ? currency.BuyRate
         : currency.SellRate) || 1; // We can make this dynamic
-      if( $("#sltCurrency").val() == "" ){
+      if ($("#sltCurrency").val() == "") {
         $("#sltCurrency").val(currencyCode);
         $("#sltCurrency").attr("currency-symbol", currencySymbol);
-        $("#exchange_rate").val(currencyRate);      
+        $("#exchange_rate").val(currencyRate);
         $(".exchange-rate-js").val(currencyRate);
-       
-       setTimeout(() => {
-        $(".exchange-rate-js").trigger('change');
-       }, 500); 
+
+        setTimeout(() => {
+          $(".exchange-rate-js").trigger("change");
+        }, 500);
       }
     }
     $("#sltCurrency").attr("disabled", false);
@@ -57,7 +58,7 @@ export default class FxGlobalFunctions {
     });
 
     let currencies = data.response.tcurrency;
-    if(currencies[0].fields) {
+    if (currencies[0].fields) {
       currencies = currencies.map(c => c.fields);
     }
 
@@ -117,27 +118,92 @@ export default class FxGlobalFunctions {
   }
 
   static handleChangedCurrency(currency = "AUD", defaultCurrencyCode) {
-    if(currency != defaultCurrencyCode) {
-      $("#sltCurrency").trigger('change');
+    if (currency != defaultCurrencyCode) {
+      $("#sltCurrency").trigger("change");
     }
   }
 
   /**
-   * 
-   * This will all events of Fx Module
-   * 
-   * @returns 
-   */
+     *
+     * This will all events of Fx Module
+     *
+     * @returns
+     */
   static getEvents() {
     return {
       "click .fx-rate-btn": async (e, ui) => {
         await FxGlobalFunctions.loadCurrency(ui, CountryAbbr);
-      },
-    }
+      }
+    };
   }
-
 
   static isCurrencyEnabled() {
     return Session.get("CloudUseForeignLicence");
+  }
+
+  static getCurrentCurrencySymbol(onNull = "N/A") {
+    return localStorage.getItem("_SELECTED_CURRENCY_SYMBOL") || onNull;
+  }
+
+  static convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol = false) {
+    let utilityService = new UtilityService();
+    const currency = utilityService.extractCurrency(amount);
+
+    //amount = utilityService.removeCurrency(amount, currency);
+
+    amount = amount.replace(/[^0-9.-]+/g, "");
+
+    let convert = (amount * rate).toFixed(2);
+    //convert = convert.toFixed(2);
+
+    if (withSymbol) {
+      return `${withSymbol}${convert}`;
+    }
+    return convert;
+  }
+
+  /**
+     *
+     * @param {String} tableId selector #tableId
+     */
+  static convertToForeignEveryFieldsInTableId(tableId) {
+    setTimeout(() => {
+      $(tableId + " tbody").find("tr").each((index, tr) => {
+        const toConvert = $(tr).find(".convert-to-foreign:not(.hiddenColumn)");
+        const rate = $("#exchange_rate").val();
+
+        toConvert.each((index, element) => {
+          const mainClass = element.classList[0]; // we get the class of the non foreign html
+          const mainElement = $(tr).find(`td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`); //document.querySelector(`#tblBillLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
+
+          const targetElement = $(tr).find(`td.${mainClass}.convert-to-foreign:not(.hiddenColumn)`);
+
+          let value = $(mainElement).children().length > 0
+            ? $(mainElement).find("input").val()
+            : $(mainElement).text();
+
+          value = FxGlobalFunctions.convertToForeignAmount(value, rate, FxGlobalFunctions.getCurrentCurrencySymbol());
+
+          if (targetElement.children().length > 0) {
+            $(targetElement).find("input").val(value);
+          } else {
+            $(targetElement).text(value);
+          }
+        });
+      });
+    }, 500);
+  }
+
+  /**
+     * This function toggle the display manually via front end
+     * It shouldn't be handled this way
+     * @param {boolean} show
+     */
+  static toggleVisbilityOfValuesToConvert(show = false) {
+    if (show) {
+      $(".convert-to-foreign").addClass("fx-enabled");
+    } else {
+      $(".convert-to-foreign").removeClass("fx-enabled");
+    }
   }
 }

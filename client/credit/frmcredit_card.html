@@ -906,6 +906,16 @@
                                     display: block !important;
                                  }
 
+                                 .convert-to-foreign {
+                                    display: none;
+                                 }
+
+                                 .convert-to-foreign.fx-enabled {
+                                    display: table-cell;
+                                 }
+                                 .convert-to-foreign.hiddenColumn {
+                                    display: none !important;
+                                 }
 
                             </style>
 
@@ -952,13 +962,13 @@
                                             <td contenteditable="true" class="lineMemo colMemo {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">{{item.memo}}</td>
 
                                             <td class="colAmountEx {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input class="lineAmount colAmount highlightInput colAmountExChange" type="text" value="{{item.unitPrice}}"></td>
-                                            {{#if isForeignEnabled}}
-                                                <td class="colAmountEx  convert-to-foreign {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPrice}}</td>
-                                            {{/if}}
+                                            
+                                                <td class="colAmountEx  convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPrice}}</td>
+                                            
                                             <td class="colAmountInc  {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input class="lineAmount colAmount highlightInput colAmountIncChange" type="text" value="{{item.unitPriceInc}}"></td>
-                                            {{#if isForeignEnabled}}
-                                                    <td class="colAmountInc convert-to-foreign {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPriceInc}}</td>
-                                            {{/if}}
+                                           
+                                                    <td class="colAmountInc convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPriceInc}}</td>
+                                           
 
 
                                             <td class="th colFixedAsset {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnFixedAsset"  style="margin-left: 40px; font-size: 22px;" ></i></td>
@@ -966,9 +976,9 @@
                                             <td contenteditable="false" class="lineTaxRate colTaxRate  {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;cursor: pointer;">{{item.taxRate}}</td>
                                             <td contenteditable="false" class="colTaxCode {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
                                             <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
-                                            {{#if isForeignEnabled}}
-                                                <td contenteditable="false" class="lineTaxAmount convert-to-foreign colTaxAmount pointer {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;cursor: pointer;">{{ convertToForeignAmount item.TaxTotal}}</td>
-                                            {{/if}}
+                                        
+                                                <td contenteditable="false" class="lineTaxAmount convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} colTaxAmount pointer {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;cursor: pointer;">{{ convertToForeignAmount item.TaxTotal}}</td>
+                                           
 
                                             {{#if isBatchSerialNoTracking 'true'}}
                                                 <td class="th colSerialNo {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>

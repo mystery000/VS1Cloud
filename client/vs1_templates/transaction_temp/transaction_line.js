@@ -4,7 +4,8 @@ import {UtilityService} from "../../utility-service";
 import '../../lib/global/indexdbstorage.js';
 import { SideBarService } from '../../js/sidebar-service';
 import TableHandler from '../../js/Table/TableHandler';
-import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
+
+import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -221,7 +222,7 @@ Template.transaction_line.helpers({
       return false;
   },
   convertToForeignAmount: (amount) => {
-      return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+      return FxGlobalFunctions.convertToForeignAmount(amount, $('#exchange_rate').val(), FxGlobalFunctions.getCurrentCurrencySymbol());
   }
 });
 

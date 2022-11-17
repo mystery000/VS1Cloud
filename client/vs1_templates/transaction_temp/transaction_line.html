@@ -316,6 +316,17 @@
                overflow-x: auto!important;
                overflow-y: hidden!important;
               }
+
+              .convert-to-foreign {
+                display: none;
+              }
+
+                .convert-to-foreign.fx-enabled {
+                    display: table-cell;
+                }
+                .convert-to-foreign.hiddenColumn {
+                    display: none !important;
+                }
           </style>
           {{#if displayfields}}
           <table id="{{tablename}}" name="{{tablename}}" style="width:100%" class="dataTable table table-striped table-bordered {{tablename}}">
@@ -389,18 +400,18 @@
                         class="lineUnitPrice colUnitPrice colUnitPriceEx highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}">
                     </td>
 
-                    {{#if equals isForeignEnabled true}}
-                      <td class="colUnitPrice convert-to-foreign colUnitPriceEx {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPrice}}
+                  
+                      <td class="colUnitPrice convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colUnitPriceEx {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPrice}}
                       </td>
-                    {{/if}}
+                   
 
                     <td class="colUnitPriceInc {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input
                         class="lineUnitPrice highlightInput colUnitPriceIncChange" type="text"
                         value="{{item.unitPriceInc}}"></td>
 
-                  {{#if equals isForeignEnabled true}}
-                      <td class="colUnitPriceInc  convert-to-foreign {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPriceInc}}</td>
-                  {{/if}}
+                
+                      <td class="colUnitPriceInc  convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPriceInc}}</td>
+                 
 
                     <td class="colDiscount {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"><input class="lineDiscount highlightInput" type="number" value="{{item.DiscountPercent}}" max="100"></td>
                     <td class="colCostPrice {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"><input
@@ -418,13 +429,12 @@
                           class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
                           style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
 
-                          {{#if equals isForeignEnabled true}}
+                          
 
                               <td contenteditable="false"
-                              class="lineTaxAmount convert-to-foreign colTaxAmount pointer {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
+                              class="lineTaxAmount convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colTaxAmount pointer {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
                               style="text-align: right!important;cursor: pointer;">{{convertToForeignAmount item.TaxTotal}}</td>
 
-                          {{/if}}
 
                     {{#if equals isBatchSerialNoTracking true}}
                     <td class="th colSerialNo {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnSnLotmodal"
@@ -434,23 +444,21 @@
                       class="lineAmt colAmount colAmountEx {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}"
                       style="text-align: right!important;">{{item.TotalAmt}}</td>
 
-                      {{#if equals isForeignEnabled true}}
-
+                 
                           <td contenteditable="false"
-                          class="lineAmt convert-to-foreign colAmount colAmountEx {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}"
+                          class="lineAmt convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colAmount colAmountEx {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}"
                           style="text-align: right!important;">{{convertToForeignAmount item.TotalAmt}}</td>
 
-                      {{/if}}
+                     
 
                       <td contenteditable="false" class="lineAmtInc colAmountInc {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}"
                       style="text-align: right!important;">{{item.TotalAmtInc}}</td>
 
-                      {{#if equals isForeignEnabled true}}
+                      
 
-                          <td contenteditable="false" class="lineAmtInc convert-to-foreign  colAmountInc {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}"
+                          <td contenteditable="false" class="lineAmtInc convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}}  colAmountInc {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}"
                           style="text-align: right!important;">{{convertToForeignAmount item.TotalAmtInc}}</td>
 
-                      {{/if}}
 
                       {{#if canShowUOM}}
                     <td contenteditable="false"

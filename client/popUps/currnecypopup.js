@@ -5,15 +5,14 @@ import {SideBarService} from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../LoadingOverlay";
 import { currencySymbolEmpty } from "../packages/currency/CurrencyGlobals";
+import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 let sideBarService = new SideBarService();
 
 export function setCurrentCurrencySymbol(symbol = "N/A") {
   return localStorage.setItem("_SELECTED_CURRENCY_SYMBOL", symbol);
 }
 
-export function getCurrentCurrencySymbol() {
-  return localStorage.getItem("_SELECTED_CURRENCY_SYMBOL") || "N/A";
-}
+export const getCurrentCurrencySymbol = () => FxGlobalFunctions.getCurrentCurrencySymbol()
 
 export function getUserCurrency() {
   return localStorage.getItem("_USER_CURRENCY");

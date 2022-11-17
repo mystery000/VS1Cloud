@@ -799,6 +799,16 @@
                                     display: block !important;
                                  }
 
+                                 .convert-to-foreign {
+                                    display: none;
+                                 }
+
+                                 .convert-to-foreign.fx-enabled {
+                                    display: table-cell;
+                                 }
+                                 .convert-to-foreign.hiddenColumn {
+                                    display: none !important;
+                                 }
 
                             </style>
 
@@ -846,96 +856,85 @@
                                 {{/if}}
                               </thead>
                               <tbody>
-                                {{#each item in saleOrderLines}}
-                                    <tr class="dnd-moved" v-id="{{item.vId}}" id={{item.fields.ID}}>
-                                        <td contenteditable="false" class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}"><input
-                                            class="es-input highlightSelect lineProductName" type="search" value="{{item.fields.ProductName}}"></td>
-                                        <td contenteditable="true" class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
-                                            {{item.fields.ProductDescription}}</td>
-                                        <td class="colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">
-                                            <input class="lineQty colQty highlightInput" type="number" value="{{item.fields.Qty}}"></td>
+                                {{#each item in salesorderrecord.LineItems}}
+                                    <tr class="dnd-moved" id={{item.lineID}}>
+                                    <td contenteditable="false" class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}"><input
+                                        class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}"></td>
+                                    <td contenteditable="true"
+                                        class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
+                                        {{item.description}}</td>
+                                    <td class="colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
+                                        class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
 
-                                        <td class="colUnitPriceEx colUnitPrice {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input
-                                            class="lineUnitPrice colUnitPriceEx colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.fields.OriginalLinePrice}}">
-                                        </td>
+                                    <td class="colUnitPriceEx colUnitPrice {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input
+                                        class="lineUnitPrice colUnitPriceEx colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}">
+                                    </td>
 
-                                        {{#if isForeignEnabled}}
-                                            <td class="colUnitPriceEx convert-to-foreign colUnitPrice {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.fields.OriginalLinePrice}}</td>
-                                        {{/if}}
+                                    
+                                        <td class="colUnitPriceEx convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} colUnitPrice {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPrice}}</td>
+                                   
 
-                                        <td class="colUnitPriceInc {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
-                                            class="lineUnitPrice colUnitPriceInc highlightInput colUnitPriceIncChange" type="text"
-                                            value="{{item.fields.OriginalLinePriceInc}}"></td>
+                                    <td class="colUnitPriceInc {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
+                                        class="lineUnitPrice colUnitPriceInc highlightInput colUnitPriceIncChange" type="text"
+                                        value="{{item.unitPriceInc}}"></td>
 
-                                            {{#if isForeignEnabled}}
-                                                <td class="colUnitPriceInc convert-to-foreign {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.fields.OriginalLinePriceInc}}</td>
-                                            {{/if}}
+                                       
+                                            <td class="colUnitPriceInc convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}}  {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPriceInc}}</td>
+                                        
 
 
-                                        <td contenteditable="false" class="lineDiscount colDiscount {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
-                                            {{item.fields.DiscountPercent}}</td>
-                                        <td class="colCostPrice {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input
-                                            class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.fields.LineCost}}"></td>
+                                    <td contenteditable="false" class="lineDiscount colDiscount {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
+                                        {{item.DiscountPercent}}</td>
+                                    <td class="colCostPrice {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input
+                                        class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"></td>
 
-                                            {{#if isForeignEnabled}}
-                                                <td class="colCostPrice convert-to-foreign {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.fields.LineCost}}</td>
-                                            {{/if}}
+                                   
+                                            <td class="colCostPrice convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.lineCost}}</td>
+                                       
 
-                                            <td contenteditable="true" class="lineSalesLinesCustField1 colSalesLinesCustField1  {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">
-                                                {{item.fields.SalesLinesCustField1}}
-                                            </td>
+                                        <td contenteditable="true"
+                                        class="lineSalesLinesCustField1 colSalesLinesCustField1  {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">
+                                        {{item.SalesLinesCustField1}}</td>
+                                    <td contenteditable="false"
+                                        class="lineTaxRate colTaxRate pointer  {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"
+                                        style="text-align: right!important;">{{item.taxRate}}</td>
+                                    <td contenteditable="false" class="colTaxCode {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"><input
+                                        class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
+
                                         <td contenteditable="false"
-                                            class="lineTaxRate colTaxRate pointer  {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"
-                                            style="text-align: right!important;">{{item.fields.LineTaxRate}}</td>
-                                        <td contenteditable="false" class="colTaxCode {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"><input
-                                            class="es-input highlightSelect lineTaxCode" type="search" value="{{item.fields.LineTaxCode}}"></td>
+                                        class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"
+                                        style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
 
                                             <td contenteditable="false"
-                                            class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"
-                                            style="text-align: right!important;cursor: pointer;">{{item.fields.LineTaxTotal}}</td>
-
-                                            {{#if isForeignEnabled}}
-
-                                                <td contenteditable="false"
-                                                class="lineTaxAmount convert-to-foreign colTaxAmount pointer {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"
-                                                style="text-align: right!important;cursor: pointer;">{{ convertToForeignAmount item.fields.LineTaxTotal}}</td>
-
-                                            {{/if}}
+                                            class="lineTaxAmount convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} colTaxAmount pointer {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"
+                                            style="text-align: right!important;cursor: pointer;">{{ convertToForeignAmount item.TaxTotal}}</td>
 
 
-                                        {{#if isBatchSerialNoTracking 'true'}}
-                                            <td class="th colSerialNo {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">
-                                                <i class="fas fa-plus-square text-success btnSnLotmodal" style="margin-left: 40px; font-size: 22px;"></i>
-                                            </td>
-                                        {{/if}}
 
-                                        <td contenteditable="false"
-                                            class="lineAmt colAmountEx colAmount {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}"
-                                            style="text-align: right!important;">{{item.fields.TotalLineAmount}}</td>
+                                    {{#if isBatchSerialNoTracking 'true'}}
+                                    <td class="th colSerialNo {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnSnLotmodal"
+                                        style="margin-left: 40px; font-size: 22px;"></i></td>
+                                    {{/if}}
 
-                                            {{#if isForeignEnabled}}
-                                                <td contenteditable="false"
-                                                class="lineAmt convert-to-foreign colAmountEx colAmount {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}"
-                                                style="text-align: right!important;">{{convertToForeignAmount item.fields.TotalLineAmount}}</td>
+                                    <td contenteditable="false"
+                                        class="lineAmt colAmountEx colAmount {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}"
+                                        style="text-align: right!important;">{{item.TotalAmt}}</td>
 
-                                            {{/if}}
+                                            <td contenteditable="false"
+                                            class="lineAmt convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} colAmountEx colAmount {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}"
+                                            style="text-align: right!important;">{{convertToForeignAmount item.TotalAmt}}</td>
 
-                                            <td contenteditable="false" class="lineAmt colAmountInc {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
-                                                {{item.fields.TotalLineAmountInc}}
-                                            </td>
+                                        
 
-                                            {{#if isForeignEnabled}}
-                                                <td contenteditable="false" class="lineAmt convert-to-foreign colAmountInc {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
-                                                    style="text-align: right!important;">{{convertToForeignAmount item.fields.TotalLineAmountInc}}</td>
-                                            {{/if}}
+                                        <td contenteditable="false" class="lineAmt colAmountInc {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
+                                        style="text-align: right!important;">{{item.TotalAmtInc}}</td>
 
-                                        <td>
-                                            <span class="table-remove btnRemove">
-                                                <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 ">
-                                                    <i class="fa fa-remove"></i>
-                                                </button>
-                                            </span>
-                                        </td>
+                                            <td contenteditable="false" class="lineAmt convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} colAmountInc {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
+                                                style="text-align: right!important;">{{convertToForeignAmount item.TotalAmtInc}}</td>
+                                       
+
+                                    <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
+                                            class="fa fa-remove"></i></button></span></td>
                                     </tr>
                                 {{/each}}
                               </tbody>
