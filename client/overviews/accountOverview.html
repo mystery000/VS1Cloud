@@ -77,7 +77,8 @@
             </div>
             <div class="col-12 col-md-4 justify-content-end">
                   <div class="form-group">
-                    <button class="btn btn-primary btnBatchUpdate float-right" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>
+                    <button class="btn btn-primary btnClosingDates vs1ButtonMargin" role="button" data-toggle="modal" href="#ModalClosingDate" type="button" style="margin-left: 39px;"><i class="fa fa-calendar" style="padding-right: 5px;"></i>Closing Dates</button>
+                    <button class="btn btn-primary btnBatchUpdate float-right vs1ButtonMargin" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>
                     <span class="text-gray-600 small trans_lastupdate float-right" id="trans_lastupdate" style="width:100%;text-align: end!important;"><a href="#">Last Updated: </a>{{lastBatchUpdate}}</span>
                  </div>
             </div>
@@ -523,6 +524,108 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="ModalClosingDate">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 style="" >
+                    <div id="closing-dates" name="closing-dates" style="float: left;">Closing Dates</div>
+                    <a role="button" data-toggle="modal" href="#helpViewModalAdd"  style="font-size: 20px; padding-left:5px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="edtdateOne">(1) Summarised Transactions Before</label>
+                    <div class="input-group date" style="cursor: pointer;">
+                      <input type="date" class="form-control formClassDate hasDatepicker edtdateOne" id="edtdateOne" name="edtdateOne" value="">
+                      <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-calendar" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="edtdateTwo">(2) Global</label>
+                    <div class="input-group date" style="cursor: pointer;">
+                      <input type="date" class="form-control formClassDate hasDatepicker edtdateTwo" id="edtdateTwo" name="edtdateTwo" value="">
+                      <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-calendar" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="edtdateThree">(3) Accounts Receivable</label>
+                    <div class="input-group date" style="cursor: pointer;">
+                      <input type="date" class="form-control formClassDate hasDatepicker edtdateThree" id="edtdateThree" name="edtdateThree" value="">
+                      <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-calendar" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="edtdatFour">(4) Accounts Payable</label>
+                    <div class="input-group date" style="cursor: pointer;">
+                      <input type="date" class="form-control formClassDate hasDatepicker edtdatFour" id="edtdatFour" name="edtdatFour" value="">
+                      <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-calendar" style="cursor: pointer;"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="row col-lg-12">
+                    <div class="col-lg-5"><label for="edtMonthsAfter">Automatically Update the Closing Dates</label></div>
+                    <div class="col-lg-2"><input type="number" class="form-control" id="edtMonthsAfter"></div>
+                    <div class="col-lg-5"><label for="edtMonthsAfter">Months after the Fiscal Year End</label></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row col-lg-12">
+                    <div class="col-lg-6">
+                        <button class="btn btn-outline-secondary btnPrevTenYrs vs1ButtonMargin" type="button"><i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left" style="margin-right: 5px;"></i>10 yrs</button>
+                        <button class="btn btn-outline-secondary btnNextTenYrs vs1ButtonMargin" type="button">10 yrs<i class="fa fa-chevron-right" style="padding-left: 8px;"></i><i class="fa fa-chevron-right"></i></button>
+                    </div>
+                    <div class="col-lg-6 align-items-right">
+                        <button class="btn btn-warning btnRefreshClosingDates vs1ButtonMargin" type="button"><i class="fa fa-history" style="padding-right: 8px;"></i>Refresh</button>
+                        <button class="btn btn-secondary vs1ButtonMargin" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Start Help View Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding-bottom: 8px;">
+                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a></p>
+                    <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=186" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                    <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                    <p class="text-center text-muted" style="margin: 0px;">
+                        <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a>
+                    </p>
+                </div>
+                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+    </div>
+    <!-- End Help View Modal -->
     <script>
         modalDraggable();
     </script>
