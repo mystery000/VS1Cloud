@@ -6,6 +6,7 @@ import { UtilityService } from "../utility-service";
 import { SalesBoardService } from "../js/sales-service";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
+import XLSX from 'xlsx';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 // Template.contactoverview.inheritsHelpersFrom('non_transactional_list');
@@ -19,7 +20,8 @@ Template.contactoverview.onCreated(function () {
   //templateObject.topTenData = new ReactiveVar([]);
   //templateObject.loggeduserdata = new ReactiveVar([]);
   templateObject.displayfields = new ReactiveVar([]);
-    templateObject.reset_data = new ReactiveVar([]);
+  templateObject.reset_data = new ReactiveVar([]);
+  templateObject.setupFinished = new ReactiveVar();
 });
 
 Template.contactoverview.onRendered(function () {
@@ -300,15 +302,17 @@ Template.contactoverview.events({
   'click .templateDownload': function() {
         let utilityService = new UtilityService();
         let rows = [];
-        const filename = 'SampleEmployee' + '.csv';
-        rows[0] = ['First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'Skype', 'Street', 'City/Suburb', 'State', 'Post Code', 'Country', 'Gender'];
-        rows[1] = ['John', 'Smith', '9995551213', '9995551213', 'johnsmith@email.com', 'johnsmith', '123 Main Street', 'Brooklyn', 'New York', '1234', 'United States', 'M'];
-        rows[1] = ['Jane', 'Smith', '9995551213', '9995551213', 'janesmith@email.com', 'janesmith', '123 Main Street', 'Brooklyn', 'New York', '1234', 'United States', 'F'];
+        const filename = 'SampleContactOverview' + '.csv';
+        rows[0] = ['Company', 'Type', 'First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'Skype', 'Street', 'City/Suburb', 'State', 'Post Code', 'Country', 'Gender'];
+        rows[1] = ['ABC', 'Customer', 'John', 'Smith', '9995551213', '9995551213', 'johnsmith@email.com', 'johnsmith', '123 Main Street', 'Brooklyn', 'New York', '1234', 'United States', 'M'];
+        rows[2] = ['ABC', 'Employee', 'John', 'Smith', '9995551213', '9995551213', 'johnsmith@email.com', 'johnsmith', '123 Main Street', 'Brooklyn', 'New York', '1234', 'United States', 'M'];
+        rows[3] = ['ABC', 'Lead', 'John', 'Smith', '9995551213', '9995551213', 'johnsmith@email.com', 'johnsmith', '123 Main Street', 'Brooklyn', 'New York', '1234', 'United States', 'M'];
+        rows[4] = ['ABC', 'Supplier', 'John', 'Smith', '9995551213', '9995551213', 'johnsmith@email.com', 'johnsmith', '123 Main Street', 'Brooklyn', 'New York', '1234', 'United States', 'M'];
         utilityService.exportToCsv(rows, filename, 'csv');
     },
   'click .templateDownloadXLSX': function(e) {
       e.preventDefault(); //stop the browser from following
-      window.location.href = 'sample_imports/SampleEmployee.xlsx';
+      window.location.href = 'sample_imports/SampleContactOverview.xlsx';
   },
   'click .btnUploadFile': function(event) {
       $('#attachment-upload').val('');
@@ -384,6 +388,10 @@ Template.contactoverview.events({
       let templateObject = Template.instance();
       let contactService = new ContactService();
       let objDetails;
+      let firstName = '';
+      let lastName = '';
+      let taxCode = '';
+      let type = '';
       var saledateTime = new Date();
       //let empStartDate = new Date().format("YYYY-MM-DD");
       var empStartDate = moment(saledateTime).format("YYYY-MM-DD");
@@ -391,46 +399,89 @@ Template.contactoverview.events({
           complete: function(results) {
 
               if (results.data.length > 0) {
-                  if ((results.data[0][0] == "First Name") &&
-                      (results.data[0][1] == "Last Name") && (results.data[0][2] == "Phone") &&
-                      (results.data[0][3] == "Mobile") && (results.data[0][4] == "Email") &&
-                      (results.data[0][5] == "Skype") && (results.data[0][6] == "Street") &&
-                      ((results.data[0][7] == "Street2") || (results.data[0][7] == "City/Suburb")) && (results.data[0][8] == "State") &&
-                      (results.data[0][9] == "Post Code") && (results.data[0][10] == "Country") &&
-                      (results.data[0][11] == "Gender")) {
+                  if ((results.data[0][0] == "Company") && (results.data[0][1] == "Type") && (results.data[0][2] == "First Name") && (results.data[0][3] == "Last Name") && (results.data[0][4] == "Phone") && (results.data[0][5] == "Mobile") && (results.data[0][6] == "Email") && (results.data[0][7] == "Skype") && (results.data[0][8] == "Street") && ((results.data[0][9] == "Street2") || (results.data[0][9] == "City/Suburb")) && (results.data[0][10] == "State") && (results.data[0][11] == "Post Code") && (results.data[0][12] == "Country") && (results.data[0][13] == "Gender")) {
 
                       let dataLength = results.data.length * 500;
                       setTimeout(function() {
                           // $('#importModal').modal('toggle');
                           //Meteor._reload.reload();
-                          window.open('/employeelist?success=true', '_self');
+                          window.open('/contactoverview?success=true', '_self');
                       }, parseInt(dataLength));
 
                       for (let i = 0; i < results.data.length - 1; i++) {
+                        type = results.data[i + 1][1] || '';
+                        if(type == "Customer"){ //Customers List
+                            firstName = results.data[i + 1][2] !== undefined ? results.data[i + 1][2] : '';
+                            lastName = results.data[i + 1][3] !== undefined ? results.data[i + 1][3] : '';
+                        objDetails = {
+                            type: "TCustomer",
+                            fields: {
+                                ClientName: results.data[i + 1][0],
+                                FirstName: firstName || '',
+                                LastName: lastName || '',
+                                Phone: results.data[i + 1][4],
+                                Mobile: results.data[i + 1][5],
+                                Email: results.data[i + 1][6],
+                                SkypeName: results.data[i + 1][7],
+                                Street: results.data[i + 1][8],
+                                Street2: results.data[i + 1][9],
+                                Suburb: results.data[i + 1][9] || '',
+                                State: results.data[i + 1][10],
+                                PostCode: results.data[i + 1][11],
+                                Country: results.data[i + 1][12],
+
+                                BillStreet: results.data[i + 1][8],
+                                BillStreet2: results.data[i + 1][9],
+                                BillState: results.data[i + 1][10],
+                                BillPostCode: results.data[i + 1][11],
+                                Billcountry: results.data[i + 1][12],
+
+                                PublishOnVS1: true
+                            }
+                        };
+                        if (results.data[i + 1][1]) {
+                            if (results.data[i + 1][1] !== "") {
+                                contactService.saveCustomer(objDetails).then(function(data) {
+                                    ///$('.fullScreenSpin').css('display','none');
+                                    //Meteor._reload.reload();
+                                }).catch(function(err) {
+                                    //$('.fullScreenSpin').css('display','none');
+                                    swal({
+                                        title: 'Oooops...',
+                                        text: err,
+                                        type: 'error',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Try Again'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            Meteor._reload.reload();
+                                        } else if (result.dismiss === 'cancel') {}
+                                    });
+                                });
+                            }
+                        }
+                        }else if(type == "Employee"){ //Employees List
+                              firstName = results.data[i + 1][2].trim() !== undefined ? results.data[i + 1][2] : '';
+                              lastName = results.data[i + 1][3].trim() !== undefined ? results.data[i + 1][3] : '';
                           objDetails = {
                               type: "TEmployee",
                               fields: {
-                                  FirstName: results.data[i + 1][0].trim(),
-                                  LastName: results.data[i + 1][1].trim(),
-                                  Phone: results.data[i + 1][2],
-                                  Mobile: results.data[i + 1][3],
+                                  FirstName: firstName,
+                                  LastName: lastName,
+                                  Phone: results.data[i+1][4],
+                                  Mobile: results.data[i+1][5],
                                   DateStarted: empStartDate,
                                   DOB: empStartDate,
-                                  Sex: results.data[i + 1][11] || "F",
-                                  Email: results.data[i + 1][4],
-                                  SkypeName: results.data[i + 1][5],
-                                  Street: results.data[i + 1][6],
-                                  Street2: results.data[i + 1][7],
-                                  Suburb: results.data[i + 1][7],
-                                  State: results.data[i + 1][8],
-                                  PostCode: results.data[i + 1][9],
-                                  Country: results.data[i + 1][10]
-
-                                  // BillStreet: results.data[i+1][6],
-                                  // BillStreet2: results.data[i+1][7],
-                                  // BillState: results.data[i+1][8],
-                                  // BillPostCode:results.data[i+1][9],
-                                  // Billcountry:results.data[i+1][10]
+                                  Email: results.data[i+1][6],
+                                  SkypeName: results.data[i+1][7],
+                                  Street: results.data[i+1][8],
+                                  Street2: results.data[i+1][9],
+                                  Suburb: results.data[i+1][9],
+                                  State: results.data[i+1][10],
+                                  PostCode:results.data[i+1][11],
+                                  Country:results.data[i+1][12],
+                                  Sex: results.data[i+1][13] || "F",
+                                  Active: true
                               }
                           };
                           if (results.data[i + 1][1]) {
@@ -454,6 +505,107 @@ Template.contactoverview.events({
                                   });
                               }
                           }
+                        }else if(type == "Lead"){ //leads List
+                            firstName = results.data[i + 1][2] !== undefined ? results.data[i + 1][2] : '';
+                            lastName = results.data[i + 1][3] !== undefined ? results.data[i + 1][3] : '';
+                        objDetails = {
+                            type: "TProspectList",
+                            fields: {
+                                ClientName: results.data[i + 1][0],
+                                FirstName: firstName || '',
+                                LastName: lastName || '',
+                                Phone: results.data[i + 1][4],
+                                Mobile: results.data[i + 1][5],
+                                Email: results.data[i + 1][6],
+                                SkypeName: results.data[i + 1][7],
+                                Street: results.data[i + 1][8],
+                                Street2: results.data[i + 1][9],
+                                Suburb: results.data[i + 1][9] || '',
+                                State: results.data[i + 1][10],
+                                PostCode: results.data[i + 1][11],
+                                Country: results.data[i + 1][12],
+
+                                BillStreet: results.data[i + 1][8],
+                                BillStreet2: results.data[i + 1][9],
+                                BillState: results.data[i + 1][10],
+                                BillPostCode: results.data[i + 1][11],
+                                Billcountry: results.data[i + 1][12],
+
+                                Active: true
+                            }
+                        };
+                        if (results.data[i + 1][1]) {
+                            if (results.data[i + 1][1] !== "") {
+                                contactService.saveProspect(objDetails).then(function(data) {
+                                    ///$('.fullScreenSpin').css('display','none');
+                                    //Meteor._reload.reload();
+                                }).catch(function(err) {
+                                    //$('.fullScreenSpin').css('display','none');
+                                    swal({
+                                        title: 'Oooops...',
+                                        text: err,
+                                        type: 'error',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Try Again'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            Meteor._reload.reload();
+                                        } else if (result.dismiss === 'cancel') {}
+                                    });
+                                });
+                            }
+                        }
+                        }else if(type == "Supplier"){ //Suppliers List
+                              firstName = results.data[i + 1][2] !== undefined ? results.data[i + 1][2] : '';
+                              lastName = results.data[i + 1][3] !== undefined ? results.data[i + 1][3] : '';
+                          objDetails = {
+                              type: "TSupplier",
+                              fields: {
+                                  ClientName: results.data[i + 1][0],
+                                  FirstName: firstName || '',
+                                  LastName: lastName || '',
+                                  Phone: results.data[i + 1][4],
+                                  Mobile: results.data[i + 1][5],
+                                  Email: results.data[i + 1][6],
+                                  SkypeName: results.data[i + 1][7],
+                                  Street: results.data[i + 1][8],
+                                  Street2: results.data[i + 1][9],
+                                  Suburb: results.data[i + 1][9] || '',
+                                  State: results.data[i + 1][10],
+                                  PostCode: results.data[i + 1][11],
+                                  Country: results.data[i + 1][12],
+
+                                  BillStreet: results.data[i + 1][8],
+                                  BillStreet2: results.data[i + 1][9],
+                                  BillState: results.data[i + 1][10],
+                                  BillPostCode: results.data[i + 1][11],
+                                  Billcountry: results.data[i + 1][12],
+
+                                  Active: true
+                              }
+                          };
+                          if (results.data[i + 1][1]) {
+                              if (results.data[i + 1][1] !== "") {
+                                  contactService.saveSupplier(objDetails).then(function(data) {
+                                      ///$('.fullScreenSpin').css('display','none');
+                                      //Meteor._reload.reload();
+                                  }).catch(function(err) {
+                                      //$('.fullScreenSpin').css('display','none');
+                                      swal({
+                                          title: 'Oooops...',
+                                          text: err,
+                                          type: 'error',
+                                          showCancelButton: false,
+                                          confirmButtonText: 'Try Again'
+                                      }).then((result) => {
+                                          if (result.value) {
+                                              Meteor._reload.reload();
+                                          } else if (result.dismiss === 'cancel') {}
+                                      });
+                                  });
+                              }
+                          }
+                         }
                       }
                   } else {
                       $('.fullScreenSpin').css('display', 'none');
