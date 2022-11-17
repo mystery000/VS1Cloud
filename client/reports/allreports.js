@@ -1,6 +1,5 @@
-import {
-    ReactiveVar
-} from 'meteor/reactive-var';
+import {ReactiveVar} from 'meteor/reactive-var';
+import { TaxRateService } from "../settings/settings-service";
 Template.allreports.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.isBalanceSheet = new ReactiveVar();
@@ -193,7 +192,7 @@ Template.allreports.onRendered(() => {
     let isBalanceSheetReport = Session.get('cloudBalanceSheetReport');
     let isIncomeReport = Session.get('cloudIncomeReport');
     let isPositionReport = Session.get('cloudPositionReport');
-    const taxRateService = new taxRateService();
+    const taxRateService = new TaxRateService();
 
     const accountantList = [];
 

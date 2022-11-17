@@ -59,7 +59,7 @@ Template.salesoverview.onRendered(function () {
   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
-    showCustomFieldDisplaySettings(reset_data);
+    templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
@@ -67,7 +67,7 @@ Template.salesoverview.onRendered(function () {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
               // reset_data = data.ProcessLog.CustomLayout.Columns;
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              showCustomFieldDisplaySettings(reset_data);
+              templateObject.showCustomFieldDisplaySettings(reset_data);
           }).catch(function (err) {
           });
         } else {
@@ -76,7 +76,7 @@ Template.salesoverview.onRendered(function () {
            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
              if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-               showCustomFieldDisplaySettings(reset_data);
+               templateObject.showCustomFieldDisplaySettings(reset_data);
              }
            }
          };
@@ -88,7 +88,7 @@ Template.salesoverview.onRendered(function () {
     return;
   }
 
-  function showCustomFieldDisplaySettings(reset_data) {
+  templateObject.showCustomFieldDisplaySettings = async function(reset_data){
 
     let custFields = [];
     let customData = {};
@@ -103,6 +103,13 @@ Template.salesoverview.onRendered(function () {
         display: reset_data[r].display,
         width: reset_data[r].width ? reset_data[r].width : ''
       };
+
+      if(reset_data[r].active == true){
+        $('#tblSalesOverview .'+reset_data[r].class).removeClass('hiddenColumn');
+      }else if(reset_data[r].active == false){
+        $('#tblSalesOverview .'+reset_data[r].class).addClass('hiddenColumn');
+      };
+
       custFields.push(customData);
     }
     templateObject.displayfields.set(custFields);

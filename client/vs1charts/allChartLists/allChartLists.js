@@ -501,7 +501,7 @@ Template.allChartLists.onRendered(function () {
                         !chart.fields.Active
                     );
                 });
-            }, 500);
+            }, 0);
         }
 
         // Now get user preferences
@@ -611,7 +611,7 @@ Template.allChartLists.onRendered(function () {
                 return +a.getAttribute("position") - +b.getAttribute("position");
             })
             .appendTo($chartWrappper);
-      }, 500)
+      }, 0)
     };
     templateObject.deactivateDraggable = () => {
         draggableCharts.disable();

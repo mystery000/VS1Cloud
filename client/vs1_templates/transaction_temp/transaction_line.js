@@ -131,8 +131,6 @@ Template.transaction_line.onRendered(function() {
 
   templateObject.initCustomFieldDisplaySettings("", currenttranstablename);
 
-  console.log(templateObject);
-
 });
 
 Template.transaction_line.events({
