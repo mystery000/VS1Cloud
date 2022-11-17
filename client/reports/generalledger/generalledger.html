@@ -1,19 +1,27 @@
-<template name="generalledger"> 
-  {{# vs1_report_template tabledisplayname="General Ledger" tablename="generalledger" dateAsAt=dateAsAt}} 
+<template name="generalledger">
+  {{# vs1_report_template tabledisplayname="General Ledger" tablename="generalledger" dateAsAt=dateAsAt}}
     <div class="table-responsive">
-        <table class="table tableExportDetailDiv table-sm" id="tableExport" name="tableExport">
+        <table class="table tableExportDetailDiv table-sm dataTable" id="tblgeneralledger" name="tblgeneralledger">
             <thead>
                 <tr class="table-active customDoubleTableHeading">
-                    <th style="max-width: 190px;">Account Name</th>
-                    <th>Account No</th>
+                  <!-- {{#each displayfield in report_displayfields}}
+                      {{#if displayfield.display}}
+                          <th data-class="{{displayfield.class}}" thclass="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{displayfield.width}}px">
+                              {{displayfield.custfieldlabel}}
+                          </th>
+                      {{/if}}
+                  {{/each}} -->
+
+                    <th style="width: 195px;" class="colAccountName">Account Name</th>
+                    <th style="width: 86px;" class="colAccountNo">Account No</th>
                     <!-- <th>Memo</th> -->
-                    <th>Date</th>
-                    <th>Client Name</th>
-                    <th style="max-width: 130px;">Type</th>
+                    <th style="width: 86px;" class="colDate">Date</th>
+                    <th style="width: 192px;" class="colClientName">Client Name</th>
+                    <th style="width: 137px;" class="colType">Type</th>
                     <!-- <th>Department</th> -->
-                    <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Debits</th>
-                    <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Credit</th>
-                    <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount</th>
+                    <th style="width: 85px;" class="colDebits text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Debits</th>
+                    <th style="width: 85px;" class="colCredit text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Credit</th>
+                    <th style="width: 85px;" class="colAmount text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount</th>
                 </tr>
 
                 {{#if isOnlyDefaultActive equal "false" }}
@@ -56,7 +64,7 @@
                     {{#each record in records}}
                         {{#each recordItem in record}}
                             {{#if recordItem.key}}
-                                <tr class="totalhr">
+                                <tr class="totalhr colAccountName">
                                     <td class="{{#if isNegativeAmount recordItem.key}} text-danger {{/if}}" style="font-weight: 800;">
                                         <div class="SectionTitle2 report-heading-last">{{recordItem.key}}</div>
                                     </td>

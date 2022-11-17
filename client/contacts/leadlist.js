@@ -139,6 +139,7 @@ Template.leadlist.events({
                   }
 
               }).catch(function(err) {
+                  console.log(err);
                   $('.fullScreenSpin').css('display', 'none');
               });
           } else {
@@ -193,7 +194,7 @@ Template.leadlist.events({
         let utilityService = new UtilityService();
         let rows =[];
         const filename = 'SampleLeads'+'.csv';
-        rows[0]= ['Employee Name', 'First Name', 'Last Name', 'Phone','Mobile', 'Email','Department', 'Address', 'Suburb', 'City'];
+        rows[0]= ['EmployeeName', 'FirstName', 'LastName', 'Phone','Mobile', 'Email','Department', 'Address', 'Suburb', 'City'];
         rows[1]= ['John Smith', 'John', 'Smith', '9995551213','9995551213', 'johnsmith@email.com','johnsmith', '123 Main Street', 'Brooklyn', 'New York'];
         utilityService.exportToCsv(rows, filename, 'csv');
     },
@@ -272,12 +273,12 @@ Template.leadlist.events({
         Papa.parse(templateObject.selectedFile.get(), {
             complete: function(results) {
                 if(results.data.length > 0){
-                    if( (results.data[0][0] === "Employee Name")
-                       && (results.data[0][1] === "First Name") && (results.data[0][2] === "Last Name")
-                       && (results.data[0][3] === "Phone") && (results.data[0][4] === "Mobile")
-                       && (results.data[0][5] === "Email") && (results.data[0][6] === "Department")
-                       && (results.data[0][7] === "Address") && (results.data[0][8] === "Suburb")
-                       && (results.data[0][9] === "City")) {
+                    if((results.data[0][0] == "Company") && (results.data[0][1] == "First Name") &&
+                        (results.data[0][2] == "Last Name") && (results.data[0][3] == "Phone") &&
+                        (results.data[0][4] == "Mobile") && (results.data[0][5] == "Email") &&
+                        (results.data[0][6] == "Skype") && (results.data[0][7] == "Street") &&
+                        (results.data[0][8] == "Street2" || results.data[0][8] == "City/Suburb") && (results.data[0][9] == "State") &&
+                        (results.data[0][10] == "Post Code") && (results.data[0][11] == "Country")) {
 
                         let dataLength = results.data.length * 500;
                         setTimeout(function(){
@@ -287,20 +288,32 @@ Template.leadlist.events({
                         },parseInt(dataLength));
 
                         for (let i = 0; i < results.data.length -1; i++) {
+                            firstName = results.data[i + 1][1] !== undefined ? results.data[i + 1][1] : '';
+                            lastName = results.data[i + 1][2] !== undefined ? results.data[i + 1][2] : '';
                             objDetails = {
-                                type: "TProspectList",
+                                type: "TProspectEx",
                                 fields:
                                 {
-                                    EmployeeName: results.data[i+1][0],
-                                    FirstName: results.data[i+1][1],
-                                    LastName: results.data[i+1][2],
-                                    Phone: results.data[i+1][3],
-                                    Mobile: results.data[i+1][4],
-                                    Email: results.data[i+1][5],
-                                    Department: results.data[i+1][6],
-                                    Address: results.data[i+1][7],
-                                    Suburb: results.data[i+1][8],
-                                    City: results.data[i+1][9]
+                                    ClientName: results.data[i + 1][0],
+                                    FirstName: firstName || '',
+                                    LastName: lastName || '',
+                                    Phone: results.data[i + 1][3],
+                                    Mobile: results.data[i + 1][4],
+                                    Email: results.data[i + 1][5],
+                                    SkypeName: results.data[i + 1][6],
+                                    Street: results.data[i + 1][7],
+                                    Street2: results.data[i + 1][8],
+                                    Suburb: results.data[i + 1][8] || '',
+                                    State: results.data[i + 1][9],
+                                    PostCode: results.data[i + 1][10],
+                                    Country: results.data[i + 1][11],
+
+                                    BillStreet: results.data[i + 1][7],
+                                    BillStreet2: results.data[i + 1][8],
+                                    BillState: results.data[i + 1][9],
+                                    BillPostCode: results.data[i + 1][10],
+                                    Billcountry: results.data[i + 1][11],
+                                    PublishOnVS1: true
                                 }
                             };
                             if(results.data[i+1][1]){

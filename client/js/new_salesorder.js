@@ -811,7 +811,13 @@ Template.new_salesorder.onRendered(function () {
         $("#templatePreviewModal .field_payment").show();
         $("#templatePreviewModal .field_amount").show();
 
-        updateTemplate1(object_invoce);
+        if (number == 1) {
+            updateTemplate1(object_invoce);
+          } else if (number == 2) {
+            updateTemplate2(object_invoce);
+          } else {
+            updateTemplate3(object_invoce);
+          }
 
         saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
 
@@ -1045,7 +1051,13 @@ Template.new_salesorder.onRendered(function () {
                 $("#templatePreviewModal .field_payment").show();
                 $("#templatePreviewModal .field_amount").show();
 
-                updateTemplate1(object_invoce);
+                if (number == 1) {
+                    updateTemplate1(object_invoce);
+                  } else if (number == 2) {
+                    updateTemplate2(object_invoce);
+                  } else {
+                    updateTemplate3(object_invoce);
+                  }
                 saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
 
 
@@ -1543,216 +1555,662 @@ Template.new_salesorder.onRendered(function () {
 
     }
 
-
-    function updateTemplate1(object_invoce) {
-        $("#templatePreviewModal").modal("toggle");
+    function loadTemplateHeaderFooter1(object_invoce) {
         if (object_invoce.length > 0) {
-          $('#templatePreviewModal #printcomment').text(object_invoce[0]["comment"]);
-          $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
-          $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
-          $("#templatePreviewModal .o_address1").text(
-            object_invoce[0]["o_address"]
+          $("#templatePreviewModal #printcomment").text(
+            object_invoce[0]["comment"]
           );
-          $("#templatePreviewModal .o_city").text(object_invoce[0]["o_city"]);
-          $("#templatePreviewModal .o_state").text(object_invoce[0]["o_state"]);
-          $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
-          $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
-          $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
-
-          if(object_invoce[0]["applied"] == ""){
-            $("#templatePreviewModal .applied").hide()
-            $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
-          }else{
-            $("#templatePreviewModal .applied").show()
-            $("#templatePreviewModal .applied").text("Applied : " +  object_invoce[0]["applied"]);
-          }
-
-
-
-          if(object_invoce[0]["supplier_type"] == ""){
-            $("#templatePreviewModal .customer").hide()
-          }else{
-            $("#templatePreviewModal .customer").show()
-          }
-          $("#templatePreviewModal .customer").empty();
-          $("#templatePreviewModal .customer").append(object_invoce[0]["supplier_type"]);
-
-          if(object_invoce[0]["supplier_name"] == ""){
-            $("#templatePreviewModal .pdfCustomerName").hide()
-          }else{
-            $("#templatePreviewModal .pdfCustomerName").show()
-          }
-          $("#templatePreviewModal .pdfCustomerName").empty();
-          $("#templatePreviewModal .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-
-          if(object_invoce[0]["supplier_addr"] == ""){
-            $("#templatePreviewModal .pdfCustomerAddress").hide()
-          }else{
-            $("#templatePreviewModal .pdfCustomerAddress").show()
-          }
+          // $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
+          // $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
+          // $("#templatePreviewModal .o_address1").text(
+          //   object_invoce[0]["o_address"]
+          // );
+          // $("#templatePreviewModal .o_city").text(object_invoce[0]["o_city"]);
+          // $("#templatePreviewModal .o_state").text(object_invoce[0]["o_state"]);
+          // $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
+          // $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
+          if (LoggedCountry == "South Africa")
+            $("#templatePreviewModal .o_abn_label").text("VAT No");
+          else
+            $("#templatePreviewModal .o_abn_label").text("ABN");
+          let companyABN = object_invoce[0]["o_abn"];
+          $("#templatePreviewModal .o_abn").text(companyABN.substring(0, 2) + "-" + companyABN.substring(2, 5) + "-" + companyABN.substring(5, 8) + "-" + companyABN.substring(8, companyABN.length));
+          
+          // if (object_invoce[0]["applied"] == "") {
+          //   $("#templatePreviewModal .applied").hide();
+          //   $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
+          // } else {
+          //   $("#templatePreviewModal .applied").show();
+          //   $("#templatePreviewModal .applied").text(
+          //     "Applied : " + object_invoce[0]["applied"]
+          //   );
+          // }
+    
+          // if (object_invoce[0]["supplier_type"] == "") {
+          //   $("#templatePreviewModal .customer").hide();
+          // } else {
+          //   $("#templatePreviewModal .customer").show();
+          // }
+          // $("#templatePreviewModal .customer").empty();
+          // $("#templatePreviewModal .customer").append(
+          //   object_invoce[0]["supplier_type"]
+          // );
+    
+          // if (object_invoce[0]["supplier_name"] == "") {
+          //   $("#templatePreviewModal .pdfCustomerName").hide();
+          // } else {
+          //   $("#templatePreviewModal .pdfCustomerName").show();
+          // }
+          // $("#templatePreviewModal .pdfCustomerName").empty();
+          // $("#templatePreviewModal .pdfCustomerName").append(
+          //   object_invoce[0]["supplier_name"]
+          // );
+    
+        //   if (object_invoce[0]["supplier_addr"] == "") {
+        //     $("#templatePreviewModal .pdfCustomerAddress").hide();
+        //   } else {
+        //     $("#templatePreviewModal .pdfCustomerAddress").show();
+        //   }
           $("#templatePreviewModal .pdfCustomerAddress").empty();
-          $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-
-
+          let txabillingAddress = object_invoce[0]["supplier_addr"];
+          if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
+            txabillingAddress = txabillingAddress.replace(/\n/g, '<br/>');
+          $("#templatePreviewModal .pdfCustomerAddress").html(
+            txabillingAddress
+          );
+    
+          $("#templatePreviewModal .employeeName").text(object_invoce[0]["employee_name"]);
+    
           $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
           $("#templatePreviewModal .modal-title").text(
-            object_invoce[0]["title"] + " "+ " Template"
+            object_invoce[0]["title"] + " " + " Template"
           );
-
-          if(object_invoce[0]["value"]=="")
-          {
-              $('.print-header').text(object_invoce[0]["title"]);
-              $('.print-header-value').text('');
-
+    
+          if (object_invoce[0]["value"] == "") {
+            $(".print-header").text(object_invoce[0]["title"]);
+            $(".print-header-value").text("");
+          } else {
+            $(".print-header").text(object_invoce[0]["title"]);
+            $(".print-header-value").text(object_invoce[0]["value"]);
           }
-          else{
-             $('.print-header').text(object_invoce[0]["title"]);
-             $('.print-header-value').text(object_invoce[0]["value"]);
-          }
-
-          if(object_invoce[0]["bsb"]=="")
-          {
-              $('#templatePreviewModal .field_payment').hide();
-
-          }
-          else{
-
-              $('#templatePreviewModal .field_payment').show();
-          }
-
-
-          $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
-          $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
-          $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-
-
-          if(object_invoce[0]["date"] == ""){
+    
+        //   if (object_invoce[0]["bsb"] == "") {
+        //     $("#templatePreviewModal .field_payment").hide();
+        //   } else {
+        //     $("#templatePreviewModal .field_payment").show();
+        //   }
+    
+          $("#templatePreviewModal .bankname").text(localStorage.getItem("vs1companyBankName"));
+          $("#templatePreviewModal .bankdesc").text(localStorage.getItem("vs1companyBankDesc"));
+          $("#templatePreviewModal .ban").text("Name : " + localStorage.getItem('vs1companyBankAccountName'));
+          $("#templatePreviewModal .bsb").text(
+            "BSB (Branch Number) : " + object_invoce[0]["bsb"]
+          );
+          $("#templatePreviewModal .account_number").text(
+            "Account Number : " + object_invoce[0]["account"]
+          );
+          $("#templatePreviewModal .swift").text(
+            "Swift Code : " + object_invoce[0]["swift"]
+          );
+    
+          if (object_invoce[0]["date"] == "") {
             $("#templatePreviewModal .dateNumber").hide();
-          }else{
+          } else {
             $("#templatePreviewModal .dateNumber").show();
           }
-
-          $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
-
-          if(object_invoce[0]["pqnumber"] == ""){
+    
+          let companyName = Session.get("vs1companyName");
+          let companyReg = Session.get("vs1companyReg");
+          if (companyReg != "")
+            $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN " + companyReg.substring(0, 3) + " " + companyReg.substring(3, 6) + " " + companyReg.substring(6, companyReg.length));
+            else
+            $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN ");
+          let companyAddr = Session.get("vs1companyaddress1");
+          if (companyAddr == "")
+            companyAddr = Session.get("vs1companyaddress2");
+          let companyCity = Session.get("vs1companyCity");
+          let companyState = Session.get("companyState");
+          let companyPostcode = Session.get("vs1companyPOBox");
+          let companyCountry = Session.get("vs1companyCountry");
+          $("#templatePreviewModal .companyInfo2").text(companyAddr + ", " + companyCity + ", " + companyState + " " + companyPostcode + ", " + companyCountry);
+          let companyPhone = Session.get("vs1companyPhone");
+          if (companyPhone != "")
+            $("#templatePreviewModal .companyInfo3").text("Ph: " + companyPhone.substring(0, 2) + " " + companyPhone.substring(2, 6) + " " + companyPhone.substring(6, companyPhone.length));
+    
+          if (object_invoce[0]["date"] != "")
+            $("#templatePreviewModal .date").text(convertDateFormatForPrint(object_invoce[0]["date"]));
+    
+          if (object_invoce[0]["pqnumber"] == "") {
             $("#templatePreviewModal .pdfPONumber").hide();
-          }else{
+          } else {
             $("#templatePreviewModal .pdfPONumber").show();
           }
-
+    
           $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
-
-          if(object_invoce[0]["invoicenumber"] == ""){
+    
+          if (object_invoce[0]["invoicenumber"] == "") {
             $("#templatePreviewModal .invoiceNumber").hide();
-          }else{
+          } else {
             $("#templatePreviewModal .invoiceNumber").show();
           }
           $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
-
-          if(object_invoce[0]["refnumber"] == ""){
+    
+          if (object_invoce[0]["refnumber"] == "") {
             $("#templatePreviewModal .refNumber").hide();
-          }else{
+          } else {
             $("#templatePreviewModal .refNumber").show();
           }
           $("#templatePreviewModal .ro").text(object_invoce[0]["refnumber"]);
-
-          if(object_invoce[0]["duedate"] == ""){
+    
+          if (object_invoce[0]["duedate"] == "") {
             $("#templatePreviewModal .pdfTerms").hide();
-          }else{
+          } else {
             $("#templatePreviewModal .pdfTerms").show();
           }
-          $("#templatePreviewModal .due").text(object_invoce[0]["duedate"]);
-
-          if (object_invoce[0]["paylink"] == "") {
-                $("#templatePreviewModal .link").hide();
-                $("#templatePreviewModal .linkText").hide();
-          } else {
-                $("#templatePreviewModal .link").show();
-                $("#templatePreviewModal .linkText").show();
-          }
-
-          if (object_invoce[0]["showFX"] == "") {
-                $("#templatePreviewModal .showFx").hide();
-                $("#templatePreviewModal .showFxValue").hide();
-         } else {
-                $("#templatePreviewModal .showFx").show();
-                $("#templatePreviewModal .showFxValue").show();
-                $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
-         }
-
-
-          if(object_invoce[0]["customfield1"] == "NA")
-          {
-                  $('#customfieldtablenew').css('display', 'none');
-                  $('#customdatatablenew').css('display', 'none');
-                  $('#templatePreviewModal .customfield1').text('');
-                  $('#templatePreviewModal .customfield2').text('');
-                  $('#templatePreviewModal .customfield3').text('');
-
-
-                  $('#templatePreviewModal .customfield1data').text('');
-                  $('#templatePreviewModal .customfield2data').text('');
-                  $('#templatePreviewModal .customfield3data').text('');
-
-          }
-          else
-          {
-                $('#customfieldtablenew').css('display', 'block');
-                $('#customdatatablenew').css('display', 'block');
-
-                $('#templatePreviewModal .customfield1').text(object_invoce[0]["customfieldlabel1"]);
-                $('#templatePreviewModal .customfield2').text(object_invoce[0]["customfieldlabel2"]);
-                $('#templatePreviewModal .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-
-                if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
-                {
-                  $('#templatePreviewModal .customfield1data').text('');
-                }
-                else
-                {
-                  $('#templatePreviewModal .customfield1data').text(object_invoce[0]["customfield1"]);
-                }
-
-                if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
-                {
-                  $('#templatePreviewModal .customfield2data').text('');
-                }
-                else
-                {
-                  $('#templatePreviewModal .customfield2data').text( object_invoce[0]["customfield2"]);
-                }
-
-                if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
-                {
-                  $('#templatePreviewModal .customfield3data').text('');
-                }
-                else
-                {
-                  $('#templatePreviewModal .customfield3data').text( object_invoce[0]["customfield3"]);
-                }
-
-
-
-          }
-
-          if(object_invoce[0]["customfield1"] == "NA")
-          {
-                $('#customfieldlable').css('display', 'none');
-                $('#customfieldlabledata').css('display', 'none');
-          }
-          else
-          {
-                $('#customfieldlable').css('display', 'block');
-                $('#customfieldlabledata').css('display', 'block');
-          }
-
-        //   table header
-          var tbl_header = $("#templatePreviewModal .tbl_header")
-          tbl_header.empty()
-          for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                tbl_header.append("<th style='background:white;color:rgb(0,0,0);width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
+          if (object_invoce[0]["duedate"] != "")
+            $("#templatePreviewModal .due").text(convertDateFormatForPrint(object_invoce[0]["duedate"]));
+    
+          // if (object_invoce[0]["paylink"] == "") {
+          //   $("#templatePreviewModal .link").hide();
+          //   $("#templatePreviewModal .linkText").hide();
+          // } else {
+          //   $("#templatePreviewModal .link").show();
+          //   $("#templatePreviewModal .linkText").show();
+          // }
+    
+          // if (object_invoce[0]["showFX"] == "") {
+          //   $("#templatePreviewModal .showFx").hide();
+          //   $("#templatePreviewModal .showFxValue").hide();
+          // } else {
+          //   $("#templatePreviewModal .showFx").show();
+          //   $("#templatePreviewModal .showFxValue").show();
+          //   $("#templatePreviewModal .showFxValue").text(
+          //     object_invoce[0]["showFX"]
+          //   );
+          // }
+    
+          // if (object_invoce[0]["customfield1"] == "NA") {
+          //   $("#customfieldtablenew").css("display", "none");
+          //   $("#customdatatablenew").css("display", "none");
+          //   $("#templatePreviewModal .customfield1").text("");
+          //   $("#templatePreviewModal .customfield2").text("");
+          //   $("#templatePreviewModal .customfield3").text("");
+    
+          //   $("#templatePreviewModal .customfield1data").text("");
+          //   $("#templatePreviewModal .customfield2data").text("");
+          //   $("#templatePreviewModal .customfield3data").text("");
+          // } else {
+          //   $("#customfieldtablenew").css("display", "block");
+          //   $("#customdatatablenew").css("display", "block");
+    
+          //   $("#templatePreviewModal .customfield1").text(
+          //     object_invoce[0]["customfieldlabel1"]
+          //   );
+          //   $("#templatePreviewModal .customfield2").text(
+          //     object_invoce[0]["customfieldlabel2"]
+          //   );
+          //   $("#templatePreviewModal .customfield3").text(
+          //     object_invoce[0]["customfieldlabel3"]
+          //   );
+    
+          //   if (
+          //     object_invoce[0]["customfield1"] == "" ||
+          //     object_invoce[0]["customfield1"] == 0
+          //   ) {
+          //     $("#templatePreviewModal .customfield1data").text("");
+          //   } else {
+          //     $("#templatePreviewModal .customfield1data").text(
+          //       object_invoce[0]["customfield1"]
+          //     );
+          //   }
+    
+          //   if (
+          //     object_invoce[0]["customfield2"] == "" ||
+          //     object_invoce[0]["customfield2"] == 0
+          //   ) {
+          //     $("#templatePreviewModal .customfield2data").text("");
+          //   } else {
+          //     $("#templatePreviewModal .customfield2data").text(
+          //       object_invoce[0]["customfield2"]
+          //     );
+          //   }
+    
+          //   if (
+          //     object_invoce[0]["customfield3"] == "" ||
+          //     object_invoce[0]["customfield3"] == 0
+          //   ) {
+          //     $("#templatePreviewModal .customfield3data").text("");
+          //   } else {
+          //     $("#templatePreviewModal .customfield3data").text(
+          //       object_invoce[0]["customfield3"]
+          //     );
+          //   }
+          // }
+    
+          // if (object_invoce[0]["customfield1"] == "NA") {
+          //   $("#customfieldlable").css("display", "none");
+          //   $("#customfieldlabledata").css("display", "none");
+          // } else {
+          //   $("#customfieldlable").css("display", "block");
+          //   $("#customfieldlabledata").css("display", "block");
+          // }
+    
+          //   table header
+          var tbl_header = $("#templatePreviewModal .tbl_header");
+          tbl_header.empty();
+          for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
+            tbl_header.append(
+              "<th style='background:white;width:" +
+                value +
+                "%'; color: rgb(0 0 0);'>" +
+                key +
+                "</th>"
+            );
           }
         }
+      }
+    
+      function loadTemplateHeaderFooter2(object_invoce) {
+        if (object_invoce.length > 0) {
+          $("#templatePreviewModal #printcomment2").text(
+            object_invoce[0]["comment"]
+          );
+          
+        //   if (object_invoce[0]["supplier_addr"] == "") {
+        //     $("#templatePreviewModal .pdfCustomerAddress2").hide();
+        //   } else {
+        //     $("#templatePreviewModal .pdfCustomerAddress2").show();
+        //   }
+          $("#templatePreviewModal .pdfCustomerAddress2").empty();
+          let txabillingAddress = object_invoce[0]["supplier_addr"];
+          if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
+            txabillingAddress = txabillingAddress.replace(/\n/g, '<br/>');
+          $("#templatePreviewModal .pdfCustomerAddress2").html(
+            txabillingAddress
+          );
+    
+          $("#templatePreviewModal .print-header2").text(object_invoce[0]["title"]);
+          $("#templatePreviewModal .modal-title").text(
+            object_invoce[0]["title"] + " " + " Template"
+          );
+    
+          $("#templatePreviewModal .bankname2").text("BANK : " + localStorage.getItem("vs1companyBankName"));
+          $("#templatePreviewModal .ban2").text("Name : " + localStorage.getItem('vs1companyBankAccountName'));
+          $("#templatePreviewModal .bsb2").text(
+            "BSB : " + object_invoce[0]["bsb"]
+          );
+          $("#templatePreviewModal .account_number2").text(
+            "ACC : " + object_invoce[0]["account"]
+          );
+          
+          let companyName = Session.get("vs1companyName");
+          let companyReg = Session.get("vs1companyReg");
+          let companyAddr = Session.get("vs1companyaddress1");
+          if (companyAddr == "")
+            companyAddr = Session.get("vs1companyaddress2");
+          let companyCity = Session.get("vs1companyCity");
+          let companyState = Session.get("companyState");
+          let companyPostcode = Session.get("vs1companyPOBox");
+          let companyCountry = Session.get("vs1companyCountry");
+          let companyPhone = Session.get("vs1companyPhone");
+    
+          $("#templatePreviewModal .o_name2").text(companyName);
+          $("#templatePreviewModal .o_address2").text(companyAddr);
+          $("#templatePreviewModal .o_city2").text(companyCity);
+          $("#templatePreviewModal .o_state2").text(companyState + " " + companyPostcode);
+          if (companyPhone != "")
+            $("#templatePreviewModal .o_phone2").text(companyPhone.substring(0, 4) + " " + companyPhone.substring(4, 7) + " " + companyPhone.substring(7, companyPhone.length));
+          $("#templatePreviewModal .o_email2").text(localStorage.getItem("VS1Accountant"));
+    
+          if (LoggedCountry == "South Africa")
+            $("#templatePreviewModal .o_abn_label2").text("VAT No");
+          else
+            $("#templatePreviewModal .o_abn_label2").text("ABN");
+          
+          let companyABN = object_invoce[0]["o_abn"];
+          if (companyABN != "")
+            $("#templatePreviewModal .o_abn2").text(companyABN.substring(0, 2) + " " + companyABN.substring(2, 5) + " " + companyABN.substring(5, 8) + " " + companyABN.substring(8, companyABN.length));
+          
+          if (object_invoce[0]["date"] != "")
+            $("#templatePreviewModal .date2").text(convertDateFormatForPrint2(object_invoce[0]["date"]));
+    
+          // if (object_invoce[0]["invoicenumber"] == "") {
+          //   $("#templatePreviewModal .invoiceNumber2").hide();
+          // } else {
+          //   $("#templatePreviewModal .invoiceNumber2").show();
+          // }
+          $("#templatePreviewModal .io2").text(object_invoce[0]["invoicenumber"]);
+    
+          // if (object_invoce[0]["refnumber"] == "") {
+          //   $("#templatePreviewModal .refNumber2").hide();
+          // } else {
+          //   $("#templatePreviewModal .refNumber2").show();
+          // }
+          $("#templatePreviewModal .ro2").text(object_invoce[0]["refnumber"]);
+    
+          // if (object_invoce[0]["duedate"] == "") {
+          //   $("#templatePreviewModal .pdfTerms2").hide();
+          // } else {
+          //   $("#templatePreviewModal .pdfTerms2").show();
+          // }
+          if (object_invoce[0]["duedate"] != "")
+            $("#templatePreviewModal .due2").text("Due Date: " + convertDateFormatForPrint2(object_invoce[0]["duedate"]));
+    
+          //   table header
+          var tbl_header = $("#templatePreviewModal .tbl_header");
+          tbl_header.empty();
+          for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
+            tbl_header.append(
+              "<th style='background:white;width:" +
+                value +
+                "%'; color: rgb(0 0 0);'>" +
+                key +
+                "</th>"
+            );
+          }
+        }
+      }
+    
+      function loadTemplateHeaderFooter3(object_invoce) {
+        if (object_invoce.length > 0) {
+        //   if (object_invoce[0]["supplier_addr"] == "") {
+        //     $("#templatePreviewModal .pdfCustomerAddress3").hide();
+        //   } else {
+        //     $("#templatePreviewModal .pdfCustomerAddress3").show();
+        //   }
+          $("#templatePreviewModal .pdfCustomerAddress3").empty();
+          let txabillingAddress = object_invoce[0]["supplier_addr"];
+          if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
+            txabillingAddress = txabillingAddress.replace(/\n/g, '<br/>');
+          $("#templatePreviewModal .pdfCustomerAddress3").html(
+            txabillingAddress
+          );
+    
+          $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"].toUpperCase());
+          $("#templatePreviewModal .toLabel3").text(object_invoce[0]["title"].toUpperCase() + " TO: ");
+          $("#templatePreviewModal .dateLabel3").text(object_invoce[0]["title"].toUpperCase() + " DATE: ");
+        //   $("#templatePreviewModal .invNumber3").text(object_invoce[0]["title"].toUpperCase() + " NUMBER");
+    
+          $("#templatePreviewModal .modal-title").text(
+            object_invoce[0]["title"] + " " + " Template"
+          );
+    
+          $("#templatePreviewModal .bankname3").text(localStorage.getItem("vs1companyBankName"));
+          $("#templatePreviewModal .ban3").text(localStorage.getItem('vs1companyBankAccountName'));
+          $("#templatePreviewModal .swift3").text(object_invoce[0]["swift"]);
+          $("#templatePreviewModal .account_number3").text(object_invoce[0]["account"]);
+          
+          let companyName = Session.get("vs1companyName");
+          let companyReg = Session.get("vs1companyReg");
+          let companyAddr = Session.get("vs1companyaddress1");
+          if (companyAddr == "")
+            companyAddr = Session.get("vs1companyaddress2");
+          let companyCity = Session.get("vs1companyCity");
+          let companyState = Session.get("companyState");
+          let companyPostcode = Session.get("vs1companyPOBox");
+          let companyCountry = Session.get("vs1companyCountry");
+          let companyPhone = Session.get("vs1companyPhone");
+          let companyURL = Session.get("vs1companyURL");
+    
+          $("#templatePreviewModal .o_name3").text(companyName);
+          $("#templatePreviewModal .o_address3").text(companyAddr);
+          $("#templatePreviewModal .o_city3").text(companyCity);
+          $("#templatePreviewModal .o_state3").text(companyState + " " + companyPostcode);
+          if (companyPhone != "")
+            $("#templatePreviewModal .o_phone3").text(companyPhone.substring(0, 4) + " " + companyPhone.substring(4, 7) + " " + companyPhone.substring(7, companyPhone.length));
+          $("#templatePreviewModal .o_email3").text(localStorage.getItem("VS1Accountant"));
+          $("#templatePreviewModal .o_url3").text(companyURL);
+    
+          if (LoggedCountry == "South Africa")
+            $("#templatePreviewModal .o_abn_label3").text("VAT No:");
+          else
+            $("#templatePreviewModal .o_abn_label3").text("ABN:");
+          
+          let companyABN = object_invoce[0]["o_abn"];
+          if (companyABN != "")
+            $("#templatePreviewModal .o_abn3").text(companyABN.substring(0, 2) + " " + companyABN.substring(2, 5) + " " + companyABN.substring(5, 8) + " " + companyABN.substring(8, companyABN.length));
+          
+          if (object_invoce[0]["date"] != "")
+            $("#templatePreviewModal .date3").text(convertDateFormatForPrint3(object_invoce[0]["date"]));
+    
+          // if (object_invoce[0]["invoicenumber"] == "") {
+          //   $("#templatePreviewModal .invoiceNumber2").hide();
+          // } else {
+          //   $("#templatePreviewModal .invoiceNumber2").show();
+          // }
+          $("#templatePreviewModal .io3").text(object_invoce[0]["invoicenumber"]);
+    
+          // if (object_invoce[0]["refnumber"] == "") {
+          //   $("#templatePreviewModal .refNumber2").hide();
+          // } else {
+          //   $("#templatePreviewModal .refNumber2").show();
+          // }
+          $("#templatePreviewModal .ro3").text(object_invoce[0]["refnumber"]);
+    
+          $("#templatePreviewModal .po3").text(object_invoce[0]["pqnumber"]);
+          $("#templatePreviewModal .amountdue3").text(object_invoce[0]["bal_due"]);
+    
+          // if (object_invoce[0]["duedate"] == "") {
+          //   $("#templatePreviewModal .pdfTerms2").hide();
+          // } else {
+          //   $("#templatePreviewModal .pdfTerms2").show();
+          // }
+          if (object_invoce[0]["duedate"] != "")
+            $("#templatePreviewModal .due3").text(convertDateFormatForPrint2(object_invoce[0]["duedate"]));
+          $("#templatePreviewModal .termdays").text($("#sltTerms").val());
+          $("#templatePreviewModal .termdesc").text(Session.get("ERPTermDesc") || "-");
+    
+          //   table header
+          var tbl_header = $("#templatePreviewModal .tbl_header");
+          tbl_header.empty();
+          for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
+            tbl_header.append(
+              "<th style='background:white;width:" +
+                value +
+                "%'; color: rgb(0 0 0);'>" +
+                key +
+                "</th>"
+            );
+          }
+        }
+      }
+
+    function updateTemplate1(object_invoce) {
+        $("#html-2-pdfwrapper_sale").show();
+        $("#html-2-pdfwrapper_sale2").hide();
+        $("#html-2-pdfwrapper_sale3").hide();
+        $("#templatePreviewModal").modal("toggle");
+        loadTemplateHeaderFooter1(object_invoce);
+
+        if (object_invoce[0]["taxItems"]) {
+
+            let taxItems = object_invoce[0]["taxItems"];
+            if(taxItems && Object.keys(taxItems).length>0) {
+                $("#templatePreviewModal #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $${taxItems[code].toFixed(3)}</p>
+                            </div>
+                        </div>
+                    `;
+                    $("#templatePreviewModal #tax_list_print").append(html);
+                });
+            } else {
+                $("#templatePreviewModal #tax_list_print").remove();
+            }
+        }
+        $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
+
+        // table content
+         var tbl_content = $("#templatePreviewModal .tbl_content")
+         tbl_content.empty()
+         const data = object_invoce[0]["data"]
+
+         for(item of data){
+
+            var html = '';
+             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+             for(item_temp of item){
+                html = html + "<td>" + item_temp + "</td>";
+             }
+
+
+            html +="</tr>";
+            tbl_content.append(html);
+
+         }
+
+        // total amount
+
+        if(object_invoce[0]["title"] == "Delivery Docket")
+        {
+              $('.hp').css('display','none');
+
+        }
+
+        if(object_invoce[0]["subtotal"] == "")
+        {
+            $("#templatePreviewModal .field_amount").hide();
+        }
+        else
+        {
+            $("#templatePreviewModal .field_amount").show();
+            if(object_invoce[0]["subtotal"] != ""){
+              $('#templatePreviewModal #subtotal_total').text("Sub total");
+              $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+            }
+            if(object_invoce[0]["gst"] != ""){
+
+
+                $('#templatePreviewModal #grandTotal').text("Grand total");
+                $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+            }
+
+            if(object_invoce[0]["total"] != ""){
+                $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
+            }
+
+            if(object_invoce[0]["bal_due"] != ""){
+                $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+            }
+
+            if(object_invoce[0]["paid_amount"] != ""){
+                $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
+            }
+
+        }
+
+
+    }
+
+    function updateTemplate2(object_invoce) {
+        $("#html-2-pdfwrapper_sale").hide();
+        $("#html-2-pdfwrapper_sale2").show();
+        $("#html-2-pdfwrapper_sale3").hide();
+        $("#templatePreviewModal").modal("toggle");
+        loadTemplateHeaderFooter2(object_invoce);
+
+        if (object_invoce[0]["taxItems"]) {
+
+            let taxItems = object_invoce[0]["taxItems"];
+            if(taxItems && Object.keys(taxItems).length>0) {
+                $("#templatePreviewModal #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $${taxItems[code].toFixed(3)}</p>
+                            </div>
+                        </div>
+                    `;
+                    $("#templatePreviewModal #tax_list_print").append(html);
+                });
+            } else {
+                $("#templatePreviewModal #tax_list_print").remove();
+            }
+        }
+        $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
+
+        // table content
+         var tbl_content = $("#templatePreviewModal .tbl_content")
+         tbl_content.empty()
+         const data = object_invoce[0]["data"]
+
+         for(item of data){
+
+            var html = '';
+             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+             for(item_temp of item){
+                html = html + "<td>" + item_temp + "</td>";
+             }
+
+
+            html +="</tr>";
+            tbl_content.append(html);
+
+         }
+
+        // total amount
+
+        if(object_invoce[0]["title"] == "Delivery Docket")
+        {
+              $('.hp').css('display','none');
+
+        }
+
+        if(object_invoce[0]["subtotal"] == "")
+        {
+            $("#templatePreviewModal .field_amount").hide();
+        }
+        else
+        {
+            $("#templatePreviewModal .field_amount").show();
+            if(object_invoce[0]["subtotal"] != ""){
+              $('#templatePreviewModal #subtotal_total').text("Sub total");
+              $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+            }
+            if(object_invoce[0]["gst"] != ""){
+
+
+                $('#templatePreviewModal #grandTotal').text("Grand total");
+                $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+            }
+
+            if(object_invoce[0]["total"] != ""){
+                $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
+            }
+
+            if(object_invoce[0]["bal_due"] != ""){
+                $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+            }
+
+            if(object_invoce[0]["paid_amount"] != ""){
+                $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
+            }
+
+        }
+
+
+    }
+
+    function updateTemplate3(object_invoce) {
+        $("#html-2-pdfwrapper_sale").hide();
+        $("#html-2-pdfwrapper_sale2").hide();
+        $("#html-2-pdfwrapper_sale3").show();
+        $("#templatePreviewModal").modal("toggle");
+        loadTemplateHeaderFooter3(object_invoce);
 
         if (object_invoce[0]["taxItems"]) {
 
@@ -2397,7 +2855,35 @@ Template.new_salesorder.onRendered(function () {
         templateObject.getSalesCustomFieldsList()
     },500);
 
-   
+    /**
+     * 
+     * Loading the saleOrders
+     * Loading the current SaleOrder
+     */
+    this.loadSaleOrder = async (refresh = false) => {
+        const SaleOrderId = FlowRouter.current().queryParams.id;
+
+        let data = await CachedHttp.get(erpObject.TSalesOrderEx, async () => {
+            return await accountService.getOneSalesOrderdataEx(currentSalesOrder);
+        }, {
+            forceOverride: refresh,
+            validate: (cachedResponse) => {
+                return true;
+            }
+        });
+
+        data = data.response;
+        let saleOrders = data.tsalesorderex;
+        let saleOrder = saleOrders.find(s => s.fields.ID == SaleOrderId);
+
+        await this.saleOrders.set(saleOrders);
+        await this.saleOrder.set(saleOrder);
+
+
+    }
+
+    this.loadSaleOrder();
+
     let url = FlowRouter.current().path;
     let bankDetails = Session.get('vs1companyBankDetails') || '';
     //$('.bankDetails').html(bankDetails.replace(/[\r\n]/g, "<br />"));
@@ -5182,239 +5668,239 @@ Template.new_salesorder.onRendered(function () {
 
     });
 
-    // /* On clik Inventory Line */
-    // $(document).on("click", "#tblInventory tbody tr", async function(e) {
-    //     $(".colProductName").removeClass('boldtablealertsborder');
-    //     let selectLineID = $('#selectLineID').val();
-    //     let taxcodeList = await templateObject.taxraterecords.get();
-    //     let customers = await templateObject.clientrecords.get();
-    //     let productExtraSell = templateObject.productextrasellrecords.get();
+    /* On clik Inventory Line */
+    $(document).on("click", "#tblInventory tbody tr", async function(e) {
+        $(".colProductName").removeClass('boldtablealertsborder');
+        let selectLineID = $('#selectLineID').val();
+        let taxcodeList = await templateObject.taxraterecords.get();
+        let customers = await templateObject.clientrecords.get();
+        let productExtraSell = templateObject.productextrasellrecords.get();
 
 
-    //     var table = $(this);
-    //     let utilityService = new UtilityService();
-    //     let $tblrows = $("#tblSalesOrderLine tbody tr");
-    //     var $printrows = $(".sales_print tbody tr");
-    //     let taxcode1 = "";
-    //     let selectedCust = $('#edtCustomerName').val();
-    //     let getCustDetails = "";
-    //     let lineTaxRate = "";
-    //     let taxRate = ""
-    //     if (selectedCust != "") {
-    //         getCustDetails = customers.filter(customer => {
-    //             return customer.customername == selectedCust
-    //         });
-    //         if (getCustDetails.length > 0) {
-    //         taxRate = taxcodeList.filter(taxrate => {
-    //             return taxrate.codename == getCustDetails[0].taxCode
-    //         });
-    //         if (taxRate.length > 0) {
-    //             if (taxRate.codename != "") {
-    //                 lineTaxRate = taxRate[0].codename
-    //             } else {
-    //                 lineTaxRate = table.find(".taxrate").text();
-    //             }
-    //         } else {
-    //             lineTaxRate = table.find(".taxrate").text();
-    //         }
+        var table = $(this);
+        let utilityService = new UtilityService();
+        let $tblrows = $("#tblSalesOrderLine tbody tr");
+        var $printrows = $(".sales_print tbody tr");
+        let taxcode1 = "";
+        let selectedCust = $('#edtCustomerName').val();
+        let getCustDetails = "";
+        let lineTaxRate = "";
+        let taxRate = ""
+        if (selectedCust != "") {
+            getCustDetails = customers.filter(customer => {
+                return customer.customername == selectedCust
+            });
+            if (getCustDetails.length > 0) {
+            taxRate = taxcodeList.filter(taxrate => {
+                return taxrate.codename == getCustDetails[0].taxCode
+            });
+            if (taxRate.length > 0) {
+                if (taxRate.codename != "") {
+                    lineTaxRate = taxRate[0].codename
+                } else {
+                    lineTaxRate = table.find(".taxrate").text();
+                }
+            } else {
+                lineTaxRate = table.find(".taxrate").text();
+            }
 
-    //         taxcode1 = getCustDetails[0].taxCode;
-    //       }else{
-    //         lineTaxRate = table.find(".taxrate").text();
-    //       }
-    //     } else {
-    //         lineTaxRate = table.find(".taxrate").text();
-    //     }
+            taxcode1 = getCustDetails[0].taxCode;
+          }else{
+            lineTaxRate = table.find(".taxrate").text();
+          }
+        } else {
+            lineTaxRate = table.find(".taxrate").text();
+        }
 
-    //     if (selectLineID) {
-    //         let lineProductName = table.find(".productName").text();
-    //         let lineProductDesc = table.find(".productDesc").text();
-    //         let lineUnitPrice = table.find(".salePrice").text();
-    //         let lineExtraSellPrice = JSON.parse(table.find(".colExtraSellPrice").text()) || null;
-    //         let getCustomerClientTypeName = $('#edtCustomerUseType').val() || 'Default';
-    //         let getCustomerDiscount = parseFloat($('#edtCustomerUseDiscount').val()) || 0;
-    //         let getCustomerProductDiscount = 0;
-    //         let discountAmount = getCustomerDiscount;
-    //         if (lineExtraSellPrice != null) {
-    //             for (let e = 0; e < lineExtraSellPrice.length; e++) {
-    //                 if (lineExtraSellPrice[e].fields.ClientTypeName === getCustomerClientTypeName) {
-    //                     getCustomerProductDiscount = parseFloat(lineExtraSellPrice[e].fields.QtyPercent1) || 0;
-    //                     if (getCustomerProductDiscount > getCustomerDiscount) {
-    //                         discountAmount = getCustomerProductDiscount;
-    //                     }
-    //                 }
+        if (selectLineID) {
+            let lineProductName = table.find(".productName").text();
+            let lineProductDesc = table.find(".productDesc").text();
+            let lineUnitPrice = table.find(".salePrice").text();
+            let lineExtraSellPrice = JSON.parse(table.find(".colExtraSellPrice").text()) || null;
+            let getCustomerClientTypeName = $('#edtCustomerUseType').val() || 'Default';
+            let getCustomerDiscount = parseFloat($('#edtCustomerUseDiscount').val()) || 0;
+            let getCustomerProductDiscount = 0;
+            let discountAmount = getCustomerDiscount;
+            if (lineExtraSellPrice != null) {
+                for (let e = 0; e < lineExtraSellPrice.length; e++) {
+                    if (lineExtraSellPrice[e].fields.ClientTypeName === getCustomerClientTypeName) {
+                        getCustomerProductDiscount = parseFloat(lineExtraSellPrice[e].fields.QtyPercent1) || 0;
+                        if (getCustomerProductDiscount > getCustomerDiscount) {
+                            discountAmount = getCustomerProductDiscount;
+                        }
+                    }
 
-    //             }
-    //         } else {
-    //             discountAmount = getCustomerDiscount;
-    //         }
+                }
+            } else {
+                discountAmount = getCustomerDiscount;
+            }
 
-    //         $('#' + selectLineID + " .lineDiscount").text(discountAmount);
+            $('#' + selectLineID + " .lineDiscount").text(discountAmount);
 
-    //         let lineTaxCode = 0;
-    //         let lineAmount = 0;
-    //         let lineTaxAmount = 0;
-    //         let subGrandTotal = 0;
-    //         let taxGrandTotal = 0;
+            let lineTaxCode = 0;
+            let lineAmount = 0;
+            let lineTaxAmount = 0;
+            let subGrandTotal = 0;
+            let taxGrandTotal = 0;
 
-    //         let subDiscountTotal = 0; // New Discount
-    //         let taxGrandTotalPrint = 0;
-    //         if (taxcodeList) {
-    //             for (var i = 0; i < taxcodeList.length; i++) {
-    //                 if (taxcodeList[i].codename == lineTaxRate) {
+            let subDiscountTotal = 0; // New Discount
+            let taxGrandTotalPrint = 0;
+            if (taxcodeList) {
+                for (var i = 0; i < taxcodeList.length; i++) {
+                    if (taxcodeList[i].codename == lineTaxRate) {
 
-    //                     $('#' + selectLineID + " .lineTaxRate").text(taxcodeList[i].coderate);
-    //                 }
-    //             }
-    //         }
+                        $('#' + selectLineID + " .lineTaxRate").text(taxcodeList[i].coderate);
+                    }
+                }
+            }
 
-    //         $('#' + selectLineID + " .lineProductName").val(lineProductName);
-    //         $('#' + selectLineID + " .lineProductName").attr("prodid", table.find(".colProuctPOPID").text());
-    //         $('#' + selectLineID + " .lineProductDesc").text(lineProductDesc);
-    //         $('#' + selectLineID + " .lineOrdered").val(1);
-    //         $('#' + selectLineID + " .lineQty").val(1);
-    //         $('#' + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
-
-
-    //         templateObject.checkAbleToMakeWorkOrder();
-
-    //         if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-    //             $('#' + selectLineID + " #lineProductName").text(lineProductName);
-    //             $('#' + selectLineID + " #lineProductDesc").text(lineProductDesc);
-    //             $('#' + selectLineID + " #lineOrdered").text(1);
-    //             $('#' + selectLineID + " #lineQty").text(1);
-    //             $('#' + selectLineID + " #lineUnitPrice").text(lineUnitPrice);
-    //         }
-
-    //         if (lineTaxRate == "NT") {
-    //             lineTaxRate = "E";
-    //             $('#' + selectLineID + " .lineTaxCode").val(lineTaxRate);
-    //             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-    //                 $('#' + selectLineID + " #lineTaxCode").text(lineTaxRate);
-    //             }
-
-    //         } else {
-    //             $('#' + selectLineID + " .lineTaxCode").val(lineTaxRate);
-    //             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-    //                 $('#' + selectLineID + " #lineTaxCode").text(lineTaxRate);
-    //             }
-    //         }
-
-    //         lineAmount = 1 * Number(lineUnitPrice.replace(/[^0-9.-]+/g, "")) || 0;
-    //         $('#' + selectLineID + " .lineAmt").text(utilityService.modifynegativeCurrencyFormat(lineAmount));
-    //         if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-    //             $('#' + selectLineID + " #lineAmt").text(utilityService.modifynegativeCurrencyFormat(lineAmount));
-    //         }
-    //         $('#productListModal').modal('toggle');
-    //         let subGrandTotalNet = 0;
-    //         let taxGrandTotalNet = 0;
-    //         $tblrows.each(function(index) {
-    //             var $tblrow = $(this);
-    //             var qty = $tblrow.find(".lineQty").val() || 0;
-    //             var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-    //             var taxRate = $tblrow.find(".lineTaxCode").val();
-
-    //             var taxrateamount = 0;
-    //             if (taxcodeList) {
-    //                 for (var i = 0; i < taxcodeList.length; i++) {
-    //                     if (taxcodeList[i].codename == taxRate) {
-    //                         taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-    //                     }
-    //                 }
-    //             }
-
-    //             var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-    //             var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-    //             var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
-    //             let lineTotalAmount = subTotal + taxTotal;
-
-    //             let lineDiscountTotal = lineDiscountPerc / 100;
-
-    //             var discountTotal = lineTotalAmount * lineDiscountTotal;
-    //             var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-    //             var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
-    //             var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-    //             var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-    //             if (!isNaN(discountTotal)) {
-    //                 subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
-
-    //                 document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-    //             }
-    //             $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
-
-    //             let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
-    //             let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
-    //             let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
-    //             $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
-    //             $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
-
-    //             if (!isNaN(subTotal)) {
-    //               $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-    //               $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
-    //                 subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
-    //                 subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-    //                 document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-    //             }
-
-    //             if (!isNaN(taxTotal)) {
-    //                 taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
-    //                 taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-    //                 document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-    //             }
+            $('#' + selectLineID + " .lineProductName").val(lineProductName);
+            $('#' + selectLineID + " .lineProductName").attr("prodid", table.find(".colProuctPOPID").text());
+            $('#' + selectLineID + " .lineProductDesc").text(lineProductDesc);
+            $('#' + selectLineID + " .lineOrdered").val(1);
+            $('#' + selectLineID + " .lineQty").val(1);
+            $('#' + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
 
 
+            templateObject.checkAbleToMakeWorkOrder();
 
-    //             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-    //                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-    //                 let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
-    //                 document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-    //                 document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-    //                 document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-    //                 document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                $('#' + selectLineID + " #lineProductName").text(lineProductName);
+                $('#' + selectLineID + " #lineProductDesc").text(lineProductDesc);
+                $('#' + selectLineID + " #lineOrdered").text(1);
+                $('#' + selectLineID + " #lineQty").text(1);
+                $('#' + selectLineID + " #lineUnitPrice").text(lineUnitPrice);
+            }
 
-    //             }
-    //         });
+            if (lineTaxRate == "NT") {
+                lineTaxRate = "E";
+                $('#' + selectLineID + " .lineTaxCode").val(lineTaxRate);
+                if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                    $('#' + selectLineID + " #lineTaxCode").text(lineTaxRate);
+                }
 
-    //         //if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-    //         $printrows.each(function(index) {
-    //             var $printrows = $(this);
-    //             var qty = $printrows.find("#lineQty").text() || 0;
-    //             var price = $printrows.find("#lineUnitPrice").text() || "0";
-    //             var taxrateamount = 0;
-    //             var taxRate = $printrows.find("#lineTaxCode").text();
-    //             if (taxcodeList) {
-    //                 for (var i = 0; i < taxcodeList.length; i++) {
-    //                     if (taxcodeList[i].codename == taxRate) {
-    //                         taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-    //                     }
-    //                 }
-    //             }
+            } else {
+                $('#' + selectLineID + " .lineTaxCode").val(lineTaxRate);
+                if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                    $('#' + selectLineID + " #lineTaxCode").text(lineTaxRate);
+                }
+            }
 
-    //             var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-    //             var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-    //             $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
-    //             if (!isNaN(subTotal)) {
-    //                 $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-    //                 subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-    //                 document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
-    //             }
+            lineAmount = 1 * Number(lineUnitPrice.replace(/[^0-9.-]+/g, "")) || 0;
+            $('#' + selectLineID + " .lineAmt").text(utilityService.modifynegativeCurrencyFormat(lineAmount));
+            if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                $('#' + selectLineID + " #lineAmt").text(utilityService.modifynegativeCurrencyFormat(lineAmount));
+            }
+            $('#productListModal').modal('toggle');
+            let subGrandTotalNet = 0;
+            let taxGrandTotalNet = 0;
+            $tblrows.each(function(index) {
+                var $tblrow = $(this);
+                var qty = $tblrow.find(".lineQty").val() || 0;
+                var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+                var taxRate = $tblrow.find(".lineTaxCode").val();
 
-    //             if (!isNaN(taxTotal)) {
-    //                 taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
-    //                 // document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
-    //             }
-    //             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-    //                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-    //                 document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
-    //                 //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-    //                 document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+                var taxrateamount = 0;
+                if (taxcodeList) {
+                    for (var i = 0; i < taxcodeList.length; i++) {
+                        if (taxcodeList[i].codename == taxRate) {
+                            taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+                        }
+                    }
+                }
 
-    //             }
-    //         });
-    //         //}
+                var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+                var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+                var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+                let lineTotalAmount = subTotal + taxTotal;
 
-    //     }
-    // });
+                let lineDiscountTotal = lineDiscountPerc / 100;
+
+                var discountTotal = lineTotalAmount * lineDiscountTotal;
+                var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+                var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+                var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+                var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+                if (!isNaN(discountTotal)) {
+                    subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+
+                    document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+                }
+                $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
+
+                let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
+                let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
+                let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
+                $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+                $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
+
+                if (!isNaN(subTotal)) {
+                  $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                  $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+                    subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
+                    subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+                    document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+                }
+
+                if (!isNaN(taxTotal)) {
+                    taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
+                    taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+                    document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+                }
+
+
+
+                if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+                    let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+                    let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
+                    document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+                    document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                    document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                    document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+
+                }
+            });
+
+            //if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+            $printrows.each(function(index) {
+                var $printrows = $(this);
+                var qty = $printrows.find("#lineQty").text() || 0;
+                var price = $printrows.find("#lineUnitPrice").text() || "0";
+                var taxrateamount = 0;
+                var taxRate = $printrows.find("#lineTaxCode").text();
+                if (taxcodeList) {
+                    for (var i = 0; i < taxcodeList.length; i++) {
+                        if (taxcodeList[i].codename == taxRate) {
+                            taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+                        }
+                    }
+                }
+
+                var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+                var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+                $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
+                if (!isNaN(subTotal)) {
+                    $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                    subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+                    document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
+                }
+
+                if (!isNaN(taxTotal)) {
+                    taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+                    // document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+                }
+                if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+                    let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+                    document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
+                    //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                    document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+
+                }
+            });
+            //}
+
+        }
+    });
     $(document).on("click", "#tblTaxRate tbody tr", function(e) {
         let selectLineID = $('#selectLineID').val();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -7610,59 +8096,6 @@ Template.new_salesorder.onRendered(function() {
 
 Template.new_salesorder.onRendered(function () {
 
-     /**
-     * 
-     * Loading the saleOrders
-     * Loading the current SaleOrder
-     */
-      this.loadSaleOrder = async (refresh = false) => {
-        const SaleOrderId = FlowRouter.current().queryParams.id;
-
-        let data = await CachedHttp.get(erpObject.TSalesOrderEx, async () => {
-            return await accountService.getOneSalesOrderdataEx(currentSalesOrder);
-        }, {
-            forceOverride: refresh,
-            validate: (cachedResponse) => {
-                return true;
-            }
-        });
-
-        data = data.response;
-        let saleOrders = data.tsalesorderex;
-        let saleOrder = saleOrders.some(s => s.fields.ID == SaleOrderId) 
-            ? saleOrders.find(s => s.fields.ID == SaleOrderId)
-            : this.newSaleOrder();
-
-        await this.saleOrders.set(saleOrders);
-        await this.saleOrder.set(saleOrder);
-
-        console.log(
-                "sale Order", 
-                saleOrders, 
-                saleOrder
-            );
-
-    }
-
-
-    /**
-     * This will generate an object if no object
-     * If new object generated, that means is wasn't in the 
-     */
-    this.newSaleOrder = () => {
-        const saleOrder = {
-            type: "TSalesOrderEx",
-            fields: {
-                Lines: [],
-            }
-        }
-
-        return saleOrder;
-
-    }
-   
-
-
     this.loadProducts = async (refresh = false) => {
         let data = await CachedHttp.get(erpObject.TProductVS1, async () => {
             return await productService.getNewProductListVS1();
@@ -7681,29 +8114,16 @@ Template.new_salesorder.onRendered(function () {
         await this.products.set(products);
     }
 
-
-    /**
-     * This will add a new line, 
-     * It will also generate the new line object
-     */
     this.addLine = () => {
         let saleOrder = this.saleOrder.get();
 
-        let lines = saleOrder.fields.Lines;
+        let lines = saleOrder.fields.Lines || [];
 
         // This will ad an empty line
         lines.push({
             vId: Random.id(),
             type: "TSalesOrderLine",
             fields: {
-                ProductName: '',
-                ProductDescription: '',
-                UOMQtySold: 0,
-                UOMQtyShipped: 0,
-                LinePrice: 0,
-                Headershipdate: "",
-                LineTaxCode:  '',
-                DiscountPercent: 0
             }
         });
 
@@ -7741,8 +8161,6 @@ Template.new_salesorder.onRendered(function () {
         let saleOrder = await this.saleOrder.get();
         let lines = saleOrder.fields.Lines;
 
-        console.log("lines", lines);
-
         const findProductById = async (pId) => {
             let products = await this.products.get();
             products = products.map(p => p.fields);
@@ -7750,46 +8168,15 @@ Template.new_salesorder.onRendered(function () {
             return products.find(p => p.ID == pId);
         }
 
-        /**
-         * This function will generate the object for the line
-         */
-        const buildSaleOrderLineObjectFromProduct = async (product) => {
-
-            console.log('product', product);
-
-    
-            const saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-            const saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
-            
-            const saleOrderLineObject = {
-                type: "TSalesOrderLine",
-                fields: {
-                    ProductName: product.ProductName,
-                    ProductDescription: product.SalesDescription,
-                    UOMQtySold: product.TotalQtyInStock,
-                    UOMQtyShipped: product.TotalQtyInStock,
-                    LinePrice: 0,
-                    Headershipdate: saleDate,
-                    LineTaxCode:  '',
-                    DiscountPercent: 0
-
-                }
-
-            }
-
-            return saleOrderLineObject.fields;
-        }
-
         await GlobalFunctions.asyncForEach(lines, async (line, i) => {
             if(line.vId == vId) {
-                lines[i].fields = await buildSaleOrderLineObjectFromProduct(await findProductById(productId));
-                console.log("fieldssssss", lines[i].fields);
+                lines[i].fields = await findProductById(productId);
+              
             }
         })
 
         saleOrder.fields.Lines = lines;
 
-        console.log("lines----", lines);
 
         await this.saleOrder.set(saleOrder);
     }
@@ -7797,7 +8184,6 @@ Template.new_salesorder.onRendered(function () {
 
     this.initPage = async (refresh = false) => {
 
-        await this.loadSaleOrder(refresh);
         await this.loadProducts(refresh);
 
     }
@@ -7942,11 +8328,10 @@ Template.new_salesorder.helpers({
         return phone;
     },
     companyabn: () => { //Update Company ABN
-      let countryABNValue = "ABN: " + Session.get('vs1companyABN');
-      if(LoggedCountry== "South Africa"){
-        countryABNValue = "Vat No: " + Session.get('vs1companyABN');;
-      }
-
+        let countryABNValue = Session.get("vs1companyABN");
+        // if (LoggedCountry == "South Africa") {
+        //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+        // }      
         return countryABNValue;
     },
     companyReg: () => { //Add Company Reg
@@ -7955,7 +8340,7 @@ Template.new_salesorder.helpers({
         countryRegValue = "Reg No: " + Session.get('vs1companyReg');
       }
 
-        return countryRegValue;
+    return countryRegValue;
     },
     organizationname: () => {
         return Session.get('vs1companyName');
@@ -7988,7 +8373,7 @@ Template.new_salesorder.helpers({
         return defaultCurrencyCode;
     },
     convertToForeignAmount: (amount) => {
-        console.log("amount to vonvert", amount);
+      
         return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
     },
 
@@ -8016,13 +8401,13 @@ Template.new_salesorder.helpers({
 
     saleOrder: () => {
         let _saleOrder = Template.instance().saleOrder.get();
-        console.log("saleOrder helper", _saleOrder);
+      
 
         return _saleOrder.fields;
     },
     saleOrderLines: () => {
         let _saleOrder = Template.instance().saleOrder.get();
-        console.log("saleOrder helper", _saleOrder);
+  
 
         return _saleOrder.fields.Lines;
     }
@@ -13241,10 +13626,12 @@ Template.new_salesorder.events({
         const productName = productTr.find('.productName').text();
         const productId = productTr.find('.colProuctPOPID').text();
 
-        const vId = $('.paste-product-here').closest("tr").attr('v-id');
+        const vId = $('.paste-product-here').attr('v-id');
         await ui.addProductToVid(vId, productId);
         $('.paste-product-here').removeClass('paste-product-here');
         $('#productListModal').modal('toggle'); // show modal
+
+
     },
 
     'click .lineProductName, keydown .lineProductName': (event, ui) => {

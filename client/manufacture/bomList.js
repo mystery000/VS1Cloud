@@ -242,7 +242,7 @@ Template.bom_list.events({
                                 if(index == -1) {
                                   bomProducts.push(objDetails)
                                 } else {
-                                  bomProducts.splice(index, 0, objDetails)
+                                  bomProducts.splice(index, 1, objDetails)
                                 } 
                                 localStorage.setItem('TProcTree', bomProducts);
                                 Meteor._reload.reload();

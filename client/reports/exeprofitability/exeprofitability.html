@@ -1,355 +1,171 @@
 <template name="exeprofitabilityreport">
-    <div style="margin-top: -24px;">
-        <div class="fullScreenSpin" style="display:none;">
-            <div class="spinner"></div>
+    {{# vs1_report_template tabledisplayname="Profitability (Executive)" tablename="tblProfitabilityExecutive" dateAsAt=dateAsAt}}
+        <div class="table-responsive">
+            <table class="table table-sm tableExportDetailDiv" id="tableExport" name="tableExport">
+                <thead>
+                    <tr class="table-secondary customDoubleTableHeading">
+                        <th></th>
+                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }} titleMonth1" style="font-weight: 800;"></th>
+                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }} titleMonth2" style="font-weight: 800;"></th>
+                        <th class="text-nowrap text-center text-center{{countActive currencyList }}" style="font-weight: 800;">Variance(%)</th>
+                    </tr>
+                    {{#if isOnlyDefaultActive equal "false" }}
+                        <tr class="table-active tblAvoid customDoubleTableHeading">
+
+                            {{#if currencyList}}
+                                <th class="text-left"></th>
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
+                                        <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+                            <th></th>
+                        </tr>
+                    {{/if}}
+                </thead>
+                <tbody>
+                    <tr class="balacesheettable">
+                        <td class="text-nowrap text-left" style="font-weight: 800;" >
+                            Income
+                        </td>
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount totalSales1 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{totalSales1}}
+                            </td>
+                        {{/if}}
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount totalSales2 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{totalSales2}}
+                            </td>
+                        {{/if}}
+                        <td class="text-nowrap text-right spnTotalSalesVariance" style="font-weight: 800;" >
+                        </td>
+                    </tr>
+                    <tr class="balacesheettable">
+                        <td class="text-nowrap text-left" style="font-weight: 800;" >
+                            Gross Profit
+                        </td>
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount grossProfit1 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{grossProfit1}}
+                            </td>
+                        {{/if}}
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount grossProfit2 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{grossProfit2}}
+                            </td>
+                        {{/if}}
+                        <td class="text-nowrap text-right spnGrossProfitVariance" style="font-weight: 800;" >
+                        </td>
+                    </tr>
+                    <tr class="balacesheettable">
+                        <td class="text-nowrap text-left" style="font-weight: 800;" >
+                            Expenses
+                        </td>
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount totalExpense1 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{totalExpense1}}
+                            </td>
+                        {{/if}}
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount totalExpense2 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{totalExpense2}}
+                            </td>
+                        {{/if}}
+                        <td class="text-nowrap text-right spnTotalExpenseVariance" style="font-weight: 800;" >
+                        </td>
+                    </tr>
+                    <tr class="balacesheettable">
+                        <td class="text-nowrap text-left" style="font-weight: 800;" >
+                            Profit
+                        </td>
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount nettProfit1 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{nettProfit1}}
+                            </td>
+                        {{/if}}
+                        {{#if currencyList}}
+                            {{#each c in currencyList}}
+                                {{#if c.active}}
+                                <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
+                                    {{convertAmount nettProfit2 c}}
+                                </td>
+                                {{/if}}
+                            {{/each}}
+                        {{else}}
+                            <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
+                                {{nettProfit2}}
+                            </td>
+                        {{/if}}
+                        <td class="text-nowrap text-right spnNettProfitVariance" style="font-weight: 800;" >
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
         </div>
-        <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Profitability (Executive) {{> helpbutton}}</h2>
-        </header>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                <div class="modal-dialog modal-sm" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" style="padding-bottom: 8px;">
-                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                        <div class="modal-body">
-                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=34" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                            {{> helpadvisor}}
-                            {{> helpgotoforum}}
-                        </div>
-                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                    </div>
-                </div>
-            </div>
-
-        <style>
-            /* Remove Hyperlinks */
-            @media print {
-                a:link {text-decoration: none !important;}
-                a[href]:after {content: none !important;}
-            }
-        </style>
-
-        <div class="row no-gutters justify-content-center" style="padding: 32px;">
-            <div class="col-12 col-md-7">
-                <div class="card shadow mb-3">
-                    <div class="card-header py-3" style="background-color: rgb(248,249,252);">
-                        <p class="text-primary m-0 font-weight-bold">Profitability</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 col-md-5">
-                                <!-- <div class="row no-gutters">
-
-                                </div> -->
-                                <div class="row no-gutters">
-                                    <div class="form-group" style="margin: 8px;">
-                                        <label>Search:</label>
-                                        <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
-                                    </div>
-                                </div>
-                                <div class="row no-gutters">
-                                    <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                    {{>FxRatesButton}}
-                                </div>
-
-                            </div>
-                            <div class="col-12 col-md-2">
-                                <style>
-                                    #uploadedImage {
-                                        margin: 0 auto !important;
-                                        width: 100%;
-                                    }
-                                </style>
-                                <img class="imageUpload img-fluid mb-3 mt-4" id="uploadedImage" src="assets/img/VS1.png">
-                            </div>
-                            <div class="col-12 col-md-5">
-                                <div class="row no-gutters justify-content-end">
-                                    <div class="form-group" style="margin: 8px;">
-                                        <label>Date At:</label>
-                                        <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control balancedate" id="balancedate" name="balancedate" value="">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row no-gutters justify-content-end">
-                                    <button class="btn btn-primary btnExportReport" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                                    <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="printReport">
-                            <div class="row">
-                                <div class="col">
-                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Profitability</p>
-                                    <p class="text-center" style="margin-bottom: 0px;">{{companyname}}</p>
-                                    <p class="text-center dateAdOf" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <style>
-                                    .customDoubleTableHeading th {
-                                        padding-top: 0px !important;
-                                        padding-bottom: 0px !important;
-                                    }
-                                    .balacesheettable :first-child {
-                                        padding-left: 0px!important;
-                                    }
-                                    .last-balance :first-child {
-                                        text-align: left !important;
-                                    }
-                                    .linkvalue td:first-child a,
-                                    .linkvalue td:first-child {
-                                        text-align: left !important;
-                                        padding-left: 30px;
-                                    }
-                                    .balacesheettable :last-child {
-                                        text-align: right !important;
-                                    }
-                                    .tableExportDetailDiv tr {
-                                        border-top: 1px solid #e3e6f0;
-                                        border-bottom: 1px solid #e3e6f0;
-                                    }
-                                    .tableExportDetailDiv th,
-                                    .tableExportDetailDiv td {
-                                        white-space: nowrap;
-                                        padding: .3rem 1rem;
-                                    }
-                                    .tableExportDetailDiv th {
-                                        text-align: center;
-                                    }
-                                    .tableExportDetailDiv th:first-child,
-                                    .tableExportDetailDiv td:first-child {
-                                        text-align: left !important;
-                                    }
-                                    /* .tableExportDetailDiv th:last-child,
-                                    .tableExportDetailDiv td:last-child {
-                                        text-align: center !important;
-                                    } */
-                                    table tr .text-danger,
-                                    table tr .text-danger a {
-                                        color: #e74a3b !important;
-                                    }
-                                    .customProfitLossTable table th {
-                                        min-width: 170px !important; 
-                                    }
-                                    
-                                    .customDoubleTableHeading + tr th {
-                                        border-right: 1px solid #cbcbcb !important;
-                                    }
-                                    .customDoubleTableHeading + tr th:last-child {
-                                        border-right: none !important;
-                                    }
-                                    .text-center1,
-                                    .text-center0 {
-                                        text-align: right !important;
-                                    }
-                                </style>
-                                <table class="table table-sm tableExportDetailDiv" id="tableExport" name="tableExport">
-                                    <thead>
-                                        <tr class="table-secondary customDoubleTableHeading">
-                                            <th></th>
-                                            <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }} titleMonth1" style="font-weight: 800;"></th>
-                                            <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }} titleMonth2" style="font-weight: 800;"></th>
-                                            <th class="text-nowrap text-center text-center{{countActive currencyList }}" style="font-weight: 800;">Variance(%)</th>
-                                        </tr>
-                                        {{#if isOnlyDefaultActive equal "false" }}
-                                            <tr class="table-active tblAvoid customDoubleTableHeading">
-
-                                                {{#if currencyList}}
-                                                    <th class="text-left"></th>
-                                                    {{#each c in currencyList }}
-                                                        {{# if c.active}}
-                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.code }}</th>
-                                                        {{/if}}
-                                                    {{/each}}
-
-                                                    {{#each c in currencyList }}
-                                                        {{# if c.active}}
-                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.code }}</th>
-                                                        {{/if}}
-                                                    {{/each}}
-                                                {{/if}}
-                                                <th></th>
-                                            </tr>
-                                        {{/if}}
-                                    </thead>
-                                    <tbody>
-                                        <tr class="balacesheettable">
-                                            <td class="text-nowrap text-left" style="font-weight: 800;" >
-                                                Income
-                                            </td>
-                                            {{#if currencyList}}
-                                                {{#each c in currencyList}}
-                                                    {{#if c.active}}
-                                                    <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalSales1 c}}
-                                                    </td>
-                                                    {{/if}}
-                                                {{/each}}
-                                            {{else}}
-                                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalSales1}}
-                                                </td>
-                                            {{/if}}
-                                            {{#if currencyList}}
-                                                {{#each c in currencyList}}
-                                                    {{#if c.active}}
-                                                    <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalSales2 c}}
-                                                    </td>
-                                                    {{/if}}
-                                                {{/each}}
-                                            {{else}}
-                                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalSales2}}
-                                                </td>
-                                            {{/if}}
-                                            <td class="text-nowrap text-right spnTotalSalesVariance" style="font-weight: 800;" >
-                                            </td>
-                                        </tr>
-                                        <tr class="balacesheettable">
-                                            <td class="text-nowrap text-left" style="font-weight: 800;" >
-                                                Gross Profit
-                                            </td>
-                                            {{#if currencyList}}
-                                                {{#each c in currencyList}}
-                                                    {{#if c.active}}
-                                                    <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount grossProfit1 c}}
-                                                    </td>
-                                                    {{/if}}
-                                                {{/each}}
-                                            {{else}}
-                                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{grossProfit1}}
-                                                </td>
-                                            {{/if}}
-                                            {{#if currencyList}}
-                                                {{#each c in currencyList}}
-                                                    {{#if c.active}}
-                                                    <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount grossProfit2 c}}
-                                                    </td>
-                                                    {{/if}}
-                                                {{/each}}
-                                            {{else}}
-                                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{grossProfit2}}
-                                                </td>
-                                            {{/if}}
-                                            <td class="text-nowrap text-right spnGrossProfitVariance" style="font-weight: 800;" >
-                                            </td>
-                                        </tr>
-                                        <tr class="balacesheettable">
-                                            <td class="text-nowrap text-left" style="font-weight: 800;" >
-                                                Expenses
-                                            </td>
-                                            {{#if currencyList}}
-                                                {{#each c in currencyList}}
-                                                    {{#if c.active}}
-                                                    <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalExpense1 c}}
-                                                    </td>
-                                                    {{/if}}
-                                                {{/each}}
-                                            {{else}}
-                                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalExpense1}}
-                                                </td>
-                                            {{/if}}
-                                            {{#if currencyList}}
-                                                {{#each c in currencyList}}
-                                                    {{#if c.active}}
-                                                    <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalExpense2 c}}
-                                                    </td>
-                                                    {{/if}}
-                                                {{/each}}
-                                            {{else}}
-                                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalExpense2}}
-                                                </td>
-                                            {{/if}}
-                                            <td class="text-nowrap text-right spnTotalExpenseVariance" style="font-weight: 800;" >
-                                            </td>
-                                        </tr>
-                                        <tr class="balacesheettable">
-                                            <td class="text-nowrap text-left" style="font-weight: 800;" >
-                                                Profit
-                                            </td>
-                                            {{#if currencyList}}
-                                                {{#each c in currencyList}}
-                                                    {{#if c.active}}
-                                                    <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount nettProfit1 c}}
-                                                    </td>
-                                                    {{/if}}
-                                                {{/each}}
-                                            {{else}}
-                                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{nettProfit1}}
-                                                </td>
-                                            {{/if}}
-                                            {{#if currencyList}}
-                                                {{#each c in currencyList}}
-                                                    {{#if c.active}}
-                                                    <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount nettProfit2 c}}
-                                                    </td>
-                                                    {{/if}}
-                                                {{/each}}
-                                            {{else}}
-                                                <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{nettProfit2}}
-                                                </td>
-                                            {{/if}}
-                                            <td class="text-nowrap text-right spnNettProfitVariance" style="font-weight: 800;" >
-                                            </td>
-                                        </tr>
-                                    </tbody>
-
-                                </table>
-                            </div>
-                        </div>
-                        <!-- <div class="d-xl-flex justify-content-xl-center">
-<button class="btn btn-primary btnPrintReport" type="button" style="margin: 16px;width: 97px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button><button class="btn btn-primary btnExportReport" type="button" style="margin: 16px;width: 97px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-</div> -->
-
-                        {{> poweredby}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Start Help Video Modal -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
-        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-            <div class="modal-content" >
-                <div class="modal-header" >
-                    <h4 class="title-header" >Profitability</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
-                    <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
-                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
-                        <source src="https://erphelpes.com/vs1videos/balancesheetreport.mp4" type="video/mp4">
-                    </video>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- End Help Video Modal -->
-
-    <!-- Start Currency Modal -->
-    {{> FxRateModal currencies=currencyList}}
-     <!-- End Currency Modal -->
-
+    {{/vs1_report_template}}
 </template>

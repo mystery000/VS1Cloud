@@ -21,9 +21,12 @@ import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentc
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
+// import { CustomerCreationSourceFilter } from "square-connect";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let productService = new ProductService();
+let organisationService = new OrganisationService();
 let times = 0;
 let clickedInput = "";
 let isDropDown = false;
@@ -34,7 +37,7 @@ const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (I
 
 let defaultCurrencyCode = CountryAbbr;
 
-Template.new_invoice.onCreated(function () {
+Template.new_invoice.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.isForeignEnabled = new ReactiveVar(false);
 
@@ -271,7 +274,6 @@ Template.new_invoice.onRendered(function() {
     }
     templateObject.init_reset_data();
     // set initial table rest_data
-
     templateObject.getTemplateInfoNew = function() {
         $(".fullScreenSpin").css("display", "inline-block");
         getVS1Data("TTemplateSettings")
@@ -3495,14 +3497,12 @@ Template.new_invoice.onRendered(function() {
             currentInvoice = parseInt(currentInvoice);
             templateObject.getInvoiceData = function() {
                 getVS1Data("TInvoiceEx")
-                    .then(function(dataObject) {
-
+                    .then(async function(dataObject) {
                         if (dataObject.length == 0) {
                             let customerData = templateObject.clientrecords.get();
                             accountService
                                 .getOneInvoicedataEx(currentInvoice)
                                 .then(function(data) {
-
                                     templateObject.singleInvoiceData.set(data);
                                     let cust_result = customerData.filter((cust_data) => {
                                         return cust_data.customername == data.fields.CustomerName;
@@ -3971,7 +3971,6 @@ Template.new_invoice.onRendered(function() {
                             let data = JSON.parse(dataObject[0].data);
 
                             let useData = data.tinvoiceex;
-
                             let customerData = templateObject.clientrecords.get();
 
                             var added = false;
@@ -3985,23 +3984,20 @@ Template.new_invoice.onRendered(function() {
                                         );
                                     });
 
-                                    let apptId = FlowRouter.current().queryParams.apptId;
-                                    if (apptId != undefined && parseInt(apptId) > 0) {
-                                        getVS1Data("TAppointment").then(function(dataObject) {
-                                            let appointments = JSON.parse(dataObject[0].data);
-                                            let allAppointments = appointments.tappointmentex;
-                                            let appointmentAttachments = (appointmentAttachments =
-                                                allAppointments.find((x) => x.fields.ID === parseInt(apptId)).fields.Attachments);
-                                            if (appointmentAttachments.length > 0) {
-                                                templateObject.attachmentCount.set(
-                                                    appointmentAttachments.length
-                                                );
-                                                templateObject.uploadedFiles.set(appointmentAttachments);
-                                            }
-                                        });
-                                    }
+                                    // getVS1Data("TAppointment").then(function (dataObject) {
+                                    //   let appointments = JSON.parse(dataObject[0].data);
+                                    //   let allAppointments = appointments.tappointmentex;
+                                    //   let apptId = FlowRouter.current().queryParams.apptId;
+                                    //   let appointmentAttachments = (appointmentAttachments =
+                                    //     allAppointments.find((x) => x.fields.ID === parseInt(apptId)).fields.Attachments);
+                                    //   if (appointmentAttachments.length > 0) {
+                                    //     templateObject.attachmentCount.set(
+                                    //       appointmentAttachments.length
+                                    //     );
+                                    //     templateObject.uploadedFiles.set(appointmentAttachments);
+                                    //   }
+                                    // });
                                     templateObject.singleInvoiceData.set(useData[d]);
-
                                     let lineItems = [];
                                     let lineItemObj = {};
                                     let lineItemsTable = [];
@@ -4057,6 +4053,7 @@ Template.new_invoice.onRendered(function() {
 
                                     if (useData[d].fields.Lines.length) {
                                         for (let i = 0; i < useData[d].fields.Lines.length; i++) {
+
                                             let AmountGbp =
                                                 currencySymbol +
                                                 "" +
@@ -4146,6 +4143,15 @@ Template.new_invoice.onRendered(function() {
                                                     defaultUOM,
                                                 pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || "",
                                             };
+
+                                            if (i == 0) {
+                                                let getProductInfo = lineItemObj.description.split("Service Provided :")[1];
+                                                getProductInfo = getProductInfo.split(" by ")[0];
+
+                                                let apptServiceInfo = await productService.getProductStatus(getProductInfo);
+                                                lineItemObj.itemID = apptServiceInfo.tproductvs1[0].Id || 0;
+                                            }
+
                                             var dataListTable = [
                                                 useData[d].fields.Lines[i].fields.ProductName || "",
                                                 useData[d].fields.Lines[i].fields.ProductDescription ||
@@ -6242,6 +6248,7 @@ Template.new_invoice.onRendered(function() {
         var total_paid = $("#totalPaidAmt").html() || Currency + 0;
         var ref = $("#edtRef").val() || "-";
         var txabillingAddress = $("#txabillingAddress").val() || "";
+        txabillingAddress = txabillingAddress.replace(/\n/g, '<br/>');
         var dtSODate = $("#dtSODate").val();
         var subtotal_total = $("#subtotal_total").text() || Currency + 0;
         var grandTotal = $("#grandTotal").text() || Currency + 0;
@@ -6398,6 +6405,7 @@ Template.new_invoice.onRendered(function() {
                 supplier_type: "Customer",
                 supplier_name: customer,
                 supplier_addr: txabillingAddress,
+                employee_name: invoice_data.employeename,
                 fields: {
                     "Product Name": "30",
                     Description: "30",
@@ -7154,36 +7162,6 @@ Template.new_invoice.onRendered(function() {
                 break;
         }
     };
-
-
-    /**
-     * This is a rewrite of getting invoiceÒ
-     */
-    this.loadInvoice = async(refresh = false) => {
-        const id = FlowRouter.current().queryParams.id;
-
-        let data = await CachedHttp.get(erpObject.TInvoiceEx, async() => {
-            return await accountService.getOneInvoicedataEx(id);
-        }, {
-            forceOverride: refresh,
-            validate: (cachedResponse) => {
-                return true;
-            }
-        });
-
-        data = data.response;
-        let invoices = data.tinvoiceex.map(i => i.fields);
-        let invoice = null;
-
-        if (id) {
-            invoice = invoices.find(i => i.ID);
-        }
-
-        console.log('new invoice loader', data);
-
-    }
-
-    //this.loadInvoice();
 
     let table;
     if (
@@ -11311,6 +11289,10 @@ Template.new_invoice.onRendered(function() {
             $("#templatePreviewModal .o_city").text(object_invoce[0]["o_city"]);
             $("#templatePreviewModal .o_state").text(object_invoce[0]["o_state"]);
             $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
+            if (LoggedCountry == "South Africa")
+                $("#templatePreviewModal .o_abn_label").text("VAT No");
+            else
+                $("#templatePreviewModal .o_abn_label").text("ABN");
             $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
             $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
 
@@ -11350,9 +11332,11 @@ Template.new_invoice.onRendered(function() {
                 $("#templatePreviewModal .pdfCustomerAddress").show();
             }
             $("#templatePreviewModal .pdfCustomerAddress").empty();
-            $("#templatePreviewModal .pdfCustomerAddress").append(
+            $("#templatePreviewModal .pdfCustomerAddress").html(
                 object_invoce[0]["supplier_addr"]
             );
+
+            $("#templatePreviewModal .employeeName").text(object_invoce[0]["employee_name"]);
 
             $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
             $("#templatePreviewModal .modal-title").text(
@@ -11373,6 +11357,9 @@ Template.new_invoice.onRendered(function() {
                 $("#templatePreviewModal .field_payment").show();
             }
 
+            $("#templatePreviewModal .bankname").text(localStorage.getItem("vs1companyBankName"));
+            $("#templatePreviewModal .bankdesc").text(localStorage.getItem("vs1companyBankDesc"));
+            $("#templatePreviewModal .ban").text("Name : " + localStorage.getItem('vs1companyBankAccountName'));
             $("#templatePreviewModal .bsb").text(
                 "BSB (Branch Number) : " + object_invoce[0]["bsb"]
             );
@@ -11389,7 +11376,21 @@ Template.new_invoice.onRendered(function() {
                 $("#templatePreviewModal .dateNumber").show();
             }
 
-            $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
+            let companyName = Session.get("vs1companyName");
+            let companyReg = Session.get("vs1companyReg");
+            $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN " + companyReg.substring(0, 3) + " " + companyReg.substring(3, 6) + " " + companyReg.substring(6, companyReg.length));
+            let companyAddr = Session.get("vs1companyaddress1");
+            if (companyAddr == "")
+                companyAddr = Session.get("vs1companyaddress2");
+            let companyCity = Session.get("vs1companyCity");
+            let companyState = Session.get("companyState");
+            let companyPostcode = Session.get("vs1companyPOBox");
+            let companyCountry = Session.get("vs1companyCountry");
+            $("#templatePreviewModal .companyInfo2").text(companyAddr + ", " + companyCity + ", " + companyState + " " + companyPostcode + ", " + companyCountry);
+            let companyPhone = Session.get("vs1companyPhone");
+            $("#templatePreviewModal .companyInfo3").text("Ph: " + companyPhone.substring(0, 2) + " " + companyPhone.substring(2, 6) + " " + companyPhone.substring(6, companyPhone.length));
+
+            $("#templatePreviewModal .date").text(convertDateFormatForPrint(object_invoce[0]["date"]));
 
             if (object_invoce[0]["pqnumber"] == "") {
                 $("#templatePreviewModal .pdfPONumber").hide();
@@ -11418,7 +11419,7 @@ Template.new_invoice.onRendered(function() {
             } else {
                 $("#templatePreviewModal .pdfTerms").show();
             }
-            $("#templatePreviewModal .due").text(object_invoce[0]["duedate"]);
+            $("#templatePreviewModal .due").text(convertDateFormatForPrint(object_invoce[0]["duedate"]));
 
             if (object_invoce[0]["paylink"] == "") {
                 $("#templatePreviewModal .link").hide();
@@ -13090,11 +13091,11 @@ Template.new_invoice.onRendered(function() {
  */
 Template.new_invoice.onRendered(function() {
 
-    this.loadCustomers = async (refresh = false) => {
-        let data = await CachedHttp.get(erpObject.TCustomerVS1, async () => {
+    this.loadCustomers = async(refresh = false) => {
+        let data = await CachedHttp.get(erpObject.TCustomerVS1, async() => {
             return await contactService.getOneCustomerDataEx(customerID);
         }, {
-            forceOverride: refresh, 
+            forceOverride: refresh,
             validate: (cachedResponse) => {
                 return true;
             }
@@ -13105,9 +13106,9 @@ Template.new_invoice.onRendered(function() {
         this.customers.set(customers);
     };
 
-    
 
-    this.findCustomerById = async (id = 0) => {
+
+    this.findCustomerById = async(id = 0) => {
         const customers = await this.customers.get();
         const customer = customers.find(c => c.ID == id);
 
@@ -13280,10 +13281,10 @@ Template.new_invoice.helpers({
     },
     companyabn: () => {
         //Update Company ABN
-        let countryABNValue = "ABN: " + Session.get("vs1companyABN");
-        if (LoggedCountry == "South Africa") {
-            countryABNValue = "Vat No: " + Session.get("vs1companyABN");
-        }
+        let countryABNValue = Session.get("vs1companyABN");
+        // if (LoggedCountry == "South Africa") {
+        //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+        // }
         return countryABNValue;
     },
     companyReg: () => {

@@ -1,462 +1,248 @@
 <template name="report1099">
-    <div style="margin-top: -24px;">
-        <div class="fullScreenSpin" style="display:none;">
-            <div class="spinner"></div>
-        </div>
-        <header style="padding: 16px;">
-            <h2 style="margin: 16px;">1099 Contractor {{> helpbutton}}</h2>
-        </header>
+    {{# vs1_report_template tabledisplayname="1099 Contractor" tablename="tbl1099Contractor" dateAsAt=dateAsAt}}
+        <div class="table-responsive">
+            <table class="table table-sm" id="tableExport" name="tableExport">
+                <thead>
+                    <tr class="table-active customDoubleTableHeading">
+                        <th>Company</th>
+                        <th style="width: 130px;">Type</th>
+                        <th>Payment #</th>
+                        <th>Date</th>
+                        <th>Method</th>
+                        <th>Bill Street</th>
+                        <th>Bill Place</th>
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-            <div class="modal-dialog modal-sm" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="padding-bottom: 8px;">
-                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=29" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                        {{> helpadvisor}}
-                        {{> helpgotoforum}}
-                    </div>
-                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                </div>
-            </div>
-        </div>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Card Amount</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Non Card Amount</th>
 
-        <style>
-            @media only screen and (min-width: 1200px) {
+                    </tr>
 
-                .cardB {
-                    width: 1000px;
-                }
-            }
+                    {{#if isOnlyDefaultActive equal "false" }}
+                        <tr class="table-active tblAvoid">
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>  
+                        <th></th>
+                        <th></th>
+                        <th></th>
 
-            /* Remove Hyperlinks */
-            @media print {
-                a:link {
-                    text-decoration: none !important;
-                }
+                        {{#if currencyList}}
+                            {{#each c in currencyList }}
+                            {{# if c.active}}
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                            {{/if}}
+                            {{/each}}
+                        {{/if}}
 
-                a[href]:after {
-                    content: none !important;
-                }
-            }
-        </style>
+                        {{#if currencyList}}
+                            {{#each c in currencyList }}
+                            {{# if c.active}}
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                            {{/if}}
+                            {{/each}}
+                        {{/if}}
 
-        <div class="row no-gutters justify-content-center mb-3" style="padding: 32px;">
-            <div class="col-12 col-md-8">
-                <div class="card shadow mb-3">
-                    <div class="card-header py-3" style="background-color: rgb(248,249,252);">
-                        <p class="text-primary m-0 font-weight-bold">1099 Contractor</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 col-md-5">
-                                <div class="row no-gutters">
-                                    <div class="form-group" style="margin: 8px;">
-                                        <label>Search:</label>
-                                        <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
-                                    </div>
-                                    <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
-                                        <div class="modal-dialog modal-sm" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4>Deparment</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {{#each item in deptrecords}}
-                                                        <div class="custom-control custom-switch" style="margin: 8px;">
-                                                            <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
-                                                            <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
-                                                        </div>
-                                                    {{/each}}
-                                                </div>
-                                                <div class="modal-footer"><button class="btn btn-primary" type="button" data-dismiss="modal"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button><button class="btn btn-light"
-                                                        data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row no-gutters">
-                                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
-                                    {{>FxRatesButton}}
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-2">
-                                <style>
-                                    #uploadedImage {
-                                        margin: 0 auto !important;
-                                        width: 100%;
-                                    }
-                                </style>
-                                <img class="imageUpload img-fluid" id="uploadedImage" src="assets/img/VS1.png">
-                            </div>
-                            <div class="col-12 col-md-5">
-                                <div class="row no-gutters justify-content-end">
-                                    <div class="dropdown" style="margin: 8px;">
-                                        <style>
-                                            .dropdown-toggle::after {
-                                                display: none;
-                                            }
-                                        </style>
-                                        <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 32px;"><i class="fas fa-ellipsis-v"></i></button>
-                                        <div class="dropdown-menu" role="menu">
-                                            <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
-                                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                            <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" style="margin: 8px;">
-                                        <label>From</label>
-                                        <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" style="margin: 8px;">
-                                        <label>To</label>
-                                        <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateTo" name="dateTo">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row no-gutters justify-content-end">
-                                    <button class="btn btn-primary btnExportReport" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                                    <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="printReport">
-                            <div class="row">
-                                <div class="col">
-                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">1099 Contractor</p>
-                                    <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
-                                    <p class="text-center" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <style>
-                                    .totalhr {
-                                        border-top: 2px #858999 solid;
-                                    }
+                        </tr>
+                    {{/if}}
+                </thead>
+                <tbody>
 
-                                    .grandtotal {
-                                        border-top: 2px #858999 solid;
-                                        border-bottom: 2px #858999 solid;
-                                    }
-                                    .table th,
-                                    .table td {
-                                        /* text-align: right; */
-                                        min-width: 150px;
-                                    }
-                                    .table td.text-left {
-                                        text-align: left !important;
-                                    }
-                                    .table th:first-child,
-                                    .table td:first-child {
-                                        text-align: left;
-                                    }
-                                    table tr .text-danger,
-                                    table tr .text-danger a {
-                                        color: #e74a3b !important;
-                                    }
-                                    .customDoubleTableHeading + tr th {
-                                        border-right: 1px solid #cbcbcb !important;
-                                    }
-                                    .customDoubleTableHeading + tr th:last-child {
-                                        border-right: none !important;
-                                    }
-                                    .text-center1,
-                                    .text-center0 {
-                                        text-align: right !important;
-                                    }
-                                </style>
-                                <div class="table-responsive">
-                                    <table class="table table-sm" id="tableExport" name="tableExport">
-                                        <thead>
-                                            <tr class="table-active customDoubleTableHeading">
-                                                <th>Company</th>
-                                                <th style="width: 130px;">Type</th>
-                                                <th>Payment #</th>
-                                                <th>Date</th>
-                                                <th>Method</th>
-                                                <th>Bill Street</th>
-                                                <th>Bill Place</th>
+                    {{#if records}}
+                        {{#each record in records}}
 
-                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Card Amount</th>
-                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Non Card Amount</th>
+                            {{#if record.title}}
+                                <tr class="totalhr">
+                                    <td style="font-weight: 800;">
+                                        <div class="SectionTitle2 report-heading-last">{{record.title}}</div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {{/if}}
 
-                                            </tr>
+                            {{#each item in record.entries}}
+                                <tr class="{{item.type}}" id="{{item.Id}}">
+                                    <div style="display:none;">{{item.Company}}</div>
 
-                                            {{#if isOnlyDefaultActive equal "false" }}
-                                                <tr class="table-active tblAvoid">
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>  
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                        
-                                                {{#if currencyList}}
-                                                    {{#each c in currencyList }}
-                                                    {{# if c.active}}
-                                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                                                    {{/if}}
-                                                    {{/each}}
+                                    <td></td>
+
+                                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                        <a href="#" style="text-decoration:none!important;">{{item.entries.PaymentType}}</a>
+                                    </td>
+
+                                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                        <a href="#" style="text-decoration:none!important;">{{ item.entries.PaymentId }}</a>
+                                    </td>
+
+                                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                        <a href="#" style="text-decoration:none!important;">{{ formatDate item.entries.PaymentDate}}</a>
+                                    </td>
+
+                                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                        <a href="#" style="text-decoration:none!important;">{{  item.entries.PaymentMethod}}</a>
+                                    </td>
+
+                                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                        <a href="#" style="text-decoration:none!important;">{{  item.entries.BillStreet}}</a>
+                                    </td>
+
+                                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                        <a href="#" style="text-decoration:none!important;">{{ item.entries.BillPlace}}</a>
+                                    </td>
+
+                                    {{#if isOnlyDefaultActive }}
+                                        {{#if currencyList}}
+
+                                            {{#each c in currencyList }}
+                                                {{#if c.active}}
+                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap  Indent1">
+                                                        <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries.CardAmount c}}</a>
+                                                    </td>
                                                 {{/if}}
-                        
-                                                {{#if currencyList}}
-                                                    {{#each c in currencyList }}
-                                                    {{# if c.active}}
-                                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                                                    {{/if}}
-                                                    {{/each}}
+                                            {{/each}}
+
+                                            {{#each c in currencyList }}
+                                                {{#if c.active}}
+                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                        <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries.NonCardAmount c}}</a>
+                                                    </td>
                                                 {{/if}}
-                        
-                                                </tr>
+                                            {{/each}}
+                                        {{/if}}
+
+                                    {{else}}
+
+                                        <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                            <a href="#" style="text-decoration:none!important;">{{ formatPrice item.entries.CardAmount}}</a>
+                                        </td>
+
+                                        <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                            <a href="#" style="text-decoration:none!important;">{{ formatPrice item.entries.NonCardAmount}}</a>
+                                        </td>
+
+                                    {{/if}}
+
+                                    
+
+
+                                </tr>
+                            {{/each}}
+
+                            {{#if record.total}}
+
+                                <tr class="TotalField">
+                                    <!-- {{#each items in total.dataArr}} -->
+                                    <!-- <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td> -->
+    
+                                    <td class="Total1Indented MenuLeft TotalField">
+                                        <span class="table-cells">
+                                        <strong>{{record.total.Title}}</strong></span></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+    
+                                    {{#if isOnlyDefaultActive }}
+                                        {{#if currencyList}}
+    
+                                            {{#each c in currencyList }}
+                                                {{#if c.active}}
+                                                <td class="Total1Indented MenuLeft TotalField">
+                                                    <span class="table-cells">
+                                                    <strong>{{ convertAmount record.total.AmountInc c}}</strong></span></td>
+                                                {{/if}}
+                                            {{/each}}
+        
+                                            {{#each c in currencyList }}
+                                                {{#if c.active}}
+                                                <td class="Total1Indented MenuLeft TotalField">
+                                                    <span class="table-cells">
+                                                        <strong>{{ convertAmount record.total.Balance c}}</strong>
+                                                    </span>
+                                                </td>
+                                                {{/if}}
+                                            {{/each}}
+    
+    
+                                        {{/if}}
+                                    {{else}}
+                                        <td class="Total1Indented MenuLeft TotalField">
+                                            <span class="table-cells">
+                                                <strong>{{items}}</strong>
+                                            </span>
+                                        </td>
+
+                                    {{/if}}
+    
+                                    <!-- {{/each}} -->
+                                </tr>
+                            {{/if}}
+
+
+
+
+                        {{/each}}
+
+                        {{#if grandrecords}}
+                            <!-- {{#each item in grandrecords}} -->
+                            <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
+
+                                <td>{{grandrecords.Title}}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+
+
+                                {{#if isOnlyDefaultActive }}
+                                        {{#if currencyList}}
+
+                                        {{#each c in currencyList }}
+                                            {{#if c.active}}
+                                            <td>{{ convertAmount grandrecords.AmountInc c}}</td>
                                             {{/if}}
-                                        </thead>
-                                        <tbody>
+                                        {{/each}}
 
-                                            {{#if records}}
-                                                {{#each record in records}}
-
-                                                    {{#if record.title}}
-                                                        <tr class="totalhr">
-                                                            <td style="font-weight: 800;">
-                                                                <div class="SectionTitle2 report-heading-last">{{record.title}}</div>
-                                                            </td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                    {{/if}}
-
-                                                    {{#each item in record.entries}}
-                                                        <tr class="{{item.type}}" id="{{item.Id}}">
-                                                            <div style="display:none;">{{item.Company}}</div>
-
-                                                            <td></td>
-
-                                                            <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                                                                <a href="#" style="text-decoration:none!important;">{{item.entries.PaymentType}}</a>
-                                                            </td>
-
-                                                            <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                                                                <a href="#" style="text-decoration:none!important;">{{ item.entries.PaymentId }}</a>
-                                                            </td>
-
-                                                            <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                                                                <a href="#" style="text-decoration:none!important;">{{ formatDate item.entries.PaymentDate}}</a>
-                                                            </td>
-
-                                                            <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                                                                <a href="#" style="text-decoration:none!important;">{{  item.entries.PaymentMethod}}</a>
-                                                            </td>
-
-                                                            <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                                                                <a href="#" style="text-decoration:none!important;">{{  item.entries.BillStreet}}</a>
-                                                            </td>
-
-                                                            <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                                                                <a href="#" style="text-decoration:none!important;">{{ item.entries.BillPlace}}</a>
-                                                            </td>
-
-                                                            {{#if isOnlyDefaultActive }}
-                                                                {{#if currencyList}}
-
-                                                                    {{#each c in currencyList }}
-                                                                        {{#if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap  Indent1">
-                                                                                <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries.CardAmount c}}</a>
-                                                                            </td>
-                                                                        {{/if}}
-                                                                    {{/each}}
-
-                                                                    {{#each c in currencyList }}
-                                                                        {{#if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1">
-                                                                                <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries.NonCardAmount c}}</a>
-                                                                            </td>
-                                                                        {{/if}}
-                                                                    {{/each}}
-                                                                {{/if}}
-
-                                                            {{else}}
-
-                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                                                                    <a href="#" style="text-decoration:none!important;">{{ formatPrice item.entries.CardAmount}}</a>
-                                                                </td>
-
-                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                                                                    <a href="#" style="text-decoration:none!important;">{{ formatPrice item.entries.NonCardAmount}}</a>
-                                                                </td>
-
-                                                            {{/if}}
-
-                                                         
-
-
-                                                        </tr>
-                                                    {{/each}}
-
-                                                    {{#if record.total}}
-
-                                                        <tr class="TotalField">
-                                                            <!-- {{#each items in total.dataArr}} -->
-                                                            <!-- <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td> -->
-                            
-                                                            <td class="Total1Indented MenuLeft TotalField">
-                                                                <span class="table-cells">
-                                                                <strong>{{record.total.Title}}</strong></span></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                            
-                                                            {{#if isOnlyDefaultActive }}
-                                                                {{#if currencyList}}
-                            
-                                                                    {{#each c in currencyList }}
-                                                                        {{#if c.active}}
-                                                                        <td class="Total1Indented MenuLeft TotalField">
-                                                                            <span class="table-cells">
-                                                                            <strong>{{ convertAmount record.total.AmountInc c}}</strong></span></td>
-                                                                        {{/if}}
-                                                                    {{/each}}
-                                
-                                                                    {{#each c in currencyList }}
-                                                                        {{#if c.active}}
-                                                                        <td class="Total1Indented MenuLeft TotalField">
-                                                                            <span class="table-cells">
-                                                                                <strong>{{ convertAmount record.total.Balance c}}</strong>
-                                                                            </span>
-                                                                        </td>
-                                                                        {{/if}}
-                                                                    {{/each}}
-                            
-                            
-                                                                {{/if}}
-                                                            {{else}}
-                                                                <td class="Total1Indented MenuLeft TotalField">
-                                                                    <span class="table-cells">
-                                                                        <strong>{{items}}</strong>
-                                                                    </span>
-                                                                </td>
-
-                                                            {{/if}}
-                            
-                                                            <!-- {{/each}} -->
-                                                        </tr>
-                                                    {{/if}}
-
-
-
-
-                                                {{/each}}
-
-                                                {{#if grandrecords}}
-                                                    <!-- {{#each item in grandrecords}} -->
-                                                    <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
-
-                                                        <td>{{grandrecords.Title}}</td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-
-
-                                                        {{#if isOnlyDefaultActive }}
-                                                                {{#if currencyList}}
-
-                                                                {{#each c in currencyList }}
-                                                                    {{#if c.active}}
-                                                                    <td>{{ convertAmount grandrecords.AmountInc c}}</td>
-                                                                    {{/if}}
-                                                                {{/each}}
-
-                                                                {{#each c in currencyList }}
-                                                                    {{#if c.active}}
-                                                                    <td>{{ convertAmount grandrecords.Balance c}}</td>
-                                                                    {{/if}}
-                                                                {{/each}}
-
-
-                                                                {{/if}}
-                                                        {{else}}
-
-                                                            <td>{{ formatPrice grandrecords.AmountInc}}</td>
-                                                            <td>{{ formatPrice grandrecords.Balance}}</td>
-                                                           
-                                                        {{/if}}
-
-                                                    </tr>
-                                                {{/if}}
-
-                                            {{else}}
-                                                <tr class="odd" style="text-align: center;">
-                                                    <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
-                                                </tr>
+                                        {{#each c in currencyList }}
+                                            {{#if c.active}}
+                                            <td>{{ convertAmount grandrecords.Balance c}}</td>
                                             {{/if}}
+                                        {{/each}}
 
-                                          
 
-                                        </tbody>
+                                        {{/if}}
+                                {{else}}
 
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        {{> poweredby}}
-                    </div>
+                                    <td>{{ formatPrice grandrecords.AmountInc}}</td>
+                                    <td>{{ formatPrice grandrecords.Balance}}</td>
+                                    
+                                {{/if}}
 
-                </div>
-            </div>
+                            </tr>
+                        {{/if}}
+
+                    {{else}}
+                        <tr class="odd" style="text-align: center;">
+                            <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
+                        </tr>
+                    {{/if}}
+
+                    
+
+                </tbody>
+
+            </table>
         </div>
-    </div>
-
-    <!-- Start Help Video Modal -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
-        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="title-header">1099 Contractor </h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
-                    <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
-                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
-                        <source src="https://erphelpes.com/vs1videos/comingsoon.mp4" type="video/mp4">
-                    </video>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- End Help Video Modal -->
-
-
-     <!-- Start Currency Modal -->
-     {{> FxRateModal currencies=currencyList}}
-     <!-- End Currency Modal -->
-
+    {{/vs1_report_template}}
 </template>

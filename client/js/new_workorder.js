@@ -384,126 +384,161 @@ Template.new_workorder.events({
     'click .btnSave': function(event) {
         let templateObject = Template.instance();
         playSaveAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'inline-block');
+        let mainOrderStart = new Date();
 
-        let record = templateObject.workorderrecord.get();
-        let temp = JSON.parse(JSON.stringify(record));
-        temp = {...temp, isStarted: true}
-        templateObject.workorderrecord.set(temp);
-        record = templateObject.workorderrecord.get();
-        let objDetail = {
-            ID: record.id,
-            Customer: $('#edtCustomerName').val() || '',
-            OrderTo: $('#txabillingAddress').val() || '',
-            PONumber: $('#ponumber').val()||'',
-            SaleDate: $('#dtSODate').val() || '',
-            DueDate: record.duedate,
-            Line: record.line,
-            BOM: templateObject.bomStructure.get(),
-            SalesOrderID: templateObject.salesOrderId.get(),
-            StartTime: new Date(),
-            // Quantity: record.quantity || 1,
-            InProgress: record.isStarted,
-        }
+        async function saveSubOrders () {
+            let record = templateObject.workorderrecord.get();
+            let bomStructure = templateObject.bomStructure.get();
+    
+            let totalWorkOrders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): []
+            let savedworkorders = totalWorkOrders.filter(order => {
+                return order.SalesOrderID == templateObject.salesOrderId.get();
+            })
+            let count = savedworkorders.length;
+            if(bomStructure.subs && bomStructure.subs.length > 0) {
+                for(let k = 0; k< bomStructure.subs.length; k++) {
+                    let subs = bomStructure.subs[k];
+                    if(subs.isBuild == true) {
+                        async function saveOneSubOrder() {
+                            return new Promise(async(resolve, reject)=>{
+                                let subProductName = subs.productName;
+                                let plans = localStorage.getItem('TProductionPlan')?JSON.parse(localStorage.getItem('TProductionPlan')):[];
+                                let tempPlans = JSON.parse(JSON.stringify(plans));
+                                tempPlans = tempPlans.filter(plan=>plan.resourceName == subs.process);
+                                let subStart = new Date();
+                                if (tempPlans.length > 0) {
+                                    subStart = new Date(Math.max.apply(null, tempPlans.map(function(e) {
+                                        return new Date(e.end);
+                                    })));
+                                }
+                                let subDetail = {
+                                    ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
+                                    Customer: $('#edtCustomerName').val() || '',
+                                    OrderTo: $('#txabillingAddress').val() || '',
+                                    PONumber: $('#ponumber').val()||'',
+                                    SaleDate: $('#dtSODate').val() || '',
+                                    DueDate: record.duedate,
+                                    BOM: subs,
+                                    SalesOrderID: templateObject.salesOrderId.get(),
+                                    OrderDate: new Date().toLocaleString(),
+                                    StartTime: subStart.toLocaleString(),
+                                    InProgress: record.isStarted,
+                                    Quantity: record.line.fields.Qty? record.line.fields.Qty* parseFloat(subs.qty) : subs.qty
+                                }
+                                let subEnd = new Date();
+                                subEnd.setTime(subStart.getTime() + subDetail.Quantity * subs.duration * 3600000);
+                                if(subEnd.getTime() > mainOrderStart.getTime()) {
+                                    mainOrderStart = subEnd;
+                                }
 
-        let tempArray = localStorage.getItem('TWorkorders');
-        let workorders = tempArray?JSON.parse(tempArray): [];
-        objDetail.ID = objDetail.SalesOrderID+ "_" + (workorders.length + 1).toString();
-        workorders = [...workorders, objDetail];
-        localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-
-        
-        let bomStructure = templateObject.bomStructure.get();
-
-        let totalWorkOrders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): []
-        let savedworkorders = totalWorkOrders.filter(order => {
-            return order.SalesOrderID == templateObject.salesOrderId.get();
-        })
-        let count = savedworkorders.length;
-        if(bomStructure.subs && bomStructure.subs.length > 0) {
-            for(let k = 0; k< bomStructure.subs.length; k++) {
-                let subs = bomStructure.subs[k];
-                if(subs.isBuild == true) {
-
-                    let subProductName = subs.productName;
-
-                    let subDetail = {
-                        ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
-                        Customer: $('#edtCustomerName').val() || '',
-                        OrderTo: $('#txabillingAddress').val() || '',
-                        PONumber: $('#ponumber').val()||'',
-                        SaleDate: $('#dtSODate').val() || '',
-                        DueDate: record.duedate,
-                        BOM: subs,
-                        SalesOrderID: objDetail.SalesOrderID,
-                        StartTime: new Date(),
-                        InProgress: record.isStarted,
-                    }
-
-                    getVS1Data('TProductVS1').then(function(dataObject) {
-                        if(dataObject.length == 0) {
-                            productService.getOneProductdatavs1byname(subProductName).then(function(data){
-
-                                let line = JSON.parse(JSON.stringify(objDetail.Line));
-                                line.fields.ProductName = subProductName;
-                                line.fields.Product_Description = data.tproduct[0].fields.ProductDescription;
-                                line.fields.ProductID = data.tproduct[0].fields.ID;
-                                line.fields.Qty = record.line.fields.Qty * parseFloat(subs.qty)
-                                subDetail = {...subDetail, Line: line};
-
-                                let tempArray = localStorage.getItem('TWorkorders');
-                                let workorders = tempArray?JSON.parse(tempArray): [];
-                                workorders = [...workorders, subDetail];
-                                localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-                            })
-                        }else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tproductvs1;
-                            for(let i=0 ; i< useData.length; i++) {
-                                if(useData[i].fields.ProductName == subProductName) {
-                                        let line = JSON.parse(JSON.stringify(objDetail.Line));
+            
+                                getVS1Data('TProductVS1').then(function(dataObject) {
+                                    if(dataObject.length == 0) {
+                                        productService.getOneProductdatavs1byname(subProductName).then(function(data){
+            
+                                            let line = JSON.parse(JSON.stringify(record.line));
+                                            line.fields.ProductName = subProductName;
+                                            line.fields.Product_Description = data.tproduct[0].fields.ProductDescription;
+                                            line.fields.ProductID = data.tproduct[0].fields.ID;
+                                            line.fields.Qty = record.line.fields.Qty * parseFloat(subs.qty)
+                                            subDetail = {...subDetail, Line: line};
+            
+                                            let tempArray = localStorage.getItem('TWorkorders');
+                                            let workorders = tempArray?JSON.parse(tempArray): [];
+                                            workorders = [...workorders, subDetail];
+                                            localStorage.setItem('TWorkorders', JSON.stringify(workorders));
+                                            resolve();
+                                        })
+                                    }else {
+                                        let data = JSON.parse(dataObject[0].data);
+                                        let useData = data.tproductvs1;
+                                        for(let i=0 ; i< useData.length; i++) {
+                                            if(useData[i].fields.ProductName == subProductName) {
+                                                    let line = JSON.parse(JSON.stringify(record.line));
+                                                    line.fields.ProductName = subProductName;
+                                                    line.fields.Product_Description = useData[i].fields.ProductDescription;
+                                                    line.fields.ProductID = useData[i].fields.ID;
+                                                    line.fields.Qty = record.line.fields.Qty * parseFloat(subs.qty)
+                                                    subDetail = {...subDetail, Line: line};
+                                                    let tempArray = localStorage.getItem('TWorkorders');
+                                                    let workorders = tempArray?JSON.parse(tempArray): [];
+                                                    workorders = [...workorders, subDetail];
+                                                    localStorage.setItem('TWorkorders', JSON.stringify(workorders));
+                                                    resolve();
+                                            } else if (i == useData.length -1) {
+                                                resolve();
+                                            }
+                                        }
+                                    }
+                                }).catch(function(err){
+                                    productService.getOneProductdatavs1byname(subProductName).then(function(data){
+                                        let line = JSON.parse(JSON.stringify(record.line));
                                         line.fields.ProductName = subProductName;
-                                        line.fields.Product_Description = useData[i].fields.ProductDescription;
-                                        line.fields.ProductID = useData[i].fields.ID;
+                                        line.fields.Product_Description = data.tproduct[0].fields.ProductDescription;
+                                        line.fields.ProductID = data.tproduct[0].fields.ID;
                                         line.fields.Qty = record.line.fields.Qty * parseFloat(subs.qty)
                                         subDetail = {...subDetail, Line: line};
                                         let tempArray = localStorage.getItem('TWorkorders');
                                         let workorders = tempArray?JSON.parse(tempArray): [];
                                         workorders = [...workorders, subDetail];
                                         localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-                                }
-                            }
+                                        resolve();
+                                    }).catch(function(error){
+                                        resolve();
+                                    })
+                                })
+                            })
                         }
-                    }).catch(function(err){
-                        productService.getOneProductdatavs1byname(subProductName).then(function(data){
-                            let line = JSON.parse(JSON.stringify(objDetail.Line));
-                            line.fields.ProductName = subProductName;
-                            line.fields.Product_Description = data.tproduct[0].fields.ProductDescription;
-                            line.fields.ProductID = data.tproduct[0].fields.ID;
-                            line.fields.Qty = record.line.fields.Qty * parseFloat(subs.qty)
-                            subDetail = {...subDetail, Line: line};
-
-                            let tempArray = localStorage.getItem('TWorkorders');
-                            let workorders = tempArray?JSON.parse(tempArray): [];
-                            workorders = [...workorders, subDetail];
-                            localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-                        }).catch(function(error){
-
-                        })
-                    })
-
-
+                        await saveOneSubOrder();
+                    }
+    
                 }
-
             }
         }
 
+        await saveSubOrders();
+
+        async function saveMainOrders() {
+
+            let record = templateObject.workorderrecord.get();
+            let temp = JSON.parse(JSON.stringify(record));
+            temp = {...temp, isStarted: true}
+            templateObject.workorderrecord.set(temp);
+            record = templateObject.workorderrecord.get();
+            
+            let objDetail = {
+                ID: record.id,
+                Customer: $('#edtCustomerName').val() || '',
+                OrderTo: $('#txabillingAddress').val() || '',
+                PONumber: $('#ponumber').val()||'',
+                SaleDate: $('#dtSODate').val() || '',
+                DueDate: record.duedate,
+                Line: record.line,
+                BOM: templateObject.bomStructure.get(),
+                SalesOrderID: templateObject.salesOrderId.get(),
+                OrderDate: new Date().toLocaleString(),
+                StartTime: mainOrderStart.toLocaleString(),
+                Quantity: record.line.fields.Qty || 1,
+                InProgress: record.isStarted,
+            }
+    
+            let tempArray = localStorage.getItem('TWorkorders');
+            let workorders = tempArray?JSON.parse(tempArray): [];
+            objDetail.ID = objDetail.SalesOrderID+ "_" + (workorders.length + 1).toString();
+            workorders = [...workorders, objDetail];
+            localStorage.setItem('TWorkorders', JSON.stringify(workorders));
+        }
+
+        await saveMainOrders();
+
+        
 
         $('.fullScreenSpin').css('display', 'none');
         swal({
             title: 'Success',
-            text: 'Process has been saved successfully',
+            text: 'Work Order has been saved successfully',
             type: 'success',
             showCancelButton: false,
             confirmButtonText: 'Continue',

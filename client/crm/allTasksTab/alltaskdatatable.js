@@ -444,7 +444,7 @@ Template.alltaskdatatable.onRendered(function () {
       info: true,
       responsive: true,
       order: [
-        [2, "desc"],
+        [3, "desc"],
       ],
       action: function () {
         $("#tblAllTaskDatatable").DataTable().ajax.reload();

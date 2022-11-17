@@ -308,7 +308,7 @@ Template.supplierlist.events({
                             //taxCode = results.data[i+1][12]!== undefined? results.data[i+1][12] :'NT';
 
                             objDetails = {
-                                type: "TSupplierVS1List",
+                                type: "TSupplier",
                                 fields: {
                                     ClientName: results.data[i + 1][0],
                                     FirstName: firstName || '',
@@ -344,7 +344,7 @@ Template.supplierlist.events({
                                             if (result.value) {
                                                 window.open('/supplierlist?success=true', '_self');
                                             } else if (result.dismiss === 'cancel') {
-                                                window.open('/supplierlist?success=true', '_self');
+                                                window.open('/supplierlist?success=false', '_self');
                                             }
                                         });
                                     });

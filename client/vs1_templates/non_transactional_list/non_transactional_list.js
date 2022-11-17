@@ -2979,7 +2979,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
         var customerpage = 0;
         getVS1Data('TPaymentMethod').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getPaymentMethodDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+                sideBarService.getPaymentMethodDataVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
                     await addVS1Data('TPaymentMethod', JSON.stringify(data));
                     templateObject.displayPaymentMethodListData(data); //Call this function to display data on the table
                 }).catch(function (err) {
@@ -2990,7 +2990,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 templateObject.displayPaymentMethodListData(data); //Call this function to display data on the table
             }
         }).catch(function (err) {
-          sideBarService.getPaymentMethodDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+          sideBarService.getPaymentMethodDataVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
               await addVS1Data('TPaymentMethod', JSON.stringify(data));
               templateObject.displayPaymentMethodListData(data); //Call this function to display data on the table
           }).catch(function (err) {

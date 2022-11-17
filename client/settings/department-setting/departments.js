@@ -1,8 +1,10 @@
 import {TaxRateService} from "../settings-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../../js/sidebar-service';
+import { ContactService } from "../../contacts/contact-service";
+import {UtilityService} from "../../utility-service";
 import '../../lib/global/indexdbstorage.js';
-
+import XLSX from 'xlsx';
 let sideBarService = new SideBarService();
 Template.departmentSettings.inheritsHooksFrom('non_transactional_list');
 
@@ -15,6 +17,7 @@ Template.departmentSettings.onCreated(function(){
     templateObject.roomrecords = new ReactiveVar([]);
 
     templateObject.departlist = new ReactiveVar([]);
+    templateObject.selectedFile = new ReactiveVar();
 });
 
 Template.departmentSettings.onRendered(function() {
@@ -65,12 +68,9 @@ Template.departmentSettings.events({
       $(".fullScreenSpin").css("display", "none");
     },
     'click .btnRefresh': function () {
-      sideBarService.getDepartmentDataList().then(function (dataReload) {
-          addVS1Data('TDepartment', JSON.stringify(dataReload)).then(function (datareturn) {
-              Meteor._reload.reload();
-          }).catch(function (err) {
-              Meteor._reload.reload();
-          });
+      sideBarService.getDepartmentDataList(initialBaseDataLoad, 0,false).then(async function (data) {
+          await addVS1Data('TDepartment', JSON.stringify(data));
+          window.open("/departmentSettings", "_self");
       }).catch(function (err) {
           Meteor._reload.reload();
       });
@@ -373,6 +373,148 @@ Template.departmentSettings.events({
         });
     }, delayTimeAfterSound);
     },
+    // Import here
+    'click .templateDownload': function() {
+        let utilityService = new UtilityService();
+        let rows = [];
+        const filename = 'SampleDepartmentSettings' + '.csv';
+        rows[0] = ['Department Name', 'Description', 'Site Code'];
+        rows[1] = ['ABC Department','Enter description', 'ABC'];
+        utilityService.exportToCsv(rows, filename, 'csv');
+    },
+    'click .templateDownloadXLSX': function(e) {
+        e.preventDefault(); //stop the browser from following
+        window.location.href = 'sample_imports/SampleDepartmentSettings.xlsx';
+    },
+    'click .btnUploadFile': function(event) {
+        $('#attachment-upload').val('');
+        $('.file-name').text('');
+        //$(".btnImport").removeAttr("disabled");
+        $('#attachment-upload').trigger('click');
+
+    },
+    'change #attachment-upload': function(e) {
+        let templateObj = Template.instance();
+        var filename = $('#attachment-upload')[0].files[0]['name'];
+        var fileExtension = filename.split('.').pop().toLowerCase();
+        var validExtensions = ["csv", "txt", "xlsx"];
+        var validCSVExtensions = ["csv", "txt"];
+        var validExcelExtensions = ["xlsx", "xls"];
+
+        if (validExtensions.indexOf(fileExtension) == -1) {
+            swal('Invalid Format', 'formats allowed are :' + validExtensions.join(', '), 'error');
+            $('.file-name').text('');
+            $(".btnImport").Attr("disabled");
+        } else if (validCSVExtensions.indexOf(fileExtension) != -1) {
+
+            $('.file-name').text(filename);
+            let selectedFile = event.target.files[0];
+
+            templateObj.selectedFile.set(selectedFile);
+            if ($('.file-name').text() != "") {
+                $(".btnImport").removeAttr("disabled");
+            } else {
+                $(".btnImport").Attr("disabled");
+            }
+        } else if (fileExtension == 'xlsx') {
+            $('.file-name').text(filename);
+            let selectedFile = event.target.files[0];
+            var oFileIn;
+            var oFile = selectedFile;
+            var sFilename = oFile.name;
+            // Create A File Reader HTML5
+            var reader = new FileReader();
+
+            // Ready The Event For When A File Gets Selected
+            reader.onload = function(e) {
+                var data = e.target.result;
+                data = new Uint8Array(data);
+                var workbook = XLSX.read(data, { type: 'array' });
+
+                var result = {};
+                workbook.SheetNames.forEach(function(sheetName) {
+                    var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    templateObj.selectedFile.set(sCSV);
+
+                    if (roa.length) result[sheetName] = roa;
+                });
+                // see the result, caution: it works after reader event is done.
+
+            };
+            reader.readAsArrayBuffer(oFile);
+
+            if ($('.file-name').text() != "") {
+                $(".btnImport").removeAttr("disabled");
+            } else {
+                $(".btnImport").Attr("disabled");
+            }
+
+        }
+    },
+    'click .btnImport': function() {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+        let taxRateService = new TaxRateService();
+        let objDetails;
+        let typeDesc = '';
+        let siteCode = '';
+        Papa.parse(templateObject.selectedFile.get(), {
+            complete: function(results) {
+
+                if (results.data.length > 0) {
+                    if ((results.data[0][0] == "Department Name") && (results.data[0][1] == "Description") && (results.data[0][2] == "Site Code")) {
+
+                        let dataLength = results.data.length * 500;
+                        setTimeout(function() {
+                            $('.importTemplateModal').hide();
+                            $('.modal-backdrop').hide();
+                            FlowRouter.go('/departmentSettings?success=true');
+                            $('.fullScreenSpin').css('display', 'none');
+                        }, parseInt(dataLength));
+
+                        for (let i = 0; i < results.data.length - 1; i++) {
+                            deptDesc = results.data[i + 1][1] !== undefined ? results.data[i + 1][1] : '';
+                            siteCode = results.data[i + 1][2] !== undefined ? results.data[i + 1][2] : '';
+                            objDetails = {
+                                type: "TDeptClass",
+                                fields: {
+                                    DeptClassName: results.data[i + 1][0],
+                                    Description: deptDesc,
+                                    SiteCode: siteCode,
+                                    Active: true
+                                }
+                            };
+                            if (results.data[i + 1][1]) {
+                                if (results.data[i + 1][1] !== "") {
+                                    taxRateService.saveDepartment(objDetails).then(function(data) {
+                                        //$('.fullScreenSpin').css('display','none');
+                                        //  Meteor._reload.reload();
+                                    }).catch(function(err) {
+                                        //$('.fullScreenSpin').css('display','none');
+                                        swal({ title: 'Oooops...', text: err, type: 'error', showCancelButton: false, confirmButtonText: 'Try Again' }).then((result) => {
+                                            if (result.value) {
+                                                window.open('/departmentSettings?success=true', '_self');
+                                            } else if (result.dismiss === 'cancel') {
+                                                window.open('/departmentSettings?success=false', '_self');
+                                            }
+                                        });
+                                    });
+                                }
+                            }
+                        }
+
+                    } else {
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+                    }
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+                }
+            }
+        });
+    }
 });
 
 Template.departmentSettings.helpers({

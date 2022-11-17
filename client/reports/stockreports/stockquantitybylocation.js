@@ -83,6 +83,10 @@ Template.stockquantitybylocation.onRendered(() => {
     // //--------- END OF DATE ---------------//
   };
 
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  };
+
 
   templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
@@ -113,6 +117,7 @@ Template.stockquantitybylocation.onRendered(() => {
 
   templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate) => {
     LoadingOverlay.show();
+    templateObject.setDateAs( dateFrom );
     // let data = [];
     // if (!localStorage.getItem('VS1StockQuantityLocation_Report')) {
     //   const options = await templateObject.reportOptions.get();
@@ -195,26 +200,14 @@ Template.stockquantitybylocation.onRendered(() => {
     LoadingOverlay.hide();
   }
 
-  templateObject.setReportOptions();
-
-  templateObject.initUploadedImage = () => {
-    let imageData = localStorage.getItem("Image");
-    if (imageData) {
-      $("#uploadedImage").attr("src", imageData);
-      $("#uploadedImage").attr("width", "50%");
-    }
-  };
-
-
   templateObject.initDate();
-  templateObject.initUploadedImage();
 
   templateObject.loadReport(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
     false
   );
-
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
 });
 
 Template.stockquantitybylocation.events({
@@ -477,7 +470,6 @@ Template.stockquantitybylocation.events({
     //localStorage.setItem("VS1StockQuantityLocation_Report", "");
     // $("#dateFrom").attr("readonly", true);
     // $("#dateTo").attr("readonly", true);
-    templateObject.dateAsAt.set("Current Date");
     //templateObject.setReportOptions(true);
     templateObject.loadReport(
       null, 

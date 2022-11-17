@@ -1,0 +1,91 @@
+<template name="production_planner">
+    <div class="container-fluid salesmodule productionplannermodule" style="padding-right: 0px;padding-left: 0px;">
+        <div class="fullScreenSpin fullScreenSpin_workorder" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <div>
+            <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;">
+                <h2 style="margin: 16px;" class="heading">
+                    Production Planner
+                    {{> helpbutton}}
+                </h2>
+            </header>
+            <div class="row w-100" >
+                <div class="mt-5 px-5 pt-3 w-100 productionPlannerTable d-flex" style="height: 500px;">
+                   
+                            <style>
+                                .productionplannermodule #calendar tbody tr {
+                                    height: 40px
+                                }
+
+                                .productionplannermodule #calendar button {
+                                    background-color: rgb(0, 163, 211);
+                                    border-color: #00a3d3;
+                                }
+                                .productionplannermodule #calendar button:hover {
+                                    background-color: #00C2EF;
+                                    border-color: #00a3d3;
+                                }
+                                
+                            </style>
+                            <div id="calendar" class="w-75"></div>
+                            <div class="eventInfo w-25">
+                                <style>
+                                    .eventInfo {
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: flex-start;
+                                        justify-content: space-around;
+                                    }
+                                    .eventInfo ul {
+                                        list-style: none;
+                                        margin-left: 0;
+                                    }
+
+                                    .eventInfo ul li {
+                                        margin-bottom: 20px;
+                                    }
+
+                                </style>
+                                {{#if viewInfoData}}
+                                    <ul class="eventDetail">
+                                        <li>
+                                            <span class="itemLabel">JOB/SO Number: </span>
+                                            <span class="eventDetailItem">{{viewInfoData.SONumber}}</span>
+                                        </li>
+                                        <li>
+                                            <span class="itemLabel">Customer: </span>
+                                            <span class="eventDetailItem">{{viewInfoData.Customer}}</span>
+                                        </li>
+                                        <li>
+                                            <span class="itemLabel">Overall Job % completed: </span>
+                                            <span class="eventDetailItem">{{viewInfoData.Percentage}}</span>
+                                        </li>
+                                        <li>
+                                            <span class="itemLabel">Order Date: </span>
+                                            <span class="eventDetailItem">{{viewInfoData.OrderDate}}</span>
+                                        </li>
+                                        <li>
+                                            <span class="itemLabel">Ship Date: </span>
+                                            <span class="eventDetailItem">{{viewInfoData.ShipDate}}</span>
+                                        </li>
+                                        <li>
+                                            <span class="itemLabel">Job Notes: </span>
+                                            <span class="eventDetailItem">{{viewInfoData.JobNotes}}</span>
+                                        </li>
+                                    </ul>
+                                    <div class="d-flex align-items-center justify-content-center p-3" style="gap: 20px">
+                                        <button class="btn btn-primary btn-round">Attachments</button>
+                                        <button class="btn btn-primary btn-round btn-print-event">Print</button>
+                                    </div>
+                                {{/if}}
+                            </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-center w-100 mt-3" style="height: 50px; gap: 20px">
+                    <button class="btn btn-success btn-round btnApply">Apply</button>
+                    <button class="btn btn-danger btn-round btn-optimize">Optimize</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

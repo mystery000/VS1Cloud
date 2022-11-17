@@ -14,6 +14,10 @@ let reportService = new ReportService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
 
+Template.generalledger.inheritsHelpersFrom('vs1_report_template');
+// Template.generalledger.inheritsEventsFrom('vs1_report_template');
+// Template.generalledger.inheritsHooksFrom('vs1_report_template');
+
 Template.generalledger.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
@@ -29,9 +33,15 @@ Template.generalledger.onCreated(() => {
 Template.generalledger.onRendered(() => {
   LoadingOverlay.show();
   const templateObject = Template.instance();
-
+    console.log(Template.generalledger);
+    console.log(Template.vs1_report_template.inheritsHelpersFrom);
+    console.log(Template.generalledger.inheritsEventsFrom('vs1_report_template'));
+    console.log(Template.generalledger.inheritsHooksFrom('vs1_report_template'));
   let taxRateService = new TaxRateService();
   let utilityService = new UtilityService();
+
+  // var data = Template.parentData(function (data) {return data instanceof MyDocument;});
+  // console.log(data);
   // let salesOrderTable;
   // var splashArray = new Array();
   // var today = moment().format("DD/MM/YYYY");
@@ -99,7 +109,7 @@ Template.generalledger.onRendered(() => {
   };
 
   templateObject.getGeneralLedgerReports = function (dateFrom,dateTo,ignoreDate) {
-    
+
     templateObject.setDateAs(dateFrom);
 
     if (!localStorage.getItem("VS1GeneralLedger_Report")) {
@@ -597,7 +607,7 @@ Template.generalledger.onRendered(() => {
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  
+
   templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
 
   templateObject.getDepartments = function () {
@@ -702,7 +712,7 @@ Template.generalledger.events({
         false,
       "_self"
     );
-  },  
+  },
   "click #dropdownDateRang": function (e) {
     let dateRangeID = e.target.id;
     $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
@@ -732,8 +742,8 @@ Template.generalledger.events({
   "click #ignoreDate":  (e, templateObject) => {
     localStorage.setItem("VS1GeneralLedger_Report", "");
     templateObject.getGeneralLedgerReports(
-      null, 
-      null, 
+      null,
+      null,
       true
     )
   },
@@ -741,8 +751,8 @@ Template.generalledger.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1GeneralLedger_Report", "");
     templateObject.getGeneralLedgerReports(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },
@@ -931,7 +941,7 @@ Template.generalledger.events({
       dateTo.getDate();
 
     const filename = loggedCompany + "-General Ledger" + ".csv";
-    utilityService.exportReportToCsvTable("tableExport", filename, "csv");
+    utilityService.exportReportToCsvTable("tblgeneralledger", filename, "csv");
     let rows = [];
     // reportService.getGeneralLedgerDetailsData(formatDateFrom,formatDateTo,false).then(function (data) {
     //     if(data.tgeneralledgerreport){
@@ -964,7 +974,7 @@ Template.generalledger.events({
 //     var dateTo = new Date($("#dateTo").datepicker("getDate"));
 //     await templateObject.setReportOptions(false, dateFrom, dateTo);
 // },
-// 
+//
 // "click #ignoreDate": async function () {
 //     $(".fullScreenSpin").css("display", "inline-block");
 //     $("#dateFrom").attr("readonly", true);
@@ -1026,7 +1036,7 @@ Template.generalledger.events({
         type: 'warning',
         confirmButtonText: 'Ok'
       })
-  },   
+  },
 });
 
 Template.generalledger.helpers({

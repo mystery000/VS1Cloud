@@ -813,7 +813,7 @@ Template.agedpayables.events({
         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
-        const filename = loggedCompany + '-Aged Payables' + '.csv';
+        const filename = loggedCompany + ' - Aged Payables' + '.csv';
         utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
         let rows = [];
         // reportService.getAgedPayableDetailsData(formatDateFrom,formatDateTo,false).then(function (data) {
@@ -1070,6 +1070,19 @@ Template.agedpayables.helpers({
         : -1;
     });
   },
+  formatPriceWithDays(amountData, days) {
+    let amount = amountData[days + 'Days'];
+    let utilityService = new UtilityService();
+    if (isNaN(amount)) {
+      amount = amount === undefined || amount === null || amount.length === 0
+        ? 0
+        : amount;
+      amount = amount
+        ? Number(amount.replace(/[^0-9.-]+/g, ""))
+        : 0;
+    }
+    return utilityService.modifynegativeCurrencyFormat(amount) || 0.0;
+  },
   formatPrice(amount) {
     let utilityService = new UtilityService();
     if (isNaN(amount)) {
@@ -1188,7 +1201,7 @@ Template.agedpayables.helpers({
     return Template.instance().currencyList.get();
   },
   isNegativeAmount(amount, days = null) {
-    if(days != null) {
+    if(days != null && days != undefined) {
         amount = amount[days + 'Days'];
     }
     if (Math.sign(amount) === -1) {

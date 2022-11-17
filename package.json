@@ -34,7 +34,6 @@
     "chart.js": "^2.9.3",
     "colresizable": "^1.6.0",
     "cron": "^1.8.2",
-    "crypto": "^1.0.1",
     "datatables.net": "^1.10.20",
     "datatables.net-bs": "^1.10.20",
     "datatables.net-colreorder": "^1.4.1",

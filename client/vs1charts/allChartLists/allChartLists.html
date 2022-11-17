@@ -143,9 +143,8 @@
         {{> mytaskswidgetchart
             md=4 defaultPosition=2 key="dscharts__my_tasks" }}
 
-        <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="3" data-default-class="col-md-8" key="dsmcharts__appointment_list">
-            {{> dsmAppointmentsWidget}}
-        </div>
+        {{> dsmAppointmentsWidget
+            md=8 defaultPosition=3 key="dsmcharts__appointment_list" }}
 
         {{> quotedsalesorderinvoicedamounts
             md=4 defaultPosition=1 key="sales__sales_overview" }}

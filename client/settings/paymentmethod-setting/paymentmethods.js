@@ -2,7 +2,10 @@ import {TaxRateService} from "../settings-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import {OrganisationService} from '../../js/organisation-service';
 import { SideBarService } from '../../js/sidebar-service';
+import {UtilityService} from "../../utility-service";
 import '../../lib/global/indexdbstorage.js';
+import XLSX from 'xlsx';
+let taxRateService = new TaxRateService();
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 
@@ -22,12 +25,12 @@ Template.paymentmethodSettings.onCreated(function(){
   templateObject.includeAccountID.set(false);
 
   templateObject.accountID = new ReactiveVar();
+  templateObject.selectedFile = new ReactiveVar();
 });
 
 Template.paymentmethodSettings.onRendered(function() {
     //$('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
-    let taxRateService = new TaxRateService();
     const dataTableList = [];
     const tableHeaderList = [];
     const deptrecords = [];
@@ -280,7 +283,6 @@ Template.paymentmethodSettings.events({
   },
   'click .btnDeletePaymentMethod': function () {
     playDeleteAudio();
-    let taxRateService = new TaxRateService();
     setTimeout(function(){
 
     let paymentMethodId = $('#edtPaymentMethodID').val();
@@ -322,7 +324,6 @@ Template.paymentmethodSettings.events({
   },
   'click .btnSavePaymentMethod': function () {
     playSaveAudio();
-    let taxRateService = new TaxRateService();
     setTimeout(function(){
     $('.fullScreenSpin').css('display','inline-block');
 
@@ -478,6 +479,146 @@ Template.paymentmethodSettings.events({
     setTimeout(function(){
     history.back(1);
     }, delayTimeAfterSound);
+  },
+  // Import here
+  'click .templateDownload': function() {
+      let utilityService = new UtilityService();
+      let rows = [];
+      const filename = 'SamplePaymentMethodSettings' + '.csv';
+      rows[0] = ['Payment Method Name', 'Is Credit Card'];
+      rows[1] = ['ABC', 'false'];
+      utilityService.exportToCsv(rows, filename, 'csv');
+  },
+  'click .templateDownloadXLSX': function(e) {
+
+      e.preventDefault(); //stop the browser from following
+      window.location.href = 'sample_imports/SamplePaymentMethodSettings.xlsx';
+  },
+  'click .btnUploadFile': function(event) {
+      $('#attachment-upload').val('');
+      $('.file-name').text('');
+      //$(".btnImport").removeAttr("disabled");
+      $('#attachment-upload').trigger('click');
+
+  },
+  'change #attachment-upload': function(e) {
+      let templateObj = Template.instance();
+      var filename = $('#attachment-upload')[0].files[0]['name'];
+      var fileExtension = filename.split('.').pop().toLowerCase();
+      var validExtensions = ["csv", "txt", "xlsx"];
+      var validCSVExtensions = ["csv", "txt"];
+      var validExcelExtensions = ["xlsx", "xls"];
+
+      if (validExtensions.indexOf(fileExtension) == -1) {
+          swal('Invalid Format', 'formats allowed are :' + validExtensions.join(', '), 'error');
+          $('.file-name').text('');
+          $(".btnImport").Attr("disabled");
+      } else if (validCSVExtensions.indexOf(fileExtension) != -1) {
+
+          $('.file-name').text(filename);
+          let selectedFile = event.target.files[0];
+
+          templateObj.selectedFile.set(selectedFile);
+          if ($('.file-name').text() != "") {
+              $(".btnImport").removeAttr("disabled");
+          } else {
+              $(".btnImport").Attr("disabled");
+          }
+      } else if (fileExtension == 'xlsx') {
+          $('.file-name').text(filename);
+          let selectedFile = event.target.files[0];
+          var oFileIn;
+          var oFile = selectedFile;
+          var sFilename = oFile.name;
+          // Create A File Reader HTML5
+          var reader = new FileReader();
+
+          // Ready The Event For When A File Gets Selected
+          reader.onload = function(e) {
+              var data = e.target.result;
+              data = new Uint8Array(data);
+              var workbook = XLSX.read(data, { type: 'array' });
+
+              var result = {};
+              workbook.SheetNames.forEach(function(sheetName) {
+                  var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+                  var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                  templateObj.selectedFile.set(sCSV);
+
+                  if (roa.length) result[sheetName] = roa;
+              });
+              // see the result, caution: it works after reader event is done.
+
+          };
+          reader.readAsArrayBuffer(oFile);
+
+          if ($('.file-name').text() != "") {
+              $(".btnImport").removeAttr("disabled");
+          } else {
+              $(".btnImport").Attr("disabled");
+          }
+
+      }
+  },
+  'click .btnImport': function() {
+      $('.fullScreenSpin').css('display', 'inline-block');
+      let templateObject = Template.instance();
+      let utilityService = new UtilityService();
+      let objDetails;
+      let isCreditCard = false;
+      Papa.parse(templateObject.selectedFile.get(), {
+          complete: function(results) {
+
+              if (results.data.length > 0) {
+                  if ((results.data[0][0] == "Payment Method Name") && (results.data[0][1] == "Is Credit Card")) {
+
+                      let dataLength = results.data.length * 500;
+                      setTimeout(function() {
+                          $('.importTemplateModal').hide();
+                          $('.modal-backdrop').hide();
+                          FlowRouter.go('/paymentmethodSettings?success=true');
+                          $('.fullScreenSpin').css('display', 'none');
+                      }, parseInt(dataLength));
+                      for (let i = 0; i < results.data.length - 1; i++) {
+                          isCreditCard = results.data[i + 1][1] !== undefined ? results.data[i + 1][1] : '';
+                          objDetails = {
+                              type: "TPaymentMethod",
+                              fields: {
+                                  PaymentMethodName: results.data[i + 1][0],
+                                  IsCreditCard: isCreditCard || false,
+                                  Active: true
+                              }
+                          };
+                          if (results.data[i + 1][1]) {
+                              if (results.data[i + 1][1] !== "") {
+                                  taxRateService.savePaymentMethod(objDetails).then(function(data) {
+                                      //$('.fullScreenSpin').css('display','none');
+                                      //  Meteor._reload.reload();
+                                  }).catch(function(err) {
+                                      //$('.fullScreenSpin').css('display','none');
+                                      swal({ title: 'Oooops...', text: err, type: 'error', showCancelButton: false, confirmButtonText: 'Try Again' }).then((result) => {
+                                          if (result.value) {
+                                              // window.open('/clienttypesettings?success=true', '_self');
+                                              FlowRouter.go('/paymentmethodSettings?success=true');
+                                          } else if (result.dismiss === 'cancel') {
+                                              FlowRouter.go('/paymentmethodSettings?success=false');
+                                          }
+                                      });
+                                  });
+                              }
+                          }
+                      }
+
+                  } else {
+                      $('.fullScreenSpin').css('display', 'none');
+                      swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+                  }
+              } else {
+                  $('.fullScreenSpin').css('display', 'none');
+                  swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+              }
+          }
+      });
   }
 
 

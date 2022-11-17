@@ -25,6 +25,8 @@ Template.vs1_report_template.onCreated(function(){
     templateObject.selectedFile = new ReactiveVar();
     templateObject.report_displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+    templateObject.isAccountingMoreOption = new ReactiveVar();
+    templateObject.isTaxCodeOption = new ReactiveVar();
     // templateObject.dateAsAt = new ReactiveVar();
 });
 
@@ -36,6 +38,8 @@ Template.vs1_report_template.onRendered(function() {
     if (imageData) {
       $("#uploadedImage").attr("src", imageData);
       $("#uploadedImage").attr("width", "50%");
+      $("#uploadedImage2").attr("src", imageData);
+      $("#uploadedImage2").attr("width", "50%");
     }
   };
 
@@ -44,10 +48,16 @@ Template.vs1_report_template.onRendered(function() {
   var url = FlowRouter.current().path;
   let currenttablename = "";
   let displaytablename = "";
-  if (url.includes("/generalledger")) {
-    currenttablename = "generalledger";
-    displaytablename = "General Ledger";
+  templateObject.isAccountingMoreOption.set(false);
+  templateObject.isTaxCodeOption.set(false);
+  if (url.includes("/taxsummaryreport")) {
+    templateObject.isAccountingMoreOption.set(true);
+    templateObject.isTaxCodeOption.set(true);
   };
+
+  currenttablename = templateObject.data.tablename||"";
+  displaytablename = templateObject.data.tabledisplayname||"";
+
   templateObject.tablename.set(currenttablename);
   templateObject.tabledisplayname.set(displaytablename);
 
@@ -57,20 +67,20 @@ Template.vs1_report_template.onRendered(function() {
     switch (currenttablename) {
       case "generalledger":
         reset_data = [
-          { index: 0, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "10" },
-          { index: 1, label: 'Account No', class:'colAccountNo', active: true, display: true, width: "10" },
-          { index: 2, label: 'Date', class:'colDate', active: true, display: true, width: "10" },
-          { index: 3, label: 'Client Name', class:'colClientName', active: true, display: true, width: "10" },
-          { index: 4, label: 'Type', class:'colType', active: true, display: true, width: "10" },
-          { index: 5, label: 'Debits', class:'colDebits', active: true, display: true, width: "10" },
-          { index: 6, label: 'Credit', class:'colCredit', active: true, display: true, width: "10" },
-          { index: 7, label: 'Amount', class:'colAmount', active: true, display: true, width: "10" },
+          { index: 0, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "195" },
+          { index: 1, label: 'Account No', class:'colAccountNo', active: true, display: true, width: "86" },
+          { index: 2, label: 'Date', class:'colDate', active: true, display: true, width: "86" },
+          { index: 3, label: 'Client Name', class:'colClientName', active: true, display: true, width: "192" },
+          { index: 4, label: 'Type', class:'colType', active: true, display: true, width: "137" },
+          { index: 5, label: 'Debits', class:'colDebits', active: true, display: true, width: "85" },
+          { index: 6, label: 'Credit', class:'colCredit', active: true, display: true, width: "85" },
+          { index: 7, label: 'Amount', class:'colAmount', active: true, display: true, width: "85" },
         ];
       break;
     }
     templateObject.reset_data.set(reset_data);
   }
-  // templateObject.init_reset_data();
+   templateObject.init_reset_data();
 
   // custom field displaysettings
 
@@ -107,7 +117,6 @@ Template.vs1_report_template.onRendered(function() {
       return;
     }
     templateObject.showCustomFieldDisplaySettings = async function(reset_data){
-    //function showCustomFieldDisplaySettings(reset_data) {
       let custFields = [];
       let customData = {};
       let customFieldCount = reset_data.length;
@@ -132,179 +141,155 @@ Template.vs1_report_template.onRendered(function() {
       await templateObject.report_displayfields.set(custFields);
       $('.dataTable').resizable();
     }
-    // templateObject.initCustomFieldDisplaySettings("", currenttablename);
+    templateObject.initCustomFieldDisplaySettings("", currenttablename);
 
     templateObject.resetData = function (dataVal) {
         location.reload();
     };
 
-  //tableResize();
+  tableResize();
 });
 
 Template.vs1_report_template.events({
-  // "change .edtReportDates": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   let templateObject = Template.instance();
-  //   var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-  //   var dateTo = new Date($("#dateTo").datepicker("getDate"));
-  //   templateObject.dateAsAt.set(moment(dateFrom, "DD/MM/YYYY").format("DD/MM/YYYY"));
-  //   let currenttablename = templateObject.tabledisplayname.get()
-  //   if(currenttablename == "General Ledger"){
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     await templateObject.getGeneralLedgerReports(dateFrom, dateTo, false);
-  //   }
-  // },
-  // "click #ignoreDate": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   let templateObject = Template.instance();
-  //   var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-  //   var dateTo = new Date($("#dateTo").datepicker("getDate"));
-  //   templateObject.dateAsAt.set(moment().format("DD/MM/YYYY"));
-  //   let currenttablename = templateObject.tabledisplayname.get();
-  //   if(currenttablename == "General Ledger"){
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     await templateObject.getGeneralLedgerReports(dateFrom, dateTo, true);
-  //   }
-  // },
-  // "click #today": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   let templateObject = Template.instance();
-  //   let dateFrom = moment().format("DD/MM/YYYY");
-  //   let dateTo = moment().format("DD/MM/YYYY");
-  //   templateObject.dateAsAt.set(dateFrom);
-  //   $("#dateFrom").val(dateFrom);
-  //   $("#dateTo").val(dateTo);
-  //   let currenttablename = templateObject.tabledisplayname.get();
-  //   if(currenttablename == "General Ledger"){
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     await templateObject.getGeneralLedgerReports(moment().format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"), false);
-  //   }
-  // },
-  // "click #thisweek": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   let templateObject = Template.instance();
-  //   let dateFrom = moment().startOf('week');
-  //   let dateTo = moment().endOf('week');
-  //   templateObject.dateAsAt.set(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateFrom").val(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateTo").val(dateTo.format("DD/MM/YYYY"));
-  //   let currenttablename = templateObject.tabledisplayname.get();
-  //   if(currenttablename == "General Ledger"){
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     await templateObject.getGeneralLedgerReports( dateFrom.format("YYYY-MM-DD"), dateTo.format("YYYY-MM-DD"), false);
-  //   }
-  // },
-  // "click #thisMonth": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   let templateObject = Template.instance();
-  //   let dateFrom = moment().startOf('month');
-  //   let dateTo = moment().endOf('month');
-  //   templateObject.dateAsAt.set(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateFrom").val(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateTo").val(dateTo.format("DD/MM/YYYY"));
-  //   let currenttablename = templateObject.tabledisplayname.get();
-  //   if(currenttablename == "General Ledger"){
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     await templateObject.getGeneralLedgerReports( dateFrom.format("YYYY-MM-DD"), dateTo.format("YYYY-MM-DD"), false);
-  //   }
-  // },
-  // "click #thisQuarter": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   let templateObject = Template.instance();
-  //   let dateFrom = moment().startOf("Q");
-  //   let dateTo = moment().endOf("Q");
-  //   templateObject.dateAsAt.set(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateFrom").val(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateTo").val(dateTo.format("DD/MM/YYYY"));
-  //   let currenttablename = templateObject.tabledisplayname.get();
-  //   if(currenttablename == "General Ledger"){
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     await templateObject.getGeneralLedgerReports( dateFrom.format("YYYY-MM-DD"), dateTo.format("YYYY-MM-DD"), false);
-  //   }
-  // },
-  // "click #thisfinancialyear": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   let templateObject = Template.instance();
-  //   let dateFrom = moment().startOf('year');
-  //   let dateTo = moment();
-  //   templateObject.dateAsAt.set(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateFrom").val(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateTo").val(dateTo.format("DD/MM/YYYY"));
-  //   let currenttablename = templateObject.tabledisplayname.get();
-  //   if(currenttablename == "General Ledger"){
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     await templateObject.getGeneralLedgerReports( dateFrom.format("YYYY-MM-DD"), dateTo.format("YYYY-MM-DD"), false);
-  //   }
-  // },
-  // "click #previousweek": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   let templateObject = Template.instance();
-  //   let dateFrom = moment().subtract(1, "week").startOf('week');
-  //   let dateTo = moment().subtract(1, "week").endOf('week');
-  //   templateObject.dateAsAt.set(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateFrom").val(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateTo").val(dateTo.format("DD/MM/YYYY"));
-  //   let currenttablename = templateObject.tabledisplayname.get();
-  //   if(currenttablename == "General Ledger"){
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     await templateObject.getGeneralLedgerReports( dateFrom.format("YYYY-MM-DD"), dateTo.format("YYYY-MM-DD"), false);
-  //   }
-  // },
-  // "click #previousmonth": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   let templateObject = Template.instance();
-  //   let dateFrom = moment().subtract(1, "month").startOf('month');
-  //   let dateTo = moment().subtract(1, "month").endOf('month');
-  //   templateObject.dateAsAt.set(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateFrom").val(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateTo").val(dateTo.format("DD/MM/YYYY"));
-  //   let currenttablename = templateObject.tabledisplayname.get();
-  //   if(currenttablename == "General Ledger"){
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     await templateObject.getGeneralLedgerReports( dateFrom.format("YYYY-MM-DD"), dateTo.format("YYYY-MM-DD"), false);
-  //   }
-  // },
-  // "click #previousquarter": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   let templateObject = Template.instance();
-  //   let dateFrom = moment().subtract(1, "Q").startOf("Q");
-  //   let dateTo = moment().subtract(1, "Q").endOf("Q");
-  //   templateObject.dateAsAt.set(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateFrom").val(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateTo").val(dateTo.format("DD/MM/YYYY"));
-  //   let currenttablename = templateObject.tabledisplayname.get();
-  //   if(currenttablename == "General Ledger"){
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     await templateObject.getGeneralLedgerReports( dateFrom.format("YYYY-MM-DD"), dateTo.format("YYYY-MM-DD"), false);
-  //   }
-  // },
-  // "click #previousfinancialyear": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   let templateObject = Template.instance();
-  //   let dateFrom = null;
-  //   let dateTo = null;
-  //   if (moment().quarter() == 4) {
-  //     dateFrom = moment().subtract(1, "year").month("July").startOf("month");
-  //     dateTo = moment().month("June").endOf("month");
-  //   } else {
-  //     dateFrom = moment().subtract(2, "year").month("July").startOf("month");
-  //     dateTo = moment().subtract(1, "year").month("June").endOf("month");
-  //   }
-  //   templateObject.dateAsAt.set(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateFrom").val(dateFrom.format("DD/MM/YYYY"));
-  //   $("#dateTo").val(dateTo.format("DD/MM/YYYY"));
-  //   let currenttablename = templateObject.tabledisplayname.get();
-  //   if(currenttablename == "General Ledger"){
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     await templateObject.getGeneralLedgerReports( dateFrom.format("YYYY-MM-DD"), dateTo.format("YYYY-MM-DD"), false);
-  //   }
-  // },
+  'click .btnOpenReportSettings': async function (event, template) {
+      let templateObject = Template.instance();
+      let currenttranstablename = 'tbl'+templateObject.data.tablename||"";
+      $(`#${currenttranstablename} thead tr th`).each(function (index) {
+        var $tblrow = $(this);
+        var colWidth = $tblrow.width() || 0;
+        console.log(colWidth);
+        // var colthClass = $tblrow.attr('data-class') || "";
+        // $('.rngRange' + colthClass).val(colWidth);
+      });
+     $('.'+templateObject.data.tablename+'_Modal').modal('toggle');
+  },
+  'change .custom-range': async function(event) {
+    const tableHandler = new TableHandler();
+    let range = $(event.target).val()||0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    $('.dataTable').resizable();
+  },
+  'click .chkDatatable': function(event) {
+      let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+      if ($(event.target).is(':checked')) {
+        $('.'+columnDataValue).addClass('showColumn');
+        $('.'+columnDataValue).removeClass('hiddenColumn');
+      } else {
+        $('.'+columnDataValue).addClass('hiddenColumn');
+        $('.'+columnDataValue).removeClass('showColumn');
+      }
+  },
+  "blur .divcolumn": async function (event) {
+    const templateObject = Template.instance();
+    let columData = $(event.target).text();
+    let columnDatanIndex = $(event.target).closest("div.columnSettings").attr("custid");
+    let currenttablename = await templateObject.tablename.get()||'';
+    var datable = $('#'+currenttablename).DataTable();
+    var title = datable.column(columnDatanIndex).header();
+    $(title).html(columData);
+  },
+  'click .resetTable' : async function(event){
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    let currenttablename = await templateObject.tablename.get()||'';
+      //reset_data[9].display = false;
+      reset_data = reset_data.filter(redata => redata.display);
+    $(".displaySettings").each(function (index) {
+      let $tblrow = $(this);
+      $tblrow.find(".divcolumn").text(reset_data[index].label);
+      $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
+
+      let title = $('#'+currenttablename).find("th").eq(index);
+        $(title).html(reset_data[index].label);
+
+      if (reset_data[index].active) {
+        $('.' + reset_data[index].class).addClass('showColumn');
+        $('.' + reset_data[index].class).removeClass('hiddenColumn');
+      } else {
+        $('.' + reset_data[index].class).addClass('hiddenColumn');
+        $('.' + reset_data[index].class).removeClass('showColumn');
+      }
+      $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
+      $("." + reset_data[index].class).css('width', reset_data[index].width);
+    });
+  },
+  "click .saveTable": async function(event) {
+    let lineItems = [];
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    $(".displaySettings").each(function (index) {
+      var $tblrow = $(this);
+      var fieldID = $tblrow.attr("custid") || 0;
+      var colTitle = $tblrow.find(".divcolumn").text() || "";
+      var colWidth = $tblrow.find(".custom-range").val() || 0;
+      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+      var colHidden = false;
+      if ($tblrow.find(".custom-control-input").is(":checked")) {
+        colHidden = true;
+      } else {
+        colHidden = false;
+      }
+      let lineItemObj = {
+        index: parseInt(fieldID),
+        label: colTitle,
+        active: colHidden,
+        width: parseInt(colWidth),
+        class: colthClass,
+        display: true
+      };
+
+      lineItems.push(lineItemObj);
+    });
+
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    reset_data = reset_data.filter(redata => redata.display == false);
+    lineItems.push(...reset_data);
+    lineItems.sort((a,b) => a.index - b.index);
+      let erpGet = erpDb();
+      let tableName = await templateObject.tablename.get()||'';
+      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+      let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+
+      if(added){
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+            addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+        }).catch(function (err) {
+        });
+        $(".fullScreenSpin").css("display", "none");
+        swal({
+          title: 'SUCCESS',
+          text: "Display settings is updated!",
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.value) {
+                $('#'+tableName+'_Modal').modal('hide');
+            }
+        });
+      }else{
+        $(".fullScreenSpin").css("display", "none");
+      }
+
+    },
 });
 
 Template.vs1_report_template.helpers({
   loggedCompany: () => {
       return localStorage.getItem('mySession') || '';
   },
+  isAccountingMoreOption: () => {
+    return Template.instance().isAccountingMoreOption.get();;
+  },
+  companyname: () =>{
+    return loggedCompany;
+  },
+  isTaxCodeOption: () => {
+    return Template.instance().isTaxCodeOption.get();;
+  },
+
   // tablename: () => {
   //     return Template.instance().tablename.get();
   // },

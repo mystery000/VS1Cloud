@@ -1175,6 +1175,20 @@ Template.appointments.onRendered(function() {
                     }
 
                     $("#event-modal").modal();
+                    setTimeout(() => {
+                        if (localStorage.getItem("smsCustomerAppt") == "false") {
+                            $("#chkSMSCustomer").prop("checked", false);
+                        }
+                        if (localStorage.getItem("smsUserAppt") == "false") {
+                            $("#chkSMSUser").prop("checked", false);
+                        }
+                        if (localStorage.getItem("emailCustomerAppt") == "false") {
+                            $("#customerEmail").prop("checked", false);
+                        }
+                        if (localStorage.getItem("emailUserAppt") == "false") {
+                            $("#userEmail").prop("checked", false);
+                        }
+                    }, 100);
                     // this.$body.addClass('modal-open');
                 }
             },
@@ -1535,8 +1549,8 @@ Template.appointments.onRendered(function() {
             const child1 = document.querySelector(".fc-appointments-button");
             if (child1 != null) {
                 const parent1 = child1.parentNode;
-                $(parent1).css("min-width", 712).css("text-align", "center");
-                $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
+                $(parent1).css("min-width", 714).css("text-align", "center");
+                $("#calendar .fc-toolbar-title").css("min-width", 275).css("text-align", "center");
             }
 
             let url = window.location.href;
@@ -1899,6 +1913,20 @@ Template.appointments.onRendered(function() {
                         $("#smsConfirmedFlag i.fa-minus-circle").removeClass("d-none");
                     }
                     $("#event-modal").modal();
+                    setTimeout(() => {
+                        if (localStorage.getItem("smsCustomerAppt") == "false") {
+                            $("#chkSMSCustomer").prop("checked", false);
+                        }
+                        if (localStorage.getItem("smsUserAppt") == "false") {
+                            $("#chkSMSUser").prop("checked", false);
+                        }
+                        if (localStorage.getItem("emailCustomerAppt") == "false") {
+                            $("#customerEmail").prop("checked", false);
+                        }
+                        if (localStorage.getItem("emailUserAppt") == "false") {
+                            $("#userEmail").prop("checked", false);
+                        }
+                    }, 100);
                     // this.$body.addClass('modal-open');
                 }
             },
@@ -2288,8 +2316,8 @@ Template.appointments.onRendered(function() {
             const child1 = document.querySelector(".fc-appointments-button");
             if (child1 != null) {
                 const parent1 = child1.parentNode;
-                $(parent1).css("min-width", 712).css("text-align", "center");
-                $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
+                $(parent1).css("min-width", 714).css("text-align", "center");
+                $("#calendar .fc-toolbar-title").css("min-width", 275).css("text-align", "center");
             }
 
             let url = window.location.href;
@@ -3650,6 +3678,20 @@ Template.appointments.onRendered(function() {
                                         }
                                     }
                                     $("#event-modal").modal();
+                                    setTimeout(() => {
+                                        if (localStorage.getItem("smsCustomerAppt") == "false") {
+                                            $("#chkSMSCustomer").prop("checked", false);
+                                        }
+                                        if (localStorage.getItem("smsUserAppt") == "false") {
+                                            $("#chkSMSUser").prop("checked", false);
+                                        }
+                                        if (localStorage.getItem("emailCustomerAppt") == "false") {
+                                            $("#customerEmail").prop("checked", false);
+                                        }
+                                        if (localStorage.getItem("emailUserAppt") == "false") {
+                                            $("#userEmail").prop("checked", false);
+                                        }
+                                    }, 100);
                                     // this.$body.addClass('modal-open');
                                 }
                             }
@@ -4535,6 +4577,20 @@ Template.appointments.onRendered(function() {
                                     employeeName = arg.event._def.title;
                                     populateEmployDetails(employeeName);
                                     $("#event-modal").modal();
+                                    setTimeout(() => {
+                                        if (localStorage.getItem("smsCustomerAppt") == "false") {
+                                            $("#chkSMSCustomer").prop("checked", false);
+                                        }
+                                        if (localStorage.getItem("smsUserAppt") == "false") {
+                                            $("#chkSMSUser").prop("checked", false);
+                                        }
+                                        if (localStorage.getItem("emailCustomerAppt") == "false") {
+                                            $("#customerEmail").prop("checked", false);
+                                        }
+                                        if (localStorage.getItem("emailUserAppt") == "false") {
+                                            $("#userEmail").prop("checked", false);
+                                        }
+                                    }, 100);
                                 },
                                 editable: true,
                                 droppable: true, // this allows things to be dropped onto the calendar
@@ -5256,6 +5312,20 @@ Template.appointments.onRendered(function() {
                                 }
                             }
                             $("#event-modal").modal();
+                            setTimeout(() => {
+                                if (localStorage.getItem("smsCustomerAppt") == "false") {
+                                    $("#chkSMSCustomer").prop("checked", false);
+                                }
+                                if (localStorage.getItem("smsUserAppt") == "false") {
+                                    $("#chkSMSUser").prop("checked", false);
+                                }
+                                if (localStorage.getItem("emailCustomerAppt") == "false") {
+                                    $("#customerEmail").prop("checked", false);
+                                }
+                                if (localStorage.getItem("emailUserAppt") == "false") {
+                                    $("#userEmail").prop("checked", false);
+                                }
+                            }, 100);
                             // this.$body.addClass('modal-open');
                         }
                     }
@@ -6339,6 +6409,20 @@ Template.appointments.onRendered(function() {
                                     }
                                 }
                                 $("#event-modal").modal();
+                                setTimeout(() => {
+                                    if (localStorage.getItem("smsCustomerAppt") == "false") {
+                                        $("#chkSMSCustomer").prop("checked", false);
+                                    }
+                                    if (localStorage.getItem("smsUserAppt") == "false") {
+                                        $("#chkSMSUser").prop("checked", false);
+                                    }
+                                    if (localStorage.getItem("emailCustomerAppt") == "false") {
+                                        $("#customerEmail").prop("checked", false);
+                                    }
+                                    if (localStorage.getItem("emailUserAppt") == "false") {
+                                        $("#userEmail").prop("checked", false);
+                                    }
+                                }, 100);
                                 // this.$body.addClass('modal-open');
                             }
                         }
@@ -7209,6 +7293,20 @@ Template.appointments.onRendered(function() {
                                 employeeName = arg.event._def.title;
                                 populateEmployDetails(employeeName);
                                 $("#event-modal").modal();
+                                setTimeout(() => {
+                                    if (localStorage.getItem("smsCustomerAppt") == "false") {
+                                        $("#chkSMSCustomer").prop("checked", false);
+                                    }
+                                    if (localStorage.getItem("smsUserAppt") == "false") {
+                                        $("#chkSMSUser").prop("checked", false);
+                                    }
+                                    if (localStorage.getItem("emailCustomerAppt") == "false") {
+                                        $("#customerEmail").prop("checked", false);
+                                    }
+                                    if (localStorage.getItem("emailUserAppt") == "false") {
+                                        $("#userEmail").prop("checked", false);
+                                    }
+                                }, 100);
                             },
                             editable: true,
                             droppable: true, // this allows things to be dropped onto the calendar
@@ -7676,8 +7774,8 @@ Template.appointments.onRendered(function() {
             const child1 = document.querySelector(".fc-appointments-button");
             if (child1 != null) {
                 const parent1 = child1.parentNode;
-                $(parent1).css("min-width", 712).css("text-align", "center");
-                $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
+                $(parent1).css("min-width", 714).css("text-align", "center");
+                $("#calendar .fc-toolbar-title").css("min-width", 275).css("text-align", "center");
             }
 
             let url = window.location.href;
@@ -8889,6 +8987,20 @@ Template.appointments.onRendered(function() {
         $('#employee_name').val(employeeName);
         $('#employeeListModal').modal('toggle');
         $("#event-modal").modal();
+        setTimeout(() => {
+            if (localStorage.getItem("smsCustomerAppt") == "false") {
+                $("#chkSMSCustomer").prop("checked", false);
+            }
+            if (localStorage.getItem("smsUserAppt") == "false") {
+                $("#chkSMSUser").prop("checked", false);
+            }
+            if (localStorage.getItem("emailCustomerAppt") == "false") {
+                $("#customerEmail").prop("checked", false);
+            }
+            if (localStorage.getItem("emailUserAppt") == "false") {
+                $("#userEmail").prop("checked", false);
+            }
+        }, 100);
     });
 
     $(document).on("click", ".addExtraProduct", function(e) {
@@ -9440,6 +9552,20 @@ Template.appointments.onRendered(function() {
             }
             $("#customerListModal").modal("hide");
             $("#event-modal").modal();
+            setTimeout(() => {
+                if (localStorage.getItem("smsCustomerAppt") == "false") {
+                    $("#chkSMSCustomer").prop("checked", false);
+                }
+                if (localStorage.getItem("smsUserAppt") == "false") {
+                    $("#chkSMSUser").prop("checked", false);
+                }
+                if (localStorage.getItem("emailCustomerAppt") == "false") {
+                    $("#customerEmail").prop("checked", false);
+                }
+                if (localStorage.getItem("emailUserAppt") == "false") {
+                    $("#userEmail").prop("checked", false);
+                }
+            }, 100);
         }
     );
 
@@ -9908,6 +10034,20 @@ Template.appointments.onRendered(function() {
                                         }
                                     }
                                     $("#event-modal").modal();
+                                    setTimeout(() => {
+                                        if (localStorage.getItem("smsCustomerAppt") == "false") {
+                                            $("#chkSMSCustomer").prop("checked", false);
+                                        }
+                                        if (localStorage.getItem("smsUserAppt") == "false") {
+                                            $("#chkSMSUser").prop("checked", false);
+                                        }
+                                        if (localStorage.getItem("emailCustomerAppt") == "false") {
+                                            $("#customerEmail").prop("checked", false);
+                                        }
+                                        if (localStorage.getItem("emailUserAppt") == "false") {
+                                            $("#userEmail").prop("checked", false);
+                                        }
+                                    }, 100);
                                     // this.$body.addClass('modal-open');
                                 }
                             },
@@ -10679,6 +10819,7 @@ Template.appointments.onRendered(function() {
         $(".btnSaveIgnoreSMS").addClass("d-none");
         $(".btnStopIgnoreSMS").addClass("d-none");
     }
+
     templateObject.checkSMSSettings = function() {
         const accessLevel = Session.get("CloudApptSMS");
         if (!accessLevel) {
@@ -11555,6 +11696,20 @@ Template.appointments.events({
                 }
 
                 $("#event-modal").modal();
+                setTimeout(() => {
+                    if (localStorage.getItem("smsCustomerAppt") == "false") {
+                        $("#chkSMSCustomer").prop("checked", false);
+                    }
+                    if (localStorage.getItem("smsUserAppt") == "false") {
+                        $("#chkSMSUser").prop("checked", false);
+                    }
+                    if (localStorage.getItem("emailCustomerAppt") == "false") {
+                        $("#customerEmail").prop("checked", false);
+                    }
+                    if (localStorage.getItem("emailUserAppt") == "false") {
+                        $("#userEmail").prop("checked", false);
+                    }
+                }, 100);
             }
         } else {
             let bookingDate = new Date();
@@ -14767,6 +14922,10 @@ Template.appointments.events({
                 const smsUser = $("#chkSMSUser").is(":checked");
                 const emailCustomer = $("#customerEmail").is(":checked");
                 const emailUser = $("#userEmail").is(":checked");
+                localStorage.setItem("smsCustomerAppt", smsCustomer);
+                localStorage.setItem("smsUserAppt", smsUser);
+                localStorage.setItem("emailCustomerAppt", emailCustomer);
+                localStorage.setItem("emailUserAppt", emailUser);
                 const customerPhone = $("#mobile").val();
                 if (customerPhone === "" || customerPhone === "0") {
                     if (smsCustomer || smsUser) {
@@ -16301,7 +16460,7 @@ Template.appointments.events({
         var startTime = new Date(
             date1 + " " + document.getElementById("tActualStartTime").value + ":00"
         );
-        if (date2 != "" && endTime > startTime) {
+        if (date2 != "" && endTime >= startTime) {
             let hours = parseFloat(
                 templateObject.diff_hours(endTime, startTime)
             ).toFixed(2);
@@ -16321,7 +16480,7 @@ Template.appointments.events({
         var startTime = new Date(
             date1 + " " + document.getElementById("tActualStartTime").value + ":00"
         );
-        if (endTime > startTime) {
+        if (endTime >= startTime) {
             let hours = parseFloat(templateObject.diff_hours(endTime, startTime));
             document.getElementById("txtActualHoursSpent").value =
                 templateObject.timeFormat(hours) || "";
@@ -18049,28 +18208,50 @@ Template.appointments.events({
             document.getElementById("colCalendar").style.width = "100vw";
         }
     },
-    'click .addAppointmentEmp': function(event) {
+    // 'click .addAppointmentEmp': function(event) {
+    //     templateObject = Template.instance();
+    //     let empID = $(event.currentTarget).attr('id').split("_")[1];
+    //     templateObject.empID.set(empID);
+    //     // let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+    //     // var startdateGet = new Date($("#dtSODate").datepicker("getDate"));
+    //     // var leaveFlag = false;
+    //     // leaveemployeerecords.forEach((item) => {
+    //     //   if(item.EmployeeID == empID && startdateGet >= new Date(item.StartDate) && startdateGet <= new Date(item.EndDate)){
+    //     //     swal(
+    //     //       "Employee is unavailable due to being on Leave",
+    //     //       "",
+    //     //       "warning"
+    //     //     );
+    //     //     leaveFlag = true;
+    //     //   }
+    //     // });
+
+    //     // if(!leaveFlag){
+    //     $('#employee_name').val($("#employeeName_" + empID).text());
+    //     $('#customerListModal').modal("show");
+    //     // }
+    // },
+    'click .addLeaveEmp': function(event) {
         templateObject = Template.instance();
         let empID = $(event.currentTarget).attr('id').split("_")[1];
         templateObject.empID.set(empID);
-        // let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-        // var startdateGet = new Date($("#dtSODate").datepicker("getDate"));
-        // var leaveFlag = false;
-        // leaveemployeerecords.forEach((item) => {
-        //   if(item.EmployeeID == empID && startdateGet >= new Date(item.StartDate) && startdateGet <= new Date(item.EndDate)){
-        //     swal(
-        //       "Employee is unavailable due to being on Leave",
-        //       "",
-        //       "warning"
-        //     );
-        //     leaveFlag = true;
-        //   }
-        // });
-
-        // if(!leaveFlag){
-        $('#employee_name').val($("#employeeName_" + empID).text());
-        $('#customerListModal').modal("show");
-        // }
+        swal({
+            title: "Leave Settings",
+            text: "Do you wish to create leave for this employee?",
+            type: "question",
+            showCancelButton: true,
+            confirmButtonText: "Ok",
+            cancelButtonText: "Cancel",
+        }).then((result) => {
+            if (result.value) {
+                FlowRouter.go("/employeescard?id=" + empID);
+                setTimeout(function() {
+                    $('.payrollTab').tab('show');
+                    $('a[href="#leave"]').tab('show');
+                    $('#newLeaveRequestbtn').trigger('click');
+                }, 1000);
+            }
+        });
     },
     'click .chkServiceCard': function(event) {
         //  templateObject = Template.instance();
@@ -18308,6 +18489,20 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             }
             $("#customerListModal").modal("hide");
             $("#event-modal").modal();
+            setTimeout(() => {
+                if (localStorage.getItem("smsCustomerAppt") == "false") {
+                    $("#chkSMSCustomer").prop("checked", false);
+                }
+                if (localStorage.getItem("smsUserAppt") == "false") {
+                    $("#chkSMSUser").prop("checked", false);
+                }
+                if (localStorage.getItem("emailCustomerAppt") == "false") {
+                    $("#customerEmail").prop("checked", false);
+                }
+                if (localStorage.getItem("emailUserAppt") == "false") {
+                    $("#userEmail").prop("checked", false);
+                }
+            }, 100);
         });
     } else if (FlowRouter.current().queryParams.customerid) {
         contactService.getOneCustomerDataEx(leadid).then((data) => {
@@ -18391,6 +18586,20 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             }
             $("#customerListModal").modal("hide");
             $("#event-modal").modal();
+            setTimeout(() => {
+                if (localStorage.getItem("smsCustomerAppt") == "false") {
+                    $("#chkSMSCustomer").prop("checked", false);
+                }
+                if (localStorage.getItem("smsUserAppt") == "false") {
+                    $("#chkSMSUser").prop("checked", false);
+                }
+                if (localStorage.getItem("emailCustomerAppt") == "false") {
+                    $("#customerEmail").prop("checked", false);
+                }
+                if (localStorage.getItem("emailUserAppt") == "false") {
+                    $("#userEmail").prop("checked", false);
+                }
+            }, 100);
         });
     } else if (FlowRouter.current().queryParams.supplierid) {
         contactService.getOneSupplierDataEx(leadid).then((data) => {
@@ -18474,6 +18683,20 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             }
             $("#customerListModal").modal("hide");
             $("#event-modal").modal();
+            setTimeout(() => {
+                if (localStorage.getItem("smsCustomerAppt") == "false") {
+                    $("#chkSMSCustomer").prop("checked", false);
+                }
+                if (localStorage.getItem("smsUserAppt") == "false") {
+                    $("#chkSMSUser").prop("checked", false);
+                }
+                if (localStorage.getItem("emailCustomerAppt") == "false") {
+                    $("#customerEmail").prop("checked", false);
+                }
+                if (localStorage.getItem("emailUserAppt") == "false") {
+                    $("#userEmail").prop("checked", false);
+                }
+            }, 100);
         });
     }
 };

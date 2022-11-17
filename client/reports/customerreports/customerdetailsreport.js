@@ -42,39 +42,15 @@ Template.customerdetailsreport.onRendered(() => {
     Datehandler.initOneMonth();
   };
 
-  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
-    let defaultOptions = templateObject.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.fromDate = formatDateFrom;
-      defaultOptions.toDate = formatDateTo;
-      defaultOptions.ignoreDate = ignoreDate;
-    } else {
-      defaultOptions = {
-        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
-        toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: false
-      };
-    }
-    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
-      $('.edtReportDates').attr('disabled', true);
-      templateObject.dateAsAt.set("Current Date");
-    }
-    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
-    await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getCustomerDetailReportData();
+  templateObject.setDateAs = ( dateFrom = null ) => {
+    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
   };
 
-  templateObject.getCustomerDetailReportData = async function () {
+  templateObject.getCustomerDetailReportData = async function ( dateFrom, dateTo, ignoreDate ) {
     LoadingOverlay.show();
+    templateObject.setDateAs( dateFrom );
     let data = [];
     if (!localStorage.getItem('VS1CustomerDetails_Report')) {
-      const options = await templateObject.reportOptions.get();
-    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let ignoreDate = options.ignoreDate || false;
     data = await reportService.getCustomerDetailReport( dateFrom, dateTo, ignoreDate);
       if( data.tcustomersummaryreport.length > 0 ){
         localStorage.setItem('VS1CustomerDetails_Report', JSON.stringify(data)||'');
@@ -137,16 +113,6 @@ Template.customerdetailsreport.onRendered(() => {
     }, 1000);
   }
 
-  templateObject.setReportOptions();
-
-  templateObject.initUploadedImage = () => {
-    let imageData = localStorage.getItem("Image");
-    if (imageData) {
-      $("#uploadedImage").attr("src", imageData);
-      $("#uploadedImage").attr("width", "50%");
-    }
-  };
-
   /**
    * This function will load
    * @param {*} dateFrom
@@ -167,7 +133,12 @@ Template.customerdetailsreport.onRendered(() => {
   
 
   templateObject.initDate();
-  templateObject.initUploadedImage();
+  templateObject.getCustomerDetailReportData(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+    false
+  );
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
   // templateObject.getReport(
   //   `${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()}`,
   //   moment(currentDate).format("YYYY-MM-DD")
@@ -177,6 +148,7 @@ Template.customerdetailsreport.onRendered(() => {
 
 Template.customerdetailsreport.events({
   "click #ignoreDate":  (e, templateObject) => {
+    localStorage.setItem("VS1CustomerDetails_Report", "");
     templateObject.getCustomerDetailReportData(
       null, 
       null, 
@@ -185,7 +157,7 @@ Template.customerdetailsreport.events({
   },
   "change #dateTo, change #dateFrom": (e) => {
     let templateObject = Template.instance();
-    localStorage.setItem("VS1GeneralLedger_Report", "");
+    localStorage.setItem("VS1CustomerDetails_Report", "");
     templateObject.getCustomerDetailReportData(
       GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
