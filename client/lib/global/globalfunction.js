@@ -713,3 +713,19 @@ convertDateFormatForPrint = function(pDate) {
   ret = arrDate[0] + "-" + sMonths[parseInt(arrDate[1]) - 1] + "-" + arrDate[2].substring(2, 4);
   return ret;
 }
+
+convertDateFormatForPrint2 = function(pDate) {
+  let ret = "";
+  let sMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  let arrDate = pDate.split("/");
+  ret = arrDate[0] + " " + sMonths[parseInt(arrDate[1]) - 1] + " " + arrDate[2];
+  return ret;
+}
+
+convertDateFormatForPrint3 = function(pDate) {
+  let ret = "";
+  let sMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  let arrDate = pDate.split("/");
+  ret = arrDate[0] + " " + sMonths[parseInt(arrDate[1]) - 1] + " " + arrDate[2];
+  return ret;
+}
