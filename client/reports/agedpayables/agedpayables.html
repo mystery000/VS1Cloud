@@ -167,17 +167,17 @@
                       <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries.Current }} text-danger {{else}} text-success {{/if}}">
                         <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries.Current}}</a>
                       </td>
-                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries.['30Days'] }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries.['30Days']}}</a>
+                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries '30Days' }} text-danger {{else}} text-success {{/if}}">
+                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPriceWithDays item.entries '30Days' }}</a>
                       </td>
-                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries.['60Days'] }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries.['60Days']}}</a>
+                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries '60Days' }} text-danger {{else}} text-success {{/if}}">
+                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPriceWithDays item.entries '60Days' }}</a>
                       </td>
-                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries.['90Days'] }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries.['90Days']}}</a>
+                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries '90Days' }} text-danger {{else}} text-success {{/if}}">
+                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPriceWithDays item.entries '90'}}</a>
                       </td>
-                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries.['120Days'] }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries.['120Days']}}</a>
+                      <td class="Total1Indented xxxxx MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries '120Days' }} text-danger {{else}} text-success {{/if}}">
+                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPriceWithDays item.entries '120'}}</a>
                       </td>
 
                     {{/if}}
