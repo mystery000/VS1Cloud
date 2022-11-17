@@ -4053,7 +4053,7 @@ Template.new_invoice.onRendered(function() {
 
                                     if (useData[d].fields.Lines.length) {
                                         for (let i = 0; i < useData[d].fields.Lines.length; i++) {
-                                            console.log("----------", useData[d].fields.Lines[i]);
+                                        
                                             let AmountGbp =
                                                 currencySymbol +
                                                 "" +
@@ -4149,7 +4149,7 @@ Template.new_invoice.onRendered(function() {
                                                 getProductInfo = getProductInfo.split(" by ")[0];
                                                 productService.getProductStatus(getProductInfo).then(function(data) {
                                                         lineItemObj.itemID = data.tproductvs1[0].Id || 0;
-                                                        console.log(lineItemObj.itemID);
+                                                        
                                                         if (data.tproductvs1[0].Id) {
                                                             var dataListTable = [
                                                                 useData[d].fields.Lines[i].fields.ProductName || "",

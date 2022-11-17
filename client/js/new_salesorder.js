@@ -2421,11 +2421,6 @@ Template.new_salesorder.onRendered(function () {
         await this.saleOrders.set(saleOrders);
         await this.saleOrder.set(saleOrder);
 
-        console.log(
-                "sale Order", 
-                saleOrders, 
-                saleOrder
-            );
 
     }
 
@@ -7708,8 +7703,6 @@ Template.new_salesorder.onRendered(function () {
         let saleOrder = await this.saleOrder.get();
         let lines = saleOrder.fields.Lines;
 
-        console.log("lines", lines);
-
         const findProductById = async (pId) => {
             let products = await this.products.get();
             products = products.map(p => p.fields);
@@ -7720,13 +7713,12 @@ Template.new_salesorder.onRendered(function () {
         await GlobalFunctions.asyncForEach(lines, async (line, i) => {
             if(line.vId == vId) {
                 lines[i].fields = await findProductById(productId);
-                console.log("fieldssssss", lines[i].fields);
+              
             }
         })
 
         saleOrder.fields.Lines = lines;
 
-        console.log("lines----", lines);
 
         await this.saleOrder.set(saleOrder);
     }
@@ -7924,7 +7916,7 @@ Template.new_salesorder.helpers({
         return defaultCurrencyCode;
     },
     convertToForeignAmount: (amount) => {
-        console.log("amount to vonvert", amount);
+      
         return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
     },
 
@@ -7952,13 +7944,13 @@ Template.new_salesorder.helpers({
 
     saleOrder: () => {
         let _saleOrder = Template.instance().saleOrder.get();
-        console.log("saleOrder helper", _saleOrder);
+      
 
         return _saleOrder.fields;
     },
     saleOrderLines: () => {
         let _saleOrder = Template.instance().saleOrder.get();
-        console.log("saleOrder helper", _saleOrder);
+  
 
         return _saleOrder.fields.Lines;
     }
@@ -13182,7 +13174,6 @@ Template.new_salesorder.events({
         $('.paste-product-here').removeClass('paste-product-here');
         $('#productListModal').modal('toggle'); // show modal
 
-        console.log("helo", productTr, productName, productId);
 
     },
 
