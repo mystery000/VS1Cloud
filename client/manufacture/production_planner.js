@@ -9,10 +9,10 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import bootstrapPlugin from "@fullcalendar/bootstrap";
 import {ManufacturingService} from '../manufacture/manufacturing-service';
-// import commonStyles from '@fullcalendar/common/main.css';
-// import dayGridStyles from '@fullcalendar/daygrid/main.css';
-// import timelineStyles from '@fullcalendar/timeline/main.css';
-// import resourceTimelineStyles from '@fullcalendar/resource-timeline/main.css';
+import commonStyles from '@fullcalendar/common/main.css';
+import dayGridStyles from '@fullcalendar/daygrid/main.css';
+import timelineStyles from '@fullcalendar/timeline/main.css';
+import resourceTimelineStyles from '@fullcalendar/resource-timeline/main.css';
 import 'jQuery.print/jQuery.print.js';
 
 

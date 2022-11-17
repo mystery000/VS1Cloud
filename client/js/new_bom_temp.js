@@ -552,7 +552,7 @@ Template.bom_template.events({
                         "</div>" +
                         "<div class='colProcess form-group'>" +
                         "</div>" +
-                        "<div class='colDuration form-group'>" +
+                        "<div class='colDuration form-group'></div>" +
                         "<div class='colNote form-group'>" +
                         "</div>" +
                         "<div class='colAttachment form-group'></div>" +
