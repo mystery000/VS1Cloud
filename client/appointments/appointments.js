@@ -16460,7 +16460,7 @@ Template.appointments.events({
         var startTime = new Date(
             date1 + " " + document.getElementById("tActualStartTime").value + ":00"
         );
-        if (date2 != "" && endTime > startTime) {
+        if (date2 != "" && endTime >= startTime) {
             let hours = parseFloat(
                 templateObject.diff_hours(endTime, startTime)
             ).toFixed(2);
@@ -16480,7 +16480,7 @@ Template.appointments.events({
         var startTime = new Date(
             date1 + " " + document.getElementById("tActualStartTime").value + ":00"
         );
-        if (endTime > startTime) {
+        if (endTime >= startTime) {
             let hours = parseFloat(templateObject.diff_hours(endTime, startTime));
             document.getElementById("txtActualHoursSpent").value =
                 templateObject.timeFormat(hours) || "";
