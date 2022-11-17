@@ -813,7 +813,7 @@ Template.agedpayables.events({
         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
-        const filename = loggedCompany + '-Aged Payables' + '.csv';
+        const filename = loggedCompany + ' - Aged Payables' + '.csv';
         utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
         let rows = [];
         // reportService.getAgedPayableDetailsData(formatDateFrom,formatDateTo,false).then(function (data) {

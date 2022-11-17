@@ -160,7 +160,7 @@ Template.newsidenav.onCreated(function() {
 Template.newsidenav.onRendered(function() {
     let userData = localStorage.getItem('vs1cloudLoginInfo');
     var countObjectTimes = 0;
-    let allDataToLoad = 74;
+    let allDataToLoad = 78;
     let progressPercentage = 0;
 
     let templateObject = Template.instance();
@@ -246,7 +246,7 @@ Template.newsidenav.onRendered(function() {
               $("#sidenavvatreturnlist").parent().show();
               $("#sidenavvatreturn").parent().show();
             }
-            
+
             if (currentLoc == "/dashboard") {
                 $('#sidenavaccounts').removeClass('active');
                 $('#sidenavbanking').removeClass('active');

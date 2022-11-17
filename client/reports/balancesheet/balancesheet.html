@@ -35,7 +35,7 @@
                             <tr>
                                 {{#each value in dataArrHeader}}
                                     <div style="display:none;">{{item.Company}}</div>
-                                    <td class="text-nowrap text-left {{#if isNegativeAmount value}} text-danger {{/if}}" style="font-weight: 800;" >
+                                    <td class="text-nowrap {{#if isNegativeAmount value}} text-danger {{/if}}" style="font-weight: 800;" >
                                         {{value}}
                                     </td>
                                     <td></td>
@@ -44,7 +44,7 @@
                             </tr>
                             <tr>
                                 {{#each value in dataArrAsset}}
-                                    <td class="text-nowrap {{#if isNegativeAmount value}} text-danger {{/if}}" style="font-weight: 800;" >
+                                    <td class="text-nowrap text-right {{#if isNegativeAmount value}} text-danger {{/if}}" style="font-weight: 800;" >
                                         {{value}}
                                     </td>
                                     <td></td>
@@ -118,7 +118,7 @@
                                             {{/if}}
 
                                         {{else}}
-                                            <td class="text-nowrap {{#if isNegativeAmount item}} text-danger {{/if}}" style="font-weight: 800;">{{item}}</td>
+                                            <td class="text-nowrap text-right {{#if isNegativeAmount item}} text-danger {{/if}}" style="font-weight: 800;">{{item}}</td>
 
                                         {{/if}}
 
@@ -126,10 +126,10 @@
                                     {{else}}
 
                                         {{#if isObject item}}
-                                            <td class="text-nowrap {{#if isNegativeAmount item.amount}} text-danger {{/if}}" style="font-weight: 800;">{{item.value}}</td>
+                                            <td class="text-nowrap text-right {{#if isNegativeAmount item.amount}} text-danger {{/if}}" style="font-weight: 800;">{{item.value}}</td>
 
                                         {{else}}
-                                            <td class="text-nowrap {{#if isNegativeAmount item}} text-danger {{/if}}" style="font-weight: 800;">{{item}}</td>
+                                            <td class="text-nowrap text-right {{#if isNegativeAmount item}} text-danger {{/if}}" style="font-weight: 800;">{{item}}</td>
 
                                         {{/if}}
 

@@ -766,10 +766,11 @@
                                                             <th class="th colAccountNo">Account No</th>
                                                             <th class="th colType">Type</th>
                                                             <th class="th colBalance" style="width:80px;">Balance</th>
-                                                            <th class="th colTaxCode hiddenColumn" style="width:80px;">Tax Code</th>
+                                                            <th class="th colTaxCode" style="width:80px;">Tax Code</th>
                                                             <th class="th colBankName hiddenColumn" style="width:120px;">Bank Name</th>
-                                                            <th class="th colBankAccountName hiddenColumn" style="width:120px;">Bank Acc Name</th>
-                                                            <th class="th colBankAccountNo hiddenColumn" style="width:120px;">Bank Acc No</th>
+                                                            <th class="th colBankAccountName" style="width:120px;">Bank Acc Name</th>
+                                                            <th class="th colBSB">BSB</th>
+                                                            <th class="th colBankAccountNo" style="width:120px;">Bank Acc No</th>
                                                             <th class="th colCardNumber hiddenColumn" style="width:120px;">Card Number</th>
                                                             <th class="th colExpiryDate hiddenColumn" style="width:60px;">Expiry Date</th>
                                                             <th class="th colCVC hiddenColumn" style="width:60px;">CVC</th>
@@ -784,7 +785,7 @@
                                                             {{#each item in datatablerecords}}
                                                                 <tr class="dnd-moved" style="cursor: pointer;">
                                                                     <td contenteditable="false" class="colAccountId">
-                                                                        <div class="custom-control custom-checkbox pointer" style="width:15px; margin:auto">
+                                                                        <div class="custom-control custom-checkbox pointer" style="width:15px; margin:auto;">
                                                                             <input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-{{pan.no}}-{{item.id}}" name="f-{{pan.no}}-{{item.id}}" value="{{item.id}}">
                                                                             <label class="custom-control-label" for="f-{{pan.no}}-{{item.id}}"></label>
                                                                         </div>
@@ -798,10 +799,11 @@
                                                                     <td contenteditable="false" class="colBalance" style="text-align: right!important;">
                                                                         {{item.balance}}
                                                                     </td>
-                                                                    <td contenteditable="false" class="colTaxCode hiddenColumn">{{item.taxcode}}</td>
+                                                                    <td contenteditable="false" class="colTaxCode">{{item.taxcode}}</td>
                                                                     <td contenteditable="false" class="colBankName hiddenColumn">{{item.bankname}}</td>
-                                                                    <td contenteditable="false" class="colBankAccountName hiddenColumn">{{item.bankaccountname}}</td>
-                                                                    <td contenteditable="false" class="colBankAccountNo hiddenColumn">{{item.bankaccountnumber}}</td>
+                                                                    <td contenteditable="false" class="colBankAccountName">{{item.bankaccountname}}</td>
+                                                                    <td contenteditable="false" class="colBSB">{{item.bsb}}</td>
+                                                                    <td contenteditable="false" class="colBankAccountNo">{{item.bankaccountnumber}}</td>
                                                                     <td contenteditable="false" class="colCardNumber hiddenColumn">{{item.cardnumber}}</td>
                                                                     <td contenteditable="false" class="colExpiryDate hiddenColumn">{{item.expirydate}}</td>
                                                                     <td contenteditable="false" class="colCVC hiddenColumn">{{item.cvc}}</td>
@@ -889,10 +891,11 @@
                                                                     <th class="th colAccountNo">Account No</th>
                                                                     <th class="th colType">Type</th>
                                                                     <th class="th colBalance" style="width:80px;">Balance</th>
-                                                                    <th class="th colTaxCode hiddenColumn" style="width:80px;">Tax Code</th>
+                                                                    <th class="th colTaxCode" style="width:80px;">Tax Code</th>
                                                                     <th class="th colBankName hiddenColumn" style="width:120px;">Bank Name</th>
-                                                                    <th class="th colBankAccountName hiddenColumn" style="width:120px;">Bank Acc Name</th>
-                                                                    <th class="th colBankAccountNo hiddenColumn" style="width:120px;">Bank Acc No</th>
+                                                                    <th class="th colBankAccountName" style="width:120px;">Bank Acc Name</th>
+                                                                    <th class="th colBSB">BSB</th>
+                                                                    <th class="th colBankAccountNo" style="width:120px;">Bank Acc No</th>
                                                                     <th class="th colCardNumber hiddenColumn" style="width:120px;">Card Number</th>
                                                                     <th class="th colExpiryDate hiddenColumn" style="width:60px;">Expiry Date</th>
                                                                     <th class="th colCVC hiddenColumn" style="width:60px;">CVC</th>
@@ -908,8 +911,8 @@
                                                                         <tr class="dnd-moved" style="cursor: pointer;">
                                                                             <td contenteditable="false" class="colAccountId">
                                                                                 <div class="custom-control custom-checkbox pointer" style="width:15px; margin:auto">
-                                                                                    <input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-15-{{item.id}}" name="f-15-{{item.id}}" value="{{item.id}}">
-                                                                                    <label class="custom-control-label" for="f-15-{{item.id}}"></label>
+                                                                                    <input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-{{pan.no}}-{{item.id}}" name="f-{{pan.no}}-{{item.id}}" value="{{item.id}}">
+                                                                                    <label class="custom-control-label" for="f-{{pan.no}}-{{item.id}}"></label>
                                                                                 </div>
                                                                             </td>
                                                                             <td contenteditable="false" class="colAccountName">{{item.accountname}}</td>
@@ -921,10 +924,11 @@
                                                                             <td contenteditable="false" class="colBalance" style="text-align: right!important;">
                                                                                 {{item.balance}}
                                                                             </td>
-                                                                            <td contenteditable="false" class="colTaxCode hiddenColumn">{{item.taxcode}}</td>
+                                                                            <td contenteditable="false" class="colTaxCode">{{item.taxcode}}</td>
                                                                             <td contenteditable="false" class="colBankName hiddenColumn">{{item.bankname}}</td>
-                                                                            <td contenteditable="false" class="colBankAccountName hiddenColumn">{{item.bankaccountname}}</td>
-                                                                            <td contenteditable="false" class="colBankAccountNo hiddenColumn">{{item.bankaccountnumber}}</td>
+                                                                            <td contenteditable="false" class="colBankAccountName">{{item.bankaccountname}}</td>
+                                                                            <td contenteditable="false" class="colBSB">{{item.bsb}}</td>
+                                                                            <td contenteditable="false" class="colBankAccountNo">{{item.bankaccountnumber}}</td>
                                                                             <td contenteditable="false" class="colCardNumber hiddenColumn">{{item.cardnumber}}</td>
                                                                             <td contenteditable="false" class="colExpiryDate hiddenColumn">{{item.expirydate}}</td>
                                                                             <td contenteditable="false" class="colCVC hiddenColumn">{{item.cvc}}</td>

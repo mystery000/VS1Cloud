@@ -2,7 +2,8 @@ import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from '../../js/sidebar-service';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { UtilityService } from "../../utility-service";
-
+import '../../lib/global/indexdbstorage.js';
+import XLSX from 'xlsx';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
@@ -12,6 +13,7 @@ Template.leadstatussettings.onCreated(function() {
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.leadStatusList = new ReactiveVar();
+    templateObject.selectedFile = new ReactiveVar();
 });
 
 Template.leadstatussettings.onRendered(function() {
@@ -578,6 +580,12 @@ Template.leadstatussettings.events({
         $('#statusQuantity').val(10);
         $('#myModalLeadStatus').modal('show');
     },
+    'click .btnClose': function () {
+        playCancelAudio();
+        setTimeout(function(){
+        $('#myModalLeadStatus').css('display', 'none');
+        }, delayTimeAfterSound);
+    },
     'click .btnDeleteLeadStatus': function() {
         playDeleteAudio();
         let contactService = new ContactService();
@@ -687,7 +695,153 @@ Template.leadstatussettings.events({
         setTimeout(function() {
             history.back(1);
         }, delayTimeAfterSound);
+    },
+    // Import here
+    'click .templateDownload': function() {
+        let utilityService = new UtilityService();
+        let rows = [];
+        const filename = 'SampleLeadStatusSettings' + '.csv';
+        rows[0] = ['Lead Status Name', 'Description', 'EQPM'];
+        rows[1] = ['ABC', 'Description', '0.00'];
+        utilityService.exportToCsv(rows, filename, 'csv');
+    },
+    'click .templateDownloadXLSX': function(e) {
+
+        e.preventDefault(); //stop the browser from following
+        window.location.href = 'sample_imports/SampleLeadStatusSettings.xlsx';
+    },
+    'click .btnUploadFile': function(event) {
+        $('#attachment-upload').val('');
+        $('.file-name').text('');
+        //$(".btnImport").removeAttr("disabled");
+        $('#attachment-upload').trigger('click');
+
+    },
+    'change #attachment-upload': function(e) {
+        let templateObj = Template.instance();
+        var filename = $('#attachment-upload')[0].files[0]['name'];
+        var fileExtension = filename.split('.').pop().toLowerCase();
+        var validExtensions = ["csv", "txt", "xlsx"];
+        var validCSVExtensions = ["csv", "txt"];
+        var validExcelExtensions = ["xlsx", "xls"];
+
+        if (validExtensions.indexOf(fileExtension) == -1) {
+            swal('Invalid Format', 'formats allowed are :' + validExtensions.join(', '), 'error');
+            $('.file-name').text('');
+            $(".btnImport").Attr("disabled");
+        } else if (validCSVExtensions.indexOf(fileExtension) != -1) {
+
+            $('.file-name').text(filename);
+            let selectedFile = event.target.files[0];
+
+            templateObj.selectedFile.set(selectedFile);
+            if ($('.file-name').text() != "") {
+                $(".btnImport").removeAttr("disabled");
+            } else {
+                $(".btnImport").Attr("disabled");
+            }
+        } else if (fileExtension == 'xlsx') {
+            $('.file-name').text(filename);
+            let selectedFile = event.target.files[0];
+            var oFileIn;
+            var oFile = selectedFile;
+            var sFilename = oFile.name;
+            // Create A File Reader HTML5
+            var reader = new FileReader();
+
+            // Ready The Event For When A File Gets Selected
+            reader.onload = function(e) {
+                var data = e.target.result;
+                data = new Uint8Array(data);
+                var workbook = XLSX.read(data, { type: 'array' });
+
+                var result = {};
+                workbook.SheetNames.forEach(function(sheetName) {
+                    var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    templateObj.selectedFile.set(sCSV);
+
+                    if (roa.length) result[sheetName] = roa;
+                });
+                // see the result, caution: it works after reader event is done.
+
+            };
+            reader.readAsArrayBuffer(oFile);
+
+            if ($('.file-name').text() != "") {
+                $(".btnImport").removeAttr("disabled");
+            } else {
+                $(".btnImport").Attr("disabled");
+            }
+
+        }
+    },
+    'click .btnImport': function() {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+        let contactService = new ContactService();
+        let objDetails;
+        let leadDescription = '';
+        let leadEQPM = 0.00;
+        Papa.parse(templateObject.selectedFile.get(), {
+            complete: function(results) {
+
+                if (results.data.length > 0) {
+                    if ((results.data[0][0] == "Lead Status Name") && (results.data[0][1] == "Description") && (results.data[0][2] == "EQPM")) {
+
+                        let dataLength = results.data.length * 500;
+                        setTimeout(function() {
+                            $('.importTemplateModal').hide();
+                            $('.modal-backdrop').hide();
+                            FlowRouter.go('/leadstatussettings?success=true');
+                            $('.fullScreenSpin').css('display', 'none');
+                        }, parseInt(dataLength));
+                        for (let i = 0; i < results.data.length - 1; i++) {
+                            leadDescription = results.data[i + 1][1] !== undefined ? results.data[i + 1][1] : '';
+                            leadEQPM = results.data[i + 1][2] !== undefined ? results.data[i + 1][2] : '';
+                            objDetails = {
+                                type: "TLeadStatusType",
+                                fields: {
+                                    TypeName: results.data[i + 1][0],
+                                    Description: leadDescription || '',
+                                    EQPM: leadEQPM || 0.00,
+                                    Active: true
+                                }
+                            };
+                            if (results.data[i + 1][1]) {
+                                if (results.data[i + 1][1] !== "") {
+                                    contactService.contactService.saveLeadStatusData(objDetails).then(function(data) {
+                                        //$('.fullScreenSpin').css('display','none');
+                                        //  Meteor._reload.reload();
+                                    }).catch(function(err) {
+                                        //$('.fullScreenSpin').css('display','none');
+                                        swal({ title: 'Oooops...', text: err, type: 'error', showCancelButton: false, confirmButtonText: 'Try Again' }).then((result) => {
+                                            if (result.value) {
+                                                // window.open('/clienttypesettings?success=true', '_self');
+                                                FlowRouter.go('/leadstatussettings?success=true');
+                                            } else if (result.dismiss === 'cancel') {
+                                                FlowRouter.go('/leadstatussettings?success=false');
+                                            }
+                                        });
+                                    });
+                                }
+                            }
+                        }
+
+                    } else {
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+                    }
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+                }
+
+
+            }
+        });
     }
+
 });
 
 Template.leadstatussettings.helpers({
