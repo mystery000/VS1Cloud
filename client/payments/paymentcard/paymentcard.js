@@ -901,11 +901,11 @@ Template.paymentcard.onRendered(() => {
           //   object_invoce[0]["supplier_name"]
           // );
     
-          if (object_invoce[0]["supplier_addr"] == "") {
-            $("#templatePreviewModal .pdfCustomerAddress").hide();
-          } else {
-            $("#templatePreviewModal .pdfCustomerAddress").show();
-          }
+        //   if (object_invoce[0]["supplier_addr"] == "") {
+        //     $("#templatePreviewModal .pdfCustomerAddress").hide();
+        //   } else {
+        //     $("#templatePreviewModal .pdfCustomerAddress").show();
+        //   }
           $("#templatePreviewModal .pdfCustomerAddress").empty();
           let txabillingAddress = object_invoce[0]["supplier_addr"];
           if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
@@ -958,6 +958,8 @@ Template.paymentcard.onRendered(() => {
           let companyReg = Session.get("vs1companyReg");
           if (companyReg != "")
             $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN " + companyReg.substring(0, 3) + " " + companyReg.substring(3, 6) + " " + companyReg.substring(6, companyReg.length));
+            else
+            $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN ");
           let companyAddr = Session.get("vs1companyaddress1");
           if (companyAddr == "")
             companyAddr = Session.get("vs1companyaddress2");
@@ -1109,11 +1111,11 @@ Template.paymentcard.onRendered(() => {
             object_invoce[0]["comment"]
           );
           
-          if (object_invoce[0]["supplier_addr"] == "") {
-            $("#templatePreviewModal .pdfCustomerAddress2").hide();
-          } else {
-            $("#templatePreviewModal .pdfCustomerAddress2").show();
-          }
+        //   if (object_invoce[0]["supplier_addr"] == "") {
+        //     $("#templatePreviewModal .pdfCustomerAddress2").hide();
+        //   } else {
+        //     $("#templatePreviewModal .pdfCustomerAddress2").show();
+        //   }
           $("#templatePreviewModal .pdfCustomerAddress2").empty();
           let txabillingAddress = object_invoce[0]["supplier_addr"];
           if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
@@ -1206,11 +1208,11 @@ Template.paymentcard.onRendered(() => {
     
       function loadTemplateHeaderFooter3(object_invoce) {
         if (object_invoce.length > 0) {
-          if (object_invoce[0]["supplier_addr"] == "") {
-            $("#templatePreviewModal .pdfCustomerAddress3").hide();
-          } else {
-            $("#templatePreviewModal .pdfCustomerAddress3").show();
-          }
+        //   if (object_invoce[0]["supplier_addr"] == "") {
+        //     $("#templatePreviewModal .pdfCustomerAddress3").hide();
+        //   } else {
+        //     $("#templatePreviewModal .pdfCustomerAddress3").show();
+        //   }
           $("#templatePreviewModal .pdfCustomerAddress3").empty();
           let txabillingAddress = object_invoce[0]["supplier_addr"];
           if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
@@ -1219,10 +1221,10 @@ Template.paymentcard.onRendered(() => {
             txabillingAddress
           );
     
-          $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"]);
-          $("#templatePreviewModal .toLabel3").text(object_invoce[0]["title"] + " TO: ");
-          $("#templatePreviewModal .dateLabel3").text(object_invoce[0]["title"] + " DATE: ");
-          $("#templatePreviewModal .invNumber3").text(object_invoce[0]["title"] + " NUMBER");
+          $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"].toUpperCase());
+          $("#templatePreviewModal .toLabel3").text(object_invoce[0]["title"].toUpperCase() + " TO: ");
+          $("#templatePreviewModal .dateLabel3").text(object_invoce[0]["title"].toUpperCase() + " DATE: ");
+        //   $("#templatePreviewModal .invNumber3").text(object_invoce[0]["title"].toUpperCase() + " NUMBER");
     
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " " + " Template"

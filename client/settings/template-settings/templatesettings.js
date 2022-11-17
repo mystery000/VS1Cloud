@@ -1607,11 +1607,11 @@ Template.templatesettings.onRendered(function () {
           //   object_invoce[0]["supplier_name"]
           // );
     
-          if (object_invoce[0]["supplier_addr"] == "") {
-            $("#templatePreviewModal .pdfCustomerAddress").hide();
-          } else {
-            $("#templatePreviewModal .pdfCustomerAddress").show();
-          }
+          // if (object_invoce[0]["supplier_addr"] == "") {
+          //   $("#templatePreviewModal .pdfCustomerAddress").hide();
+          // } else {
+          //   $("#templatePreviewModal .pdfCustomerAddress").show();
+          // }
           $("#templatePreviewModal .pdfCustomerAddress").empty();
           let txabillingAddress = object_invoce[0]["supplier_addr"];
           if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
@@ -1664,6 +1664,8 @@ Template.templatesettings.onRendered(function () {
           let companyReg = Session.get("vs1companyReg");
           if (companyReg != "")
             $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN " + companyReg.substring(0, 3) + " " + companyReg.substring(3, 6) + " " + companyReg.substring(6, companyReg.length));
+          else
+            $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN 123 456 789");
           let companyAddr = Session.get("vs1companyaddress1");
           if (companyAddr == "")
             companyAddr = Session.get("vs1companyaddress2");
@@ -1815,11 +1817,11 @@ Template.templatesettings.onRendered(function () {
             object_invoce[0]["comment"]
           );
           
-          if (object_invoce[0]["supplier_addr"] == "") {
-            $("#templatePreviewModal .pdfCustomerAddress2").hide();
-          } else {
-            $("#templatePreviewModal .pdfCustomerAddress2").show();
-          }
+          // if (object_invoce[0]["supplier_addr"] == "") {
+          //   $("#templatePreviewModal .pdfCustomerAddress2").hide();
+          // } else {
+          //   $("#templatePreviewModal .pdfCustomerAddress2").show();
+          // }
           $("#templatePreviewModal .pdfCustomerAddress2").empty();
           let txabillingAddress = object_invoce[0]["supplier_addr"];
           if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
@@ -1912,11 +1914,11 @@ Template.templatesettings.onRendered(function () {
     
       function loadTemplateHeaderFooter3(object_invoce) {
         if (object_invoce.length > 0) {
-          if (object_invoce[0]["supplier_addr"] == "") {
-            $("#templatePreviewModal .pdfCustomerAddress3").hide();
-          } else {
-            $("#templatePreviewModal .pdfCustomerAddress3").show();
-          }
+          // if (object_invoce[0]["supplier_addr"] == "") {
+          //   $("#templatePreviewModal .pdfCustomerAddress3").hide();
+          // } else {
+          //   $("#templatePreviewModal .pdfCustomerAddress3").show();
+          // }
           $("#templatePreviewModal .pdfCustomerAddress3").empty();
           let txabillingAddress = object_invoce[0]["supplier_addr"];
           if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
@@ -1925,10 +1927,10 @@ Template.templatesettings.onRendered(function () {
             txabillingAddress
           );
     
-          $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"]);
-          $("#templatePreviewModal .toLabel3").text(object_invoce[0]["title"] + " TO: ");
-          $("#templatePreviewModal .dateLabel3").text(object_invoce[0]["title"] + " DATE: ");
-          $("#templatePreviewModal .invNumber3").text(object_invoce[0]["title"] + " NUMBER");
+          $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"].toUpperCase());
+          $("#templatePreviewModal .toLabel3").text(object_invoce[0]["title"].toUpperCase() + " TO: ");
+          $("#templatePreviewModal .dateLabel3").text(object_invoce[0]["title"].toUpperCase() + " DATE: ");
+          // $("#templatePreviewModal .invNumber3").text(object_invoce[0]["title"].toUpperCase() + " NUMBER");
     
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " " + " Template"
@@ -1996,7 +1998,7 @@ Template.templatesettings.onRendered(function () {
           // }
           if (object_invoce[0]["duedate"] != "")
             $("#templatePreviewModal .due3").text(convertDateFormatForPrint2(object_invoce[0]["duedate"]));
-          $("#templatePreviewModal .termdays").text($("#sltTerms").val());
+          $("#templatePreviewModal .termdays").text("7 Days");
           $("#templatePreviewModal .termdesc").text(Session.get("ERPTermDesc") || "-");
     
           //   table header
@@ -2220,7 +2222,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "Los Angeles",
               o_state: "Califonia 12345",
               o_reg: "",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone: "Phone : 25151944",
               title: 'Bill',
               value:'751',
@@ -2232,7 +2234,7 @@ Template.templatesettings.onRendered(function () {
               paylink: "",
               supplier_type: "Supplier",
               supplier_name : "Amar kumar",
-              supplier_addr : "Antri, Gwalior, Madhya Pradesh",
+              supplier_addr : "Antri\nGwalior\nMadhya Pradesh",
               fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
               subtotal : "$900.00",
               gst : "$0.00",
@@ -2264,7 +2266,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "Los Angeles",
               o_state: "Califonia 12345",
               o_reg: "",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone: "Phone : 25151944",
               title: 'Bill',
               value:'751',
@@ -2276,7 +2278,7 @@ Template.templatesettings.onRendered(function () {
               paylink: "",
               supplier_type: "Supplier",
               supplier_name : "Amar kumar",
-              supplier_addr : "Antri, Gwalior, Madhya Pradesh",
+              supplier_addr : "Antri\nGwalior\nMadhya Pradesh",
               fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
               subtotal : "$900.00",
               gst : "$0.00",
@@ -2308,7 +2310,7 @@ Template.templatesettings.onRendered(function () {
           o_city: "Los Angeles",
           o_state: "Califonia 12345",
           o_reg: "",
-          o_abn: "5678905",
+          o_abn: "56789051234",
           o_phone: "Phone : 25151944",
           title: 'Bill',
           value:'751',
@@ -2320,7 +2322,7 @@ Template.templatesettings.onRendered(function () {
           paylink: "",
           supplier_type: "Supplier",
           supplier_name : "Amar kumar",
-          supplier_addr : "Antri, Gwalior, Madhya Pradesh",
+          supplier_addr : "Antri\nGwalior\nMadhya Pradesh",
           fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
           subtotal : "$900.00",
           gst : "$0.00",
@@ -2390,7 +2392,7 @@ Template.templatesettings.onRendered(function () {
           o_city: "Los Angeles",
           o_state: "Califonia 12345",
           o_reg: "",
-          o_abn: "5678905",
+          o_abn: "56789051234",
           o_phone: "Phone : 25151944",
           title: 'Credit',
           value: "751",
@@ -2402,7 +2404,7 @@ Template.templatesettings.onRendered(function () {
           paylink: "",
           supplier_type: "Supplier",
           supplier_name : "<p>The interesting <br>Company</p>",
-          supplier_addr : "<p>123 Street <br> PE Eastern 5115 <br> Australia</p>",
+          supplier_addr : "123 Street\nPE Eastern 5115\nAustralia",
           fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
           subtotal : "$125.00",
           gst : "$0.00",
@@ -2435,7 +2437,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg: "",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone: "Phone : 25151944",
             title: 'Credit',
             value: "751",
@@ -2447,7 +2449,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "",
             supplier_type: "Supplier",
             supplier_name : "<p>The interesting <br>Company</p>",
-            supplier_addr : "<p>123 Street <br> PE Eastern 5115 <br> Australia</p>",
+            supplier_addr : "123 Street\nPE Eastern 5115\nAustralia",
             fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
             subtotal : "$125.00",
             gst : "$0.00",
@@ -2480,7 +2482,7 @@ Template.templatesettings.onRendered(function () {
           o_city: "Los Angeles",
           o_state: "Califonia 12345",
           o_reg: "",
-          o_abn: "5678905",
+          o_abn: "56789051234",
           o_phone: "Phone : 25151944",
           title: 'Credit',
           value: "751",
@@ -2492,7 +2494,7 @@ Template.templatesettings.onRendered(function () {
           paylink: "",
           supplier_type: "Supplier",
           supplier_name : "<p>The interesting <br>Company</p>",
-          supplier_addr : "<p>123 Street <br> PE Eastern 5115 <br> Australia</p>",
+          supplier_addr : "123 Street\nPE Eastern 5115\nAustralia",
           fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
           subtotal : "$125.00",
           gst : "$0.00",
@@ -2558,7 +2560,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "Los Angeles",
               o_state: "Califonia 12345",
               o_reg: "",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone: "Phone : 25151944",
               title: template_title,
               value: "786",
@@ -2570,7 +2572,7 @@ Template.templatesettings.onRendered(function () {
               paylink: "",
               supplier_type: "Customer",
               supplier_name : "<p>Brand New <br> Company </p>",
-              supplier_addr : "<p> JHB <br> GA1515 <br> Australia",
+              supplier_addr : "JHB\nA1515\nAustralia",
               fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
               subtotal : "$0.00",
               gst : "$0.00",
@@ -2604,7 +2606,7 @@ Template.templatesettings.onRendered(function () {
           o_city: "Los Angeles",
           o_state: "Califonia 12345",
           o_reg: "",
-          o_abn: "5678905",
+          o_abn: "56789051234",
           o_phone: "Phone : 25151944",
           title: template_title,
           value: "786",
@@ -2616,7 +2618,7 @@ Template.templatesettings.onRendered(function () {
           paylink: "",
           supplier_type: "Customer",
           supplier_name : "<p>Brand New <br> Company </p>",
-          supplier_addr : "<p> JHB <br> GA1515 <br> Australia",
+          supplier_addr : "JHB\nA1515\nAustralia",
           fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
           subtotal : "",
           gst : "",
@@ -2649,7 +2651,7 @@ Template.templatesettings.onRendered(function () {
           o_city: "Los Angeles",
           o_state: "Califonia 12345",
           o_reg: "",
-          o_abn: "5678905",
+          o_abn: "56789051234",
           o_phone: "Phone : 25151944",
           title: template_title,
           value: "786",
@@ -2661,7 +2663,7 @@ Template.templatesettings.onRendered(function () {
           paylink: "",
           supplier_type: "Customer",
           supplier_name : "<p>Brand New <br> Company </p>",
-          supplier_addr : "<p> JHB <br> GA1515 <br> Australia",
+          supplier_addr : "JHB\nA1515\nAustralia",
           fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
           subtotal : "",
           gst : "",
@@ -2746,7 +2748,7 @@ Template.templatesettings.onRendered(function () {
                 o_city: "",
                 o_state: "",
                 o_reg: "",
-                o_abn: "5678905",
+                o_abn: "56789051234",
                 o_phone: "Phone : 25151944",
                 title: template_title,
                 value:"252",
@@ -2790,7 +2792,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "",
               o_state: "",
               o_reg: "",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone: "Phone : 25151944",
               title: template_title,
               value:"252",
@@ -2835,7 +2837,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "",
               o_state: "",
               o_reg: "",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone: "Phone : 25151944",
               title: template_title,
               value:"252",
@@ -2923,7 +2925,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "Los Angeles",
               o_state: "Califonia 12345",
               o_reg:"",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone:"Phone : 25151944",
               title: 'Invoice',
               value: '751',
@@ -2935,7 +2937,7 @@ Template.templatesettings.onRendered(function () {
               paylink: "Pay Now",
               supplier_type: "Customer",
               supplier_name : "Amar",
-              supplier_addr : "Gwalior, Madhya Pradesh",
+              supplier_addr : "Gwalior\nMadhya Pradesh",
               fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
               subtotal :"500",
               gst : "15",
@@ -2967,7 +2969,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg:"",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone:"Phone : 25151944",
             title: 'Invoice',
             value: '751',
@@ -2979,7 +2981,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "Pay Now",
             supplier_type: "Customer",
             supplier_name : "Amar",
-            supplier_addr : "Gwalior, Madhya Pradesh",
+            supplier_addr : "Gwalior\nMadhya Pradesh",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
             subtotal :"500",
             gst : "15",
@@ -3011,7 +3013,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg:"",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone:"Phone : 25151944",
             title: 'Invoice',
             value: '751',
@@ -3023,7 +3025,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "Pay Now",
             supplier_type: "Customer",
             supplier_name : "Amar",
-            supplier_addr : "Gwalior, Madhya Pradesh",
+            supplier_addr : "Gwalior\nMadhya Pradesh",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
             subtotal :"500",
             gst : "15",
@@ -3099,7 +3101,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "Los Angeles",
               o_state: "Califonia 12345",
               o_reg:"",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone:"Phone : 25151944",
               title: 'Invoice Back Order',
               value: '751',
@@ -3111,7 +3113,7 @@ Template.templatesettings.onRendered(function () {
               paylink: "Pay Now",
               supplier_type: "Customer",
               supplier_name : "Amar",
-              supplier_addr : "Gwalior, Madhya Pradesh",
+              supplier_addr : "Gwalior\nMadhya Pradesh",
               fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
               subtotal :"500",
               gst : "15",
@@ -3143,7 +3145,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg:"",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone:"Phone : 25151944",
             title: 'Invoice Back Order',
             value: '751',
@@ -3155,7 +3157,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "Pay Now",
             supplier_type: "Customer",
             supplier_name : "Amar",
-            supplier_addr : "Gwalior, Madhya Pradesh",
+            supplier_addr : "Gwalior\nMadhya Pradesh",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
             subtotal :"500",
             gst : "15",
@@ -3187,7 +3189,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg:"",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone:"Phone : 25151944",
             title: 'Invoice Back Order',
             value: '751',
@@ -3199,7 +3201,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "Pay Now",
             supplier_type: "Customer",
             supplier_name : "Amar",
-            supplier_addr : "Gwalior, Madhya Pradesh",
+            supplier_addr : "Gwalior\nMadhya Pradesh",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
             subtotal :"500",
             gst : "15",
@@ -3264,7 +3266,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg: "",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone: "25151944",
             title: template_title,
             value:"287",
@@ -3276,7 +3278,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "",
             supplier_type: "Supplier",
             supplier_name : "<p>ABC Building Company</p>",
-            supplier_addr : "<p> Dallas <br> Texas 8877 <br> United States",
+            supplier_addr : "Dallas\nTexas 8877\nUnited States",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
             subtotal : "$0.00",
             gst : "$0.00",
@@ -3312,7 +3314,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg: "",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone: "25151944",
             title: template_title,
             value:"287",
@@ -3324,7 +3326,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "",
             supplier_type: "Supplier",
             supplier_name : "<p>ABC Building Company</p>",
-            supplier_addr : "<p> Dallas <br> Texas 8877 <br> United States",
+            supplier_addr : "Dallas\nTexas 8877\nUnited States",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
             subtotal : "$0.00",
             gst : "$0.00",
@@ -3357,7 +3359,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg: "",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone: "25151944",
             title: template_title,
             value:"287",
@@ -3369,7 +3371,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "",
             supplier_type: "Supplier",
             supplier_name : "<p>ABC Building Company</p>",
-            supplier_addr : "<p> Dallas <br> Texas 8877 <br> United States",
+            supplier_addr : "Dallas\nTexas 8877\nUnited States",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
             subtotal : "$0.00",
             gst : "$0.00",
@@ -3436,7 +3438,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg: "",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone: "25151944",
             title: template_title,
             value: "287",
@@ -3448,7 +3450,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "Pay Now",
             supplier_type: "Customer",
             supplier_name : "<p>Accenture Software Dev</p>",
-            supplier_addr : "<p>Building 3 , Waterfall Corporate <br> South Africa</p>",
+            supplier_addr : "Building 3\nWaterfall Corporate\nSouth Africa",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
             subtotal : "$0.00",
             gst : "$0.00",
@@ -3481,7 +3483,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg: "",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone: "25151944",
             title: template_title + " 287",
             date: "14/04/2022",
@@ -3492,7 +3494,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "Pay Now",
             supplier_type: "Customer",
             supplier_name : "<p>Accenture Software Dev</p>",
-            supplier_addr : "<p>Building 3 , Waterfall Corporate <br> South Africa</p>",
+            supplier_addr : "Building 3\nWaterfall Corporate\nSouth Africa",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
             subtotal : "$0.00",
             gst : "$0.00",
@@ -3524,7 +3526,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg: "",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone: "25151944",
             title: template_title + " 287",
             date: "14/04/2022",
@@ -3535,7 +3537,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "Pay Now",
             supplier_type: "Customer",
             supplier_name : "<p>Accenture Software Dev</p>",
-            supplier_addr : "<p>Building 3 , Waterfall Corporate <br> South Africa</p>",
+            supplier_addr : "Building 3\nWaterfall Corporate\nSouth Africa",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
             subtotal : "$0.00",
             gst : "$0.00",
@@ -3600,7 +3602,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "Los Angeles",
               o_state: "Califonia 12345",
               o_reg: "",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone: "25151944",
               title: template_title,
               value: "738",
@@ -3612,7 +3614,7 @@ Template.templatesettings.onRendered(function () {
               paylink: "Pay Now",
               supplier_type: "Customer",
               supplier_name : "<p>Accenture Software Dev</p>",
-              supplier_addr : "<p>Building 3, Waterfall Corporate <br> South Africa</p>",
+              supplier_addr : "Building 3\nWaterfall Corporate\nSouth Africa",
               fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
               subtotal : "-$50.00",
               gst : "$0.00",
@@ -3644,7 +3646,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "Los Angeles",
               o_state: "Califonia 12345",
               o_reg: "",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone: "25151944",
               title: template_title,
               value: "738",
@@ -3656,7 +3658,7 @@ Template.templatesettings.onRendered(function () {
               paylink: "Pay Now",
               supplier_type: "Customer",
               supplier_name : "<p>Accenture Software Dev</p>",
-              supplier_addr : "<p>Building 3, Waterfall Corporate <br> South Africa</p>",
+              supplier_addr : "Building 3\nWaterfall Corporate\nSouth Africa",
               fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
               subtotal : "-$50.00",
               gst : "$0.00",
@@ -3690,7 +3692,7 @@ Template.templatesettings.onRendered(function () {
                 o_city: "Los Angeles",
                 o_state: "Califonia 12345",
                 o_reg: "",
-                o_abn: "5678905",
+                o_abn: "56789051234",
                 o_phone: "25151944",
                 title: template_title,
                 value: "738",
@@ -3702,7 +3704,7 @@ Template.templatesettings.onRendered(function () {
                 paylink: "Pay Now",
                 supplier_type: "Customer",
                 supplier_name : "<p>Accenture Software Dev</p>",
-                supplier_addr : "<p>Building 3, Waterfall Corporate <br> South Africa</p>",
+                supplier_addr : "Building 3\nWaterfall Corporate\nSouth Africa",
                 fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
                 subtotal : "-$50.00",
                 gst : "$0.00",
@@ -3767,7 +3769,7 @@ Template.templatesettings.onRendered(function () {
                 o_city: "Los Angeles",
                 o_state: "Califonia 12345",
                 o_reg:"",
-                o_abn: "5678905",
+                o_abn: "56789051234",
                 o_phone:"Phone : 25151944",
                 title: 'Sales Order',
                 value: '751',
@@ -3779,7 +3781,7 @@ Template.templatesettings.onRendered(function () {
                 paylink: "Pay Now",
                 supplier_type: "Customer",
                 supplier_name : "Amar",
-                supplier_addr : "Gwalior, Madhya Pradesh",
+                supplier_addr : "Gwalior\nMadhya Pradesh",
                 fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
                 subtotal :"500",
                 gst : "15",
@@ -3811,7 +3813,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "Los Angeles",
               o_state: "Califonia 12345",
               o_reg:"",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone:"Phone : 25151944",
               title: 'Sales Order',
               value: '751',
@@ -3823,7 +3825,7 @@ Template.templatesettings.onRendered(function () {
               paylink: "Pay Now",
               supplier_type: "Customer",
               supplier_name : "Amar",
-              supplier_addr : "Gwalior, Madhya Pradesh",
+              supplier_addr : "Gwalior\nMadhya Pradesh",
               fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
               subtotal :"500",
               gst : "15",
@@ -3855,7 +3857,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "Los Angeles",
               o_state: "Califonia 12345",
               o_reg:"",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone:"Phone : 25151944",
               title: 'Sales Order',
               value: '751',
@@ -3867,7 +3869,7 @@ Template.templatesettings.onRendered(function () {
               paylink: "Pay Now",
               supplier_type: "Customer",
               supplier_name : "Amar",
-              supplier_addr : "Gwalior, Madhya Pradesh",
+              supplier_addr : "Gwalior\nMadhya Pradesh",
               fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
               subtotal :"500",
               gst : "15",
@@ -3931,7 +3933,7 @@ Template.templatesettings.onRendered(function () {
                 o_city: "Los Angeles",
                 o_state: "Califonia 12345",
                 o_reg: "",
-                o_abn: "5678905",
+                o_abn: "56789051234",
                 o_phone: "25151944",
                 title: template_title,
                 value:"287",
@@ -3976,7 +3978,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "Los Angeles",
               o_state: "Califonia 12345",
               o_reg: "",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone: "25151944",
               title: template_title,
               value:"287",
@@ -4021,7 +4023,7 @@ Template.templatesettings.onRendered(function () {
                 o_city: "Los Angeles",
                 o_state: "Califonia 12345",
                 o_reg: "",
-                o_abn: "5678905",
+                o_abn: "56789051234",
                 o_phone: "25151944",
                 title: template_title,
                 value:"287",
@@ -4098,7 +4100,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg: "",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone: "25151944",
             title: template_title,
             value: "287",
@@ -4142,7 +4144,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg: "",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone: "25151944",
             title: template_title,
             value: "287",
@@ -4186,7 +4188,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg: "",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone: "25151944",
             title: template_title,
             value: "287",
@@ -4271,7 +4273,7 @@ Template.templatesettings.onRendered(function () {
               o_city: "Los Angeles",
               o_state: "Califonia 12345",
               o_reg:"",
-              o_abn: "5678905",
+              o_abn: "56789051234",
               o_phone:"Phone : 25151944",
               title: 'Delivery Docket',
               value: '751',
@@ -4283,7 +4285,7 @@ Template.templatesettings.onRendered(function () {
               paylink: "Pay Now",
               supplier_type: "Customer",
               supplier_name : "Amar",
-              supplier_addr : "Gwalior, Madhya Pradesh",
+              supplier_addr : "Gwalior\nMadhya Pradesh",
               fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10"},
               subtotal :"",
               gst : "",
@@ -4315,7 +4317,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg:"",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone:"Phone : 25151944",
             title: 'Delivery Docket',
             value: '751',
@@ -4327,7 +4329,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "Pay Now",
             supplier_type: "Customer",
             supplier_name : "Amar",
-            supplier_addr : "Gwalior, Madhya Pradesh",
+            supplier_addr : "Gwalior\nMadhya Pradesh",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10"},
             subtotal :"",
             gst : "",
@@ -4359,7 +4361,7 @@ Template.templatesettings.onRendered(function () {
             o_city: "Los Angeles",
             o_state: "Califonia 12345",
             o_reg:"",
-            o_abn: "5678905",
+            o_abn: "56789051234",
             o_phone:"Phone : 25151944",
             title: 'Delivery Docket',
             value: '751',
@@ -4371,7 +4373,7 @@ Template.templatesettings.onRendered(function () {
             paylink: "Pay Now",
             supplier_type: "Customer",
             supplier_name : "Amar",
-            supplier_addr : "Gwalior, Madhya Pradesh",
+            supplier_addr : "Gwalior\nMadhya Pradesh",
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10"},
             subtotal :"",
             gst : "",
