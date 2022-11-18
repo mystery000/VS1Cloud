@@ -115,8 +115,7 @@ Template.production_planner.onRendered(async function() {
   
     let calendarEl = document.getElementById('calendar');
     
-
-    let calendar = new Calendar(calendarEl, {
+    let calendarOptions = {
         plugins: [
             resourceTimelinePlugin,
             interactionPlugin,
@@ -135,7 +134,7 @@ Template.production_planner.onRendered(async function() {
         right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
         },
         editable: true,
-        resourceAreaHeaderContent: 'Rooms',
+        resourceAreaHeaderContent: 'Resources',
         resources: await getResources(),
         events: templateObject.events.get().length == 0?events:templateObject.events.get(),
         eventOverlap: true,
@@ -227,7 +226,16 @@ Template.production_planner.onRendered(async function() {
             }
             templateObject.events.set(events);
             localStorage.setItem('TProductionPlan', JSON.stringify(events));
-            calendar.render()
+            if(calendar) {
+                calendar.destroy();
+                calendar = new Calendar(calendarEl, {
+                    ...calendarOptions,
+                    events: events
+                })
+                calendar.render();
+            }
+
+            // calendar.render()
             // window.location.reload();
         },
         eventClick: function(info) {
@@ -253,7 +261,10 @@ Template.production_planner.onRendered(async function() {
         }
         // expandRows: true,
         // events: [{"resourceId":"1","title":"event 1","start":"2022-11-14","end":"2022-11-16"},{"resourceId":"2","title":"event 3","start":"2022-11-15T12:00:00+00:00","end":"2022-11-16T06:00:00+00:00"},{"resourceId":"0","title":"event 4","start":"2022-11-15T07:30:00+00:00","end":"2022-11-15T09:30:00+00:00"},{"resourceId":"2","title":"event 5","start":"2022-11-15T10:00:00+00:00","end":"2022-11-15T15:00:00+00:00"},{"resourceId":"1","title":"event 2","start":"2022-11-15T09:00:00+00:00","end":"2022-11-15T14:00:00+00:00"}]
-      });
+      
+    }
+
+    let calendar = new Calendar(calendarEl, calendarOptions);
       calendar.render();
    
 })
@@ -263,7 +274,7 @@ Template.production_planner.events({
         $('.fullScreenSpin').css('display', 'inline-block')
         let templateObject = Template.instance();
         let events = templateObject.events.get();
-        localStorage.setItem('TProductionPlan', events);
+        localStorage.setItem('TProductionPlan', JSON.stringify(events));
         $('.fullScreenSpin').css('display', 'none');
         swal({
             title: 'Success',
