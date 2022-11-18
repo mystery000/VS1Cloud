@@ -21,7 +21,7 @@ import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentc
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
-import { CustomerCreationSourceFilter } from "square-connect";
+// import { CustomerCreationSourceFilter } from "square-connect";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

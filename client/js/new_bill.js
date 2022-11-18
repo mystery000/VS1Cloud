@@ -23,7 +23,7 @@ import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
-import { object } from 'underscore';
+// import { object } from 'underscore';
 
 var template_list = [
     "Bills",
