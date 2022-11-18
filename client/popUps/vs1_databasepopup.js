@@ -9,7 +9,7 @@ Template.vs1_databasepopup.onRendered(function(){
   oReq.setRequestHeader("database",vs1loggedDatatbase);
   oReq.setRequestHeader("username",'VS1_Cloud_Admin');
   oReq.setRequestHeader("password",'DptfGw83mFl1j&9');
-  oReq.send();
+  //oReq.send();
   oReq.onreadystatechange = function() {
   if(oReq.readyState == 4 && oReq.status == 200) {
      var vs1Data = JSON.parse(oReq.responseText);

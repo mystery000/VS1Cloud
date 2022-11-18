@@ -161,28 +161,6 @@ Template.customerscard.onRendered(function () {
             yearRange: "-90:+10",
         });
     }, 100);
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTransactionlist', function (error, result) {
-        if (error) {
-
-        } else {
-            if (result) {
-
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
 
     function MakeNegative() {
         $('td').each(function () {
@@ -1188,72 +1166,71 @@ Template.customerscard.onRendered(function () {
     //$('#sltCustomerType').append('<option value="' + lineItemObj.custometype + '">' + lineItemObj.custometype + '</option>');
 
     templateObject.getEmployeeData = async ()  => {
-        let data = await CachedHttp.get(erpObject.TCustomerEx, async () => {
-            return await contactService.getOneCustomerDataEx(customerID);
-        }, {
-            validate: (cachedResponse) => {
-                return true;
-            }
-        });
-
-        data = data.response;
-
-        setOneCustomerDataEx(data);
-
-        // getVS1Data('TCustomerVS1').then(function (dataObject) {
-        //     if (dataObject.length == 0) {
-        //         contactService.getOneCustomerDataEx(customerID).then(function (data) {
-        //             setOneCustomerDataEx(data);
-        //             // add to custom field
-        //             // tempcode
-        //             // setTimeout(function () {
-        //             //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
-        //             //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
-        //             //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-        //             // }, 5500);
-        //         });
-        //     } else {
-        //         let data = JSON.parse(dataObject[0].data);
-        //         let useData = data.tcustomervs1;
-        //         let added = false;
-        //         for (let i = 0; i < useData.length; i++) {
-        //             if (parseInt(useData[i].fields.ID) == parseInt(customerID)) {
-
-        //             // add to custom field
-        //             // tempcode
-        //               // setTimeout(function () {
-        //               //   $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
-        //               //   $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
-        //               //   $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
-        //               // }, 5500);
-
-        //                 added = true;
-        //                 setOneCustomerDataEx(useData[i]);
-        //                 setTimeout(function () {
-        //                     const rowCount = $('.results tbody tr').length;
-        //                     $('.counter').text(rowCount + ' items');
-        //                 }, 500);
-        //             }
-        //         }
-        //         if (!added) {
-        //             contactService.getOneCustomerDataEx(customerID).then(function (data) {
-        //                 setOneCustomerDataEx(data);
-        //                 // tempcode
-        //                 // add to custom field
-        //                 // setTimeout(function () {
-        //                 //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
-        //                 //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
-        //                 //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-        //                 // }, 5500);
-        //             });
-        //         }
+        // let data = await CachedHttp.get(erpObject.TCustomerEx, async () => {
+        //     return await contactService.getOneCustomerDataEx(customerID);
+        // }, {
+        //     validate: (cachedResponse) => {
+        //         return true;
         //     }
-        // }).catch(function (err) {
-        //     contactService.getOneCustomerDataEx(customerID).then(function (data) {
-        //         $('.fullScreenSpin').css('display', 'none');
-        //         setOneCustomerDataEx(data);
-        //     });
         // });
+        //
+        // data = data.response;
+        //setOneCustomerDataEx(data);
+
+        getVS1Data('TCustomerVS1').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                contactService.getOneCustomerDataEx(customerID).then(function (data) {
+                    setOneCustomerDataEx(data);
+                    // add to custom field
+                    // tempcode
+                    // setTimeout(function () {
+                    //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                    //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                    //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                    // }, 5500);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tcustomervs1;
+                let added = false;
+                for (let i = 0; i < useData.length; i++) {
+                    if (parseInt(useData[i].fields.ID) == parseInt(customerID)) {
+
+                    // add to custom field
+                    // tempcode
+                      // setTimeout(function () {
+                      //   $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
+                      //   $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
+                      //   $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
+                      // }, 5500);
+
+                        added = true;
+                        setOneCustomerDataEx(useData[i]);
+                        setTimeout(function () {
+                            const rowCount = $('.results tbody tr').length;
+                            $('.counter').text(rowCount + ' items');
+                        }, 500);
+                    }
+                }
+                if (!added) {
+                    contactService.getOneCustomerDataEx(customerID).then(function (data) {
+                        setOneCustomerDataEx(data);
+                        // tempcode
+                        // add to custom field
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                        //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                        //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                        // }, 5500);
+                    });
+                }
+            }
+        }).catch(function (err) {
+            contactService.getOneCustomerDataEx(customerID).then(function (data) {
+                $('.fullScreenSpin').css('display', 'none');
+                setOneCustomerDataEx(data);
+            });
+        });
     };
     templateObject.getEmployeeDataByName = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {

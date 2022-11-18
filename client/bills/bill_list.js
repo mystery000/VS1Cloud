@@ -437,7 +437,7 @@ Template.billlist.onRendered(function() {
               sPre
             ) {
              // let countTableData = data.response.Params.Count || 0; //get count from API data
-              let countTableData = response.Params.Count || 0; 
+              let countTableData = response.Params.Count || 0;
               let bills = templateObject.bills.get() || [];
 
               return (
@@ -1442,9 +1442,9 @@ Template.billlist.onRendered(function() {
   }
 
   templateObject.initPage = async (refresh = false) =>  {
-   
+
     LoadingOverlay.show();
-    
+
     // I dont understand the purpose of this...
     if(FlowRouter.current().queryParams.overview){
       // templateObject.getAllFilterBillData("", "", true);
@@ -1965,128 +1965,128 @@ Template.billlist.events({
 
     },
     'click .btnRefresh':  (e, ui) => {
-      ui.initPage(true);
-      //   $('.fullScreenSpin').css('display','inline-block');
-      //   let currentDate = new Date();
-      //   let hours = currentDate.getHours();
-      //   let minutes = currentDate.getMinutes();
-      //   let seconds = currentDate.getSeconds();
-      //   let month = (currentDate.getMonth()+1);
-      //   let days = currentDate.getDate();
+      //ui.initPage(true);
+        $('.fullScreenSpin').css('display','inline-block');
+        let currentDate = new Date();
+        let hours = currentDate.getHours();
+        let minutes = currentDate.getMinutes();
+        let seconds = currentDate.getSeconds();
+        let month = (currentDate.getMonth()+1);
+        let days = currentDate.getDate();
 
-      //   if((currentDate.getMonth()+1) < 10){
-      //       month = "0" + (currentDate.getMonth()+1);
-      //   }
+        if((currentDate.getMonth()+1) < 10){
+            month = "0" + (currentDate.getMonth()+1);
+        }
 
-      //   if(currentDate.getDate() < 10){
-      //       days = "0" + currentDate.getDate();
-      //   }
-      //   let currenctTodayDate = currentDate.getFullYear() + "-" + month + "-" + days + " "+ hours+ ":"+ minutes+ ":"+ seconds;
-      //   let templateObject = Template.instance();
+        if(currentDate.getDate() < 10){
+            days = "0" + currentDate.getDate();
+        }
+        let currenctTodayDate = currentDate.getFullYear() + "-" + month + "-" + days + " "+ hours+ ":"+ minutes+ ":"+ seconds;
+        let templateObject = Template.instance();
 
-      // var currentBeginDate = new Date();
-      // var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-      // let fromDateMonth = (currentBeginDate.getMonth() + 1);
-      // let fromDateDay = currentBeginDate.getDate();
-      // if((currentBeginDate.getMonth()+1) < 10){
-      //     fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
-      // }else{
-      //   fromDateMonth = (currentBeginDate.getMonth()+1);
-      // }
+      var currentBeginDate = new Date();
+      var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+      let fromDateMonth = (currentBeginDate.getMonth() + 1);
+      let fromDateDay = currentBeginDate.getDate();
+      if((currentBeginDate.getMonth()+1) < 10){
+          fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+      }else{
+        fromDateMonth = (currentBeginDate.getMonth()+1);
+      }
 
-      // if(currentBeginDate.getDate() < 10){
-      //     fromDateDay = "0" + currentBeginDate.getDate();
-      // }
-      // var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
-      // let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+      if(currentBeginDate.getDate() < 10){
+          fromDateDay = "0" + currentBeginDate.getDate();
+      }
+      var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+      let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
 
-      // sideBarService.getAllBillExList(initialDataLoad,0).then(function(dataBill) {
-      //     addVS1Data('TBillEx',JSON.stringify(dataBill)).then(function (datareturn) {
+      sideBarService.getAllBillExList(initialDataLoad,0).then(function(dataBill) {
+          addVS1Data('TBillEx',JSON.stringify(dataBill)).then(function (datareturn) {
 
-      //     }).catch(function (err) {
+          }).catch(function (err) {
 
-      //     });
-      // }).catch(function(err) {
+          });
+      }).catch(function(err) {
 
-      // });
+      });
 
-      // sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (data) {
-      //   addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {
+      sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (data) {
+        addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {
 
-      //     }).catch(function (err) {
+          }).catch(function (err) {
 
-      //     });
-      // }).catch(function (err) {
+          });
+      }).catch(function (err) {
 
-      // });
+      });
 
-      // sideBarService.getAllPurchasesList(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (dataPList) {
-      //     addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
+      sideBarService.getAllPurchasesList(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (dataPList) {
+          addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
 
-      //       }).catch(function (err) {
+            }).catch(function (err) {
 
-      //       });
-      //   }).catch(function (err) {
+            });
+        }).catch(function (err) {
 
-      //   });
+        });
 
-      // sideBarService.getAllBillListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataBillList) {
-      //     addVS1Data('TBillList',JSON.stringify(dataBillList)).then(function (datareturn) {
-      //       sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0, '').then(function(dataPaymentList) {
-      //       addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
-      //           sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
-      //               addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
-      //                   sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
-      //                       addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
-      //                         setTimeout(function () {
-      //                           window.open('/billlist', '_self');
-      //                         }, 2000);
-      //                       }).catch(function(err) {
-      //                         setTimeout(function () {
-      //                           window.open('/billlist', '_self');
-      //                         }, 2000);
-      //                       });
-      //                   }).catch(function(err) {
-      //                     setTimeout(function () {
-      //                       window.open('/billlist', '_self');
-      //                     }, 2000);
-      //                   });
-      //               }).catch(function(err) {
-      //                   setTimeout(function () {
-      //                       window.open('/billlist', '_self');
-      //                    }, 2000);
-      //               });
-      //           }).catch(function(err) {
-      //             setTimeout(function () {
-      //               window.open('/billlist', '_self');
-      //             }, 2000);
-      //           });
-      //       }).catch(function(err) {
-      //         setTimeout(function () {
-      //           window.open('/billlist', '_self');
-      //         }, 2000);
-      //       });
-      //   }).catch(function(err) {
-      //     setTimeout(function () {
-      //       window.open('/billlist', '_self');
-      //     }, 2000);
+      sideBarService.getAllBillListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataBillList) {
+          addVS1Data('TBillList',JSON.stringify(dataBillList)).then(function (datareturn) {
+            sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0, '').then(function(dataPaymentList) {
+            addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
+                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
+                    addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
+                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
+                            addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
+                              setTimeout(function () {
+                                window.open('/billlist', '_self');
+                              }, 2000);
+                            }).catch(function(err) {
+                              setTimeout(function () {
+                                window.open('/billlist', '_self');
+                              }, 2000);
+                            });
+                        }).catch(function(err) {
+                          setTimeout(function () {
+                            window.open('/billlist', '_self');
+                          }, 2000);
+                        });
+                    }).catch(function(err) {
+                        setTimeout(function () {
+                            window.open('/billlist', '_self');
+                         }, 2000);
+                    });
+                }).catch(function(err) {
+                  setTimeout(function () {
+                    window.open('/billlist', '_self');
+                  }, 2000);
+                });
+            }).catch(function(err) {
+              setTimeout(function () {
+                window.open('/billlist', '_self');
+              }, 2000);
+            });
+        }).catch(function(err) {
+          setTimeout(function () {
+            window.open('/billlist', '_self');
+          }, 2000);
 
-      //   });
-      //     }).catch(function (err) {
-      //       sideBarService.getAllBillExList(initialDataLoad,0).then(function(dataBill) {
-      //           addVS1Data('TBillEx',JSON.stringify(dataBill)).then(function (datareturn) {
-      //               window.open('/billlist','_self');
-      //           }).catch(function (err) {
-      //               window.open('/billlist','_self');
-      //           });
-      //       }).catch(function(err) {
-      //           window.open('/billlist','_self');
-      //       });
-      //     });
-      // }).catch(function(err) {
-      //   window.open('/billlist','_self');
-      // });
+        });
+          }).catch(function (err) {
+            sideBarService.getAllBillExList(initialDataLoad,0).then(function(dataBill) {
+                addVS1Data('TBillEx',JSON.stringify(dataBill)).then(function (datareturn) {
+                    window.open('/billlist','_self');
+                }).catch(function (err) {
+                    window.open('/billlist','_self');
+                });
+            }).catch(function(err) {
+                window.open('/billlist','_self');
+            });
+          });
+      }).catch(function(err) {
+        window.open('/billlist','_self');
+      });
 
 
     },
