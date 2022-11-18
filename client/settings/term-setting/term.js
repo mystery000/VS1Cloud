@@ -138,9 +138,17 @@ Template.termsettings.events({
   },
   'click .btnRefresh': function () {
       let taxRateService = new TaxRateService();
-      sideBarService.getTermsVS1().then(function (dataReload) {
-          addVS1Data('TTermsVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-              Meteor._reload.reload();
+      sideBarService.getTermsDataList().then(function (dataTermsList) {
+          addVS1Data('TTermsVS1List', JSON.stringify(dataTermsList)).then(function (datareturn) {
+            sideBarService.getTermsVS1().then(function (dataReload) {
+                addVS1Data('TTermsVS1', JSON.stringify(dataReload)).then(function (datareturn) {
+                    Meteor._reload.reload();
+                }).catch(function (err) {
+                    Meteor._reload.reload();
+                });
+            }).catch(function (err) {
+                Meteor._reload.reload();
+            });
           }).catch(function (err) {
               Meteor._reload.reload();
           });

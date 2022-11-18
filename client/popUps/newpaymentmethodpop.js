@@ -100,9 +100,9 @@ Template.newpaymentmethodpop.onRendered(function() {
                     for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                         // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
                         var dataList = {
-                            id: data.tpaymentmethodvs1[i].Id || '',
-                            paymentmethodname: data.tpaymentmethodvs1[i].PaymentMethodName || '',
-                            iscreditcard: data.tpaymentmethodvs1[i].IsCreditCard || 'false',
+                            id: data.tpaymentmethodvs1[i].fields.ID || '',
+                            paymentmethodname: data.tpaymentmethodvs1[i].fields.PaymentMethodName || '',
+                            iscreditcard: data.tpaymentmethodvs1[i].fields.IsCreditCard || 'false',
                         };
 
                         dataTableList.push(dataList);
@@ -446,9 +446,9 @@ Template.newpaymentmethodpop.onRendered(function() {
                 for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                     // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
                     var dataList = {
-                        id: data.tpaymentmethodvs1[i].Id || '',
-                        paymentmethodname: data.tpaymentmethodvs1[i].PaymentMethodName || '',
-                        iscreditcard: data.tpaymentmethodvs1[i].IsCreditCard || 'false',
+                        id: data.tpaymentmethodvs1[i].fields.ID || '',
+                        paymentmethodname: data.tpaymentmethodvs1[i].fields.PaymentMethodName || '',
+                        iscreditcard: data.tpaymentmethodvs1[i].fields.IsCreditCard || 'false',
                     };
 
                     dataTableList.push(dataList);
@@ -796,7 +796,7 @@ Template.newpaymentmethodpop.events({
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         var currentLoc = FlowRouter.current().path;
         let paymentMethodID = $('#edtPaymentMethodID').val()||'';
         let paymentName = $('#edtPaymentMethodName').val();

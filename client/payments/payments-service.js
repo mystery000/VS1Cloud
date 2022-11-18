@@ -260,7 +260,7 @@ export class PaymentsService extends BaseService {
 
   getPaymentMethodVS1() {
       let options = {
-          PropertyList: "PaymentMethodName",
+          ListType: "Detail",
           select: "[Active]=true"
       };
       return this.getList(this.ERPObjects.TPaymentMethodVS1, options);

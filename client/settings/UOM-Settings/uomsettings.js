@@ -99,8 +99,8 @@ Template.uomSettings.events({
     },
     'click .btnRefresh': function () {
       $('.fullScreenSpin').css('display','inline-block');
-      sideBarService.getUOMDataList().then(function(dataReload) {
-          addVS1Data('TUnitOfMeasure',JSON.stringify(dataReload)).then(function (datareturn) {
+      sideBarService.getUOMDataList(initialBaseDataLoad, 0, false).then(function(dataReload) {
+          addVS1Data('TUnitOfMeasureList',JSON.stringify(dataReload)).then(function (datareturn) {
               Meteor._reload.reload();
           }).catch(function (err) {
               Meteor._reload.reload();
@@ -123,8 +123,8 @@ Template.uomSettings.events({
           };
 
             taxRateService.saveUOM(objDetails).then(function (objDetails) {
-            sideBarService.getUOMDataList().then(function(dataReload) {
-              addVS1Data('TUnitOfMeasure',  JSON.stringify(dataReload)).then(function (datareturn) {
+            sideBarService.getUOMDataList(initialBaseDataLoad, 0, false).then(function(dataReload) {
+              addVS1Data('TUnitOfMeasureList',  JSON.stringify(dataReload)).then(function (datareturn) {
                  Meteor._reload.reload();
               }).catch(function (err) {
                  Meteor._reload.reload();

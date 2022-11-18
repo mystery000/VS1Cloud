@@ -2424,7 +2424,7 @@ Template.customerscard.events({
         let contactService = new ContactService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
 
         //let headerDept = $('#sltDepartment').val();
         let custType = $('#edtClientTypeName').val();
@@ -2602,7 +2602,7 @@ Template.customerscard.events({
         let contactService = new ContactService();
         let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(async function(){
-        
+
         $('.fullScreenSpin').css('display', 'inline-block');
         let company = $('#edtCustomerCompany').val()||'';
         let email = $('#edtCustomerEmail').val()||'';
@@ -2671,7 +2671,7 @@ Template.customerscard.events({
         let custField3 = $('#edtCustomField3').val()||'';
         let custField4 = $('#edtCustomField4').val()||'';
         let customerType = $('#sltCustomerType').val()||'';
-        
+
         let sourceName = $('#leadSource').val()||'';
         let repName = $('#leadRep').val()||'';
         let status = $('#leadStatus').val()||'';
@@ -2868,7 +2868,7 @@ Template.customerscard.events({
         let templateObject = Template.instance();
         let contactService = new ContactService();
         setTimeout(function(){
-        
+
         $('.fullScreenSpin').css('display', 'inline-block');
 
         let companyJob = $('#edtJobCustomerCompany').val()||'';
@@ -3854,7 +3854,7 @@ Template.customerscard.events({
         let contactService = new ContactService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
         if (!isNaN(currentId.id)) {

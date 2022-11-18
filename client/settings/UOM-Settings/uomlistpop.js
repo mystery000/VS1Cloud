@@ -18,10 +18,10 @@ Template.uomlistpop.onRendered(function() {
   var splashArrayUOMList = new Array();
 
   templateObject.getAllUOMs = function () {
-      getVS1Data('TUnitOfMeasure').then(function (dataObject) {
+      getVS1Data('TUnitOfMeasureList').then(function (dataObject) {
           if (dataObject.length == 0) {
               sideBarService.getUOMVS1().then(function (data) {
-                addVS1Data('TUnitOfMeasure',JSON.stringify(data));
+                addVS1Data('TUnitOfMeasureList',JSON.stringify(data));
                   let records = [];
                   let inventoryData = [];
                   for (let i = 0; i < data.tunitofmeasure.length; i++) {
@@ -177,7 +177,7 @@ Template.uomlistpop.onRendered(function() {
           }
       }).catch(function (err) {
           sideBarService.getUOMVS1().then(function (data) {
-            addVS1Data('TUnitOfMeasure',JSON.stringify(data));
+            addVS1Data('TUnitOfMeasureList',JSON.stringify(data));
               let records = [];
               let inventoryData = [];
               for (let i = 0; i < data.tunitofmeasure.length; i++) {

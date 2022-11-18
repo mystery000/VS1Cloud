@@ -65,7 +65,7 @@ Template.vs1_report_template.onRendered(function() {
   templateObject.init_reset_data = function(){
     let reset_data = [];
     switch (currenttablename) {
-      case "generalledger":
+      case "tblgeneralledger":
         reset_data = [
           { index: 0, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "195" },
           { index: 1, label: 'Account No', class:'colAccountNo', active: true, display: true, width: "86" },
@@ -91,7 +91,7 @@ Template.vs1_report_template.onRendered(function() {
       templateObject.showCustomFieldDisplaySettings(reset_data);
 
       try {
-
+        /*
         getVS1Data("VS1_Customize").then(function (dataObject) {
           if (dataObject.length == 0) {
             sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
@@ -111,7 +111,7 @@ Template.vs1_report_template.onRendered(function() {
            };
           }
         });
-
+        */
       } catch (error) {
       }
       return;
@@ -131,11 +131,11 @@ Template.vs1_report_template.onRendered(function() {
           width: reset_data[r].width ? reset_data[r].width : ''
         };
 
-        if(reset_data[r].active == true){
-          $('#'+currenttablename+' .'+reset_data[r].class).removeClass('hiddenColumn');
-        }else if(reset_data[r].active == false){
-          $('#'+currenttablename+' .'+reset_data[r].class).addClass('hiddenColumn');
-        };
+        // if(reset_data[r].active == true){
+        //   $('#'+currenttablename+' .'+reset_data[r].class).removeClass('hiddenColumn');
+        // }else if(reset_data[r].active == false){
+        //   $('#'+currenttablename+' .'+reset_data[r].class).addClass('hiddenColumn');
+        // };
         custFields.push(customData);
       }
       await templateObject.report_displayfields.set(custFields);
@@ -153,13 +153,12 @@ Template.vs1_report_template.onRendered(function() {
 Template.vs1_report_template.events({
   'click .btnOpenReportSettings': async function (event, template) {
       let templateObject = Template.instance();
-      let currenttranstablename = 'tbl'+templateObject.data.tablename||"";
+      let currenttranstablename = templateObject.data.tablename||"";
       $(`#${currenttranstablename} thead tr th`).each(function (index) {
         var $tblrow = $(this);
         var colWidth = $tblrow.width() || 0;
-        console.log(colWidth);
-        // var colthClass = $tblrow.attr('data-class') || "";
-        // $('.rngRange' + colthClass).val(colWidth);
+        var colthClass = $tblrow.attr('data-class') || "";
+        $('.rngRange' + colthClass).val(colWidth);
       });
      $('.'+templateObject.data.tablename+'_Modal').modal('toggle');
   },

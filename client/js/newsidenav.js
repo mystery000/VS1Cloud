@@ -6657,7 +6657,7 @@ Template.newsidenav.events({
     oPost.setRequestHeader("Accept", "application/html");
     oPost.setRequestHeader("Content-type", "application/json");
     var myString = '"JsonIn"'+':'+JSON.stringify(payload);
-    oPost.send(myString);
+    //oPost.send(myString);
     oPost.onreadystatechange = function() {
         if(oPost.readyState == 4 && oPost.status == 200) {
 

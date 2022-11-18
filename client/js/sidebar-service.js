@@ -1271,6 +1271,24 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProspect, options);
   }
 
+  getAllLeadsEx(limitcount, limitfrom) {
+    let options = "";
+    if (limitcount === "All") {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true"
+      };
+    } else {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
+      };
+    }
+    return this.getList(this.ERPObjects.TProspectEx, options);
+  }
+
   getAllTripGroups(limitcount, limitfrom) {
     let options = "";
     if (limitcount === "All") {
@@ -3451,15 +3469,52 @@ export class SideBarService extends BaseService {
 
   getPaymentMethodDataVS1() {
     let options = {
-      ListType: "Detail",
+      PropertyList: "ID,PaymentMethodName",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TPaymentMethodVS1, options);
   }
 
+  getPaymentMethodDataList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"Description asc"',
+            select: "[Active]=true",
+        };
+      } else {
+        options = {
+          orderby: '"Description asc"',
+          ListType: "Detail",
+          select: "[Active]=true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"Description asc"',
+        };
+      } else {
+        options = {
+            orderby: '"Description asc"',
+            ListType: "Detail",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TPaymentMethodVS1, options);
+  }
+
   getPaymentMethodVS1() {
     let options = {
-      PropertyList: "ID,IsCreditCard,PaymentMethodName,Active",
+      ListType: "Detail",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TPaymentMethodVS1, options);

@@ -270,9 +270,17 @@ Template.paymentmethodSettings.events({
     $(".fullScreenSpin").css("display", "none");
   },
   'click .btnRefresh': function () {
-      sideBarService.getPaymentMethodDataVS1().then(function (dataReload) {
-          addVS1Data('TPaymentMethod', JSON.stringify(dataReload)).then(function (datareturn) {
-              Meteor._reload.reload();
+      sideBarService.getPaymentMethodDataList(initialBaseDataLoad, 0, false).then(function (dataReload) {
+          addVS1Data('TPaymentMethodList', JSON.stringify(dataReload)).then(function (datareturn) {
+            sideBarService.getPaymentMethodDataVS1().then(function (dataPayment) {
+                addVS1Data('TPaymentMethod', JSON.stringify(dataPayment)).then(function (datareturn) {
+                    Meteor._reload.reload();
+                }).catch(function (err) {
+                    Meteor._reload.reload();
+                });
+            }).catch(function (err) {
+                Meteor._reload.reload();
+            });
           }).catch(function (err) {
               Meteor._reload.reload();
           });

@@ -419,7 +419,7 @@ export class ContactService extends BaseService {
 
     getPaymentMethodData() {
         let options = {
-            PropertyList: "ID,PaymentMethodName",
+            ListType: "Detail",
             select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TPaymentMethod, options);
@@ -427,7 +427,7 @@ export class ContactService extends BaseService {
 
     getPaymentMethodDataVS1() {
         let options = {
-            PropertyList: "ID,PaymentMethodName",
+            ListType: "Detail",
             select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TPaymentMethodVS1, options);

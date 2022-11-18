@@ -159,10 +159,10 @@ Template.leadlist.events({
     'click .btnRefresh': function() {
         $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
-        sideBarService.getAllLeadDataList(initialDataLoad, 0).then(function (data) {
+        sideBarService.getAllLeadDataList(initialDataLoad, 0, false).then(function (data) {
             addVS1Data("TProspectList", JSON.stringify(data)).then(function (datareturn) {
-              sideBarService.getAllLeadDataList(initialDataLoad, 0, false).then(function (dataUsers) {
-                addVS1Data('TProspectList', JSON.stringify(dataUsers)).then(function (datareturn) {
+              sideBarService.getAllLeadsEx(initialDataLoad, 0, false).then(function (dataUsers) {
+                addVS1Data('TProspectEx', JSON.stringify(dataUsers)).then(function (datareturn) {
                     window.open("/leadlist", "_self");
                   }).catch(function (err) {
                     window.open("/leadlist", "_self");
@@ -172,7 +172,7 @@ Template.leadlist.events({
                 window.open("/leadlist", "_self");
               });
           }).catch(function (err) {
-            sideBarService.getAllLeadDataList().then(function (dataUsers) {
+            sideBarService.getAllLeadDataList(initialDataLoad, 0, false).then(function (dataUsers) {
               addVS1Data('TProspectList', JSON.stringify(dataUsers)).then(function (datareturn) {
                   window.open("/leadlist", "_self");
                 }).catch(function (err) {

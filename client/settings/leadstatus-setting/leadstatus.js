@@ -564,7 +564,15 @@ Template.leadstatussettings.events({
     'click .btnRefresh': function() {
         sideBarService.getAllLeadStatus().then(function(dataReload) {
             addVS1Data('TLeadStatusType', JSON.stringify(dataReload)).then(function(datareturn) {
-                Meteor._reload.reload();
+              sideBarService.getAllLeadStatus(initialBaseDataLoad, 0, false).then(function(dataLeadList) {
+                  addVS1Data('TLeadStatusTypeList', JSON.stringify(dataLeadList)).then(function(datareturn) {
+                      Meteor._reload.reload();
+                  }).catch(function(err) {
+                      Meteor._reload.reload();
+                  });
+              }).catch(function(err) {
+                  Meteor._reload.reload();
+              });
             }).catch(function(err) {
                 Meteor._reload.reload();
             });

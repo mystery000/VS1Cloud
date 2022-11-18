@@ -19,17 +19,17 @@
                     </div>
                 {{/if}}
                 <div class="col-5 col-md-4 d-xl-flex justify-content-xl-end align-items-xl-start">
-                    {{> export_import_print_display_button}}
-                </div>
-            </div> 
-            <div>
-                <div class="card-body p-3 rounded" style="margin: 0px 16px;">
-                  {{> non_transactional_list}}
+                    {{> export_import_print_display_button tablename="tblBOMList"}}
                 </div>
             </div>
-      
+            <div>
+                <div class="card-body p-3 rounded" style="margin: 0px 16px;">
+                  {{> non_transactional_list tablename="tblBOMList"}}
+                </div>
+            </div>
+
         </div>
-        
+
     </div>
     <!-- Import Modal -->
     {{> import_template}}

@@ -87,6 +87,7 @@ openDb = function(dbName) {
             db.createObjectStore("TBankCode", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TCashSale", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TClientType", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TClientTypeList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TChequeEx", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TCompanyType", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TContact", { keyPath: "EmployeeEmail" });
@@ -104,6 +105,7 @@ openDb = function(dbName) {
             db.createObjectStore("TModel", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TOtherContact", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TPaymentMethod", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TPaymentMethodList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TpaySplit", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TPhoneSupportLog", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TPhoneSupportType", { keyPath: "EmployeeEmail" });
@@ -151,6 +153,7 @@ openDb = function(dbName) {
             db.createObjectStore("TSummarySheetReport", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TGeneralLedgerReport", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TUnitOfMeasure", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TUnitOfMeasureList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProductBarcode", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProductPicture", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TERPForm", { keyPath: "EmployeeEmail" });
@@ -587,7 +590,7 @@ getStoreToDelete = async function(email) {
 openDbCheckVersion = async function() {
     var promiseversion = new Promise((resolve, reject) => {
         var versionExists = false;
-        let dbReqVersion = indexedDB.open('TDatabaseVersion', 99);
+        let dbReqVersion = indexedDB.open('TDatabaseVersion', 100);
         dbReqVersion.onsuccess = function() {
             resolve(versionExists);
         };

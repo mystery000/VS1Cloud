@@ -93,23 +93,23 @@ Template.salesoverview.onRendered(function () {
     let custFields = [];
     let customData = {};
     let customFieldCount = reset_data.length;
-
     for (let r = 0; r < customFieldCount; r++) {
       customData = {
         active: reset_data[r].active,
         id: reset_data[r].index,
         custfieldlabel: reset_data[r].label,
-        class: reset_data[r].class,
+        class: reset_data[r].class||'',
         display: reset_data[r].display,
         width: reset_data[r].width ? reset_data[r].width : ''
       };
 
-      if(reset_data[r].active == true){
-        $('#tblSalesOverview .'+reset_data[r].class).removeClass('hiddenColumn');
-      }else if(reset_data[r].active == false){
-        $('#tblSalesOverview .'+reset_data[r].class).addClass('hiddenColumn');
-      };
-
+      //if(reset_data[r].class != ''){
+        if(reset_data[r].active == true){
+          $('#tblSalesOverview .'+reset_data[r].class).removeClass('hiddenColumn');
+        }else if(reset_data[r].active == false){
+          $('#tblSalesOverview .'+reset_data[r].class).addClass('hiddenColumn');
+        };
+      //};
       custFields.push(customData);
     }
     templateObject.displayfields.set(custFields);

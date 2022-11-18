@@ -101,19 +101,19 @@ Template.paymentmethodpop.onRendered(function() {
                     for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                         // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
                         var dataList = {
-                            id: data.tpaymentmethodvs1[i].Id || '',
-                            paymentmethodname: data.tpaymentmethodvs1[i].PaymentMethodName || '',
-                            iscreditcard: data.tpaymentmethodvs1[i].IsCreditCard || 'false',
+                            id: data.tpaymentmethodvs1[i].fields.ID || '',
+                            paymentmethodname: data.tpaymentmethodvs1[i].fields.PaymentMethodName || '',
+                            iscreditcard: data.tpaymentmethodvs1[i].fields.IsCreditCard || 'false',
                         };
 
                         let getIsCreditCard = '';
-                        if(data.tpaymentmethodvs1[i].IsCreditCard){
-                          getIsCreditCard = '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-data.tpaymentmethodvs1[i].Id" checked><label class="custom-control-label chkBox"for="iscreditcard-data.tpaymentmethodvs1[i].Id"></label></div>';
+                        if(data.tpaymentmethodvs1[i].fields.IsCreditCard){
+                          getIsCreditCard = '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-data.tpaymentmethodvs1[i].fields.ID" checked><label class="custom-control-label chkBox"for="iscreditcard-data.tpaymentmethodvs1[i].fields.ID"></label></div>';
                         }else{
-                          getIsCreditCard = '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-data.tpaymentmethodvs1[i].Id"><label class="custom-control-label chkBox"for="iscreditcard-data.tpaymentmethodvs1[i].Id"></label></div>';
+                          getIsCreditCard = '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-data.tpaymentmethodvs1[i].fields.ID"><label class="custom-control-label chkBox"for="iscreditcard-data.tpaymentmethodvs1[i].fields.ID"></label></div>';
                         }
                         var dataList = [
-                          data.tpaymentmethodvs1[i].PaymentMethodName || '',
+                          data.tpaymentmethodvs1[i].fields.PaymentMethodName || '',
                           getIsCreditCard
                         ];
                         splashArrayPaymentMethodList.push(dataList);
@@ -359,9 +359,9 @@ Template.paymentmethodpop.onRendered(function() {
                 for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                     // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
                     var dataList = {
-                        id: data.tpaymentmethodvs1[i].Id || '',
-                        paymentmethodname: data.tpaymentmethodvs1[i].PaymentMethodName || '',
-                        iscreditcard: data.tpaymentmethodvs1[i].IsCreditCard || 'false',
+                        id: data.tpaymentmethodvs1[i].fields.ID || '',
+                        paymentmethodname: data.tpaymentmethodvs1[i].fields.PaymentMethodName || '',
+                        iscreditcard: data.tpaymentmethodvs1[i].fields.IsCreditCard || 'false',
                     };
 
                     let getIsCreditCard = '';
@@ -371,7 +371,7 @@ Template.paymentmethodpop.onRendered(function() {
                       getIsCreditCard = '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-data.tpaymentmethodvs1[i].Id"><label class="custom-control-label chkBox"for="iscreditcard-data.tpaymentmethodvs1[i].Id"></label></div>';
                     }
                     var dataList = [
-                      data.tpaymentmethodvs1[i].PaymentMethodName || '',
+                      data.tpaymentmethodvs1[i].fields.PaymentMethodName || '',
                       getIsCreditCard
                     ];
                     splashArrayPaymentMethodList.push(dataList);
@@ -908,13 +908,13 @@ Template.paymentmethodpop.events({
                 if (data.tpaymentmethodvs1.length > 0) {
                   for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                     let getIsCreditCard = '';
-                    if(data.tpaymentmethodvs1[i].IsCreditCard){
+                    if(data.tpaymentmethodvs1[i].fields.IsCreditCard){
                       getIsCreditCard = '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="' + data.tpaymentmethodvs1[i].Id + '" checked><label class="custom-control-label chkBox"for="' + data.tpaymentmethodvs1[i].Id + '"></label></div>';
                     }else{
                       getIsCreditCard = '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="' + data.tpaymentmethodvs1[i].Id + '"><label class="custom-control-label chkBox"for="' + data.tpaymentmethodvs1[i].Id + '"></label></div>';
                     }
                     var dataList = [
-                      data.tpaymentmethodvs1[i].PaymentMethodName || '',
+                      data.tpaymentmethodvs1[i].fields.PaymentMethodName || '',
                       getIsCreditCard
                     ];
                 splashArrayPaymentMethodList.push(dataList);
@@ -958,13 +958,13 @@ Template.paymentmethodpop.events({
                   let inventoryData = [];
                   for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                     let getIsCreditCard = '';
-                    if(data.tpaymentmethodvs1[i].IsCreditCard){
+                    if(data.tpaymentmethodvs1[i].fields.IsCreditCard){
                       getIsCreditCard = '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="' + data.tpaymentmethodvs1[i].Id + '" checked><label class="custom-control-label chkBox"for="' + data.tpaymentmethodvs1[i].Id + '"></label></div>';
                     }else{
                       getIsCreditCard = '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="' + data.tpaymentmethodvs1[i].Id + '"><label class="custom-control-label chkBox"for="' + data.tpaymentmethodvs1[i].Id + '"></label></div>';
                     }
                     var dataList = [
-                      data.tpaymentmethodvs1[i].PaymentMethodName || '',
+                      data.tpaymentmethodvs1[i].fields.PaymentMethodName || '',
                       getIsCreditCard
                     ];
                 splashArrayPaymentMethodList.push(dataList);

@@ -421,168 +421,168 @@ Template.invoicelist.onRendered(function () {
             action: function () {
               $("#tblInvoicelist").DataTable().ajax.reload();
             },
-            // fnDrawCallback: function (oSettings) {
-            //   let checkurlIgnoreDate =
-            //     FlowRouter.current().queryParams.ignoredate;
+            fnDrawCallback: function (oSettings) {
+              let checkurlIgnoreDate =
+                FlowRouter.current().queryParams.ignoredate;
 
-            //   $(".paginate_button.page-item").removeClass("disabled");
-            //   $("#tblInvoicelist_ellipsis").addClass("disabled");
+              $(".paginate_button.page-item").removeClass("disabled");
+              $("#tblInvoicelist_ellipsis").addClass("disabled");
 
-            //   if (oSettings._iDisplayLength == -1) {
-            //     if (oSettings.fnRecordsDisplay() > 150) {
-            //       $(".paginate_button.page-item.previous").addClass(
-            //         "disabled"
-            //       );
-            //       $(".paginate_button.page-item.next").addClass(
-            //         "disabled"
-            //       );
-            //     }
-            //   } else {
-            //   }
-            //   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-            //     $(".paginate_button.page-item.next").addClass(
-            //       "disabled"
-            //     );
-            //   }
+              if (oSettings._iDisplayLength == -1) {
+                if (oSettings.fnRecordsDisplay() > 150) {
+                  $(".paginate_button.page-item.previous").addClass(
+                    "disabled"
+                  );
+                  $(".paginate_button.page-item.next").addClass(
+                    "disabled"
+                  );
+                }
+              } else {
+              }
+              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                $(".paginate_button.page-item.next").addClass(
+                  "disabled"
+                );
+              }
 
-            //   $(
-            //     ".paginate_button.next:not(.disabled)",
-            //     this.api().table().container()
-            //   ).on("click", function () {
-            //     $(".fullScreenSpin").css("display", "inline-block");
-            //     let dataLenght = oSettings._iDisplayLength;
-            //     var dateFrom = new Date(
-            //       $("#dateFrom").datepicker("getDate")
-            //     );
-            //     var dateTo = new Date(
-            //       $("#dateTo").datepicker("getDate")
-            //     );
+              $(
+                ".paginate_button.next:not(.disabled)",
+                this.api().table().container()
+              ).on("click", function () {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = oSettings._iDisplayLength;
+                var dateFrom = new Date(
+                  $("#dateFrom").datepicker("getDate")
+                );
+                var dateTo = new Date(
+                  $("#dateTo").datepicker("getDate")
+                );
 
-            //     let formatDateFrom =
-            //       dateFrom.getFullYear() +
-            //       "-" +
-            //       (dateFrom.getMonth() + 1) +
-            //       "-" +
-            //       dateFrom.getDate();
-            //     let formatDateTo =
-            //       dateTo.getFullYear() +
-            //       "-" +
-            //       (dateTo.getMonth() + 1) +
-            //       "-" +
-            //       dateTo.getDate();
-            //     if (data.Params.IgnoreDates == true) {
-            //       sideBarService
-            //         .getAllTInvoiceListData(
-            //           formatDateFrom,
-            //           formatDateTo,
-            //           true,
-            //           initialDatatableLoad,
-            //           oSettings.fnRecordsDisplay()
-            //         )
-            //         .then(function (dataObjectnew) {
-            //           getVS1Data("TInvoiceList")
-            //             .then(function (dataObjectold) {
-            //               if (dataObjectold.length == 0) {
-            //               } else {
-            //                 let dataOld = JSON.parse(
-            //                   dataObjectold[0].data
-            //                 );
+                let formatDateFrom =
+                  dateFrom.getFullYear() +
+                  "-" +
+                  (dateFrom.getMonth() + 1) +
+                  "-" +
+                  dateFrom.getDate();
+                let formatDateTo =
+                  dateTo.getFullYear() +
+                  "-" +
+                  (dateTo.getMonth() + 1) +
+                  "-" +
+                  dateTo.getDate();
+                if (data.Params.IgnoreDates == true) {
+                  sideBarService
+                    .getAllTInvoiceListData(
+                      formatDateFrom,
+                      formatDateTo,
+                      true,
+                      initialDatatableLoad,
+                      oSettings.fnRecordsDisplay()
+                    )
+                    .then(function (dataObjectnew) {
+                      getVS1Data("TInvoiceList")
+                        .then(function (dataObjectold) {
+                          if (dataObjectold.length == 0) {
+                          } else {
+                            let dataOld = JSON.parse(
+                              dataObjectold[0].data
+                            );
 
-            //                 var thirdaryData = $.merge(
-            //                   $.merge([], dataObjectnew.tinvoicelist),
-            //                   dataOld.tinvoicelist
-            //                 );
-            //                 let objCombineData = {
-            //                   Params: dataOld.Params,
-            //                   tinvoicelist: thirdaryData,
-            //                 };
+                            var thirdaryData = $.merge(
+                              $.merge([], dataObjectnew.tinvoicelist),
+                              dataOld.tinvoicelist
+                            );
+                            let objCombineData = {
+                              Params: dataOld.Params,
+                              tinvoicelist: thirdaryData,
+                            };
 
-            //                 addVS1Data(
-            //                   "TInvoiceList",
-            //                   JSON.stringify(objCombineData)
-            //                 )
-            //                   .then(function (datareturn) {
-            //                     templateObject.resetData(
-            //                       objCombineData
-            //                     );
-            //                     $(".fullScreenSpin").css(
-            //                       "display",
-            //                       "none"
-            //                     );
-            //                   })
-            //                   .catch(function (err) {
-            //                     $(".fullScreenSpin").css(
-            //                       "display",
-            //                       "none"
-            //                     );
-            //                   });
-            //               }
-            //             })
-            //             .catch(function (err) {});
-            //         })
-            //         .catch(function (err) {
-            //           $(".fullScreenSpin").css("display", "none");
-            //         });
-            //     } else {
-            //       sideBarService
-            //         .getAllTInvoiceListData(
-            //           formatDateFrom,
-            //           formatDateTo,
-            //           false,
-            //           initialDatatableLoad,
-            //           oSettings.fnRecordsDisplay()
-            //         )
-            //         .then(function (dataObjectnew) {
-            //           getVS1Data("TInvoiceList")
-            //             .then(function (dataObjectold) {
-            //               if (dataObjectold.length == 0) {
-            //               } else {
-            //                 let dataOld = JSON.parse(
-            //                   dataObjectold[0].data
-            //                 );
+                            addVS1Data(
+                              "TInvoiceList",
+                              JSON.stringify(objCombineData)
+                            )
+                              .then(function (datareturn) {
+                                templateObject.resetData(
+                                  objCombineData
+                                );
+                                $(".fullScreenSpin").css(
+                                  "display",
+                                  "none"
+                                );
+                              })
+                              .catch(function (err) {
+                                $(".fullScreenSpin").css(
+                                  "display",
+                                  "none"
+                                );
+                              });
+                          }
+                        })
+                        .catch(function (err) {});
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                } else {
+                  sideBarService
+                    .getAllTInvoiceListData(
+                      formatDateFrom,
+                      formatDateTo,
+                      false,
+                      initialDatatableLoad,
+                      oSettings.fnRecordsDisplay()
+                    )
+                    .then(function (dataObjectnew) {
+                      getVS1Data("TInvoiceList")
+                        .then(function (dataObjectold) {
+                          if (dataObjectold.length == 0) {
+                          } else {
+                            let dataOld = JSON.parse(
+                              dataObjectold[0].data
+                            );
 
-            //                 var thirdaryData = $.merge(
-            //                   $.merge([], dataObjectnew.tinvoicelist),
-            //                   dataOld.tinvoicelist
-            //                 );
-            //                 let objCombineData = {
-            //                   Params: dataOld.Params,
-            //                   tinvoicelist: thirdaryData,
-            //                 };
+                            var thirdaryData = $.merge(
+                              $.merge([], dataObjectnew.tinvoicelist),
+                              dataOld.tinvoicelist
+                            );
+                            let objCombineData = {
+                              Params: dataOld.Params,
+                              tinvoicelist: thirdaryData,
+                            };
 
-            //                 addVS1Data(
-            //                   "TInvoiceList",
-            //                   JSON.stringify(objCombineData)
-            //                 )
-            //                   .then(function (datareturn) {
-            //                     templateObject.resetData(
-            //                       objCombineData
-            //                     );
-            //                     $(".fullScreenSpin").css(
-            //                       "display",
-            //                       "none"
-            //                     );
-            //                   })
-            //                   .catch(function (err) {
-            //                     $(".fullScreenSpin").css(
-            //                       "display",
-            //                       "none"
-            //                     );
-            //                   });
-            //               }
-            //             })
-            //             .catch(function (err) {});
-            //         })
-            //         .catch(function (err) {
-            //           $(".fullScreenSpin").css("display", "none");
-            //         });
-            //     }
-            //   });
+                            addVS1Data(
+                              "TInvoiceList",
+                              JSON.stringify(objCombineData)
+                            )
+                              .then(function (datareturn) {
+                                templateObject.resetData(
+                                  objCombineData
+                                );
+                                $(".fullScreenSpin").css(
+                                  "display",
+                                  "none"
+                                );
+                              })
+                              .catch(function (err) {
+                                $(".fullScreenSpin").css(
+                                  "display",
+                                  "none"
+                                );
+                              });
+                          }
+                        })
+                        .catch(function (err) {});
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                }
+              });
 
-            //   setTimeout(function () {
-            //     MakeNegative();
-            //   }, 100);
-            // },
+              setTimeout(function () {
+                MakeNegative();
+              }, 100);
+            },
             // language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               this.fnPageChange("last");
@@ -687,7 +687,7 @@ Template.invoicelist.onRendered(function () {
     let prevMonth11Date = moment()
       .subtract(reportsloadMonths, "months")
       .format("YYYY-MM-DD");
-   
+
     getVS1Data("TInvoiceList")
       .then(function (dataObject) {
         if (dataObject.length == 0) {

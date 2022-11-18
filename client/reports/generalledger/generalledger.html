@@ -1,5 +1,5 @@
 <template name="generalledger">
-  {{# vs1_report_template tabledisplayname="General Ledger" tablename="generalledger" dateAsAt=dateAsAt}}
+  {{# vs1_report_template tabledisplayname="General Ledger" tablename="tblgeneralledger" dateAsAt=dateAsAt}}
     <div class="table-responsive">
         <table class="table tableExportDetailDiv table-sm dataTable" id="tblgeneralledger" name="tblgeneralledger">
             <thead>
@@ -64,7 +64,7 @@
                     {{#each record in records}}
                         {{#each recordItem in record}}
                             {{#if recordItem.key}}
-                                <tr class="totalhr colAccountName">
+                                <tr class="totalhr">
                                     <td class="{{#if isNegativeAmount recordItem.key}} text-danger {{/if}}" style="font-weight: 800;">
                                         <div class="SectionTitle2 report-heading-last">{{recordItem.key}}</div>
                                     </td>

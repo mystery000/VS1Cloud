@@ -32,12 +32,12 @@
                     </div>
                 {{/if}}
                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                    {{> export_import_print_display_button}}
+                    {{> export_import_print_display_button tablename="tblLeadlist"}}
                 </div>
             </div>
             <div>
                 <div class="card-body p-3 rounded" style="margin: 0 16px;">
-                    {{> non_transactional_list}}
+                    {{> non_transactional_list tablename="tblLeadlist"}}
                 </div>
             </div>
         </div>
