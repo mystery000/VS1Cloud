@@ -48,6 +48,7 @@ Template.accountsoverview.onRendered(function() {
     let needAddVehicle = true;
 
 
+
     if(Session.get("ERPLoggedCountry") == "United States of America"){
         $(".btnTaxSummary").show();
         $(".btnBasReturnGroup").hide();
@@ -55,7 +56,7 @@ Template.accountsoverview.onRendered(function() {
     }
     else if(Session.get("ERPLoggedCountry") == "Australia"){
         $(".btnTaxSummary").hide();
-        $(".btnBasReturnGroup").show();        
+        $(".btnBasReturnGroup").show();
         $(".btnVatReturnGroup").hide();
     }
     else if(Session.get("ERPLoggedCountry") == "South Africa"){
@@ -389,7 +390,7 @@ Template.accountsoverview.onRendered(function() {
         $(".btnRefresh").addClass("btnRefreshAlertOverview");
     }
 
-    $("#edtExpiryDate").datepicker({
+    $("#edtExpiryDate, #edtSummarisedDate, #edtGlobal, #edtReceivable, #edtPayable").datepicker({
         showOn: "button",
         buttonText: "Show Date",
         buttonImageOnly: true,
