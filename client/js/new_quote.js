@@ -20,6 +20,7 @@ import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
+import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -31,8 +32,6 @@ const template_list = [
     "Quotes",
 ];
 
-
-const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (Inc)", "Cost Price"];
 
 let defaultCurrencyCode = CountryAbbr;
 

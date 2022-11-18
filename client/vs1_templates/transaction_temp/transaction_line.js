@@ -9,7 +9,7 @@ import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
-const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (Inc)"];
+export const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Amount (Inc)", "Unit Price (Inc)", "Cost Price"];
 
 //Template.transaction_line.inheritsHelpersFrom('new_invoice');
 // Template.new_invoice.inheritsEventsFrom('transaction_line');

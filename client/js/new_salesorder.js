@@ -23,6 +23,7 @@ import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 import CachedHttp from '../lib/global/CachedHttp';
 import erpObject from '../lib/global/erp-objects';
 import GlobalFunctions from '../GlobalFunctions';
+import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -36,8 +37,6 @@ var template_list = [
     "Sales Order",
     "Delivery Docket",
 ];
-
-const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (Inc)", "Cost Price"];
 
 let defaultCurrencyCode = CountryAbbr;
 
