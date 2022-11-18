@@ -37,7 +37,7 @@ const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (I
 
 let defaultCurrencyCode = CountryAbbr;
 
-Template.new_invoice.onCreated(function () {
+Template.new_invoice.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.isForeignEnabled = new ReactiveVar(false);
 
@@ -3497,7 +3497,7 @@ Template.new_invoice.onRendered(function() {
             currentInvoice = parseInt(currentInvoice);
             templateObject.getInvoiceData = function() {
                 getVS1Data("TInvoiceEx")
-                    .then(function(dataObject) {
+                    .then(async function(dataObject) {
                         if (dataObject.length == 0) {
                             let customerData = templateObject.clientrecords.get();
                             accountService
@@ -4053,7 +4053,7 @@ Template.new_invoice.onRendered(function() {
 
                                     if (useData[d].fields.Lines.length) {
                                         for (let i = 0; i < useData[d].fields.Lines.length; i++) {
-                                        
+
                                             let AmountGbp =
                                                 currencySymbol +
                                                 "" +
@@ -4147,65 +4147,35 @@ Template.new_invoice.onRendered(function() {
                                             if (i == 0) {
                                                 let getProductInfo = lineItemObj.description.split("Service Provided :")[1];
                                                 getProductInfo = getProductInfo.split(" by ")[0];
-                                                productService.getProductStatus(getProductInfo).then(function(data) {
-                                                        lineItemObj.itemID = data.tproductvs1[0].Id || 0;
-                                                        
-                                                        if (data.tproductvs1[0].Id) {
-                                                            var dataListTable = [
-                                                                useData[d].fields.Lines[i].fields.ProductName || "",
-                                                                useData[d].fields.Lines[i].fields.ProductDescription ||
-                                                                "",
-                                                                "<div contenteditable='true' class='qty'>" +
-                                                                "" +
-                                                                useData[d].fields.Lines[i].fields.UOMOrderQty +
-                                                                "" +
-                                                                "</div>" || "<div>" + "" + 0 + "" + "</div>",
-                                                                "<div>" +
-                                                                "" +
-                                                                currencySymbol +
-                                                                "" +
-                                                                useData[d].fields.Lines[i].fields.LinePrice.toFixed(
-                                                                    2
-                                                                ) +
-                                                                "" +
-                                                                "</div>" || currencySymbol + "" + 0.0,
-                                                                useData[d].fields.Lines[i].fields.LineTaxCode || "",
-                                                                AmountGbp || currencySymbol + "" + 0.0,
-                                                                '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
-                                                            ];
-                                                            lineItemsTable.push(dataListTable);
-                                                            lineItems.push(lineItemObj);
-                                                        }
-                                                    })
-                                                    .catch(function(err) {
-                                                        console.error(err);
-                                                    });
-                                            } else {
-                                                var dataListTable = [
-                                                    useData[d].fields.Lines[i].fields.ProductName || "",
-                                                    useData[d].fields.Lines[i].fields.ProductDescription ||
-                                                    "",
-                                                    "<div contenteditable='true' class='qty'>" +
-                                                    "" +
-                                                    useData[d].fields.Lines[i].fields.UOMOrderQty +
-                                                    "" +
-                                                    "</div>" || "<div>" + "" + 0 + "" + "</div>",
-                                                    "<div>" +
-                                                    "" +
-                                                    currencySymbol +
-                                                    "" +
-                                                    useData[d].fields.Lines[i].fields.LinePrice.toFixed(
-                                                        2
-                                                    ) +
-                                                    "" +
-                                                    "</div>" || currencySymbol + "" + 0.0,
-                                                    useData[d].fields.Lines[i].fields.LineTaxCode || "",
-                                                    AmountGbp || currencySymbol + "" + 0.0,
-                                                    '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
-                                                ];
-                                                lineItemsTable.push(dataListTable);
-                                                lineItems.push(lineItemObj);
+
+                                                let apptServiceInfo = await productService.getProductStatus(getProductInfo);
+                                                lineItemObj.itemID = apptServiceInfo.tproductvs1[0].Id || 0;
                                             }
+
+                                            var dataListTable = [
+                                                useData[d].fields.Lines[i].fields.ProductName || "",
+                                                useData[d].fields.Lines[i].fields.ProductDescription ||
+                                                "",
+                                                "<div contenteditable='true' class='qty'>" +
+                                                "" +
+                                                useData[d].fields.Lines[i].fields.UOMOrderQty +
+                                                "" +
+                                                "</div>" || "<div>" + "" + 0 + "" + "</div>",
+                                                "<div>" +
+                                                "" +
+                                                currencySymbol +
+                                                "" +
+                                                useData[d].fields.Lines[i].fields.LinePrice.toFixed(
+                                                    2
+                                                ) +
+                                                "" +
+                                                "</div>" || currencySymbol + "" + 0.0,
+                                                useData[d].fields.Lines[i].fields.LineTaxCode || "",
+                                                AmountGbp || currencySymbol + "" + 0.0,
+                                                '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
+                                            ];
+                                            lineItemsTable.push(dataListTable);
+                                            lineItems.push(lineItemObj);
                                         }
                                     } else {
                                         let AmountGbp = useData[
@@ -13121,11 +13091,11 @@ Template.new_invoice.onRendered(function() {
  */
 Template.new_invoice.onRendered(function() {
 
-    this.loadCustomers = async (refresh = false) => {
-        let data = await CachedHttp.get(erpObject.TCustomerVS1, async () => {
+    this.loadCustomers = async(refresh = false) => {
+        let data = await CachedHttp.get(erpObject.TCustomerVS1, async() => {
             return await contactService.getOneCustomerDataEx(customerID);
         }, {
-            forceOverride: refresh, 
+            forceOverride: refresh,
             validate: (cachedResponse) => {
                 return true;
             }
@@ -13136,9 +13106,9 @@ Template.new_invoice.onRendered(function() {
         this.customers.set(customers);
     };
 
-    
 
-    this.findCustomerById = async (id = 0) => {
+
+    this.findCustomerById = async(id = 0) => {
         const customers = await this.customers.get();
         const customer = customers.find(c => c.ID == id);
 
