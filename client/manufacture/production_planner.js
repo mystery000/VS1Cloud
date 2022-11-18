@@ -1,4 +1,4 @@
-import {ReactiveVar} from 'meteor/reactive-var';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { ProductService } from '../product/product-service';
 import { UtilityService } from '../utility-service';
 import { Calendar, formatDate } from "@fullcalendar/core";
@@ -8,15 +8,15 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import bootstrapPlugin from "@fullcalendar/bootstrap";
-import {ManufacturingService} from '../manufacture/manufacturing-service';
-import commonStyles from '@fullcalendar/common/main.css';
-import dayGridStyles from '@fullcalendar/daygrid/main.css';
-import timelineStyles from '@fullcalendar/timeline/main.css';
-import resourceTimelineStyles from '@fullcalendar/resource-timeline/main.css';
+import { ManufacturingService } from '../manufacture/manufacturing-service';
+// import commonStyles from '@fullcalendar/common/main.css';
+// import dayGridStyles from '@fullcalendar/daygrid/main.css';
+// import timelineStyles from '@fullcalendar/timeline/main.css';
+// import resourceTimelineStyles from '@fullcalendar/resource-timeline/main.css';
 import 'jQuery.print/jQuery.print.js';
 
 
-Template.production_planner.onCreated(function(){
+Template.production_planner.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.resources = new ReactiveVar([]);
     templateObject.events = new ReactiveVar([]);
@@ -27,18 +27,18 @@ Template.production_planner.onCreated(function(){
 let manufacturingService = new ManufacturingService();
 Template.production_planner.onRendered(async function() {
     const templateObject = Template.instance();
-   
-    
-    
+
+
+
     async function getResources() {
-        return new Promise(async(resolve, reject) =>{
-            getVS1Data('TProcessStep').then(function(dataObject){
-                if(dataObject.length == 0) {
-                    manufacturingService.getAllProcessData().then(function(data){
+        return new Promise(async(resolve, reject) => {
+            getVS1Data('TProcessStep').then(function(dataObject) {
+                if (dataObject.length == 0) {
+                    manufacturingService.getAllProcessData().then(function(data) {
                         addVS1Data('TProcessStep', JSON.stringify(data))
                         let useData = data.tprocessstep;
                         let temp = []
-                        for(let i = 0; i<useData.length; i++) {
+                        for (let i = 0; i < useData.length; i++) {
                             temp.push({
                                 id: i,
                                 title: useData[i].fields.KeyValue,
@@ -46,11 +46,11 @@ Template.production_planner.onRendered(async function() {
                         }
                         resolve(temp)
                     })
-                }else{
+                } else {
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.tprocessstep;
                     let temp = [];
-                    for(let i = 0; i<useData.length; i++) {
+                    for (let i = 0; i < useData.length; i++) {
                         temp.push({
                             id: i,
                             title: useData[i].fields.KeyValue,
@@ -62,7 +62,7 @@ Template.production_planner.onRendered(async function() {
                 addVS1Data('TProcessStep', JSON.stringify(data))
                 let useData = data.tprocessstep;
                 let temp = []
-                for(let i = 0; i<useData.length; i++) {
+                for (let i = 0; i < useData.length; i++) {
                     temp.push({
                         id: i,
                         title: useData[i].fields.KeyValue,
@@ -74,36 +74,41 @@ Template.production_planner.onRendered(async function() {
     }
     let resources = await getResources();
     await templateObject.resources.set(resources);
-    let workorders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')) : []
-    // templateObject.workorders.set(workorders);
-    async function getEvents () {
+    let workorders = localStorage.getItem('TWorkorders') ? JSON.parse(localStorage.getItem('TWorkorders')) : []
+        // templateObject.workorders.set(workorders);
+    async function getEvents() {
         return new Promise(async function(resolve, reject) {
             let events = [];
-            let eventsData = localStorage.getItem('TProductionPlan')?JSON.parse(localStorage.getItem('TProductionPlan')):[];
-            if(eventsData.length == 0) {
+            let eventsData = localStorage.getItem('TProductionPlan') ? JSON.parse(localStorage.getItem('TProductionPlan')) : [];
+            if (eventsData.length == 0) {
 
                 let events = [];
-                for(let i = 0; i < workorders.length; i ++ ){
+                for (let i = 0; i < workorders.length; i++) {
                     let processName = workorders[i].BOM.process;
                     let productName = workorders[i].BOM.productName;
                     let startTime = new Date(workorders[i].StartTime);
                     let duration = workorders[i].BOM.duration;
-                    if(workorders[i].Quantity)  duration = duration * parseFloat(workorders[i].Quantity);
-                    let endTime  = new Date();
+                    if (workorders[i].Quantity) duration = duration * parseFloat(workorders[i].Quantity);
+                    let endTime = new Date();
                     endTime.setTime(startTime.getTime() + duration * 3600000)
                     let index = resources.findIndex(resource => {
                         return resource.title == processName;
                     })
                     let resourceId = resources[index].id;
-                    var randomColor = Math.floor(Math.random()*16777215).toString(16);
+                    var randomColor = Math.floor(Math.random() * 16777215).toString(16);
                     let event = {
-                        "resourceId":resourceId, "resourceName":resources[index].title, "title":productName,"start":startTime,"end":endTime, "color": "#"+randomColor,
+                        "resourceId": resourceId,
+                        "resourceName": resources[index].title,
+                        "title": productName,
+                        "start": startTime,
+                        "end": endTime,
+                        "color": "#" + randomColor,
                     }
                     events.push(event);
                 }
                 templateObject.events.set(events)
                 resolve(events);
-            }else  {
+            } else {
                 events = eventsData;
                 templateObject.events.set(events)
                 resolve(events)
@@ -112,9 +117,9 @@ Template.production_planner.onRendered(async function() {
     }
 
     let events = await getEvents();
-  
+
     let calendarEl = document.getElementById('calendar');
-    
+
     let calendarOptions = {
         plugins: [
             resourceTimelinePlugin,
@@ -129,25 +134,25 @@ Template.production_planner.onRendered(async function() {
         initialView: 'resourceTimelineDay',
         aspectRatio: 1.5,
         headerToolbar: {
-        left: 'prev,next',
-        center: 'title',
-        right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
+            left: 'prev,next',
+            center: 'title',
+            right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
         },
         editable: true,
         resourceAreaHeaderContent: 'Resources',
         resources: await getResources(),
-        events: templateObject.events.get().length == 0?events:templateObject.events.get(),
+        events: templateObject.events.get().length == 0 ? events : templateObject.events.get(),
         eventOverlap: true,
         eventResourceEditable: false,
         weekends: false,
         businessHours: [{
-            daysOfWeek: [1,2,3,4],
+            daysOfWeek: [1, 2, 3, 4],
             startTime: '10:00',
-            endTime:'18:00'
-        },{
+            endTime: '18:00'
+        }, {
             daysOfWeek: [5],
             startTime: '10:00',
-            endTime:'14:00'
+            endTime: '14:00'
         }],
         eventDrop: function(info) {
             let totalEvents = templateObject.events.get();
@@ -156,7 +161,7 @@ Template.production_planner.onRendered(async function() {
             let updatedEnd = info.event.end;
             let color = info.event.color;
             let title = info.event.title;
-            
+
             let currentIndex = cloneEvents.findIndex(event => {
                 return event.title == title
             })
@@ -165,8 +170,8 @@ Template.production_planner.onRendered(async function() {
             currentEvent.end = updatedEnd
             cloneEvents[currentIndex] = currentEvent;
             templateObject.events.set(cloneEvents)
-          
-    
+
+
         },
         eventResizeStop: function(info) {
             let totalEvents = templateObject.events.get();
@@ -175,7 +180,7 @@ Template.production_planner.onRendered(async function() {
             let updatedEnd = info.event.end;
             let color = info.event.color;
             let title = info.event.title;
-            
+
             let currentIndex = cloneEvents.findIndex(event => {
                 return event.title == title
             })
@@ -187,46 +192,46 @@ Template.production_planner.onRendered(async function() {
         },
         eventDragStop: function(info) {
             let resourceId = info.event._def.resourceIds[0]
- 
+
 
             let newStart = info.event.start;
-            let newEnd =  info.event.end;
+            let newEnd = info.event.end;
             let events = templateObject.events.get();
             let tempEvents = JSON.parse(JSON.stringify(events));
-            tempEvents = tempEvents.filter(event => 
+            tempEvents = tempEvents.filter(event =>
                 // event.resourceId == resourceId 
                 event.resourceId == resourceId && event.title != info.event.title
             )
 
-            
+
             const getNearest = (data, target) => {
-                if(tempEvents.length > 0) {
-                    data.reduce((acc, obj)=>{
-                        Math.abs(target.getTime() - obj.start.getTime()) < Math.abs(target.getTime() - acc.start.getTime()) && (target.getTime() - obj.start.getTime() < 0) ? obj: acc
+                if (tempEvents.length > 0) {
+                    data.reduce((acc, obj) => {
+                        Math.abs(target.getTime() - obj.start.getTime()) < Math.abs(target.getTime() - acc.start.getTime()) && (target.getTime() - obj.start.getTime() < 0) ? obj : acc
                     })
                 }
             }
 
             let targetEvent
-            if(tempEvents.length ==1) {
+            if (tempEvents.length == 1) {
                 targetEvent = tempEvents[0]
-            }  else {
+            } else {
                 targetEvent = getNearest(tempEvents, newStart);
             }
-            let moveDistance =  newEnd.getTime() - new Date(targetEvent.start).getTime();
+            let moveDistance = newEnd.getTime() - new Date(targetEvent.start).getTime();
             tempEvents = tempEvents.filter(event => new Date(event.start).getTime() < newEnd.getTime());
             for (let i = 0; i < tempEvents.length; i++) {
                 let index = events.findIndex(event => {
                     return event.resourceId == resourceId && event.title == tempEvents[i].title;
                 })
-                if(index > -1) {
+                if (index > -1) {
                     events[index].start = new Date((new Date(tempEvents[i].start).getTime() + moveDistance));
                     events[index].end = new Date((new Date(tempEvents[i].end).getTime() + moveDistance));
                 }
             }
             templateObject.events.set(events);
             localStorage.setItem('TProductionPlan', JSON.stringify(events));
-            if(calendar) {
+            if (calendar) {
                 calendar.destroy();
                 calendar = new Calendar(calendarEl, {
                     ...calendarOptions,
@@ -239,34 +244,34 @@ Template.production_planner.onRendered(async function() {
             // window.location.reload();
         },
         eventClick: function(info) {
-            let title = info.event.title;
-            let orderIndex = workorders.findIndex(order => {
-                return order.BOM.productName == title;
-            })
-            let percentage = 0;
-            if(new Date().getTime() > (new Date(info.event.start)).getTime() && new Date().getTime() < (new Date(info.event.end)).getTime()) {
-                let overallTime = (new Date(info.event.end)).getTime() - (new Date(info.event.start)).getTime();
-                let processedTime = new Date().getTime() -(new Date(info.event.start)).getTime();
-                percentage = (processedTime / overallTime) * 100;
+                let title = info.event.title;
+                let orderIndex = workorders.findIndex(order => {
+                    return order.BOM.productName == title;
+                })
+                let percentage = 0;
+                if (new Date().getTime() > (new Date(info.event.start)).getTime() && new Date().getTime() < (new Date(info.event.end)).getTime()) {
+                    let overallTime = (new Date(info.event.end)).getTime() - (new Date(info.event.start)).getTime();
+                    let processedTime = new Date().getTime() - (new Date(info.event.start)).getTime();
+                    percentage = (processedTime / overallTime) * 100;
+                }
+                let object = {
+                    SONumber: workorders[orderIndex].SalesOrderID,
+                    Customer: workorders[orderIndex].Customer,
+                    OrderDate: workorders[orderIndex].OrderDate,
+                    ShipDate: workorders[orderIndex].Line.fields.ShipDate,
+                    JobNotes: workorders[orderIndex].BOM.processNote || '',
+                    Percentage: percentage + '%',
+                }
+                templateObject.viewInfoData.set(object);
             }
-            let object = {
-                SONumber: workorders[orderIndex].SalesOrderID,
-                Customer: workorders[orderIndex].Customer,
-                OrderDate: workorders[orderIndex].OrderDate,
-                ShipDate: workorders[orderIndex].Line.fields.ShipDate,
-                JobNotes: workorders[orderIndex].BOM.processNote || '',
-                Percentage: percentage + '%',
-            }
-            templateObject.viewInfoData.set(object);
-        }
-        // expandRows: true,
-        // events: [{"resourceId":"1","title":"event 1","start":"2022-11-14","end":"2022-11-16"},{"resourceId":"2","title":"event 3","start":"2022-11-15T12:00:00+00:00","end":"2022-11-16T06:00:00+00:00"},{"resourceId":"0","title":"event 4","start":"2022-11-15T07:30:00+00:00","end":"2022-11-15T09:30:00+00:00"},{"resourceId":"2","title":"event 5","start":"2022-11-15T10:00:00+00:00","end":"2022-11-15T15:00:00+00:00"},{"resourceId":"1","title":"event 2","start":"2022-11-15T09:00:00+00:00","end":"2022-11-15T14:00:00+00:00"}]
-      
+            // expandRows: true,
+            // events: [{"resourceId":"1","title":"event 1","start":"2022-11-14","end":"2022-11-16"},{"resourceId":"2","title":"event 3","start":"2022-11-15T12:00:00+00:00","end":"2022-11-16T06:00:00+00:00"},{"resourceId":"0","title":"event 4","start":"2022-11-15T07:30:00+00:00","end":"2022-11-15T09:30:00+00:00"},{"resourceId":"2","title":"event 5","start":"2022-11-15T10:00:00+00:00","end":"2022-11-15T15:00:00+00:00"},{"resourceId":"1","title":"event 2","start":"2022-11-15T09:00:00+00:00","end":"2022-11-15T14:00:00+00:00"}]
+
     }
 
     let calendar = new Calendar(calendarEl, calendarOptions);
-      calendar.render();
-   
+    calendar.render();
+
 })
 
 Template.production_planner.events({
@@ -282,7 +287,7 @@ Template.production_planner.events({
             type: 'success',
             showCancelButton: false,
             confirmButtonText: 'Continue',
-        }).then ((result)=>{
+        }).then((result) => {
             window.location.reload();
         });
     },
@@ -300,7 +305,7 @@ Template.production_planner.events({
 })
 
 Template.production_planner.helpers({
-    viewInfoData: ()=>{
+    viewInfoData: () => {
         return Template.instance().viewInfoData.get();
     }
 })
