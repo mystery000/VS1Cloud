@@ -21,6 +21,7 @@ import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentc
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
+import { foreignCols } from "../vs1_templates/transaction_temp/transaction_line";
 // import { CustomerCreationSourceFilter } from "square-connect";
 
 let sideBarService = new SideBarService();
@@ -32,8 +33,6 @@ let clickedInput = "";
 let isDropDown = false;
 
 let template_list = ["Invoices", "Invoice Back Orders", "Delivery Docket"];
-
-const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (Inc)", "Cost Price"];
 
 let defaultCurrencyCode = CountryAbbr;
 
