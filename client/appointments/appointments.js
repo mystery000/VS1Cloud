@@ -1928,6 +1928,43 @@ Template.appointments.onRendered(function() {
                         }
                     }, 100);
                     // this.$body.addClass('modal-open');
+                } else {
+                    let splitId = id.split(":");
+
+                    FlowRouter.go("/employeescard?id=" + splitId[1]);
+                    setTimeout(function() {
+                        $('.payrollTab').tab('show');
+                        $('a[href="#leave"]').tab('show');
+
+                        $('#removeLeaveRequestBtn').show();
+                        let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                        var getLeaveInfo = leaveemployeerecords.filter((leave) => {
+                            return (
+                                splitId[2] ==
+                                leave.ID
+                            );
+                        });
+
+                        if (getLeaveInfo.length > 0) {
+                            $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
+                            $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
+                            $('#edtLeaveTypeofRequestID').val(getLeaveInfo[0].TypeOfRequest);
+                            $('#edtLeaveTypeofRequest').val(getLeaveInfo[0].LeaveMethod);
+                            $('#edtLeaveDescription').val(getLeaveInfo[0].Description);
+                            $('#edtLeaveStartDate').val(moment(getLeaveInfo[0].StartDate).format('DD/MM/YYYY'));
+                            $('#edtLeaveEndDate').val(moment(getLeaveInfo[0].EndDate).format('DD/MM/YYYY'));
+                            $('#edtLeavePayPeriod').val(getLeaveInfo[0].PayPeriod);
+                            $('#edtLeaveHours').val(getLeaveInfo[0].Hours);
+                            setTimeout(function() {
+                                $('#edtLeavePayStatus').val(getLeaveInfo[0].Status);
+                            }, 200);
+                            $('#newLeaveRequestModal').modal('show');
+                        }
+
+                        $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
+                            window.open("/appointments", "_self");
+                        });
+                    }, 1000);
                 }
             },
             editable: true,
@@ -2241,7 +2278,7 @@ Template.appointments.onRendered(function() {
                 } else {
                     let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                     var leaveFlag = false;
-                    let empID = $(event.draggedEl.childNodes[1]).attr('id').split("_")[1];
+                    let empID = $(event.draggedEl.childNodes[2].childNodes[5]).attr('id').split("_")[1];
                     templateObject.empID.set(empID);
                     leaveemployeerecords.forEach((item) => {
                         if (item.EmployeeID == empID && new Date(event.dateStr) >= new Date(item.StartDate) && new Date(event.dateStr) <= new Date(item.EndDate)) {
@@ -3381,7 +3418,9 @@ Template.appointments.onRendered(function() {
                             $(".fullScreenSpin").css("display", "inline-block");
                             let appColor = "#00a3d3";
                             let dataColor = "";
+                            let leaveEmpName = "";
                             let allEmp = templateObject.employeerecords.get();
+
                             for (let i = 0; i < data.tappointmentex.length; i++) {
                                 var employeeColor = allEmp.filter((apmt) => {
                                     return (
@@ -3499,6 +3538,46 @@ Template.appointments.onRendered(function() {
                                     appointmentList.push(appointment);
                                 }
                             }
+
+                            let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                            for (let i = 0; i < leaveemployeerecords.length; i++) {
+                                var employeeColor = allEmp.filter((apmt) => {
+                                    return (
+                                        apmt.id ==
+                                        leaveemployeerecords[i].EmployeeID
+                                    );
+                                });
+
+                                if (employeeColor.length > 0) {
+                                    appColor = employeeColor[0].color || "#00a3d3";
+                                    leaveEmpName = employeeColor[0].employeeName;
+                                } else {
+                                    appColor = "#00a3d3";
+                                    leaveEmpName = "";
+                                }
+
+                                var dataList = {
+                                    id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                                    title: leaveEmpName,
+                                    // "<br>" +
+                                    // street +
+                                    // "<br>" +
+                                    // surbub +
+                                    // "<br>" +
+                                    // state +
+                                    // " " +
+                                    // zip,
+                                    start: leaveemployeerecords[i].StartDate || "",
+                                    end: leaveemployeerecords[i].EndDate || "",
+                                    description: leaveemployeerecords[i].Description || "",
+                                    color: appColor,
+                                };
+
+                                eventData.push(dataList);
+                            }
+
+                            // templateObject.leaveemployeerecords.get()
+
                             templateObject.appointmentrecords.set(appointmentList);
                             templateObject.eventdata.set(eventData);
 
@@ -18203,6 +18282,7 @@ Template.appointments.events({
         var newnav = document.getElementById("colEmployeeList");
         if (window.getComputedStyle(newnav).display === "none") {
             document.getElementById("colEmployeeList").style.display = "block";
+            document.getElementById("colCalendar").style.width = "calc(100% - 325px)";
         } else {
             document.getElementById("colEmployeeList").style.display = "none";
             document.getElementById("colCalendar").style.width = "100vw";
@@ -18245,10 +18325,15 @@ Template.appointments.events({
         }).then((result) => {
             if (result.value) {
                 FlowRouter.go("/employeescard?id=" + empID);
+                // localStorage.setItem("appt_historypage", "appointmentlist");
                 setTimeout(function() {
                     $('.payrollTab').tab('show');
                     $('a[href="#leave"]').tab('show');
                     $('#newLeaveRequestbtn').trigger('click');
+
+                    $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
+                        window.open("/appointments", "_self");
+                    });
                 }, 1000);
             }
         });

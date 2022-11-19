@@ -2096,7 +2096,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
     </script>
 
     <div class="row rowB" id="rowB">
-        <div class="col-12 col-lg-2 colEmployeeList" id="colEmployeeList">
+        <div class="colEmployeeList" id="colEmployeeList" style="width:288px; margin:8px">
             <style>
                 /* .newcardb {
                     width: 150px;
@@ -2148,7 +2148,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                         <table id="tblEmployeeSideList" name="tblEmployeeSideList" class="table table-hover table-bordered results tblEmployeeSideList">
                             <thead>
                                 <tr>
-                                    <th>Employee</th>
+                                    <th style="width:190px">Employee</th>
                                     <th>Leave</th>
                                 </tr>
                                 <tr class="warning no-result">
@@ -2162,7 +2162,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                                     {{#each item in employeerecords}}
                                         <tr id="{{item.id}}">
                                             <td>
-                                                <div class='fc-event fc-daygrid-event fc-daygrid-block-event'>
+                                                <div class='fc-event fc-daygrid-event fc-daygrid-block-event' style="width:164px">
                                                 {{#if item.color}}
                                                     <div class='fc-event-main'>
                                                         <span class="empColor" style="background: {{item.color}};">
@@ -2194,7 +2194,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                 </div>
             </div>
         </div>
-        <div class="col-12 col-lg-10 colCalendar" id="colCalendar">
+        <div class="colCalendar" id="colCalendar" style="width:calc(100% - 325px); margin:8px">
             <style>
                 @media screen and (max-width: 2000px) {
                     .fc-view-harness.fc-view-harness-active {
