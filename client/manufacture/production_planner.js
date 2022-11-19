@@ -138,13 +138,14 @@ Template.production_planner.onRendered(async function() {
         timeZone: 'local',
         initialView: 'resourceTimelineWeek',
         firstDay: dayIndex,
-        resourceAreaWidth: "20%",
+        resourceAreaWidth: "15%",
         aspectRatio: 1.5,
         headerToolbar: {
             left: 'prev,next',
             center: 'title',
             right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
         },
+        contentHeight: resources.length * 40 + 80,
         editable: true,
         resourceAreaHeaderContent: 'Resources',
         resources: await getResources(),
