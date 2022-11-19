@@ -4051,6 +4051,7 @@ Template.new_invoice.onRendered(function() {
 
 
                                     if (useData[d].fields.Lines.length) {
+                                        console.log("---------", useData[d].fields.Lines);
                                         for (let i = 0; i < useData[d].fields.Lines.length; i++) {
 
                                             let AmountGbp =
