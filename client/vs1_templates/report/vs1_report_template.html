@@ -38,10 +38,9 @@
             tr {
                 border-bottom: 1px solid #e3e6f0;
             }
+            .printReport > .row > .col > p {
+                font-size: 1.5rem !important;
             }
-            /* .printReport > .row > .col > p {
-                font-size: 1.5rem;
-            } */
             /* Remove Hyperlinks */
             @media print {
                 a:link {text-decoration: none !important;}
@@ -77,10 +76,10 @@
                                     </div>
                                 </div>
                                 <div class="row no-gutters">
-                                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 9px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
                                     {{>FxRatesButton}}
                                     {{#if isAccountingMoreOption }}
-                                        <div class="dropdown periodSelector scnd" style="margin: 8px;">
+                                        <div class="dropdown periodSelector scnd" style="margin: 9px;">
                                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More
                                             </button>
                                             <div class="dropdown-menu accountingBasisDropdown p-3" aria-labelledby="dropdownMenuButton" style="width: 250px;">
@@ -111,12 +110,18 @@
                                         margin: 0 auto !important;
                                         width: 100%;
                                     }
+                                    .vs1ButtonMargin,
+                                    .vs1LastButtonMargin,
+                                    .btn.btn-primary.fx-rate-btn {
+                                        margin: 9px !important;
+                                    }
+                                    
                                 </style>
                                 <img class="imageUpload img-fluid" id="uploadedImage" src="assets/img/VS1.png">
                             </div>
                             <div class="col-12 col-md-5">
                                 <div class="row no-gutters justify-content-end">
-                                    <div class="dropdown" style="margin: 8px;">
+                                    <div class="dropdown" style="margin: 9px;">
                                         <style>
                                             .dropdown-toggle::after {
                                                 display: none;
@@ -148,7 +153,7 @@
                             </div>
                             <div class="row">
                                 {{#if isTaxCodeOption }}
-                                    <div class="col-12 col-md-4">
+                                    <div class="col-12">
                                         <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="taxCodeCategory" id="mainTaxCode" checked="checked">
                                         <label class="form-check-label" for="mainTaxCode">
