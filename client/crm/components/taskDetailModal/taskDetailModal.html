@@ -18,7 +18,7 @@
   </style>
   <div class="modal fade" id="taskDetailModal" tabindex="-1" role="dialog" aria-labelledby="taskNameLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
       <div class="modal-content" style="min-height: 90vh; padding: 20px;">
         <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
           <div style="display: grid; width: 100%;">
@@ -42,11 +42,11 @@
               </div> -->
 
               <div class="custom-control custom-switch" style="cursor: pointer;padding-right: 100px; margin-top: 5px;">
-                <input class="custom-control-input additionalModule chkComplete pointer" type="checkbox" 
+                <input class="custom-control-input additionalModule chkComplete pointer" type="checkbox"
                   id="chkComplete_taskEdit" name="Additional" style="cursor: pointer;" additionalqty="1"
                   autocomplete="off" data-id="edit">
                 <label class="custom-control-label" for="chkComplete_taskEdit"
-                  style="cursor: pointer; max-width: 200px;" data-id="edit">Completed</label> 
+                  style="cursor: pointer; max-width: 200px;" data-id="edit">Completed</label>
               </div>
             </div>
 
@@ -67,7 +67,7 @@
                 <select id="crmEditSelectEmployeeList" class="form-control crmSelectEmployeeList">
                 </select>
               </div>
-            </div> 
+            </div>
 
             <div style="display: inline-flex; justify-content: space-between;">
               <div class=" flex">
@@ -109,7 +109,6 @@
                   style="width: 275px;">
                 </div>
               </div>
-              <!-- <i class="fas fa-tag taskModalAction" data-toggle="tooltip" data-placement="bottom" title="Add label(s)..."></i> -->
               <div class="dropdown">
                 <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false" title="Select the label(s) for this task"></i>
@@ -117,7 +116,6 @@
                   aria-labelledby="dropdownMenuButton">
                 </div>
               </div>
-              <!-- <i class="fas fa-flag taskModalAction" data-toggle="tooltip" data-placement="bottom" title="Set the priority..."></i> -->
               <div class="dropdown">
                 <i class="fas fa-flag taskModalAction taskModalActionFlagDropdown dropdown-toggle"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Set the priority..."></i>
@@ -411,11 +409,124 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer" style="padding-bottom: 0; border-top: none;">
-          <button class="btn btn-success btnSaveEditTask" data-dismiss="modal" type="button"><i class="fa fa-save"
-              style="margin-right: 5px;"></i>Save</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"
-              style="margin-right: 5px;"></i>Close</button>
+        <!-- <div class="d-xl-flex justify-content-between align-items-xl-center" style="margin: 16px 0px 0px 0px;">
+            <div style="margin-right: 5px;">
+                <div class="dropdown btnTaskTableAction vs1ButtonMargin float-left" style="padding-left: 14px;">
+                  <button type="button" class="btn btn-success" data-toggle="dropdown"><i
+                      class="far fa-calendar" title="Reschedule Task"></i></button>
+                  <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
+                    aria-labelledby="dropdownMenuButton" style="width: 275px;">
+                    <a class="dropdown-item no-modal setScheduleToday" href="#" data-id="{{item.fields.ID}}">
+                      <i class="fas fa-calendar-day text-success no-modal"
+                        style="margin-right: 8px;"></i>Today
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                        {{item.todayDate}}</div>
+                    </a>
+                    <a class="dropdown-item no-modal setScheduleTomorrow" href="#"
+                      data-id="${item.fields.ID}}">
+                      <i class="fas fa-sun text-warning no-modal" style="margin-right: 8px;"></i>Tomorrow
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                        {{item.fields.tomorrowDay}}</div>
+                    </a>
+                    <a class="dropdown-item no-modal setScheduleWeekend" href="#"
+                      data-id="{{item.fields.ID}}">
+                      <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>This Weekend
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                        Sat</div>
+                    </a>
+                    <a class="dropdown-item no-modal setScheduleNexweek" href="#"
+                      data-id="{{item.fields.ID}}">
+                      <i class="fas fa-calendar-alt text-danger no-modal" style="margin-right: 8px;"></i>Next Week
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                        {{item.fields.nextMonday}}
+                      </div>
+                    </a>
+                    <a class="dropdown-item no-modal setScheduleNodate" href="#" data-id="${item.fields.ID}}">
+                      <i class="fas fa-ban text-secondary no-modal" style="margin-right: 8px;"></i>
+                      No Date</a>
+                    <div class="dropdown-divider no-modal"></div>
+                    <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
+                      title="Date format: DD/MM/YYYY" style="display:flex; margin: 6px 20px; margin-top: 0px; z-index: 99999;">
+                      <label style="margin-top: 6px; margin-right: 16px; width: 146px;">Select Date</label>
+                      <div class="input-group date no-modal" style="cursor: pointer;">
+                        <input type="text" id="{{item.fields.ID}}" class="form-control crmDatepicker no-modal"
+                          autocomplete="off">
+                        <div class="input-group-addon no-modal">
+                          <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="dropdown btnTaskTableAction vs1ButtonMargin float-left" style="padding-left: 14px;">
+                  <button type="button" class="btn btn-warning openEditTaskModal" data-id="{{item.fields.ID}}"
+                    data-ttype="comment" data-catg="{{item.fields.projectName}}"
+                    title="Add a Comment"><i class="far fa-comment-alt" data-id="{{item.fields.ID}}"
+                      data-ttype="comment"
+                      data-catg="{{item.fields.projectName}}"></i></button>
+                </div>
+
+                <div class="dropdown btnTaskTableAction vs1ButtonMargin float-left" style="padding-left: 14px;">
+                  <button type="button" class="btn btn-secondary" data-toggle="dropdown"
+                    data-placement="bottom" title="More Options"><i class="fas fa-ellipsis-h"></i></button>
+                  <div class="dropdown-menu dropdown-menu-right crmtaskdrop" id="">
+                    <a class="dropdown-item openEditTaskModal" data-id="{{item.fields.ID}}"
+                      data-catg="{{item.fields.projectName}}">
+                      <i class="far fa-edit" style="margin-right: 8px;" data-id="${item.fields.ID}}"
+                        data-catg="{{item.fields.projectName}}"></i>Edit
+                      Task</a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <div class="dropdown-item-wrap no-modal">
+                      <div class="no-modal">
+                        <div class="no-modal">
+                          <span class="no-modal">Priority</span>
+                        </div>
+                        <div class="no-modal" style="display: inline-flex;">
+                          <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_3" style="padding-left: 8px;" data-toggle="tooltip"
+                            data-placement="bottom" title="Priority 1" data-priority="3"
+                            data-id="{{item.fields.ID}}"></i>
+                          <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_2"
+                            data-toggle="tooltip" data-placement="bottom" title="Priority 2" data-priority="2"
+                            data-id="{{item.fields.ID}}"></i>
+                          <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_1"
+                            data-toggle="tooltip" data-placement="bottom" title="Priority 3" data-priority="1"
+                            data-id="{{item.fields.ID}}"></i>
+                          <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_0" data-toggle="tooltip"
+                            data-placement="bottom" title="Priority 4" data-priority="0"
+                            data-id="{{item.fields.ID}}"></i>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item no-modal movetoproject" data-id="${item.fields.ID}}"
+                      data-projectid="{{item.fields.ProjectID}}">
+                      <i class="fa fa-arrow-circle-right" style="margin-right: 8px;"
+                        data-id="{{item.fields.ID}}" data-projectid="{{item.fields.ProjectID}}"></i>Move to
+                      Project</a>
+                    <a class="dropdown-item duplicate-task no-modal" data-id="{{item.fields.ID}}">
+                      <i class="fa fa-plus-square-o" style="margin-right: 8px;"
+                        data-id="{{item.fields.ID}}"></i>Duplicate</a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item delete-task no-modal" data-id="${item.fields.ID}}">
+                      <i class="fas fa-trash-alt" style="margin-right: 8px;"
+                        data-id="{{item.fields.ID}}"></i>Delete
+                      Task</a>
+                  </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="modal-footer">
+            <button class="btn btn-success btnSaveEditTask vs1ButtonMargin" data-dismiss="modal" type="button"><i class="fa fa-save"
+                   style="padding-right: 8px;"></i>Save</button>
+            <button class="btn btn-danger btnDeleteEditTask vs1ButtonMargin" type="button"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
+            <button type="button" class="btn btn-secondary vs1ButtonMargin" data-dismiss="modal"><i class="fa fa-close" style="padding-right: 8px;"></i>Close</button>
         </div>
       </div>
     </div>

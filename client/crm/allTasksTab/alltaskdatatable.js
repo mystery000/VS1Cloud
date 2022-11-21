@@ -54,7 +54,7 @@ Template.alltaskdatatable.onCreated(function () {
 });
 
 Template.alltaskdatatable.onRendered(function () {
- 
+
   let templateObject = Template.instance();
   templateObject.selected_id.set(0);
   templateObject.selected_ttodo.set(null);
@@ -121,32 +121,33 @@ Template.alltaskdatatable.onRendered(function () {
       $("#tblSubtaskDatatable").DataTable({
         data: splashArrayTaskList,
         columnDefs: [
+          // {
+          //   orderable: false,
+          //   targets: 0,
+          //   className: "colCompleteTask colSubComplete",
+          //   createdCell: function (td, cellData, rowData, row, col) {
+          //     $(td).closest("tr").attr("data-id", rowData[9]);
+          //     $(td).attr("data-id", rowData[9]);
+          //     $(td).addClass("task_priority_" + rowData[10]);
+          //     if (rowData[12]) {
+          //       $(td).addClass("taskCompleted");
+          //     }
+          //   },
+          //   width: "18px",
+          // },
           {
             orderable: false,
             targets: 0,
-            className: "colCompleteTask colSubComplete",
-            createdCell: function (td, cellData, rowData, row, col) {
-              $(td).closest("tr").attr("data-id", rowData[9]);
-              $(td).attr("data-id", rowData[9]);
-              $(td).addClass("task_priority_" + rowData[10]);
-              if (rowData[12]) {
-                $(td).addClass("taskCompleted");
-              }
-            },
-            width: "18px",
-          },
-          {
-            orderable: false,
-            targets: 1,
             className: "colPriority openEditSubTaskModal hiddenColumn",
             createdCell: function (td, cellData, rowData, row, col) {
-              $(td).attr("data-id", rowData[9]);
+                $(td).closest("tr").attr("data-id", rowData[9]);
+                $(td).attr("data-id", rowData[9]);
             },
             width: "100px",
           },
           {
             orderable: false,
-            targets: 2,
+            targets: 1,
             className: "colContact openEditSubTaskModal hiddenColumn",
             createdCell: function (td, cellData, rowData, row, col) {
               $(td).attr("data-id", rowData[9]);
@@ -154,7 +155,7 @@ Template.alltaskdatatable.onRendered(function () {
             width: "100px",
           },
           {
-            targets: 3,
+            targets: 2,
             className: "colSubDate openEditSubTaskModal",
             createdCell: function (td, cellData, rowData, row, col) {
               $(td).attr("data-id", rowData[9]);
@@ -162,42 +163,42 @@ Template.alltaskdatatable.onRendered(function () {
             width: "120px",
           },
           {
-            targets: 4,
+            targets: 3,
             className: "colSubTaskName openEditSubTaskModal",
             createdCell: function (td, cellData, rowData, row, col) {
               $(td).attr("data-id", rowData[9]);
             },
           },
           {
-            targets: 5,
+            targets: 4,
             className: "colTaskDesc openEditSubTaskModal hiddenColumn",
             createdCell: function (td, cellData, rowData, row, col) {
               $(td).attr("data-id", rowData[9]);
             },
           },
           {
-            targets: 6,
+            targets: 5,
             className: "colTaskLabels openEditSubTaskModal hiddenColumn",
             createdCell: function (td, cellData, rowData, row, col) {
               $(td).attr("data-id", rowData[9]);
             },
           },
           {
-            targets: 7,
+            targets: 6,
             className: "colTaskProjects openEditSubTaskModal hiddenColumn",
             createdCell: function (td, cellData, rowData, row, col) {
               $(td).attr("data-id", rowData[9]);
             },
           },
-          {
-            orderable: false,
-            targets: 8,
-            className: "colTaskActions",
-            createdCell: function (td, cellData, rowData, row, col) {
-              $(td).attr("data-id", rowData[9]);
-            },
-            width: "150px",
-          },
+          // {
+          //   orderable: false,
+          //   targets: 8,
+          //   className: "colTaskActions",
+          //   createdCell: function (td, cellData, rowData, row, col) {
+          //     $(td).attr("data-id", rowData[9]);
+          //   },
+          //   width: "150px",
+          // },
         ],
         colReorder: {
           fixedColumnsLeft: 0,
@@ -234,25 +235,26 @@ Template.alltaskdatatable.onRendered(function () {
     $("#tblAllTaskDatatable").DataTable({
       data: splashArrayTaskList,
       columnDefs: [
+        // {
+        //   orderable: false,
+        //   targets: 0,
+        //   className: "colCompleteTask",
+        //   createdCell: function (td, cellData, rowData, row, col) {
+        //     $(td).closest("tr").attr("data-id", rowData[9]);
+        //     $(td).attr("data-id", rowData[9]);
+        //     $(td).addClass("task_priority_" + rowData[10]);
+        //     if (rowData[12]) {
+        //       $(td).addClass("taskCompleted");
+        //     }
+        //   },
+        //   width: "18px",
+        // },
         {
           orderable: false,
           targets: 0,
-          className: "colCompleteTask",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).closest("tr").attr("data-id", rowData[9]);
-            $(td).attr("data-id", rowData[9]);
-            $(td).addClass("task_priority_" + rowData[10]);
-            if (rowData[12]) {
-              $(td).addClass("taskCompleted");
-            }
-          },
-          width: "18px",
-        },
-        {
-          orderable: false,
-          targets: 1,
           className: "colPriority openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
+            $(td).closest("tr").attr("data-id", rowData[9]);
             $(td).attr("data-id", rowData[9]);
             $(td).css('background-color', rowData[13]);
             // if (rowData[13] != 'transparent') {
@@ -265,7 +267,7 @@ Template.alltaskdatatable.onRendered(function () {
         },
         {
           orderable: false,
-          targets: 2,
+          targets: 1,
           className: "colContact openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
@@ -279,7 +281,7 @@ Template.alltaskdatatable.onRendered(function () {
           width: "200px",
         },
         {
-          targets: 3,
+          targets: 2,
           className: "colDate openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
@@ -293,7 +295,7 @@ Template.alltaskdatatable.onRendered(function () {
           width: "120px",
         },
         {
-          targets: 4,
+          targets: 3,
           className: "colTaskName openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
@@ -306,7 +308,7 @@ Template.alltaskdatatable.onRendered(function () {
           },
         },
         {
-          targets: 5,
+          targets: 4,
           className: "colTaskDesc openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
@@ -319,7 +321,7 @@ Template.alltaskdatatable.onRendered(function () {
           },
         },
         {
-          targets: 6,
+          targets: 5,
           className: "colTaskLabels openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
@@ -332,7 +334,7 @@ Template.alltaskdatatable.onRendered(function () {
           },
         },
         {
-          targets: 7,
+          targets: 6,
           className: "colTaskProjects openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
@@ -345,21 +347,21 @@ Template.alltaskdatatable.onRendered(function () {
             // }
           },
         },
-        {
-          orderable: false,
-          targets: 8,
-          className: "colTaskActions",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).attr("data-id", rowData[9]);
-            $(td).css('background-color', rowData[13]);
+        // {
+          // orderable: false,
+          // targets: 8,
+          // className: "colTaskActions",
+          // createdCell: function (td, cellData, rowData, row, col) {
+          //   $(td).attr("data-id", rowData[9]);
+          //   $(td).css('background-color', rowData[13]);
             // if (rowData[13] != 'transparent') {
             //   $(td).css('background-color', rowData[13]);
             //   $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
             //   $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
             // }
-          },
-          width: "150px",
-        },
+          // },
+          // width: "150px",
+        // },
       ],
       colReorder: {
         fixedColumnsLeft: 0,
@@ -377,7 +379,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 1 || idx == 8) {
+              if (idx == 0 || idx == 1 || idx == 6) {
                 return false;
               }
               return true;
@@ -424,7 +426,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 8) {
+              if (idx == 0 || idx == 6) {
                 return false;
               }
               return true;
@@ -516,32 +518,33 @@ Template.alltaskdatatable.onRendered(function () {
     $("#tblTodayTaskDatatable").DataTable({
       data: todayTaskArray,
       columnDefs: [
+        // {
+        //   orderable: false,
+        //   targets: 0,
+        //   className: "colCompleteTask",
+        //   createdCell: function (td, cellData, rowData, row, col) {
+        //     $(td).closest("tr").attr("data-id", rowData[9]);
+        //     $(td).attr("data-id", rowData[9]);
+        //     $(td).addClass("task_priority_" + rowData[10]);
+        //     if (rowData[12]) {
+        //       $(td).addClass("taskCompleted");
+        //     }
+        //   },
+        //   width: "18px",
+        // },
         {
           orderable: false,
           targets: 0,
-          className: "colCompleteTask",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).closest("tr").attr("data-id", rowData[9]);
-            $(td).attr("data-id", rowData[9]);
-            $(td).addClass("task_priority_" + rowData[10]);
-            if (rowData[12]) {
-              $(td).addClass("taskCompleted");
-            }
-          },
-          width: "18px",
-        },
-        {
-          orderable: false,
-          targets: 1,
           className: "colPriority openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
+            $(td).closest("tr").attr("data-id", rowData[9]);
             $(td).attr("data-id", rowData[9]);
           },
           width: "100px",
         },
         {
           orderable: false,
-          targets: 2,
+          targets: 1,
           className: "colContact openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
@@ -549,7 +552,7 @@ Template.alltaskdatatable.onRendered(function () {
           width: "100px",
         },
         {
-          targets: 3,
+          targets: 2,
           className: "colDate openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
@@ -557,42 +560,42 @@ Template.alltaskdatatable.onRendered(function () {
           width: "120px",
         },
         {
-          targets: 4,
+          targets: 3,
           className: "colTaskName openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
           },
         },
         {
-          targets: 5,
+          targets: 4,
           className: "colTaskDesc openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
           },
         },
         {
-          targets: 6,
+          targets: 5,
           className: "colTaskLabels openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
           },
         },
         {
-          targets: 7,
+          targets: 6,
           className: "colTaskProjects openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
           },
         },
-        {
-          orderable: false,
-          targets: 8,
-          className: "colTaskActions",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).attr("data-id", rowData[9]);
-          },
-          width: "150px",
-        },
+        // {
+        //   orderable: false,
+        //   targets: 7,
+        //   className: "colTaskActions",
+        //   createdCell: function (td, cellData, rowData, row, col) {
+        //     $(td).attr("data-id", rowData[9]);
+        //   },
+        //   width: "150px",
+        // },
       ],
       colReorder: {
         fixedColumnsLeft: 0,
@@ -610,7 +613,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 1 || idx == 8) {
+              if (idx == 0 || idx == 1 || idx == 6) {
                 return false;
               }
               return true;
@@ -656,7 +659,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 8) {
+              if (idx == 0 || idx == 6) {
                 return false;
               }
               return true;
@@ -706,32 +709,33 @@ Template.alltaskdatatable.onRendered(function () {
     $("#tblUpcomingTaskDatatable").DataTable({
       data: upcomingTaskArray,
       columnDefs: [
+        // {
+        //   orderable: false,
+        //   targets: 0,
+        //   className: "colCompleteTask",
+        //   createdCell: function (td, cellData, rowData, row, col) {
+        //     $(td).closest("tr").attr("data-id", rowData[9]);
+        //     $(td).attr("data-id", rowData[9]);
+        //     $(td).addClass("task_priority_" + rowData[10]);
+        //     if (rowData[12]) {
+        //       $(td).addClass("taskCompleted");
+        //     }
+        //   },
+        //   width: "18px",
+        // },
         {
           orderable: false,
           targets: 0,
-          className: "colCompleteTask",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).closest("tr").attr("data-id", rowData[9]);
-            $(td).attr("data-id", rowData[9]);
-            $(td).addClass("task_priority_" + rowData[10]);
-            if (rowData[12]) {
-              $(td).addClass("taskCompleted");
-            }
-          },
-          width: "18px",
-        },
-        {
-          orderable: false,
-          targets: 1,
           className: "colPriority openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
+            $(td).closest("tr").attr("data-id", rowData[9]);
             $(td).attr("data-id", rowData[9]);
           },
           width: "100px",
         },
         {
           orderable: false,
-          targets: 2,
+          targets: 1,
           className: "colContact openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
@@ -739,7 +743,7 @@ Template.alltaskdatatable.onRendered(function () {
           width: "100px",
         },
         {
-          targets: 3,
+          targets: 2,
           className: "colDate openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
@@ -747,42 +751,42 @@ Template.alltaskdatatable.onRendered(function () {
           width: "120px",
         },
         {
-          targets: 4,
+          targets: 3,
           className: "colTaskName openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
           },
         },
         {
-          targets: 5,
+          targets: 4,
           className: "colTaskDesc openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
           },
         },
         {
-          targets: 6,
+          targets: 5,
           className: "colTaskLabels openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
           },
         },
         {
-          targets: 7,
+          targets: 6,
           className: "colTaskProjects openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
           },
         },
-        {
-          orderable: false,
-          targets: 8,
-          className: "colTaskActions",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).attr("data-id", rowData[9]);
-          },
-          width: "150px",
-        },
+        // {
+        //   orderable: false,
+        //   targets: 7,
+        //   className: "colTaskActions",
+        //   createdCell: function (td, cellData, rowData, row, col) {
+        //     $(td).attr("data-id", rowData[9]);
+        //   },
+        //   width: "150px",
+        // },
       ],
       colReorder: {
         fixedColumnsLeft: 0,
@@ -800,7 +804,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 1 || idx == 8) {
+              if (idx == 0 || idx == 1 || idx == 6) {
                 return false;
               }
               return true;
@@ -847,7 +851,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 8) {
+              if (idx == 0 || idx == 6) {
                 return false;
               }
               return true;
@@ -1270,7 +1274,7 @@ Template.alltaskdatatable.onRendered(function () {
       </div>`;
 
       taskRows.push([
-        td0,
+        // td0,
         tflag,
         tcontact,
         td1,
@@ -1428,15 +1432,15 @@ Template.alltaskdatatable.onRendered(function () {
           },
           width: "100%",
         },
-        {
-          orderable: false,
-          targets: 2,
-          className: "colLabelActions",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).attr("data-id", rowData[3]);
-          },
-          width: "50px",
-        },
+        // {
+        //   orderable: false,
+        //   targets: 2,
+        //   className: "colLabelActions",
+        //   createdCell: function (td, cellData, rowData, row, col) {
+        //     $(td).attr("data-id", rowData[3]);
+        //   },
+        //   width: "50px",
+        // },
       ],
       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
       buttons: [
