@@ -102,7 +102,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
                 { index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
               ];
-          }else if(currenttablename == "tblAccountOverview") {
+          }else if(currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
                let bsbname = "Branch Code";
                if (Session.get("ERPLoggedCountry") === "Australia") {
                    bsbname = "BSB";
@@ -117,7 +117,7 @@ Template.non_transactional_list.onRendered(function() {
                   { index: 6, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "80" },
                   { index: 7, label: 'Bank Name', class: 'colBankName', active: false, display: true, width: "120" },
                   { index: 8, label: 'Bank Acc Name', class: 'colBankAccountName', active: true, display: true, width: "120" },
-                  { index: 9, label: 'bsbname', class: 'colBSB', active: true, display: true, width: "90" },
+                  { index: 9, label: bsbname, class: 'colBSB', active: true, display: true, width: "95" },
                   { index: 10, label: 'Bank Acc No', class: 'colBankAccountNo', active: true, display: true, width: "120" },
                   { index: 11, label: 'Card Number', class: 'colCardNumber', active: false, display: true, width: "120" },
                   { index: 12, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "60" },
@@ -290,7 +290,6 @@ Template.non_transactional_list.onRendered(function() {
         let custFields = [];
         let customData = {};
         let customFieldCount = reset_data.length;
-
         for (let r = 0; r < customFieldCount; r++) {
           customData = {
             active: reset_data[r].active,
@@ -1244,7 +1243,7 @@ Template.non_transactional_list.onRendered(function() {
                 {
                   targets: 9,
                   className: "colBSB",
-                  width: "60px",
+                  width: "95px",
                 },
                 {
                   targets: 10,
@@ -4089,7 +4088,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             templateObject.getContactOverviewData();
         }else if(currenttablename == "tblEmployeelist"){
             templateObject.getEmployeeListData();
-        }else if(currenttablename == "tblAccountOverview"){
+        }else if(currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList"){
             templateObject.getAccountsOverviewData();
         }else if(currenttablename == "tblClienttypeList"){
             templateObject.getClientTypeListData();
@@ -4127,7 +4126,7 @@ Template.non_transactional_list.events({
       }else if(currenttablename == "tblEmployeelist"){
         await clearData('TEmployeeList');
         templateObject.getEmployeeListData(true);
-      }else if(currenttablename == "tblAccountOverview"){
+      }else if(currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList"){
         await clearData('TAccountVS1List');
         templateObject.getAccountsOverviewData(true);
       }else if(currenttablename == "tblClienttypeList"){
@@ -4175,7 +4174,7 @@ Template.non_transactional_list.events({
       }else if(currenttablename == "tblEmployeelist"){
         await clearData('TEmployeeList');
         templateObject.getEmployeeListData(false);
-      }else if(currenttablename == "tblAccountOverview"){
+      }else if(currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList"){
         await clearData('TAccountVS1List');
         templateObject.getAccountsOverviewData(false);
       }else if(currenttablename == "tblClienttypeList"){

@@ -19,7 +19,7 @@
             max-width: 100% !important;
         }
 
-    
+
         @media screen and (max-width: 1306px) {
             .sortableMonthlyExpense {
                 width: 100%;
@@ -27,10 +27,11 @@
             }
         }
     </style>
-    {{# draggablePanel 
-        xs=xs sm=sm md=md lg=lg xl=xl 
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
         defaultPosition=defaultPosition
         key=key
+        hLenght=100
         id="sortableMonthlyExpense"
         headerClass=""
         headerColor="primary"

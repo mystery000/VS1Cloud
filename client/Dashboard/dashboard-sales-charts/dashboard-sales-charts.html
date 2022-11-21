@@ -1,8 +1,9 @@
 <template name="dashboardSalesCharts">
-    {{# draggablePanel 
+    {{# draggablePanel
         md=6
         defaultPosition=30
         key="dscharts__performance_quota"
+        hLenght=100
         id=""
         headerClass=""
         headerColor="primary"
@@ -14,10 +15,11 @@
     <div id="sd-comparison-chart" class="ds-highcharts"></div>
     {{/draggablePanel}}
 
-    {{# draggablePanel 
+    {{# draggablePanel
         md=6
         defaultPosition=31
         key="dscharts__opportunities_source"
+        hLenght=100
         id=""
         headerClass=""
         headerColor="primary"

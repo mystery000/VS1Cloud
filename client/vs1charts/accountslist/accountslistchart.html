@@ -26,8 +26,8 @@
         }
     }
   </style>
-  {{# draggablePanel 
-    xs=xs sm=sm md=md lg=lg xl=xl 
+  {{# draggablePanel
+    xs=xs sm=sm md=md lg=lg xl=xl
     defaultPosition=defaultPosition
     key=key
     id="accountslistchart"
@@ -81,7 +81,8 @@
             </div>
         </div>
         <div class="col-6 col-md-5">
-            <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right" role="button" data-toggle="modal" href="#myModalAccountList" style="margin: 14px;"><i class="icon ion-android-more-horizontal"></i></a>
+            <!-- <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right" role="button" data-toggle="modal" href="#myModalAccountList" style="margin: 14px;"><i class="icon ion-android-more-horizontal"></i></a> -->
+            {{> export_import_print_display_button Export="hiddenButton" Import="hiddenButton" Print="hiddenButton" tablename="tblDashboardAccountChartList"}}
             <button class="btn btnNav btn-primary float-right printConfirm" type="button" style="margin: 14px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
             <div class="btn-group btnNav float-right exportbtngroup" style="margin: 14px;">
                 <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
@@ -92,89 +93,13 @@
                 </div>
             </div>
             <button style="margin: 14px;" class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#importAccountListCharModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-            <div>
+            <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
 
-                <div class="modal fade" role="dialog" tabindex="-1" id="importAccountListCharModal">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
-                                    <p style="margin-bottom: 0;font-weight: bold;">1. Download the
-                                        &lt;&lt;form&gt;&gt; template</p>
-                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Start by
-                                        downloading our template file. This file has the correct column headings to
-                                        allow VS1 Cloud to import your form's details.</p>
-                                    <div class="col flex-grow-1">
-                                        <button class="btn btn-primary templateDownload" type="button" style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download CSV Template</button>
-                                        <button class="btn btn-primary templateDownloadXLSX" type="button" style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download Excel Template</button>
-                                    </div>
-                                    <div class="col d-xl-flex align-items-xl-center" style="width: 50px;max-width: 50px;">
-                                        <a href="downloads/csvHelpFile.pdf" target="_blank" download><i class="fa fa-question-circle-o" data-toggle="tooltip" data-bs-tooltip=""
-                                                title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
-                                                style="margin: 16px;"></i></a>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                    <p style="margin-bottom: 0;font-weight: bold;">2. Copy your items into the
-                                        template</p>
-                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Using MS Excel,
-                                        or another spreadsheet editor, you can fill in the VS1 Cloud template file
-                                        with your desired details.</p>
-                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 16px;">Important:
-                                        Avoid changing the column headings in the template file.</p>
-                                </div>
-                                <hr>
-                                <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                    <p style="margin-bottom: 0;font-weight: bold;">3. Import the updated template
-                                        file</p>
-                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Save your
-                                        updated template and you're ready to go.</p>
-
-                                    <div class="divTable" id="file-display">
-                                    </div>
-                                    <input type="file" id="attachment-upload" style="display:none" accept=".csv,.txt,.xlsx">
-                                    <style>
-                                        #row1 {
-                                            display: flex;
-                                            flex-direction: row;
-                                            justify-content: space-around;
-                                        }
-
-                                        #column1 {
-                                            display: flex;
-                                        }
-
-
-                                        #column2 {
-                                            display: flex;
-                                            flex-direction: column;
-                                            margin: 16px;
-                                            padding: .375rem .75rem;
-                                        }
-                                    </style>
-                                    <div id="row1">
-                                        <div id="column1"></div><button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px;"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
-                                        <div class="file-name" id="column2"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer"><button class="btn btn-primary btnImport" type="button" disabled><i class="fas fa-file-import" style="margin-right: 5px;"></i>Import</button>
-                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myModalAccountList" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
         </div>
     </div>
     <div class="card-body p-0 rounded">
         <!-- Start {{> optionNavSalesOverview}} -->
-        <div class="d-xl-flex justify-content-xl-end">
+        <!-- <div class="d-xl-flex justify-content-xl-end">
             <div>
                 <div class="modal fade myModalAccountList" role="dialog" tabindex="-1" id="myModalAccountList">
                     <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
@@ -240,10 +165,10 @@
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0;margin-top: 8px;">Width:
-                                                                    <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
+
                                                                 </label>
                                                                 <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
-                                                                <!-- <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div> -->
+
                                                             </div>
                                                         </div>
 
@@ -273,74 +198,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- End -->
-        <div class="table-responsive">
-            <style>
-                th {
-                    background-color: #ededed;
-                }
+        <!-- <div class="table-responsive">
 
-                .table-striped tbody tr:nth-of-type(odd) {
-                    background-color: white !important;
-                }
-
-                .table-striped tbody tr:nth-of-type(even) {
-                    background-color: #0000000d !important;
-                }
-
-                .JColResizer>tbody>tr>td,
-                .JColResizer>tbody>tr>th {
-                    padding: .75rem !important;
-                }
-
-                .hiddenColumn {
-                    display: none;
-                }
-
-                .showColumn {
-                    display: table-cell;
-                    padding: .75rem;
-                    vertical-align: top;
-                }
-
-                input[type=number]::-webkit-inner-spin-button,
-                input[type=number]::-webkit-outer-spin-button {
-                    opacity: 1;
-                }
-
-                .isNotBankAccount {
-                    display: none !important;
-                }
-
-                .isNotCreditAccount {
-                    display: none !important;
-                }
-                .btn-primary, a.btnOpenSettings {
-                    color: #fff!important;
-                }
-                .colBalance.text-right {
-                    text-align: right !important;
-                }
-                @media print {
-                    div {
-                        width: 100% !important;
-                        min-width: 100% !important;
-                    }
-                    table {
-                        width: 100% !important;
-                        min-width: 100% !important;
-                    }
-                    table thead tr th {
-                        font-size: 12px !important;
-                        padding: 10px !important;
-                    }
-                    table tbody tr td {
-                        font-size: 10px !important;
-                        padding: 10px !important;
-                    }
-                }
-            </style>
             <table id="tblDashboardAccountChartList" style="width:100%" class="dataTable table table-striped table-bordered tblDashboardAccountChartList">
                 <thead>
                     <tr class="dnd-moved">
@@ -398,7 +259,9 @@
                     {{/if}}
                 </tbody>
             </table>
-        </div>
+        </div> -->
+
+        {{> non_transactional_list tablename="tblDashboardAccountChartList"}}
     </div>
 </div>
 {{/draggablePanel}}
@@ -528,6 +391,10 @@
         </div>
     </div>
 </div>
+
+
+<!-- Import Modal -->
+{{> import_template}}
 <script>
     modalDraggable();
 </script>

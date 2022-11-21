@@ -1499,18 +1499,21 @@ Template.accountsoverview.events({
         $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
 
-        sideBarService
-            .getAccountListVS1()
-            .then(function(data) {
-                addVS1Data("TAccountVS1", JSON.stringify(data))
-                    .then(function(datareturn) {
-                        window.open("/accountsoverview", "_self");
-                    })
-                    .catch(function(err) {
+        sideBarService.getAccountListVS1().then(function(data) {
+                addVS1Data("TAccountVS1", JSON.stringify(data)).then(function(datareturn) {
+                  sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0,false).then(function(dataAccount) {
+                          addVS1Data("TAccountVS1List", JSON.stringify(dataAccount)).then(function(datareturn) {
+                                  window.open("/accountsoverview", "_self");
+                              }).catch(function(err) {
+                                  window.open("/accountsoverview", "_self");
+                              });
+                      }).catch(function(err) {
+                          window.open("/accountsoverview", "_self");
+                      });
+                    }).catch(function(err) {
                         window.open("/accountsoverview", "_self");
                     });
-            })
-            .catch(function(err) {
+            }).catch(function(err) {
                 window.open("/accountsoverview", "_self");
             });
     },
