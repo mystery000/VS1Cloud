@@ -1796,7 +1796,7 @@ Template.alltaskdatatable.onRendered(function () {
 
     task_array.forEach((item) => {
       if (item.fields.Active) {
-        projectStatus = "Active";
+        projectStatus = "";
       } else {
         projectStatus = "In-Active";
       }
