@@ -190,6 +190,14 @@ Template.alltaskdatatable.onRendered(function () {
               $(td).attr("data-id", rowData[9]);
             },
           },
+          {
+            orderable: false,
+            targets: 7,
+            className: "colStatus openEditSubTaskModal",
+            createdCell: function (td, cellData, rowData, row, col) {
+              $(td).attr("data-id", rowData[9]);
+            },
+          },
           // {
           //   orderable: false,
           //   targets: 8,
@@ -347,6 +355,14 @@ Template.alltaskdatatable.onRendered(function () {
             // }
           },
         },
+        {
+          orderable: false,
+          targets: 7,
+          className: "colStatus openEditSubTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[9]);
+          },
+        },
         // {
           // orderable: false,
           // targets: 8,
@@ -379,7 +395,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 1 || idx == 6) {
+              if (idx == 0 || idx == 1 || idx == 7) {
                 return false;
               }
               return true;
@@ -426,7 +442,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 6) {
+              if (idx == 0 || idx == 7) {
                 return false;
               }
               return true;
@@ -587,6 +603,14 @@ Template.alltaskdatatable.onRendered(function () {
             $(td).attr("data-id", rowData[9]);
           },
         },
+        {
+          orderable: false,
+          targets: 7,
+          className: "colStatus openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[9]);
+          },
+        },
         // {
         //   orderable: false,
         //   targets: 7,
@@ -613,7 +637,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 1 || idx == 6) {
+              if (idx == 0 || idx == 1 || idx == 7) {
                 return false;
               }
               return true;
@@ -659,7 +683,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 6) {
+              if (idx == 0 || idx == 7) {
                 return false;
               }
               return true;
@@ -778,6 +802,14 @@ Template.alltaskdatatable.onRendered(function () {
             $(td).attr("data-id", rowData[9]);
           },
         },
+        {
+          orderable: false,
+          targets: 7,
+          className: "colStatus openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[9]);
+          },
+        },
         // {
         //   orderable: false,
         //   targets: 7,
@@ -804,7 +836,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 1 || idx == 6) {
+              if (idx == 0 || idx == 1 || idx == 7) {
                 return false;
               }
               return true;
@@ -851,7 +883,7 @@ Template.alltaskdatatable.onRendered(function () {
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
-              if (idx == 0 || idx == 6) {
+              if (idx == 0 || idx == 7) {
                 return false;
               }
               return true;
@@ -1055,7 +1087,7 @@ Template.alltaskdatatable.onRendered(function () {
 
   templateObject.makeTaskTableRows = function (task_array) {
     let taskRows = new Array();
-    let td0, td1, tflag, td11, td2, td3, td4, td5 = "", tcontact = "";
+    let td0, td1, tflag, td11, td2, td3, td4, td5, td6 = "", tcontact = "";
     let projectName = "";
     let labelsForExcel = "";
     let color_num = '100'
@@ -1273,6 +1305,12 @@ Template.alltaskdatatable.onRendered(function () {
         </div>
       </div>`;
 
+    td6 = ``;
+      if (item.fields.Active) {
+        td6 = "";
+      } else {
+        td6 = "In-Active";
+      }
       taskRows.push([
         // td0,
         tflag,
@@ -1282,7 +1320,7 @@ Template.alltaskdatatable.onRendered(function () {
         td3,
         td4,
         projectName,
-        td5,
+        td6,
         item.fields.ID,
         color_num,
         labelsForExcel,
@@ -1760,7 +1798,7 @@ Template.alltaskdatatable.onRendered(function () {
       if (item.fields.Active) {
         projectStatus = "Active";
       } else {
-        projectStatus = "Deleted";
+        projectStatus = "In-Active";
       }
       if (item.fields.projecttasks == null) {
         taskCount = "";
