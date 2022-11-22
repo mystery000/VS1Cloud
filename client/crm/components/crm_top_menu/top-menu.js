@@ -14,16 +14,15 @@ Template.crm_top_menu.onRendered(function () {
   // set initial table rest_data
   templateObject.init_reset_data = function () {
     let reset_data = [
-      // { index: 0, label: '', class: 'CompleteTask', active: false, display: false, width: "40" },
-      { index: 0, label: 'Priority', class: 'Priority', active: true, display: true, width: "" },
-      { index: 1, label: 'Contact', class: 'Contact', active: true, display: true, width: "" },
-      { index: 2, label: 'Date', class: 'Date', active: true, display: true, width: "" },
-      { index: 3, label: 'Task', class: 'TaskName', active: true, display: true, width: "" },
-      { index: 4, label: 'Description', class: 'TaskDesc', active: true, display: true, width: "" },
-      { index: 5, label: 'Labels', class: 'TaskLabels', active: true, display: true, width: "" },
-      { index: 6, label: 'Project', class: 'TaskProjects', active: true, display: true, width: "" },
-      { index: 7, label: 'Status', class: 'Status', active: true, display: true, width: "" },
-      // { index: 8, label: 'Action', class: 'TaskActions', active: true, display: true, width: "" },
+      { index: 0, label: '#ID', class: 'ID', active: false, display: true, width: "" },
+      { index: 1, label: 'Priority', class: 'Priority', active: true, display: true, width: "35" },
+      { index: 2, label: 'Contact', class: 'Contact', active: true, display: true, width: "" },
+      { index: 3, label: 'Date', class: 'Date', active: true, display: true, width: "" },
+      { index: 4, label: 'Task', class: 'TaskName', active: true, display: true, width: "" },
+      { index: 5, label: 'Description', class: 'TaskDesc', active: true, display: true, width: "" },
+      { index: 6, label: 'Labels', class: 'TaskLabels', active: true, display: true, width: "" },
+      { index: 7, label: 'Project', class: 'TaskProjects', active: true, display: true, width: "" },
+      { index: 8, label: 'Status', class: 'Status', active: true, display: true, width: "" },
     ];
 
     let templateObject = Template.instance();

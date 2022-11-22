@@ -1,8 +1,10 @@
 import "../lib/global/indexdbstorage.js";
-
 import { CRMService } from "./crm-service";
 import { ContactService } from "../contacts/contact-service";
 import { TaxRateService } from "../../client/settings/settings-service"
+import {UtilityService} from "../utility-service";
+import XLSX from 'xlsx';
+import { SideBarService } from '../js/sidebar-service';
 
 let crmService = new CRMService();
 const contactService = new ContactService();
@@ -17,6 +19,8 @@ Template.crmoverview.onCreated(function () {
   templateObject.all_projects = new ReactiveVar([]);
   templateObject.subTasks = new ReactiveVar([]);
   templateObject.settingDetails = new ReactiveVar([]);
+  templateObject.setupFinished = new ReactiveVar();
+  templateObject.selectedFile = new ReactiveVar();
 });
 
 Template.crmoverview.onRendered(function () {
@@ -930,6 +934,157 @@ Template.crmoverview.events({
     FlowRouter.go("/crmoverview");
     Meteor._reload.reload();
   },
+
+  //Export_Import
+  'click .templateDownload': function () {
+      let utilityService = new UtilityService();
+      let rows =[];
+      const filename = 'SampleTaskLists'+'.csv';
+      rows[0]= ['Contact', 'Date', 'Task', 'Description', 'Labels', 'Project'];
+      rows[1]= ['Contact1', 'DD/MM/YYYY', 'Task1', 'Description1', 'Label1', 'Project1'];
+      utilityService.exportToCsv(rows, filename, 'csv');
+  },
+  'click .btnUploadFile':function(event){
+      $('#attachment-upload').val('');
+      $('.file-name').text('');
+      //$(".btnImport").removeAttr("disabled");
+      $('#attachment-upload').trigger('click');
+
+  },
+  'click .templateDownloadXLSX': function (e) {
+      e.preventDefault();  //stop the browser from following
+      window.location.href = 'sample_imports/SampleTaskLists.xlsx';
+  },
+  'change #attachment-upload': function (e) {
+      let templateObj = Template.instance();
+      var filename = $('#attachment-upload')[0].files[0]['name'];
+      var fileExtension = filename.split('.').pop().toLowerCase();
+      var validExtensions = ["csv","txt","xlsx"];
+      var validCSVExtensions = ["csv","txt"];
+      var validExcelExtensions = ["xlsx","xls"];
+
+      if (validExtensions.indexOf(fileExtension) == -1) {
+          // Bert.alert('<strong>formats allowed are : '+ validExtensions.join(', ')+'</strong>!', 'danger');
+          swal('Invalid Format', 'formats allowed are :' + validExtensions.join(', '), 'error');
+          $('.file-name').text('');
+          $(".btnImport").Attr("disabled");
+      }else if(validCSVExtensions.indexOf(fileExtension) != -1){
+          $('.file-name').text(filename);
+          let selectedFile = event.target.files[0];
+          templateObj.selectedFile.set(selectedFile);
+          if($('.file-name').text() != ""){
+              $(".btnImport").removeAttr("disabled");
+          }else{
+              $(".btnImport").Attr("disabled");
+          }
+      }else if(fileExtension == 'xlsx'){
+          $('.file-name').text(filename);
+          let selectedFile = event.target.files[0];
+          var oFileIn;
+          var oFile = selectedFile;
+          var sFilename = oFile.name;
+          // Create A File Reader HTML5
+          var reader = new FileReader();
+
+          // Ready The Event For When A File Gets Selected
+          reader.onload = function (e) {
+              var data = e.target.result;
+              data = new Uint8Array(data);
+              var workbook = XLSX.read(data, {type: 'array'});
+
+              var result = {};
+              workbook.SheetNames.forEach(function (sheetName) {
+                  var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
+                  var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                  templateObj.selectedFile.set(sCSV);
+
+                  if (roa.length) result[sheetName] = roa;
+              });
+              // see the result, caution: it works after reader event is done.
+          };
+          reader.readAsArrayBuffer(oFile);
+
+          if($('.file-name').text() != ""){
+              $(".btnImport").removeAttr("disabled");
+          }else{
+              $(".btnImport").Attr("disabled");
+          }
+      }
+  },
+  'click .btnImport' : function () {
+      $('.fullScreenSpin').css('display','inline-block');
+      let templateObject = Template.instance();
+      let contactService = new ContactService();
+      let objDetails;
+      let contact;
+      let now_date;
+      Papa.parse(templateObject.selectedFile.get(), {
+          complete: function(results) {
+              if(results.data.length > 0){
+                  if((results.data[0][0] == "Contact") && (results.data[0][1] == "Date") && (results.data[0][2] == "Task") && (results.data[0][3] == "Description") && (results.data[0][4] == "Labels") && (results.data[0][5] == "Project")) {
+
+                      let dataLength = results.data.length * 500;
+                      setTimeout(function(){
+                        window.open('/crmoverview?success=true','_self');
+                        $('.fullScreenSpin').css('display','none');
+                      },parseInt(dataLength));
+
+                      for (let i = 0; i < results.data.length -1; i++) {
+                          contact = results.data[i+1][0] || '';
+                          now_date = results.data[i+1][1] || moment().format("DD/MM/YYYY");
+                          objDetails = {
+
+                              type: "TCRMTaskList",
+                              fields:
+                              {
+                                  ClientName: contact,
+                                  due_date: now_date,
+                                  TaskName: results.data[i+1][2] || '',
+                                  TaskDescription: results.data[i+1][3] || '',
+                                  TaskLabel: results.data[i+1][4] || '',
+                                  ProjectName: results.data[i+1][5] || '',
+                                  Active: true
+                              }
+                          };
+                          if(results.data[i+1][0]){
+                              if(results.data[i+1][0] !== "") {
+                                  contactService.saveNewTask(objDetails).then(function (data) {
+                                      //$('.fullScreenSpin').css('display','none');
+                                      //Meteor._reload.reload();
+                                  }).catch(function (err) {
+                                      //$('.fullScreenSpin').css('display','none');
+                                      swal({
+                                          title: 'Oooops...',
+                                          text: err,
+                                          type: 'error',
+                                          showCancelButton: false,
+                                          confirmButtonText: 'Try Again'
+                                      }).then((result) => {
+                                          if (result.value) {
+                                              window.open('/crmoverview?success=true','_self');
+                                          } else if (result.dismiss === 'cancel') {
+                                            window.open('/crmoverview?success=true','_self');
+                                          }
+                                      });
+                                  });
+                              }
+                          }
+                      }
+
+                  }else{
+                      $('.fullScreenSpin').css('display','none');
+                      // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
+                      swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+                  }
+              }else{
+                  $('.fullScreenSpin').css('display','none');
+                  // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
+                  swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+              }
+
+          }
+      });
+  }
 
 });
 
