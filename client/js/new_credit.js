@@ -639,7 +639,7 @@ Template.creditcard.onRendered(() => {
         $("#templatePreviewModal .field_amount").show();
 
         updateTemplate(object_invoce);
-        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
 
     }
 
@@ -907,7 +907,7 @@ Template.creditcard.onRendered(() => {
             updateTemplate3(object_invoce);
           }
 
-        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
 
     }
 

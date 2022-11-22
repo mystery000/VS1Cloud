@@ -367,7 +367,7 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#templatePreviewModal .field_payment").show();
           $("#templatePreviewModal .field_amount").show();
           updateTemplate(object_invoce);
-          saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+          saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
     }
 
     function showSuppliers1(template_title,number) {
@@ -602,7 +602,7 @@ Template.supplierpaymentcard.onRendered(() => {
         } else {
           updateTemplate3(object_invoce);
         }
-        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
     }
 
      templateObject.generateInvoiceData = function (template_title,number) {

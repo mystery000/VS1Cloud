@@ -20,6 +20,9 @@ var template_list = [
   "Supplier Payments",
   "Statements",
   "Delivery Docket",
+  "Journal Entry",
+  "Deposits",
+  "Cheques",
 ];
 
 var modal_data = [];
@@ -2213,8 +2216,6 @@ Template.templatesettings.onRendered(function () {
 
       if(number == 1)
       {
-
-        
             item = {
               o_url: "vs1cloud.com",
               o_name: "Sample Company",
@@ -2345,9 +2346,6 @@ Template.templatesettings.onRendered(function () {
 
         };
 
-
-
-
       }
     
       object_invoce.push(item);
@@ -2361,7 +2359,7 @@ Template.templatesettings.onRendered(function () {
         updateTemplate3(object_invoce);
       }
 
-      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
       }
 
      //show credit data with dummy data
@@ -2532,7 +2530,7 @@ Template.templatesettings.onRendered(function () {
       } else {
         updateTemplate3(object_invoce);
       }
-      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
 
      }
 
@@ -2701,7 +2699,7 @@ Template.templatesettings.onRendered(function () {
         updateTemplate3(object_invoce);
       }
 
-      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
      }
 
      //show customer payment info with DummyData
@@ -2890,7 +2888,7 @@ Template.templatesettings.onRendered(function () {
             updateTemplate3(object_invoce);
           }
 
-          saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+          saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
      }
 
      //show invoice payment info with DummyData
@@ -3064,7 +3062,7 @@ Template.templatesettings.onRendered(function () {
         updateTemplate3(object_invoce);
       }
 
-      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
      }
 
      //show invoice back  info with DummyData
@@ -3240,7 +3238,7 @@ Template.templatesettings.onRendered(function () {
         updateTemplate3(object_invoce);
       }
 
-      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
       }
 
 
@@ -3410,7 +3408,7 @@ Template.templatesettings.onRendered(function () {
           updateTemplate3(object_invoce);
         }
 
-        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
      }
 
 
@@ -3575,7 +3573,7 @@ Template.templatesettings.onRendered(function () {
           updateTemplate3(object_invoce);
         }
 
-        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
       }
 
 
@@ -3741,7 +3739,7 @@ Template.templatesettings.onRendered(function () {
         } else {
           updateTemplate3(object_invoce);
         }
-        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
       }
 
       //show selas order  info with DummyData
@@ -3904,7 +3902,7 @@ Template.templatesettings.onRendered(function () {
           updateTemplate3(object_invoce);
         }
 
-        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
     }
 
 
@@ -4075,7 +4073,7 @@ Template.templatesettings.onRendered(function () {
           updateTemplate3(object_invoce);
         }
 
-        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
     }
 
     function showStatements(template_title,number)
@@ -4240,7 +4238,7 @@ Template.templatesettings.onRendered(function () {
           updateTemplate3(object_invoce);
         }
 
-        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
 
     }
 
@@ -4411,9 +4409,497 @@ Template.templatesettings.onRendered(function () {
         updateTemplate3(object_invoce);
       }
 
-      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
     }
 
+    function showJournalEntry(template_title, number) {
+      object_invoce = [];
+      var array_data = [];
+      array_data.push([
+        "Bank",
+        "Bank",
+        "$700.00",
+        "$0.00",
+      ]);
+      array_data.push([
+        "Bank Charges",
+        "Bank Charges and Fees",
+        "$0.00",
+        "$700.00",
+      ]);
+
+      let item = '';
+  
+
+      if(number == 1)
+      {
+            item = {
+              o_url: "vs1cloud.com",
+              o_name: "Sample Company",
+              o_address: "123 street",
+              o_city: "Los Angeles",
+              o_state: "Califonia 12345",
+              o_reg: "",
+              o_abn: "56789051234",
+              o_phone: "Phone : 25151944",
+              title: 'Journal',
+              value:'56',
+              date: "09/05/2022",
+              invoicenumber:'56',
+              refnumber: "",
+              pqnumber: "",
+              duedate:"",
+              paylink: "",
+              supplier_type: "Supplier",
+              supplier_name : "",
+              supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
+              fields: {"Account Name" : "30", "Memo" : "30", "Credit (Ex)" : "20", "Debit (Ex)" : "20"},
+              subtotal : "$700.00",
+              gst : "$0.00",
+              total : "$700.00",
+              paid_amount : "$700.00",
+              bal_due : "$0.00",
+              bsb : "",
+              account : "",
+              swift : "",
+              applied : "",
+              data: array_data,
+              customfield1:'NA',
+              customfield2:'NA',
+              customfield3:'NA',
+              customfieldlabel1:'NA',
+              customfieldlabel2:'NA',
+              customfieldlabel3:'NA',
+              showFX:"",
+              comment:"Journal Template Preivew",
+            };
+
+      }
+      else if(number == 2)
+      {
+            item = {
+              o_url: "vs1cloud.com",
+              o_name: "Sample Company",
+              o_address: "123 street",
+              o_city: "Los Angeles",
+              o_state: "Califonia 12345",
+              o_reg: "",
+              o_abn: "56789051234",
+              o_phone: "Phone : 25151944",
+              title: 'Journal',
+              value:'56',
+              date: "09/05/2022",
+              invoicenumber:'56',
+              refnumber: "",
+              pqnumber: "",
+              duedate:"",
+              paylink: "",
+              supplier_type: "Supplier",
+              supplier_name : "",
+              supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
+              fields: {"Account Name" : "30", "Memo" : "30", "Credit (Ex)" : "20", "Debit (Ex)" : "20"},
+              subtotal : "$700.00",
+              gst : "$0.00",
+              total : "$700.00",
+              paid_amount : "$700.00",
+              bal_due : "$0.00",
+              bsb : "",
+              account : "",
+              swift : "",
+              applied : "",
+              data: array_data,
+              customfield1:'customfield1 data',
+              customfield2:'customfield2 data',
+              customfield3:'customfield3 data',
+              customfieldlabel1:'customfield1',
+              customfieldlabel2:'customfield2',
+              customfieldlabel3:'customfield3',
+              showFX:'',
+              comment:"Journal Template Preivew",
+            };
+      }
+      else{
+
+          
+        item = {
+          o_url: "vs1cloud.com",
+          o_name: "Sample Company",
+          o_address: "123 street",
+          o_city: "Los Angeles",
+          o_state: "Califonia 12345",
+          o_reg: "",
+          o_abn: "56789051234",
+          o_phone: "Phone : 25151944",
+          title: 'Journal',
+          value:'56',
+          date: "09/05/2022",
+          invoicenumber:'56',
+          refnumber: "",
+          pqnumber: "",
+          duedate:"",
+          paylink: "",
+          supplier_type: "Supplier",
+          supplier_name : "Amar kumar",
+          supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
+          fields: {"Account Name" : "30", "Memo" : "30", "Credit (Ex)" : "20", "Debit (Ex)" : "20"},
+          subtotal : "$700.00",
+          gst : "$0.00",
+          total : "$700.00",
+          paid_amount : "$700.00",
+          bal_due : "$0.00",
+          bsb : "",
+          account : "",
+          swift : "",
+          applied : "",
+          data: array_data,
+          customfield1:'customfield1 data',
+          customfield2:'customfield2 data',
+          customfield3:'customfield3 data',
+          customfieldlabel1:'customfield1',
+          customfieldlabel2:'customfield2',
+          customfieldlabel3:'customfield3',
+          showFX:'AUD',
+          comment:"Journal Template Preivew",
+
+        };
+
+      }
+    
+      object_invoce.push(item);
+      $("#templatePreviewModal .field_payment").show();
+      $("#templatePreviewModal .field_amount").show();
+      if (number == 1) {
+        updateTemplate1(object_invoce);
+      } else if (number == 2) {
+        updateTemplate2(object_invoce);
+      } else {
+        updateTemplate3(object_invoce);
+      }
+
+      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
+    }
+
+    function showDepositData(template_title, number) {
+      object_invoce = [];
+      var array_data = [];
+      array_data.push([
+        "Bank",
+        "Cheque",
+        "",
+        "Received From",
+        "-$900.00",
+      ]);
+      
+      let item = '';
+  
+
+      if(number == 1)
+      {
+            item = {
+              o_url: "vs1cloud.com",
+              o_name: "Sample Company",
+              o_address: "123 street",
+              o_city: "Los Angeles",
+              o_state: "Califonia 12345",
+              o_reg: "",
+              o_abn: "56789051234",
+              o_phone: "Phone : 25151944",
+              title: 'Deposit',
+              value:'616',
+              date: "04/10/2022",
+              invoicenumber:'616',
+              refnumber: "",
+              pqnumber: "",
+              duedate:"",
+              paylink: "",
+              supplier_type: "Supplier",
+              supplier_name : "",
+              supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
+              fields: {"From Account" : "20", "Payment Method" : "20", "Reference No" : "20", "Received From" : "", "Amount" : "10"},
+              subtotal : "-$900.00",
+              gst : "$0.00",
+              total : "-$900.00",
+              paid_amount : "-$900.00",
+              bal_due : "$0.00",
+              bsb : "",
+              account : "",
+              swift : "",
+              applied : "",
+              data: array_data,
+              customfield1:'NA',
+              customfield2:'NA',
+              customfield3:'NA',
+              customfieldlabel1:'NA',
+              customfieldlabel2:'NA',
+              customfieldlabel3:'NA',
+              showFX:"",
+              comment:"Deposit Template Preivew",
+            };
+
+      }
+      else if(number == 2)
+      {
+            item = {
+              o_url: "vs1cloud.com",
+              o_name: "Sample Company",
+              o_address: "123 street",
+              o_city: "Los Angeles",
+              o_state: "Califonia 12345",
+              o_reg: "",
+              o_abn: "56789051234",
+              o_phone: "Phone : 25151944",
+              title: 'Deposit',
+              value:'616',
+              date: "04/10/2022",
+              invoicenumber:'616',
+              refnumber: "",
+              pqnumber: "",
+              duedate:"",
+              paylink: "",
+              supplier_type: "Supplier",
+              supplier_name : "",
+              supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
+              fields: {"From Account" : "20", "Payment Method" : "20", "Reference No" : "20", "Received From": "30", "Amount" : "10"},
+              subtotal : "-$900.00",
+              gst : "$0.00",
+              total : "-$900.00",
+              paid_amount : "-$900.00",
+              bal_due : "$0.00",
+              bsb : "",
+              account : "",
+              swift : "",
+              applied : "",
+              data: array_data,
+              customfield1:'customfield1 data',
+              customfield2:'customfield2 data',
+              customfield3:'customfield3 data',
+              customfieldlabel1:'customfield1',
+              customfieldlabel2:'customfield2',
+              customfieldlabel3:'customfield3',
+              showFX:'',
+              comment:"Deposit Template Preivew",
+            };
+      }
+      else{
+
+          
+        item = {
+          o_url: "vs1cloud.com",
+          o_name: "Sample Company",
+          o_address: "123 street",
+          o_city: "Los Angeles",
+          o_state: "Califonia 12345",
+          o_reg: "",
+          o_abn: "56789051234",
+          o_phone: "Phone : 25151944",
+          title: 'Deposit',
+          value:'616',
+          date: "04/10/2022",
+          invoicenumber:'616',
+          refnumber: "",
+          pqnumber: "",
+          duedate:"",
+          paylink: "",
+          supplier_type: "Supplier",
+          supplier_name : "Amar kumar",
+          supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
+          fields: {"From Account" : "20", "Payment Method" : "20", "Reference No": "20", "Received From" : "30", "Amount" : "10"},
+          subtotal : "-$900.00",
+          gst : "$0.00",
+          total : "-$900.00",
+          paid_amount : "-$900.00",
+          bal_due : "$0.00",
+          bsb : "",
+          account : "",
+          swift : "",
+          applied : "",
+          data: array_data,
+          customfield1:'customfield1 data',
+          customfield2:'customfield2 data',
+          customfield3:'customfield3 data',
+          customfieldlabel1:'customfield1',
+          customfieldlabel2:'customfield2',
+          customfieldlabel3:'customfield3',
+          showFX:'AUD',
+          comment:"Deposit Template Preivew",
+
+        };
+
+      }
+    
+      object_invoce.push(item);
+      $("#templatePreviewModal .field_payment").show();
+      $("#templatePreviewModal .field_amount").show();
+      if (number == 1) {
+        updateTemplate1(object_invoce);
+      } else if (number == 2) {
+        updateTemplate2(object_invoce);
+      } else {
+        updateTemplate3(object_invoce);
+      }
+
+      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
+    }
+    
+    function showChequeData(template_title, number) {
+      object_invoce = [];
+      var array_data = [];
+      array_data.push([
+        "Opening Bal Equity",
+        "Receipt Claim",
+        "$0.00",
+        "$900.00",
+      ]);
+      
+      let item = '';
+  
+      if(number == 1)
+      {
+            item = {
+              o_url: "vs1cloud.com",
+              o_name: "Sample Company",
+              o_address: "123 street",
+              o_city: "Los Angeles",
+              o_state: "Califonia 12345",
+              o_reg: "",
+              o_abn: "56789051234",
+              o_phone: "Phone : 25151944",
+              title: 'Cheque',
+              value:'371',
+              date: "04/10/2022",
+              invoicenumber:'371',
+              refnumber: "",
+              pqnumber: "",
+              duedate:"",
+              paylink: "",
+              supplier_type: "Supplier",
+              supplier_name : "",
+              supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
+              fields: {"Account Name" : "30", "Description" : "30", "Tax" : "20", "Amount" : "20"},
+              subtotal : "$900.00",
+              gst : "$0.00",
+              total : "900.00",
+              paid_amount : "$0.00",
+              bal_due : "$0.00",
+              bsb : "",
+              account : "",
+              swift : "",
+              applied : "",
+              data: array_data,
+              customfield1:'NA',
+              customfield2:'NA',
+              customfield3:'NA',
+              customfieldlabel1:'NA',
+              customfieldlabel2:'NA',
+              customfieldlabel3:'NA',
+              showFX:"",
+              comment:"Cheque Template Preivew",
+            };
+
+      }
+      else if(number == 2)
+      {
+            item = {
+              o_url: "vs1cloud.com",
+              o_name: "Sample Company",
+              o_address: "123 street",
+              o_city: "Los Angeles",
+              o_state: "Califonia 12345",
+              o_reg: "",
+              o_abn: "56789051234",
+              o_phone: "Phone : 25151944",
+              title: 'Cheque',
+              value:'371',
+              date: "04/10/2022",
+              invoicenumber:'371',
+              refnumber: "",
+              pqnumber: "",
+              duedate:"",
+              paylink: "",
+              supplier_type: "Supplier",
+              supplier_name : "",
+              supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
+              fields: {"Account Name" : "30", "Description" : "30", "Tax" : "20", "Amount" : "20"},
+              subtotal : "$900.00",
+              gst : "$0.00",
+              total : "$900.00",
+              paid_amount : "$0.00",
+              bal_due : "$0.00",
+              bsb : "",
+              account : "",
+              swift : "",
+              applied : "",
+              data: array_data,
+              customfield1:'customfield1 data',
+              customfield2:'customfield2 data',
+              customfield3:'customfield3 data',
+              customfieldlabel1:'customfield1',
+              customfieldlabel2:'customfield2',
+              customfieldlabel3:'customfield3',
+              showFX:'',
+              comment:"Cheque Template Preivew",
+            };
+      }
+      else{
+
+          
+        item = {
+          o_url: "vs1cloud.com",
+          o_name: "Sample Company",
+          o_address: "123 street",
+          o_city: "Los Angeles",
+          o_state: "Califonia 12345",
+          o_reg: "",
+          o_abn: "56789051234",
+          o_phone: "Phone : 25151944",
+          title: 'Cheque',
+          value:'371',
+          date: "04/10/2022",
+          invoicenumber:'371',
+          refnumber: "",
+          pqnumber: "",
+          duedate:"",
+          paylink: "",
+          supplier_type: "Supplier",
+          supplier_name : "Amar kumar",
+          supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
+          fields: {"Account Name" : "30", "Description" : "30", "Tax" : "20", "Amount" : "20"},
+          subtotal : "$900.00",
+          gst : "$0.00",
+          total : "$900.00",
+          paid_amount : "$0.00",
+          bal_due : "$0.00",
+          bsb : "",
+          account : "",
+          swift : "",
+          applied : "",
+          data: array_data,
+          customfield1:'customfield1 data',
+          customfield2:'customfield2 data',
+          customfield3:'customfield3 data',
+          customfieldlabel1:'customfield1',
+          customfieldlabel2:'customfield2',
+          customfieldlabel3:'customfield3',
+          showFX:'AUD',
+          comment:"Cheque Template Preivew",
+
+        };
+
+      }
+    
+      object_invoce.push(item);
+      $("#templatePreviewModal .field_payment").show();
+      $("#templatePreviewModal .field_amount").show();
+      if (number == 1) {
+        updateTemplate1(object_invoce);
+      } else if (number == 2) {
+        updateTemplate2(object_invoce);
+      } else {
+        updateTemplate3(object_invoce);
+      }
+
+      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
+    }
 
      templateObject.generateInvoiceData = function (template_title,number) {
      object_invoce = [];
@@ -4431,7 +4917,7 @@ Template.templatesettings.onRendered(function () {
         break;
 
       
-    case "Customer Statements":
+      case "Customer Statements":
         showCustomerStatments(template_title,number);
         break;  
 
@@ -4444,23 +4930,23 @@ Template.templatesettings.onRendered(function () {
         break;
 
       case "Purchase Orders":
-        showPurchaseOrder(template_title,number)
+        showPurchaseOrder(template_title,number);
         break;
 
       case "Quotes":
-        showQuotes(template_title,number)
+        showQuotes(template_title,number);
         break;
 
       case "Refunds":
-        showRefund(template_title,number)
+        showRefund(template_title,number);
         break;
 
       case "Sales Orders":
-        showSealsOrder(template_title,number)
+        showSealsOrder(template_title,number);
         break;
 
       case "Supplier Payments":
-        showSuppliers(template_title,number)
+        showSuppliers(template_title,number);
         break;
       
       case "Statements": 
@@ -4469,6 +4955,18 @@ Template.templatesettings.onRendered(function () {
       
       case "Delivery Docket":
         showDeliveryDocket(template_title,number);
+        break;
+
+      case "Journal Entry":
+        showJournalEntry(template_title, number);
+        break;
+
+      case "Deposits":
+        showDepositData(template_title, number);
+        break;
+
+      case "Cheques":
+        showChequeData(template_title, number);
         break;
     }
 
@@ -4555,6 +5053,9 @@ Template.templatesettings.events({
     var supplier_payments = $('input[name="Supplier Payments"]:checked').val();
     var statements = $('input[name="Statements"]:checked').val();
     var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
+    var journal_entry = $('input[name="Journal Entry"]:checked').val();
+    var deposits = $('input[name="Deposits"]:checked').val();
+    var cheques = $('input[name="Cheques"]:checked').val();
     $('.fullScreenSpin').css('display','inline-block');
     let emid = Session.get('mySessionEmployeeLoggedID');
     let count = 0; 
@@ -4579,7 +5080,7 @@ Template.templatesettings.events({
                             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                             addVS1Data('TTemplateSettings', JSON.stringify(data)); 
                             count++;
-                            if(count >= 39)
+                            if(count >= 48)
                             {
                                $('.fullScreenSpin').css('display', 'none');
                                swal({
@@ -4621,7 +5122,7 @@ Template.templatesettings.events({
                                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                                   addVS1Data('TTemplateSettings', JSON.stringify(data));  
                                   count++;
-                                  if(count >= 39)
+                                  if(count >= 48)
                                   {
                                           $('.fullScreenSpin').css('display', 'none');
                                           swal({
@@ -4668,7 +5169,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));   
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
                $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -4710,7 +5211,7 @@ Template.templatesettings.events({
                               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                               addVS1Data('TTemplateSettings', JSON.stringify(data));  
                               count++;
-                              if(count >= 39)
+                              if(count >= 48)
                               {
                                     $('.fullScreenSpin').css('display', 'none');
                                      swal({
@@ -4756,7 +5257,7 @@ Template.templatesettings.events({
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data('TTemplateSettings', JSON.stringify(data));     
               count++;
-              if(count >= 39)
+              if(count >= 48)
               {
                   $('.fullScreenSpin').css('display', 'none');
                    swal({
@@ -4799,7 +5300,7 @@ Template.templatesettings.events({
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data)); 
                   count++;
-                  if(count >= 39)
+                  if(count >= 48)
                   {
                     $('.fullScreenSpin').css('display', 'none');
                      swal({
@@ -4850,7 +5351,7 @@ Template.templatesettings.events({
          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
          addVS1Data('TTemplateSettings', JSON.stringify(data));    
          count++;
-         if(count >= 39)
+         if(count >= 48)
          {
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
@@ -4894,7 +5395,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));     
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                        $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -4942,7 +5443,7 @@ Template.templatesettings.events({
             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                 addVS1Data('TTemplateSettings', JSON.stringify(data)); 
                 count++;
-                if(count >= 39)
+                if(count >= 48)
                 {
                    $('.fullScreenSpin').css('display', 'none');
                    swal({
@@ -4982,7 +5483,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));    
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -5034,7 +5535,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));    
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -5080,7 +5581,7 @@ Template.templatesettings.events({
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));      
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -5131,7 +5632,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));          
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
                $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -5169,7 +5670,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));   
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -5220,7 +5721,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));      
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
                $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -5260,7 +5761,7 @@ Template.templatesettings.events({
                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));    
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                        $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -5309,7 +5810,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));    
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
                $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -5353,7 +5854,7 @@ Template.templatesettings.events({
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));      
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -5402,7 +5903,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));      
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
                $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -5444,7 +5945,7 @@ Template.templatesettings.events({
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));  
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -5494,7 +5995,7 @@ Template.templatesettings.events({
            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
              addVS1Data('TTemplateSettings', JSON.stringify(data));     
              count++;
-             if(count >= 39)
+             if(count >= 48)
              {
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
@@ -5537,7 +6038,7 @@ Template.templatesettings.events({
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));    
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                          $('.fullScreenSpin').css('display', 'none');
                          swal({
@@ -5585,7 +6086,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));   
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
                $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -5629,7 +6130,7 @@ Template.templatesettings.events({
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                        addVS1Data('TTemplateSettings', JSON.stringify(data));     
                        count++;
-                       if(count >= 39)
+                       if(count >= 48)
                        {
                           $('.fullScreenSpin').css('display', 'none');
                           swal({
@@ -5679,7 +6180,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));   
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -5725,7 +6226,7 @@ Template.templatesettings.events({
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));    
                       count++;
-                      if(count >= 39)
+                      if(count >= 48)
                       {
                         $('.fullScreenSpin').css('display', 'none');
                          swal({
@@ -5776,7 +6277,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));        
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -5822,7 +6323,7 @@ Template.templatesettings.events({
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));  
                       count++;
-                      if(count >= 39)
+                      if(count >= 48)
                       {
                         $('.fullScreenSpin').css('display', 'none');
                          swal({
@@ -5874,7 +6375,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));   
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -5920,7 +6421,7 @@ Template.templatesettings.events({
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));   
                       count++;
-                      if(count >= 39)
+                      if(count >= 48)
                       {
                         $('.fullScreenSpin').css('display', 'none');
                          swal({
@@ -5973,7 +6474,7 @@ Template.templatesettings.events({
             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data('TTemplateSettings', JSON.stringify(data));    
               count++;
-              if(count >= 39)
+              if(count >= 48)
               {
                 $('.fullScreenSpin').css('display', 'none');
                  swal({
@@ -6019,7 +6520,7 @@ Template.templatesettings.events({
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                         addVS1Data('TTemplateSettings', JSON.stringify(data));   
                         count++;
-                        if(count >= 39)
+                        if(count >= 48)
                         {
                           $('.fullScreenSpin').css('display', 'none');
                            swal({
@@ -6070,7 +6571,7 @@ Template.templatesettings.events({
             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data('TTemplateSettings', JSON.stringify(data));    
               count++;
-              if(count >= 39)
+              if(count >= 48)
               {
                 $('.fullScreenSpin').css('display', 'none');
                  swal({
@@ -6115,7 +6616,7 @@ Template.templatesettings.events({
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                         addVS1Data('TTemplateSettings', JSON.stringify(data));    
                         count++;
-                        if(count >= 39)
+                        if(count >= 48)
                         {
                           $('.fullScreenSpin').css('display', 'none');
                            swal({
@@ -6165,7 +6666,7 @@ Template.templatesettings.events({
             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data('TTemplateSettings', JSON.stringify(data));   
               count++;
-              if(count >= 39)
+              if(count >= 48)
               {
                 $('.fullScreenSpin').css('display', 'none');
                  swal({
@@ -6211,7 +6712,7 @@ Template.templatesettings.events({
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                         addVS1Data('TTemplateSettings', JSON.stringify(data));   
                         count++;
-                        if(count >= 39)
+                        if(count >= 48)
                         {
                           $('.fullScreenSpin').css('display', 'none');
                            swal({
@@ -6262,7 +6763,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));   
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -6308,7 +6809,7 @@ Template.templatesettings.events({
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));   
                       count++;
-                      if(count >= 39)
+                      if(count >= 48)
                       {
                         $('.fullScreenSpin').css('display', 'none');
                          swal({
@@ -6359,7 +6860,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));   
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -6405,7 +6906,7 @@ Template.templatesettings.events({
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));    
                       count++;
-                      if(count >= 39)
+                      if(count >= 48)
                       {
                         $('.fullScreenSpin').css('display', 'none');
                          swal({
@@ -6457,7 +6958,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));     
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -6502,7 +7003,7 @@ Template.templatesettings.events({
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));   
                       count++;
-                      if(count >= 39)
+                      if(count >= 48)
                       {
                         $('.fullScreenSpin').css('display', 'none');
                          swal({
@@ -6554,7 +7055,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));   
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -6599,7 +7100,7 @@ Template.templatesettings.events({
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));  
                       count++;
-                      if(count >= 39)
+                      if(count >= 48)
                       {
                         $('.fullScreenSpin').css('display', 'none');
                          swal({
@@ -6651,7 +7152,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));  
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -6697,7 +7198,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));    
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -6749,7 +7250,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));  
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -6795,7 +7296,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data)); 
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -6848,7 +7349,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));  
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -6893,7 +7394,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data)); 
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -6945,7 +7446,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));    
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -6990,7 +7491,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));   
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -7042,7 +7543,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));   
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -7088,7 +7589,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data)); 
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -7140,7 +7641,7 @@ Template.templatesettings.events({
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
           addVS1Data('TTemplateSettings', JSON.stringify(data));   
           count++;
-          if(count >= 39)
+          if(count >= 48)
           {
             $('.fullScreenSpin').css('display', 'none');
              swal({
@@ -7186,7 +7687,7 @@ Template.templatesettings.events({
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));
                   count++;
-                  if(count >= 39)
+                  if(count >= 48)
                   {
                     $('.fullScreenSpin').css('display', 'none');
                      swal({
@@ -7236,7 +7737,7 @@ Template.templatesettings.events({
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
           addVS1Data('TTemplateSettings', JSON.stringify(data));   
           count++;
-          if(count >= 39)
+          if(count >= 48)
           {
             $('.fullScreenSpin').css('display', 'none');
              swal({
@@ -7281,7 +7782,7 @@ Template.templatesettings.events({
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data)); 
                   count++;
-                  if(count >= 39)
+                  if(count >= 48)
                   {
                     $('.fullScreenSpin').css('display', 'none');
                      swal({
@@ -7331,7 +7832,7 @@ Template.templatesettings.events({
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
           addVS1Data('TTemplateSettings', JSON.stringify(data));   
           count++;
-          if(count >= 39)
+          if(count >= 48)
           {
             $('.fullScreenSpin').css('display', 'none');
              swal({
@@ -7376,7 +7877,7 @@ Template.templatesettings.events({
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));  
                   count++;
-                  if(count >= 39)
+                  if(count >= 48)
                   {
                     $('.fullScreenSpin').css('display', 'none');
                      swal({
@@ -7428,7 +7929,7 @@ Template.templatesettings.events({
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
           addVS1Data('TTemplateSettings', JSON.stringify(data));   
           count++;
-          if(count >= 39)
+          if(count >= 48)
           {
             $('.fullScreenSpin').css('display', 'none');
              swal({
@@ -7473,7 +7974,7 @@ Template.templatesettings.events({
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data)); 
                   count++;
-                  if(count >= 39)
+                  if(count >= 48)
                   {
                     $('.fullScreenSpin').css('display', 'none');
                      swal({
@@ -7524,7 +8025,7 @@ Template.templatesettings.events({
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
           addVS1Data('TTemplateSettings', JSON.stringify(data));      
           count++;
-          if(count >= 39)
+          if(count >= 48)
           {
             $('.fullScreenSpin').css('display', 'none');
              swal({
@@ -7568,7 +8069,7 @@ Template.templatesettings.events({
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));   
                   count++;
-                  if(count >= 39)
+                  if(count >= 48)
                   {
                     $('.fullScreenSpin').css('display', 'none');
                      swal({
@@ -7618,7 +8119,7 @@ Template.templatesettings.events({
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
           addVS1Data('TTemplateSettings', JSON.stringify(data));   
           count++;
-          if(count >= 39)
+          if(count >= 48)
           {
             $('.fullScreenSpin').css('display', 'none');
              swal({
@@ -7666,7 +8167,7 @@ Template.templatesettings.events({
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data)); 
                   count++;
-                  if(count >= 39)
+                  if(count >= 48)
                   {
                     $('.fullScreenSpin').css('display', 'none');
                      swal({
@@ -7718,7 +8219,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));    
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -7763,7 +8264,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));   
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -7814,7 +8315,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));  
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -7858,7 +8359,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));  
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -7910,7 +8411,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));   
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -7954,7 +8455,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));    
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -8006,7 +8507,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));     
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -8052,7 +8553,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));   
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -8081,8 +8582,6 @@ Template.templatesettings.events({
   
        });
 
-
-
        sideBarService.getTemplateNameandEmployeId("Delivery Docket",emid,2).then(function (data) {
         templateid = data.ttemplatesettings;
         var id = templateid[0].fields.ID;    
@@ -8104,7 +8603,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data)); 
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -8149,7 +8648,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));   
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -8178,7 +8677,6 @@ Template.templatesettings.events({
   
        });
 
-
        sideBarService.getTemplateNameandEmployeId("Delivery Docket",emid,3).then(function (data) {
 
         $('.fullScreenSpin').css('display','none');
@@ -8201,7 +8699,7 @@ Template.templatesettings.events({
           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
             addVS1Data('TTemplateSettings', JSON.stringify(data));   
             count++;
-            if(count >= 39)
+            if(count >= 48)
             {
               $('.fullScreenSpin').css('display', 'none');
                swal({
@@ -8250,7 +8748,7 @@ Template.templatesettings.events({
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                     addVS1Data('TTemplateSettings', JSON.stringify(data));    
                     count++;
-                    if(count >= 39)
+                    if(count >= 48)
                     {
                       $('.fullScreenSpin').css('display', 'none');
                        swal({
@@ -8281,8 +8779,881 @@ Template.templatesettings.events({
   
        });
 
+       sideBarService.getTemplateNameandEmployeId("Journal Entry",emid,1).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;    
+        objDetails =  {
+        type:"TTemplateSettings",
+        fields:{        
+                            ID:parseInt(id),                      
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Journal Entry",
+                            GlobalRef:"Journal Entry",
+                            Description:$('input[name="Journal Entry_1"]').val(),
+                            Template:"1",
+                            Active:journal_entry == 1 ? true:false,
+                }            
+        }
+    
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));     
+            count++;
+            if(count >= 48)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }       
+          });
+          
+    
+        }).catch(function (err) {
+    
+          
+      
+        });
+    
+       }).catch(function (err) {
+                
+                objDetails =  {
+                type:"TTemplateSettings",
+                fields:{                                                                  
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Journal Entry",
+                            Description:$('input[name="Journal Entry_1"]').val(),
+                            Template:"1",
+                            Active:journal_entry == 1 ? true:false,
+                        }            
+                }
+            
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+            
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    count++;
+                    if(count >= 48)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }         
+                  });
+            
+                }).catch(function (err) {
+            
+                    
+              
+                });  
+  
+       });
 
-       
+       sideBarService.getTemplateNameandEmployeId("Journal Entry",emid,2).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;    
+        objDetails =  {
+        type:"TTemplateSettings",
+        fields:{        
+                            ID:parseInt(id),                      
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Journal Entry",
+                            GlobalRef:"Journal Entry",
+                            Description:$('input[name="Journal Entry_2"]').val(),
+                            Template:"2",
+                            Active:journal_entry == 2 ? true:false,
+                }            
+        }
+    
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+    
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+            count++;
+            if(count >= 48)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }           
+          });
+    
+        }).catch(function (err) {
+    
+          
+      
+        });
+    
+       }).catch(function (err) {
+                
+                objDetails =  {
+                type:"TTemplateSettings",
+                fields:{                                                                  
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Journal Entry",
+                            Description:$('input[name="Journal Entry_2"]').val(),
+                            Template:"2",
+                            Active:journal_entry == 2 ? true:false,
+                        }            
+                }
+            
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+            
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    count++;
+                    if(count >= 48)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }         
+                  });
+            
+                }).catch(function (err) {
+            
+                    
+              
+                });  
+  
+       });
+
+       sideBarService.getTemplateNameandEmployeId("Journal Entry",emid,3).then(function (data) {
+
+        $('.fullScreenSpin').css('display','none');
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;    
+        objDetails =  {
+        type:"TTemplateSettings",
+        fields:{        
+                            ID:parseInt(id),                      
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Journal Entry",
+                            GlobalRef:"Journal Entry",
+                            Description:$('input[name="Journal Entry_3"]').val(),
+                            Template:"3",
+                            Active:journal_entry == 3 ? true:false,
+                }            
+        }
+    
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 48)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+          });
+        
+          
+    
+        }).catch(function (err) {
+          $('.fullScreenSpin').css('display','none');
+
+    
+          
+      
+        });
+    
+       }).catch(function (err) {
+               $('.fullScreenSpin').css('display','none');
+                objDetails =  {
+                type:"TTemplateSettings",
+                fields:{                                                                  
+                              EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                              SettingName:"Journal Entry",
+                              Description:$('input[name="Journal Entry_3"]').val(),
+                              Template:"3",
+                              Active:journal_entry == 3 ? true:false,
+                        }            
+                }
+            
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                    count++;
+                    if(count >= 48)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }        
+                  });
+
+             
+                    
+                }).catch(function (err) {
+            
+                    
+              
+                });  
+  
+       });
+
+       sideBarService.getTemplateNameandEmployeId("Deposits",emid,1).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;    
+        objDetails =  {
+        type:"TTemplateSettings",
+        fields:{        
+                            ID:parseInt(id),                      
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Deposits",
+                            GlobalRef:"Deposits",
+                            Description:$('input[name="Deposits_1"]').val(),
+                            Template:"1",
+                            Active:deposits == 1 ? true:false,
+                }            
+        }
+    
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));     
+            count++;
+            if(count >= 48)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }       
+          });
+          
+    
+        }).catch(function (err) {
+    
+          
+      
+        });
+    
+       }).catch(function (err) {
+                
+                objDetails =  {
+                type:"TTemplateSettings",
+                fields:{                                                                  
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Deposits",
+                            Description:$('input[name="Deposits_1"]').val(),
+                            Template:"1",
+                            Active:deposits == 1 ? true:false,
+                        }            
+                }
+            
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+            
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    count++;
+                    if(count >= 48)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }         
+                  });
+            
+                }).catch(function (err) {
+            
+                    
+              
+                });  
+  
+       });
+
+       sideBarService.getTemplateNameandEmployeId("Deposits",emid,2).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;    
+        objDetails =  {
+        type:"TTemplateSettings",
+        fields:{        
+                            ID:parseInt(id),                      
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Deposits",
+                            GlobalRef:"Deposits",
+                            Description:$('input[name="Deposits_2"]').val(),
+                            Template:"2",
+                            Active:deposits == 2 ? true:false,
+                }            
+        }
+    
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+    
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+            count++;
+            if(count >= 48)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }           
+          });
+    
+        }).catch(function (err) {
+    
+          
+      
+        });
+    
+       }).catch(function (err) {
+                
+                objDetails =  {
+                type:"TTemplateSettings",
+                fields:{                                                                  
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Deposits",
+                            Description:$('input[name="Deposits_2"]').val(),
+                            Template:"2",
+                            Active:deposits == 2 ? true:false,
+                        }            
+                }
+            
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+            
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    count++;
+                    if(count >= 48)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }         
+                  });
+            
+                }).catch(function (err) {
+            
+                    
+              
+                });  
+  
+       });
+
+       sideBarService.getTemplateNameandEmployeId("Deposits",emid,3).then(function (data) {
+
+        $('.fullScreenSpin').css('display','none');
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;    
+        objDetails =  {
+        type:"TTemplateSettings",
+        fields:{        
+                            ID:parseInt(id),                      
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Deposits",
+                            GlobalRef:"Deposits",
+                            Description:$('input[name="Deposits_3"]').val(),
+                            Template:"3",
+                            Active:deposits == 3 ? true:false,
+                }            
+        }
+    
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 48)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+          });
+        
+          
+    
+        }).catch(function (err) {
+          $('.fullScreenSpin').css('display','none');
+
+    
+          
+      
+        });
+    
+       }).catch(function (err) {
+               $('.fullScreenSpin').css('display','none');
+                objDetails =  {
+                type:"TTemplateSettings",
+                fields:{                                                                  
+                              EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                              SettingName:"Deposits",
+                              Description:$('input[name="Deposits_3"]').val(),
+                              Template:"3",
+                              Active:deposits == 3 ? true:false,
+                        }            
+                }
+            
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                    count++;
+                    if(count >= 48)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }        
+                  });
+
+             
+                    
+                }).catch(function (err) {
+            
+                    
+              
+                });  
+  
+       });
+
+       sideBarService.getTemplateNameandEmployeId("Cheques",emid,1).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;    
+        objDetails =  {
+        type:"TTemplateSettings",
+        fields:{        
+                            ID:parseInt(id),                      
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Cheques",
+                            GlobalRef:"Cheques",
+                            Description:$('input[name="Cheques_1"]').val(),
+                            Template:"1",
+                            Active:cheques == 1 ? true:false,
+                }            
+        }
+    
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));     
+            count++;
+            if(count >= 48)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }       
+          });
+          
+    
+        }).catch(function (err) {
+    
+          
+      
+        });
+    
+       }).catch(function (err) {
+                
+                objDetails =  {
+                type:"TTemplateSettings",
+                fields:{                                                                  
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Cheques",
+                            Description:$('input[name="Cheques_1"]').val(),
+                            Template:"1",
+                            Active:cheques == 1 ? true:false,
+                        }            
+                }
+            
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+            
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    count++;
+                    if(count >= 48)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }         
+                  });
+            
+                }).catch(function (err) {
+            
+                    
+              
+                });  
+  
+       });
+
+       sideBarService.getTemplateNameandEmployeId("Cheques",emid,2).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;    
+        objDetails =  {
+        type:"TTemplateSettings",
+        fields:{        
+                            ID:parseInt(id),                      
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Cheques",
+                            GlobalRef:"Cheques",
+                            Description:$('input[name="Cheques_2"]').val(),
+                            Template:"2",
+                            Active:cheques == 2 ? true:false,
+                }            
+        }
+    
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+    
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+            count++;
+            if(count >= 48)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }           
+          });
+    
+        }).catch(function (err) {
+    
+          
+      
+        });
+    
+       }).catch(function (err) {
+                
+                objDetails =  {
+                type:"TTemplateSettings",
+                fields:{                                                                  
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Cheques",
+                            Description:$('input[name="Cheques_2"]').val(),
+                            Template:"2",
+                            Active:cheques == 2 ? true:false,
+                        }            
+                }
+            
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+            
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    count++;
+                    if(count >= 48)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }         
+                  });
+            
+                }).catch(function (err) {
+            
+                    
+              
+                });  
+  
+       });
+
+       sideBarService.getTemplateNameandEmployeId("Cheques",emid,3).then(function (data) {
+
+        $('.fullScreenSpin').css('display','none');
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;    
+        objDetails =  {
+        type:"TTemplateSettings",
+        fields:{        
+                            ID:parseInt(id),                      
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Cheques",
+                            GlobalRef:"Cheques",
+                            Description:$('input[name="Cheques_3"]').val(),
+                            Template:"3",
+                            Active:cheques == 3 ? true:false,
+                }            
+        }
+    
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 48)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+          });
+        
+          
+    
+        }).catch(function (err) {
+          $('.fullScreenSpin').css('display','none');
+
+    
+          
+      
+        });
+    
+       }).catch(function (err) {
+               $('.fullScreenSpin').css('display','none');
+                objDetails =  {
+                type:"TTemplateSettings",
+                fields:{                                                                  
+                              EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                              SettingName:"Cheques",
+                              Description:$('input[name="Cheques_3"]').val(),
+                              Template:"3",
+                              Active:cheques == 3 ? true:false,
+                        }            
+                }
+            
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                    count++;
+                    if(count >= 48)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }        
+                  });
+
+             
+                    
+                }).catch(function (err) {
+            
+                    
+              
+                });  
+  
+       });
 
       }, delayTimeAfterSound);
       },

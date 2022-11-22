@@ -818,7 +818,7 @@ Template.new_salesorder.onRendered(function () {
             updateTemplate3(object_invoce);
           }
 
-        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
 
 
     }
@@ -1057,7 +1057,7 @@ Template.new_salesorder.onRendered(function () {
                   } else {
                     updateTemplate3(object_invoce);
                   }
-                saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+                saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
 
 
 
@@ -1317,7 +1317,7 @@ Template.new_salesorder.onRendered(function () {
         $("#templatePreviewModal .field_amount").show();
         await updateTemplate(object_invoce);
 
-        await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
     }
 
     async function showDeliveryDocket(template_title,number)
@@ -1550,7 +1550,7 @@ Template.new_salesorder.onRendered(function () {
             $("#templatePreviewModal .field_amount").show();
 
             await updateTemplate(object_invoce);
-            await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+            await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
 
     }
 
