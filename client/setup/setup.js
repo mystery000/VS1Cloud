@@ -79,7 +79,7 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
           } else {
             window.open(onSetupUnFinished, '_self');
           }
-          
+
         }
     });
      // isSetupFinished().then(boolean => {
@@ -843,11 +843,11 @@ Template.setup.onRendered(function () {
               for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                 // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
                 var dataList = {
-                  id: data.tpaymentmethodvs1[i].Id || "",
+                  id: data.tpaymentmethodvs1[i].fields.ID || "",
                   paymentmethodname:
-                    data.tpaymentmethodvs1[i].PaymentMethodName || "",
+                    data.tpaymentmethodvs1[i].fields.PaymentMethodName || "",
                   iscreditcard:
-                    data.tpaymentmethodvs1[i].IsCreditCard || "false",
+                    data.tpaymentmethodvs1[i].fields.IsCreditCard || "false",
                 };
 
                 dataTableListPaymentMethod.push(dataList);
@@ -1233,10 +1233,9 @@ Template.setup.onRendered(function () {
             for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
               // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
               var dataList = {
-                id: data.tpaymentmethodvs1[i].Id || "",
-                paymentmethodname:
-                  data.tpaymentmethodvs1[i].PaymentMethodName || "",
-                iscreditcard: data.tpaymentmethodvs1[i].IsCreditCard || "false",
+                id: data.tpaymentmethodvs1[i].fields.ID || "",
+                paymentmethodname: data.tpaymentmethodvs1[i].fields.PaymentMethodName || "",
+                iscreditcard: data.tpaymentmethodvs1[i].fields.IsCreditCard || "false",
               };
 
               dataTableListPaymentMethod.push(dataList);
@@ -4489,7 +4488,7 @@ Template.setup.events({
   },
   "click #edtCountry": async function (event) {
     await clearData('TTaxcodeVS1');
-  },  
+  },
   "click #saveStep1": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     let companyID = 1;
@@ -5115,7 +5114,7 @@ Template.setup.events({
     let taxRateService = new TaxRateService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    
+
     let taxtID = $("#edtTaxID").val();
     let taxName = $("#edtTaxName").val();
     let taxDesc = $("#edtTaxDesc").val();
@@ -5630,7 +5629,7 @@ Template.setup.events({
     let taxRateService = new TaxRateService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    
+
     let paymentMethodID = $("#edtPaymentMethodID").val();
     //let headerDept = $('#sltDepartment').val();
     let paymentName = $("#edtPaymentMethodName").val();
@@ -6124,7 +6123,7 @@ Template.setup.events({
     let taxRateService = new TaxRateService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    
+
     let termsID = $("#edtTermsID").val();
     let termsName = $("#edtName").val();
     let description = $("#edtDesc").val();
@@ -7501,7 +7500,7 @@ Template.setup.events({
     let clientService = new SalesBoardService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    
+
     let status = $("#status").val();
     let leadData = {
       type: "TLeadStatusType",
@@ -7895,7 +7894,7 @@ Template.setup.events({
   //     var url = FlowRouter.current().path;
   //     var getso_id = url.split("?id=");
   //     var currentCredit = getso_id[getso_id.length - 1];
-  
+
   //     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
   //     var objDetails = "";
   //     if (getso_id[1]) {

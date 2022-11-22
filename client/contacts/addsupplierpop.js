@@ -163,7 +163,7 @@ Template.addsupplierpop.onRendered(function () {
           contactService.getPaymentMethodDataVS1().then((data) => {
             for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
               preferedPayments.push(
-                data.tpaymentmethodvs1[i].PaymentMethodName
+                data.tpaymentmethodvs1[i].fields.PaymentMethodName
               );
             }
             preferedPayments = _.sortBy(preferedPayments);
@@ -183,7 +183,7 @@ Template.addsupplierpop.onRendered(function () {
       .catch(function (err) {
         contactService.getPaymentMethodDataVS1().then((data) => {
           for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-            preferedPayments.push(data.tpaymentmethodvs1[i].PaymentMethodName);
+            preferedPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName);
           }
           preferedPayments = _.sortBy(preferedPayments);
 
@@ -510,7 +510,7 @@ Template.addsupplierpop.events({
       let city = $('.addsupplierpop #edtSupplierShippingCity').val();
       let state =  $('.addsupplierpop #edtSupplierShippingState').val();
       let zipcode =  $('.addsupplierpop #edtSupplierShippingZIP').val();
-      
+
       let country =  $('.addsupplierpop #sedtCountry').val();
        $('.addsupplierpop #edtSupplierBillingAddress').val(streetAddress);
        $('.addsupplierpop #edtSupplierBillingCity').val(city);
@@ -606,7 +606,7 @@ Template.addsupplierpop.events({
     var currentEmployee = getemp_id[getemp_id.length - 1];
     var objDetails = "";
 
-    
+
 
     let suppdupID = 0;
     if (supplierPOPID != "") {

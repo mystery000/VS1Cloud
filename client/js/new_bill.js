@@ -107,7 +107,7 @@ Template.billcard.onRendered(() => {
       changeYear: true,
       yearRange: "-90:+10",
     });
-  
+
     templateObject.getDayNumber = function (day) {
       day = day.toLowerCase();
       if (day == "") {
@@ -188,7 +188,7 @@ Template.billcard.onRendered(() => {
           $("#formCheck-january").prop('checked', true);
       }
     }
-    
+
     $('#choosetemplate').attr('checked', true);
 
     // set initial table rest_data
@@ -1355,7 +1355,7 @@ Template.billcard.onRendered(() => {
                             }
 
                             let isPartialPaid = false;
-                            if(useData[d].fields.TotalPaid > 0){
+                            if(data.fields.TotalPaid > 0){
                                 isPartialPaid = true;
                             }
 
@@ -2327,7 +2327,7 @@ Template.billcard.onRendered(() => {
             $("#templatePreviewModal .o_abn_label").text("ABN");
           let companyABN = object_invoce[0]["o_abn"];
           $("#templatePreviewModal .o_abn").text(companyABN.substring(0, 2) + "-" + companyABN.substring(2, 5) + "-" + companyABN.substring(5, 8) + "-" + companyABN.substring(8, companyABN.length));
-          
+
           // if (object_invoce[0]["applied"] == "") {
           //   $("#templatePreviewModal .applied").hide();
           //   $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
@@ -2337,7 +2337,7 @@ Template.billcard.onRendered(() => {
           //     "Applied : " + object_invoce[0]["applied"]
           //   );
           // }
-    
+
           // if (object_invoce[0]["supplier_type"] == "") {
           //   $("#templatePreviewModal .customer").hide();
           // } else {
@@ -2347,7 +2347,7 @@ Template.billcard.onRendered(() => {
           // $("#templatePreviewModal .customer").append(
           //   object_invoce[0]["supplier_type"]
           // );
-    
+
           // if (object_invoce[0]["supplier_name"] == "") {
           //   $("#templatePreviewModal .pdfCustomerName").hide();
           // } else {
@@ -2357,7 +2357,7 @@ Template.billcard.onRendered(() => {
           // $("#templatePreviewModal .pdfCustomerName").append(
           //   object_invoce[0]["supplier_name"]
           // );
-    
+
         //   if (object_invoce[0]["supplier_addr"] == "") {
         //     $("#templatePreviewModal .pdfCustomerAddress").hide();
         //   } else {
@@ -2370,14 +2370,14 @@ Template.billcard.onRendered(() => {
           $("#templatePreviewModal .pdfCustomerAddress").html(
             txabillingAddress
           );
-    
+
           $("#templatePreviewModal .employeeName").text(object_invoce[0]["employee_name"]);
-    
+
           $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " " + " Template"
           );
-    
+
           if (object_invoce[0]["value"] == "") {
             $(".print-header").text(object_invoce[0]["title"]);
             $(".print-header-value").text("");
@@ -2385,13 +2385,13 @@ Template.billcard.onRendered(() => {
             $(".print-header").text(object_invoce[0]["title"]);
             $(".print-header-value").text(object_invoce[0]["value"]);
           }
-    
+
         //   if (object_invoce[0]["bsb"] == "") {
         //     $("#templatePreviewModal .field_payment").hide();
         //   } else {
         //     $("#templatePreviewModal .field_payment").show();
         //   }
-    
+
           $("#templatePreviewModal .bankname").text(localStorage.getItem("vs1companyBankName"));
           $("#templatePreviewModal .bankdesc").text(localStorage.getItem("vs1companyBankDesc"));
           $("#templatePreviewModal .ban").text("Name : " + localStorage.getItem('vs1companyBankAccountName'));
@@ -2404,13 +2404,13 @@ Template.billcard.onRendered(() => {
           $("#templatePreviewModal .swift").text(
             "Swift Code : " + object_invoce[0]["swift"]
           );
-    
+
           if (object_invoce[0]["date"] == "") {
             $("#templatePreviewModal .dateNumber").hide();
           } else {
             $("#templatePreviewModal .dateNumber").show();
           }
-    
+
           let companyName = Session.get("vs1companyName");
           let companyReg = Session.get("vs1companyReg");
           if (companyReg != "")
@@ -2428,32 +2428,32 @@ Template.billcard.onRendered(() => {
           let companyPhone = Session.get("vs1companyPhone");
           if (companyPhone != "")
             $("#templatePreviewModal .companyInfo3").text("Ph: " + companyPhone.substring(0, 2) + " " + companyPhone.substring(2, 6) + " " + companyPhone.substring(6, companyPhone.length));
-    
+
           if (object_invoce[0]["date"] != "")
             $("#templatePreviewModal .date").text(convertDateFormatForPrint(object_invoce[0]["date"]));
-    
+
           if (object_invoce[0]["pqnumber"] == "") {
             $("#templatePreviewModal .pdfPONumber").hide();
           } else {
             $("#templatePreviewModal .pdfPONumber").show();
           }
-    
+
           $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
-    
+
           if (object_invoce[0]["invoicenumber"] == "") {
             $("#templatePreviewModal .invoiceNumber").hide();
           } else {
             $("#templatePreviewModal .invoiceNumber").show();
           }
           $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
-    
+
           if (object_invoce[0]["refnumber"] == "") {
             $("#templatePreviewModal .refNumber").hide();
           } else {
             $("#templatePreviewModal .refNumber").show();
           }
           $("#templatePreviewModal .ro").text(object_invoce[0]["refnumber"]);
-    
+
           if (object_invoce[0]["duedate"] == "") {
             $("#templatePreviewModal .pdfTerms").hide();
           } else {
@@ -2461,7 +2461,7 @@ Template.billcard.onRendered(() => {
           }
           if (object_invoce[0]["duedate"] != "")
             $("#templatePreviewModal .due").text(convertDateFormatForPrint(object_invoce[0]["duedate"]));
-    
+
           // if (object_invoce[0]["paylink"] == "") {
           //   $("#templatePreviewModal .link").hide();
           //   $("#templatePreviewModal .linkText").hide();
@@ -2469,7 +2469,7 @@ Template.billcard.onRendered(() => {
           //   $("#templatePreviewModal .link").show();
           //   $("#templatePreviewModal .linkText").show();
           // }
-    
+
           // if (object_invoce[0]["showFX"] == "") {
           //   $("#templatePreviewModal .showFx").hide();
           //   $("#templatePreviewModal .showFxValue").hide();
@@ -2480,21 +2480,21 @@ Template.billcard.onRendered(() => {
           //     object_invoce[0]["showFX"]
           //   );
           // }
-    
+
           // if (object_invoce[0]["customfield1"] == "NA") {
           //   $("#customfieldtablenew").css("display", "none");
           //   $("#customdatatablenew").css("display", "none");
           //   $("#templatePreviewModal .customfield1").text("");
           //   $("#templatePreviewModal .customfield2").text("");
           //   $("#templatePreviewModal .customfield3").text("");
-    
+
           //   $("#templatePreviewModal .customfield1data").text("");
           //   $("#templatePreviewModal .customfield2data").text("");
           //   $("#templatePreviewModal .customfield3data").text("");
           // } else {
           //   $("#customfieldtablenew").css("display", "block");
           //   $("#customdatatablenew").css("display", "block");
-    
+
           //   $("#templatePreviewModal .customfield1").text(
           //     object_invoce[0]["customfieldlabel1"]
           //   );
@@ -2504,7 +2504,7 @@ Template.billcard.onRendered(() => {
           //   $("#templatePreviewModal .customfield3").text(
           //     object_invoce[0]["customfieldlabel3"]
           //   );
-    
+
           //   if (
           //     object_invoce[0]["customfield1"] == "" ||
           //     object_invoce[0]["customfield1"] == 0
@@ -2515,7 +2515,7 @@ Template.billcard.onRendered(() => {
           //       object_invoce[0]["customfield1"]
           //     );
           //   }
-    
+
           //   if (
           //     object_invoce[0]["customfield2"] == "" ||
           //     object_invoce[0]["customfield2"] == 0
@@ -2526,7 +2526,7 @@ Template.billcard.onRendered(() => {
           //       object_invoce[0]["customfield2"]
           //     );
           //   }
-    
+
           //   if (
           //     object_invoce[0]["customfield3"] == "" ||
           //     object_invoce[0]["customfield3"] == 0
@@ -2538,7 +2538,7 @@ Template.billcard.onRendered(() => {
           //     );
           //   }
           // }
-    
+
           // if (object_invoce[0]["customfield1"] == "NA") {
           //   $("#customfieldlable").css("display", "none");
           //   $("#customfieldlabledata").css("display", "none");
@@ -2546,7 +2546,7 @@ Template.billcard.onRendered(() => {
           //   $("#customfieldlable").css("display", "block");
           //   $("#customfieldlabledata").css("display", "block");
           // }
-    
+
           //   table header
           var tbl_header = $("#templatePreviewModal .tbl_header");
           tbl_header.empty();
@@ -2561,13 +2561,13 @@ Template.billcard.onRendered(() => {
           }
         }
       }
-    
+
       function loadTemplateHeaderFooter2(object_invoce) {
         if (object_invoce.length > 0) {
           $("#templatePreviewModal #printcomment2").text(
             object_invoce[0]["comment"]
           );
-          
+
         //   if (object_invoce[0]["supplier_addr"] == "") {
         //     $("#templatePreviewModal .pdfCustomerAddress2").hide();
         //   } else {
@@ -2580,12 +2580,12 @@ Template.billcard.onRendered(() => {
           $("#templatePreviewModal .pdfCustomerAddress2").html(
             txabillingAddress
           );
-    
+
           $("#templatePreviewModal .print-header2").text(object_invoce[0]["title"]);
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " " + " Template"
           );
-    
+
           $("#templatePreviewModal .bankname2").text("BANK : " + localStorage.getItem("vs1companyBankName"));
           $("#templatePreviewModal .ban2").text("Name : " + localStorage.getItem('vs1companyBankAccountName'));
           $("#templatePreviewModal .bsb2").text(
@@ -2594,7 +2594,7 @@ Template.billcard.onRendered(() => {
           $("#templatePreviewModal .account_number2").text(
             "ACC : " + object_invoce[0]["account"]
           );
-          
+
           let companyName = Session.get("vs1companyName");
           let companyReg = Session.get("vs1companyReg");
           let companyAddr = Session.get("vs1companyaddress1");
@@ -2605,7 +2605,7 @@ Template.billcard.onRendered(() => {
           let companyPostcode = Session.get("vs1companyPOBox");
           let companyCountry = Session.get("vs1companyCountry");
           let companyPhone = Session.get("vs1companyPhone");
-    
+
           $("#templatePreviewModal .o_name2").text(companyName);
           $("#templatePreviewModal .o_address2").text(companyAddr);
           $("#templatePreviewModal .o_city2").text(companyCity);
@@ -2613,33 +2613,33 @@ Template.billcard.onRendered(() => {
           if (companyPhone != "")
             $("#templatePreviewModal .o_phone2").text(companyPhone.substring(0, 4) + " " + companyPhone.substring(4, 7) + " " + companyPhone.substring(7, companyPhone.length));
           $("#templatePreviewModal .o_email2").text(localStorage.getItem("VS1Accountant"));
-    
+
           if (LoggedCountry == "South Africa")
             $("#templatePreviewModal .o_abn_label2").text("VAT No");
           else
             $("#templatePreviewModal .o_abn_label2").text("ABN");
-          
+
           let companyABN = object_invoce[0]["o_abn"];
           if (companyABN != "")
             $("#templatePreviewModal .o_abn2").text(companyABN.substring(0, 2) + " " + companyABN.substring(2, 5) + " " + companyABN.substring(5, 8) + " " + companyABN.substring(8, companyABN.length));
-          
+
           if (object_invoce[0]["date"] != "")
             $("#templatePreviewModal .date2").text(convertDateFormatForPrint2(object_invoce[0]["date"]));
-    
+
           // if (object_invoce[0]["invoicenumber"] == "") {
           //   $("#templatePreviewModal .invoiceNumber2").hide();
           // } else {
           //   $("#templatePreviewModal .invoiceNumber2").show();
           // }
           $("#templatePreviewModal .io2").text(object_invoce[0]["invoicenumber"]);
-    
+
           // if (object_invoce[0]["refnumber"] == "") {
           //   $("#templatePreviewModal .refNumber2").hide();
           // } else {
           //   $("#templatePreviewModal .refNumber2").show();
           // }
           $("#templatePreviewModal .ro2").text(object_invoce[0]["refnumber"]);
-    
+
           // if (object_invoce[0]["duedate"] == "") {
           //   $("#templatePreviewModal .pdfTerms2").hide();
           // } else {
@@ -2647,7 +2647,7 @@ Template.billcard.onRendered(() => {
           // }
           if (object_invoce[0]["duedate"] != "")
             $("#templatePreviewModal .due2").text("Due Date: " + convertDateFormatForPrint2(object_invoce[0]["duedate"]));
-    
+
           //   table header
           var tbl_header = $("#templatePreviewModal .tbl_header");
           tbl_header.empty();
@@ -2662,7 +2662,7 @@ Template.billcard.onRendered(() => {
           }
         }
       }
-    
+
       function loadTemplateHeaderFooter3(object_invoce) {
         if (object_invoce.length > 0) {
         //   if (object_invoce[0]["supplier_addr"] == "") {
@@ -2677,21 +2677,21 @@ Template.billcard.onRendered(() => {
           $("#templatePreviewModal .pdfCustomerAddress3").html(
             txabillingAddress
           );
-    
+
           $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"].toUpperCase());
           $("#templatePreviewModal .toLabel3").text(object_invoce[0]["title"].toUpperCase() + " TO: ");
           $("#templatePreviewModal .dateLabel3").text(object_invoce[0]["title"].toUpperCase() + " DATE: ");
         //   $("#templatePreviewModal .invNumber3").text(object_invoce[0]["title"].toUpperCase() + " NUMBER");
-    
+
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " " + " Template"
           );
-    
+
           $("#templatePreviewModal .bankname3").text(localStorage.getItem("vs1companyBankName"));
           $("#templatePreviewModal .ban3").text(localStorage.getItem('vs1companyBankAccountName'));
           $("#templatePreviewModal .swift3").text(object_invoce[0]["swift"]);
           $("#templatePreviewModal .account_number3").text(object_invoce[0]["account"]);
-          
+
           let companyName = Session.get("vs1companyName");
           let companyReg = Session.get("vs1companyReg");
           let companyAddr = Session.get("vs1companyaddress1");
@@ -2703,7 +2703,7 @@ Template.billcard.onRendered(() => {
           let companyCountry = Session.get("vs1companyCountry");
           let companyPhone = Session.get("vs1companyPhone");
           let companyURL = Session.get("vs1companyURL");
-    
+
           $("#templatePreviewModal .o_name3").text(companyName);
           $("#templatePreviewModal .o_address3").text(companyAddr);
           $("#templatePreviewModal .o_city3").text(companyCity);
@@ -2712,36 +2712,36 @@ Template.billcard.onRendered(() => {
             $("#templatePreviewModal .o_phone3").text(companyPhone.substring(0, 4) + " " + companyPhone.substring(4, 7) + " " + companyPhone.substring(7, companyPhone.length));
           $("#templatePreviewModal .o_email3").text(localStorage.getItem("VS1Accountant"));
           $("#templatePreviewModal .o_url3").text(companyURL);
-    
+
           if (LoggedCountry == "South Africa")
             $("#templatePreviewModal .o_abn_label3").text("VAT No:");
           else
             $("#templatePreviewModal .o_abn_label3").text("ABN:");
-          
+
           let companyABN = object_invoce[0]["o_abn"];
           if (companyABN != "")
             $("#templatePreviewModal .o_abn3").text(companyABN.substring(0, 2) + " " + companyABN.substring(2, 5) + " " + companyABN.substring(5, 8) + " " + companyABN.substring(8, companyABN.length));
-          
+
           if (object_invoce[0]["date"] != "")
             $("#templatePreviewModal .date3").text(convertDateFormatForPrint3(object_invoce[0]["date"]));
-    
+
           // if (object_invoce[0]["invoicenumber"] == "") {
           //   $("#templatePreviewModal .invoiceNumber2").hide();
           // } else {
           //   $("#templatePreviewModal .invoiceNumber2").show();
           // }
           $("#templatePreviewModal .io3").text(object_invoce[0]["invoicenumber"]);
-    
+
           // if (object_invoce[0]["refnumber"] == "") {
           //   $("#templatePreviewModal .refNumber2").hide();
           // } else {
           //   $("#templatePreviewModal .refNumber2").show();
           // }
           $("#templatePreviewModal .ro3").text(object_invoce[0]["refnumber"]);
-    
+
           $("#templatePreviewModal .po3").text(object_invoce[0]["pqnumber"]);
           $("#templatePreviewModal .amountdue3").text(object_invoce[0]["bal_due"]);
-    
+
           // if (object_invoce[0]["duedate"] == "") {
           //   $("#templatePreviewModal .pdfTerms2").hide();
           // } else {
@@ -2751,7 +2751,7 @@ Template.billcard.onRendered(() => {
             $("#templatePreviewModal .due3").text(convertDateFormatForPrint2(object_invoce[0]["duedate"]));
           $("#templatePreviewModal .termdays").text($("#sltTerms").val());
           $("#templatePreviewModal .termdesc").text(Session.get("ERPTermDesc") || "-");
-    
+
           //   table header
           var tbl_header = $("#templatePreviewModal .tbl_header");
           tbl_header.empty();
@@ -5949,7 +5949,7 @@ Template.billcard.events({
       },
     'click #btnCopyBill': function() {
         playCopyAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
     let i = 0;
     setTimeout(async function(){
@@ -6064,7 +6064,7 @@ Template.billcard.events({
     },
     'click .btnSaveFrequency': async function () {
         playSaveAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         // let selectedType = '';
         let selectedType = "basedOnFrequency";
@@ -6082,7 +6082,7 @@ Template.billcard.events({
         let selectDays = '';
         let dailyRadioOption = '';
         let everyDays = '';
-        
+
         // const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
         let basedOnTypeTexts = '';
         // let basedOnTypeAttr = '';
@@ -6105,7 +6105,7 @@ Template.billcard.events({
         //   });
         //   if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
         //   if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
-    
+
           let formId = parseInt($("#formid").val());
           let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
           frequencyVal = radioFrequency + '@';
@@ -6152,7 +6152,7 @@ Template.billcard.events({
           convertedFinishDate = finishDate ? finishDate.split('/')[2] + '-' + finishDate.split('/')[1] + '-' + finishDate.split('/')[0] : '';
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
-    
+
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -8027,7 +8027,7 @@ Template.billcard.events({
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         setTimeout(async function(){
-        
+
         swal({
             title: 'Delete Bill',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -8088,7 +8088,7 @@ Template.billcard.events({
         let purchaseService = new PurchaseBoardService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -8281,9 +8281,9 @@ Template.billcard.events({
         let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(function(){
         saveCurrencyHistory();
-        
+
         let suppliername = $('#edtSupplierName');
-        
+
         let termname = $('#sltTerms').val() || '';
         if (termname === '') {
             swal({
@@ -8382,7 +8382,7 @@ Template.billcard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentBill = getso_id[getso_id.length - 1];
-            
+
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
             let foreignCurrencyFields = {}
@@ -9190,7 +9190,7 @@ Template.billcard.events({
         lineItems.push(lineItemObj);
       });
 
-      
+
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
@@ -9823,30 +9823,30 @@ Template.billcard.events({
     //         $('#tblBillLine tbody').find('tr').each((index, tr) => {
     //             const toConvert = $(tr).find('.convert-to-foreign:not(.hiddenColumn)');
     //             const rate = $("#exchange_rate").val();
-    
+
     //             toConvert.each((index, element) => {
-    //                 const mainClass = element.classList[0]; // we get the class of the non foreign html 
+    //                 const mainClass = element.classList[0]; // we get the class of the non foreign html
     //                 const mainElement = $(tr).find(`td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`); //document.querySelector(`#tblBillLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-    
+
     //                 const targetElement = $(tr).find(`td.${mainClass}.convert-to-foreign:not(.hiddenColumn)`);
-                    
-                    
+
+
     //                 let value = $(mainElement).children().length > 0 ?
     //                     $(mainElement).find('input').val() :
     //                     $(mainElement).text();
 
     //                 value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
-                  
+
     //                 if(targetElement.children().length > 0) {
     //                     $(targetElement).find("input").val(value);
     //                 } else {
     //                     $(targetElement).text(value);
     //                 }
-    
+
     //             })
     //         })
 
-        
+
     //     }, 500);
 
     // }

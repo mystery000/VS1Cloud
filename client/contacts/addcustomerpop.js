@@ -167,7 +167,7 @@ Template.addcustomerpop.onRendered(function () {
             if (dataObject.length == 0) {
                 contactService.getPaymentMethodDataVS1().then((data) => {
                     for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                        preferedPayments.push(data.tpaymentmethodvs1[i].PaymentMethodName)
+                        preferedPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName)
                     }
                     preferedPayments = _.sortBy(preferedPayments);
 
@@ -185,7 +185,7 @@ Template.addcustomerpop.onRendered(function () {
         }).catch(function (err) {
             contactService.getPaymentMethodDataVS1().then((data) => {
                 for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                    preferedPayments.push(data.tpaymentmethodvs1[i].PaymentMethodName)
+                    preferedPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName)
                 }
                 preferedPayments = _.sortBy(preferedPayments);
 
@@ -557,7 +557,7 @@ Template.addcustomerpop.events({
         LoadingOverlay.show();
         let contactService = new ContactService();
         setTimeout(function(){
-        
+
         //let headerDept = $('.addcustomerpop #sltDepartment').val();
         let custType = $('.addcustomerpop #edtDeptName').val();
         let typeDesc = $('.addcustomerpop #txaDescription').val() || '';
@@ -732,7 +732,7 @@ Template.addcustomerpop.events({
         let templateObject = Template.instance();
         let contactService = new ContactService();
         setTimeout(async function(){
-        
+
         LoadingOverlay.show();
         let customerPOPID = $('.addcustomerpop #edtCustomerPOPID').val();
         let company = $('.addcustomerpop #edtCustomerCompany').val();
@@ -1025,7 +1025,7 @@ Template.addcustomerpop.events({
         playSaveAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
-        
+
         setTimeout(function(){
         LoadingOverlay.show();
         let companyJob = $('.addcustomerpop #edtJobCustomerCompany').val();
@@ -1674,7 +1674,7 @@ Template.addcustomerpop.events({
         playSaveAudio();
         let templateObject = Template.instance();
         setTimeout(function(){
-        
+
         $('.addcustomerpop .lblCustomField1').html('');
         $('.addcustomerpop .lblCustomField2').html('');
         $('.addcustomerpop .lblCustomField3').html('');
@@ -2089,7 +2089,7 @@ Template.addcustomerpop.events({
         let contactService2 = new ContactService();
         LoadingOverlay.show();
         setTimeout(function(){
-        
+
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
 

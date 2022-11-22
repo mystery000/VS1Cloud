@@ -76,6 +76,7 @@ Template.appointments.onCreated(function() {
     templateObject.toupdatelogid = new ReactiveVar();
     templateObject.isAccessLevels = new ReactiveVar();
     templateObject.productFees = new ReactiveVar();
+    templateObject.extraProductFees = new ReactiveVar([]);
     templateObject.leaveemployeerecords = new ReactiveVar([]);
 });
 
@@ -1998,7 +1999,7 @@ Template.appointments.onRendered(function() {
                     let endTime =
                         ("0" + dateEnd.getHours()).toString().slice(-2) +
                         ":" +
-                        ("0" + dateStart.getMinutes()).toString().slice(-2);
+                        ("0" + dateEnd.getMinutes()).toString().slice(-2);
                     let index = appointmentData
                         .map(function(e) {
                             return e.id;
@@ -2295,7 +2296,6 @@ Template.appointments.onRendered(function() {
                     }
                 }
             },
-
             events: templateObject.eventdata.get(),
             eventDidMount: function(info) {
                 if (
@@ -2330,6 +2330,133 @@ Template.appointments.onRendered(function() {
                     domNodes: arrayOfDomNodes,
                 };
             },
+            eventResize: function(info) {
+                if (info.event._def.publicId != "") {
+                    $(".fullScreenSpin").css("display", "inline-block");
+                    let appointmentData = templateObject.appointmentrecords.get();
+                    let resourceData = templateObject.resourceAllocation.get();
+                    let eventDropID = info.event._def.publicId || "0";
+                    let dateStart = new Date(info.event.start);
+                    let dateEnd = new Date(info.event.end);
+                    let startDate =
+                        dateStart.getFullYear() +
+                        "-" +
+                        ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) +
+                        "-" +
+                        ("0" + dateStart.getDate()).toString().slice(-2);
+                    let endDate =
+                        dateEnd.getFullYear() +
+                        "-" +
+                        ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) +
+                        "-" +
+                        ("0" + dateEnd.getDate()).toString().slice(-2);
+                    let startTime =
+                        ("0" + dateStart.getHours()).toString().slice(-2) +
+                        ":" +
+                        ("0" + dateStart.getMinutes()).toString().slice(-2);
+                    let endTime =
+                        ("0" + dateEnd.getHours()).toString().slice(-2) +
+                        ":" +
+                        ("0" + dateEnd.getMinutes()).toString().slice(-2);
+
+                    let index = appointmentData
+                        .map(function(e) {
+                            return e.id;
+                        })
+                        .indexOf(parseInt(eventDropID));
+                    let resourceIndex = resourceData
+                        .map(function(e) {
+                            return e.employeeName;
+                        })
+                        .indexOf(appointmentData[index].employeename);
+                    var result = appointmentData.filter((apmt) => {
+                        return apmt.id == eventDropID;
+                    });
+                    if (result.length > 0) {
+                        objectData = {
+                            type: "TAppointmentEx",
+                            fields: {
+                                Id: parseInt(eventDropID) || 0,
+                                StartTime: startDate + " " + startTime + ":00" || "",
+                                EndTime: endDate + " " + endTime + ":00" || "",
+                            },
+                        };
+                        let nameid = appointmentData[index].employeename.replace(" ", "-");
+                        $("#allocationTable tbody tr").each(function() {
+                            if (this.id == appointmentData[index].employeename) {
+                                $(this).attr("id", $(this).attr("id").replace(" ", "-"));
+                            }
+                        });
+                        let job =
+                            '<div class="card draggable cardHiddenWeekend" draggable="true" id="' +
+                            eventDropID +
+                            '" style="margin:4px 0px; background-color: ' +
+                            resourceData[resourceIndex].color +
+                            '; border-radius: 5px; cursor: pointer;">' +
+                            "" +
+                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' +
+                            "" +
+                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' +
+                            appointmentData[index].accountname +
+                            "</p>" +
+                            "" +
+                            "</div>" +
+                            "" +
+                            "</div>";
+                        let day = moment(startDate).format("dddd").toLowerCase();
+                        appointmentService
+                            .saveAppointment(objectData)
+                            .then(function(data) {
+                                appointmentData[index].startDate = startDate + " " + startTime;
+                                appointmentData[index].endDate = endDate + " " + endTime;
+                                templateObject.appointmentrecords.set(appointmentData);
+                                $(".droppable #" + eventDropID).remove();
+                                $("#" + nameid + " ." + day + " .droppable").append(job);
+                                $("#allocationTable tbody tr").each(function() {
+                                    if (this.id == nameid) {
+                                        $(this).attr("id", $(this).attr("id").replace("-", " "));
+                                    }
+                                });
+                                sideBarService
+                                    .getAllAppointmentList(initialDataLoad, 0)
+                                    .then(function(dataUpdate) {
+                                        addVS1Data("TAppointment", JSON.stringify(dataUpdate))
+                                            .then(function(datareturn) {
+                                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                    window.open(localStorage.getItem("appt_historypage"), "_self");
+                                                } else {
+                                                    window.open("/appointments", "_self");
+                                                }
+                                            })
+                                            .catch(function(err) {
+                                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                    window.open(localStorage.getItem("appt_historypage"), "_self");
+                                                } else {
+                                                    window.open("/appointments", "_self");
+                                                }
+                                            });
+                                    })
+                                    .catch(function(err) {
+                                        if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                            window.open(localStorage.getItem("appt_historypage"), "_self");
+                                        } else {
+                                            window.open("/appointments", "_self");
+                                        }
+                                    });
+                            })
+                            .catch(function(err) {
+                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                    window.open(localStorage.getItem("appt_historypage"), "_self");
+                                } else {
+                                    window.open("/appointments", "_self");
+                                }
+                            });
+                    }
+                }
+                // if (!confirm("is this okay?")) {
+                //     info.revert();
+                // }
+            }
         });
         calendar.render();
         $('.fc-today-button').prop('disabled', false);
@@ -3654,11 +3781,26 @@ Template.appointments.onRendered(function() {
                                     // }
 
                                     if (result[0].extraProducts != "") {
-                                        let extraProducts = result[0].extraProducts.split(":");
-                                        extraProducts.forEach((item) => {
-                                            $("#productCheck-" + item).prop("checked", true);
-                                        });
-                                        $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
+                                        productService.getNewProductServiceListVS1()
+                                            .then(function(products) {
+                                                let extraProducts = result[0].extraProducts.split(":");
+                                                let extraProductFees = [];
+                                                extraProducts.forEach((item) => {
+                                                    $("#productCheck-" + item).prop("checked", true);
+                                                    products.tproductvs1.forEach((product) => {
+                                                        if (product.Id == item) {
+                                                            console.log("product=", product);
+                                                            extraProductFees.push(product);
+                                                        }
+                                                        $("#productCheck-" + item).prop("checked", true);
+                                                    });
+                                                });
+                                                templateObject.extraProductFees.set(extraProductFees);
+                                                $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
+                                            })
+                                            .catch(function(err) {
+                                                console.error(err);
+                                            });
                                     }
 
                                     document.getElementById("employee_name").value =
@@ -8768,6 +8910,7 @@ Template.appointments.onRendered(function() {
                                     if (
                                         data.tproductvs1[i].fields.ProductName === productDataName
                                     ) {
+                                        console.log("data.tproductvs1[i].fields=", data.tproductvs1[i].fields);
                                         added = true;
                                         $(".fullScreenSpin").css("display", "none");
                                         let lineItems = [];
@@ -9138,17 +9281,17 @@ Template.appointments.onRendered(function() {
         // }
 
         setTimeout(function() {
-            $("#tblInventory_filter .form-control-sm").focus();
-            $("#tblInventory_filter .form-control-sm").val("");
-            $("#tblInventory_filter .form-control-sm").trigger("input");
+            $("#tblInventoryCheckbox_filter .form-control-sm").focus();
+            $("#tblInventoryCheckbox_filter .form-control-sm").val("");
+            $("#tblInventoryCheckbox_filter .form-control-sm").trigger("input");
 
-            var datatable = $("#tblInventory").DataTable();
+            var datatable = $("#tblInventoryCheckbox").DataTable();
             datatable.draw();
-            $("#tblInventory_filter .form-control-sm").trigger("input");
+            $("#tblInventoryCheckbox_filter .form-control-sm").trigger("input");
         }, 500);
     });
 
-    // $(document).on("click", "#tblInventory tbody tr", async function (e) {
+    // $(document).on("click", "#tblInventoryCheckbox tbody tr", async function (e) {
     //   $(".colProductName").removeClass("boldtablealertsborder");
     //   let selectLineID = $("#selectLineID").val();
     //   let taxcodeList = await templateObject.taxraterecords.get();
@@ -9449,7 +9592,7 @@ Template.appointments.onRendered(function() {
     //     //}
     //   }
 
-    //   $("#tblInventory_filter .form-control-sm").val("");
+    //   $("#tblInventoryCheckbox_filter .form-control-sm").val("");
     //   setTimeout(function () {
     //     //$('#tblCustomerlist_filter .form-control-sm').focus();
     //     $(".btnRefreshProduct").trigger("click");
@@ -9471,6 +9614,59 @@ Template.appointments.onRendered(function() {
         setTimeout(function() {
             //$('#tblCustomerlist_filter .form-control-sm').focus();
             $(".btnRefreshProduct").trigger("click");
+            $(".fullScreenSpin").css("display", "none");
+        }, 1000);
+    });
+
+    $(document).on("click", "#tblInventory tbody tr", async function(e) {
+        $(".colProductName").removeClass("boldtablealertsborder");
+        let selectLineID = $("#selectLineID").val();
+        let taxcodeList = await templateObject.taxraterecords.get();
+        let customers = await templateObject.clientrecords.get();
+        let productExtraSell = templateObject.productextrasellrecords.get();
+        var table = $(this);
+        let utilityService = new UtilityService();
+        let $tblrows = $("#tblExtraProducts tbody tr");
+        let taxcode1 = "";
+
+        let selectedCust = $("#edtCustomerName").val();
+        let getCustDetails = "";
+        let lineTaxRate = "";
+        let taxRate = "";
+
+        if (selectLineID) {
+            let lineProductId = table.find(".colProuctPOPID").text();
+            let lineProductName = table.find(".productName").text();
+            let lineProductDesc = table.find(".productDesc").text();
+            let lineUnitPrice = table.find(".salePrice").text();
+
+            if (taxcodeList) {
+                for (var i = 0; i < taxcodeList.length; i++) {
+                    if (taxcodeList[i].codename == lineTaxRate) {
+                        $("#" + selectLineID + " .lineTaxRate").text(
+                            taxcodeList[i].coderate
+                        );
+                    }
+                }
+            }
+
+            $("#" + selectLineID + " .lineProductName").val(lineProductName);
+            // $('#' + selectLineID + " .lineProductName").attr("prodid", table.find(".colProuctPOPID").text());
+            $("#" + selectLineID + " .lineProductDesc").text(lineProductDesc);
+            // $("#" + selectLineID + " .lineOrdered").val(1);
+            // $("#" + selectLineID + " .lineQty").val(1);
+            $("#" + selectLineID + " .lineSalesPrice").text(lineUnitPrice);
+            $("#" + selectLineID).attr("id", lineProductId);
+
+            $("#productCheck-" + selectLineID).prop("checked", false);
+            $("#productCheck-" + lineProductId).prop("checked", true);
+
+            $("#productListModal2").modal("toggle");
+        }
+
+        $("#tblInventory_filter .form-control-sm").val("");
+        setTimeout(function() {
+            //$('#tblCustomerlist_filter .form-control-sm').focus();
             $(".fullScreenSpin").css("display", "none");
         }, 1000);
     });
@@ -14046,11 +14242,7 @@ Template.appointments.events({
             } else {
                 window.open("/appointments", "_self");
             }
-        }
-    },
-    "click btnDeleteAppointment": function() {
-        const templateObject = Template.instance();
-        if (templateObject.checkRefresh.get() == true) {
+        } else {
             if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
                 window.open(localStorage.getItem("appt_historypage"), "_self");
             } else {
@@ -17231,6 +17423,9 @@ Template.appointments.events({
                 });
                 return false;
             } */
+
+        $("#btnselProductFees").trigger("click");
+
         var frmAppointment = $("#frmAppointment")[0];
         templateObject = Template.instance();
         let appointmentService = new AppointmentService();
@@ -17240,7 +17435,6 @@ Template.appointments.events({
         let paused = "";
         let result = "";
 
-        event.preventDefault();
         var formData = new FormData(frmAppointment);
         let aStartDate = "";
         let aEndDate = "";
@@ -18372,7 +18566,57 @@ Template.appointments.events({
         }
 
         templateObject.productFees.set(productFees);
-    }
+    },
+    "click .btnRemove": function(event) {
+        let templateObject = Template.instance();
+        var targetID = $(event.target).closest("tr").attr("id");
+        if ($("#tblExtraProducts tbody>tr").length > 1) {
+            $(event.target).closest("tr").remove();
+            $("#productCheck-" + targetID).prop("checked", false);
+            event.preventDefault();
+        }
+    },
+    "click #addRow": (e, ui) => {
+        var rowData = $("#tblExtraProducts tbody>tr:last").clone(true);
+        let tokenid = Random.id();
+        $(".lineProductName", rowData).val("");
+
+        rowData.attr("id", tokenid);
+        $("#tblExtraProducts tbody").append(rowData);
+        setTimeout(function() {
+            $("#" + tokenid + " .lineProductName").trigger("click");
+        }, 200);
+    },
+    "click .lineProductName, keydown .lineProductName": function(event) {
+        var $earch = $(event.currentTarget);
+        var offset = $earch.offset();
+        // $("#selectProductID").val("");
+        var productDataName = $(event.target).val() || "";
+        if (event.pageX > offset.left + $earch.width() - 10) {
+            // X button 16px wide?
+            $("#productListModal2").modal("toggle");
+            var targetID = $(event.target).closest("tr").attr("id");
+            $("#selectLineID").val(targetID);
+            setTimeout(function() {
+                $("#tblInventory_filter .form-control-sm").focus();
+                $("#tblInventory_filter .form-control-sm").val("");
+                $("#tblInventory_filter .form-control-sm").trigger("input");
+
+                var datatable = $("#tblInventory").DataTable();
+                datatable.draw();
+                $("#tblInventory_filter .form-control-sm").trigger("input");
+            }, 500);
+        } else {
+            if (productDataName.replace(/\s/g, "") != "") {
+                var itemId = $(event.target).attr("itemid");
+                window.open("/productview?id=" + itemId, "_self");
+            } else {
+                $("#productListModal2").modal("toggle");
+                var targetID = $(event.target).closest("tr").attr("id");
+                $("#selectLineID").val(targetID);
+            }
+        }
+    },
 });
 
 Template.appointments.helpers({
@@ -18474,6 +18718,9 @@ Template.appointments.helpers({
     // custom field displaysettings
     displayfields: () => {
         return Template.instance().displayfields.get();
+    },
+    extraProductFees: () => {
+        return Template.instance().extraProductFees.get();
     },
 });
 

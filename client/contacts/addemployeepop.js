@@ -1663,7 +1663,7 @@ Template.addemployeepop.onRendered(function () {
             if (dataObject.length == 0) {
                 contactService.getPaymentMethodDataVS1().then((data) => {
                     for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                        preferedPayments.push(data.tpaymentmethodvs1[i].PaymentMethodName)
+                        preferedPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName)
                     }
                     preferedPayments = _.sortBy(preferedPayments);
 
@@ -1681,7 +1681,7 @@ Template.addemployeepop.onRendered(function () {
         }).catch(function (err) {
             contactService.getPaymentMethodDataVS1().then((data) => {
                 for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                    preferedPayments.push(data.tpaymentmethodvs1[i].PaymentMethodName)
+                    preferedPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName)
                 }
                 preferedPayments = _.sortBy(preferedPayments);
 
@@ -3469,7 +3469,7 @@ Template.addemployeepop.events({
         playSaveAudio();
         let templateObject = Template.instance();
         setTimeout(function(){
-        
+
         $('.addemployeepop .lblCustomField1').html('');
         $('.addemployeepop .lblCustomField2').html('');
         $('.addemployeepop .lblCustomField3').html('');
@@ -3709,7 +3709,7 @@ Template.addemployeepop.events({
     },
     'click .addemployeepop .btnDeleteEmployee': function (event) {
         playDeleteAudio();
-        
+
         let templateObject = Template.instance();
         let contactService2 = new ContactService();
         setTimeout(function(){

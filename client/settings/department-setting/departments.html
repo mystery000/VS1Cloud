@@ -74,7 +74,7 @@
 
 
                                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start" style="padding: 0px !important;">
-                                                    {{> export_import_print_display_button}}
+                                                    {{> export_import_print_display_button tablename="tblDepartmentList"}}
                                                 </div>
 
                                             </div>
@@ -137,7 +137,7 @@
                                             margin: 16px 0px;
                                         }
                                     </style>
-                                    
+
                                     <!-- Start {{> optionNavSalesOverview}} -->
                                     <div class="d-xl-flex justify-content-xl-end">
                                         <div>
@@ -179,7 +179,7 @@
                                             </div>
                                         </div>
 
-                                        {{> non_transactional_list}}
+                                        {{> non_transactional_list tablename="tblDepartmentList"}}
                                     </div>
                                 </div>
                                 <div class="row no-gutters">

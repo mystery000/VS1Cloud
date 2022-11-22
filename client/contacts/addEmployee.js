@@ -2075,7 +2075,7 @@ Template.employeescard.onRendered(function() {
             if (dataObject.length == 0) {
                 contactService.getPaymentMethodDataVS1().then((data) => {
                     for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                        preferedPayments.push(data.tpaymentmethodvs1[i].PaymentMethodName)
+                        preferedPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName)
                     }
                     preferedPayments = _.sortBy(preferedPayments);
                     templateObject.preferedPaymentList.set(preferedPayments);
@@ -2092,7 +2092,7 @@ Template.employeescard.onRendered(function() {
         }).catch(function(err) {
             contactService.getPaymentMethodDataVS1().then((data) => {
                 for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                    preferedPayments.push(data.tpaymentmethodvs1[i].PaymentMethodName)
+                    preferedPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName)
                 }
                 preferedPayments = _.sortBy(preferedPayments);
                 templateObject.preferedPaymentList.set(preferedPayments);
@@ -3179,9 +3179,9 @@ Template.employeescard.onRendered(function() {
     };
 
     /**
-     * 
-     * @param {integer} employeeID 
-     * @param {boolean} refresh 
+     *
+     * @param {integer} employeeID
+     * @param {boolean} refresh
      * @returns {object[]} earnings
      */
     templateObject.getEarnings = async(employeeID = null, refresh = false) => {
@@ -4752,8 +4752,8 @@ Template.employeescard.onRendered(function() {
             LoadingOverlay.hide();
         },
         /**
-         * 
-         * @returns 
+         *
+         * @returns
          */
         add: async(
             fields = {

@@ -547,7 +547,7 @@ Template.trialbalance.onRendered(() => {
       return await reportService.getTrialBalanceDetailsData(dateFrom, dateTo, ignoreDate);
     }, {
       useIndexDb: true,
-      useLocalStorage: false,
+      useLocalStorage: true,
       validate: cachedResponse => {
         return false;
       }

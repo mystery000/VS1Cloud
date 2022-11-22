@@ -8,6 +8,7 @@ let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
+Template.accountsoverview.inheritsHooksFrom('non_transactional_list');
 Template.bankaccountschart.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar([]);

@@ -43,67 +43,91 @@ Template.myTasksWidget.onRendered(function() {
         });
     };
 
-    templateObject.getAllTaskList = function() {
-        let url = FlowRouter.current().path;
-        url = new URL(window.location.href);
-        let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
-        if (employeeID == '') {
-            // employeeID = Session.get('mySessionEmployeeLoggedID');
-            employeeID = Session.get('mySessionEmployee');
-        }
-        let task_list = [];
-        crmService.getAllTaskList(employeeID).then(function(data) {
-            if (data.tprojecttasks && data.tprojecttasks.length > 0) {
-                let all_records = data.tprojecttasks;
-                all_records = all_records.filter((item) => item.fields.Completed == false);
-                const fromDate = new Date($("#dateFrom").datepicker("getDate"));
-                const toDate = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.getAllTaskListData = function(data) {
+       let url = FlowRouter.current().path;
+       url = new URL(window.location.href);
+       let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+       if (employeeID == '') {
+           // employeeID = Session.get('mySessionEmployeeLoggedID');
+           employeeID = Session.get('mySessionEmployee');
+       }
+       let task_list = [];
 
-                for (let i = 0; i < all_records.length; i++) {
-                    let strPriority = "";
-                    let priority = all_records[i].fields.priority;
-                    if (priority === 3) {
-                        strPriority = "Urgent";
-                    } else if (priority === 2) {
-                        strPriority = "High";
-                    } else if (priority === 1) {
-                        strPriority = "Normal";
-                    } else {
-                        strPriority = "Low";
-                    }
-                    let dueDate = all_records[i].fields.due_date.substring(0, 10);
-                    dueDate = new Date(dueDate);
-                    if (fromDate != "Invalid Date") {
-                        if (fromDate <= dueDate && toDate >= dueDate) {
-                            dueDate = moment(dueDate).format('DD/MM/YYYY');
-                            const pdata = {
-                                id: all_records[i].fields.ID,
-                                taskName: all_records[i].fields.TaskName,
-                                description: all_records[i].fields.TaskDescription,
-                                dueDate: dueDate,
-                                priority: strPriority,
-                            }
-                            task_list.push(pdata);
-                        }
-                    } else {
-                        dueDate = moment(dueDate).format('DD/MM/YYYY');
-                        const pdata = {
-                            id: all_records[i].fields.ID,
-                            taskName: all_records[i].fields.TaskName,
-                            description: all_records[i].fields.TaskDescription,
-                            dueDate: dueDate,
-                            priority: strPriority,
-                        }
-                        task_list.push(pdata);
-                    }
-                }
-                task_list = sortArray(task_list, 'dueDate');
-                templateObject.todayTasks.set(task_list.slice(0, 5));
-            }
-            $(".fullScreenSpin").css("display", "none");
+       if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+           let all_records = data.tprojecttasks;
+           all_records = all_records.filter((item) => item.fields.Completed == false && item.fields.EnteredBy == employeeID);
+           const fromDate = new Date($("#dateFrom").datepicker("getDate"));
+           const toDate = new Date($("#dateTo").datepicker("getDate"));
+           for (let i = 0; i < all_records.length; i++) {
+               let strPriority = "";
+               let priority = all_records[i].fields.priority;
+               if (priority === 3) {
+                   strPriority = "Urgent";
+               } else if (priority === 2) {
+                   strPriority = "High";
+               } else if (priority === 1) {
+                   strPriority = "Normal";
+               } else {
+                   strPriority = "Low";
+               }
+               let dueDate = all_records[i].fields.due_date.substring(0, 10);
+               dueDate = new Date(dueDate);
+               if (fromDate != "Invalid Date") {
+                   if (fromDate <= dueDate && toDate >= dueDate) {
+                       dueDate = moment(dueDate).format('DD/MM/YYYY');
+                       const pdata = {
+                           id: all_records[i].fields.ID,
+                           taskName: all_records[i].fields.TaskName,
+                           description: all_records[i].fields.TaskDescription,
+                           dueDate: dueDate,
+                           priority: strPriority,
+                       }
+                       task_list.push(pdata);
+                   }
+               } else {
+                   dueDate = moment(dueDate).format('DD/MM/YYYY');
+                   const pdata = {
+                       id: all_records[i].fields.ID,
+                       taskName: all_records[i].fields.TaskName,
+                       description: all_records[i].fields.TaskDescription,
+                       dueDate: dueDate,
+                       priority: strPriority,
+                   }
+                   task_list.push(pdata);
+               }
+           }
+           task_list = sortArray(task_list, 'dueDate');
+           templateObject.todayTasks.set(task_list.slice(0, 5));
+       }
+     }
+    templateObject.getAllTaskList = function() {
+      let url = FlowRouter.current().path;
+      url = new URL(window.location.href);
+      let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+      if (employeeID == '') {
+          // employeeID = Session.get('mySessionEmployeeLoggedID');
+          employeeID = Session.get('mySessionEmployee');
+      }
+      let task_list = [];
+      getVS1Data("TCRMTaskList").then(function(dataObject) {
+          if (dataObject.length == 0) {
+            crmService.getAllTaskList(employeeID).then(function(data) {
+                templateObject.getAllTaskListData(data);
+            }).catch(function(err) {
+
+            });
+          } else {
+              let data = JSON.parse(dataObject[0].data);
+              templateObject.getAllTaskListData(data);
+          }
+      }).catch(function(err) {
+        crmService.getAllTaskList(employeeID).then(function(data) {
+            templateObject.getAllTaskListData(data);
         }).catch(function(err) {
-            $(".fullScreenSpin").css("display", "none");
+
         });
+      });
+
     };
     // templateObject.getInitialAllTaskList();
     templateObject.getAllTaskList();

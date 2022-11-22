@@ -54,32 +54,8 @@ Template.non_transactional_list.onRendered(function() {
   };
 
     var url = FlowRouter.current().path;
-    let currenttablename = "";
-    if (url.includes("/contactoverview")) {
-        currenttablename = "tblcontactoverview";
-    }else if (url.includes("/employeelist")) {
-        currenttablename = "tblEmployeelist";
-    }else if (url.includes("/accountsoverview")) {
-        currenttablename = "tblAccountOverview";
-    }else if (url.includes("/clienttypesettings")) { //Do Something Here
-        currenttablename = "tblClienttypeList";
-    }else if (url.includes("/leadstatussettings")) {
-        currenttablename = "tblLeadStatusList"; //Done Something Here
-    }else if (url.includes("/departmentSettings")) {
-        currenttablename = "tblDepartmentList"; //Done Something Here
-    }else if (url.includes("/paymentmethodSettings")) {
-      currenttablename = "tblPaymentMethodList"; //Done Something Here;
-    }else if (url.includes("/termsettings")) {
-      currenttablename = "tblTermsList"; //Done Something Here;
-    }else if (url.includes("/uomSettings")) {
-      currenttablename = "tblUOMList"; //Done Something Here;
-    }else if (url.includes("/bomlist")){
-      currenttablename = "tblBOMList";
-    }else if (url.includes("/supplierlist")){
-      currenttablename = "tblSupplierlist"; //Done Something Here;
-    }else if (url.includes("/leadlist")){
-      currenttablename = "tblLeadlist"; //Done Something Here;
-    }
+    let currenttablename = templateObject.data.tablename||"";
+
     templateObject.tablename.set(currenttablename);
 
       // set initial table rest_data
@@ -126,7 +102,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
                 { index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
               ];
-          }else if(currenttablename == "tblAccountOverview") {
+          }else if(currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
                let bsbname = "Branch Code";
                if (Session.get("ERPLoggedCountry") === "Australia") {
                    bsbname = "BSB";
@@ -141,7 +117,7 @@ Template.non_transactional_list.onRendered(function() {
                   { index: 6, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "80" },
                   { index: 7, label: 'Bank Name', class: 'colBankName', active: false, display: true, width: "120" },
                   { index: 8, label: 'Bank Acc Name', class: 'colBankAccountName', active: true, display: true, width: "120" },
-                  { index: 9, label: 'bsbname', class: 'colBSB', active: true, display: true, width: "90" },
+                  { index: 9, label: bsbname, class: 'colBSB', active: true, display: true, width: "95" },
                   { index: 10, label: 'Bank Acc No', class: 'colBankAccountNo', active: true, display: true, width: "120" },
                   { index: 11, label: 'Card Number', class: 'colCardNumber', active: false, display: true, width: "120" },
                   { index: 12, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "60" },
@@ -314,7 +290,6 @@ Template.non_transactional_list.onRendered(function() {
         let custFields = [];
         let customData = {};
         let customFieldCount = reset_data.length;
-
         for (let r = 0; r < customFieldCount; r++) {
           customData = {
             active: reset_data[r].active,
@@ -1268,7 +1243,7 @@ Template.non_transactional_list.onRendered(function() {
                 {
                   targets: 9,
                   className: "colBSB",
-                  width: "60px",
+                  width: "95px",
                 },
                 {
                   targets: 10,
@@ -2232,10 +2207,10 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
       //Client Type List Data
       templateObject.getClientTypeListData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
-        getVS1Data('TClientType').then(function (dataObject) {
+        getVS1Data('TClientTypeList').then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getClientTypeDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-                    await addVS1Data('TClientType', JSON.stringify(data));
+                    await addVS1Data('TClientTypeList', JSON.stringify(data));
                     templateObject.displayClientTypeListData(data); //Call this function to display data on the table
                 }).catch(function (err) {
 
@@ -2246,7 +2221,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             }
         }).catch(function (err) {
           sideBarService.getClientTypeDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-              await addVS1Data('TClientType', JSON.stringify(data));
+              await addVS1Data('TClientTypeList', JSON.stringify(data));
               templateObject.displayClientTypeListData(data); //Call this function to display data on the table
           }).catch(function (err) {
 
@@ -2475,10 +2450,10 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
       //Lead Status List Data
       templateObject.getLeadStatusListData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
-        getVS1Data('TLeadStatusType1').then(function (dataObject) {
+        getVS1Data('TLeadStatusTypeList').then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getLeadStatusDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-                    //await addVS1Data('TLeadStatusType', JSON.stringify(data));
+                    await addVS1Data('TLeadStatusTypeList', JSON.stringify(data));
                     templateObject.displayLeadStatusListData(data); //Call this function to display data on the table
                 }).catch(function (err) {
 
@@ -2489,7 +2464,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             }
         }).catch(function (err) {
           sideBarService.getLeadStatusDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-              //await addVS1Data('TLeadStatusType', JSON.stringify(data));
+              await addVS1Data('TLeadStatusTypeList', JSON.stringify(data));
               templateObject.displayLeadStatusListData(data); //Call this function to display data on the table
           }).catch(function (err) {
 
@@ -2977,10 +2952,10 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
       //Payment Method List Data
       templateObject.getPaymentMethodData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
-        getVS1Data('TPaymentMethod').then(function (dataObject) {
+        getVS1Data('TPaymentMethodList').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getPaymentMethodDataVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-                    await addVS1Data('TPaymentMethod', JSON.stringify(data));
+                sideBarService.getPaymentMethodDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+                    await addVS1Data('TPaymentMethodList', JSON.stringify(data));
                     templateObject.displayPaymentMethodListData(data); //Call this function to display data on the table
                 }).catch(function (err) {
 
@@ -2990,8 +2965,8 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 templateObject.displayPaymentMethodListData(data); //Call this function to display data on the table
             }
         }).catch(function (err) {
-          sideBarService.getPaymentMethodDataVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-              await addVS1Data('TPaymentMethod', JSON.stringify(data));
+          sideBarService.getPaymentMethodDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+              await addVS1Data('TPaymentMethodList', JSON.stringify(data));
               templateObject.displayPaymentMethodListData(data); //Call this function to display data on the table
           }).catch(function (err) {
 
@@ -3563,10 +3538,10 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
       //UOM List Data
       templateObject.getUOMListData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
-        getVS1Data('TUnitOfMeasure').then(function (dataObject) {
+        getVS1Data('TUnitOfMeasureList').then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getUOMDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-                    await addVS1Data('TUnitOfMeasure', JSON.stringify(data));
+                    await addVS1Data('TUnitOfMeasureList', JSON.stringify(data));
                     templateObject.displayUOMListData(data); //Call this function to display data on the table
                 }).catch(function (err) {
 
@@ -3577,7 +3552,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             }
         }).catch(function (err) {
           sideBarService.getUOMDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-              await addVS1Data('TUnitOfMeasure', JSON.stringify(data));
+              await addVS1Data('TUnitOfMeasureList', JSON.stringify(data));
               templateObject.displayUOMListData(data); //Call this function to display data on the table
           }).catch(function (err) {
 
@@ -4113,7 +4088,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             templateObject.getContactOverviewData();
         }else if(currenttablename == "tblEmployeelist"){
             templateObject.getEmployeeListData();
-        }else if(currenttablename == "tblAccountOverview"){
+        }else if(currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList"){
             templateObject.getAccountsOverviewData();
         }else if(currenttablename == "tblClienttypeList"){
             templateObject.getClientTypeListData();
@@ -4151,14 +4126,14 @@ Template.non_transactional_list.events({
       }else if(currenttablename == "tblEmployeelist"){
         await clearData('TEmployeeList');
         templateObject.getEmployeeListData(true);
-      }else if(currenttablename == "tblAccountOverview"){
+      }else if(currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList"){
         await clearData('TAccountVS1List');
         templateObject.getAccountsOverviewData(true);
       }else if(currenttablename == "tblClienttypeList"){
-        await clearData('TClientType');
+        await clearData('TClientTypeList');
         templateObject.getClientTypeListData(true);
       }else if(currenttablename == "tblLeadStatusList"){
-        await clearData('TLeadStatusType');
+        await clearData('TLeadStatusTypeList');
         templateObject.getLeadStatusListData(true);
     }else if(currenttablename == "tblDepartmentList"){
         await clearData('TDepartment');
@@ -4199,7 +4174,7 @@ Template.non_transactional_list.events({
       }else if(currenttablename == "tblEmployeelist"){
         await clearData('TEmployeeList');
         templateObject.getEmployeeListData(false);
-      }else if(currenttablename == "tblAccountOverview"){
+      }else if(currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList"){
         await clearData('TAccountVS1List');
         templateObject.getAccountsOverviewData(false);
       }else if(currenttablename == "tblClienttypeList"){
@@ -4212,7 +4187,7 @@ Template.non_transactional_list.events({
         await clearData('TDepartment');
         templateObject.getDepartmentListData(false);
     }else if(currenttablename == "tblPaymentMethodList"){
-      await clearData('TPaymentMethod');
+      await clearData('TPaymentMethodList');
       templateObject.getPaymentMethodListData(false);
     }else if(currenttablename == "tblTermsList"){
       await clearData('TTermsVS1List');

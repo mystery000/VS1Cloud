@@ -4051,6 +4051,7 @@ Template.new_invoice.onRendered(function() {
 
 
                                     if (useData[d].fields.Lines.length) {
+                                        console.log("---------", useData[d].fields.Lines);
                                         for (let i = 0; i < useData[d].fields.Lines.length; i++) {
 
                                             let AmountGbp =
@@ -4149,6 +4150,23 @@ Template.new_invoice.onRendered(function() {
 
                                                 let apptServiceInfo = await productService.getProductStatus(getProductInfo);
                                                 lineItemObj.itemID = apptServiceInfo.tproductvs1[0].Id || 0;
+                                                lineItemObj.unitPrice = utilityService
+                                                    .modifynegativeCurrencyFormat(
+                                                        apptServiceInfo.tproductvs1[0].SellQty1Price
+                                                    )
+                                                    .toLocaleString(undefined, {
+                                                        minimumFractionDigits: 2,
+                                                    }) || 0;
+                                            } else {
+                                                let apptServiceInfo = await productService.getProductStatus(lineItemObj.item);
+                                                lineItemObj.itemID = apptServiceInfo.tproductvs1[0].Id || 0;
+                                                lineItemObj.unitPrice = utilityService
+                                                    .modifynegativeCurrencyFormat(
+                                                        apptServiceInfo.tproductvs1[0].SellQty1Price
+                                                    )
+                                                    .toLocaleString(undefined, {
+                                                        minimumFractionDigits: 2,
+                                                    }) || 0;
                                             }
 
                                             var dataListTable = [

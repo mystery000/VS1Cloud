@@ -194,7 +194,41 @@
 
             <div>
 
-                <div class="card-body p-3 rounded" style="margin: 0px 16px;">
+                <div class="card-body p-3 rounded" style="margin: 0px 16px;">                    
+                    <div class="row no-gutters d-xl-flex align-items-xl-end">
+                        <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+
+                        </div>
+                        <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                            <div class="dropdown" style="margin: 8px; margin-top: 0px;">
+                                <style>
+                                    .btn-daterange::after {
+                                        display: none;
+                                    }
+                                </style>
+                                <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
+                                {{> daterangedropdownoption}}
+                            </div>
+                            <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
+                                <label style="margin-top: 8px; margin-right: 16px;">From</label>
+                                <div class="input-group date" style="width: 160px;">
+                                    <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                                <label style="margin-top: 8px; margin-right: 16px;">To</label>
+                                <div class="input-group date" style="width: 160px;">
+                                    <input type="text" class="form-control" id="dateTo" name="dateTo" >
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <style>
                             th {
@@ -233,40 +267,6 @@
                               background-color: #e74a3b !important; color:#fff;
                             }
                         </style>
-                        <div class="row no-gutters d-xl-flex align-items-xl-end">
-                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-
-                            </div>
-                            <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
-                                <div class="dropdown" style="margin: 8px; margin-top: 0px;">
-                                    <style>
-                                        .btn-daterange::after {
-                                            display: none;
-                                        }
-                                    </style>
-                                    <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
-                                    {{> daterangedropdownoption}}
-                                </div>
-                                <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
-                                    <label style="margin-top: 8px; margin-right: 16px;">From</label>
-                                    <div class="input-group date" style="width: 160px;">
-                                        <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
-                                    <label style="margin-top: 8px; margin-right: 16px;">To</label>
-                                    <div class="input-group date" style="width: 160px;">
-                                        <input type="text" class="form-control" id="dateTo" name="dateTo" >
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <table id="tblappointmentlist" name="tblappointmentlist" class="dataTable table table-hover table-striped table-bordered tblappointmentlist">
                             <thead>
                                 <tr class="dnd-moved">
@@ -340,7 +340,6 @@
                           -->
                             </tbody>
                         </table>
-
                         <div class="modal fade" role="dialog"  id="event-modal" >
                             <form id="frmAppointment">
                                 <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document" style="width:100%;">
@@ -579,7 +578,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

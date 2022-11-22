@@ -165,7 +165,7 @@
         .btnNext {
             margin-left: 12px;
         }
-        .fc-event{
+        .fc-dayGridMonth-view .fc-event{
             height:20px !important;
         }
     </style>
@@ -1749,10 +1749,11 @@
                 /* natural color for navlinks */
             }
         </style>
-        {{# draggablePanel 
-            xs=xs sm=sm md=md lg=lg xl=xl 
+        {{# draggablePanel
+            xs=xs sm=sm md=md lg=lg xl=xl
             defaultPosition=defaultPosition
             key=key
+            hLenght=100
             id="colCalendar"
             headerClass=""
             headerColor="primary"

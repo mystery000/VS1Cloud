@@ -33,15 +33,10 @@ Template.generalledger.onCreated(() => {
 Template.generalledger.onRendered(() => {
   LoadingOverlay.show();
   const templateObject = Template.instance();
-    console.log(Template.generalledger);
-    console.log(Template.vs1_report_template.inheritsHelpersFrom);
-    console.log(Template.generalledger.inheritsEventsFrom('vs1_report_template'));
-    console.log(Template.generalledger.inheritsHooksFrom('vs1_report_template'));
   let taxRateService = new TaxRateService();
   let utilityService = new UtilityService();
 
   // var data = Template.parentData(function (data) {return data instanceof MyDocument;});
-  // console.log(data);
   // let salesOrderTable;
   // var splashArray = new Array();
   // var today = moment().format("DD/MM/YYYY");

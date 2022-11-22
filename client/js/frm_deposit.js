@@ -135,7 +135,7 @@ Template.depositcard.onRendered(()=>{
       changeYear: true,
       yearRange: "-90:+10",
     });
-  
+
     templateObject.getDayNumber = function (day) {
       day = day.toLowerCase();
       if (day == "") {
@@ -221,7 +221,7 @@ Template.depositcard.onRendered(()=>{
     {
         $('.uploadedImage').attr('src', imageData);
     }
-    
+
     const records =[];
     let purchaseService = new PurchaseBoardService();
     let clientsService = new PurchaseBoardService();
@@ -346,9 +346,9 @@ Template.depositcard.onRendered(()=>{
             for(let i=0; i<data.tpaymentmethodvs1.length; i++){
 
                  var dataList = {
-                   id: data.tpaymentmethodvs1[i].Id || '',
-                   paymentmethodname: data.tpaymentmethodvs1[i].PaymentMethodName || '',
-                   iscreditcard: data.tpaymentmethodvs1[i].IsCreditCard || 'false',
+                   id: data.tpaymentmethodvs1[i].fields.ID || '',
+                   paymentmethodname: data.tpaymentmethodvs1[i].fields.PaymentMethodName || '',
+                   iscreditcard: data.tpaymentmethodvs1[i].fields.IsCreditCard || 'false',
                };
 
                 dataTableList.push(dataList);
@@ -686,9 +686,9 @@ Template.depositcard.onRendered(()=>{
           for(let i=0; i<data.tpaymentmethodvs1.length; i++){
 
                var dataList = {
-                 id: data.tpaymentmethodvs1[i].Id || '',
-                 paymentmethodname: data.tpaymentmethodvs1[i].PaymentMethodName || '',
-                 iscreditcard: data.tpaymentmethodvs1[i].IsCreditCard || 'false',
+                 id: data.tpaymentmethodvs1[i].fields.ID || '',
+                 paymentmethodname: data.tpaymentmethodvs1[i].fields.PaymentMethodName || '',
+                 iscreditcard: data.tpaymentmethodvs1[i].fields.IsCreditCard || 'false',
              };
 
               dataTableList.push(dataList);
@@ -2399,7 +2399,7 @@ Template.depositcard.events({
       },
     'click #copyDeposit': async function(event) {
         playCopyAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         let i = 0;
         setTimeout(async function(){
@@ -2514,7 +2514,7 @@ Template.depositcard.events({
     },
     'click .btnSaveFrequency': async function () {
         playSaveAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         // let selectedType = '';
         let selectedType = "basedOnFrequency";
@@ -2532,7 +2532,7 @@ Template.depositcard.events({
         let selectDays = '';
         let dailyRadioOption = '';
         let everyDays = '';
-        
+
         // const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
         let basedOnTypeTexts = '';
         // let basedOnTypeAttr = '';
@@ -2555,7 +2555,7 @@ Template.depositcard.events({
         //   });
         //   if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
         //   if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
-    
+
           let formId = parseInt($("#formid").val());
           let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
           frequencyVal = radioFrequency + '@';
@@ -2602,7 +2602,7 @@ Template.depositcard.events({
           convertedFinishDate = finishDate ? finishDate.split('/')[2] + '-' + finishDate.split('/')[1] + '-' + finishDate.split('/')[0] : '';
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
-    
+
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -3221,7 +3221,7 @@ Template.depositcard.events({
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         setTimeout(async function(){
-        
+
         swal({
             title: 'Delete Deposit',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -3271,7 +3271,7 @@ Template.depositcard.events({
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         setTimeout(function(){
-        
+
         swal({
             title: 'Delete Deposit',
             text: "Are you sure you want to delete Deposit?",
@@ -3332,7 +3332,7 @@ Template.depositcard.events({
         let purchaseService = new PurchaseBoardService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length-1];
@@ -3375,7 +3375,7 @@ Template.depositcard.events({
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         setTimeout(function(){
-        
+
         let taxcodeList = templateObject.taxraterecords.get();
         let selectLineID = $('#selectDeleteLineID').val();
         if($('#tblDepositEntryLine tbody>tr').length > 1){
@@ -3431,12 +3431,12 @@ Template.depositcard.events({
         let purchaseService = new PurchaseBoardService();
         let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(function(){
-        
+
         let account = $('#sltAccountName').val();
         let depositTotal = $('#depositTotal').val();
         let depositTotalLine = $('#depositTotalLine').text();
         let txaNotes = $('#txaNotes').val();
-        
+
         if (account === ''){
             swal('Account has not been selected!', '', 'warning');
             e.preventDefault();
@@ -3465,7 +3465,7 @@ Template.depositcard.events({
                     var url = FlowRouter.current().path;
                     var getso_id = url.split('?id=');
                     var currentDeposit = getso_id[getso_id.length-1];
-                    
+
                     var objDetails = '';
                     if(getso_id[1]){
                         $('#tblDepositEntryLine > tbody > tr').each(function(){
@@ -3612,7 +3612,7 @@ Template.depositcard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentDeposit = getso_id[getso_id.length-1];
-            
+
             var objDetails = '';
             if(getso_id[1]){
                 $('#tblDepositEntryLine > tbody > tr').each(function(){

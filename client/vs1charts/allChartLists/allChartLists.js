@@ -464,9 +464,10 @@ Template.allChartLists.onRendered(function () {
                         if ( chart.fields._chartSlug == 'inventory__stock_on_hand_and_demand'){
                             $(`[key='contacts__top_10_supplies']`).removeClass("hideelement");
                         }
-                        // if ( _chartGroup == 'Dashboard' && ( chart.fields._chartSlug == 'dashboard__monthly_earnings' || chart.fields._chartSlug == 'dashboard__quoted_amounts_/_invoiced_amounts' ) ){
-                        //     $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
-                        // }
+                        //Auto hide on Dashboard
+                        if ( _chartGroup == 'Dashboard' && ( chart.fields._chartSlug == 'dashboard__monthly_earnings' || chart.fields._chartSlug == 'dashboard__quoted_amounts_/_invoiced_amounts' ) ){
+                            $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
+                        }
                     } else {
                         $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
                             "<i class='far fa-eye-slash'></i>"
