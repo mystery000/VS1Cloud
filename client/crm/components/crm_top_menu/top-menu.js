@@ -14,15 +14,15 @@ Template.crm_top_menu.onRendered(function () {
   // set initial table rest_data
   templateObject.init_reset_data = function () {
     let reset_data = [
-      { index: 0, label: '#ID', class: 'ID', active: false, display: true, width: "" },
-      { index: 1, label: 'Priority', class: 'Priority', active: true, display: true, width: "35" },
-      { index: 2, label: 'Contact', class: 'Contact', active: true, display: true, width: "" },
-      { index: 3, label: 'Date', class: 'Date', active: true, display: true, width: "" },
-      { index: 4, label: 'Task', class: 'TaskName', active: true, display: true, width: "" },
-      { index: 5, label: 'Description', class: 'TaskDesc', active: true, display: true, width: "" },
-      { index: 6, label: 'Labels', class: 'TaskLabels', active: true, display: true, width: "" },
-      { index: 7, label: 'Project', class: 'TaskProjects', active: true, display: true, width: "" },
-      { index: 8, label: 'Status', class: 'Status', active: true, display: true, width: "" },
+      // { index: 0, label: '#ID', class: 'ID', active: false, display: true, width: "" },
+      { index: 0, label: 'Priority', class: 'Priority', active: true, display: true, width: "35" },
+      { index: 1, label: 'Contact', class: 'Contact', active: true, display: true, width: "" },
+      { index: 2, label: 'Date', class: 'Date', active: true, display: true, width: "" },
+      { index: 3, label: 'Task', class: 'TaskName', active: true, display: true, width: "" },
+      { index: 4, label: 'Description', class: 'TaskDesc', active: true, display: true, width: "" },
+      { index: 5, label: 'Labels', class: 'TaskLabels', active: true, display: true, width: "" },
+      { index: 6, label: 'Project', class: 'TaskProjects', active: true, display: true, width: "" },
+      { index: 7, label: 'Status', class: 'Status', active: true, display: true, width: "" },
     ];
 
     let templateObject = Template.instance();
@@ -34,14 +34,14 @@ Template.crm_top_menu.onRendered(function () {
   // custom field displaysettings
   templateObject.initCustomFieldDisplaySettings = function (listType) {
     let reset_data = templateObject.reset_data.get();
-    showCustomFieldDisplaySettings(reset_data);
+    templateObject.showCustomFieldDisplaySettings(reset_data, listType);
 
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
             reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-            showCustomFieldDisplaySettings(reset_data);
+            templateObject.showCustomFieldDisplaySettings(reset_data, listType);
           }).catch(function (err) {
           });
         } else {
@@ -50,7 +50,7 @@ Template.crm_top_menu.onRendered(function () {
            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
              if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-               showCustomFieldDisplaySettings(reset_data);
+               templateObject.showCustomFieldDisplaySettings(reset_data, listType);
              }
            }
          };
@@ -62,7 +62,7 @@ Template.crm_top_menu.onRendered(function () {
     return;
   }
 
-  function showCustomFieldDisplaySettings(reset_data) {
+  templateObject.showCustomFieldDisplaySettings = async function(reset_data, currenttablename){
     let custFields = [];
     let customData = {};
     let customFieldCount = reset_data.length;
@@ -75,6 +75,11 @@ Template.crm_top_menu.onRendered(function () {
         class: reset_data[r].class,
         display: reset_data[r].display,
         width: reset_data[r].width ? reset_data[r].width : ''
+      };
+      if(reset_data[r].active == true){
+        $('#'+currenttablename+' .'+reset_data[r].class).removeClass('hiddenColumn');
+      }else if(reset_data[r].active == false){
+        $('#'+currenttablename+' .'+reset_data[r].class).addClass('hiddenColumn');
       };
       custFields.push(customData);
     }

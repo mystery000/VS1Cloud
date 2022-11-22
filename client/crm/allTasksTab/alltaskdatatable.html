@@ -1,5 +1,57 @@
 <template name="alltaskdatatable">
+  <style>
+      th {
+          background-color: #ededed;
+      }
 
+      .table-striped tbody tr:nth-of-type(odd) {
+          background-color: white !important;
+      }
+
+      .table-striped tbody tr:nth-of-type(even) {
+          background-color: #0000000d !important;
+      }
+
+      .JColResizer>tbody>tr>td,
+      .JColResizer>tbody>tr>th {
+          padding: .75rem !important;
+      }
+
+      .hiddenColumn {
+          display: none;
+      }
+
+      .showColumn {
+          display: table-cell;
+          padding: .75rem;
+          vertical-align: top;
+      }
+
+      input[type=number]::-webkit-inner-spin-button,
+      input[type=number]::-webkit-outer-spin-button {
+          opacity: 1;
+      }
+
+      .tbl_responsive{
+        width: 100%!important;
+        overflow-x: auto!important;
+        overflow-y: hidden!important;
+      };
+
+        @media print {
+          table.dataTable {
+              width: 100% !important;
+          }
+          table.dataTable tr td {
+              font-size: 0.7rem !important;
+              padding: 0.6rem !important;
+          }
+          table.dataTable tr th {
+              font-size: 0.7rem !important;
+              padding: 0.6rem !important;
+          }
+        }
+  </style>
   <div class="row no-gutters" style="padding: 0px 32px;">
     <div class="col-12">
       <div class="card shadow mb-3">
@@ -35,68 +87,7 @@
 
             <div class="tab-pane fade show active" id="allTasks" role="tabpanel" aria-labelledby="allTasks-tab">
               <div class="tbl_responsive">
-                  <style>
-                      th {
-                          background-color: #ededed;
-                      }
 
-                      .table-striped tbody tr:nth-of-type(odd) {
-                          background-color: white !important;
-                      }
-
-                      .table-striped tbody tr:nth-of-type(even) {
-                          background-color: #0000000d !important;
-                      }
-
-                      .JColResizer>tbody>tr>td,
-                      .JColResizer>tbody>tr>th {
-                          padding: .75rem !important;
-                      }
-
-                      .hiddenColumn {
-                          display: none;
-                      }
-
-                      .showColumn {
-                          display: table-cell;
-                          padding: .75rem;
-                          vertical-align: top;
-                      }
-
-                      input[type=number]::-webkit-inner-spin-button,
-                      input[type=number]::-webkit-outer-spin-button {
-                          opacity: 1;
-                      }
-
-                      .tbl_responsive{
-                        width: 100%!important;
-                        overflow-x: auto!important;
-                        overflow-y: hidden!important;
-                        }
-                        .table th.colPriority,
-                        .table th.colContact,
-                        .table th.colDate,
-                        .table th.colTaskName,
-                        .table th.colTaskDesc,
-                        .table th.colTaskLabels,
-                        .table th.colTaskProjects,
-                        .table th.colStatus {
-                          text-align: left !important;
-                        }
-                        @media print {
-                          table.dataTable {
-                              width: 100% !important;
-                          }
-                          table.dataTable tr td {
-                              font-size: 0.7rem !important;
-                              padding: 0.6rem !important;
-                          }
-                          table.dataTable tr th {
-                              font-size: 0.7rem !important;
-                              padding: 0.6rem !important;
-                          }
-                        }
-                  </style>
                 <table id="tblAllTaskDatatable" name="tblAllTaskDatatable" class="dataTable table table-hover table-striped table-bordered tblAllTaskDatatable">
                   <thead>
                     <tr class="dnd-moved">
@@ -120,69 +111,8 @@
             </div>
 
             <div class="tab-pane fade" id="todayTab" role="tabpanel" aria-labelledby="todayTab-tab">
-              <div class="tbl_responsive">
-                  <style>
-                      th {
-                          background-color: #ededed;
-                      }
+              <div class="table-responsive">
 
-                      .table-striped tbody tr:nth-of-type(odd) {
-                          background-color: white !important;
-                      }
-
-                      .table-striped tbody tr:nth-of-type(even) {
-                          background-color: #0000000d !important;
-                      }
-
-                      .JColResizer>tbody>tr>td,
-                      .JColResizer>tbody>tr>th {
-                          padding: .75rem !important;
-                      }
-
-                      .hiddenColumn {
-                          display: none;
-                      }
-
-                      .showColumn {
-                          display: table-cell;
-                          padding: .75rem;
-                          vertical-align: top;
-                      }
-
-                      input[type=number]::-webkit-inner-spin-button,
-                      input[type=number]::-webkit-outer-spin-button {
-                          opacity: 1;
-                      }
-
-                      .tbl_responsive{
-                        width: 100%!important;
-                        overflow-x: auto!important;
-                        overflow-y: hidden!important;
-                        }
-                        .table th.colPriority,
-                        .table th.colContact,
-                        .table th.colDate,
-                        .table th.colTaskName,
-                        .table th.colTaskDesc,
-                        .table th.colTaskLabels,
-                        .table th.colTaskProjects,
-                        .table th.colStatus {
-                          text-align: left !important;
-                        }
-                        @media print {
-                          table.dataTable {
-                              width: 100% !important;
-                          }
-                          table.dataTable tr td {
-                              font-size: 0.7rem !important;
-                              padding: 0.6rem !important;
-                          }
-                          table.dataTable tr th {
-                              font-size: 0.7rem !important;
-                              padding: 0.6rem !important;
-                          }
-                        }
-                  </style>
                 <table id="tblTodayTaskDatatable" name="tblTodayTaskDatatable" style="width:100%"
                   class="dataTable table table-hover table-striped table-bordered tblTodayTaskDatatable">
                   <thead>
@@ -207,69 +137,8 @@
             </div>
 
             <div class="tab-pane fade" id="upcomingTab" role="tabpanel" aria-labelledby="upcomingTab-tab">
-              <div class="tbl_responsive">
-                  <style>
-                      th {
-                          background-color: #ededed;
-                      }
+              <div class="table-responsive">
 
-                      .table-striped tbody tr:nth-of-type(odd) {
-                          background-color: white !important;
-                      }
-
-                      .table-striped tbody tr:nth-of-type(even) {
-                          background-color: #0000000d !important;
-                      }
-
-                      .JColResizer>tbody>tr>td,
-                      .JColResizer>tbody>tr>th {
-                          padding: .75rem !important;
-                      }
-
-                      .hiddenColumn {
-                          display: none;
-                      }
-
-                      .showColumn {
-                          display: table-cell;
-                          padding: .75rem;
-                          vertical-align: top;
-                      }
-
-                      input[type=number]::-webkit-inner-spin-button,
-                      input[type=number]::-webkit-outer-spin-button {
-                          opacity: 1;
-                      }
-
-                      .tbl_responsive{
-                        width: 100%!important;
-                        overflow-x: auto!important;
-                        overflow-y: hidden!important;
-                        }
-                        .table th.colPriority,
-                        .table th.colContact,
-                        .table th.colDate,
-                        .table th.colTaskName,
-                        .table th.colTaskDesc,
-                        .table th.colTaskLabels,
-                        .table th.colTaskProjects,
-                        .table th.colStatus {
-                          text-align: left !important;
-                        }
-                        @media print {
-                          table.dataTable {
-                              width: 100% !important;
-                          }
-                          table.dataTable tr td {
-                              font-size: 0.7rem !important;
-                              padding: 0.6rem !important;
-                          }
-                          table.dataTable tr th {
-                              font-size: 0.7rem !important;
-                              padding: 0.6rem !important;
-                          }
-                        }
-                  </style>
                 <table id="tblUpcomingTaskDatatable" name="tblUpcomingTaskDatatable" style="width:100%"
                   class="dataTable table table-hover table-striped table-bordered tblUpcomingTaskDatatable">
                   <thead>
@@ -294,67 +163,8 @@
             </div>
 
             <div class="tab-pane fade" id="projectsTab" role="tabpanel" aria-labelledby="projectsTab-tab">
-              <div class="tbl_responsive">
-                  <style>
-                      th {
-                          background-color: #ededed;
-                      }
+              <div class="table-responsive">
 
-                      .table-striped tbody tr:nth-of-type(odd) {
-                          background-color: white !important;
-                      }
-
-                      .table-striped tbody tr:nth-of-type(even) {
-                          background-color: #0000000d !important;
-                      }
-
-                      .JColResizer>tbody>tr>td,
-                      .JColResizer>tbody>tr>th {
-                          padding: .75rem !important;
-                      }
-
-                      .hiddenColumn {
-                          display: none;
-                      }
-
-                      .showColumn {
-                          display: table-cell;
-                          padding: .75rem;
-                          vertical-align: top;
-                      }
-
-                      input[type=number]::-webkit-inner-spin-button,
-                      input[type=number]::-webkit-outer-spin-button {
-                          opacity: 1;
-                      }
-
-                      .tbl_responsive{
-                        width: 100%!important;
-                        overflow-x: auto!important;
-                        overflow-y: hidden!important;
-                        }
-                        .table th.colPrjectDate,
-                        .table th.colProjectName,
-                        .table th.colProjectDesc,
-                        .table th.colProjectStatus,
-                        .table th.colProjectTasks,
-                        .table th.colTaskLabels {
-                          text-align: left !important;
-                        }
-                        @media print {
-                          table.dataTable {
-                              width: 100% !important;
-                          }
-                          table.dataTable tr td {
-                              font-size: 0.7rem !important;
-                              padding: 0.6rem !important;
-                          }
-                          table.dataTable tr th {
-                              font-size: 0.7rem !important;
-                              padding: 0.6rem !important;
-                          }
-                        }
-                  </style>
                 <table id="tblNewProjectsDatatable" name="tblNewProjectsDatatable" style="width:100%"
                   class="dataTable table table-hover table-striped table-bordered tblNewProjectsDatatable">
                   <thead>
@@ -375,63 +185,8 @@
             <div class="tab-pane fade" id="filterLabelsTab" role="tabpanel" aria-labelledby="filterLabelsTab-tab">
               <div class="row">
                 <div class="col-12 pb-4">
-                  <div class="tbl_responsive">
-                      <style>
-                          th {
-                              background-color: #ededed;
-                          }
+                  <div class="table-responsive">
 
-                          .table-striped tbody tr:nth-of-type(odd) {
-                              background-color: white !important;
-                          }
-
-                          .table-striped tbody tr:nth-of-type(even) {
-                              background-color: #0000000d !important;
-                          }
-
-                          .JColResizer>tbody>tr>td,
-                          .JColResizer>tbody>tr>th {
-                              padding: .75rem !important;
-                          }
-
-                          .hiddenColumn {
-                              display: none;
-                          }
-
-                          .showColumn {
-                              display: table-cell;
-                              padding: .75rem;
-                              vertical-align: top;
-                          }
-
-                          input[type=number]::-webkit-inner-spin-button,
-                          input[type=number]::-webkit-outer-spin-button {
-                              opacity: 1;
-                          }
-
-                          .tbl_responsive{
-                            width: 100%!important;
-                            overflow-x: auto!important;
-                            overflow-y: hidden!important;
-                            }
-                            .table th.colLabelCreatedDate,
-                            .table th.colLabel {
-                              text-align: left !important;
-                            }
-                            @media print {
-                              table.dataTable {
-                                  width: 100% !important;
-                              }
-                              table.dataTable tr td {
-                                  font-size: 0.7rem !important;
-                                  padding: 0.6rem !important;
-                              }
-                              table.dataTable tr th {
-                                  font-size: 0.7rem !important;
-                                  padding: 0.6rem !important;
-                              }
-                            }
-                      </style>
                     <table id="tblLabels" name="tblLabels" style="width:100%"
                       class="dataTable table table-hover table-striped table-bordered tblLabels">
                       <thead>
