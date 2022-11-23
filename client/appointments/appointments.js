@@ -3789,7 +3789,6 @@ Template.appointments.onRendered(function() {
                                                     $("#productCheck-" + item).prop("checked", true);
                                                     products.tproductvs1.forEach((product) => {
                                                         if (product.Id == item) {
-                                                            console.log("product=", product);
                                                             extraProductFees.push(product);
                                                         }
                                                         $("#productCheck-" + item).prop("checked", true);
@@ -8910,7 +8909,6 @@ Template.appointments.onRendered(function() {
                                     if (
                                         data.tproductvs1[i].fields.ProductName === productDataName
                                     ) {
-                                        console.log("data.tproductvs1[i].fields=", data.tproductvs1[i].fields);
                                         added = true;
                                         $(".fullScreenSpin").css("display", "none");
                                         let lineItems = [];
@@ -9660,6 +9658,7 @@ Template.appointments.onRendered(function() {
 
             $("#productCheck-" + selectLineID).prop("checked", false);
             $("#productCheck-" + lineProductId).prop("checked", true);
+            $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
 
             $("#productListModal2").modal("toggle");
         }
@@ -18570,18 +18569,32 @@ Template.appointments.events({
     "click .btnRemove": function(event) {
         let templateObject = Template.instance();
         var targetID = $(event.target).closest("tr").attr("id");
-        if ($("#tblExtraProducts tbody>tr").length > 1) {
-            $(event.target).closest("tr").remove();
-            $("#productCheck-" + targetID).prop("checked", false);
-            event.preventDefault();
-        }
+        // if ($("#tblExtraProducts tbody>tr").length > 1) {
+        $(event.target).closest("tr").remove();
+        $("#productCheck-" + targetID).prop("checked", false);
+        event.preventDefault();
+        // }
     },
     "click #addRow": (e, ui) => {
-        var rowData = $("#tblExtraProducts tbody>tr:last").clone(true);
         let tokenid = Random.id();
-        $(".lineProductName", rowData).val("");
+        // $(".lineProductName", rowData).val("");
+        var rowData = `<tr class="dnd-moved" id="${tokenid}">
+            <td class="thProductName">
+                <input class="es-input highlightSelect lineProductName" type="search">
+            </td>
+            <td class="lineProductDesc colDescription"></td>
+            <td class="thCostPrice hiddenColumn" style="text-align: left!important;"></td>
+            <td class="thSalesPrice lineSalesPrice" style="text-align: left!important;"></td>
+            <td class="thQty hiddenColumn">Quantity</td>
+            <td class="thTax hiddenColumn" style="text-align: left!important;">Tax Rate</td>
+            <td>
+                <span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
+                class="fa fa-remove"></i></button></span>
+            </td>
+            <td class="thExtraSellPrice hiddenColumn">Prouct ID</td>
+        </tr>`;
 
-        rowData.attr("id", tokenid);
+        // rowData.attr("id", tokenid);
         $("#tblExtraProducts tbody").append(rowData);
         setTimeout(function() {
             $("#" + tokenid + " .lineProductName").trigger("click");

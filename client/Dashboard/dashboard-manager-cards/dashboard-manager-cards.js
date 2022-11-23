@@ -69,14 +69,15 @@ Template.dashboardManagerCards.onRendered(() => {
                 tinvoicelist.forEach(tinvoice => {
                     const saleDate = new Date(tinvoice.SaleDate);
                     if (fromDate <= saleDate && toDate >= saleDate) {
-                        closedDealsThisMonth += tinvoice.Balance;
-                    }
-
-                    if (moment(tinvoice.SaleDate).unix() > lastYearUnix) {
+                        closedDealsThisMonth++;
                         closedDealsThisYear += tinvoice.Balance;
                     }
+
+                    // if (moment(tinvoice.SaleDate).unix() > lastYearUnix) {
+                    //     closedDealsThisYear += tinvoice.Balance;
+                    // }
                 });
-                $('#closed-deals-month').text(`$${closedDealsThisMonth.toFixed(2)}`);
+                $('#closed-deals-month').text(closedDealsThisMonth);
                 $('#closed-deals-year').text(`$${closedDealsThisYear.toFixed(2)}`);
             }
         }).catch(function(err) {});
