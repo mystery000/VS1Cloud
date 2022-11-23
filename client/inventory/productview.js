@@ -4132,86 +4132,86 @@ Template.productview.onRendered(function() {
     })
 
 
-    $(document).on('click', '.new_attachment_btn', function(event) {
-        let inputEle = $(event.target).closest('.modal-footer').find('.attachment-upload');
-        $(inputEle).trigger('click');
-    })
+    // $(document).on('click', '.new_attachment_btn', function(event) {
+    //     let inputEle = $(event.target).closest('.modal-footer').find('.attachment-upload');
+    //     $(inputEle).trigger('click');
+    // })
 
-    $(document).on('change', '.attachment-upload', async function(event) {
-        let myFiles = $(event.target)[0].files;
-        let saveToTAttachment = false;
-        let lineIDForAttachment = false;
-        let modalId = $(event.target).closest('.modal').attr('id');
-        let existingArray = JSON.parse($(templateObject.selectedAttachedField.get()).text()!=''?$(templateObject.selectedAttachedField.get()).text() : '[]').uploadedFilesArray || []
-        let uploadData = await utilityService.customAttachmentUpload(existingArray, myFiles, saveToTAttachment, lineIDForAttachment, modalId);
-        templateObject.selectedAttachedField.get().html(JSON.stringify(uploadData))
-        let attachmentButton = $(templateObject.selectedAttachedField.get()).closest('.colAttachment').find('.btnAddAttachment');
-        let attachCount = uploadData.totalAttachments;
-        attachmentButton.html(attachCount + "     <i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments")
-    })
+    // $(document).on('change', '.attachment-upload', async function(event) {
+    //     let myFiles = $(event.target)[0].files;
+    //     let saveToTAttachment = false;
+    //     let lineIDForAttachment = false;
+    //     let modalId = $(event.target).closest('.modal').attr('id');
+    //     let existingArray = JSON.parse($(templateObject.selectedAttachedField.get()).text()!=''?$(templateObject.selectedAttachedField.get()).text() : '[]').uploadedFilesArray || []
+    //     let uploadData = await utilityService.customAttachmentUpload(existingArray, myFiles, saveToTAttachment, lineIDForAttachment, modalId);
+    //     templateObject.selectedAttachedField.get().html(JSON.stringify(uploadData))
+    //     let attachmentButton = $(templateObject.selectedAttachedField.get()).closest('.colAttachment').find('.btnAddAttachment');
+    //     let attachCount = uploadData.totalAttachments;
+    //     attachmentButton.html(attachCount + "     <i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments")
+    // })
 
-    $(document).on('click', '.remove-attachment', function(event) {
-        let className = $(event.target).attr('class')
-        let attachmentID = parseInt(className.split('remove-attachment-')[1]);
-        let modalId = $(event.target).closest('.modal').attr("id");
+    // $(document).on('click', '.remove-attachment', function(event) {
+    //     let className = $(event.target).attr('class')
+    //     let attachmentID = parseInt(className.split('remove-attachment-')[1]);
+    //     let modalId = $(event.target).closest('.modal').attr("id");
 
-        if ($("#"+modalId+" .confirm-action-" + attachmentID).length) {
-            $("#"+modalId+" .confirm-action-" + attachmentID).remove();
-        } else {
-            let actionElement = '<div class="confirm-action confirm-action-' + attachmentID + '"><a class="confirm-delete-attachment btn btn-default delete-attachment-' + attachmentID + '">' +
-                'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
-            $('#'+modalId + ' .attachment-name-' + attachmentID).append(actionElement);
-        }
-        $("#new-attachment2-tooltip").show();
-    })
+    //     if ($("#"+modalId+" .confirm-action-" + attachmentID).length) {
+    //         $("#"+modalId+" .confirm-action-" + attachmentID).remove();
+    //     } else {
+    //         let actionElement = '<div class="confirm-action confirm-action-' + attachmentID + '"><a class="confirm-delete-attachment btn btn-default delete-attachment-' + attachmentID + '">' +
+    //             'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
+    //         $('#'+modalId + ' .attachment-name-' + attachmentID).append(actionElement);
+    //     }
+    //     $("#new-attachment2-tooltip").show();
+    // })
 
-    $(document).on('click', '.confirm-delete-attachment', function(event) {
-        templateObject.$("#new-attachment2-tooltip").show();
-        let className = $(event.target).attr('class')
-        let attachmentID = parseInt(className.split('delete-attachment-')[1]);
-        let uploadedElement = templateObject.selectedAttachedField.get();
-        let uploadedArray = JSON.parse(uploadedElement.text()).uploadedFilesArray;
-        // let uploadedArray = templateObject.uploadedFiles.get();
-        // let attachmentCount = templateObject.attachmentCount.get();
-        let modalId = $(event.target).closest('.modal').attr('id');
-        $('#'+modalId+' .attachment-upload').val('');
-        uploadedArray.splice(attachmentID, 1);
-        let newObject = {
-            totalAttachments: uploadedArray.length,
-           uploadedFilesArray: uploadedArray
-        }
-        $(templateObject.selectedAttachedField.get()).text(JSON.stringify(newObject))
+    // $(document).on('click', '.confirm-delete-attachment', function(event) {
+    //     templateObject.$("#new-attachment2-tooltip").show();
+    //     let className = $(event.target).attr('class')
+    //     let attachmentID = parseInt(className.split('delete-attachment-')[1]);
+    //     let uploadedElement = templateObject.selectedAttachedField.get();
+    //     let uploadedArray = JSON.parse(uploadedElement.text()).uploadedFilesArray;
+    //     // let uploadedArray = templateObject.uploadedFiles.get();
+    //     // let attachmentCount = templateObject.attachmentCount.get();
+    //     let modalId = $(event.target).closest('.modal').attr('id');
+    //     $('#'+modalId+' .attachment-upload').val('');
+    //     uploadedArray.splice(attachmentID, 1);
+    //     let newObject = {
+    //         totalAttachments: uploadedArray.length,
+    //        uploadedFilesArray: uploadedArray
+    //     }
+    //     $(templateObject.selectedAttachedField.get()).text(JSON.stringify(newObject))
 
-        let attachmentButton = $(templateObject.selectedAttachedField.get()).closest('.colAttachment').find('.btnAddAttachment');
-        let attachCount = uploadedArray.length;
-        attachmentButton.html(attachCount + "     <i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments")
+    //     let attachmentButton = $(templateObject.selectedAttachedField.get()).closest('.colAttachment').find('.btnAddAttachment');
+    //     let attachCount = uploadedArray.length;
+    //     attachmentButton.html(attachCount + "     <i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments")
 
-        if(uploadedArray.length === 0) {
-            attachmentButton.html("<i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments")
-            let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
-                $('#'+modalId + ' .file-display').html(elementToAdd);
-                $(".attchment-tooltip").show();
-        }else {
-            utilityService.customShowUploadedAttachment(uploadedArray, modalId)
-        }
-
-
+    //     if(uploadedArray.length === 0) {
+    //         attachmentButton.html("<i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments")
+    //         let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
+    //             $('#'+modalId + ' .file-display').html(elementToAdd);
+    //             $(".attchment-tooltip").show();
+    //     }else {
+    //         utilityService.customShowUploadedAttachment(uploadedArray, modalId)
+    //     }
 
 
-        // templateObject.uploadedFiles.set(uploadedArray);
-        // attachmentCount--;
-        // if (attachmentCount === 0) {
-        //     let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
-        //     $('#file-display').html(elementToAdd);
-        // }
-        // templateObject.attachmentCount.set(attachmentCount);
-        // if (uploadedArray.length > 0) {
-        //     let utilityService = new UtilityService();
-        //     utilityService.showUploadedAttachment(uploadedArray);
-        // } else {
-        //     $(".attchment-tooltip").show();
-        // }
-    })
+
+
+    //     // templateObject.uploadedFiles.set(uploadedArray);
+    //     // attachmentCount--;
+    //     // if (attachmentCount === 0) {
+    //     //     let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
+    //     //     $('#file-display').html(elementToAdd);
+    //     // }
+    //     // templateObject.attachmentCount.set(attachmentCount);
+    //     // if (uploadedArray.length > 0) {
+    //     //     let utilityService = new UtilityService();
+    //     //     utilityService.showUploadedAttachment(uploadedArray);
+    //     // } else {
+    //     //     $(".attchment-tooltip").show();
+    //     // }
+    // })
 });
 
 Template.productview.helpers({

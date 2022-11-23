@@ -2,6 +2,7 @@ import { ReactiveVar } from "meteor/reactive-var";
 import {ProductService} from '../product/product-service';
 import { SideBarService } from "./sidebar-service";
 import 'jquery-editable-select';
+import { UtilityService } from "../utility-service";
 
 
 //product name, process name, product sales description, qty in stock, subs, 
@@ -12,10 +13,13 @@ Template.bom_template.onCreated(function() {
     templateObject.selectedProcessField = new ReactiveVar();
     templateObject.selectedProductField = new ReactiveVar();
     templateObject.isMobileDevices = new ReactiveVar(false);
-    templateObject.showSubButton = new ReactiveVar(true)
+    templateObject.showSubButton = new ReactiveVar(true);
+    templateObject.attachmentModalHtml = new ReactiveVar('');
+    templateObject.selectedAttachedField = new ReactiveVar();
 })
 let productService =  new ProductService();
 let sideBarService = new SideBarService();
+let utilityService = new UtilityService();
 Template.bom_template.onRendered(function() {
     const templateObject = Template.instance();
     let temp = localStorage.getItem('TProcTree');
@@ -27,6 +31,64 @@ Template.bom_template.onRendered(function() {
         templateObject.isMobileDevices.set(true);
     }
 
+    let modalHtml =    "<div class='modal-dialog modal-dialog-centered' role='document'>" +
+    "<div class='modal-content'>" +
+        "<div class='modal-header'>" +
+            "<h4>Upload Attachments</h4><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>" +
+        "</div>" +
+        "<div class='modal-body' style='padding: 0px;'>" +
+            "<div class='divTable file-display'>" +
+                "<div class='col inboxcol1'>" +
+                    "<img src='/icons/nofiles_icon.jpg' class=' style='width:100%;'>" +
+                "</div>" +
+                "<div class='col inboxcol2' style='text-align: center;'>" +
+                    "<div>Upload files or add files from the file library.</div>"
+                if(templateObject.isMobileDevices.get() == true) {
+                    modalHtml = modalHtml +"<div>Capture copies of receipt's or take photo's of completed jobs.</div>"
+                }
+
+
+                modalHtml = modalHtml + "<p style='color: #ababab;'>Only users with access to your company can view these files</p>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>"+
+                "<div class='modal-footer'>";
+                if(templateObject.isMobileDevices.get() == true) {
+                    modalHtml = modalHtml +"<input type='file' class='img-attachment-upload' id='img-attachment-upload' style='display:none' accept='image/*' capture='camera'>" +
+                    "<button class='btn btn-primary btnUploadFile img_new_attachment_btn' type='button'><i class='fas fa-camera' style='margin-right: 5px;'></i>Capture</button>" +
+
+                    "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png'>"
+                }else {
+                    modalHtml = modalHtml + "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt," +
+                    ".pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef," +
+                    ".pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg," +
+                    "image/gif,image/png,image/bmp,image/tiff,application/pdf," +
+                    "application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document," +
+                    "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet," +
+                    "application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation," +
+                    "application/vnd.oasis.opendocument.formula,text/csv,text/plain,text/rtf,message/rfc822," +
+                    "application/vnd.ms-outlook,application/vnd.oasis.opendocument.spreadsheet," +
+                    "application/vnd.oasis.opendocument.text,application/x-iwork-keynote-sffkey," +
+                    "application/vnd.apple.keynote,application/x-iwork-pages-sffpages," +
+                    "application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers," +
+                    "application/vnd.apple.numbers,application/zip,application/rar," +
+                    "application/x-zip-compressed,application/x-zip,application/x-7z-compressed'>"
+                }
+                modalHtml = modalHtml +
+                    "<button class='btn btn-primary btnUploadFile new_attachment_btn' type='button'><i class='fa fa-cloud-upload' style='margin-right: 5px;'></i>Upload</button>" +
+                    "<button class='btn btn-success closeModal' data-dismiss='modal' type='button' style='margin-right: 5px;' autocomplete='off'>" +
+                        "<i class='fa fa-save' style='padding-right: 8px;'></i>Save" +
+                    "</button>" +
+                    "<button class='btn btn-secondary' data-dismiss='modal' type='button'><i class='fa fa-remove' style='margin-right: 5px;'></i>Close</button>" +
+                "</div>"+
+            "</div>"+
+        "</div>"+
+    "</div>"
+
+    templateObject.attachmentModalHtml.set(modalHtml);
+
+
+
 
     templateObject.getBOMStructure = async function() {
         // $('.fullScreenSpin').css('display', 'inline-block')
@@ -37,6 +99,13 @@ Template.bom_template.onRendered(function() {
 
         let objectFields = await getObjectFields();
         templateObject.initialRecord.set(objectFields)
+        if (objectFields.attachments.length > 0) {
+            let productContents = $('.product-content')
+            $(productContents[0]).find('.attachedFiles').text(JSON.stringify({totalAttachments: objectFields.attachments.length, uploadedFilesArray: objectFields.attachments}))
+            let modalId = $('#myModalAttachment.modal').attr('id');
+            utilityService.customShowUploadedAttachment(objectFields.attachments, modalId)
+            $(productContents[0]).find('.btnAddAttachment').html(objectFields.attachments.length + "     <i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments")
+        }
         if(objectFields.subs.length >0) {
             let subs = objectFields.subs;
             for(let i=0; i< subs.length; i++) {
@@ -193,7 +262,20 @@ Template.bom_template.onRendered(function() {
                     $(productContent).find('.edtProcessNote').val(subs[i].processNote || '')
                 }
                 // $(productContent).find('.edtProcessName').val(subs[i].process || "")
-                
+                let modalHtml = "<div class='modal fade' role='dialog' tabindex='-1' id='myModalAttachment-"+subs[i].productName.replace(/[|&;$%@"<>()+," "]/g, '')+"'>" + templateObject.attachmentModalHtml.get();
+                if(subs[i].attachments&&subs[i].attachments.length > 0) {
+                    // JSON.parse($(products[0]).find('.attachedFiles').text() != ''?$(products[0]).find('.attachedFiles').text(): '[]').uploadedFilesArray || [];
+                    let temp = JSON.stringify({totalAttachments: subs[i].attachments.length, uploadedFilesArray: subs[i].attachments});
+                    $(productContent).find('.attachedFiles').text(temp)
+                }
+                if(FlowRouter.current().path.includes('/bomsetupcard')) {
+                 let topElement = $('#content');
+                 topElement.append(modalHtml)   
+                }else {
+                    let modalElement = $(productContent).closest('.modal');
+                    let topParent = modalElement.parent();
+                    topParent.append(modalHtml)
+                }
             }
         }
 
@@ -361,6 +443,88 @@ Template.bom_template.onRendered(function() {
     }
 
     templateObject.setEditableSelect();
+
+
+    $(document).on('change', '.attachment-upload', async function(event) {
+        let myFiles = $(event.target)[0].files;
+        let saveToTAttachment = false;
+        let lineIDForAttachment = false;
+        let modalId = $(event.target).closest('.modal').attr('id');
+        let existingArray = JSON.parse($(templateObject.selectedAttachedField.get()).text()!=''?$(templateObject.selectedAttachedField.get()).text() : '[]').uploadedFilesArray || []
+        let uploadData = await utilityService.customAttachmentUpload(existingArray, myFiles, saveToTAttachment, lineIDForAttachment, modalId);
+        templateObject.selectedAttachedField.get().html(JSON.stringify(uploadData))
+        let attachmentButton = $(templateObject.selectedAttachedField.get()).closest('.colAttachment').find('.btnAddAttachment');
+        let attachCount = uploadData.totalAttachments;
+        attachmentButton.html(attachCount + "     <i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments")
+    })
+
+    $(document).on('click', '.remove-attachment', function(event) {
+        let className = $(event.target).attr('class')
+        let attachmentID = parseInt(className.split('remove-attachment-')[1]);
+        let modalId = $(event.target).closest('.modal').attr("id");
+
+        if ($("#"+modalId+" .confirm-action-" + attachmentID).length) {
+            $("#"+modalId+" .confirm-action-" + attachmentID).remove();
+        } else {
+            let actionElement = '<div class="confirm-action confirm-action-' + attachmentID + '"><a class="confirm-delete-attachment btn btn-default delete-attachment-' + attachmentID + '">' +
+                'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
+            $('#'+modalId + ' .attachment-name-' + attachmentID).append(actionElement);
+        }
+        $("#new-attachment2-tooltip").show();
+    })
+
+    $(document).on('click', '.confirm-delete-attachment', function(event) {
+        templateObject.$("#new-attachment2-tooltip").show();
+        let className = $(event.target).attr('class')
+        let attachmentID = parseInt(className.split('delete-attachment-')[1]);
+        let uploadedElement = templateObject.selectedAttachedField.get();
+        let uploadedArray = JSON.parse(uploadedElement.text()).uploadedFilesArray;
+        // let uploadedArray = templateObject.uploadedFiles.get();
+        // let attachmentCount = templateObject.attachmentCount.get();
+        let modalId = $(event.target).closest('.modal').attr('id');
+        $('#'+modalId+' .attachment-upload').val('');
+        uploadedArray.splice(attachmentID, 1);
+        let newObject = {
+            totalAttachments: uploadedArray.length,
+           uploadedFilesArray: uploadedArray
+        }
+        $(templateObject.selectedAttachedField.get()).text(JSON.stringify(newObject))
+
+        let attachmentButton = $(templateObject.selectedAttachedField.get()).closest('.colAttachment').find('.btnAddAttachment');
+        let attachCount = uploadedArray.length;
+        attachmentButton.html(attachCount + "     <i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments")
+
+        if(uploadedArray.length === 0) {
+            attachmentButton.html("<i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments")
+            let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
+                $('#'+modalId + ' .file-display').html(elementToAdd);
+                $(".attchment-tooltip").show();
+        }else {
+            utilityService.customShowUploadedAttachment(uploadedArray, modalId)
+        }
+
+
+
+
+        // templateObject.uploadedFiles.set(uploadedArray);
+        // attachmentCount--;
+        // if (attachmentCount === 0) {
+        //     let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
+        //     $('#file-display').html(elementToAdd);
+        // }
+        // templateObject.attachmentCount.set(attachmentCount);
+        // if (uploadedArray.length > 0) {
+        //     let utilityService = new UtilityService();
+        //     utilityService.showUploadedAttachment(uploadedArray);
+        // } else {
+        //     $(".attchment-tooltip").show();
+        // }
+    })
+
+    $(document).on('click','.new_attachment_btn', function(event) {
+        let inputEle = $(event.target).closest('.modal-footer').find('.attachment-upload');
+        $(inputEle).trigger('click');
+    })
 })
 
 
@@ -564,60 +728,8 @@ Template.bom_template.events({
         $(colAttachment).append("<a class='btn btn-primary no-print btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+productContentCount+"' id='btn_Attachment' name='btn_Attachment'>"+
                     "<i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div>")
 
-        let attachModalHtml = "<div class='modal fade' role='dialog' tabindex='-1' id='myModalAttachment-"+productContentCount+"'>" +
-        "<div class='modal-dialog modal-dialog-centered' role='document'>" +
-            "<div class='modal-content'>" +
-                "<div class='modal-header'>" +
-                    "<h4>Upload Attachments</h4><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>" +
-                "</div>" +
-                "<div class='modal-body' style='padding: 0px;'>" +
-                    "<div class='divTable file-display'>" +
-                        "<div class='col inboxcol1'>" +
-                            "<img src='/icons/nofiles_icon.jpg' class=' style='width:100%;'>" +
-                        "</div>" +
-                        "<div class='col inboxcol2' style='text-align: center;'>" +
-                            "<div>Upload files or add files from the file library.</div>"
-                            if(tempObject.isMobileDevices.get() == true) {
-                                attachModalHtml = attachModalHtml +"<div>Capture copies of receipt's or take photo's of completed jobs.</div>"
-                            }
-
-
-                                        attachModalHtml = attachModalHtml + "<p style='color: #ababab;'>Only users with access to your company can view these files</p>" +
-                                    "</div>" +
-                                "</div>" +
-                            "</div>"+
-                            "<div class='modal-footer'>";
-                            if(tempObject.isMobileDevices.get() == true) {
-                                attachModalHtml = attachModalHtml +"<input type='file' class='img-attachment-upload' id='img-attachment-upload' style='display:none' accept='image/*' capture='camera'>" +
-                                "<button class='btn btn-primary btnUploadFile img_new_attachment_btn' type='button'><i class='fas fa-camera' style='margin-right: 5px;'></i>Capture</button>" +
-
-                                "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png'>"
-                            }else {
-                                attachModalHtml = attachModalHtml + "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt," +
-                                ".pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef," +
-                                ".pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg," +
-                                "image/gif,image/png,image/bmp,image/tiff,application/pdf," +
-                                "application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document," +
-                                "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet," +
-                                "application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation," +
-                                "application/vnd.oasis.opendocument.formula,text/csv,text/plain,text/rtf,message/rfc822," +
-                                "application/vnd.ms-outlook,application/vnd.oasis.opendocument.spreadsheet," +
-                                "application/vnd.oasis.opendocument.text,application/x-iwork-keynote-sffkey," +
-                                "application/vnd.apple.keynote,application/x-iwork-pages-sffpages," +
-                                "application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers," +
-                                "application/vnd.apple.numbers,application/zip,application/rar," +
-                                "application/x-zip-compressed,application/x-zip,application/x-7z-compressed'>"
-                            }
-                            attachModalHtml = attachModalHtml +
-                                "<button class='btn btn-primary btnUploadFile new_attachment_btn' type='button'><i class='fa fa-cloud-upload' style='margin-right: 5px;'></i>Upload</button>" +
-                                "<button class='btn btn-success closeModal' data-dismiss='modal' type='button' style='margin-right: 5px;' autocomplete='off'>" +
-                                    "<i class='fa fa-save' style='padding-right: 8px;'></i>Save" +
-                                "</button>" +
-                                "<button class='btn btn-secondary' data-dismiss='modal' type='button'><i class='fa fa-remove' style='margin-right: 5px;'></i>Close</button>" +
-                            "</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"
+        let attachModalHtml = "<div class='modal fade' role='dialog' tabindex='-1' id='myModalAttachment-"+productContentCount+"'>" + tempObject.attachmentModalHtml.get();
+     
                     topParent.append(attachModalHtml);
     },
 
@@ -797,6 +909,7 @@ Template.bom_template.events({
         let rowCount = $(content).find('.productRow').length;
         if (rowCount == 1 || $(content).first().find('.edtProductName').val() == productName) {
             $(content).remove();
+            $('#myModalAttachment-'+ productName.replace(/[|&;$%@"<>()+," "]/g, '')).remove()
         } else {
             $(row).remove();
         }
@@ -909,6 +1022,23 @@ Template.bom_template.events({
 
 
     },
+
+    'click .btnAddAttachment': function(event) {
+        let tempObject = Template.instance();
+        let row = $(event.target).closest('.productRow');
+        let targetField = $(row).find('.attachedFiles');
+        tempObject.selectedAttachedField.set(targetField);
+    },
+
+    // 'click .new_attachment_btn': function(event) {
+    //     let inputEle = $(event.target).closest('.modal-footer').find('.attachment-upload');
+    //     $(inputEle).trigger('click');
+    // },
+
+    
+
+
+    
 
 })
 

@@ -388,6 +388,96 @@ Template.new_workorder.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         let mainOrderStart = new Date();
 
+        async function getStockCount(productName) {
+            return new Promise(async(resolve, reject)=>{
+                getVS1Data('TProductVS1').then(function(dataObject) {
+                    if(dataObject.length == 0) {
+                        productService.getOneProductdatavs1byname(productName).then(function(data) {
+                            resolve(data.tproduct[0].fields.TotalQtyInStock)                            
+                        })
+                    }else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.tproductvs1;
+                        for(let o=0; o<useData.length; o++) {
+                            if(useData[o].fields.ProductName == productName) {
+                                resolve(useData[o].fields.TotalQtyInStock)
+                            }
+                        }
+                    }
+                }).catch(function(e) {
+                    productService.getOneProductdatavs1byname(productName).then(function(data) {
+                        resolve(data.tproduct[0].fields.TotalQtyInStock)                            
+                    })
+                })
+            })
+        }
+
+        async function getSupplierDetail ()  {
+            return new Promise(async(resolve, reject)=>{
+                let supplierName = 'Misc Supplier';
+                getVS1Data('TSupplierVS1')
+            })
+
+
+        }
+
+        async function createPurchaseOrder(productName, neededQty) {
+            return new Promise(async(resolve, reject)=>{
+                getVS1Data('TProductVS1').then(function(dataObject){
+                    if(dataObject.length == 0) {
+                        productService.getOneProductdatavs1byname(productName).then(function(data) {
+                            let stockQty = data.tproduct[0].fields.TotalQtyInStock;
+                            if(stockQty < neededQty) {
+                                let splashLineArray = [];
+
+                                let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproduct[0].fields.BuyQty1Cost * 100) / 100);
+                                let lineItemObjForm = {
+                                    type: "TPurchaseOrderLine",
+                                    fields: {
+                                        ProductName: productName || '',
+                                        ProductDescription: data.tproduct[0].fields.ProductDescription || '',
+                                        UOMQtySold: parseFloat(1),
+                                        UOMQtyShipped: 0,
+                                        LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                                        CustomerJob: '',
+                                        LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
+                                        LineClassName: defaultDept
+                                    }
+                                };
+
+                                splashLineArray.push(lineItemObjForm);
+
+                                let objDetails = {
+                                    type: "TPurchaseOrderEx",
+                                    fields: {
+                                        SupplierName: 'Misc Supplier',
+                                        ...foreignCurrencyFields,
+                                        SupplierInvoiceNumber: ' ',
+                                        Lines: splashLineArray,
+                                        OrderTo: billingAddress,
+                                        OrderDate: saleDate,
+            
+                                        SupplierInvoiceDate: saleDate,
+            
+                                        SaleLineRef: reference,
+                                        TermsName: termname,
+                                        Shipping: departement,
+                                        ShipTo: shippingAddress,
+                                        Comments: comments,
+                                        SalesComments: pickingInfrmation,
+                                        Attachments: uploadedItems,
+                                        OrderStatus: $('#sltStatus').val()
+                                    }
+                                };
+                            }else {
+                                resolve()
+                            }
+                        })
+                    }
+                })
+            })
+        }
+
         async function saveSubOrders () {
             let record = templateObject.workorderrecord.get();
             let bomStructure = templateObject.bomStructure.get();
@@ -413,6 +503,7 @@ Template.new_workorder.events({
                                         return new Date(e.end);
                                     })));
                                 }
+
                                 let subDetail = {
                                     ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
                                     Customer: $('#edtCustomerName').val() || '',
@@ -426,6 +517,14 @@ Template.new_workorder.events({
                                     StartTime: subStart.toLocaleString(),
                                     InProgress: record.isStarted,
                                     Quantity: record.line.fields.Qty? record.line.fields.Qty* parseFloat(subs.qty) : subs.qty
+                                }
+
+                                if(subs.subs&&subs.subs.length > 0) {
+                                    for(let n=0; n<subs.subs.length; n++) {
+                                        let rawName = subs.subs[n].productName;
+                                        let neededQty = subs.subs[n].qty * subDetail.Quantity;
+                                        await createPurchaseOrder(rawName, neededQty)
+                                    }
                                 }
                                 let subEnd = new Date();
                                 subEnd.setTime(subStart.getTime() + subDetail.Quantity * subs.duration * 3600000);
@@ -707,6 +806,10 @@ Template.new_workorder.helpers({
 
     showBOMModal: ()=> {
         return Template.instance().showBOMModal.get()
+    },
+
+    isMobileDevices: ()=> {
+        return Template.instance().isMobileDevices.get()
     }
 
 })

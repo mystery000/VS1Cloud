@@ -91,6 +91,19 @@ Template.production_planner.onRendered(async function() {
                     let productName = workorders[i].BOM.productName;
                     let startTime = new Date(workorders[i].StartTime);
                     let duration = workorders[i].BOM.duration;
+                    let quantity = workorders[i].Quantity || 1;
+                    let buildSubs = [];
+                    let stockRaws = [];
+                    let subs = workorders[i].BOM.subs;
+                    if(subs.length > 1) {
+                        for(let j = 0; j < subs.length; j++ ) {
+                            if(subs[j].isBuild == true) {
+                                buildSubs.push(subs[j].productName)
+                            }else {
+                                stockRaws.push(subs[j].productName)
+                            }
+                        }
+                    }
                     if (workorders[i].Quantity) duration = duration * parseFloat(workorders[i].Quantity);
                     let endTime = new Date();
                     endTime.setTime(startTime.getTime() + duration * 3600000)
@@ -106,6 +119,12 @@ Template.production_planner.onRendered(async function() {
                         "start": startTime,
                         "end": endTime,
                         "color": "#" + randomColor,
+                        "extendedProps": {
+                            "orderId": workorders[i].ID,
+                            'quantity': quantity,
+                            "builds": buildSubs,
+                            "fromStocks": stockRaws
+                        }
                     }
                     events.push(event);
                 }
@@ -152,6 +171,84 @@ Template.production_planner.onRendered(async function() {
         events: templateObject.events.get().length == 0 ? events : templateObject.events.get(),
         eventOverlap: true,
         eventResourceEditable: false,
+        eventContent:  function (arg) {
+            
+            var event = arg.event;
+            
+
+            async function getCurrentStockCount () {
+                return new Promise(async(resolve, reject) => {
+                    getVS1Data('TProductVS1').then(function(dataObject){
+                        if(dataObject.length == 0) {
+
+                        }else {
+                            let aaa;
+                            resolve(aaa)
+                        }
+                    })
+                })
+            }
+            function checkQtyAvailable() {
+                let productName = event.title;
+                // let currentStockCount = await getCurrentStockCount();
+                let events = templateObject.events.get();
+                let buildSubs = event.extendedProps.builds;
+                let retResult = true;
+                for(let i = 0; i < buildSubs.length ;  i++) {
+                    for(let n = 0; n < events.length; n++) {
+                        let e = events[n];
+
+                    }
+                    let subEvents = events.filter(e=>e.title == buildSubs[i] && new Date(e.start).getTime() <= new Date(event.start).getTime());
+                    // let subEvents = events.filter(e=>e.title == buildSubs[i] && e.start <= event.start && new Date(e.end).getTime() > new Date().getTime());
+                    let subQuantity = 0; 
+                    let needQty = 0;
+                    for(let j = 0; j< subEvents.length; j++) {
+                        if(new Date(subEvents[j].end).getTime() < new Date(event.start).getTime()) {
+                            subQuantity += subEvents[j].extendedProps.quantity
+                        }
+                        
+                       
+                        let filteredMainEvents = events.filter(e => new Date(e.start).getTime() <= new Date(event.start).getTime() && new Date(e.end).getTime() > new Date().getTime() && e.extendedProps.builds.includes(subEvents[j].title) )
+                        for (let k = 0; k< filteredMainEvents.length; k++) {
+                            let filteredOrder = workorders.findIndex(order => {
+                                return order.ID == filteredMainEvents[k].extendedProps.orderId
+                            })
+                            if(filteredOrder > -1) {
+                                let bom = workorders[filteredOrder].BOM.subs;
+                                let index = bom.findIndex(item=>{
+                                    return item.productName == buildSubs[i];
+                                })
+                                if(index>-1) {
+                                    needQty += bom[index].qty *  filteredMainEvents[k].extendedProps.quantity
+                                }
+                            }
+
+                        }
+                        
+                        if(needQty < subQuantity) {
+                            retResult = false
+                        }
+                    }
+                }
+                return retResult;
+            }
+
+            let available = checkQtyAvailable();
+            var customHtml = '';
+            
+            if(available == true) {
+                customHtml += event.title
+            }else {
+
+                customHtml += "<div class='w-100 h-100 unable-process'>" + event.title + "</div>";
+            }
+            
+            // customHtml += "<span class='r10 highlighted-badge font-xxs font-bold'>" + event.extendedProps.age + text + "</span>";
+                          
+
+            return { html: customHtml }
+        },
         businessHours: [{
             daysOfWeek: [1, 2, 3, 4],
             startTime: '10:00',

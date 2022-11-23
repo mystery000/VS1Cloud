@@ -78,6 +78,7 @@ Template.bom_setup.events({
             duration: parseFloat($('.edtDuration').val())
         }
 
+
         for(let i = 1; i< products.length - 1; i ++) {
             let productRows = products[i].querySelectorAll('.productRow')
             let objectDetail;

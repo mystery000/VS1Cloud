@@ -118,5 +118,138 @@
         </div>
         
     </div>
+
+    <style>
+
+        .file-display .fileIocns i.fa.fa-file {
+            color: rgb(252, 181, 38);
+            font-size: 24px;
+        }
+
+        .file-display {
+            padding: 0;
+            margin: 0;
+        }
+
+        .uploaded-element {
+            display: inherit;
+        }
+
+        .uploaded-element {
+
+            border: 1px solid rgb(237, 237, 237);
+            border-top: none;
+
+            float: left;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .uploaded-element-header {
+            border: 1px solid rgb(237, 237, 237);
+            border-top: none;
+            float: left;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #e3e6f0;
+        }
+
+        .uploaded-element .confirm-action a.confirm-delete-attachment {
+            padding: 6px 13px 5px;
+            background-color: rgb(216, 68, 68) !important;
+            border-color: rgb(197, 112, 119) rgb(169, 29, 29) rgb(169, 29, 29) rgb(197, 112, 119);
+            color: rgb(255, 255, 255) !important;
+            text-shadow: 1px 1px 1px rgba(30, 30, 30, 0.15);
+            line-height: initial;
+            font-size: 12px;
+            float: left;
+        }
+
+        .file-display .fileIocns {
+            background-image: url(img/file_icons-samall.png);
+            background-repeat: no-repeat;
+            background-position: 0 -105px;
+        }
+
+        .file-display .fileIocns {
+            float: left;
+            margin-right: 10px;
+        }
+
+        .file-name {
+            float: left;
+            width: 87%;
+        }
+        
+        button.save-to-library {
+            padding: 6px 13px 5px;
+            border-radius: 4px;
+            background: linear-gradient(rgb(255, 255, 255), rgb(230, 234, 236));
+            border: 1px solid rgb(230, 230, 230);
+            border-color: rgb(230, 230, 230) rgb(179, 179, 179) rgb(179, 179, 179) rgb(230, 230, 230) !important;
+            color: rgb(204, 0, 0) !important;
+            font-weight: bold;
+            margin-left: 10px !important;
+            font-size: 12px;
+        }
+    </style>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Upload Attachments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 0px;">
+                    <div class="divTable file-display" >
+                 
+                        <div class="col inboxcol1">
+                            <img src="/icons/nofiles_icon.jpg" class="" style="width:100%;">
+                        </div>
+                        <div class="col inboxcol2" style="text-align: center;">
+                            <div>Upload files or add files from the file library.</div>
+                            {{#if isMobileDevices}}
+                                <div>Capture copies of receipt's or take photo's of completed jobs.</div>
+                            {{/if}}
+                            <p style="color: #ababab;">Only users with access to your company can view these files</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    {{#if isMobileDevices}}
+                        <input type="file" class="img-attachment-upload" id="img-attachment-upload" style="display:none" accept="image/*" capture="camera">
+                        <button class="btn btn-primary btnUploadFile img_new_attachment_btn" type="button"><i class="fas fa-camera" style="margin-right: 5px;"></i>Capture</button>
+
+                        <input type="file" class="attachment-upload" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png">
+                    {{else}}
+                        <input type="file" class="attachment-upload" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
+                               .pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef,
+                               .pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg,
+                               image/gif,image/png,image/bmp,image/tiff,application/pdf,
+                               application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                               application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                               application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,
+                               application/vnd.oasis.opendocument.formula,text/csv,text/plain,text/rtf,message/rfc822,
+                               application/vnd.ms-outlook,application/vnd.oasis.opendocument.spreadsheet,
+                               application/vnd.oasis.opendocument.text,application/x-iwork-keynote-sffkey,
+                               application/vnd.apple.keynote,application/x-iwork-pages-sffpages,
+                               application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers,
+                               application/vnd.apple.numbers,application/zip,application/rar,
+                               application/x-zip-compressed,application/x-zip,application/x-7z-compressed">
+                    {{/if}}
+                    <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button>
+                    <button class="btn btn-success closeModal" data-dismiss="modal" type="button" style="margin-right: 5px;" autocomplete="off">
+                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+                    </button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
 </template>
