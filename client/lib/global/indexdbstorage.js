@@ -330,6 +330,8 @@ openDb = function(dbName) {
             db.createObjectStore('TProjectTasksList', { keyPath: 'EmployeeEmail' });
             db.createObjectStore('TBasedOnType', { keyPath: 'EmployeeEmail' });
             db.createObjectStore('TProcTreeVS1', { keyPath: 'EmployeeEmail' });
+            db.createObjectStore("TABADescriptiveRecord", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TABADetailRecord", { keyPath: "EmployeeEmail" });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });
