@@ -54,7 +54,7 @@
 
     <div class="modal-body">
       <div class="row">
-        <div class="col-6 col-md-5">
+        <div class="col-6 col-md-6">
           <div class="row">
             <div class="col-6 col-md-4">
               <div class="form-group" style="margin: 4px;"><label>Account</label>
@@ -111,7 +111,7 @@
       </div>
 
       <div class="row">
-        <div class="table-responsive eftExportTableContainer">
+        <div class="table-responsive eftExportTableContainer" style="overflow-y: auto !important;">
           <table id="eftExportTable" name="eftExportTable"
             class="dataTable table table-hover table-striped table-bordered eftExportTable">
             <thead>
@@ -131,42 +131,51 @@
               </tr>
             </thead>
             <tbody id="eftExportTableBody">
+              {{#each item in tabadetailrecordList}}
               <tr id="{{eftRowId}}">
                 <td class="colApply">
-                  <input type="checkbox" class="isApply" />
+                  <input type="checkbox" class="isApply" checked="{{item.Apply}}" />
                 </td>
                 <td class="colAccountName">
-                  <input type="text" class="form-control eftInput eftInputAccountName" />
+                  <input type="text" class="form-control eftInput eftInputAccountName" value="{{item.AccountName}}" />
                 </td>
                 <td class="colBsb">
-                  <input type="text" class="form-control eftInput eftInputBsb" placeholder="___-___" />
+                  <input type="text" class="form-control eftInput eftInputBsb" value="{{item.BSB}}" placeholder="___-___" />
                 </td>
                 <td class="colAccountNo">
-                  <input type="text" class="form-control eftInput eftInputAccountNo" />
+                  <input type="text" class="form-control eftInput eftInputAccountNo" value="{{item.CreditDebitAccountNumber}}" />
                 </td>
                 <td class="colTransactionCode">
-                  <select class="form-control pointer sltTranslactionCode">
-                    <option value=""></option>
-                    <option value="">Debit Items</option>
-                    <option value="">Credit Items</option>
+                  <select class="form-control pointer sltTranslactionCode" value="{{item.TransactionCode}}">
+                    <option value="{{item.TransactionCode}}">{{item.TransCodeDesc}}</option>
+                    <option value="13">Debit Items</option>
+                    <option value="50">Credit Items</option>
+                    <option value="51">Australian Govt. Security Interest</option>
+                    <option value="52">Basic Family Payments/Additional Family Payment</option>
+                    <option value="53">Pay</option>
+                    <option value="54">Pension</option>
+                    <option value="55">Allotment</option>
+                    <option value="56">Dividend</option>
+                    <option value="57">Debenture/Note Interest</option>
                   </select>
                 </td>
                 <td class="colLodgement">
-                  <input type="text" class="form-control eftInput eftInputTransactionCode" />
+                  <input type="text" class="form-control eftInput eftInputTransactionCode" value="{{item.LodgementReferences}}"/>
                 </td>
                 <td class="colAmount">
-                  <input type="text" class="form-control eftInput eftInputAmount text-right" />
+                  <input type="text" class="form-control eftInput eftInputAmount text-right" value="{{item.Amount}}"/>
                 </td>
                 <td class="colFromBsb">
-                  <input type="text" class="form-control eftInput eftInputFromBsb" placeholder="___-___" />
+                  <input type="text" class="form-control eftInput eftInputFromBsb" placeholder="___-___" value="{{item.UsersBSB}}"/>
                 </td>
                 <td class="colFromAccountNo">
-                  <input type="text" class="form-control eftInput eftInputFromAccountNo" />
+                  <input type="text" class="form-control eftInput eftInputFromAccountNo" value="{{item.UsersAccountNumber}}"/>
                 </td>
                 <td class="colIdx addNewRow" style="width: 25px">
                   <span class="table-remove btnEftRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
                 </td>
               </tr>
+              {{/each}}
             </tbody>
             <tr>
               <td class="border-none">
