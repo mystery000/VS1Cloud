@@ -172,9 +172,7 @@ Template.production_planner.onRendered(async function() {
         eventOverlap: true,
         eventResourceEditable: false,
         eventContent:  function (arg) {
-            
             var event = arg.event;
-            
 
             async function getCurrentStockCount () {
                 return new Promise(async(resolve, reject) => {
@@ -204,7 +202,7 @@ Template.production_planner.onRendered(async function() {
                     let subQuantity = 0; 
                     let needQty = 0;
                     for(let j = 0; j< subEvents.length; j++) {
-                        if(new Date(subEvents[j].end).getTime() < new Date(event.start).getTime()) {
+                        if(new Date(subEvents[j].end).getTime() <= new Date(event.start).getTime()) {
                             subQuantity += subEvents[j].extendedProps.quantity
                         }
                         
@@ -225,12 +223,12 @@ Template.production_planner.onRendered(async function() {
                             }
 
                         }
-                        
-                        if(needQty < subQuantity) {
+                        if(needQty > subQuantity) {
                             retResult = false
                         }
                     }
                 }
+
                 return retResult;
             }
 
@@ -248,6 +246,14 @@ Template.production_planner.onRendered(async function() {
                           
 
             return { html: customHtml }
+        },
+        eventDidMount : function(arg) {
+            arg.el.ondblclick = (()=>{
+                let event = arg.event;
+                let id = event.extendedProps.orderId;
+                FlowRouter.go('/workordercard?id=' + id)
+            })
+            
         },
         businessHours: [{
             daysOfWeek: [1, 2, 3, 4],
@@ -307,7 +313,6 @@ Template.production_planner.onRendered(async function() {
                 event.resourceId == resourceId && event.title != info.event.title
             )
 
-
             tempEvents.sort((a, b)=>{
                 new Date(a.start) - new Date(b.start)
             })
@@ -342,6 +347,13 @@ Template.production_planner.onRendered(async function() {
                     })
                     calendar.render();
                 }
+            }else {
+                let targetIndex = events.findIndex(event => {
+                    return event.resourceId == resourceId && event.title == info.event.title;
+                })
+                events[targetIndex].start = newStart;
+                events[targetIndex].end = newEnd;
+                templateObject.events.set(events);
             }
 
             // calendar.render()
@@ -448,6 +460,46 @@ Template.production_planner.events({
             let calendarOptions = templateObject.calendarOptions.get();
             let calendarEl= document.getElementById('calendar');
             let newCalendar = new Calendar(calendarEl, {...calendarOptions, events: cloneEvents, firstDay: dayIndex})
+            newCalendar.render();
+            templateObject.calendar.set(newCalendar)
+        }
+
+    },
+
+
+    'click .btn-raw-material': function(eve) {
+        let templateObject = Template.instance();
+        let events = templateObject.events.get();
+        for(let i = 0; i< events.length; i++) {
+            let event = events[i];
+            if(event.extendedProps.builds.length == 0) {
+                continue;
+            } else {
+                let buildSubs = event.extendedProps.builds;
+                buildSubs.sort((a, b)=>{
+                    new Date(a.end) - new Date(b.end)
+                })
+                let newStart = new Date(buildSubs[buildSubs.length-1].end)
+                let duration = new Date(event.end).getTime() - new Date(event.start).getTime();
+                let newEnd = new Date(newStart.getTime() + duration)
+                let eventIndex = events.findIndex(e=>{
+                    return e.extendedProps.orderId == event.extendedProps.orderId
+                })
+
+                let tempEvent = (JSON.parse(JSON.stringify(events)) )[eventIndex] 
+                tempEvent.start = newStart;
+                tempEvent.end = newEnd;
+                events[eventIndex] = tempEvent;
+            }
+        }
+        templateObject.events.set(events);
+        if(templateObject.calendar.get() != null) {
+            let calendar = templateObject.calendar.get();
+            calendar.destroy();
+            let dayIndex = new Date(events[0].start).getDay();
+            let calendarOptions = templateObject.calendarOptions.get();
+            let calendarEl= document.getElementById('calendar');
+            let newCalendar = new Calendar(calendarEl, {...calendarOptions, events: events, firstDay: dayIndex})
             newCalendar.render();
             templateObject.calendar.set(newCalendar)
         }
