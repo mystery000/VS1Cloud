@@ -2521,7 +2521,7 @@ Template.billcard.onRendered(() => {
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -4497,7 +4497,7 @@ Template.billcard.onRendered(() => {
                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                    // $(".btnSave").trigger("click");
                 } else {
-                    
+
                 }
                 document.getElementById('html-2-pdfwrapper_new').style.display="none";
                 $('#html-2-pdfwrapper').css('display', 'none');
@@ -5023,6 +5023,8 @@ Template.billcard.onRendered(function() {
                                     "targets": [3]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
 
                             bStateSave: true,
@@ -5097,6 +5099,8 @@ Template.billcard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
 
 
@@ -5180,6 +5184,8 @@ Template.billcard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
 
 
@@ -7953,7 +7959,7 @@ Template.billcard.events({
             var currentBill = getso_id[getso_id.length - 1];
 
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
+            let ForeignExchangeRate = $('#exchange_rate').val()||0;
             let foreignCurrencyFields = {}
             if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {
@@ -9070,7 +9076,7 @@ Template.billcard.events({
                 var currentBill = getso_id[getso_id.length - 1];
                 let uploadedItems = templateObject.uploadedFiles.get();
                 var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                let ForeignExchangeRate = $('#exchange_rate').val();
+                let ForeignExchangeRate = $('#exchange_rate').val()||0;
                 var objDetails = '';
                 if (getso_id[1]) {
                     currentBill = parseInt(currentBill);

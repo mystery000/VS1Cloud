@@ -891,7 +891,7 @@ Template.paymentcard.onRendered(() => {
 
         }
 
-        
+
         // total amount
         if (noHasTotals.includes(object_invoce[0]["title"])) {
             $("#templatePreviewModal .field_amount").hide();
@@ -900,7 +900,7 @@ Template.paymentcard.onRendered(() => {
             $("#templatePreviewModal .field_amount").show();
             $("#templatePreviewModal .field_payment").css("borderRight", "1px solid black");
         }
-        
+
         $('#templatePreviewModal #subtotal_total').text("Sub total");
         $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
         $('#templatePreviewModal #grandTotal').text("Grand total");
@@ -942,7 +942,7 @@ Template.paymentcard.onRendered(() => {
 
         }
 
-        
+
         // total amount
         if (noHasTotals.includes(object_invoce[0]["title"])) {
             $(".subtotal2").hide();
@@ -996,14 +996,14 @@ Template.paymentcard.onRendered(() => {
             i++;
 
         }
-        
+
         // total amount
         if (noHasTotals.includes(object_invoce[0]["title"])) {
             $(".subtotal3").hide();
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -5015,7 +5015,7 @@ Template.paymentcard.events({
         //     ForeignCurrencyAmount = Number(ForeignCurrencyAmount.replace(/[^0-9.-]+/g, ""));
         // }
         let ForeignExchangeCode = $('#sltCurrency').val();
-        let ForeignExchangeRate = $('#exchange_rate').val();
+        let ForeignExchangeRate = $('#exchange_rate').val()||0;
         let ForeignVariationAmount = $('#edtVariation').val();
         let Amount = $('#edtPaymentAmount').val();
         if (isNaN(Amount) || !Amount) {

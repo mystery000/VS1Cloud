@@ -452,6 +452,8 @@ Template.accountsoverview.onRendered(function() {
                                     targets: [3],
                                 },
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
 
                             pageLength: initialDatatableLoad,
@@ -522,6 +524,8 @@ Template.accountsoverview.onRendered(function() {
                                 targets: [3],
                             },
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
 
                         pageLength: initialDatatableLoad,
@@ -592,6 +596,8 @@ Template.accountsoverview.onRendered(function() {
                                 targets: [3],
                             },
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
 
                         pageLength: initialDatatableLoad,

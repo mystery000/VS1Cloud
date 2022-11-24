@@ -1070,7 +1070,7 @@ Template.new_quote.onRendered(() => {
         } else {
             $(".subtotal2").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint2").text(
             object_invoce[0]["subtotal"]
         );
@@ -1139,7 +1139,7 @@ Template.new_quote.onRendered(() => {
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -5267,8 +5267,9 @@ Template.new_quote.onRendered(function() {
                                     "targets": [3]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-                            bStateSave: true,
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5334,8 +5335,9 @@ Template.new_quote.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5403,8 +5405,9 @@ Template.new_quote.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7373,7 +7376,7 @@ Template.new_quote.events({
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         setTimeout(async function(){
-        
+
         swal({
             title: 'Delete Quote',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -7429,7 +7432,7 @@ Template.new_quote.events({
         let salesService = new SalesBoardService();
         setTimeout(function(){
         LoadingOverlay.show();
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -7642,7 +7645,7 @@ Template.new_quote.events({
         let customername = $('#edtCustomerName');
         let name = $('#edtCustomerEmail').attr('customerfirstname');
         let surname = $('#edtCustomerEmail').attr('customerlastname');
-        
+
         let termname = $('#sltTerms').val() || '';
         // if (termname === '') {
         //     swal('Terms has not been selected!', '', 'warning');
@@ -7792,9 +7795,9 @@ Template.new_quote.events({
             const url = FlowRouter.current().path;
             const getso_id = url.split('?id=');
             let currentQuote = getso_id[getso_id.length - 1];
-            
+
             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
+            let ForeignExchangeRate = $('#exchange_rate').val()||0;
             let foreignCurrencyFields = {}
             if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {
@@ -8777,7 +8780,7 @@ Template.new_quote.events({
             };
             lineItems.push(lineItemObj);
         });
-        
+
         let reset_data = templateObject.reset_data.get();
         reset_data = reset_data.filter(redata => redata.display == false);
         lineItems.push(...reset_data);
@@ -9148,7 +9151,7 @@ Template.new_quote.events({
                     let currentQuote = getso_id[getso_id.length - 1];
                     let uploadedItems = templateObject.uploadedFiles.get();
                     const currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                    let ForeignExchangeRate = $('#exchange_rate').val();
+                    let ForeignExchangeRate = $('#exchange_rate').val()||0;
                     let foreignCurrencyFields = {}
                     if( FxGlobalFunctions.isCurrencyEnabled() ){
                         foreignCurrencyFields = {
@@ -9759,7 +9762,7 @@ Template.new_quote.events({
             let currentQuote = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
+            let ForeignExchangeRate = $('#exchange_rate').val()||0;
             let foreignCurrencyFields = {}
             if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {
@@ -9945,7 +9948,7 @@ Template.new_quote.events({
     'click #btnCopyToOrder': function(e) {
         bOrderInvoice = 1;
         playCopyAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         let i = 0;
         setTimeout(async function(){
@@ -10151,7 +10154,7 @@ Template.new_quote.events({
     //             url = FlowRouter.current().path;
     //             const getso_id = url.split('?id=');
     //             let currentQuote = getso_id[getso_id.length - 1];
-    
+
     //             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //             let ForeignExchangeRate = $('#exchange_rate').val();
     //             let foreignCurrencyFields = {}
@@ -10331,7 +10334,7 @@ Template.new_quote.events({
     'click #btnCopyToInvoice': function(e) {
         bOrderInvoice = 2;
         playCopyAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         let i = 0;
         setTimeout(async function(){
@@ -10539,7 +10542,7 @@ Template.new_quote.events({
     //             url = FlowRouter.current().path;
     //             const getso_id = url.split('?id=');
     //             let currentQuote = getso_id[getso_id.length - 1];
-    
+
     //             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //             let ForeignExchangeRate = $('#exchange_rate').val();
     //             let foreignCurrencyFields = {}
@@ -10725,7 +10728,7 @@ Template.new_quote.events({
     },
     'click .btnSaveFrequency': async function () {
         playSaveAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         // let selectedType = '';
         let selectedType = "basedOnFrequency";
@@ -10743,7 +10746,7 @@ Template.new_quote.events({
         let selectDays = '';
         let dailyRadioOption = '';
         let everyDays = '';
-        
+
         // const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
         let basedOnTypeTexts = '';
         // let basedOnTypeAttr = '';
@@ -10766,7 +10769,7 @@ Template.new_quote.events({
         //   });
         //   if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
         //   if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
-    
+
           let formId = parseInt($("#formid").val());
           let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
           frequencyVal = radioFrequency + '@';
@@ -10813,7 +10816,7 @@ Template.new_quote.events({
           convertedFinishDate = finishDate ? finishDate.split('/')[2] + '-' + finishDate.split('/')[1] + '-' + finishDate.split('/')[0] : '';
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
-    
+
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (

@@ -119,7 +119,7 @@ Template.journalentrycard.onRendered(() => {
       changeYear: true,
       yearRange: "-90:+10",
     });
-  
+
     templateObject.getDayNumber = function (day) {
       day = day.toLowerCase();
       if (day == "") {
@@ -204,7 +204,7 @@ Template.journalentrycard.onRendered(() => {
     if (imageData) {
         $('.uploadedImage').attr('src', imageData);
     };
-    
+
     const records = [];
     let purchaseService = new PurchaseBoardService();
     let clientsService = new PurchaseBoardService();
@@ -1536,6 +1536,8 @@ Template.journalentrycard.onRendered(function() {
                                     "targets": [3]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
 
                             bStateSave: true,
@@ -1608,6 +1610,8 @@ Template.journalentrycard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
 
 
@@ -1689,6 +1693,8 @@ Template.journalentrycard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
 
 
@@ -2024,7 +2030,7 @@ Template.journalentrycard.events({
       },
     'click #copyJournal': async function(event) {
         playCopyAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         let i = 0;
         setTimeout(async function(){
@@ -2139,7 +2145,7 @@ Template.journalentrycard.events({
     },
     'click .btnSaveFrequency': async function () {
         playSaveAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         // let selectedType = '';
         let selectedType = "basedOnFrequency";
@@ -2157,7 +2163,7 @@ Template.journalentrycard.events({
         let selectDays = '';
         let dailyRadioOption = '';
         let everyDays = '';
-        
+
         // const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
         let basedOnTypeTexts = '';
         // let basedOnTypeAttr = '';
@@ -2180,7 +2186,7 @@ Template.journalentrycard.events({
         //   });
         //   if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
         //   if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
-    
+
           let formId = parseInt($("#formid").val());
           let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
           frequencyVal = radioFrequency + '@';
@@ -2227,7 +2233,7 @@ Template.journalentrycard.events({
           convertedFinishDate = finishDate ? finishDate.split('/')[2] + '-' + finishDate.split('/')[1] + '-' + finishDate.split('/')[0] : '';
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
-    
+
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -3263,7 +3269,7 @@ Template.journalentrycard.events({
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         setTimeout(async function(){
-        
+
         swal({
             title: 'Delete Journal Entry',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -3284,10 +3290,10 @@ Template.journalentrycard.events({
                     var fromDate = transactionDate.substring(0, 10);
                     var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
                     var followingJournals = await sideBarService.getTJournalEntryListData(
-                        fromDate, 
-                        toDate, 
-                        false, 
-                        initialReportLoad, 
+                        fromDate,
+                        toDate,
+                        false,
+                        initialReportLoad,
                         0
                     );
                     var journalList = followingJournals.tjournalentrylist;
@@ -3315,7 +3321,7 @@ Template.journalentrycard.events({
         let purchaseService = new PurchaseBoardService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -3376,7 +3382,7 @@ Template.journalentrycard.events({
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         setTimeout(function(){
-        
+
         swal({
             title: 'Delete Journal Entry',
             text: "Are you sure you want to Delete this Journal Entry?",
@@ -3448,7 +3454,7 @@ Template.journalentrycard.events({
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         setTimeout(function(){
-        
+
         let taxcodeList = templateObject.taxraterecords.get();
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblJournalEntryLine tbody>tr').length > 1) {
@@ -3514,10 +3520,10 @@ Template.journalentrycard.events({
         let purchaseService = new PurchaseBoardService();
         let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(function(){
-        
+
         let department = $('#sltDepartment').val();
         let headMemo = $('#txaMemo').val();
-        
+
         if (department === '') {
           swal({
               title: "Department has not been selected!",
@@ -3548,7 +3554,7 @@ Template.journalentrycard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentBill = getso_id[getso_id.length - 1];
-            
+
             var objDetails = '';
             if (getso_id[1]) {
                 $('#tblJournalEntryLine > tbody > tr').each(function() {

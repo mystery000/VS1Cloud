@@ -3975,10 +3975,8 @@ Template.new_invoice.onRendered(function() {
                             let customerData = templateObject.clientrecords.get();
 
                             var added = false;
-                            console.log("useData=", useData);
                             for (let d = 0; d < useData.length; d++) {
                                 if (parseInt(useData[d].fields.ID) === currentInvoice) {
-                                    alert(1);
                                     added = true;
                                     $(".fullScreenSpin").css("display", "none");
                                     let cust_result = customerData.filter((cust_data) => {
@@ -4055,7 +4053,6 @@ Template.new_invoice.onRendered(function() {
 
 
                                     if (useData[d].fields.Lines.length) {
-                                        console.log("---------", useData[d].fields.Lines);
                                         for (let i = 0; i < useData[d].fields.Lines.length; i++) {
 
                                             let AmountGbp =
@@ -4493,7 +4490,6 @@ Template.new_invoice.onRendered(function() {
                                 accountService
                                     .getOneInvoicedataEx(currentInvoice)
                                     .then(async function(data) {
-                                        console.log("data======", data);
                                         templateObject.singleInvoiceData.set(data);
                                         $(".fullScreenSpin").css("display", "none");
                                         let lineItems = [];
@@ -4940,7 +4936,6 @@ Template.new_invoice.onRendered(function() {
                         accountService
                             .getOneInvoicedataEx(currentInvoice)
                             .then(function(data) {
-                                alert(6);
                                 templateObject.singleInvoiceData.set(data);
                                 let cust_result = customerData.filter((cust_data) => {
                                     return cust_data.customername == data.fields.CustomerName;
@@ -7108,10 +7103,10 @@ Template.new_invoice.onRendered(function() {
                 supplier_type: "Customer",
                 supplier_name: customer,
                 supplier_addr: txabillingAddress,
-                fields: { 
-                    "Product Name": ["40", "left"], 
-                    "Description": ["40", "left"], 
-                    "Qty": ["20", "right"] 
+                fields: {
+                    "Product Name": ["40", "left"],
+                    "Description": ["40", "left"],
+                    "Qty": ["20", "right"]
                 },
                 subtotal: "",
                 gst: "",
@@ -7153,10 +7148,10 @@ Template.new_invoice.onRendered(function() {
                 supplier_type: "Customer",
                 supplier_name: customer,
                 supplier_addr: txabillingAddress,
-                fields: { 
-                    "Product Name": ["40", "left"], 
-                    "Description": ["40", "left"], 
-                    "Qty": ["20", "right"] 
+                fields: {
+                    "Product Name": ["40", "left"],
+                    "Description": ["40", "left"],
+                    "Qty": ["20", "right"]
                 },
                 subtotal: "",
                 gst: "",
@@ -7198,10 +7193,10 @@ Template.new_invoice.onRendered(function() {
                 supplier_type: "Customer",
                 supplier_name: customer,
                 supplier_addr: txabillingAddress,
-                fields: { 
-                    "Product Name": ["40", "left"], 
-                    "Description": ["40", "left"], 
-                    "Qty": ["20", "right"] 
+                fields: {
+                    "Product Name": ["40", "left"],
+                    "Description": ["40", "left"],
+                    "Qty": ["20", "right"]
                 },
                 subtotal: "",
                 gst: "",
@@ -11201,7 +11196,7 @@ Template.new_invoice.onRendered(function() {
                 $("#html-2-pdfwrapper3").show();
                 source = document.getElementById("html-2-pdfwrapper3");
             }
-            
+
             let file = "Invoice.pdf";
             if (
                 $(".printID").attr("id") != undefined ||
@@ -11788,19 +11783,19 @@ Template.new_invoice.onRendered(function() {
         // } else {
         //     $("#templatePreviewModal .pdfPONumber").show();
         // }
-    
+
         // if (object_invoce[0]["invoicenumber"] == "") {
         //     $("#templatePreviewModal .invoiceNumber").hide();
         // } else {
         //     $("#templatePreviewModal .invoiceNumber").show();
         // }
-        
+
         // if (object_invoce[0]["refnumber"] == "") {
         //     $("#templatePreviewModal .refNumber").hide();
         // } else {
         //     $("#templatePreviewModal .refNumber").show();
         // }
-        
+
         // if (object_invoce[0]["duedate"] == "") {
         //     $("#templatePreviewModal .pdfTerms").hide();
         // } else {
@@ -11861,7 +11856,7 @@ Template.new_invoice.onRendered(function() {
             tbl_content.append(html);
         }
 
-        
+
         // total amount
         if (noHasTotals.includes(object_invoce[0]["title"])) {
             $("#templatePreviewModal .field_amount").hide();
@@ -11870,25 +11865,25 @@ Template.new_invoice.onRendered(function() {
             $("#templatePreviewModal .field_amount").show();
             $("#templatePreviewModal .field_payment").css("borderRight", "1px solid black");
         }
-        
+
         $("#templatePreviewModal #subtotal_total").text("Sub total");
         $("#templatePreviewModal #subtotal_totalPrint").text(
             object_invoce[0]["subtotal"]
         );
-    
+
         $("#templatePreviewModal #grandTotal").text("Grand total");
         $("#templatePreviewModal #totalTax_totalPrint").text(
             object_invoce[0]["gst"]
         );
-    
+
         $("#templatePreviewModal #grandTotalPrint").text(
             object_invoce[0]["total"]
         );
-    
+
         $("#templatePreviewModal #totalBalanceDuePrint").text(
             object_invoce[0]["bal_due"]
         );
-    
+
         $("#templatePreviewModal #paid_amount").text(
             object_invoce[0]["paid_amount"]
         );
@@ -11943,13 +11938,13 @@ Template.new_invoice.onRendered(function() {
             tbl_content.append(html);
         }
 
-        
+
         if (noHasTotals.includes(object_invoce[0]["title"])) {
             $(".subtotal2").hide();
         } else {
             $(".subtotal2").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint2").text(
             object_invoce[0]["subtotal"]
         );
@@ -11961,7 +11956,7 @@ Template.new_invoice.onRendered(function() {
         );
         $("#templatePreviewModal #paid_amount2").text(
             object_invoce[0]["paid_amount"]
-        );  
+        );
     }
 
     function loadTemplateBody3(object_invoce) {
@@ -12018,7 +12013,7 @@ Template.new_invoice.onRendered(function() {
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -12885,6 +12880,8 @@ Template.new_invoice.onRendered(function() {
                                         targets: [3],
                                     },
                                 ],
+                                select: true,
+                                destroy: true,
                                 colReorder: true,
 
                                 pageLength: initialDatatableLoad,
@@ -12957,6 +12954,8 @@ Template.new_invoice.onRendered(function() {
                                     targets: [3],
                                 },
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
 
                             pageLength: initialDatatableLoad,
@@ -13030,6 +13029,8 @@ Template.new_invoice.onRendered(function() {
                                     targets: [3],
                                 },
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
 
                             pageLength: initialDatatableLoad,
@@ -14348,7 +14349,7 @@ Template.new_invoice.events({
                     var currentInvoice = getso_id[getso_id.length - 1];
                     let uploadedItems = templateObject.uploadedFiles.get();
                     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                    let ForeignExchangeRate = $('#exchange_rate').val();
+                    let ForeignExchangeRate = $('#exchange_rate').val()||0;
                     var objDetails = "";
                     if (getso_id[1]) {
                         currentInvoice = parseInt(currentInvoice);
@@ -18141,7 +18142,7 @@ Template.new_invoice.events({
                 var currentInvoice = getso_id[getso_id.length - 1];
 
                 var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                let ForeignExchangeRate = $('#exchange_rate').val();
+                let ForeignExchangeRate = $('#exchange_rate').val()||0;
                 var objDetails = "";
                 if (departement === "") {
                     swal({
@@ -19730,7 +19731,7 @@ Template.new_invoice.events({
             var currentInvoice = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
+            let ForeignExchangeRate = $('#exchange_rate').val()||0;
             var objDetails = "";
             if (getso_id[1]) {
                 currentInvoice = parseInt(currentInvoice);
@@ -20623,7 +20624,7 @@ Template.new_invoice.events({
         //       var currentInvoice = getso_id[getso_id.length - 1];
 
         //       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-        //       let ForeignExchangeRate = $('#exchange_rate').val();
+        //       let ForeignExchangeRate = $('#exchange_rate').val()||0;
         //       var objDetails = "";
         //       if (getso_id[1]) {
         //         currentInvoice = parseInt(currentInvoice);

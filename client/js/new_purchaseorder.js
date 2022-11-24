@@ -103,7 +103,7 @@ Template.purchaseordercard.onRendered(() => {
       changeYear: true,
       yearRange: "-90:+10",
     });
-  
+
     templateObject.getDayNumber = function (day) {
       day = day.toLowerCase();
       if (day == "") {
@@ -1223,7 +1223,7 @@ templateObject.getLastPOData = async function() {
         } else {
             $(".subtotal2").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint2").text(
             object_invoce[0]["subtotal"]
         );
@@ -1294,7 +1294,7 @@ templateObject.getLastPOData = async function() {
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -4664,7 +4664,7 @@ templateObject.getLastPOData = async function() {
                             }
                         }
                     }
-                }); 
+                });
             });
             html2pdf().set(opt).from(source).save().then(function (dataObject) {
                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
@@ -4831,7 +4831,7 @@ templateObject.getLastPOData = async function() {
             });
         })
 
-      
+
 
     };
 
@@ -5216,6 +5216,8 @@ Template.purchaseordercard.onRendered(function() {
                                     "targets": [3]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
 
 
@@ -5298,6 +5300,8 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
 
 
@@ -5381,6 +5385,8 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
 
 
@@ -7597,7 +7603,7 @@ Template.purchaseordercard.events({
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         setTimeout(async function(){
-        
+
         swal({
             title: 'Delete Purchase Order',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -7713,9 +7719,9 @@ Template.purchaseordercard.events({
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         setTimeout(function(){
-        
+
         let taxcodeList = templateObject.taxraterecords.get();
-        
+
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblPurchaseOrderLine tbody>tr').length > 1) {
             this.click;
@@ -7883,7 +7889,7 @@ Template.purchaseordercard.events({
         saveCurrencyHistory();
         let isBORedirect = await tempObject.isbackorderredirect.get() || false;
         let suppliername = $('#edtSupplierName');
-        
+
         let termname = $('#sltTerms').val() || '';
         if (termname === '') {
             swal('Terms has not been selected!', '', 'warning');
@@ -8061,9 +8067,9 @@ Template.purchaseordercard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentPurchaseOrder = getso_id[getso_id.length - 1];
-            
+
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
+            let ForeignExchangeRate = $('#exchange_rate').val()||0;
             let foreignCurrencyFields = {}
             if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {
@@ -9023,7 +9029,7 @@ Template.purchaseordercard.events({
         lineItems.push(lineItemObj);
       });
 
-      
+
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
@@ -9520,7 +9526,7 @@ Template.purchaseordercard.events({
     },
     'click #btnCopyToInvoice': function() {
         playCopyAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         let i = 0;
         setTimeout(async function(){
@@ -9741,7 +9747,7 @@ Template.purchaseordercard.events({
     //             var url = FlowRouter.current().path;
     //             var getso_id = url.split('?id=');
     //             var currentPurchaseOrder = getso_id[getso_id.length - 1];
-    
+
     //             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //             var objDetails = '';
     //             if (getso_id[1]) {
@@ -9907,7 +9913,7 @@ Template.purchaseordercard.events({
     },
     'click #btnCopyPO': function() {
         playCopyAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         let i = 0;
         setTimeout(async function(){
@@ -10144,7 +10150,7 @@ Template.purchaseordercard.events({
     //         var url = FlowRouter.current().path;
     //         var getso_id = url.split('?id=');
     //         var currentPurchaseOrder = getso_id[getso_id.length - 1];
-    
+
     //         var currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //         var objDetails = '';
     //         if (getso_id[1]) {
@@ -10332,7 +10338,7 @@ Template.purchaseordercard.events({
     },
     'click .btnSaveFrequency': async function () {
         playSaveAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         let selectedType = '';
         let frequencyVal = '';
@@ -10349,7 +10355,7 @@ Template.purchaseordercard.events({
         let selectDays = '';
         let dailyRadioOption = '';
         let everyDays = '';
-        
+
         const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
         let basedOnTypeTexts = '';
         let basedOnTypeAttr = '';
@@ -10371,7 +10377,7 @@ Template.purchaseordercard.events({
         //   });
         //   if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
         //   if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
-    
+
           let formId = parseInt($("#formid").val());
           let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
           frequencyVal = radioFrequency + '@';
@@ -10418,7 +10424,7 @@ Template.purchaseordercard.events({
           convertedFinishDate = finishDate ? finishDate.split('/')[2] + '-' + finishDate.split('/')[1] + '-' + finishDate.split('/')[0] : '';
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
-    
+
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
