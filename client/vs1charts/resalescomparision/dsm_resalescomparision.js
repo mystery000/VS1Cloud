@@ -46,6 +46,7 @@ Template.dsmResalescomparision.onRendered(() => {
 
     // if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
     getInvSales(function(data) {
+        console.log("----------", data)
         setTimeout(function() {
             topTenData1 = _.take(data, 5);
             let totalBalance = 0;

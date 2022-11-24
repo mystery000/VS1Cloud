@@ -844,7 +844,7 @@
                                     {{#each item in invoicerecord.LineItems}}
                                     <tr class="dnd-moved" id={{item.lineID}}>
                                       <td contenteditable="false" class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}"><input
-                                          class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}"></td>
+                                          class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}" itemid="{{item.itemID}}"></td>
                                       <td contenteditable="true"
                                         class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
                                         {{item.description}}</td>
