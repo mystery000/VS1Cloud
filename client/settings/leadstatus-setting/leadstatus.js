@@ -26,24 +26,6 @@ Template.leadstatussettings.onRendered(function() {
     let needAddQuoted = true;
     let needAddInvoiced = true;
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'leadStatusList', function(error, result) {
-        if (error) {
-
-        } else {
-            if (result) {
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-                }
-            }
-        }
-    });
 
     function MakeNegative() {
         $('td').each(function() {
@@ -53,7 +35,7 @@ Template.leadstatussettings.onRendered(function() {
     }
 
     templateObject.getLeadStatusData = function() {
-        getVS1Data('TLeadStatus').then(function(dataObject) {
+        getVS1Data('TLeadStatusTypeList').then(function(dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getAllLeadStatus().then(function(data) {
                     setLeadStatusList(data);
@@ -70,24 +52,40 @@ Template.leadstatussettings.onRendered(function() {
     }
 
     function setLeadStatusList(data) {
-        for (let i = 0; i < data.tleadstatustype.length; i++) {
-            let eqpm = Number(data.tleadstatustype[i].EQPM);
-            const dataList = {
-                id: data.tleadstatustype[i].Id || '',
-                typeName: data.tleadstatustype[i].TypeName || '',
-                description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName,
-                eqpm: utilityService.negativeNumberFormat(eqpm)
+        let isDefault = false;
+        let linestatus = '';
+
+        for (let i = 0; i < data.tleadstatustypelist.length; i++) {
+            let eqpm = Number(data.tleadstatustypelist[i].EQPM);
+            if(data.tleadstatustypelist[i].IsDefault == true){
+                isDefault = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+data.tleadstatustypelist[i].ID+'" checked><label class="custom-control-label chkBox" for="iseomplus-'+data.tleadstatustypelist[i].ID+'"></label></div>';
+            }else{
+                isDefault = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+data.tleadstatustypelist[i].ID+'"><label class="custom-control-label chkBox" for="iseomplus-'+data.tleadstatustypelist[i].ID+'"></label></div>';
             };
-            if (data.tleadstatustype[i].TypeName == "Unqualified") {
+            if (data.tleadstatustypelist[i].Active == true) {
+                linestatus = "";
+            } else if (data.tleadstatustypelist[i].Active == false) {
+                linestatus = "In-Active";
+            };
+            const dataList = {
+                id: data.tleadstatustypelist[i].ID || '',
+                typeName: data.tleadstatustypelist[i].TypeCode || '',
+                typeName: data.tleadstatustypelist[i].Name || '',
+                description: data.tleadstatustypelist[i].Description || data.tleadstatustypelist[i].Name,
+                isDefault: isDefault,
+                eqpm: utilityService.negativeNumberFormat(eqpm),
+                status: linestatus
+            };
+            if (data.tleadstatustypelist[i].Name == "Unqualified") {
                 needAddUnqualified = false;
             }
-            if (data.tleadstatustype[i].TypeName == "Opportunity") {
+            if (data.tleadstatustypelist[i].Name == "Opportunity") {
                 needAddOpportunity = false;
             }
-            if (data.tleadstatustype[i].TypeName == "Quoted") {
+            if (data.tleadstatustypelist[i].Name == "Quoted") {
                 needAddQuoted = false;
             }
-            if (data.tleadstatustype[i].TypeName == "Invoiced") {
+            if (data.tleadstatustypelist[i].Name == "Invoiced") {
                 needAddInvoiced = false;
             }
             dataTableList.push(dataList);
@@ -95,7 +93,7 @@ Template.leadstatussettings.onRendered(function() {
         addDefaultValue();
         templateObject.datatablerecords.set(dataTableList);
         if (templateObject.datatablerecords.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'leadStatusList', function(error, result) {
+            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblLeadStatusList', function(error, result) {
                 if (error) {
 
                 } else {
@@ -125,7 +123,7 @@ Template.leadstatussettings.onRendered(function() {
         }
         $('.fullScreenSpin').css('display', 'none');
         setTimeout(function() {
-            $('#leadStatusList').DataTable({
+            $('#tblLeadStatusList').DataTable({
                 columnDefs: [{
                     type: 'date',
                     targets: 0
@@ -174,7 +172,7 @@ Template.leadstatussettings.onRendered(function() {
                     [0, "asc"]
                 ],
                 action: function() {
-                    $('#leadStatusList').DataTable().ajax.reload();
+                    $('#tblLeadStatusList').DataTable().ajax.reload();
                 },
                 "fnDrawCallback": function(oSettings) {
                     setTimeout(function() {
@@ -184,9 +182,9 @@ Template.leadstatussettings.onRendered(function() {
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function() {
                     this.fnPageChange('last');
-                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#leadStatusList_filter");
+                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblLeadStatusList_filter");
 
-                    $("<button class='btn btn-primary btnRefreshleadStatusList' type='button' id='btnRefreshleadStatusList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#leadStatusList_filter");
+                    $("<button class='btn btn-primary btnRefreshleadStatusList' type='button' id='btnRefreshleadStatusList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeadStatusList_filter");
                 },
             }).on('page', function() {
                 setTimeout(function() {
@@ -203,7 +201,7 @@ Template.leadstatussettings.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         }, 0);
 
-        const columns = $('#leadStatusList th');
+        const columns = $('#tblLeadStatusList th');
         let sWidth = "";
         let columnVisible = false;
         $.each(columns, function(i, v) {
@@ -237,20 +235,20 @@ Template.leadstatussettings.onRendered(function() {
             if (needAddUnqualified) {
                 contactService.getOneLeadStatusExByName("Quoted").then(function(leadStatus) {
                     let objUnqualified;
-                    if (leadStatus.tleadstatustype.length == 0) {
+                    if (leadStatus.tleadstatustypelist.length == 0) {
                         objUnqualified = {
-                            type: "TLeadStatus",
+                            type: "TLeadStatusType",
                             fields: {
-                                TypeName: "Unqualified",
+                                Name: "Unqualified",
                                 Description: "Default Value",
                                 EQPM: 10,
                                 Active: true
                             }
                         }
                     } else {
-                        let statusID = leadStatus.tleadstatustype[0].fields.ID;
+                        let statusID = leadStatus.tleadstatustypelist[0].ID;
                         objUnqualified = {
-                            type: "TLeadStatus",
+                            type: "TLeadStatusType",
                             fields: {
                                 Id: statusID,
                                 Active: true
@@ -265,20 +263,20 @@ Template.leadstatussettings.onRendered(function() {
             if (needAddOpportunity) {
                 contactService.getOneLeadStatusExByName("Quoted").then(function(leadStatus) {
                     let objOpportunity;
-                    if (leadStatus.tleadstatustype.length == 0) {
+                    if (leadStatus.tleadstatustypelist.length == 0) {
                         objOpportunity = {
-                            type: "TLeadStatus",
+                            type: "TLeadStatusType",
                             fields: {
-                                TypeName: "Opportunity",
+                                Name: "Opportunity",
                                 Description: "Default Value",
                                 EQPM: 10,
                                 Active: true
                             }
                         }
                     } else {
-                        let statusID = leadStatus.tleadstatustype[0].fields.ID;
+                        let statusID = leadStatus.tleadstatustypelist[0].ID;
                         objOpportunity = {
-                            type: "TLeadStatus",
+                            type: "TLeadStatusType",
                             fields: {
                                 Id: statusID,
                                 Active: true
@@ -293,20 +291,20 @@ Template.leadstatussettings.onRendered(function() {
             if (needAddQuoted) {
                 contactService.getOneLeadStatusExByName("Quoted").then(function(leadStatus) {
                     let objQuoted;
-                    if (leadStatus.tleadstatustype.length == 0) {
+                    if (leadStatus.tleadstatustypelist.length == 0) {
                         objQuoted = {
-                            type: "TLeadStatus",
+                            type: "TLeadStatusType",
                             fields: {
-                                TypeName: "Quoted",
+                                Name: "Quoted",
                                 Description: "Default Value",
                                 EQPM: 10,
                                 Active: true
                             }
                         }
                     } else {
-                        let statusID = leadStatus.tleadstatustype[0].fields.ID;
+                        let statusID = leadStatus.tleadstatustypelist[0].ID;
                         objQuoted = {
-                            type: "TLeadStatus",
+                            type: "TLeadStatusType",
                             fields: {
                                 Id: statusID,
                                 Active: true
@@ -321,18 +319,18 @@ Template.leadstatussettings.onRendered(function() {
             if (needAddInvoiced) {
                 contactService.getOneLeadStatusExByName("Invoiced").then(function(leadStatus) {
                     let objInvoiced;
-                    if (leadStatus.tleadstatustype.length == 0) {
+                    if (leadStatus.tleadstatustypelist.length == 0) {
                         objInvoiced = {
                             type: "TLeadStatusType",
                             fields: {
-                                TypeName: "Invoiced",
+                                Name: "Invoiced",
                                 Description: "Default Value",
                                 EQPM: 10,
                                 Active: true
                             }
                         }
                     } else {
-                        let statusID = leadStatus.tleadstatustype[0].fields.ID;
+                        let statusID = leadStatus.tleadstatustypelist[0].ID;
                         objInvoiced = {
                             type: "TLeadStatusType",
                             fields: {
@@ -349,7 +347,7 @@ Template.leadstatussettings.onRendered(function() {
             setTimeout(function() {
                 if (isSaved) {
                     sideBarService.getAllLeadStatus().then(function(dataReload) {
-                        addVS1Data('TLeadStatusType', JSON.stringify(dataReload)).then(function(datareturn) {
+                        addVS1Data('TLeadStatusTypeList', JSON.stringify(dataReload)).then(function(datareturn) {
                             Meteor._reload.reload();
                         }).catch(function(err) {
                             Meteor._reload.reload();
@@ -375,182 +373,22 @@ Template.leadstatussettings.onRendered(function() {
         let description = $(event.target).closest('tr').find('.colDescription').text();
         let statusName = $(event.target).closest('tr').find('.colStatusName').text();
         let quantity = $(event.target).closest('tr').find('.colQuantity').text();
+        let status = $(event.target).closest('tr').find('.colStatus').text();
         $('#statusID').val(targetID);
         $('#edtLeadStatusName').val(statusName);
         $('#statusDescription').val(description);
         $('#statusQuantity').val(quantity);
         $('#myModalLeadStatus').modal('show');
+        //Make btnDelete "Make Active or In-Active"
+        if(status == "In-Active"){
+            $('#view-in-active').html("<button class='btn btn-success btnActivateLeadStatus vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
+        }else{
+            $('#view-in-active').html("<button class='btn btn-danger btnDeleteLeadStatus vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
+        }
     });
 });
 
 Template.leadstatussettings.events({
-    'click .chkDatatable': function(event) {
-        const columns = $('#leadStatusList th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
-    'click .resetTable': function(event) {
-        const getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                const clientID = getcurrentCloudDetails._id;
-                const clientUsername = getcurrentCloudDetails.cloudUsername;
-                const clientEmail = getcurrentCloudDetails.cloudEmail;
-                const checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'leadStatusList'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function(err, idTag) {
-                        if (err) {} else {
-                            Meteor._reload.reload();
-                        }
-                    });
-                }
-            }
-        }
-    },
-    'click .saveTable': function(event) {
-        let lineItems = [];
-        $('.columnSettings').each(function(index) {
-            const $tblrow = $(this);
-            const colTitle = $tblrow.find(".divcolumn").text() || '';
-            const colWidth = $tblrow.find(".custom-range").val() || 0;
-            const colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            let colHidden = false;
-            colHidden = !$tblrow.find(".custom-control-input").is(':checked');
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
-            lineItems.push(lineItemObj);
-        });
-        const getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                const clientID = getcurrentCloudDetails._id;
-                const clientUsername = getcurrentCloudDetails.cloudUsername;
-                const clientEmail = getcurrentCloudDetails.cloudEmail;
-                const checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'leadStatusList'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.update({
-                        _id: checkPrefDetails._id
-                    }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'leadStatusList',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'leadStatusList',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-                }
-            }
-        }
-        $('#myModal2').modal('toggle');
-    },
-    'blur .divcolumn': function(event) {
-        let columData = $(event.target).text();
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        const datable = $('#leadStatusList').DataTable();
-        const title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-    },
-    'change .rngRange': function(event) {
-        let range = $(event.target).val();
-        $(event.target).closest("div.divColWidth").find(".spWidth").html(range + 'px');
-        let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        const datable = $('#leadStatusList th');
-        $.each(datable, function(i, v) {
-            if (v.innerText == columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css('width', range + 'px');
-            }
-        });
-    },
-    'click .btnOpenSettings': function(event) {
-        let templateObject = Template.instance();
-        const columns = $('#leadStatusList th');
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i, v) {
-            if (v.hidden == false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
     'click #exportbtn': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblLeadStatusList_wrapper .dt-buttons .btntabletocsv').click();
@@ -562,10 +400,11 @@ Template.leadstatussettings.events({
         $(".fullScreenSpin").css("display", "none");
     },
     'click .btnRefresh': function() {
+        $(".fullScreenSpin").css("display", "inline-block");
         sideBarService.getAllLeadStatus().then(function(dataReload) {
             addVS1Data('TLeadStatusType', JSON.stringify(dataReload)).then(function(datareturn) {
-              sideBarService.getAllLeadStatus(initialBaseDataLoad, 0, false).then(function(dataLeadList) {
-                  addVS1Data('TLeadStatusTypeList', JSON.stringify(dataLeadList)).then(function(datareturn) {
+              sideBarService.getLeadStatusDataList(initialBaseDataLoad, 0, false).then(async function(dataLeadList) {
+                  await addVS1Data('TLeadStatusTypeList', JSON.stringify(dataLeadList)).then(function(datareturn) {
                       Meteor._reload.reload();
                   }).catch(function(err) {
                       Meteor._reload.reload();
@@ -585,8 +424,9 @@ Template.leadstatussettings.events({
         $('#statusID').val('');
         $('#edtLeadStatusName').val('');
         $('#statusDescription').val('');
-        $('#statusQuantity').val(10);
+        $('#statusQuantity').val(1.0);
         $('#myModalLeadStatus').modal('show');
+        $('#view-in-active').html("<button class='btn btn-danger btnDeleteLeadStatus vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
     },
     'click .btnClose': function () {
         playCancelAudio();
@@ -599,21 +439,94 @@ Template.leadstatussettings.events({
         let contactService = new ContactService();
         setTimeout(function() {
             $('.fullScreenSpin').css('display', 'inline-block');
-            let statusId = $('#statusID').val();
+            let statusId = $('#statusID').val()||0;
+            let statusName = $('#edtLeadStatusName').val() || '';
+            let statusDesc = $('#statusDescription').val() || '';
+            let statusEQPM = $('#statusQuantity').val() || '';
+            statusEQPM = Number(statusEQPM.replace(/[^0-9.-]+/g, "")) || 1.0
+            statusEQPM = statusEQPM.toString();
             let objDetails = {
                 type: "TLeadStatusType",
                 fields: {
                     Id: statusId,
+                    TypeName: statusName,
+                    Description: statusDesc,
+                    EQPM: statusEQPM,
                     Active: false
                 }
             };
             contactService.saveLeadStatusData(objDetails).then(function(result) {
                 sideBarService.getAllLeadStatus().then(function(dataReload) {
                     addVS1Data('TLeadStatusType', JSON.stringify(dataReload)).then(function(datareturn) {
-                        Meteor._reload.reload();
+                      sideBarService.getLeadStatusDataList(initialBaseDataLoad, 0, false).then(async function(dataLeadList) {
+                          await addVS1Data('TLeadStatusTypeList', JSON.stringify(dataLeadList)).then(function(datareturn) {
+                              Meteor._reload.reload();
+                          }).catch(function(err) {
+                              Meteor._reload.reload();
+                          });
+                      }).catch(function(err) {
+                          Meteor._reload.reload();
+                      });
                     }).catch(function(err) {
                         Meteor._reload.reload();
                     });
+                }).catch(function(err) {
+                    Meteor._reload.reload();
+                });
+            }).catch(function(err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                        Meteor._reload.reload();
+                    } else if (result.dismiss === 'cancel') {}
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        }, delayTimeAfterSound);
+    },
+    'click .btnActivateLeadStatus': function() {
+        playDeleteAudio();
+        let contactService = new ContactService();
+        setTimeout(function() {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            let statusId = $('#statusID').val()||0;
+            let statusName = $('#edtLeadStatusName').val() || '';
+            let statusDesc = $('#statusDescription').val() || '';
+            let statusEQPM = $('#statusQuantity').val() || '';
+            statusEQPM = Number(statusEQPM.replace(/[^0-9.-]+/g, "")) || 1.0
+            statusEQPM = statusEQPM.toString();
+            let objDetails = {
+                type: "TLeadStatusType",
+                fields: {
+                    Id: statusId,
+                    TypeName: statusName,
+                    Description: statusDesc,
+                    EQPM: statusEQPM,
+                    Active: true
+                }
+            };
+            contactService.saveLeadStatusData(objDetails).then(function(result) {
+                sideBarService.getAllLeadStatus().then(function(dataReload) {
+                    addVS1Data('TLeadStatusType', JSON.stringify(dataReload)).then(function(datareturn) {
+                      sideBarService.getLeadStatusDataList(initialBaseDataLoad, 0, false).then(async function(dataLeadList) {
+                          await addVS1Data('TLeadStatusTypeList', JSON.stringify(dataLeadList)).then(function(datareturn) {
+                              Meteor._reload.reload();
+                          }).catch(function(err) {
+                              Meteor._reload.reload();
+                          });
+                      }).catch(function(err) {
+                          Meteor._reload.reload();
+                      });
+                    }).catch(function(err) {
+                        Meteor._reload.reload();
+                    });
+                }).catch(function(err) {
+                    Meteor._reload.reload();
                 });
             }).catch(function(err) {
                 swal({
@@ -672,8 +585,16 @@ Template.leadstatussettings.events({
 
                 contactService.saveLeadStatusData(objDetails).then(function(result) {
                     sideBarService.getAllLeadStatus().then(function(dataReload) {
-                        addVS1Data('TLeadStatus', JSON.stringify(dataReload)).then(function(datareturn) {
-                            Meteor._reload.reload();
+                        addVS1Data('TLeadStatusType', JSON.stringify(dataReload)).then(function(datareturn) {
+                          sideBarService.getLeadStatusDataList(initialBaseDataLoad, 0, false).then(async function(dataLeadList) {
+                              await addVS1Data('TLeadStatusTypeList', JSON.stringify(dataLeadList)).then(function(datareturn) {
+                                  Meteor._reload.reload();
+                              }).catch(function(err) {
+                                  Meteor._reload.reload();
+                              });
+                          }).catch(function(err) {
+                              Meteor._reload.reload();
+                          });
                         }).catch(function(err) {
                             Meteor._reload.reload();
                         });
@@ -805,13 +726,15 @@ Template.leadstatussettings.events({
                             $('.fullScreenSpin').css('display', 'none');
                         }, parseInt(dataLength));
                         for (let i = 0; i < results.data.length - 1; i++) {
-                            leadDescription = results.data[i + 1][1] !== undefined ? results.data[i + 1][1] : '';
-                            leadEQPM = results.data[i + 1][2] !== undefined ? results.data[i + 1][2] : '';
+                            leadDescription = results.data[i + 1][2] !== undefined ? results.data[i + 1][2] : '';
+                            leadEQPM = results.data[i + 1][4] !== undefined ? results.data[i + 1][4] : '';
                             objDetails = {
                                 type: "TLeadStatusType",
                                 fields: {
-                                    TypeName: results.data[i + 1][0],
+                                    TypeCode: results.data[i + 1][0],
+                                    Name: results.data[i + 1][1],
                                     Description: leadDescription || '',
+                                    IsDefault: results.data[i + 1][3],
                                     EQPM: leadEQPM || 0.00,
                                     Active: true
                                 }
@@ -869,7 +792,7 @@ Template.leadstatussettings.helpers({
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
             userid: Session.get('mycloudLogonID'),
-            PrefName: 'leadStatusList'
+            PrefName: 'tblLeadStatusList'
         });
     },
     loggedCompany: () => {

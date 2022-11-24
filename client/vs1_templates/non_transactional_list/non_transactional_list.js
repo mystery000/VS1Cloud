@@ -134,16 +134,22 @@ Template.non_transactional_list.onRendered(function() {
                     { index: 0, label: '#ID', class: 'colClientTypeID', active: false, display: true, width: "10" },
                     { index: 1, label: 'Type Name', class: 'colTypeName', active: true, display: true, width: "200" },
                     { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-                    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+                    { index: 3, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "200" },
+                    { index: 4, label: 'Default Accounts', class: 'colDefaultAccount', active: false, display: true, width: "250" },
+                    { index: 5, label: 'Grace Period', class: 'colGracePeriodtus', active: false, display: true, width: "100" },
+                    { index: 6, label: 'Terms', class: 'colTermsID', active: false, display: true, width: "100" },
+                    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
                   ];
           }
           else if(currenttablename == "tblLeadStatusList") { //Done Something Here
               reset_data = [
                 { index: 0, label: '#ID', class: 'colLeadStatusID', active: false, display: true, width: "10" },
-                { index: 1, label: 'Lead Status Name', class: 'colStatusName', active: true, display: true, width: "200" },
-                { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-                { index: 3, label: 'Expected Quantity per Month', class: 'colQuantity', active: true, display: true, width: "200" },
-                { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+                { index: 1, label: 'Type Code', class: 'colLeadTypeCode', active: false, display: true, width: "200" },
+                { index: 2, label: 'Lead Status Name', class: 'colStatusName', active: true, display: true, width: "200" },
+                { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+                { index: 4, label: 'Is Default', class: 'colIsDefault', active: false, display: true, width: "100" },
+                { index: 5, label: 'Expected Quantity per Month', class: 'colQuantity', active: true, display: true, width: "250" },
+                { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
               ];
           }else if(currenttablename == "tblDepartmentList") { //Done Something Here
               reset_data = [
@@ -260,25 +266,25 @@ Template.non_transactional_list.onRendered(function() {
     templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
-      getVS1Data("VS1_Customize").then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              templateObject.showCustomFieldDisplaySettings(reset_data);
-          }).catch(function (err) {
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          if(data.ProcessLog.Obj.CustomLayout.length > 0){
-           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-               templateObject.showCustomFieldDisplaySettings(reset_data);
-             }
-           }
-         };
-        }
-      });
+      // getVS1Data("VS1_Customize").then(function (dataObject) {
+      //   if (dataObject.length == 0) {
+      //     sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+      //         reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+      //         templateObject.showCustomFieldDisplaySettings(reset_data);
+      //     }).catch(function (err) {
+      //     });
+      //   } else {
+      //     let data = JSON.parse(dataObject[0].data);
+      //     if(data.ProcessLog.Obj.CustomLayout.length > 0){
+      //      for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+      //        if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+      //          reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+      //          templateObject.showCustomFieldDisplaySettings(reset_data);
+      //        }
+      //      }
+      //    };
+      //   }
+      // });
 
     } catch (error) {
 
@@ -2233,26 +2239,26 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
         let lineItems = [];
         let lineItemObj = {};
         let deleteFilter = false;
-        // if(data.Params.Search.replace(/\s/g, "") == ""){
-        //   deleteFilter = true;
-        // }else{
-        //   deleteFilter = false;
-        // };
+        if(data.Params.Search.replace(/\s/g, "") == ""){
+          deleteFilter = true;
+        }else{
+          deleteFilter = false;
+        };
 
-        for (let i = 0; i < data.tclienttype.length; i++) {
+        for (let i = 0; i < data.tclienttypelist.length; i++) {
           let mobile = "";
           //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
           let linestatus = '';
-          if (data.tclienttype[i].fields.Active == true) {
+          if (data.tclienttypelist[i].Active == true) {
               linestatus = "";
-          } else if (data.tclienttype[i].fields.Active == false) {
+          } else if (data.tclienttypelist[i].Active == false) {
               linestatus = "In-Active";
           };
           var dataList = [
-            data.tclienttype[i].fields.ID || "",
-            data.tclienttype[i].fields.TypeName || "",
-            data.tclienttype[i].fields.TypeDescription || "",
-            linestatus,
+            data.tclienttypelist[i].ID || "",
+            data.tclienttypelist[i].TypeDescription || "",
+            data.tclienttypelist[i].TypeDescription || "",
+            linestatus
           ];
 
             splashArrayClientTypeList.push(dataList);
@@ -2290,6 +2296,26 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     },
                     {
                       targets: 3,
+                      className: "colCreditLimit hiddenColumn",
+                      width: "200px",
+                    },
+                    {
+                      targets: 4,
+                      className: "colDefaultAccount hiddenColumn",
+                      width: "250px",
+                    },
+                    {
+                      targets: 5,
+                      className: "colGracePeriod hiddenColumn",
+                      width: "100px",
+                    },
+                    {
+                      targets: 6,
+                      className: "colTermsID hiddenColumn",
+                      width: "100px",
+                    },
+                    {
+                      targets: 7,
                       className: "colStatus",
                       width: "100px",
                     }
@@ -2360,7 +2386,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                   let dataLenght = oSettings._iDisplayLength;
                   let customerSearch = $('#'+currenttablename+'_filter input').val();
 
-                    sideBarService.getAllTClientTypeList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+                    sideBarService.getClientTypeDataList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
 
                     for (let j = 0; j < dataObjectnew.clienttypelist.length; j++) {
                       let mobile = sideBarService.changeDialFormat(dataObjectnew.clienttypelist[j].Mobile, dataObjectnew.clienttypelist[j].Country);
@@ -2374,9 +2400,9 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
                         var dataListDupp = [
                           dataObjectnew.clienttypelist[j].ID || "",
-                          dataObjectnew.clienttypelist[j].TypeName || "",
                           dataObjectnew.clienttypelist[j].TypeDescription || "",
-                          linestatus,
+                          dataObjectnew.clienttypelist[j].TypeDescription || "",
+                          linestatus
                         ];
 
                         splashArrayClientTypeList.push(dataListDupp);
@@ -2405,7 +2431,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 },
                 language: { search: "",searchPlaceholder: "Search List..." },
                 "fnInitComplete": function (oSettings) {
-                      if(deleteFilter){
+                      if(data.Params.Search.replace(/\s/g, "") == ""){
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
                       }else{
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
@@ -2413,9 +2439,9 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                       $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    //let countTableData = data.Params.Count || 0; //get count from API data
+                    let countTableData = data.Params.Count || 0; //get count from API data
 
-                    //return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
 
             }).on('page', function () {
@@ -2476,28 +2502,36 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
         let lineItems = [];
         let lineItemObj = {};
         let deleteFilter = false;
-        // if(data.Params.Search.replace(/\s/g, "") == ""){
-        //   deleteFilter = true;
-        // }else{
-        //   deleteFilter = false;
-        // };
+        let isDefault = false;
+        if(data.Params.Search.replace(/\s/g, "") == ""){
+          deleteFilter = true;
+        }else{
+          deleteFilter = false;
+        };
 
-        for (let i = 0; i < data.tleadstatustype.length; i++) {
+        for (let i = 0; i < data.tleadstatustypelist.length; i++) {
           let mobile = "";
           //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
+          if(data.tleadstatustypelist[i].IsDefault == true){
+              isDefault = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+data.tleadstatustypelist[i].ID+'" checked><label class="custom-control-label chkBox" for="iseomplus-'+data.tleadstatustypelist[i].ID+'"></label></div>';
+          }else{
+              isDefault = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+data.tleadstatustypelist[i].ID+'"><label class="custom-control-label chkBox" for="iseomplus-'+data.tleadstatustypelist[i].ID+'"></label></div>';
+          };
           let linestatus = '';
-          if (data.tleadstatustype[i].fields.Active == true) {
+          if (data.tleadstatustypelist[i].Active == true) {
               linestatus = "";
-          } else if (data.tleadstatustype[i].fields.Active == false) {
+          } else if (data.tleadstatustypelist[i].Active == false) {
               linestatus = "In-Active";
           };
-          let eqpm = Number(data.tleadstatustype[i].fields.EQPM);
+          let eqpm = Number(data.tleadstatustypelist[i].EQPM);
           var dataList = [
-            data.tleadstatustype[i].fields.ID || "",
-            data.tleadstatustype[i].fields.TypeName || "",
-            data.tleadstatustype[i].fields.Description || "",
+            data.tleadstatustypelist[i].ID || "",
+            data.tleadstatustypelist[i].TypeCode || "",
+            data.tleadstatustypelist[i].Name || "",
+            data.tleadstatustypelist[i].Description || "",
+            isDefault,
             utilityService.negativeNumberFormat(eqpm)|| 0,
-            linestatus,
+            linestatus
           ];
 
             splashArrayLeadStatusList.push(dataList);
@@ -2526,19 +2560,30 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     }},
                     {
                       targets: 1,
-                      className: "colStatusName",
+                      className: "colLeadTypeCode hiddenColumn",
                       width: "200px",
                     },
                     {
                       targets: 2,
-                      className: "colDescription",
+                      className: "colStatusName",
+                      width: "200px",
                     },
                     {
                       targets: 3,
-                      className: "colQuantity",
+                      className: "colDescription",
                     },
                     {
                       targets: 4,
+                      className: "colIsDefault hiddenColumn",
+                      width: "100px",
+                    },
+                    {
+                      targets: 5,
+                      className: "colQuantity",
+                      width: "250px",
+                    },
+                    {
+                      targets: 6,
                       className: "colStatus",
                       width: "100px",
                     }
@@ -2609,24 +2654,32 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                   let dataLenght = oSettings._iDisplayLength;
                   let customerSearch = $('#'+currenttablename+'_filter input').val();
 
-                    sideBarService.getAllTLeadStatusList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+                    sideBarService.getLeadStatusDataList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+                    let isDefault = false;
+                    for (let j = 0; j < dataObjectnew.tleadstatustypelist.length; j++) {
 
-                    for (let j = 0; j < dataObjectnew.tleadstatustype.length; j++) {
-                      let mobile = sideBarService.changeDialFormat(dataObjectnew.temployeelist[j].Mobile, dataObjectnew.tleadstatustype[j].Country);
+                      if(dataObjectnew.tleadstatustypelist[j].IsDefault == true){
+                          isDefault = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="'+dataObjectnew.tleadstatustypelist[j].ID+'" checked><label class="custom-control-label chkBox" for="'+dataObjectnew.tleadstatustypelist[j].ID+'"></label></div>';
+                      }else{
+                          isDefault = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="'+dataObjectnew.tleadstatustypelist[j].ID+'"><label class="custom-control-label chkBox" for="'+dataObjectnew.tleadstatustypelist[j].ID+'"></label></div>';
+                      };
+
                       let linestatus = '';
-                      if (dataObjectnew.tleadstatustype[j].Active == true) {
+                      if (dataObjectnew.tleadstatustypelist[j].Active == true) {
                           linestatus = "";
-                      } else if (dataObjectnew.tleadstatustype[j].Active == false) {
+                      } else if (dataObjectnew.tleadstatustypelist[j].Active == false) {
                           linestatus = "In-Active";
                       };
 
 
                         var dataListDupp = [
-                            dataObjectnew.tleadstatustype[j].fields.ID || "",
-                            dataObjectnew.tleadstatustype[j].fields.TypeName || "",
-                            dataObjectnew.tleadstatustype[j].fields.Description || "",
+                            dataObjectnew.tleadstatustypelist[i].ID || "",
+                            dataObjectnew.tleadstatustypelist[i].TypeCode || "",
+                            dataObjectnew.tleadstatustypelist[i].Name || "",
+                            dataObjectnew.tleadstatustypelist[i].Description || "",
+                            isDefault,
                             utilityService.negativeNumberFormat(eqpm)|| 0,
-                            linestatus,
+                            linestatus
                         ];
 
                         splashArrayLeadStatusList.push(dataListDupp);
@@ -2655,17 +2708,18 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 },
                 language: { search: "",searchPlaceholder: "Search List..." },
                 "fnInitComplete": function (oSettings) {
-                      if(deleteFilter){
+                      if(data.Params.Search.replace(/\s/g, "") == ""){
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+
                       }else{
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
                       }
                       $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    //let countTableData = data.Params.Count || 0; //get count from API data
+                    let countTableData = data.Params.Count || 0; //get count from API data
 
-                    //return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
 
             }).on('page', function () {
@@ -4120,6 +4174,7 @@ Template.non_transactional_list.events({
       let currenttablename = await templateObject.tablename.get()||'';
       $('.btnViewDeleted').css('display','none');
       $('.btnHideDeleted').css('display','inline-block');
+
       if(currenttablename == "tblcontactoverview"){
         await clearData('TERPCombinedContactsVS1');
         templateObject.getContactOverviewData(true);
@@ -4178,10 +4233,10 @@ Template.non_transactional_list.events({
         await clearData('TAccountVS1List');
         templateObject.getAccountsOverviewData(false);
       }else if(currenttablename == "tblClienttypeList"){
-        await clearData('TClientType');
+        await clearData('TClientTypeList');
         templateObject.getClientTypeListData(false);
       }else if(currenttablename == "tblLeadStatusList"){
-        await clearData('TLeadStatusType');
+        await clearData('TLeadStatusTypeList');
         templateObject.getLeadStatusListData(false);
     }else if(currenttablename == "tblDepartmentList"){
         await clearData('TDepartment');
