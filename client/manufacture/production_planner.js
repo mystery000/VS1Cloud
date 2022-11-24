@@ -475,7 +475,14 @@ Template.production_planner.events({
             if(event.extendedProps.builds.length == 0) {
                 continue;
             } else {
-                let buildSubs = event.extendedProps.builds;
+                let buildSubNames = event.extendedProps.builds;
+                let buildSubs = []
+                for(let k = 0; k < buildSubNames.length; k++) {
+                    let index = events.findIndex(e=>{
+                        return e.title == buildSubNames[k]
+                    })
+                    buildSubs.push(events[index])
+                }
                 buildSubs.sort((a, b)=>{
                     new Date(a.end) - new Date(b.end)
                 })
