@@ -11,7 +11,7 @@ import Tvs1ChartDashboardPreference from "../../js/Api/Model/Tvs1ChartDashboardP
 import Tvs1ChartDashboardPreferenceField from "../../js/Api/Model/Tvs1ChartDashboardPreferenceField";
 import ApiService from "../../js/Api/Module/ApiService";
 import '../../lib/global/indexdbstorage.js';
-import {SideBarService} from "../../js/sidebar-service";
+import { SideBarService } from "../../js/sidebar-service";
 let _ = require("lodash");
 
 let sideBarService = new SideBarService();
@@ -64,16 +64,16 @@ const chartsEditor = new ChartsEditor(
 /**
  * This function will save the charts on the dashboard
  */
- async function saveCharts() {
+async function saveCharts() {
     /**
-    * Lets load all API colections
-    */
+     * Lets load all API colections
+     */
     const dashboardApis = new DashboardApi(); // Load all dashboard APIS
     ChartHandler.buildPositions();
     const charts = $(".chart-visibility.editCharts");
     /**
-    * @property {Tvs1ChartDashboardPreference[]}
-    */
+     * @property {Tvs1ChartDashboardPreference[]}
+     */
     let chartList = [];
     // now we have to make the post request to save the data in database
     const apiEndpoint = dashboardApis.collection.findByName(
@@ -82,9 +82,9 @@ const chartsEditor = new ChartsEditor(
 
     let dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences');
     dashboardpreferences = JSON.parse(dashboardpreferences[0].data);
-    if(dashboardpreferences.length){
+    if (dashboardpreferences.length) {
         dashboardpreferences.forEach((chart) => {
-            if(chart.fields != undefined && chart.fields.TabGroup != _tabGroup){
+            if (chart.fields != undefined && chart.fields.TabGroup != _tabGroup) {
                 chartList.push(chart);
             }
         });
@@ -96,9 +96,8 @@ const chartsEditor = new ChartsEditor(
                 type: "Tvs1dashboardpreferences",
                 fields: new Tvs1ChartDashboardPreferenceField({
                     Active: $(chart).find(".on-editor-change-mode").attr("is-hidden") == true ||
-                            $(chart).find(".on-editor-change-mode").attr("is-hidden") == "true"
-                            ? false
-                            : true,
+                        $(chart).find(".on-editor-change-mode").attr("is-hidden") == "true" ?
+                        false : true,
                     ChartID: parseInt($(chart).attr("chart-id")),
                     ID: parseInt($(chart).attr("pref-id")),
                     EmployeeID: employeeId,
@@ -115,10 +114,10 @@ const chartsEditor = new ChartsEditor(
     // for (const _chart of chartList) {
     let chartJSON = {
         type: "Tvs1dashboardpreferences",
-        objects:chartList
+        objects: chartList
     };
 
-    if(chartList.length > 0){
+    if (chartList.length > 0) {
         await addVS1Data('Tvs1dashboardpreferences', JSON.stringify(chartList));
     }
 
@@ -133,12 +132,12 @@ const chartsEditor = new ChartsEditor(
     // }
 }
 
-Template.allChartLists.onCreated(function () {
+Template.allChartLists.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.chartList = new ReactiveVar([]);
 });
 
-Template.allChartLists.onRendered(function () {
+Template.allChartLists.onRendered(function() {
     const templateObject = Template.instance();
     _tabGroup = $("#connectedSortable").data("tabgroup");
     _chartGroup = $("#connectedSortable").data("chartgroup");
@@ -152,38 +151,37 @@ Template.allChartLists.onRendered(function () {
             dimmedElements[0].classList.remove("dimmedChart");
         }
     };
-    templateObject.showChartElements = function () {
+    templateObject.showChartElements = function() {
         // on edit mode true
         // $(".on-editor-change-mode").addClass("showelement");
         // $(".on-editor-change-mode").removeClass("hideelement");
         $('.sortable-chart-widget-js').removeClass("col-md-12 col-md-8 col-md-6 col-md-4");
         $('.sortable-chart-widget-js').addClass("editCharts");
-        $('.sortable-chart-widget-js').each(function(){
+        $('.sortable-chart-widget-js').each(function() {
             let className = $(this).data('default-class');
             $(this).addClass(className);
             $(this).find('.portlet').addClass('minHeight100');
         });
-        if($('.fc-dayGridMonth-button').length > 0){
+        if ($('.fc-dayGridMonth-button').length > 0) {
             $('.fc-dayGridMonth-button').trigger('click');
         }
         $(".card").addClass("dimmedChart");
         $(".py-2").removeClass("dimmedChart");
     };
-    templateObject.checkChartToDisplay = async () => {
+    templateObject.checkChartToDisplay = async() => {
         let defaultChartList = [];
         let chartList = [];
         const dashboardApis = new DashboardApi(); // Load all dashboard APIS
         let displayedCharts = 0;
 
         let dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences');
-        if (dashboardpreferences.length == 0) {
-        }else{
-          dashboardpreferences = JSON.parse(dashboardpreferences[0].data);
+        if (dashboardpreferences.length == 0) {} else {
+            dashboardpreferences = JSON.parse(dashboardpreferences[0].data);
         };
 
-        if(dashboardpreferences.length){
+        if (dashboardpreferences.length) {
             dashboardpreferences.forEach((chart) => {
-                if(chart.fields != undefined && chart.fields.TabGroup == _tabGroup){
+                if (chart.fields != undefined && chart.fields.TabGroup == _tabGroup) {
                     chartList.push(chart);
                 }
             });
@@ -385,7 +383,7 @@ Template.allChartLists.onRendered(function () {
                 };
                 chartList.push(accountListChart);
 
-                let myTasksChart= {
+                let myTasksChart = {
                     fields: {
                         Active: true,
                         ChartGroup: "Dashboard",
@@ -396,16 +394,16 @@ Template.allChartLists.onRendered(function () {
                 };
                 chartList.push(myTasksChart);
 
-                let myBankAccountschart= {
-                  fields: {
-                      Active: true,
-                      ChartGroup: "Dashboard",
-                      ChartName: "Bank Accountschart",
-                      ID: 1006,
-                      _chartSlug: "dashboard__bank_accountschart"
-                  }
-              };
-              chartList.push(myBankAccountschart);
+                let myBankAccountschart = {
+                    fields: {
+                        Active: true,
+                        ChartGroup: "Dashboard",
+                        ChartName: "Bank Accountschart",
+                        ID: 1006,
+                        _chartSlug: "dashboard__bank_accountschart"
+                    }
+                };
+                chartList.push(myBankAccountschart);
             }
         }
 
@@ -430,7 +428,7 @@ Template.allChartLists.onRendered(function () {
                     let defaultClass = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-class');
                     let defaultPosition = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-position');
                     let storeObj = null;
-                    if(localStorage.getItem(chart.fields._chartSlug))
+                    if (localStorage.getItem(chart.fields._chartSlug))
                         storeObj = JSON.parse(localStorage.getItem(chart.fields._chartSlug));
                     $(`[key='${chart.fields._chartSlug}']`).addClass(defaultClass);
                     $(`[key='${chart.fields._chartSlug}']`).attr('position', storeObj ? storeObj.position : defaultPosition);
@@ -454,18 +452,18 @@ Template.allChartLists.onRendered(function () {
                             "false"
                         );
                         $(`[key='${chart.fields._chartSlug}']`).removeClass("hideelement");
-                        if ( chart.fields._chartSlug == 'accounts__profit_and_loss' ){
+                        if (chart.fields._chartSlug == 'accounts__profit_and_loss') {
                             $(`[key='dashboard__profit_and_loss']`).removeClass("hideelement");
                         }
-                        if ( chart.fields._chartSlug == 'sales__sales_overview'){
+                        if (chart.fields._chartSlug == 'sales__sales_overview') {
                             $(`[key='contacts__top_10_customers']`).removeClass("hideelement");
                             $(`[key='dashboard__employee_sales_comparison']`).removeClass("hideelement");
                         }
-                        if ( chart.fields._chartSlug == 'inventory__stock_on_hand_and_demand'){
+                        if (chart.fields._chartSlug == 'inventory__stock_on_hand_and_demand') {
                             $(`[key='contacts__top_10_supplies']`).removeClass("hideelement");
                         }
                         //Auto hide on Dashboard
-                        if ( _chartGroup == 'Dashboard' && ( chart.fields._chartSlug == 'dashboard__monthly_earnings' || chart.fields._chartSlug == 'dashboard__quoted_amounts_/_invoiced_amounts' ) ){
+                        if (_chartGroup == 'Dashboard' && (chart.fields._chartSlug == 'dashboard__monthly_earnings' || chart.fields._chartSlug == 'dashboard__quoted_amounts_/_invoiced_amounts')) {
                             $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
                         }
                     } else {
@@ -498,8 +496,7 @@ Template.allChartLists.onRendered(function () {
                         chart.fields.Active
                     );
                     $(`[key='${chart.fields._chartSlug}']`).attr(
-                        "chart-user-pref-is-hidden",
-                        !chart.fields.Active
+                        "chart-user-pref-is-hidden", !chart.fields.Active
                     );
                 });
             }, 0);
@@ -586,33 +583,33 @@ Template.allChartLists.onRendered(function () {
         //         }
         //     }
         // } else {
-            // Set default chart list
-            $('.card-visibility').each(function () {
-                $(this).find('.cardShowBtn .far').removeClass('fa-eye');
-                // let position = $(this).data('default-position');
-                // $(this).attr('position', position);
-                $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
-                $(this).attr("card-active", 'false');
-            })
-            $(`[chart-group='${_chartGroup}']`).attr("card-active", 'true');
-            $(`[chart-group='${_chartGroup}']`).removeClass('hideelement');
-            $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
-            $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
-            $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
-            //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget');
-            //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget-content');
+        // Set default chart list
+        $('.card-visibility').each(function() {
+            $(this).find('.cardShowBtn .far').removeClass('fa-eye');
+            // let position = $(this).data('default-position');
+            // $(this).attr('position', position);
+            $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
+            $(this).attr("card-active", 'false');
+        })
+        $(`[chart-group='${_chartGroup}']`).attr("card-active", 'true');
+        $(`[chart-group='${_chartGroup}']`).removeClass('hideelement');
+        $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
+        $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
+        $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
+        //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget');
+        //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget-content');
         // }
         // await ChartHandler.buildPositions();
         // Handle sorting
         setTimeout(() => {
             let $chartWrappper = $(".connectedChartSortable");
             $chartWrappper
-            .find(".sortable-chart-widget-js")
-            .sort(function (a, b) {
-                return +a.getAttribute("position") - +b.getAttribute("position");
-            })
-            .appendTo($chartWrappper);
-      }, 0)
+                .find(".sortable-chart-widget-js")
+                .sort(function(a, b) {
+                    return +a.getAttribute("position") - +b.getAttribute("position");
+                })
+                .appendTo($chartWrappper);
+        }, 0)
     };
     templateObject.deactivateDraggable = () => {
         draggableCharts.disable();
@@ -644,7 +641,7 @@ Template.allChartLists.events({
     "mouseleave .card-header": (e) => {
         $(e.currentTarget).parent(".card").removeClass("hovered");
     },
-    "click .btnBatchUpdate": function () {
+    "click .btnBatchUpdate": function() {
         $(".fullScreenSpin").css("display", "inline-block");
         batchUpdateCall();
     },
@@ -654,7 +651,7 @@ Template.allChartLists.events({
         const templateObject = Template.instance();
         templateObject.showChartElements();
     },
-    "click .resetchartbtn": async ( event ) => {
+    "click .resetchartbtn": async(event) => {
         event.preventDefault();
         $(".fullScreenSpin").css("display", "block");
         chartsEditor.disable();
@@ -699,32 +696,32 @@ Template.allChartLists.events({
         }
         // templateObject.deactivateDraggable();
     },
-    "click #btnCancel": async () => {
+    "click #btnCancel": async() => {
         playCancelAudio();
-        setTimeout(async function(){
-        $(".fullScreenSpin").css("display", "block");
-        chartsEditor.disable();
-        const templateObject = Template.instance();
-        await templateObject.hideChartElements();
-        await templateObject.checkChartToDisplay();
-        $('.sortable-chart-widget-js').removeClass("editCharts");
-        $(".fullScreenSpin").css("display", "none");
-        //templateObject.deactivateDraggable();
+        setTimeout(async function() {
+            $(".fullScreenSpin").css("display", "block");
+            chartsEditor.disable();
+            const templateObject = Template.instance();
+            await templateObject.hideChartElements();
+            await templateObject.checkChartToDisplay();
+            $('.sortable-chart-widget-js').removeClass("editCharts");
+            $(".fullScreenSpin").css("display", "none");
+            //templateObject.deactivateDraggable();
         }, delayTimeAfterSound);
     },
-    "click #btnDone": async () => {
+    "click #btnDone": async() => {
         playSaveAudio();
         let templateObject = Template.instance();
-        setTimeout(async function(){
-        $(".fullScreenSpin").css("display", "inline-block");
-        await saveCharts();
-        await chartsEditor.disable();
-        await templateObject.hideChartElements();
-        templateObject.checkChartToDisplay();
+        setTimeout(async function() {
+            $(".fullScreenSpin").css("display", "inline-block");
+            await saveCharts();
+            await chartsEditor.disable();
+            await templateObject.hideChartElements();
+            templateObject.checkChartToDisplay();
 
-        $(".fullScreenSpin").css("display", "none");
-        Meteor._reload.reload();
-    }, delayTimeAfterSound);
+            $(".fullScreenSpin").css("display", "none");
+            Meteor._reload.reload();
+        }, delayTimeAfterSound);
     },
 });
 
@@ -732,7 +729,7 @@ Template.allChartLists.helpers({
     isaccountoverview: () => {
         const currentLoc = FlowRouter.current().route.path;
         let isAccountOverviewPage = false;
-        if (currentLoc == "/accountsoverview"){
+        if (currentLoc == "/accountsoverview") {
             isAccountOverviewPage = true;
         }
         return isAccountOverviewPage;

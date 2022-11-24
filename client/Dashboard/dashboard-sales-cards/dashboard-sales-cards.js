@@ -88,11 +88,11 @@ Template.dashboardSalesCards.onRendered(function() {
                 if (totalInvoiceValueLast3Months > totalQuoteValueLast3Months) {
                     $('#gap-to-quota').removeClass('text-danger');
                     $('#gap-to-quota').addClass('text-success');
-                    $('#gap-to-quota-label').html('In Front');
+                    $('#gap-to-quota').parent().children("h5").html('In Front');
                 } else {
                     $('#gap-to-quota').removeClass('text-success');
                     $('#gap-to-quota').addClass('text-danger');
-                    $('#gap-to-quota-label').html('Behind');
+                    $('#gap-to-quota').parent().children("h5").html('Behind');
                 }
             }).catch(function(err) {});
         }).catch(function(err) {});
@@ -263,7 +263,7 @@ Template.dashboardSalesCards.helpers({
             fromDate.getMonth() +
             12 * (toDate.getFullYear() - fromDate.getFullYear())
         );
-        return "This Lead count for last " + monthCount + " months where status is ”Unqualified”";
+        return "This is Lead count for last " + monthCount + " months where status is ”Unqualified”";
     },
     newOpportunitiesTooltip: function() {
         let templateObject = Template.instance();
