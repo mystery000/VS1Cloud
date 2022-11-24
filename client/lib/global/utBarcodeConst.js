@@ -159,3 +159,4 @@ checkResponseError ="You have lost internet connection, please log out and log b
 
 //loggedTaxCodePurchaseInc = Session.get('ERPTaxCodePurchaseInc');
 //loggedTaxCodeSalesInc = Session.get('ERPTaxCodeSalesInc');
+
