@@ -1162,7 +1162,7 @@ Template.new_quote.onRendered(() => {
         loadTemplateBody1(object_invoce);
     }
 
-    function updateTemplate2(object_invoce) {
+    function updateTemplate2(object_invoce, bprint) {
         initTemplateHeaderFooter2();
         $("#html-2-pdfwrapper_quotes").hide();
         $("#html-2-pdfwrapper_quotes2").show();
@@ -1173,7 +1173,7 @@ Template.new_quote.onRendered(() => {
         loadTemplateBody2(object_invoce);
     }
 
-    function updateTemplate3(object_invoce) {
+    function updateTemplate3(object_invoce, bprint) {
         initTemplateHeaderFooter3();
         $("#html-2-pdfwrapper_quotes").hide();
         $("#html-2-pdfwrapper_quotes2").hide();
