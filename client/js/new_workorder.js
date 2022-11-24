@@ -785,7 +785,6 @@ Template.new_workorder.events({
                 Quantity: record.line.fields.Qty || 1,
                 InProgress: record.isStarted,
             }
-            await createPurchaseOrder(objDetail.BOM.productName, objDetail.Quantity)
             let tempArray = localStorage.getItem('TWorkorders');
             let workorders = tempArray?JSON.parse(tempArray): [];
             objDetail.ID = objDetail.SalesOrderID+ "_" + (workorders.length + 1).toString();
