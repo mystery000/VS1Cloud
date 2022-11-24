@@ -65,25 +65,21 @@ Template.clienttypesettings.events({
       $(".fullScreenSpin").css("display", "none");
     },
     'click .btnRefresh': function () {
-        let contactService = new ContactService();
-
-        sideBarService.getClientTypeData(initialBaseDataLoad, 0,false).then(async function (data) {
-            await addVS1Data('TClientType', JSON.stringify(data));
-            window.open("/clienttypesettings", "_self");
+        $(".fullScreenSpin").css("display", "inline-block");
+        sideBarService.getClientTypeData().then(function (dataReload) {
+            addVS1Data('TClientTypeList', JSON.stringify(dataReload)).then(function (datareturn) {
+                sideBarService.getClientTypeDataList(initialBaseDataLoad, 0,false).then(async function (dataList) {
+                    await addVS1Data('TClientTypeList', JSON.stringify(dataList));
+                    window.open("/clienttypesettings", "_self");
+                }).catch(function (err) {
+                    Meteor._reload.reload();
+                });
+            }).catch(function (err) {
+                Meteor._reload.reload();
+            });
         }).catch(function (err) {
             Meteor._reload.reload();
         });
-
-        // sideBarService.getClientTypeData().then(function (dataReload) {
-        //     addVS1Data('TClientType', JSON.stringify(dataReload)).then(function (datareturn) {
-        //         Meteor._reload.reload();
-        //     }).catch(function (err) {
-        //         Meteor._reload.reload();
-        //     });
-        // }).catch(function (err) {
-        //     Meteor._reload.reload();
-        // });
-        // Meteor._reload.reload();
     },
     'click .btnAddClientType': async function () {
         await $('#add-clienttype-title').text('Add New Customer Type');
@@ -110,7 +106,7 @@ Template.clienttypesettings.events({
         let clientTypeId = $('#edtClientTypeID').val();
 
         let objDetails = {
-            type: "TClientType",
+            type: "TClientTypeList",
             fields: {
                 Id: clientTypeId,
                 Active: false
@@ -119,7 +115,7 @@ Template.clienttypesettings.events({
 
         contactService.saveClientTypeData(objDetails).then(function (objDetails) {
             sideBarService.getClientTypeData().then(function (dataReload) {
-                addVS1Data('TClientType', JSON.stringify(dataReload)).then(function (datareturn) {
+                addVS1Data('TClientTypeList', JSON.stringify(dataReload)).then(function (datareturn) {
                    Meteor._reload.reload();
                 }).catch(function (err) {
                    Meteor._reload.reload();
@@ -160,7 +156,7 @@ Template.clienttypesettings.events({
         } else {
             if(id == "") {
             objDetails = {
-                type: "TClientType",
+                type: "TClientTypeList",
                 fields: {
                     TypeName: custType,
                     TypeDescription: typeDesc,
@@ -169,7 +165,7 @@ Template.clienttypesettings.events({
             }
         } else {
                 objDetails = {
-                type: "TClientType",
+                type: "TClientTypeList",
                 fields: {
                     Id: id,
                     TypeName: custType,
@@ -180,7 +176,7 @@ Template.clienttypesettings.events({
             }
             }
             objDetails = {
-                type: "TClientType",
+                type: "TClientTypeList",
                 fields: {
                     TypeName: custType,
                     TypeDescription: typeDesc,
@@ -189,7 +185,7 @@ Template.clienttypesettings.events({
             }
             contactService.saveClientTypeData(objDetails).then(function (objDetails) {
                 sideBarService.getClientTypeData().then(function (dataReload) {
-                    addVS1Data('TClientType', JSON.stringify(dataReload)).then(function (datareturn) {
+                    addVS1Data('TClientTypeList', JSON.stringify(dataReload)).then(function (datareturn) {
                         Meteor._reload.reload();
                     }).catch(function (err) {
                         Meteor._reload.reload();
@@ -382,7 +378,7 @@ Template.clienttypesettings.events({
                         for (let i = 0; i < results.data.length - 1; i++) {
                             typeDesc = results.data[i + 1][1] !== undefined ? results.data[i + 1][1] : '';
                             objDetails = {
-                                type: "TClientType",
+                                type: "TClientTypeList",
                                 fields: {
                                     TypeName: results.data[i + 1][0],
                                     TypeDescription: typeDesc || '',
