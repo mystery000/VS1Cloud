@@ -415,7 +415,27 @@ Template.new_workorder.events({
         async function getSupplierDetail ()  {
             return new Promise(async(resolve, reject)=>{
                 let supplierName = 'Misc Supplier';
-                getVS1Data('TSupplierVS1')
+                getVS1Data('TSupplierVS1').then(function(dataObject) {
+                    if(dataObject.length == 0) {
+
+                    }else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.tsuppliervs1;
+                        for(let i = 0; i< useData.length; i++) {
+                            if(useData[i].fields.ClientName == supplierName) {
+                                let clientName = useData[i].fields.ClientName;
+                                let street = useData[i].fields.Street || '';
+                                let city = useData[i].fields.Street2 || '';
+                                let state = useData[i].fields.State || '';
+                                let zipCode = useData[i].fields.Postcode || '';
+                                let country = useData[i].fields.Country || '';
+                                
+                                let postalAddress = useData[i].fields.ClientName + '\n' + street + '\n' + city + ' ' + state + ' ' + zipCode + '\n' + country;
+                                resolve(postalAddress)
+                            }
+                        }
+                    }
+                })
             })
 
 
@@ -423,9 +443,14 @@ Template.new_workorder.events({
 
         async function createPurchaseOrder(productName, neededQty) {
             return new Promise(async(resolve, reject)=>{
-                getVS1Data('TProductVS1').then(function(dataObject){
+                let foreignCurrencyFields = {
+                    ForeignExchangeCode: CountryAbbr,
+                    ForeignExchangeRate: 0.00,
+                }
+                let purchaseService = new PurchaseBoardService();
+                getVS1Data('TProductVS1').then(async function(dataObject){
                     if(dataObject.length == 0) {
-                        productService.getOneProductdatavs1byname(productName).then(function(data) {
+                        productService.getOneProductdatavs1byname(productName).then(async function(data) {
                             let stockQty = data.tproduct[0].fields.TotalQtyInStock;
                             if(stockQty < neededQty) {
                                 let splashLineArray = [];
@@ -436,7 +461,7 @@ Template.new_workorder.events({
                                     fields: {
                                         ProductName: productName || '',
                                         ProductDescription: data.tproduct[0].fields.ProductDescription || '',
-                                        UOMQtySold: parseFloat(1),
+                                        UOMQtySold: parseFloat(neededQty - stockQty),
                                         UOMQtyShipped: 0,
                                         LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                         CustomerJob: '',
@@ -446,6 +471,9 @@ Template.new_workorder.events({
                                 };
 
                                 splashLineArray.push(lineItemObjForm);
+                                let billingAddress = await getSupplierDetail();
+                                let saledateTime = new Date();
+                                let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
 
                                 let objDetails = {
                                     type: "TPurchaseOrderEx",
@@ -455,25 +483,160 @@ Template.new_workorder.events({
                                         SupplierInvoiceNumber: ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
-                                        OrderDate: saleDate,
+                                        OrderDate: date,
             
-                                        SupplierInvoiceDate: saleDate,
+                                        SupplierInvoiceDate: date,
             
-                                        SaleLineRef: reference,
-                                        TermsName: termname,
-                                        Shipping: departement,
-                                        ShipTo: shippingAddress,
-                                        Comments: comments,
-                                        SalesComments: pickingInfrmation,
-                                        Attachments: uploadedItems,
-                                        OrderStatus: $('#sltStatus').val()
+                                        SaleLineRef: '',
+                                        TermsName: 'COD',
+                                        Shipping: '',
+                                        ShipTo: billingAddress,
+                                        Comments: '',
+                                        SalesComments: '',
+                                        Attachments: [],
+                                        OrderStatus: ''
                                     }
                                 };
+                                purchaseService.savePurchaseOrderEx(objDetails).then(function(dataReturn) {
+                                    sideBarService.getAllTPurchasesBackOrderReportData('', '', true, initialReportLoad, 0).then(function(data)  {
+                                        addVS1Data('TPurchasesBackOrderReport', JSON.stringify(data)).then(function (dataUpdate) {
+                                            resolve()
+                                        })
+                                    })
+                                }).catch(function(err) {
+                                    resolve()
+                                })
                             }else {
                                 resolve()
                             }
                         })
+                    }else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.tproductvs1;
+                        for(let i = 0; i< useData.length; i++) {
+                            if(useData[i].fields.ProductName == productName) {
+                                let stockQty = useData[i].fields.TotalQtyInStock;
+                                if(stockQty < neededQty) {
+                                    let splashLineArray = [];
+            
+                                    let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(useData[i].fields.BuyQty1Cost * 100) / 100);
+                                    let lineItemObjForm = {
+                                        type: "TPurchaseOrderLine",
+                                        fields: {
+                                            ProductName: productName || '',
+                                            ProductDescription: useData[i].fields.ProductDescription || '',
+                                            UOMQtySold: parseFloat(neededQty - stockQty),
+                                            UOMQtyShipped: 0,
+                                            LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                                            CustomerJob: '',
+                                            LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
+                                            LineClassName: defaultDept
+                                        }
+                                    };
+            
+                                    splashLineArray.push(lineItemObjForm);
+                                    let billingAddress = await getSupplierDetail();
+                                    let saledateTime = new Date();
+                                    let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
+            
+                                    let objDetails = {
+                                        type: "TPurchaseOrderEx",
+                                        fields: {
+                                            SupplierName: 'Misc Supplier',
+                                            ...foreignCurrencyFields,
+                                            SupplierInvoiceNumber: ' ',
+                                            Lines: splashLineArray,
+                                            OrderTo: billingAddress,
+                                            OrderDate: date,
+                
+                                            SupplierInvoiceDate: date,
+                
+                                            SaleLineRef: '',
+                                            TermsName: 'COD',
+                                            Shipping: '',
+                                            ShipTo: billingAddress,
+                                            Comments: '',
+                                            SalesComments: '',
+                                            Attachments: [],
+                                            OrderStatus: ''
+                                        }
+                                    };
+                                    purchaseService.savePurchaseOrderEx(objDetails).then(function(dataReturn) {
+                                        sideBarService.getAllTPurchasesBackOrderReportData('', '', true, initialReportLoad, 0).then(function(data)  {
+                                            addVS1Data('TPurchasesBackOrderReport', JSON.stringify(data)).then(function (dataUpdate) {
+                                                resolve()
+                                            })
+                                        })
+                                    }).catch(function(err) {
+                                        resolve()
+                                    })
+                                }else {
+                                    resolve()
+                                }
+                            }
+                        }
                     }
+                }).catch(async function(error) {
+                    productService.getOneProductdatavs1byname(productName).then(async function(data) {
+                        let stockQty = data.tproduct[0].fields.TotalQtyInStock;
+                        if(stockQty < neededQty) {
+                            let splashLineArray = [];
+
+                            let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproduct[0].fields.BuyQty1Cost * 100) / 100);
+                            let lineItemObjForm = {
+                                type: "TPurchaseOrderLine",
+                                fields: {
+                                    ProductName: productName || '',
+                                    ProductDescription: data.tproduct[0].fields.ProductDescription || '',
+                                    UOMQtySold: parseFloat(neededQty - stockQty),
+                                    UOMQtyShipped: 0,
+                                    LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                                    CustomerJob: '',
+                                    LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
+                                    LineClassName: defaultDept
+                                }
+                            };
+
+                            splashLineArray.push(lineItemObjForm);
+                            let billingAddress = await getSupplierDetail();
+                            let saledateTime = new Date();
+                            let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
+
+                            let objDetails = {
+                                type: "TPurchaseOrderEx",
+                                fields: {
+                                    SupplierName: 'Misc Supplier',
+                                    ...foreignCurrencyFields,
+                                    SupplierInvoiceNumber: ' ',
+                                    Lines: splashLineArray,
+                                    OrderTo: billingAddress,
+                                    OrderDate: date,
+        
+                                    SupplierInvoiceDate: date,
+        
+                                    SaleLineRef: '',
+                                    TermsName: 'COD',
+                                    Shipping: '',
+                                    ShipTo: billingAddress,
+                                    Comments: '',
+                                    SalesComments: '',
+                                    Attachments: [],
+                                    OrderStatus: ''
+                                }
+                            };
+                            purchaseService.savePurchaseOrderEx(objDetails).then(function(dataReturn) {
+                                sideBarService.getAllTPurchasesBackOrderReportData('', '', true, initialReportLoad, 0).then(function(data)  {
+                                    addVS1Data('TPurchasesBackOrderReport', JSON.stringify(data)).then(function (dataUpdate) {
+                                        resolve()
+                                    })
+                                })
+                            }).catch(function(err) {
+                                resolve()
+                            })
+                        }else {
+                            resolve()
+                        }
+                    })
                 })
             })
         }
@@ -622,7 +785,7 @@ Template.new_workorder.events({
                 Quantity: record.line.fields.Qty || 1,
                 InProgress: record.isStarted,
             }
-    
+            await createPurchaseOrder(objDetail.BOM.productName, objDetail.Quantity)
             let tempArray = localStorage.getItem('TWorkorders');
             let workorders = tempArray?JSON.parse(tempArray): [];
             objDetail.ID = objDetail.SalesOrderID+ "_" + (workorders.length + 1).toString();
