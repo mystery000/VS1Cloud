@@ -1356,46 +1356,7 @@
                     </div>
                 </div>
                 <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog" aria-labelledby="templatePreviewLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="templatePreviewLabel"></h5>
-                                <button type="button" class="close" onclick="$('#templatePreviewModal').modal('hide');" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body" style="background-color: #f8f9fc; max-height: calc(100vh - 200px); overflow-y: auto;">
-                                <div style="width: 90%;position: relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
-                                    id="html-2-pdfwrapper_quotes" name="pdfwrapper_quotes">
-                                    {{> preview_header1 }}
-                                    <hr style="width: 90%; margin: 0px auto;">
-                                    {{> preview_body1 }}
-                                    <hr style="width: 90%; margin: 0px auto;">
-                                    {{> preview_footer1 }}
-                                </div>
-                                <div style="display: none; width: 90%;position: relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
-                                    id="html-2-pdfwrapper_quotes2" name="pdfwrapper_quotes2">
-                                    {{> preview_header2 }}
-                                    <hr style="width: 90%; margin: 0px auto;">
-                                    {{> preview_body2 }}
-                                    <hr style="width: 90%; margin: 0px auto;">
-                                    {{> preview_footer2 }}
-                                </div>
-                                <div style="display: none; width: 90%;position: relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
-                                    id="html-2-pdfwrapper_quotes3" name="pdfwrapper_quotes3">
-                                    {{> preview_header3 }}
-                                    <hr style="width: 90%; margin: 0px auto;">
-                                    {{> preview_body3 }}
-                                    <hr style="width: 90%; margin: 0px auto;">
-                                    {{> preview_footer3 }}
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times" style="margin-right: 5px;"></i>Close</button>
-                            </div>
-                        </div>
-
-                    </div>
+                    {{> custom_print_template modalId="templatePreviewModal" idPrefix="html-2-pdfwrapper_quotes" namePrefix="pdfwrapper_quotes" }}
                 </div>
 
                <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; display: none; color: #000000; overflow-x: visible;" id="html-2-pdfwrapper_new"
