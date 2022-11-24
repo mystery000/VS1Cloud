@@ -15,14 +15,14 @@ Template.crm_top_menu.onRendered(function () {
   templateObject.init_reset_data = function () {
     let reset_data = [
       // { index: 0, label: '#ID', class: 'ID', active: false, display: true, width: "" },
-      { index: 0, label: 'Priority', class: 'Priority', active: true, display: true, width: "35" },
-      { index: 1, label: 'Contact', class: 'Contact', active: true, display: true, width: "" },
-      { index: 2, label: 'Date', class: 'Date', active: true, display: true, width: "" },
-      { index: 3, label: 'Task', class: 'TaskName', active: true, display: true, width: "" },
-      { index: 4, label: 'Description', class: 'TaskDesc', active: true, display: true, width: "" },
-      { index: 5, label: 'Labels', class: 'TaskLabels', active: true, display: true, width: "" },
-      { index: 6, label: 'Project', class: 'TaskProjects', active: true, display: true, width: "" },
-      { index: 7, label: 'Status', class: 'Status', active: true, display: true, width: "" },
+      { index: 0, label: 'Priority', class: 'colPriority', active: true, display: true, width: "35" },
+      { index: 1, label: 'Contact', class: 'colContact', active: true, display: true, width: "126" },
+      { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+      { index: 3, label: 'Task', class: 'colTaskName', active: true, display: true, width: "200" },
+      { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "" },
+      { index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "100" },
+      { index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "200" },
+      { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     ];
 
     let templateObject = Template.instance();

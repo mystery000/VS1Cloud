@@ -35,7 +35,7 @@
       .tbl_responsive{
         width: 100%!important;
         overflow-x: auto!important;
-        overflow-y: hidden!important;
+        /* overflow-y: hidden!important; */
       };
 
         @media print {
@@ -88,7 +88,7 @@
             <div class="tab-pane fade show active" id="allTasks" role="tabpanel" aria-labelledby="allTasks-tab">
               <div class="tbl_responsive">
 
-                <table id="tblAllTaskDatatable" name="tblAllTaskDatatable" class="dataTable table table-hover table-striped table-bordered tblAllTaskDatatable">
+                <table id="tblAllTaskDatatable" name="tblAllTaskDatatable" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblAllTaskDatatable">
                   <thead>
                     <tr class="dnd-moved">
                       <!-- <th class="th colCompleteTask" style="width: 2%;">#
@@ -111,10 +111,9 @@
             </div>
 
             <div class="tab-pane fade" id="todayTab" role="tabpanel" aria-labelledby="todayTab-tab">
-              <div class="table-responsive">
+              <div class="tbl_responsive">
 
-                <table id="tblTodayTaskDatatable" name="tblTodayTaskDatatable" style="width:100%"
-                  class="dataTable table table-hover table-striped table-bordered tblTodayTaskDatatable">
+                <table id="tblTodayTaskDatatable" name="tblTodayTaskDatatable" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblTodayTaskDatatable">
                   <thead>
                     <tr class="dnd-moved">
                       <!-- <th class="th colCompleteTask" style="width: 2%;">
@@ -126,7 +125,7 @@
                       <th class="th colTaskDesc no-modal">Description</th>
                       <th class="th colTaskLabels no-modal">Labels</th>
                       <th class="th colTaskProjects no-modal">Project</th>
-                      <th class="th colActive no-modal">Status</th>
+                      <th class="th colStatus no-modal">Status</th>
                       <!-- <th class="th colTaskActions no-modal">Actions</th> -->
                     </tr>
                   </thead>
@@ -163,7 +162,7 @@
             </div>
 
             <div class="tab-pane fade" id="projectsTab" role="tabpanel" aria-labelledby="projectsTab-tab">
-              <div class="table-responsive">
+              <div class="tbl_responsive">
 
                 <table id="tblNewProjectsDatatable" name="tblNewProjectsDatatable" style="width:100%"
                   class="dataTable table table-hover table-striped table-bordered tblNewProjectsDatatable">
@@ -185,10 +184,9 @@
             <div class="tab-pane fade" id="filterLabelsTab" role="tabpanel" aria-labelledby="filterLabelsTab-tab">
               <div class="row">
                 <div class="col-12 pb-4">
-                  <div class="table-responsive">
+                  <div class="tbl_responsive">
 
-                    <table id="tblLabels" name="tblLabels" style="width:100%"
-                      class="dataTable table table-hover table-striped table-bordered tblLabels">
+                    <table id="tblLabels" name="tblLabels" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblLabels">
                       <thead>
                         <tr class="dnd-moved">
                           <th class="th colLabelCreatedDate">Created</th>
@@ -210,8 +208,6 @@
     </div>
   </div>
 
-
-
   {{> projectTasksModal}}
   {{> editProjectModal}}
   {{> newProjectModal}}
@@ -223,6 +219,4 @@
 
   {{> newLabelModal}}
   {{> editLabelModal}}
-
-
 </template>

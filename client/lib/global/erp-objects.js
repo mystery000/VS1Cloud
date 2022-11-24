@@ -10,6 +10,7 @@ const erpObject = {
     TBill: "TBill",
     TCashSale: "TCashSale",
     TClientType: "TClientType",
+    TClientTypeList:"TClientTypeList",
     TChequeEx: "TChequeEx",
     TCheque: "TCheque",
     TCompanyType: "TCompanyType",
@@ -38,6 +39,7 @@ const erpObject = {
     TPayrollHolidays: "TPayrollHolidays",
     TPayrollCalendars: "TPayrollCalendars",
     TLeadStatusType: "TLeadStatusType",
+    TLeadStatusTypeList: "TLeadStatusTypeList",
     TLeaveAccruals: "TLeaveAccruals",
     TManufacture: "TManufacture",
     TMarketingContact: "TMarketingContact",
@@ -297,12 +299,10 @@ const erpObject = {
     TSupplierVS1List:"TSupplierVS1List",
     TleaveAccruals: "TleaveAccruals",
     TPNLLayout: "TPNLLayout",
-    VS1_PNLGetLayout: "VS1_PNLGetLayout",    
+    VS1_PNLGetLayout: "VS1_PNLGetLayout",
     TSupplierVS1List: "TSupplierVS1List",
     TleaveAccruals: "TleaveAccruals",
-    TProspectList:"TProspectList",
-    TABADescriptiveRecord: "TABADescriptiveRecord",
-    TABADetailRecord: "TABADetailRecord"
+    TProspectList:"TProspectList"
 };
 
 export default erpObject;

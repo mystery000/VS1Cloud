@@ -3019,7 +3019,7 @@ export class SideBarService extends BaseService {
 
   getAllLeadStatus() {
     let options = {
-      PropertyList: "ID,TypeName,Description,TypeCode, EQPM",
+      PropertyList: "ID,TypeCode,Name,Description,IsDefault,EQPM",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TLeadStatusType, options);
@@ -3031,14 +3031,14 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"Description asc"',
-            select: "[Active]=true",
+            orderby: '"Name asc"',
+            Search: "Active = true",
         };
       } else {
         options = {
-          orderby: '"Description asc"',
+          orderby: '"Name asc"',
           ListType: "Detail",
-          select: "[Active]=true",
+          Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -3047,11 +3047,11 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"Description asc"',
+            orderby: '"Name asc"',
         };
       } else {
         options = {
-            orderby: '"Description asc"',
+            orderby: '"Name asc"',
             ListType: "Detail",
             LimitCount: parseInt(limitcount),
             LimitFrom: parseInt(limitfrom),
@@ -3059,7 +3059,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TLeadStatusType, options);
+    return this.getList(this.ERPObjects.TLeadStatusTypeList, options);
   }
 
   getShippingMethodData() {
@@ -3553,13 +3553,13 @@ export class SideBarService extends BaseService {
         options = {
             ListType: "Detail",
             orderby: '"TypeName asc"',
-            select: "[Active]=true",
+            Search: "Active = true",
         };
       } else {
         options = {
           orderby: '"TypeName asc"',
           ListType: "Detail",
-          select: "[Active]=true",
+          Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -3580,7 +3580,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TClientType, options);
+    return this.getList(this.ERPObjects.TClientTypeList, options);
   }
 
   getAllCustomerStatementData(dateFrom, dateTo, ignoreDate) {
