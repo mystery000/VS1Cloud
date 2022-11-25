@@ -164,7 +164,7 @@ Template.production_planner.onRendered(async function() {
             center: 'title',
             right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
         },
-        contentHeight: resources.length * 40 + 80,
+        contentHeight: resources.length * 60 + 80,
         editable: true,
         resourceAreaHeaderContent: 'Resources',
         resources: await getResources(),
@@ -236,10 +236,24 @@ Template.production_planner.onRendered(async function() {
             var customHtml = '';
             
             if(available == true) {
-                customHtml += event.title
+                customHtml += "<div class='w-100 h-100 d-flex align-items-start justify-content-center process-event' style='color: black'>" + event.title + "</div>"
             }else {
 
-                customHtml += "<div class='w-100 h-100 unable-process'>" + event.title + "</div>";
+                customHtml += "<div class='w-100 h-100 unable-process d-flex align-items-start justify-content-center process-event' style='color: black'>" + event.title + "</div>";
+            }
+
+
+            let sTime = event.start;
+            let eTime = event.end;
+            let current = new Date();
+
+            if(current.getTime() > sTime.getTime() && current.getTime() < eTime.getTime()) {
+                let totalDuration = eTime.getTime() - sTime.getTime();
+                let progressed = current.getTime() - sTime.getTime();
+                let percent = Math.round((progressed / totalDuration) * 100);
+                customHtml = "<div class='w-100 h-100 current-progress process-event' style='color: black'>" + event.title + "<div class='progress-percentage' style='width:"+percent+"%'>" + percent + "%</div></div>"
+            } else if (current.getTime() >= eTime.getTime()) {
+                customHtml = "<div class='w-100 h-100 current-progress process-event' style='color: black'>" + event.title + "<div class='progress-percentage w-100'>Completed</div></div>"
             }
             
             // customHtml += "<span class='r10 highlighted-badge font-xxs font-bold'>" + event.extendedProps.age + text + "</span>";
@@ -248,11 +262,17 @@ Template.production_planner.onRendered(async function() {
             return { html: customHtml }
         },
         eventDidMount : function(arg) {
+            let event = arg.event;
             arg.el.ondblclick = (()=>{
-                let event = arg.event;
                 let id = event.extendedProps.orderId;
                 FlowRouter.go('/workordercard?id=' + id)
             })
+            let sTime = event.start
+            let current = new Date().getTime()
+            if(current>sTime.getTime())   {
+                arg.el.classList.remove('fc-event-resizable');
+                arg.el.classList.remove('fc-event-draggable');
+            }         
             
         },
         businessHours: [{
