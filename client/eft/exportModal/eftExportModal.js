@@ -391,7 +391,7 @@ Template.eftExportModal.onRendered(function () {
 Template.eftExportModal.events({
 
   "click .btnOptionsEft": () => {
-    $('#eftOptionsModal').modal();
+    $('#eftOptionsModal').modal('toggle');
   },
 
   "click .btnSelectAllEft": () => {

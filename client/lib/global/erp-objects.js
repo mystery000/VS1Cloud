@@ -302,7 +302,9 @@ const erpObject = {
     VS1_PNLGetLayout: "VS1_PNLGetLayout",
     TSupplierVS1List: "TSupplierVS1List",
     TleaveAccruals: "TleaveAccruals",
-    TProspectList:"TProspectList"
+    TProspectList:"TProspectList",
+    TABADetailRecord:"TABADetailRecord",
+    TABADescriptiveRecord:"TABADescriptiveRecord",
 };
 
 export default erpObject;
