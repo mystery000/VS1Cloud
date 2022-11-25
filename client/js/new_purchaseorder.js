@@ -20,6 +20,7 @@ import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
+import { rest } from 'lodash';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -221,9 +222,9 @@ Template.purchaseordercard.onRendered(() => {
         { index: 3, label: "Ordered", class: "Ordered", width: "75", active: true, display: true },
         { index: 4, label: "Received", class: "Shipped", width: "75", active: true, display: true },
         { index: 5, label: "BO", class: "BackOrder", width: "75", active: true, display: true },
-        { index: 6, label: "Price (Ex)", class: "UnitPriceEx", width: "122", active: true, display: true },
-        { index: 7, label: "Price (Inc)", class: "UnitPriceInc", width: "122", active: false, display: true },
-        { index: 8, label: "Customer/Job", class: "CustomerJob", width: "110", active: true, display: true },
+        { index: 6, label: "Customer/Job", class: "CustomerJob", width: "110", active: true, display: true },
+        { index: 7, label: "Price (Ex)", class: "UnitPriceEx", width: "122", active: true, display: true },
+        { index: 8, label: "Price (Inc)", class: "UnitPriceInc", width: "122", active: false, display: true },
         { index: 9, label: "CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
         { index: 10, label: "Tax Rate", class: "TaxRate", width: "91", active: false, display: false },
         { index: 11, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
@@ -269,6 +270,10 @@ Template.purchaseordercard.onRendered(() => {
           if (dataObject.length == 0) {
             sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              reset_data[8].index = reset_data[6].index;
+              reset_data[6].index += 1;
+              reset_data[7].index += 1;
+              reset_data.sort((a,b)=>a.index-b.index);
               showCustomFieldDisplaySettings(reset_data);
             }).catch(function (err) {
             });
@@ -278,6 +283,12 @@ Template.purchaseordercard.onRendered(() => {
              for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
                  reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                 //console.log(reset_data);
+                 reset_data[8].index = reset_data[6].index;
+                 reset_data[6].index += 1;
+                 reset_data[7].index += 1;
+                 reset_data.sort((a,b)=>a.index-b.index);
+                 console.log(reset_data);
                  showCustomFieldDisplaySettings(reset_data);
                }
              }

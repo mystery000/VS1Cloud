@@ -1312,19 +1312,21 @@
                                               <td class="colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
                                           {{/if}}
 
-                                          <td class="colUnitPriceEx {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}"></td>
-                                            
-                                                <td class="colUnitPriceEx convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPrice}}</td>
-                                            
-                                          <td class="colUnitPriceInc {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">
-                                            <input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="{{item.unitPriceInc}}"></td>
-                                          
-                                                <td class="colUnitPriceInc convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPriceInc}}</td>
-                                           
-
-                                          <td contenteditable="false" class="colCustomerJob {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">
+                                            <td contenteditable="false" class="colCustomerJob {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">
                                             <input class="es-input highlightSelect lineCustomerJob" type="search" value="{{item.customerJob}}">
                                           </td>
+
+                                          <td class="colUnitPriceEx {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}"></td>
+                                            
+                                                <td class="colUnitPriceEx convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPrice}}</td>
+                                            
+                                          <td class="colUnitPriceInc {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">
+                                            <input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="{{item.unitPriceInc}}"></td>
+                                          
+                                                <td class="colUnitPriceInc convert-to-foreign {{#if isForeignEnabled}} fx-enabled {{/if}} {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPriceInc}}</td>
+                                           
+
+                                          
 
                                           <td contenteditable="true" class="lineSalesLinesCustField1 colSalesLinesCustField1 {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.CustomField1}}</td>
                                           <td contenteditable="false" class="lineTaxRate colTaxRate pointer {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.taxRate}}</td>
