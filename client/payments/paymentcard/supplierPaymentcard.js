@@ -3577,6 +3577,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 $("#eftUserName").val(data.fields.CompanyName);
                 $("#eftNumberUser").val(data.fields.ID);
                 $("#eftProcessingDate").val(record.paymentDate);
+                $('#sltBankAccountName').val(data.fields.AccountName);
 
                 $("#edtSupplierName").attr("readonly", true);
                 $("#edtSupplierName").css("background-color", "#eaecf4");
@@ -3821,12 +3822,17 @@ Template.supplierpaymentcard.onRendered(() => {
                 $("#sltDepartment").val(useData[d].fields.DeptClassName);
                 $("#sltPaymentMethod").val(useData[d].fields.PaymentMethodName);
 
+                $("#eftUserName").val(useData[d].fields.CompanyName);
+                $("#eftNumberUser").val(useData[d].fields.ID);
+                $("#eftProcessingDate").val(record.paymentDate);
+
                 $("#edtSupplierName").attr("readonly", true);
                 $("#edtSupplierName").css("background-color", "#eaecf4");
                 $("#edtSupplierEmail").attr("readonly", true);
 
                 $("#edtPaymentAmount").attr("readonly", true);
 
+                $('#sltBankAccountName').val(useData[d].fields.AccountName);
                 $("#edtSelectBankAccountName").val(
                   useData[d].fields.AccountName
                 );
@@ -7440,7 +7446,7 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#edtSelectBankAccountName").attr("readonly", false);
     setTimeout(function () {
       if (localStorage.getItem("check_acc")) {
-        $("#sltBankAccountName").val(localStorage.getItem("check_acc"));
+        // $("#sltBankAccountName").val(localStorage.getItem("check_acc"));
       } else {
         // $('#sltBankAccountName').val('Bank');
       }
