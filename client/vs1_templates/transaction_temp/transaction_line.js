@@ -72,12 +72,21 @@ Template.transaction_line.onRendered(function() {
   }
   templateObject.init_reset_data();
   // set initial table rest_data
-
+  templateObject.insertItemWithLabel = (reset_data, a,b) => {
+        let data = reset_data.slice();
+        var aPos, bPos;
+        for(var i = 0; i < data.length; i++) if(data[i].label === a) aPos = i; else if(data[i].label === b) {bPos = i; break;}
+        data[bPos].index = aPos + 1;
+        for(var i = aPos + 1; i < bPos; i++) data[i].index += 1;
+        data.sort((a,b) => a.index - b.index);
+        return data;
+  }
   // custom field displaysettings
   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
-      templateObject.showCustomFieldDisplaySettings(reset_data);
+
+      templateObject.showCustomFieldDisplaySettings(templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No'));
 
       try {
 
@@ -85,7 +94,8 @@ Template.transaction_line.onRendered(function() {
               if (dataObject.length == 0) {
                   sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
                       reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                      templateObject.showCustomFieldDisplaySettings(reset_data);
+                      templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No');
+                      templateObject.showCustomFieldDisplaySettings(templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No'));
                   }).catch(function(err) {});
               } else {
                   let data = JSON.parse(dataObject[0].data);
@@ -93,7 +103,7 @@ Template.transaction_line.onRendered(function() {
                       for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                           if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
                               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                              templateObject.showCustomFieldDisplaySettings(reset_data);
+                              templateObject.showCustomFieldDisplaySettings(templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No'));
                           }
                       }
                   };

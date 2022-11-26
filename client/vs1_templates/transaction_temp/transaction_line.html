@@ -402,51 +402,54 @@
                   <td class="colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
                     class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
                   {{/if}}
-
-                    <td class="colUnitPrice colUnitPriceEx {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input
+                  {{#if equals isBatchSerialNoTracking true}}
+                  <td class="th colSerialNo {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnSnLotmodal"
+                    style="margin-left: 40px; font-size: 22px;"></i></td>
+                  {{/if}}
+                    <td class="colUnitPrice colUnitPriceEx {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input
                         class="lineUnitPrice colUnitPrice colUnitPriceEx highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}">
                     </td>
 
                   
-                      <td class="colUnitPrice convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colUnitPriceEx {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPrice}}
+                      <td class="colUnitPrice convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colUnitPriceEx {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPrice}}
                       </td>
                    
 
-                    <td class="colUnitPriceInc {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input
+                    <td class="colUnitPriceInc {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"><input
                         class="lineUnitPrice highlightInput colUnitPriceIncChange" type="text"
                         value="{{item.unitPriceInc}}"></td>
 
                 
-                      <td class="colUnitPriceInc  convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPriceInc}}</td>
+                      <td class="colUnitPriceInc  convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPriceInc}}</td>
                  
 
-                    <td class="colDiscount {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"><input class="lineDiscount highlightInput" type="number" value="{{item.DiscountPercent}}" max="100"></td>
-                    <td class="colCostPrice {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"><input
+                    <td class="colDiscount {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"><input class="lineDiscount highlightInput" type="number" value="{{item.DiscountPercent}}" max="100"></td>
+                    <td class="colCostPrice {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"><input
                         class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"></td>
                     <td contenteditable="true"
-                      class="lineSalesLinesCustField1 colSalesLinesCustField1  {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">
+                      class="lineSalesLinesCustField1 colSalesLinesCustField1  {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">
                       {{item.SalesLinesCustField1}}</td>
                     <td contenteditable="false"
-                      class="lineTaxRate colTaxRate pointer {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}"
+                      class="lineTaxRate colTaxRate pointer {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}"
                       style="text-align: right!important;">{{item.taxRate}}</td>
-                    <td contenteditable="false" class="colTaxCode {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}"><input
+                    <td contenteditable="false" class="colTaxCode {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"><input
                         class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
 
                         <td contenteditable="false"
-                          class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
+                          class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"
                           style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
 
                           
 
                               <td contenteditable="false"
-                              class="lineTaxAmount convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colTaxAmount pointer {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
+                              class="lineTaxAmount convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colTaxAmount pointer {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"
                               style="text-align: right!important;cursor: pointer;">{{convertToForeignAmount item.TaxTotal}}</td>
 
 
-                    {{#if equals isBatchSerialNoTracking true}}
+                    <!-- {{#if equals isBatchSerialNoTracking true}}
                     <td class="th colSerialNo {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnSnLotmodal"
                       style="margin-left: 40px; font-size: 22px;"></i></td>
-                    {{/if}}
+                    {{/if}} -->
                     <td contenteditable="false"
                       class="lineAmt colAmount colAmountEx {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}"
                       style="text-align: right!important;">{{item.TotalAmt}}</td>
