@@ -23,6 +23,20 @@ let reportService = new ReportService();
 let organisationService = new OrganisationService();
 var times = 0;
 
+const months = [];
+months["January"] = "01";
+months["February"] = "02";
+months["March"] = "03";
+months["April"] = "04";
+months["May"] = "05";
+months["June"] = "06";
+months["July"] = "07";
+months["August"] = "08";
+months["September"] = "09";
+months["October"] = "10";
+months["November"] = "11";
+months["December"] = "12";
+
 Template.basreturn.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
@@ -100,7 +114,6 @@ Template.basreturn.onRendered(function() {
     let usedCategories = [];
     const accountTypeList = [];
     const dataTableList = [];
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     let reasonT4 = [
         { val: "T4-1", title: "Mergers, acquisitions and takeovers" },
@@ -1868,6 +1881,7 @@ Template.basreturn.onRendered(function() {
 
     $(document).on("click", "#departmentList tbody tr", function(e) {
         $('#sltDepartment').val($(this).find(".colDeptName").text());
+        $('#sltDepartmentID').val($(this).attr("id"));
         $('#departmentModal').modal('toggle');
         $("#allDepart").prop('checked', false);
     });
@@ -1939,99 +1953,7 @@ Template.basreturn.helpers({
             return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
         });
     },
-    termrecords: () => {
-        return Template.instance().termrecords.get().sort(function(a, b) {
-            if (a.termsname == 'NA') {
-                return 1;
-            } else if (b.termsname == 'NA') {
-                return -1;
-            }
-            return (a.termsname.toUpperCase() > b.termsname.toUpperCase()) ? 1 : -1;
-        });
-    },
-    purchaseCloudPreferenceRec: () => {
-        return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
-            PrefName: 'journalentrycard'
-        });
-    },
-    purchaseCloudGridPreferenceRec: () => {
-        return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
-            PrefName: 'tblJournalEntryLine'
-        });
-    },
-    uploadedFiles: () => {
-        return Template.instance().uploadedFiles.get();
-    },
-    attachmentCount: () => {
-        return Template.instance().attachmentCount.get();
-    },
-    uploadedFile: () => {
-        return Template.instance().uploadedFile.get();
-    },
-    statusrecords: () => {
-        return Template.instance().statusrecords.get().sort(function(a, b) {
-            if (a.orderstatus == 'NA') {
-                return 1;
-            } else if (b.orderstatus == 'NA') {
-                return -1;
-            }
-            return (a.orderstatus.toUpperCase() > b.orderstatus.toUpperCase()) ? 1 : -1;
-        });
-    },
-    totalCredit: () => {
-        return Template.instance().totalCredit.get();
-    },
-    totalDebit: () => {
-        return Template.instance().totalDebit.get();
-    },
-    totalCreditInc: () => {
-        return Template.instance().totalCreditInc.get();
-    },
-    totalDebitInc: () => {
-        return Template.instance().totalDebitInc.get();
-    },
-    companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
-    },
-    companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
-    },
-    city: () => {
-        return Session.get('vs1companyCity');
-    },
-    state: () => {
-        return Session.get('companyState');
-    },
-    poBox: () => {
-        return Session.get('vs1companyPOBox');
-    },
-    companyphone: () => {
-        return Session.get('vs1companyPhone');
-    },
-    companyabn: () => {
-        return Session.get('vs1companyABN');
-    },
-    organizationname: () => {
-        return Session.get('vs1companyName');
-    },
-    organizationurl: () => {
-        return Session.get('vs1companyURL');
-    },
-    isMobileDevices: () => {
-        var isMobile = false;
 
-        if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) ||
-            /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) {
-            isMobile = true;
-        }
-
-        return isMobile;
-    },
-    isCurrencyEnable: () => {
-        return Session.get('CloudUseForeignLicence');
-    }
 });
 
 Template.basreturn.events({
@@ -2079,14 +2001,14 @@ Template.basreturn.events({
 
         if ($("#datemethod1").prop('checked') == true) {
             if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
-                var endMonth = Math.ceil(parseInt($("#beginmonthlydate").val().split("-")[0]) / 3) * 3;
+                var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
                 $("#endDate").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
-                var endMonth = parseInt($("#beginmonthlydate").val().split("-")[0]);
+                var endMonth = parseInt(months[$("#beginmonthlydate").val()]);
                 toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
                 $("#endDate").val(toDate);
@@ -2099,14 +2021,14 @@ Template.basreturn.events({
 
         if ($("#datemethod1-t2").prop('checked') == true) {
             if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
-                var endMonth = Math.ceil(parseInt($("#beginmonthlydate-t2").val().split("-")[0]) / 3) * 3;
+                var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t2").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
                 $("#endDate-t2").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
-                var endMonth = parseInt($("#beginmonthlydate-t2").val().split("-")[0]);
+                var endMonth = parseInt(months[$("#beginmonthlydate-t2").val()]);
                 toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
                 $("#endDate-t2").val(toDate);
@@ -2119,14 +2041,14 @@ Template.basreturn.events({
 
         if ($("#datemethod1-t2-2").prop('checked') == true) {
             if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
-                var endMonth = Math.ceil(parseInt($("#beginmonthlydate-t2-2").val().split("-")[0]) / 3) * 3;
+                var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t2-2").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear-t2-2").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
                 $("#endDate-t2-2").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
-                var endMonth = parseInt($("#beginmonthlydate-t2-2").val().split("-")[0]);
+                var endMonth = parseInt(months[$("#beginmonthlydate-t2-2").val()]);
                 toDate = new Date($("#currentyear-t2-2").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
                 $("#endDate-t2-2").val(toDate);
@@ -2139,14 +2061,14 @@ Template.basreturn.events({
 
         if ($("#datemethod1-t3").prop('checked') == true) {
             if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
-                var endMonth = Math.ceil(parseInt($("#beginmonthlydate-t3").val().split("-")[0]) / 3) * 3;
+                var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t3").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
                 $("#endDate-t3").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
-                var endMonth = parseInt($("#beginmonthlydate-t3").val().split("-")[0]);
+                var endMonth = parseInt(months[$("#beginmonthlydate-t3").val()]);
                 toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
                 $("#endDate-t3").val(toDate);
@@ -2980,35 +2902,37 @@ Template.basreturn.events({
         let templateObject = Template.instance();
         playSaveAudio();
         setTimeout(function() {
-            $('.fullScreenSpin').css('display', 'inline-block');
+            // $('.fullScreenSpin').css('display', 'inline-block');
             let taxRateList = templateObject.taxRateList.get();
             let accountsList = templateObject.accountsList.get();
 
             let dataArray = [];
             let description = $('#description').val();
-            let departmentId = "all";
+            let allClass = true;
+            let classID = 0;
             if ($("#allDepart").prop('checked') == false) {
-                departmentId = $('#sltDepartment').val();
+                allClass = false;
+                classID = $('#sltDepartment').val();
+                alert($('#sltDepartmentID').val());
             }
-            let accountingMethod = "Accrual";
+            let accMethod = "Accrual";
             if ($("#accountingmethod1").prop('checked') == true) {
-                accountingMethod = "Accrual";
+                accMethod = "Accrual";
             } else {
-                accountingMethod = "Cash";
+                accMethod = "Cash";
             }
-            let datemethod = "q";
-            let startDate = "0000-00-00";
-            let endDate = "0000-00-00";
+
+            let hasTab1 = $("#basreturnCategory1").prop('checked');
+            let tab1_type = "Quarterly";
+            // let startDate = "0000-00-00";
+            // let endDate = "0000-00-00";
             if ($("#datemethod1").prop('checked') == true) {
-                datemethod = "q";
+                tab1_type = "Quarterly";
             } else {
-                datemethod = "m";
+                tab1_type = "Monthly";
             }
-            if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
-                startDate = new Date($("#currentyear").val() + "-" + $("#beginmonthlydate").val());
-                startDate = moment(startDate).format("YYYY-MM-DD");
-                endDate = $("#endDate").val();
-            }
+            let tab1_month = $("#beginmonthlydate").val();
+            let tab1_year = $("#currentyear").val();
             let gst1cost = $('#gst1cost').val();
             let gst2cost = $('#gst2cost').val();
             let gst3cost = $('#gst3cost').val();
@@ -3029,83 +2953,80 @@ Template.basreturn.events({
             let gst18cost = $('#gst18cost').val();
             let gst19cost = $('#gst19cost').val();
             let gst20cost = $('#gst20cost').val();
-            let gst1taxcodes = [];
-            let gst2taxcodes = [];
-            let gst3taxcodes = [];
-            let gst4taxcodes = [];
-            let gst7taxcodes = [];
-            let gst10taxcodes = [];
-            let gst11taxcodes = [];
-            let gst13taxcodes = [];
-            let gst14taxcodes = [];
-            let gst15taxcodes = [];
-            let gst18taxcodes = [];
-            let t3taxcodes1 = [];
-            let t3taxcodes2 = [];
-            let t3taxcodes3 = [];
-            let t3taxcodes4 = [];
-            let t3taxcodes5 = [];
+            let gst1taxcodes = "";
+            let gst2taxcodes = "";
+            let gst3taxcodes = "";
+            let gst4taxcodes = "";
+            let gst7taxcodes = "";
+            let gst10taxcodes = "";
+            let gst11taxcodes = "";
+            let gst13taxcodes = "";
+            let gst14taxcodes = "";
+            let gst15taxcodes = "";
+            let gst18taxcodes = "";
+            let t3taxcodes1 = "";
+            let t3taxcodes2 = "";
+            let t3taxcodes3 = "";
+            let t3taxcodes4 = "";
+            let t3taxcodes5 = "";
             for (var i = 0; i < taxRateList.length; i++) {
                 if ($("#t-1-" + taxRateList[i].Id).prop('checked') == true) {
-                    gst1taxcodes.push(taxRateList[i].Id)
+                    gst1taxcodes = (gst1taxcodes == "") ? taxRateList[i].CodeName : gst1taxcodes + "," + taxRateList[i].CodeName;
                 } else if ($("#t-2-" + taxRateList[i].Id).prop('checked') == true) {
-                    gst2taxcodes.push(taxRateList[i].Id)
+                    gst2taxcodes = (gst2taxcodes == "") ? taxRateList[i].CodeName : gst2taxcodes + "," + taxRateList[i].CodeName;
                 } else if ($("#t-3-" + taxRateList[i].Id).prop('checked') == true) {
-                    gst3taxcodes.push(taxRateList[i].Id)
+                    gst3taxcodes = (gst3taxcodes == "") ? taxRateList[i].CodeName : gst3taxcodes + "," + taxRateList[i].CodeName;
                 } else if ($("#t-4-" + taxRateList[i].Id).prop('checked') == true) {
-                    gst4taxcodes.push(taxRateList[i].Id)
+                    gst4taxcodes = (gst4taxcodes == "") ? taxRateList[i].CodeName : gst4taxcodes + "," + taxRateList[i].CodeName;
                 } else if ($("#t-7-" + taxRateList[i].Id).prop('checked') == true) {
-                    gst7taxcodes.push(taxRateList[i].Id)
+                    gst7taxcodes = (gst7taxcodes == "") ? taxRateList[i].CodeName : gst7taxcodes + "," + taxRateList[i].CodeName;
                 } else if ($("#t-10-" + taxRateList[i].Id).prop('checked') == true) {
-                    gst10taxcodes.push(taxRateList[i].Id)
+                    gst10taxcodes = (gst10taxcodes == "") ? taxRateList[i].CodeName : gst10taxcodes + "," + taxRateList[i].CodeName;
                 } else if ($("#t-11-" + taxRateList[i].Id).prop('checked') == true) {
-                    gst11taxcodes.push(taxRateList[i].Id)
+                    gst11taxcodes = (gst11taxcodes == "") ? taxRateList[i].CodeName : gst11taxcodes + "," + taxRateList[i].CodeName;
                 } else if ($("#t-13-" + taxRateList[i].Id).prop('checked') == true) {
-                    gst13taxcodes.push(taxRateList[i].Id)
+                    gst13taxcodes = (gst13taxcodes == "") ? taxRateList[i].CodeName : gst13taxcodes + "," + taxRateList[i].CodeName;
                 } else if ($("#t-14-" + taxRateList[i].Id).prop('checked') == true) {
-                    gst14taxcodes.push(taxRateList[i].Id)
+                    gst14taxcodes = (gst14taxcodes == "") ? taxRateList[i].CodeName : gst14taxcodes + "," + taxRateList[i].CodeName;
                 } else if ($("#t-15-" + taxRateList[i].Id).prop('checked') == true) {
-                    gst15taxcodes.push(taxRateList[i].Id)
+                    gst15taxcodes = (gst15taxcodes == "") ? taxRateList[i].CodeName : gst15taxcodes + "," + taxRateList[i].CodeName;
                 } else if ($("#t-18-" + taxRateList[i].Id).prop('checked') == true) {
-                    gst18taxcodes.push(taxRateList[i].Id)
+                    gst18taxcodes = (gst18taxcodes == "") ? taxRateList[i].CodeName : gst18taxcodes + "," + taxRateList[i].CodeName;
                 } else if ($("#t3-1-" + taxRateList[i].Id).prop('checked') == true) {
-                    t3taxcodes1.push(taxRateList[i].Id)
+                    t3taxcodes1 = (t3taxcodes1 == "") ? taxRateList[i].CodeName : t3taxcodes1 + "," + taxRateList[i].CodeName;
                 } else if ($("#t3-2-" + taxRateList[i].Id).prop('checked') == true) {
-                    t3taxcodes2.push(taxRateList[i].Id)
+                    t3taxcodes2 = (t3taxcodes2 == "") ? taxRateList[i].CodeName : t3taxcodes2 + "," + taxRateList[i].CodeName;
                 } else if ($("#t3-3-" + taxRateList[i].Id).prop('checked') == true) {
-                    t3taxcodes3.push(taxRateList[i].Id)
+                    t3taxcodes3 = (t3taxcodes3 == "") ? taxRateList[i].CodeName : t3taxcodes3 + "," + taxRateList[i].CodeName;
                 } else if ($("#t3-4-" + taxRateList[i].Id).prop('checked') == true) {
-                    t3taxcodes4.push(taxRateList[i].Id)
+                    t3taxcodes4 = (t3taxcodes4 == "") ? taxRateList[i].CodeName : t3taxcodes4 + "," + taxRateList[i].CodeName;
                 } else if ($("#t3-5-" + taxRateList[i].Id).prop('checked') == true) {
-                    t3taxcodes5.push(taxRateList[i].Id)
+                    t3taxcodes5 = (t3taxcodes5 == "") ? taxRateList[i].CodeName : t3taxcodes5 + "," + taxRateList[i].CodeName;
                 }
             }
-            let datemethodT2 = "q";
-            let startDateT2 = "0000-00-00";
-            let endDateT2 = "0000-00-00";
+            let hasTab2 = $("#basreturnCategory2").prop('checked');
+            let tab2_type = "Quarterly";
+            // let startDate = "0000-00-00";
+            // let endDate = "0000-00-00";
             if ($("#datemethod1-t2").prop('checked') == true) {
-                datemethodT2 = "q";
+                tab2_type = "Quarterly";
             } else {
-                datemethodT2 = "m";
+                tab2_type = "Monthly";
             }
-            if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
-                startDateT2 = new Date($("#currentyear-t2").val() + "-" + $("#beginmonthlydate-t2").val());
-                startDateT2 = moment(startDateT2).format("YYYY-MM-DD");
-                endDateT2 = $("#endDate-t2").val();
-            }
-            let datemethodT2_2 = "q";
-            let startDateT2_2 = "0000-00-00";
-            let endDateT2_2 = "0000-00-00";
+            let tab2_month = $("#beginmonthlydate-t2").val();
+            let tab2_year = $("#currentyear-t2").val();
+
+            let hasTab3 = $("#basreturnCategory3").prop('checked');
+            let tab3_type = "Quarterly";
+            // let startDate = "0000-00-00";
+            // let endDate = "0000-00-00";
             if ($("#datemethod1-t2-2").prop('checked') == true) {
-                datemethodT2_2 = "q";
+                tab3_type = "Quarterly";
             } else {
-                datemethodT2_2 = "m";
+                tab3_type = "Monthly";
             }
-            if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
-                startDateT2_2 = new Date($("#currentyear-t2-2").val() + "-" + $("#beginmonthlydate-t2-2").val());
-                startDateT2_2 = moment(startDateT2_2).format("YYYY-MM-DD");
-                endDateT2_2 = $("#endDate-t2-2").val();
-            }
+            let tab3_month = $("#beginmonthlydate-t2-2").val();
+            let tab3_year = $("#currentyear-t2-2").val();
             let accounts1cost = $('#accounts1cost').val();
             let accounts2cost = $('#accounts2cost').val();
             let accounts3cost = $('#accounts3cost').val();
@@ -3118,30 +3039,30 @@ Template.basreturn.events({
             let accounts10cost = $('#accounts10cost').val();
             let accounts11cost = $('#accounts11cost').val();
             let reasonF4 = $('#reasonF4').val();
-            let accounts1 = [];
-            let accounts2 = [];
-            let accounts3 = [];
-            let accounts4 = [];
-            let accounts5 = [];
-            let t3accounts1 = [];
+            let accounts1 = "";
+            let accounts2 = "";
+            let accounts3 = "";
+            let accounts4 = "";
+            let accounts5 = "";
+            let t3accounts1 = "";
             for (var i = 0; i < accountsList.length; i++) {
                 if ($("#f-1-" + accountsList[i].id).prop('checked') == true) {
-                    accounts1.push(accountsList[i].id)
+                    accounts1 = (accounts1 == "") ? accountsList[i].accountname : accounts1 + "," + accountsList[i].accountname;
                 }
                 if ($("#f-2-" + accountsList[i].id).prop('checked') == true) {
-                    accounts2.push(accountsList[i].id)
+                    accounts2 = (accounts2 == "") ? accountsList[i].accountname : accounts2 + "," + accountsList[i].accountname;
                 }
                 if ($("#f-3-" + accountsList[i].id).prop('checked') == true) {
-                    accounts3.push(accountsList[i].id)
+                    accounts3 = (accounts3 == "") ? accountsList[i].accountname : accounts3 + "," + accountsList[i].accountname;
                 }
                 if ($("#f-4-" + accountsList[i].id).prop('checked') == true) {
-                    accounts4.push(accountsList[i].id)
+                    accounts4 = (accounts4 == "") ? accountsList[i].accountname : accounts4 + "," + accountsList[i].accountname;
                 }
                 if ($("#f-5-" + accountsList[i].id).prop('checked') == true) {
-                    accounts5.push(accountsList[i].id)
+                    accounts5 = (accounts5 == "") ? accountsList[i].accountname : accounts5 + "," + accountsList[i].accountname;
                 }
                 if ($("#f3-1-" + accountsList[i].id).prop('checked') == true) {
-                    t3accounts1.push(accountsList[i].id)
+                    t3accounts1 = (t3accounts1 == "") ? accountsList[i].accountname : t3accounts1 + "," + accountsList[i].accountname;
                 }
             }
             let datemethodT3 = "q";
@@ -3198,245 +3119,96 @@ Template.basreturn.events({
                 setTimeout(function() {
                     let basnumber = (dataArray.length) ? (parseInt(dataArray[0].basNumber) + 1) : 1;
                     let jsonObj = {
-                        basNumber: basnumber,
-                        description: description,
-                        departmentId: departmentId,
-                        accountingMethod: accountingMethod,
-                        basReturnTab1: {
-                            datemethod: datemethod,
-                            startDate: startDate,
-                            endDate: endDate,
-                            tab1G1: {
-                                amount: gst1cost,
-                                taxcodes: gst1taxcodes
-                            },
-                            tab1G2: {
-                                amount: gst2cost,
-                                taxcodes: gst2taxcodes
-                            },
-                            tab1G3: {
-                                amount: gst3cost,
-                                taxcodes: gst3taxcodes
-                            },
-                            tab1G4: {
-                                amount: gst4cost,
-                                taxcodes: gst4taxcodes
-                            },
-                            tab1G5: {
-                                amount: gst5cost,
-                            },
-                            tab1G6: {
-                                amount: gst6cost,
-                            },
-                            tab1G7: {
-                                amount: gst7cost,
-                                taxcodes: gst7taxcodes
-                            },
-                            tab1G8: {
-                                amount: gst8cost,
-                            },
-                            tab1G9: {
-                                amount: gst9cost,
-                            },
-                            tab1G10: {
-                                amount: gst10cost,
-                                taxcodes: gst10taxcodes
-                            },
-                            tab1G11: {
-                                amount: gst11cost,
-                                taxcodes: gst11taxcodes
-                            },
-                            tab1G12: {
-                                amount: gst12cost,
-                            },
-                            tab1G13: {
-                                amount: gst13cost,
-                                taxcodes: gst13taxcodes
-                            },
-                            tab1G14: {
-                                amount: gst14cost,
-                                taxcodes: gst14taxcodes
-                            },
-                            tab1G15: {
-                                amount: gst15cost,
-                                taxcodes: gst15taxcodes
-                            },
-                            tab1G16: {
-                                amount: gst16cost,
-                            },
-                            tab1G17: {
-                                amount: gst17cost,
-                            },
-                            tab1G18: {
-                                amount: gst18cost,
-                                taxcodes: gst18taxcodes
-                            },
-                            tab1G19: {
-                                amount: gst19cost,
-                            },
-                            tab1G20: {
-                                amount: gst20cost,
-                            },
-                        },
-                        basReturnTab2: {
-                            datemethod: datemethodT2,
-                            startDate: startDateT2,
-                            endDate: endDateT2,
-                            datemethod_2: datemethodT2_2,
-                            startDate_2: startDateT2_2,
-                            endDate_2: endDateT2_2,
-                            tab2W1: {
-                                amount: accounts1cost,
-                                accounts: accounts1
-                            },
-                            tab2W2: {
-                                amount: accounts2cost,
-                                accounts: accounts2
-                            },
-                            tab2W3: {
-                                amount: accounts3cost,
-                                accounts: accounts3
-                            },
-                            tab2W4: {
-                                amount: accounts4cost,
-                                accounts: accounts4
-                            },
-                            tab2T1: {
-                                amount: accounts5cost,
-                                accounts: accounts5
-                            },
-                            tab2T2: {
-                                amount: accounts6cost
-                            },
-                            tab2T3: {
-                                amount: accounts7cost
-                            },
-                            tab2T4: {
-                                reason: reasonT4
-                            },
-                            tab2F1: {
-                                amount: accounts9cost
-                            },
-                            tab2F2: {
-                                amount: accounts10cost
-                            },
-                            tab2F3: {
-                                amount: accounts11cost
-                            },
-                            tab2F4: {
-                                reason: reasonF4
-                            },
-                        },
-                        basReturnTab3: {
-                            datemethod: datemethodT3,
-                            startDate: startDateT3,
-                            endDate: endDateT3,
-                            tab31C: {
-                                amount: t3taxcodes1cost,
-                                taxcodes: t3taxcodes1
-                            },
-                            tab31E: {
-                                amount: t3taxcodes2cost,
-                                taxcodes: t3taxcodes2
-                            },
-                            tab31D: {
-                                amount: t3taxcodes3cost,
-                                taxcodes: t3taxcodes3
-                            },
-                            tab31F: {
-                                amount: t3taxcodes4cost,
-                                taxcodes: t3taxcodes4
-                            },
-                            tab31G: {
-                                amount: t3taxcodes5cost,
-                                taxcodes: t3taxcodes5
-                            },
-                            tab37D: {
-                                amount: t3accounts1cost,
-                                accounts: t3accounts1
-                            },
-                        },
-                        basReturnTab4: {
-                            tab41A: {
-                                amount: debits1cost
-                            },
-                            tab41C: {
-                                amount: debits2cost
-                            },
-                            tab41E: {
-                                amount: debits3cost
-                            },
-                            tab42A: {
-                                amount: debits4cost
-                            },
-                            tab43: {
-                                amount: debits5cost
-                            },
-                            tab44: {
-                                amount: debits6cost
-                            },
-                            tab45A: {
-                                amount: debits7cost
-                            },
-                            tab46A: {
-                                amount: debits8cost
-                            },
-                            tab47: {
-                                amount: debits9cost
-                            },
-                            tab48A: {
-                                amount: debits10cost
-                            },
-                            tab49: {
-                                amount: debits11cost
-                            },
-                            tab41B: {
-                                amount: credits1cost
-                            },
-                            tab41D: {
-                                amount: credits2cost
-                            },
-                            tab41F: {
-                                amount: credits3cost
-                            },
-                            tab41G: {
-                                amount: credits4cost
-                            },
-                            tab42B: {
-                                amount: credits5cost
-                            },
-                            tab45B: {
-                                amount: credits6cost
-                            },
-                            tab46B: {
-                                amount: credits7cost
-                            },
-                            tab47D: {
-                                amount: credits8cost
-                            },
-                            tab48B: {
-                                amount: credits9cost
-                            },
+                        type: "TBASReturn",
+                        fields: {
+                            AccMethod: accMethod,
+                            Active: true,
+                            AllClass: allClass,
+                            ClassID: classID,
+                            BasSheetDesc: description,
+                            Done: false,
+                            HasTab1: hasTab1,
+                            Tab1_Type: tab1_type,
+                            Tab1_Month: tab1_month,
+                            Tab1_Year: tab1_year,
+                            G1: parseFloat(gst1cost),
+                            G1Selected: gst1taxcodes,
+                            G2: parseFloat(gst2cost),
+                            G2Selected: gst2taxcodes,
+                            G3: parseFloat(gst3cost),
+                            G3Selected: gst3taxcodes,
+                            G4: parseFloat(gst4cost),
+                            G4Selected: gst4taxcodes,
+                            G5: parseFloat(gst5cost),
+                            G6: parseFloat(gst6cost),
+                            G7: parseFloat(gst7cost),
+                            G7Selected: gst7taxcodes,
+                            G8: parseFloat(gst8cost),
+                            G9: parseFloat(gst9cost),
+                            G10: parseFloat(gst10cost),
+                            G10Selected: gst10taxcodes,
+                            G11: parseFloat(gst11cost),
+                            G11Selected: gst11taxcodes,
+                            G12: parseFloat(gst12cost),
+                            G13: parseFloat(gst13cost),
+                            G13Selected: gst13taxcodes,
+                            G14: parseFloat(gst14cost),
+                            G14Selected: gst14taxcodes,
+                            G15: parseFloat(gst15cost),
+                            G15Selected: gst15taxcodes,
+                            G16: parseFloat(gst16cost),
+                            G17: parseFloat(gst17cost),
+                            G18: parseFloat(gst18cost),
+                            G18Selected: gst18taxcodes,
+                            G19: parseFloat(gst19cost),
+                            G20: parseFloat(gst20cost),
+                            HasTab2: hasTab2,
+                            Tab2_Type: tab2_type,
+                            Tab2_Month: tab2_month,
+                            Tab2_Year: tab2_year,
+                            W1: parseFloat(accounts1cost),
+                            W1Selected: accounts1,
+                            W2: parseFloat(accounts2cost),
+                            W2Selected: accounts2,
+                            W3: parseFloat(accounts3cost),
+                            W3Selected: accounts3,
+                            W4: parseFloat(accounts4cost),
+                            W4Selected: accounts4,
+                            HasTab3: hasTab3,
+                            Tab3_Type: tab3_type,
+                            Tab3_Month: tab3_month,
+                            Tab3_Year: tab3_year,
+                            T1: parseFloat(accounts5cost),
+                            T1Selected: accounts5,
+                            T2: parseFloat(accounts6cost),
+                            T3: parseFloat(accounts7cost),
+                            T4: reasonT4,
+                            F1: parseFloat(accounts9cost),
+                            F2: parseFloat(accounts10cost),
+                            F3: parseFloat(accounts11cost),
+                            F4: reasonF4,
                         }
                     }
 
-                    if (templateObject.getId.get()) {
-                        dataArray.forEach((item, j) => {
-                            if (item.basNumber == templateObject.getId.get()) {
-                                dataArray[j] = jsonObj;
-                                dataArray[j].basNumber = templateObject.getId.get();
-                            }
-                        });
-                    } else {
-                        dataArray.unshift(jsonObj);
-                    }
+                    console.log("jsonObj=", jsonObj);
 
-                    addVS1Data('TBASReturn', JSON.stringify(dataArray)).then(function(datareturn) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        FlowRouter.go('/basreturnlist');
-                    }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'none');
-                    });
+                    // if (templateObject.getId.get()) {
+                    //     dataArray.forEach((item, j) => {
+                    //         if (item.basNumber == templateObject.getId.get()) {
+                    //             dataArray[j] = jsonObj;
+                    //             dataArray[j].basNumber = templateObject.getId.get();
+                    //         }
+                    //     });
+                    // } else {
+                    //     dataArray.unshift(jsonObj);
+                    // }
+
+                    // addVS1Data('TBASReturn', JSON.stringify(dataArray)).then(function(datareturn) {
+                    //     $('.fullScreenSpin').css('display', 'none');
+                    //     FlowRouter.go('/basreturnlist');
+                    // }).catch(function(err) {
+                    //     $('.fullScreenSpin').css('display', 'none');
+                    // });
                 }, 500);
             }
         }, delayTimeAfterSound);

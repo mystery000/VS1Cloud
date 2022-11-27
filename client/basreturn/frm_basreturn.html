@@ -79,6 +79,7 @@
                                         <div>
                                             <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="float:left; width:80%; background-color:rgb(255, 255, 255); cursor: pointer;">
                                             </select>
+                                            <input type="hidden" id="sltDepartmentID" name="sltDepartmentID"/>
                                             <div class="custom-control custom-switch" style="width:65px; float:right; margin-top:14px;">
                                                 <input class="custom-control-input" type="checkbox" name="allDepart" id="allDepart" checked="checked" style="cursor: pointer;">
                                                 <label class="custom-control-label" for="allDepart" style="cursor: pointer;">All</label>
@@ -213,18 +214,18 @@
                                                         <label>Beginning</label>
                                                         <select class="form-control" id="beginmonthlydate">
                                                             <option value="" selected="selected"></option>
-                                                            <option value="01-01">January</option>
-                                                            <option value="02-01">February</option>
-                                                            <option value="03-01">March</option>
-                                                            <option value="04-01">April</option>
-                                                            <option value="05-01">May</option>
+                                                            <option value="January">January</option>
+                                                            <option value="February">February</option>
+                                                            <option value="March">March</option>
+                                                            <option value="April">April</option>
+                                                            <option value="May">May</option>
                                                             <option value="06-01">June</option>
-                                                            <option value="07-01">July</option>
-                                                            <option value="08-01">August</option>
-                                                            <option value="09-01">September</option>
-                                                            <option value="10-01">October</option>
-                                                            <option value="11-01">November</option>
-                                                            <option value="12-01">December</option>
+                                                            <option value="June">July</option>
+                                                            <option value="August">August</option>
+                                                            <option value="September">September</option>
+                                                            <option value="October">October</option>
+                                                            <option value="November">November</option>
+                                                            <option value="December">December</option>
                                                         </select>
                                                         <!-- <select class="form-control" id="beginquarterlydate">
                                                             <option value="" selected="selected"></option>
@@ -658,7 +659,7 @@
                                                     <div class="row" style="margin-bottom:10px">
                                                         <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Instalment income</div>
                                                         <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            <a role="button" data-toggle="modal" href="#" class="btn btn-primary" id="accounts5" autocomplete="off" disabled="disabled">T1</a>
+                                                            <a role="button" data-toggle="modal" href="#accounts5option" class="btn btn-primary" id="accounts5" autocomplete="off" disabled="disabled">T1</a>
                                                         </div>
                                                         <div class="col-12 col-md-4" style="align-items: center; display: flex;">
                                                             <span style="float:left;">$&nbsp;</span>
@@ -2330,16 +2331,16 @@
                                                         {{else if equals item.accountname 'PAYG Tax Paid'}}
                                                             <input class="custom-control-input" type="checkbox" id="f-{{pan}}-{{item.id}}" name="f-{{pan}}-{{item.id}}" value="{{item.id}}" checked="checked">
                                                         {{else}}
-                                                            <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
+                                                            <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.id}}" name="t-{{pan}}-{{item.id}}" value="{{item.Id}}">
                                                         {{/if}}
                                                     {{else if equals pan 2}}
                                                         {{#if equals item.accountname 'PAYG Tax Paid'}}
                                                             <input class="custom-control-input" type="checkbox" id="f-{{pan}}-{{item.id}}" name="f-{{pan}}-{{item.id}}" value="{{item.id}}" checked="checked">
                                                         {{else}}
-                                                            <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
+                                                            <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.id}}" name="t-{{pan}}-{{item.id}}" value="{{item.Id}}">
                                                         {{/if}}
                                                     {{else}}
-                                                        <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
+                                                        <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.id}}" name="t-{{pan}}-{{item.id}}" value="{{item.Id}}">
                                                     {{/if}}
                                                     <input class="custom-control-input" type="checkbox" id="f-{{pan}}-{{item.id}}" name="f-{{pan}}-{{item.id}}" value="{{item.id}}">
                                                     <label class="custom-control-label" for="f-{{pan}}-{{item.id}}" style="cursor: pointer;"></label>
@@ -2420,42 +2421,42 @@
                                                         <div class="custom-control custom-switch">
                                                             {{#if equals pan 1}}
                                                                 {{#if equals item.CodeName 'WET'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
                                                                 {{/if}}
                                                             {{else if equals pan 2}}
                                                                 {{#if equals item.CodeName 'LCT'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
                                                                 {{/if}}
                                                             {{else if equals pan 3}}
                                                                 {{#if equals item.CodeName 'WETR'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
                                                                 {{/if}}
                                                             {{else if equals pan 4}}
                                                                 {{#if equals item.CodeName 'LCTR'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
                                                                 {{/if}}
                                                             {{else if equals pan 5}}
                                                                 {{#if equals item.CodeName 'CAG'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else if equals item.CodeName 'GST'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else if equals item.CodeName 'INP'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
+                                                                    <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
                                                                 {{/if}}
                                                             {{else}}
-                                                                <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.Id}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
+                                                                <input class="custom-control-input" type="checkbox" id="t3-{{pan}}-{{item.CodeName}}" name="t3-{{pan}}-{{item.Id}}" value="{{item.Id}}">
                                                             {{/if}}
-                                                            <label class="custom-control-label" for="t3-{{pan}}-{{item.Id}}" style="cursor: pointer;"></label>
+                                                            <label class="custom-control-label" for="t3-{{pan}}-{{item.CodeName}}" style="cursor: pointer;"></label>
                                                         </div>
                                                     </td>
                                                     <td contenteditable="false" class="colCodeName">{{item.CodeName}}</td>
