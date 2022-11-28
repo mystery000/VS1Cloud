@@ -20,7 +20,7 @@ import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
-import { rest } from 'lodash';
+import { rest, template } from 'lodash';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -222,9 +222,9 @@ Template.purchaseordercard.onRendered(() => {
         { index: 3, label: "Ordered", class: "Ordered", width: "75", active: true, display: true },
         { index: 4, label: "Received", class: "Shipped", width: "75", active: true, display: true },
         { index: 5, label: "BO", class: "BackOrder", width: "75", active: true, display: true },
-        { index: 6, label: "Customer/Job", class: "CustomerJob", width: "110", active: true, display: true },
-        { index: 7, label: "Price (Ex)", class: "UnitPriceEx", width: "122", active: true, display: true },
-        { index: 8, label: "Price (Inc)", class: "UnitPriceInc", width: "122", active: false, display: true },
+        { index: 6, label: "Price (Ex)", class: "UnitPriceEx", width: "122", active: true, display: true },
+        { index: 7, label: "Price (Inc)", class: "UnitPriceInc", width: "122", active: false, display: true },
+        { index: 8, label: "Customer/Job", class: "CustomerJob", width: "110", active: true, display: true },
         { index: 9, label: "CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
         { index: 10, label: "Tax Rate", class: "TaxRate", width: "91", active: false, display: false },
         { index: 11, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
@@ -258,22 +258,34 @@ Template.purchaseordercard.onRendered(() => {
       templateObject.reset_data.set(reset_data);
     }
     init_reset_data();
+    templateObject.insertItemWithLabel = (x, a, b) => {
+        var data = [...x];
+        var aPos = data.findIndex((x) => x.label === a);
+        var bPos = data.findIndex(x => x.label === b);
+        if(aPos === -1 || bPos === -1) return data;
+        data[bPos] = {...data[bPos], index: aPos + 1};
+        for(var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index:data[i].index + 1}
+        return data.sort((a,b) => a.index - b.index);
+    }
     // set initial table rest_data
     // custom field displaysettings
      templateObject.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
+      reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
       showCustomFieldDisplaySettings(reset_data);
-
+    
       try {
         getVS1Data("VS1_Customize").then(function (dataObject) {
           if (dataObject.length == 0) {
             sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              reset_data[8].index = reset_data[6].index;
-              reset_data[6].index += 1;
-              reset_data[7].index += 1;
-              reset_data.sort((a,b)=>a.index-b.index);
+              if(!reset_data[16]) reset_data.push({ index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: false, display: false })
+              reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+              reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+              reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
               showCustomFieldDisplaySettings(reset_data);
             }).catch(function (err) {
             });
@@ -283,11 +295,10 @@ Template.purchaseordercard.onRendered(() => {
              for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
                  reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                 //console.log(reset_data);
-                 reset_data[8].index = reset_data[6].index;
-                 reset_data[6].index += 1;
-                 reset_data[7].index += 1;
-                 reset_data.sort((a,b)=>a.index-b.index);
+                 if(!reset_data[16]) reset_data.push({ index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: false, display: false })
+                 reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+                 reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+                 reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
                  console.log(reset_data);
                  showCustomFieldDisplaySettings(reset_data);
                }
@@ -300,7 +311,7 @@ Template.purchaseordercard.onRendered(() => {
       }
       return;
     }
-
+    
     function showCustomFieldDisplaySettings(reset_data) {
 
       let custFields = [];

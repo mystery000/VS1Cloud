@@ -442,14 +442,11 @@
                           
 
                               <td contenteditable="false"
-                              class="lineTaxAmount convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colTaxAmount pointer {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"
+                              class="lineTaxAmount convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colTaxAmount pointer {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"
                               style="text-align: right!important;cursor: pointer;">{{convertToForeignAmount item.TaxTotal}}</td>
 
 
-                    <!-- {{#if equals isBatchSerialNoTracking true}}
-                    <td class="th colSerialNo {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnSnLotmodal"
-                      style="margin-left: 40px; font-size: 22px;"></i></td>
-                    {{/if}} -->
+                    
                     <td contenteditable="false"
                       class="lineAmt colAmount colAmountEx {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}"
                       style="text-align: right!important;">{{item.TotalAmt}}</td>

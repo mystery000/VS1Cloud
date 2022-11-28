@@ -6,6 +6,7 @@ import { SideBarService } from '../../js/sidebar-service';
 import TableHandler from '../../js/Table/TableHandler';
 
 import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
+import { template } from 'lodash';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -71,22 +72,22 @@ Template.transaction_line.onRendered(function() {
       templateObject.reset_data.set(reset_data);
   }
   templateObject.init_reset_data();
-  // set initial table rest_data
-  templateObject.insertItemWithLabel = (reset_data, a,b) => {
-        let data = reset_data.slice();
-        var aPos, bPos;
-        for(var i = 0; i < data.length; i++) if(data[i].label === a) aPos = i; else if(data[i].label === b) {bPos = i; break;}
-        data[bPos].index = aPos + 1;
-        for(var i = aPos + 1; i < bPos; i++) data[i].index += 1;
-        data.sort((a,b) => a.index - b.index);
-        return data;
-  }
+  // set initial table rest_data        let data = reset_data.slice();
+  templateObject.insertItemWithLabel = (x, a, b) => {
+    var data = [...x];
+    var aPos = data.findIndex((x) => x.label === a);
+    var bPos = data.findIndex(x => x.label === b);
+    if(aPos === -1 || bPos === -1) return data;
+    data[bPos] = {...data[bPos], index: aPos + 1};
+    for(var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index:data[i].index + 1}
+    return data.sort((a,b) => a.index - b.index);
+}
   // custom field displaysettings
   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
-
-      templateObject.showCustomFieldDisplaySettings(templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No'));
+        reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
+      templateObject.showCustomFieldDisplaySettings(reset_data);
 
       try {
 
@@ -94,8 +95,8 @@ Template.transaction_line.onRendered(function() {
               if (dataObject.length == 0) {
                   sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
                       reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                      templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No');
-                      templateObject.showCustomFieldDisplaySettings(templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No'));
+                      reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
+                      templateObject.showCustomFieldDisplaySettings(reset_data);
                   }).catch(function(err) {});
               } else {
                   let data = JSON.parse(dataObject[0].data);
@@ -103,7 +104,8 @@ Template.transaction_line.onRendered(function() {
                       for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                           if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
                               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                              templateObject.showCustomFieldDisplaySettings(templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No'));
+                              reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
+                              templateObject.showCustomFieldDisplaySettings(reset_data);
                           }
                       }
                   };
