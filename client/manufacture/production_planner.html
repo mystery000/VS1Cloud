@@ -26,8 +26,8 @@
                                 }
                                 
                             </style>
-                            <div id="calendar" class="w-75"></div>
-                            <div class="eventInfo w-25">
+                            <div id="calendar" style="width: 100%; resize: horizontal; overflow: auto;"></div>
+                            <div class="eventInfo">
                                 <style>
                                     .eventInfo {
                                         display: flex;
@@ -104,6 +104,13 @@
 
                                     .productionplannermodule .fc-timeline-lane-frame {
                                         height: 60px !important;
+                                    }
+
+                                    .productionplannermodule .fc-h-event.highlighted {
+                                        box-sizing: border-box!important;
+                                        -moz-box-sizing: border-box!important;
+                                        -webkit-box-sizing: border-box!important;
+                                        border: 2px solid #f00 !important;
                                     }
 
                                     /* .unable-process::before {
