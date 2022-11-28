@@ -156,8 +156,11 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 0, label: '#ID', class: 'colDeptID', active: false, display: true, width: "10" },
                 { index: 1, label: 'Department Name', class: 'colDeptClassName', active: true, display: true, width: "200" },
                 { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-                { index: 3, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
-                { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+                { index: 3, label: 'Header Department', class: 'colHeaderDept', active: false, display: true, width: "250" },
+                { index: 4, label: 'Full Department Name', class: 'colFullDeptName', active: false, display: true, width: "250" },
+                { index: 5, label: 'Department Tree', class: 'colDeptTree', active: false, display: true, width: "250" },
+                { index: 6, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
+                { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
               ];
           }else if(currenttablename == "tblPaymentMethodList") { //Done Something Here
               reset_data = [
@@ -2754,10 +2757,10 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
       //Department List Data
       templateObject.getDepartmentData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
-        getVS1Data('TDepartment').then(function (dataObject) {
+        getVS1Data('TDeptClassList').then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getDepartmentDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-                    await addVS1Data('TDepartment', JSON.stringify(data));
+                    await addVS1Data('TDeptClassList', JSON.stringify(data));
                     templateObject.displayDepartmentListData(data); //Call this function to display data on the table
                 }).catch(function (err) {
 
@@ -2768,7 +2771,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             }
         }).catch(function (err) {
           sideBarService.getDepartmentDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-              await addVS1Data('TDepartment', JSON.stringify(data));
+              await addVS1Data('TDeptClassList', JSON.stringify(data));
               templateObject.displayDepartmentListData(data); //Call this function to display data on the table
           }).catch(function (err) {
 
@@ -2780,35 +2783,36 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
     let lineItems = [];
     let lineItemObj = {};
     let deleteFilter = false;
-    // if(data.Params.Search.replace(/\s/g, "") == ""){
-    //   deleteFilter = true;
-    // }else{
-    //   deleteFilter = false;
-    // };
+    if(data.Params.Search.replace(/\s/g, "") == ""){
+      deleteFilter = true;
+    }else{
+      deleteFilter = false;
+    };
 
-    for (let i = 0; i < data.tdeptclass.length; i++) {
+    for (let i = 0; i < data.tdeptclasslist.length; i++) {
       let mobile = "";
-      //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
       let linestatus = '';
-      if (data.tdeptclass[i].fields.Active == true) {
+      let deptFName = '';
+      if (data.tdeptclasslist[i].Active == true) {
           linestatus = "";
-      } else if (data.tdeptclass[i].fields.Active == false) {
+      } else if (data.tdeptclasslist[i].Active == false) {
           linestatus = "In-Active";
       };
+      //deptFName = data.tdeptclasslist[i].ClassName+" - "+data.tdeptclasslist[i].SiteCode;
+      console.log(deptFName);
       var dataList = [
-        data.tdeptclass[i].fields.ID || "",
-        data.tdeptclass[i].fields.DeptClassName || "",
-        data.tdeptclass[i].fields.Description || "",
-        data.tdeptclass[i].fields.SiteCode || "",
-        linestatus,
+        data.tdeptclasslist[i].ClassID || "",
+        data.tdeptclasslist[i].ClassName || "",
+        data.tdeptclasslist[i].Description || "",
+        data.tdeptclasslist[i].ClassGroup || "",
+        data.tdeptclasslist[i].ClassName,
+        data.tdeptclasslist[i].Level1 || "",
+        data.tdeptclasslist[i].SiteCode || "",
+        linestatus
       ];
 
-      //if (data.temployeelist[i].EmployeeName.replace(/\s/g, "") !== "") {
         splashArrayDepartmentList.push(dataList);
         templateObject.transactiondatatablerecords.set(splashArrayDepartmentList);
-      //}
-
-      //}
     }
 
     if (templateObject.transactiondatatablerecords.get()) {
@@ -2841,10 +2845,25 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 },
                 {
                   targets: 3,
-                  className: "colSiteCode",
+                  className: "colHeaderDept hiddenColumn",
+                  width: "250px",
                 },
                 {
                   targets: 4,
+                  className: "colFullDeptName hiddenColumn",
+                  width: "250px",
+                },
+                {
+                  targets: 5,
+                  className: "colDeptTree hiddenColumn",
+                  width: "250px",
+                },
+                {
+                  targets: 6,
+                  className: "colSiteCode",
+                },
+                {
+                  targets: 7,
                   className: "colStatus",
                   width: "100px",
                 }
@@ -2916,23 +2935,25 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
               let customerSearch = $('#'+currenttablename+'_filter input').val();
 
                 sideBarService.getAllTDepartmentList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
-
-                for (let j = 0; j < dataObjectnew.tdeptclass.length; j++) {
-                  let mobile = sideBarService.changeDialFormat(dataObjectnew.tdeptclass[j].Mobile, dataObjectnew.tdeptclass[j].Country);
+                for (let j = 0; j < dataObjectnew.tdeptclasslist.length; j++) {
+                  let deptFName = '';
                   let linestatus = '';
-                  if (dataObjectnew.tdeptclass[j].Active == true) {
+                  if (dataObjectnew.tdeptclasslist[j].Active == true) {
                       linestatus = "";
-                  } else if (dataObjectnew.tdeptclass[j].Active == false) {
+                  } else if (dataObjectnew.tdeptclasslist[j].Active == false) {
                       linestatus = "In-Active";
                   };
-
+                    //deptFName = dataObjectnew.tdeptclasslist[j].ClassName+" "+data.tdeptclasslist[j].SiteCode;
 
                     var dataListDupp = [
-                      dataObjectnew.tdeptclass[j].fields.ID || "",
-                      dataObjectnew.tdeptclass[j].fields.DeptClassName || "",
-                      dataObjectnew.tdeptclass[j].fields.Description || "",
-                      dataObjectnew.tdeptclass[j].fields.SiteCode || "",
-                      linestatus || "",
+                      dataObjectnew.tdeptclasslist[j].ID || "",
+                      dataObjectnew.tdeptclasslist[j].ClassName || "",
+                      dataObjectnew.tdeptclasslist[j].Description || "",
+                      dataObjectnew.tdeptclasslist[j].ClassGroup || "",
+                      dataObjectnew.tdeptclasslist[j].ClassName,
+                      dataObjectnew.tdeptclasslist[j].Level1 || "",
+                      dataObjectnew.tdeptclasslist[j].SiteCode || "",
+                      linestatus
                     ];
 
                     splashArrayDepartmentList.push(dataListDupp);
@@ -2961,7 +2982,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             },
             language: { search: "",searchPlaceholder: "Search List..." },
             "fnInitComplete": function (oSettings) {
-                  if(deleteFilter){
+                  if(data.Params.Search.replace(/\s/g, "") == ""){
                     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
                   }else{
                     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
@@ -2969,9 +2990,9 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                   $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
             },
             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                //let countTableData = data.Params.Count || 0; //get count from API data
+                let countTableData = data.Params.Count || 0; //get count from API data
 
-                //return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
             }
 
         }).on('page', function () {
@@ -4191,7 +4212,7 @@ Template.non_transactional_list.events({
         await clearData('TLeadStatusTypeList');
         templateObject.getLeadStatusListData(true);
     }else if(currenttablename == "tblDepartmentList"){
-        await clearData('TDepartment');
+        await clearData('TDeptClassList');
         templateObject.getDepartmentData(true);
     }else if(currenttablename == "tblPaymentMethodList"){
         await clearData('TPaymentList');
@@ -4239,8 +4260,8 @@ Template.non_transactional_list.events({
         await clearData('TLeadStatusTypeList');
         templateObject.getLeadStatusListData(false);
     }else if(currenttablename == "tblDepartmentList"){
-        await clearData('TDepartment');
-        templateObject.getDepartmentListData(false);
+        await clearData('TDeptClassList');
+        templateObject.getDepartmentData(false);
     }else if(currenttablename == "tblPaymentMethodList"){
       await clearData('TPaymentMethodList');
       templateObject.getPaymentMethodListData(false);

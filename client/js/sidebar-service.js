@@ -2785,13 +2785,13 @@ export class SideBarService extends BaseService {
         options = {
             ListType: "Detail",
             orderby: '"Description asc"',
-            select: "[Active]=true",
+            Search: "Active = true",
         };
       } else {
         options = {
           orderby: '"Description asc"',
           ListType: "Detail",
-          select: "[Active]=true",
+          Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -2812,7 +2812,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TDeptClass, options);
+    return this.getList(this.ERPObjects.TDeptClassList, options);
   }
 
   getTripGroup() {

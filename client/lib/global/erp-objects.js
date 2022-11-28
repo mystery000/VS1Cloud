@@ -24,6 +24,7 @@ const erpObject = {
     TCustomerEquipment: "TCustomerEquipment",
     TCustomerPayment: "TCustomerPayment",
     TDeptClass: "TDeptClass",
+    TDeptClassList: "TDeptClassList",
     TERPSysInfo: "TERPSysInfo",
     TEmployee: "TEmployee",
     TEmployeeEx: "TEmployeeEx",
