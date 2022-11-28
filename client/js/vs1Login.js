@@ -971,6 +971,8 @@ Template.vs1login.onRendered(function () {
               Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName || '');
               Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address || '');
               localStorage.setItem('vs1TradingName', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_TradingName || '');
+              localStorage.setItem('vs1LoggedEmployeeName', dataReturnRes.ProcessLog.TUser.EmployeeName || '');
+              localStorage.setItem('vs1LoggedEmployeeID', dataReturnRes.ProcessLog.TUser.EmployeeId || '');
               Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2 || '');
               Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN || '');
               Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber || '');

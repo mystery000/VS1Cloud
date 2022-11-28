@@ -3190,8 +3190,6 @@ Template.basreturn.events({
                         }
                     }
 
-                    console.log("jsonObj=", jsonObj);
-
                     // if (templateObject.getId.get()) {
                     //     dataArray.forEach((item, j) => {
                     //         if (item.basNumber == templateObject.getId.get()) {
