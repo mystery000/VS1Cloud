@@ -5281,15 +5281,13 @@ Template.billcard.onRendered(function() {
 });
 
 Template.billcard.helpers({
-
     getTemplateList: function () {
         return template_list;
-      },
-
-      getTemplateNumber: function () {
+    },
+    getTemplateNumber: function () {
         let template_numbers = ["1", "2", "3"];
         return template_numbers;
-      },
+    },
     billrecord: () => {
         return Template.instance().billrecord.get();
     },
