@@ -4360,7 +4360,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                       let dataLenght = oSettings._iDisplayLength;
                       let customerSearch = $('#'+currenttablename+'_filter input').val();
 
-                        sideBarService.getAllTCurrencyList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+                        sideBarService.getCurrencyListData(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
                         for (let j = 0; j < dataObjectnew.tcurrency.length; j++) {
                           let linestatus = '';
                           if (dataObjectnew.tcurrency[j].fields.Active == true) {

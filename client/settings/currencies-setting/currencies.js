@@ -824,30 +824,36 @@ Template.currenciessettings.events({
   "click #btnNewInvoice": function (event) {
     // FlowRouter.go('/invoicecard');
   },
-  "click #exportbtn": function () {
-    LoadingOverlay.show();
-    jQuery("#tblCurrencyList_wrapper .dt-buttons .btntabletocsv").click();
-    LoadingOverlay.hide();
+  'click #exportbtn': function () {
+      $('.fullScreenSpin').css('display','inline-block');
+      jQuery('#tblCurrencyList_wrapper .dt-buttons .btntabletocsv').click();
+      $('.fullScreenSpin').css('display','none');
   },
-  'click .printConfirm': function(event) {
-    LoadingOverlay.show();
-    jQuery('#tblCurrencyList_wrapper .dt-buttons .btntabletopdf').click();
-    LoadingOverlay.hide();
+  "click .printConfirm": function (event) {
+    $(".fullScreenSpin").css("display", "inline-block");
+    jQuery("#tblCurrencyList_wrapper .dt-buttons .btntabletopdf").click();
+    $(".fullScreenSpin").css("display", "none");
   },
-  "click .btnRefresh":  (e, ui) => {
-    LoadingOverlay.show();
-    sideBarService.getCurrencies().then(function (dataReload) {
-      addVS1Data("TCurrency", JSON.stringify(dataReload)).then(function (datareturn) {
-        location.reload(true);
-      }).catch(function (err) {
-        location.reload(true);
+  'click .btnRefresh': function () {
+      $(".fullScreenSpin").css("display", "inline-block");
+      sideBarService.getCurrencyDataList().then(function(dataReload) {
+          addVS1Data('TCurrencyList', JSON.stringify(dataReload)).then(function(datareturn) {
+            sideBarService.getCurrencyDataList(initialBaseDataLoad, 0, false).then(async function(dataCurrencyList) {
+                await addVS1Data('TCurrencyList', JSON.stringify(dataCurrencyList)).then(function(datareturn) {
+                    Meteor._reload.reload();
+                }).catch(function(err) {
+                    Meteor._reload.reload();
+                });
+            }).catch(function(err) {
+                Meteor._reload.reload();
+            });
+          }).catch(function(err) {
+              Meteor._reload.reload();
+          });
+      }).catch(function(err) {
+          Meteor._reload.reload();
       });
-    }).catch(function (err) {
-      location.reload(true);
-    });
-
-    ui.getCurrencies(true, true);
-  },
+},
   "click .btnAddNewDepart": function () {
     $("#newTaxRate").css("display", "block");
   },
@@ -1048,27 +1054,49 @@ Template.currenciessettings.events({
     playDeleteAudio();
     let taxRateService = new TaxRateService();
     setTimeout(function(){
-    let currencyId = $("#selectDeleteLineID").val();
-
-    let objDetails = {
-      type: "TCurrency",
-      fields: {
-        Id: currencyId,
-        Active: false
+        let currencyId = $('#edtCurrencyID').val() || '';
+        let code = $('#currencyCode').val() || '';
+        let currency = $('#edtCurrencyName').val() || '';
+        let symbol = $('#currencySymbol').val() || '';
+        let buyrate = $('#edtBuyRate').val() || 0.0;
+        let sellrate = $('#edtSellRate').val() || 0.0;
+        let country = $('#sedtCountry').val() || '';
+        let description = $('#edtCurrencyDesc').val() || '';
+        let objDetails = {
+            type: "TCurrencyList",
+            fields: {
+                Id: currencyId,
+                Code: code,
+                Currency: currency,
+                CurrencySymbol: symbol,
+                BuyRate: buyrate,
+                SellRate: sellrate,
+                Country: country,
+                CurrencyDesc: description,
+                Active: false
       }
     };
 
     taxRateService.saveCurrency(objDetails).then(function (objDetails) {
       sideBarService.getCurrencies().then(function (dataReload) {
-        addVS1Data("TCurrency", JSON.stringify(dataReload)).then(function (datareturn) {
+          addVS1Data('TCurrencyList', JSON.stringify(dataReload)).then(function(datareturn) {
+            sideBarService.getCurrencyDataList(initialBaseDataLoad, 0, false).then(async function(dataCurrencyList) {
+                await addVS1Data('TCurrencyList', JSON.stringify(dataCurrencyList)).then(function(datareturn) {
+                    Meteor._reload.reload();
+                }).catch(function(err) {
+                    Meteor._reload.reload();
+                });
+            }).catch(function(err) {
+                Meteor._reload.reload();
+            });
+          }).catch(function(err) {
+              Meteor._reload.reload();
+          });
+      }).catch(function(err) {
           Meteor._reload.reload();
-        }).catch(function (err) {
-          Meteor._reload.reload();
-        });
-      }).catch(function (err) {
-        Meteor._reload.reload();
       });
-    }).catch(function (err) {
+
+  }).catch(function (err) {
       swal({title: "Oooops...", text: err, type: "error", showCancelButton: false, confirmButtonText: "Try Again"}).then(result => {
         if (result.value) {
           Meteor._reload.reload();
@@ -1077,6 +1105,69 @@ Template.currenciessettings.events({
       LoadingOverlay.hide();
     });
   }, delayTimeAfterSound);
+  },
+
+  'click .btnActivateCurrency': function() {
+      playSaveAudio();
+      let contactService = new ContactService();
+      setTimeout(function() {
+          $('.fullScreenSpin').css('display', 'inline-block');
+          let currencyId = $('#edtCurrencyID').val() || '';
+          let code = $('#currencyCode').val() || '';
+          let currency = $('#edtCurrencyName').val() || '';
+          let symbol = $('#currencySymbol').val() || '';
+          let buyrate = $('#edtBuyRate').val() || 0.0;
+          let sellrate = $('#edtSellRate').val() || 0.0;
+          let country = $('#sedtCountry').val() || '';
+          let description = $('#edtCurrencyDesc').val() || '';
+          let objDetails = {
+              type: "TCurrencyList",
+              fields: {
+                  Id: currencyId,
+                  Code: code,
+                  Currency: currency,
+                  CurrencySymbol: symbol,
+                  BuyRate: buyrate,
+                  SellRate: sellrate,
+                  Country: country,
+                  CurrencyDesc: description,
+                  Active: true
+              }
+          };
+          contactService.saveCurrency(objDetails).then(function(result) {
+              $(".fullScreenSpin").css("display", "inline-block");
+              sideBarService.getCurrencyDataList().then(function(dataReload) {
+                  addVS1Data('TCurrencyList', JSON.stringify(dataReload)).then(function(datareturn) {
+                        sideBarService.getCurrencyDataList(initialBaseDataLoad, 0, false).then(async function(dataCurrencyList) {
+                            await addVS1Data('TDeptClassList', JSON.stringify(dataCurrencyList)).then(function(datareturn) {
+                                Meteor._reload.reload();
+                            }).catch(function(err) {
+                                Meteor._reload.reload();
+                            });
+                        }).catch(function(err) {
+                            Meteor._reload.reload();
+                        });
+                      }).catch(function(err) {
+                          Meteor._reload.reload();
+                      });
+                  }).catch(function(err) {
+                      Meteor._reload.reload();
+                  });
+              }).catch(function(err) {
+                  swal({
+                      title: 'Oooops...',
+                      text: err,
+                      type: 'error',
+                      showCancelButton: false,
+                      confirmButtonText: 'Try Again'
+                  }).then((result) => {
+                      if (result.value) {
+                          // Meteor._reload.reload();
+                      } else if (result.dismiss === 'cancel') {}
+                  });
+                  $('.fullScreenSpin').css('display', 'none');
+              });
+      }, delayTimeAfterSound);
   },
   "click .btnAddCurrency": function () {
     $("#add-currency-title").text("Add New Currency");
