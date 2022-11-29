@@ -74,15 +74,15 @@ Template.newcurrencypop.onRendered(function () {
               for (let i = 0; i < data.tcurrency.length; i++) {
                 // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
                 var dataList = {
-                  id: data.tcurrency[i].Id || "",
+                  id: data.tcurrency[i].ID || "",
                   code: data.tcurrency[i].Code || "N/A",
                   currency: data.tcurrency[i].Currency || "N/A",
                   symbol: data.tcurrency[i].CurrencySymbol || currencySymbolEmpty,
                   buyrate: data.tcurrency[i].BuyRate || "-",
                   sellrate: data.tcurrency[i].SellRate || "-",
                   country: data.tcurrency[i].Country || "N/A",
-                  description: data.tcurrency[i].CurrencyDesc || "N/A",
                   ratelastmodified: data.tcurrency[i].RateLastModified || "-",
+                  description: data.tcurrency[i].CurrencyDesc || "N/A",
                 };
 
                 dataTableList.push(dataList);
@@ -682,7 +682,7 @@ Template.newcurrencypop.events({
         /**
          * Let's call the Fx APis here
          */
-        
+
         for (let i = 0; i < data.tcurrency.length; i++) {
           if (data.tcurrency[i].Country === selectCountry) {
             var currencyid = data.tcurrency[i].Id || "";
@@ -1030,7 +1030,7 @@ Template.newcurrencypop.events({
     playSaveAudio();
     let taxRateService = new TaxRateService();
     setTimeout(function(){
-    
+
     LoadingOverlay.show();
     var currencyid = $("#edtCurrencyID").val();
     var country = $("#sedtCountry").val();

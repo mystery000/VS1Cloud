@@ -256,6 +256,19 @@ Template.non_transactional_list.onRendered(function() {
               { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
               { index: 20, label: 'Comments', class: 'colNotes', active: true, display: true, width: ""},
           ];
+          }else if(currenttablename == "tblCurrencyList") { //Done Something Here
+            reset_data = [
+              { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: true,  width: "10"},
+              { index: 1, label: 'Code', class: 'colCode', active: true, display: true, width: "50"},
+              { index: 2, label: 'Currency', class: 'colCurrency', active: true, display: true, width: "100"},
+              { index: 3, label: 'Symbol', class: 'colSymbol', active: true, display: true, width: "100"},
+              { index: 4, label: 'Buy Rate', class: 'colBuyRate', active: true, display: true, width: "100"},
+              { index: 5, label: 'Sell Rate', class: 'colSellRate', active: true, display: true, width: "100"},
+              { index: 6, label: 'Country', class: 'colCountry', active: true, display: true, width: "200"},
+              { index: 7, label: 'Rate Last Modified', class: 'colRateLastModified', active: false, display: true, width: "200"},
+              { index: 8, label: 'Description', class: 'colDescription', active: true, display: true, width: ""},
+              { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
+          ];
           }
         templateObject.reset_data.set(reset_data);
       }
@@ -269,25 +282,25 @@ Template.non_transactional_list.onRendered(function() {
     templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
-      // getVS1Data("VS1_Customize").then(function (dataObject) {
-      //   if (dataObject.length == 0) {
-      //     sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-      //         reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-      //         templateObject.showCustomFieldDisplaySettings(reset_data);
-      //     }).catch(function (err) {
-      //     });
-      //   } else {
-      //     let data = JSON.parse(dataObject[0].data);
-      //     if(data.ProcessLog.Obj.CustomLayout.length > 0){
-      //      for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-      //        if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-      //          reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-      //          templateObject.showCustomFieldDisplaySettings(reset_data);
-      //        }
-      //      }
-      //    };
-      //   }
-      // });
+      getVS1Data("VS1_Customize").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              templateObject.showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          if(data.ProcessLog.Obj.CustomLayout.length > 0){
+           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+               templateObject.showCustomFieldDisplaySettings(reset_data);
+             }
+           }
+         };
+        }
+      });
 
     } catch (error) {
 
@@ -2798,8 +2811,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
       } else if (data.tdeptclasslist[i].Active == false) {
           linestatus = "In-Active";
       };
-      //deptFName = data.tdeptclasslist[i].ClassName+" - "+data.tdeptclasslist[i].SiteCode;
-      console.log(deptFName);
+
       var dataList = [
         data.tdeptclasslist[i].ClassID || "",
         data.tdeptclasslist[i].ClassName || "",
@@ -3829,12 +3841,12 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
                         sideBarService.getAllTUOMList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
 
-                        for (let j = 0; j < dataObjectnew.clienttypelist.length; j++) {
-                          let mobile = sideBarService.changeDialFormat(dataObjectnew.clienttypelist[j].Mobile, dataObjectnew.clienttypelist[j].Country);
+                        for (let j = 0; j < dataObjectnew.tunitofmeasure.length; j++) {
+                          let mobile = sideBarService.changeDialFormat(dataObjectnew.tunitofmeasure[j].fields.Mobile, dataObjectnew.tunitofmeasure[j].fields.Country);
                           let linestatus = '';
-                          if (dataObjectnew.clienttypelist[j].Active == true) {
+                          if (dataObjectnew.tunitofmeasure[j].fields.Active == true) {
                               linestatus = "";
-                          } else if (dataObjectnew.clienttypelist[j].Active == false) {
+                          } else if (dataObjectnew.tunitofmeasure[j].fields.Active == false) {
                               linestatus = "In-Active";
                           };
 
@@ -3846,16 +3858,16 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                           };
                           //Check if Purchase default is checked
                           if(dataObjectnew.tunitofmeasure[i].fields.PurchasesDefault == true){
-                              tdPurchaseDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'"></label></div>';
+                              tdPurchaseDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+dataObjectnew.tunitofmeasure[j].fields.ID+'" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+dataObjectnew.tunitofmeasure[i].fields.ID+'"></label></div>';
                           }else{
-                              tdPurchaseDef= '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'"><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+data.tunitofmeasure[i].fields.ID+'"></label></div>';
+                              tdPurchaseDef= '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+dataObjectnew.tunitofmeasure[j].fields.ID+'"><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+dataObjectnew.tunitofmeasure[j].fields.ID+'"></label></div>';
                           };
 
                             var dataListDupp = [
                               dataObjectnew.tunitofmeasure[j].fields.ID || '',
                               dataObjectnew.tunitofmeasure[j].fields.UOMName || '',
                               dataObjectnew.tunitofmeasure[j].fields.UnitDescription || '',
-                              data.tunitofmeasure[j].fields.ProductName || '',
+                              dataObjectnew.tunitofmeasure[j].fields.ProductName || '',
                               dataObjectnew.tunitofmeasure[ij].fields.Multiplier || 0,
                               tdSupplierDef,
                               tdPurchaseDef,
@@ -4158,6 +4170,283 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
       }
 
+      //Currency List Data
+      templateObject.getCurrencyListData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
+        var customerpage = 0;
+        getVS1Data('TCurrencyList').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getCurrencyDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+                    await addVS1Data('TCurrencyList', JSON.stringify(data));
+                    templateObject.displayCurrencyListData(data); //Call this function to display data on the table
+                }).catch(function (err) {
+
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayCurrencyListData(data); //Call this function to display data on the table
+            }
+        }).catch(function (err) {
+          sideBarService.getCurrencyDataList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+              await addVS1Data('TCurrencyList', JSON.stringify(data));
+              templateObject.displayCurrencyListData(data); //Call this function to display data on the table
+          }).catch(function (err) {
+
+          });
+        });
+      }
+      templateObject.displayCurrencyListData = async function (data) {
+            var splashArrayCurrencyList = new Array();
+            let lineItems = [];
+            let lineItemObj = {};
+            let deleteFilter = false;
+            // if(data.Params.Search.replace(/\s/g, "") == ""){
+            //   deleteFilter = true;
+            // }else{
+            //   deleteFilter = false;
+            // };
+
+            for (let i = 0; i < data.tcurrency.length; i++) {
+              let linestatus = '';
+              if (data.tcurrency[i].fields.Active == true) {
+                  linestatus = "";
+              } else if (data.tcurrency[i].fields.Active == false) {
+                  linestatus = "In-Active";
+              };
+
+              var dataList = [
+                data.tcurrency[i].fields.ID|| "",
+                data.tcurrency[i].fields.Code || "",
+                data.tcurrency[i].fields.Currency || "",
+                data.tcurrency[i].fields.CurrencySymbol || "",
+                data.tcurrency[i].fields.BuyRate || 0.00,
+                data.tcurrency[i].fields.SellRate || 0.00,
+                data.tcurrency[i].fields.Country || "",
+                data.tcurrency[i].fields.RateLastModified || "",
+                data.tcurrency[i].fields.CurrencyDesc || "",
+                linestatus
+              ];
+
+                splashArrayCurrencyList.push(dataList);
+                templateObject.transactiondatatablerecords.set(splashArrayCurrencyList);
+            }
+
+            if (templateObject.transactiondatatablerecords.get()) {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            }
+            //$('.fullScreenSpin').css('display','none');
+            setTimeout(function () {
+                //$('#'+currenttablename).removeClass('hiddenColumn');
+                $('#'+currenttablename).DataTable({
+                    data: splashArrayCurrencyList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
+                        {
+                        targets: 0,
+                        className: "colCurrencyID colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function (td, cellData, rowData, row, col) {
+                          $(td).closest("tr").attr("id", rowData[0]);
+                        }},
+                        {
+                          targets: 1,
+                          className: "colCode",
+                          width: "100px",
+                        },
+                        {
+                          targets: 2,
+                          className: "colCurrency",
+                          width: "100px",
+                        },
+                        {
+                          targets: 3,
+                          className: "colSymbol",
+                          width: "100px",
+                        },
+                        {
+                          targets: 4,
+                          className: "colBuyRate text-right",
+                          width: "100px",
+                        },
+                        {
+                          targets: 5,
+                          className: "colSellRate text-right",
+                          width: "100px",
+                        },
+                        {
+                          targets: 6,
+                          className: "colCountry",
+                          width: "200px",
+                        },
+                        {
+                          targets: 7,
+                          className: "colRateLastModified hiddenColumn",
+                          width: "200px",
+                        },
+                        {
+                          targets: 8,
+                          className: "colDescription",
+                        },
+                        {
+                          targets: 9,
+                          className: "colStatus",
+                          width: "100px",
+                        }
+                    ],
+                    buttons: [
+                        {
+                            extend: 'csvHtml5',
+                            text: '',
+                            download: 'open',
+                            className: "btntabletocsv hiddenColumn",
+                            filename: "Currency Settings",
+                            orientation:'portrait',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },{
+                            extend: 'print',
+                            download: 'open',
+                            className: "btntabletopdf hiddenColumn",
+                            text: '',
+                            title: 'Currency Settings',
+                            filename: "Currency Settings",
+                            exportOptions: {
+                                columns: ':visible',
+                                stripHtml: false
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: '',
+                            download: 'open',
+                            className: "btntabletoexcel hiddenColumn",
+                            filename: "Currency Settings",
+                            orientation:'portrait',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+
+                        }],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[1, "asc"]],
+                    action: function () {
+                        $('#'+currenttablename).DataTable().ajax.reload();
+                    },
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#'+currenttablename+'_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+
+                            }
+                        } else {
+
+                        }
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                      $('.fullScreenSpin').css('display', 'inline-block');
+                      //var splashArrayCustomerListDupp = new Array();
+                      let dataLenght = oSettings._iDisplayLength;
+                      let customerSearch = $('#'+currenttablename+'_filter input').val();
+
+                        sideBarService.getAllTCurrencyList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+                        for (let j = 0; j < dataObjectnew.tcurrency.length; j++) {
+                          let linestatus = '';
+                          if (dataObjectnew.tcurrency[j].fields.Active == true) {
+                              linestatus = "";
+                          } else if (dataObjectnew.tcurrency[j].fields.Active == false) {
+                              linestatus = "In-Active";
+                          };
+                            var dataListDupp = [
+                              dataObjectnew.tcurrency[j].fields.Code || "",
+                              dataObjectnew.tcurrency[j].fields.Currency || "",
+                              dataObjectnew.tcurrency[j].fields.CurrencySymbol || "",
+                              dataObjectnew.tcurrency[j].fields.BuyRate || 0.00,
+                              dataObjectnew.tcurrency[j].fields.SellRate || 0.00,
+                              dataObjectnew.tcurrency[j].fields.Country || "",
+                              dataObjectnew.tcurrency[j].fields.RateLastModified || "",
+                              dataObjectnew.tcurrency[j].fields.CurrencyDesc || "",
+                              linestatus
+                            ];
+
+                            splashArrayCurrencyList.push(dataListDupp);
+                        }
+                        let uniqueChars = [...new Set(splashArrayCurrencyList)];
+                        templateObject.transactiondatatablerecords.set(uniqueChars);
+                        var datatable = $('#'+currenttablename).DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                        setTimeout(function () {
+                          $('#'+currenttablename).dataTable().fnPageChange('last');
+                        }, 400);
+
+                        $('.fullScreenSpin').css('display', 'none');
+
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+
+                      });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                    },
+                    language: { search: "",searchPlaceholder: "Search List..." },
+                    "fnInitComplete": function (oSettings) {
+                          if(deleteFilter){
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                          }else{
+                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                          }
+                          $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+                    },
+                    "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                        // let countTableData = data.Params.Count || 0; //get count from API data
+                        //
+                        // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                    }
+
+                }).on('page', function () {
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                }).on('column-reorder', function () {
+
+                }).on('length.dt', function (e, settings, len) {
+
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  let dataLenght = settings._iDisplayLength;
+                  if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                      $(".fullScreenSpin").css("display", "none");
+                    } else {
+                      $(".fullScreenSpin").css("display", "none");
+                    }
+                  } else {
+                    $(".fullScreenSpin").css("display", "none");
+                  }
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
+                $(".fullScreenSpin").css("display", "none");
+            }, 0);
+
+            $('div.dataTables_filter input').addClass('form-control form-control-sm');
+          }
+
         //Check URL to make right call.
         if(currenttablename == "tblcontactoverview"){
             templateObject.getContactOverviewData();
@@ -4183,6 +4472,8 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             templateObject.getSupplierListData();
         }else if(currenttablename == "tblLeadlist") {
             templateObject.getLeadListData();
+        }else if(currenttablename == "tblCurrencyList") {
+            templateObject.getCurrencyListData();
         }
       tableResize();
     });
@@ -4229,6 +4520,9 @@ Template.non_transactional_list.events({
     }else if(currenttablename == "tblLeadlist"){
       await clearData('TProspectList');
       templateObject.getLeadListData(true);
+    }else if(currenttablename == "tblCurrencyList"){
+      await clearData('TCurrency');
+      templateObject.getCurrencyListData(true);
     }
 
     },
@@ -4277,6 +4571,9 @@ Template.non_transactional_list.events({
     }else if(currenttablename == "tblLeadlist"){
       await clearData('TProspectList');
       templateObject.getLeadListData(false);
+    }else if(currenttablename == "tblCurrencyList"){
+      await clearData('TCurrency');
+      templateObject.getCurrencyListData(false);
     }
 
     },

@@ -19,6 +19,7 @@ const erpObject = {
     TCredit: "TCredit",
     TCreditEx: "TCreditEx",
     TCurrency: "TCurrency",
+    TCurrencyList: "TCurrencyList",
     TCustomer: "TCustomer",
     TCustomerEx: "TCustomerEx",
     TCustomerEquipment: "TCustomerEquipment",

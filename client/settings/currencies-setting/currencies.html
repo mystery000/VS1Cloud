@@ -6,23 +6,6 @@
         <h3 class="text-dark mb-4">Currency Settings
             {{> helpbutton}}
 
-            <!-- Start Help View Modal -->
-            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                <div class="modal-dialog modal-sm" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" style="padding-bottom: 8px;">
-                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                        <div class="modal-body">
-                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=37" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                            {{> helpadvisor}}
-                            {{> helpgotoforum}}
-                        </div>
-                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Help View Modal -->
         </h3>
 
         <style>
@@ -52,27 +35,42 @@
                             <div class="card-body">
                                 <div class="card-body rounded">
                                     <div class="row no-gutters">
-                                        <div class="col-12">
-                                            <button class="btn btn-primary btnRefresh float-left btnRefreshMobile" type="button" style="margin: 12px 12px 12px 0px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                            <a class="btn btn-primary float-left  btnAddCurrency" role="button" data-toggle="modal" href="#newCurrencyModal" style="margin: 12px 12px 12px 0px;"><i class="fa fa-plus" style="margin-right: 12px;"></i>Add New Currency<br></a>
+                                        <div class="col">
 
-                                           
+                                            <div class="row d-xl-flex flex-row justify-content-xl-center">
 
-                                            <!-- <a class="btn btn-primary float-left  btnFxupdate" role="button" data-toggle="modal"  style="margin: 12px 12px 12px 0px;color:white;"><i class="fas fa-exchange-alt"></i> FX Update<br></a> -->
-                                            <!-- <a class="btn btn-primary float-left  synbutton" role="button" data-toggle="modal"  style="margin: 12px 12px 12px 0px;color:white;"><i class="fas fa-coins"></i> Currency Update<br></a> -->
-                                            <a class="btn btn-primary float-left  btn-fx-history" role="button"  style="margin: 12px 12px 12px 0px;color:white;"><i class="fas fa-comment-dollar" style="margin-right: 5px"></i> FX History<br></a>
-                                            <!-- <a class="btn btn-primary float-left "  href="https://accounts.xe.com/login?client_id=hoqkluj0h25d805a6ru8n3t4n&redirect_uri=https%3A%2F%2Fxecd-account-api.xe.com%2Foauth2%2Fidpresponse&response_type=code&scope=openid%20email&state=s%2BUkvTCXxsFy2c4nox%2BRaqhKQ%2Bdhnb9msxB3N7RJhJKgtzXrY4A%2FKBNW3BFUqc3I5%2BYljo14kJcAsrd%2Bwq4FnTgSsNDFjh4wwbIIY7WJRgfd3bjdVk6TJITt7A6EZJ7ugtEO6KsrR1QznOA2A9niWnvO8xGSCwbwIv8UvxaXKrSz%2FC%2FR07LPAbvv5MZurqrUJJYsIoBiibeebgFe8Q%3D%3D" target="_blank" style="margin: 12px 12px 12px 0px;color:white;"><i class="fas fa-exchange-alt" style="margin-right: 5px"></i>  XE Currencies<br></a> -->
-                                          
+                                                <div class="col d-xl-flex flex-grow-1 align-items-xl-start" style="padding: 0px !important;">
+                                                    <button class="btn btn-primary btnRefresh float-left btnRefreshMobile" type="button" style="margin: 12px 12px 12px 0px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                                                    <a class="btn btn-primary float-left  btnAddCurrency" role="button" data-toggle="modal" href="#newCurrencyModal" style="margin: 12px 12px 12px 0px;"><i class="fa fa-plus" style="margin-right: 12px;"></i>Add New Currency<br></a>
+                                                    <a class="btn btn-primary float-left  btn-fx-history" role="button"  style="margin: 12px 12px 12px 0px;color:white;"><i class="fas fa-comment-dollar" style="margin-right: 5px"></i> FX History<br></a>
+                                                </div>
 
+
+                                                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start" style="padding: 0px !important;">
+                                                    <div class="btn-group btnNav vs1ButtonMargin" >
+                                                        <a class="btn btn-primary synbutton" role="button" href="#" style="background-color: #00A3D3; border-color: #00A3D3;">Auto update</a>
+                                                        <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"></button>
+                                                        <div class="dropdown-menu" role="menu">
+
+                                                            <a type="button" style="cursor: pointer;" class="dropdown-item create-xe-currency" role="presentation" href="https://accounts.xe.com/login?client_id=hoqkluj0h25d805a6ru8n3t4n&redirect_uri=https%3A%2F%2Fxecd-account-api.xe.com%2Foauth2%2Fidpresponse&response_type=code&scope=openid%20email&state=s%2BUkvTCXxsFy2c4nox%2BRaqhKQ%2Bdhnb9msxB3N7RJhJKgtzXrY4A%2FKBNW3BFUqc3I5%2BYljo14kJcAsrd%2Bwq4FnTgSsNDFjh4wwbIIY7WJRgfd3bjdVk6TJITt7A6EZJ7ugtEO6KsrR1QznOA2A9niWnvO8xGSCwbwIv8UvxaXKrSz%2FC%2FR07LPAbvv5MZurqrUJJYsIoBiibeebgFe8Q%3D%3D">
+                                                                <i class="fas fa-exchange-alt" style="margin-right: 5px"></i>
+                                                                <!-- <i class="fas fa-up-right-from-square" style="margin-right: 5px"></i>  -->
+                                                                <!-- <i class="fa-solid fa-up-right-from-square"></i> -->
+                                                                XE Currencies</a>
+                                                            <a type="button" style="cursor: pointer;" class="dropdown-item btnFxupdate" role="presentation" data-toggle="modal"><i class="fas fa-exchange-alt" style="margin-right: 5px"></i> Update frequency<br></a>
+                                                            <a type="button" style="cursor: pointer;" class="dropdown-item synbutton" role="presentation" ><i class="fas fa-coins " style="margin-right: 5px"></i> Run an update</a>
+
+                                                            <a type="button" style="cursor: pointer;" class="dropdown-item" role="presentation" > Close</a>
+                                                        </div>
+                                                    </div>
+
+                                                    {{> export_import_print_display_button tablename="tblCurrencyList"}}
+                                                </div>
+
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row no-gutters" style="display: none;">
-                                        <div class="col text-left">
-                                            <button class="btn btn-primary btnAddNewDepart" type="button" style="margin: 8px 0px;"><i class="fa fa-plus" style="margin-right: 5px;"></i>Add New Currency</button>
-                                        </div>
-                                    </div>
-                                
-                                    <div class="card newTaxRate" id="newTaxRate">
+                                    <!-- <div class="card newTaxRate" id="newTaxRate">
                                         <style>
                                             .newTaxRate {
                                                 display: none;
@@ -115,121 +113,8 @@
                                                 <button class="btn btn-success float-right" type="button" style="margin: 8px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!-- Start {{> optionNavSalesOverview}} -->
-                                    <div class="d-xl-flex justify-content-xl-end">
-                                        <div class="btn-group btnNav vs1ButtonMargin" >
-                                            <a class="btn btn-primary synbutton" role="button" href="#" style="background-color: #00A3D3; border-color: #00A3D3;">Auto update</a>
-                                            <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"></button>
-                                            <div class="dropdown-menu" role="menu">
-                                               
-                                                <a type="button" style="cursor: pointer;" class="dropdown-item create-xe-currency" role="presentation" href="https://accounts.xe.com/login?client_id=hoqkluj0h25d805a6ru8n3t4n&redirect_uri=https%3A%2F%2Fxecd-account-api.xe.com%2Foauth2%2Fidpresponse&response_type=code&scope=openid%20email&state=s%2BUkvTCXxsFy2c4nox%2BRaqhKQ%2Bdhnb9msxB3N7RJhJKgtzXrY4A%2FKBNW3BFUqc3I5%2BYljo14kJcAsrd%2Bwq4FnTgSsNDFjh4wwbIIY7WJRgfd3bjdVk6TJITt7A6EZJ7ugtEO6KsrR1QznOA2A9niWnvO8xGSCwbwIv8UvxaXKrSz%2FC%2FR07LPAbvv5MZurqrUJJYsIoBiibeebgFe8Q%3D%3D">
-                                                    <i class="fas fa-exchange-alt" style="margin-right: 5px"></i> 
-                                                    <!-- <i class="fas fa-up-right-from-square" style="margin-right: 5px"></i>  -->
-                                                    <!-- <i class="fa-solid fa-up-right-from-square"></i> -->
-                                                    XE Currencies</a>
-                                                <a type="button" style="cursor: pointer;" class="dropdown-item btnFxupdate" role="presentation" data-toggle="modal"><i class="fas fa-exchange-alt" style="margin-right: 5px"></i> Update frequency<br></a>
-                                                <a type="button" style="cursor: pointer;" class="dropdown-item synbutton" role="presentation" ><i class="fas fa-coins " style="margin-right: 5px"></i> Run an update</a>
-                                                
-                                                <a type="button" style="cursor: pointer;" class="dropdown-item" role="presentation" > Close</a>
-                                            </div>
-                                        </div>
-
-                                        <button id="exportbtn" class="btn btn-primary float-right btnNav vs1ButtonMargin" type="button" ><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                                        <button class="btn btn-primary printConfirm float-right btnNav vs1ButtonMargin" type="button" ><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-
-                                        <a class="btn btnOpenSettings vs1ButtonMargin" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
-
-                                        <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
-                                            <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                    <div class="modal-body">
-                                                        <div>
-                                                            {{#if tableheaderrecords}}
-                                                            <form class="d-xl-flex align-items-xl-center">
-                                                                <div class="flex-grow-1">
-                                                                    <style>
-                                                                        .groove {
-                                                                            border-style: solid;
-                                                                            border-width: 1px;
-                                                                            width: 200px;
-                                                                            padding: 2px;
-                                                                            border-radius: .35rem;
-                                                                        }
-                                                                        .custom-control-label{
-                                                                            position: absolute;
-                                                                        }
-                                                                        .rngRange {
-                                                                            position: relative;
-                                                                            display: flex;
-                                                                            flex-direction: column;
-                                                                            width: 100%;
-                                                                            pointer-events: auto;
-                                                                            background-color: rgb(255, 255, 255);
-                                                                            background-clip: padding-box;
-                                                                            border: 1px solid rgb(133, 135, 150);
-                                                                            border-radius: .3rem;
-                                                                            border-style: solid;
-                                                                            border-width: 1px;
-                                                                            padding: 2px;
-                                                                            border-radius: .35rem;
-                                                                            color: rgb(128, 128, 128);
-                                                                            height:inherit!important;
-                                                                        }
-                                                                        @media only screen and (max-width: 480px) {
-                                                                            .modal.show .modal-dialog{
-                                                                                float: inherit!important;
-                                                                                left: inherit!important;
-                                                                                top: auto!important;
-
-                                                                            }
-                                                                        }
-                                                                    </style>
-                                                                    {{#each item in tableheaderrecords}}
-                                                                    {{#if equals item.sTitle ""}}
-                                                                    {{else}}
-
-                                                                    <div id="{{item.sIndex}}" class="columnSettings">
-                                                                        <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                            <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
-                                                                            <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
-                                                                            <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
-                                                                        </div>
-                                                                        <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                                            <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>--></label>
-                                                                            <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
-                                                                            <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
-                                                                        </div>
-                                                                    </div>
-
-                                                                    {{#if equals item.sVisible true}}
-                                                                    <script>
-                                                                        $("#"+ {{item.sIndex}} +".chkDatatable").attr("checked","checked");
-                                                                    </script>
-                                                                    {{else}}
-                                                                    <script>
-                                                                        $("#"+ {{item.sIndex}} +".chkDatatable").removeAttr("checked");
-                                                                    </script>
-                                                                    {{/if}}
-
-                                                                    {{/if}}
-                                                                    {{/each}}
-                                                                </div>
-                                                            </form>
-                                                            {{/if}}
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-success saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                        <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                                                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <!-- End -->
                                     <div class="table-responsive">
                                         <style>
@@ -241,7 +126,7 @@
                                                 padding:.75rem;
                                                 vertical-align:top;
                                             }
-                                            #currencyLists .btn-sm.btn-danger {
+                                            #tblCurrencyList .btn-sm.btn-danger {
                                                 padding: 2.5px 7px !important;
                                                 margin-top: 0px !important;
                                             }
@@ -270,58 +155,12 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <table id="currencyLists" style="width:100%" class="dataTable table table-hover table-striped table-bordered currencyLists">
-                                            <thead>
-                                                <tr class="dnd-moved">
-                                                    <th class="th colCode" style="width:50px">Code</th>
-                                                    <th class="th colCurrency" style="width:100px;">Currency</th>
-                                                    <th class="th colSymbol" style="width:100px">Symbol</th>
-                                                    <th class="th colBuyRate" style="width:100px">Buy Rate</th>
-                                                    <th class="th colSellRate" style="width:100px">Sell Rate</th>
-                                                    <th class="th colCountry" style="width:100px">Country</th>
-                                                    <th class="th colRateLastModified hiddenColumn" >Rate Last Modified</th>
-                                                    <th class="th colDescription" >Description</th>
-                                                    <th class="th colDelete" style="min-width:60px;"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{#if currencies}}
-                                                {{#each item in currencies}}
-                                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                    <td contenteditable="false" class="colCode">{{item.code}}</td>
-                                                    <td contenteditable="false" class="colCurrency">{{item.currency}}</td>
-                                                    <td contenteditable="false" class="colSymbol">{{item.symbol}}</td>
-                                                    <td contenteditable="false" class="colBuyRate text-right">{{item.buyrate}}</td>
-                                                    <td contenteditable="false" class="colSellRate text-right">{{item.sellrate}}</td>
-                                                    <td contenteditable="false" class="colCountry">{{item.country}}</td>
-                                                    <td contenteditable="false" class="colRateLastModified hiddenColumn">{{item.ratelastmodified}}</td>
-                                                    <td contenteditable="false" class="colDescription">{{item.description}}</td>
-                                                    <td contenteditable="false" class="colDelete">
-                                                        <span class="table-remove">
-                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 remove-currency">
-                                                            <i class="fa fa-remove"></i>
-                                                            </button>
-                                                        </span>
-
-                                                        <span class="table-edit">
-                                                            <button type="button" class="btn btn-rounded btn-success btn-sm my-0 edit-currency">
-                                                                <i class="fa fa-edit"></i>
-                                                            </button>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                {{/each}}
-                                                {{/if}}
-                                            </tbody>
-
-                                        </table>
+                                        {{> non_transactional_list tablename="tblCurrencyList"}}
                                     </div>
                                 </div>
                                 <div class="row no-gutters">
                                     <div class="col">
                                         <button class="btn btn-secondary float-right" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                        <button class="btn btn-success float-right" type="button" style="margin: 12px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -344,27 +183,9 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="countryModal">
         {{> CountryModal}}
     </div>
-    
-    <!-- Start Help Video Modal -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
-        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-            <div class="modal-content" >
-                <div class="modal-header" >
-                    <h4 class="title-header" >Currency Settings</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
-                    <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
-                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
-                        <source src="https://erphelpes.com/vs1videos/currency.mp4" type="video/mp4">
-                    </video>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- End Help Video Modal -->
+    <!-- Import Modal -->
+    {{> import_template ImportformName="Currency Settings"}}
     <script>
         modalDraggable();
     </script>

@@ -3094,6 +3094,43 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TCurrency, options);
   }
 
+  getCurrencyDataList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"Currency asc"',
+            Search: "Active = true",
+        };
+      } else {
+        options = {
+          orderby: '"Currency asc"',
+          ListType: "Detail",
+          Search: "Active = true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"Currency asc"',
+        };
+      } else {
+        options = {
+            orderby: '"Currency asc"',
+            ListType: "Detail",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TCurrency, options);
+  }
+
   getAccountTypesToAddNew() {
     let options = {
       PropertyList: "AccountTypeName,Description,OriginalDescription",
