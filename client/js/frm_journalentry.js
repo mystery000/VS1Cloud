@@ -44,6 +44,10 @@ let utilityService = new UtilityService();
 var times = 0;
 let defaultCurrencyCode = CountryAbbr;
 
+var template_list = [
+    "Journal Entry",
+];
+var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit", "Cheque"];
 
 Template.journalentrycard.onCreated(() => {
     const templateObject = Template.instance();
@@ -1806,6 +1810,13 @@ Template.journalentrycard.onRendered(function() {
     });
 });
 Template.journalentrycard.helpers({
+    getTemplateList: function () {
+        return template_list;
+    },
+    getTemplateNumber: function () {
+        let template_numbers = ["1", "2", "3"];
+        return template_numbers;
+    },
     record: () => {
         return Template.instance().record.get();
     },
@@ -3195,6 +3206,12 @@ Template.journalentrycard.events({
 
        }
 
+    },
+    'click #open_print_confirm' : function(event) {
+        playPrintAudio();
+        setTimeout(function(){
+            $('#templateselection').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
