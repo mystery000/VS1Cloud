@@ -182,7 +182,7 @@ Template.transaction_line.onRendered(function() {
     data[bPos] = {...data[bPos], index: aPos + 1};
     for(var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index:data[i].index + 1}
     return data.sort((a,b) => a.index - b.index);
-}
+    }
   // custom field displaysettings
   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
      
@@ -261,7 +261,6 @@ Template.transaction_line.events({
       }
       reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
       reset_data = reset_data.filter(redata => redata.display);
-      
       $(".displaySettings").each(function(index) {
           let $tblrow = $(this);
           $tblrow.find(".divcolumn").text(reset_data[index].label);
