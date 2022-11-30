@@ -2,6 +2,70 @@
     <nav id="sidebar" class="{{ sideBarPositionClass}}">
 
         <style>
+            .top #popperBounder {
+                position: fixed;
+                top: 93px;
+                left: 0;
+                right: 0;
+                height: 0;
+            }
+            .popper-popup {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                background-color: #333333 !important;
+                color: white !important;
+            }
+
+            .popper-popup[data-popper-reference-hidden] {
+                visibility: hidden;
+                pointer-events: none;
+            }
+
+            .popper-popup[show-popper] {
+                display: flex;
+                z-index: 9999;
+            }
+
+            /*build the arrow targeting the divider with class 'popper-arrow'*/
+            .popper-arrow,
+            .popper-arrow::before {
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                background: #333333;
+            }
+            .popper-arrow {
+                visibility: hidden;
+            }
+            .popper-arrow::before {
+                visibility: visible;
+                content: "";
+                transform: rotate(45deg);
+            }
+
+            /*position arrow using popper.js data-popper-placement attribute*/
+            .popper-popup[data-popper-placement^="top"] .popper-arrow {
+                bottom: -4px;
+            }
+
+            .popper-popup[data-popper-placement^="bottom"] .popper-arrow {
+                top: -4px;
+            }
+
+            .popper-popup[data-popper-placement^="left"] .popper-arrow {
+                right: -4px;
+            }
+
+            .popper-popup[data-popper-placement^="right"] .popper-arrow {
+                left: -4px;
+            }
+
+            /*hide arrow when reference outside of viewport*/
+            .popper-popup[data-popper-reference-hidden] .popper-arrow::before {
+                visibility: hidden;
+            }
+
             #sidebar a,
             #sidebar a:hover,
             #sidebar a:focus {
@@ -54,8 +118,11 @@
             #sidebar.top>ul>li>ul{
                 display: flex;
             }
-            #sidebar.top>ul>li>ul.collapse:not(.show){
-                display: none;
+            #sidebar.top>ul>li>ul.collapse:not(.show),
+            #sidebar.top>ul>li>ul.collapse.show,
+            #sidebar.top>ul>li>ul.collapsing {
+                display: none !important;
+                height: 0 !important;
             }
             #sidebar.top>ul>li>ul>li{
                 display: flex;
@@ -260,7 +327,7 @@
                 }
             }
         </style>
-
+        <div id="popperBounder"></div>
         <div class="sidebar-header">
           <div></div>
             <img class="vs1brand" src="assets/img/vs1cloudbrand.png" />
