@@ -1584,7 +1584,8 @@ Template.vs1login.onRendered(function () {
             });
 
             var vid = document.getElementById('myVS1Video');
-            vid.addEventListener('ended', function(e) {
+            //vid.addEventListener('ended', function(e) {
+            setTimeout(function(){
               if(isSetupWizard == true){
                 if (isAppointmentScheduling == true) {
                     if (isAllocationLaunch == true) {
@@ -1605,7 +1606,8 @@ Template.vs1login.onRendered(function () {
               }else{
                 handleSetupRedirection();
               };
-             }, false);
+              }, delayTimeAfterSound);
+             //}, false);
 
 
         } else {

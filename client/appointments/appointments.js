@@ -18684,6 +18684,7 @@ Template.appointments.events({
                         window.open("/appointments", "_self");
                     });
                 }, 1000);
+                // $("#newLeaveRequestModal").modal("toggle");
             }
         });
     },
