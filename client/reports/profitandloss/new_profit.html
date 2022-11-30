@@ -1051,7 +1051,8 @@
                     {{#each item in deptrecords}}
                         <div class="custom-control custom-switch" style="margin: 8px;">
                             <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
-                            <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
+                            <!-- <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label> -->
+                            <div class="custom-control-label" for="formCheck-{{item.id}}">{{item.DeptClassName}}</div>
                         </div>
                     {{/each}}
                 </div>
@@ -1799,6 +1800,20 @@
                     <div class="container-fluid">
                         <div class="form-group-sm">
                             <script type="text/javascript" src="jquery-calx-1.1.8.min.js"></script>
+                            <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+                            <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                            <script>
+                                $( function() {
+                                  $( "#sortable" ).sortable();
+                                  $( "#sortable" ).disableSelection();
+                                } );
+                                function changeColor(element) {
+                                $('.childInner').css({'background-color' : '#F3F3F3'});
+                                $('.childInner').children().css({'color':'#858796'});
+                                element.children[1].style.backgroundColor="#028DDE";
+                                element.children[1].children[1].style.color="#fff";
+                                }
+                            </script>
                             <div class="row">
                                 <div class="col-8 sortableAccountParent">
                                     <!--
@@ -1920,9 +1935,9 @@
                                        .subChild .childInner strong {
                                         color: #858796;
                                        }
-                                       .subChild.selected.noDrag .childInner {
+                                       /* .subChild.selected.noDrag .childInner {
                                         cursor: not-allowed !important;
-                                       }
+                                       } */
                                        .subChild.selected .childInner strong {
                                            color: #fff;
                                        }
@@ -1989,37 +2004,40 @@
                                         }
                                     </style>
                                     {{#if profitlosslayoutrecords}}
-                                        <div class="customSortableDiv">
+                                    <div class="customSortableDiv">
 
-
+                                        
                                             <form action="" name="" method="POST">
 
                                                 <ol class='nested_with_switch vertical'>
                                                     {{#each item in profitlosslayoutrecords }}
-                                                        <li key="layoutFields-{{ item.ID }}" plid="{{ item.ID }}" data-group="{{ item.AccountName }}" position="{{ item.Level0Order }}" class="mainList pSortItems">
+                                                        <li key="layoutFields-{{ item.ID }}" plid="{{ item.ID }}" data-group="{{ item.AccountName }}" position="{{ item.Level0Order }}" class="mainList lvlzero-one">
                                                             <div class="mainHeadingDiv">
                                                                 <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
                                                             </div>
-                                                            <ol class="groupedListNew" parent="{{ item.Level0Order }}">
+                                                            <!-- <ol class="groupedListNew" parent="{{ item.Level0Order }}"> -->
+                                                            <ol id="sortable" aria-dropeffect="move" class="groupedListNew lvlzero-two" parent="{{ item.Level0Order }}">
                                                                 {{#each acItem in item.subAccounts }}
                                                                     {{#if isAccount acItem }}
-                                                                        <li class="subChild cSortItems" data-group="{{ acItem.AccountName }}" plid="{{ acItem.ID }}" key="layoutFields-{{ acItem.ID }}" position="{{ acItem.Level1Order }}">
+                                                                        <!-- <li class="subChild cSortItems" data-group="{{ acItem.AccountName }}" plid="{{ acItem.ID }}" key="layoutFields-{{ acItem.ID }}" position="{{ acItem.Level1Order }}"> -->
+                                                                        <li draggable="true"  class="subChild cSortItems lvlone-one" data-group="{{ acItem.AccountName }}" plid="{{ acItem.ID }}" key="layoutFields-{{ acItem.ID }}" position="{{ acItem.Level1Order }}">
                                                                             <span class="childInner">
                                                                                 <span class="collepsDiv fas"></span>{{ acItem.AccountName }}
                                                                             </span>
                                                                         </li>
                                                                     {{else}}
-                                                                        <li class="subChild noDrag cSortItems" plid="{{ acItem.ID }}" data-group="{{ acItem.AccountName }}" key="layoutFields-{{ acItem.ID }}" position="{{ acItem.Level1Order }}">
+                                                                        <!-- <li class="subChild noDrag cSortItems" plid="{{ acItem.ID }}" data-group="{{ acItem.AccountName }}" key="layoutFields-{{ acItem.ID }}" position="{{ acItem.Level1Order }}"> -->
+                                                                        <li draggable="true"  class="subChild noDrag cSortItems lvlone-two" plid="{{ acItem.ID }}" data-group="{{ acItem.AccountName }}" key="layoutFields-{{ acItem.ID }}" position="{{ acItem.Level1Order }}">
                                                                             <ol class="ddllkk" parent="{{ acItem.Level1Order }}">
                                                                                 {{#each subacItem in acItem.subAccounts }}
                                                                                     {{#if isAccount subacItem }}
-                                                                                        <li class="subChild scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
+                                                                                        <li class="subChild scSortItems lvltwo-one" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
                                                                                             <span class="childInner">
                                                                                                 <span class="collepsDiv fas"></span>{{ subacItem.AccountName }}
                                                                                             </span>
                                                                                         </li>
                                                                                     {{else}}
-                                                                                        <li class="subChild noDrag scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
+                                                                                        <li class="subChild noDrag scSortItems lvltwo-two" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
                                                                                             <ol class="ddllkk"></ol>
                                                                                             <span class="childInner">
                                                                                                 <span class="collepsDiv fas"></span><strong>{{ subacItem.AccountName }}</strong>
