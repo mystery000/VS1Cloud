@@ -3617,7 +3617,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TClientTypeList, options);
+    return this.getList(this.ERPObjects.TClientType, options);
   }
 
   getAllCustomerStatementData(dateFrom, dateTo, ignoreDate) {
