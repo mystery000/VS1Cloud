@@ -1,4 +1,4 @@
-import {BaseService} from '../js/base-service.js';
+import { BaseService } from '../js/base-service.js';
 
 export class AccountService extends BaseService {
     getExpenseClaim() {
@@ -8,17 +8,17 @@ export class AccountService extends BaseService {
     getFixedAssets(type) {
         let options = {
             // select: type ? "[Active]=true and [Status]="+type : "[Active]=true" ,
-            select: "'"+type+"'"  ? "[Active]=true and [Status]='"+type+"'" : "[Active]=true" ,
-            ListType:"Detail"
+            select: "'" + type + "'" ? "[Active]=true and [Status]='" + type + "'" : "[Active]=true",
+            ListType: "Detail"
         };
         return this.getList(this.ERPObjects.TFixedAssets, options);
     }
 
-    getOneAsset(id){
+    getOneAsset(id) {
         return this.getOneById(this.ERPObjects.TFixedAssets, id);
     }
 
-    getOneExpenseClaim(id){
+    getOneExpenseClaim(id) {
         return this.getOneById(this.ERPObjects.TExpenseClaimEx, id);
     }
 
@@ -31,14 +31,14 @@ export class AccountService extends BaseService {
     }
 
     getEmployees() {
-      let options = {
-          PropertyList: "ID,EmployeeName,KeyValue",
-          select: "[Active]=true"
-      };
-        return this.getList(this.ERPObjects.TEmployee,options);
+        let options = {
+            PropertyList: "ID,EmployeeName,KeyValue",
+            select: "[Active]=true"
+        };
+        return this.getList(this.ERPObjects.TEmployee, options);
     }
 
-    getTaxCodes(){
+    getTaxCodes() {
         let options = {
             PropertyList: "CodeName,Rate,Description",
             // select: "[Active]=true"
@@ -46,7 +46,7 @@ export class AccountService extends BaseService {
         return this.getList(this.ERPObjects.TTaxCode, options);
     }
 
-    getTaxCodesVS1(){
+    getTaxCodesVS1() {
         let options = {
             PropertyList: "CodeName,Rate,Description",
             // select: "[Active]=true"
@@ -54,14 +54,14 @@ export class AccountService extends BaseService {
         return this.getList(this.ERPObjects.TTaxcodeVS1, options);
     }
 
-    getAssetType(){
+    getAssetType() {
         let options = {
             PropertyList: "AssetTypeName",
             select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TFixedAssetType, options);
     }
-    getSupplier(){
+    getSupplier() {
         let options = {
             PropertyList: "ClientName",
             select: "[Active]=true"
@@ -69,7 +69,7 @@ export class AccountService extends BaseService {
         return this.getList(this.ERPObjects.TSupplier, options);
     }
 
-    getSupplierVS1(){
+    getSupplierVS1() {
         let options = {
             PropertyList: "ClientName",
             select: "[Active]=true"
@@ -77,43 +77,51 @@ export class AccountService extends BaseService {
         return this.getList(this.ERPObjects.TSupplierVS1, options);
     }
 
-    getBASReturnDetail(){
+    getBASReturnDetail() {
         let options = {
-            IgnoreDates:true,
+            IgnoreDates: true,
         };
         return this.getList(this.ERPObjects.TBASReturnDetail, options);
     }
 
-    getVATReturnDetail(){
+    getBASReturnLines() {
         let options = {
-            IgnoreDates:true,
+            IgnoreDates: true,
+            ListType: "Detail",
+        };
+        return this.getList(this.ERPObjects.TBASReturnLines, options);
+    }
+
+    getVATReturnDetail() {
+        let options = {
+            IgnoreDates: true,
         };
         return this.getList(this.ERPObjects.TVATReturnDetail, options);
     }
 
-    saveAsset(data){
+    saveAsset(data) {
         return this.POST(this.ERPObjects.TFixedAssets, data);
     }
-    saveAccount(data){
+    saveAccount(data) {
         return this.POST(this.ERPObjects.TAccount, data);
     }
-    saveAssetType(data){
+    saveAssetType(data) {
         return this.POST(this.ERPObjects.TFixedAssetType, data);
     }
-    saveReceipt(data){
+    saveReceipt(data) {
         return this.POST(this.ERPObjects.TExpenseClaimEx, data);
     }
-    saveLineAttachment(data){
-        return this.POST(this.ERPObjects.TAttachment,data);
+    saveLineAttachment(data) {
+        return this.POST(this.ERPObjects.TAttachment, data);
     }
-    getLineAttachmentList(lineID){
+    getLineAttachmentList(lineID) {
         let options = {
             PropertyList: "Attachment,AttachmentName,Description,TableId,TableName",
-            select: "[TableName]='tblexpenseclaimlineex' and [TableID]="+lineID
+            select: "[TableName]='tblexpenseclaimlineex' and [TableID]=" + lineID
         };
         return this.getList(this.ERPObjects.TAttachment, options);
     }
-    getAssetIds(){
+    getAssetIds() {
         let options = {
             PropertyList: "ID",
         };
@@ -128,7 +136,7 @@ export class AccountService extends BaseService {
     getTOneCustomerData(customerName) {
         let options = {
             ListType: "Detail",
-            select: "[ClientName]='"+customerName+"'",
+            select: "[ClientName]='" + customerName + "'",
         };
         return this.getList(this.ERPObjects.TCustomer, options);
     }
@@ -139,75 +147,75 @@ export class AccountService extends BaseService {
         return this.getList(this.ERPObjects.TAccountType, options);
     }
     saveNewAccount(data) {
-        return this.POST(this.ERPObjects.TAccount,data);
+        return this.POST(this.ERPObjects.TAccount, data);
     }
     getBankCodes() {
         let options = {
-            PropertyList:'BankName,BankCode',
+            PropertyList: 'BankName,BankCode',
             select: "[Active]=true"
         };
         return this.getList(this.ERPObjects.TBankCode, options);
     }
     saveCustomerData(data) {
-        return this.POST(this.ERPObjects.TCustomer,data);
+        return this.POST(this.ERPObjects.TCustomer, data);
     }
 
     getAccountList() {
-      let options = {
-          PropertyList:'AccountName,Description,AccountNumber,AccountTypeName,TaxCode,BankAccountName,BSB,BankAccountNumber,Extra,APCANumber,Balance',
-          select: "[Active]=true",
-      };
-      return this.getList(this.ERPObjects.TAccount,options);
+        let options = {
+            PropertyList: 'AccountName,Description,AccountNumber,AccountTypeName,TaxCode,BankAccountName,BSB,BankAccountNumber,Extra,APCANumber,Balance',
+            select: "[Active]=true",
+        };
+        return this.getList(this.ERPObjects.TAccount, options);
     }
 
     getAccountListVS1() {
-      let options = {
-          PropertyList:'AccountName,Description,AccountNumber,AccountTypeName,TaxCode,BankAccountName,BSB,BankAccountNumber,Extra,APCANumber,Balance,BankNumber,IsHeader',
-          select: "[Active]=true",
-      };
-      return this.getList(this.ERPObjects.TAccountVS1,options);
+        let options = {
+            PropertyList: 'AccountName,Description,AccountNumber,AccountTypeName,TaxCode,BankAccountName,BSB,BankAccountNumber,Extra,APCANumber,Balance,BankNumber,IsHeader',
+            select: "[Active]=true",
+        };
+        return this.getList(this.ERPObjects.TAccountVS1, options);
     }
 
     getAccountTypeCheck() {
-      let options = {
-          PropertyList:'AccountTypeName,Description,OriginalDescription',
-          // select: "[Active]=true",
-      };
-      return this.getList(this.ERPObjects.TAccountType,options);
+        let options = {
+            PropertyList: 'AccountTypeName,Description,OriginalDescription',
+            // select: "[Active]=true",
+        };
+        return this.getList(this.ERPObjects.TAccountType, options);
     }
 
-    getOneAccount(id){
-     return this.getOneById(this.ERPObjects.ERPAccount, id);
-   }
-   getOneAccountByName(dataSearchName){
-     let options = {
-       ListType:"Detail",
-       select: '[AccountName]="'+dataSearchName+'"'
-     };
-     return this.getList(this.ERPObjects.TAccountVS1, options);
-  }
+    getOneAccount(id) {
+        return this.getOneById(this.ERPObjects.ERPAccount, id);
+    }
+    getOneAccountByName(dataSearchName) {
+        let options = {
+            ListType: "Detail",
+            select: '[AccountName]="' + dataSearchName + '"'
+        };
+        return this.getList(this.ERPObjects.TAccountVS1, options);
+    }
 
-   getAllJournalEnrtryLinesList() {
-     let options = {
-       PropertyList: "GJID,MsTimeStamp,AccountName,DeptName,DebitAmount,DebitAmountInc,CreditAmount,CreditAmountInc,TaxAmount,AccountID,Approved,EmployeeName,AccountNumber,Memo",
-       select: "[Deleted]=false",
-     };
-     return this.getList(this.ERPObjects.TJournalEntryLines, options);
-   }
+    getAllJournalEnrtryLinesList() {
+        let options = {
+            PropertyList: "GJID,MsTimeStamp,AccountName,DeptName,DebitAmount,DebitAmountInc,CreditAmount,CreditAmountInc,TaxAmount,AccountID,Approved,EmployeeName,AccountNumber,Memo",
+            select: "[Deleted]=false",
+        };
+        return this.getList(this.ERPObjects.TJournalEntryLines, options);
+    }
 
-   getCheckAccountData(accountName) {
-       let options = {
-           select: "[AccountName]='"+accountName+"'",
-       };
-       return this.getList(this.ERPObjects.TAccount, options);
-   }
+    getCheckAccountData(accountName) {
+        let options = {
+            select: "[AccountName]='" + accountName + "'",
+        };
+        return this.getList(this.ERPObjects.TAccount, options);
+    }
 
-   getAccountName() {
-       let options = {
-           PropertyList: "AccountName",
-           select: "[Active]=true and [AccountTypeName]='BANK'"
-       };
-       return this.getList(this.ERPObjects.TAccount, options);
-   }
+    getAccountName() {
+        let options = {
+            PropertyList: "AccountName",
+            select: "[Active]=true and [AccountTypeName]='BANK'"
+        };
+        return this.getList(this.ERPObjects.TAccount, options);
+    }
 
 }

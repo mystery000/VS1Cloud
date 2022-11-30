@@ -28,7 +28,7 @@ let purchaseDefaultTerms = "";
 var template_list = [
     "Purchase Orders",
 ];
-var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit", "Cheque"];
+var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit"];
 let defaultCurrencyCode = CountryAbbr;
 
 Template.purchaseordercard.onCreated(() => {
@@ -1125,7 +1125,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
+        
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1193,7 +1193,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
+        
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1264,7 +1264,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
+        
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1609,7 +1609,7 @@ templateObject.getLastPOData = async function() {
                         $("#html-2-pdfwrapper_new #tax_list_print").remove();
                     }
                 }
-                $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
+                
         }
 
          // table content
@@ -1659,7 +1659,7 @@ templateObject.getLastPOData = async function() {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
+            
 
             }
 
@@ -4552,12 +4552,6 @@ templateObject.getLastPOData = async function() {
 
     exportSalesToPdf = async function (template_title,number)
     {
-        // if(template_title == 'Purchase Orders' && number == 1)
-        // {
-        //        exportSalesToPdf1();
-        // }
-        // else
-        // {
             if(template_title == 'Purchase Orders')
             {
                 await showPurchaseOrder1(template_title, number, true);
@@ -4680,7 +4674,6 @@ templateObject.getLastPOData = async function() {
             });
 
             return true;
-        // }
     }
 
 
@@ -7394,53 +7387,44 @@ Template.purchaseordercard.events({
 
           });
 
-        $('#html-2-pdfwrapper-new').css('display', 'none');
-        if ($('.edtCustomerEmail').val() != "") {
-            $('.pdfCustomerName').html($('#edtCustomerName').val());
-            $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            var ponumber = $('#ponumber').val() || '.';
-            $('.po').text(ponumber);
-            var rowCount = $('.tblInvoiceLine tbody tr').length;
-
-            if($('#print_purchase_order').is(':checked') || $('#print_purchase_order_second').is(':checked')) {
-                printTemplate.push('Purchase Orders');
-            }
-
-            if(printTemplate.length > 0) {
-
-                  for(var i = 0; i < printTemplate.length; i++)
-                  {
-                    if(printTemplate[i] == 'Purchase Orders')
-                    {
-                        var template_number = $('input[name="Purchase Orders"]:checked').val();
-                    }
-
-
-                    let result = await exportSalesToPdf(printTemplate[i],template_number);
-                    if(result == true)
-                    {
-
-                    }
-
-                  }
-
-            }
-
-
-
-        } else {
-            swal({
-                title: 'Customer Email Required',
-                text: 'Please enter customer email',
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.value) {}
-                else if (result.dismiss === 'cancel') {}
-            });
+        
+        if($('#print_purchase_order').is(':checked') || $('#print_purchase_order_second').is(':checked')) {
+            printTemplate.push('Purchase Orders');
         }
+
+        if(printTemplate.length > 0) {
+              for(var i = 0; i < printTemplate.length; i++)
+              {
+                if(printTemplate[i] == 'Purchase Orders')
+                {
+                    var template_number = $('input[name="Purchase Orders"]:checked').val();
+                }
+                let result = await exportSalesToPdf(printTemplate[i],template_number);
+                if(result == true)
+                {
+
+                }
+              }
+        }
+        // if ($('.edtCustomerEmail').val() != "") {
+        //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+        //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+        //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+        //     var ponumber = $('#ponumber').val() || '.';
+        //     $('.po').text(ponumber);
+        //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+        // } else {
+        //     swal({
+        //         title: 'Customer Email Required',
+        //         text: 'Please enter customer email',
+        //         type: 'error',
+        //         showCancelButton: false,
+        //         confirmButtonText: 'OK'
+        //     }).then((result) => {
+        //         if (result.value) {}
+        //         else if (result.dismiss === 'cancel') {}
+        //     });
+        // }
     }, delayTimeAfterSound);
     },
     // 'click .printConfirm': function(event) {

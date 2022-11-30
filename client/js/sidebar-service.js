@@ -2785,13 +2785,13 @@ export class SideBarService extends BaseService {
         options = {
             ListType: "Detail",
             orderby: '"Description asc"',
-            select: "[Active]=true",
+            Search: "Active = true",
         };
       } else {
         options = {
           orderby: '"Description asc"',
           ListType: "Detail",
-          select: "[Active]=true",
+          Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -2812,7 +2812,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TDeptClass, options);
+    return this.getList(this.ERPObjects.TDeptClassList, options);
   }
 
   getTripGroup() {
@@ -3091,6 +3091,43 @@ export class SideBarService extends BaseService {
       ListType: "Detail",
       select: "[Active]=true",
     };
+    return this.getList(this.ERPObjects.TCurrency, options);
+  }
+
+  getCurrencyDataList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"Currency asc"',
+            Search: "Active = true",
+        };
+      } else {
+        options = {
+          orderby: '"Currency asc"',
+          ListType: "Detail",
+          Search: "Active = true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+            ListType: "Detail",
+            orderby: '"Currency asc"',
+        };
+      } else {
+        options = {
+            orderby: '"Currency asc"',
+            ListType: "Detail",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
     return this.getList(this.ERPObjects.TCurrency, options);
   }
 
@@ -3580,7 +3617,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TClientTypeList, options);
+    return this.getList(this.ERPObjects.TClientType, options);
   }
 
   getAllCustomerStatementData(dateFrom, dateTo, ignoreDate) {

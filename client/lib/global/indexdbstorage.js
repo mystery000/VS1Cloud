@@ -50,8 +50,10 @@ openDb = function(dbName) {
             db.createObjectStore("TTermsVS1", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TTermsVS1List", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TDeptClass", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TDeptClassList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TDepartment", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TCurrency", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TCurrencyList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TLeadStatusType", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TLeadStatusTypeList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TShippingMethod", { keyPath: "EmployeeEmail" });
@@ -592,7 +594,7 @@ getStoreToDelete = async function(email) {
 openDbCheckVersion = async function() {
     var promiseversion = new Promise((resolve, reject) => {
         var versionExists = false;
-        let dbReqVersion = indexedDB.open('TDatabaseVersion', 101);
+        let dbReqVersion = indexedDB.open('TDatabaseVersion', 102);
         dbReqVersion.onsuccess = function() {
             resolve(versionExists);
         };

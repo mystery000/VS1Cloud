@@ -90,7 +90,7 @@ Template.customerscard.onRendered(function () {
     const tableHeaderListJob = [];
 
     let salestaxcode = '';
-
+    // let currenttablename = templateObject.data||"";
     setTimeout(function () {
         Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'defaulttax', function (error, result) {
             if (error) {
@@ -1146,6 +1146,8 @@ Template.customerscard.onRendered(function () {
                     "targets": [3]
                 }
                 ],
+                select: true,
+                destroy: true,
                 colReorder: true,
                 pageLength: initialDatatableLoad,
                 lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -1458,9 +1460,9 @@ Template.customerscard.onRendered(function () {
         templateObject.records.set(lineItemObj);
         setTimeout(function () {
             setTab();
-            $('#tblJoblist').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
-            $('#tblTransactionlist').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
-            $('#tblCrmList').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
+            // $('#tblJoblist').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
+            // $('#tblTransactionlist').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
+            // $('#tblCrmList').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
             $('.fullScreenSpin').css('display', 'none');
         }, 100);
         // setTimeout(function () {

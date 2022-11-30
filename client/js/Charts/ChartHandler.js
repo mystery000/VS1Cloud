@@ -11,7 +11,7 @@ export default class ChartHandler {
     const charts = $(".chart-visibility");
 
     for (let i = 0; i <= charts.length; i++) {
-      $(charts[i]).attr("position", i);      
+      $(charts[i]).attr("position", i);
     }
   }
 
@@ -64,7 +64,7 @@ export default class ChartHandler {
     const apiEndpoint = dashboardApis.collection.findByName(
       dashboardApis.collectionNames.Tvs1dashboardpreferences
     );
-    
+
     Array.prototype.forEach.call(charts, (chart) => {
       if(localStorage.getItem($(chart).attr("chart-slug"))){
         let storeObj = JSON.parse(localStorage.getItem($(chart).attr("chart-slug")))
@@ -79,7 +79,7 @@ export default class ChartHandler {
           width: 0,
           height: 0
         }));
-      }      
+      }
 
       chartList.push(
         new Tvs1ChartDashboardPreference({
@@ -109,13 +109,13 @@ export default class ChartHandler {
         type: "Tvs1dashboardpreferences",
         objects:chartList
     };
-    
+
     const ApiResponse = await apiEndpoint.fetch(null, {
       method: "POST",
       headers: ApiService.getPostHeaders(),
       body: JSON.stringify(chartJSON),
     });
-    
+
     if (ApiResponse.ok == true) {
       const jsonResponse = await ApiResponse.json();
     }
@@ -169,22 +169,22 @@ export default class ChartHandler {
       dashboardApis.collectionNames.Tvs1dashboardpreferences
     );
 
-    // dashboardPreferencesEndpoint.url.searchParams.append(
-    //   "ListType",
-    //   "'Detail'"
-    // );
+    dashboardPreferencesEndpoint.url.searchParams.append(
+      "ListType",
+      "'Detail'"
+    );
 
-    // dashboardPreferencesEndpoint.url.searchParams.append(
-    //   "select",
-    //   `[employeeID]=${employeeId}`
-    // );
+    dashboardPreferencesEndpoint.url.searchParams.append(
+      "select",
+      `[employeeID]=${employeeId}`
+    );
 
     const dashboardPreferencesEndpointResponse = await dashboardPreferencesEndpoint.fetch(); // here i should get from database all charts to be displayed
     let dashboardPreferencesEndpointJsonResponse = {};
     if (dashboardPreferencesEndpointResponse.ok == true) {
       dashboardPreferencesEndpointJsonResponse = await dashboardPreferencesEndpointResponse.json();
     }
-    
+
     await addVS1Data('Tvs1dashboardpreferences', JSON.stringify(dashboardPreferencesEndpointJsonResponse))
     return true
   }

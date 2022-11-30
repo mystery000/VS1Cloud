@@ -4,25 +4,8 @@
             <div class="spinner"></div>
         </div>
         <h3 class="text-dark mb-4">Department Settings
-            <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
-
-            <!-- Start Help View Modal -->
-            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                <div class="modal-dialog modal-sm" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" style="padding-bottom: 8px;">
-                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                        <div class="modal-body">
-                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=15" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                            <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                            <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
-                        </div>
-                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Help View Modal -->
+            <!-- <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> -->
+            {{> helpbutton}}
         </h3>
         <div class="row mb-3">
             <div class="col">
@@ -57,17 +40,11 @@
                                         </style>
 
                                         <div class="col">
-                                            <!-- <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 12px; "><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button> -->
+
                                             <div class="row d-xl-flex flex-row justify-content-xl-center">
 
                                                 <div class="col d-xl-flex flex-grow-1 align-items-xl-start" style="padding: 0px !important;">
                                                     <button id="btnRefresh" class="btn btn-primary btnRefresh btnNav vs1ButtonMargin" type="button" style="min-width: 117.016px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
-
-
-
-<!--
-                                                    <a class="btn btn-primary btnAddDept"  role="button" data-toggle="modal" href="#myModalClientType" style="margin-top: 14px;margin: 14px;"><i class="fa fa-plus" style="margin-right: 14px;"></i>Add New Customer Type<br></a>
-                                                    {{> clienttypemodal}} -->
                                                     <a class="btn btn-primary btnAddDept btnAddDeptMobile" role="button" data-toggle="modal" href="#myModalDepartment" style="margin: 14px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Department<br></a>
 
                                                 </div>
@@ -205,8 +182,6 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
-                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
-                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/departmentlist.mp4" frameborder="0" allowfullscreen=""></iframe> -->
                     <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
                         <source src="https://erphelpes.com/vs1videos/departmentsettings.mp4" type="video/mp4">
                     </video>
@@ -227,8 +202,6 @@
                     <button type="button" class="close closeAdd" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
-                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
-                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/departments.mp4" frameborder="0" allowfullscreen=""></iframe> -->
                     <video preload="none" id="myVideoAdd" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
                         <source src="https://erphelpes.com/vs1videos/newdepartment.mp4" type="video/mp4">
                     </video>
@@ -243,26 +216,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 style=""><div id="add-dept-title" name="add-dept-title" style="float: left;">Add Department</div>
-                      <!-- <a role="button" data-toggle="modal" href="#helpModalAdd" class="helpModalAdd" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-                      <a role="button" data-toggle="modal" href="#helpViewModalAdd"  style="font-size: 20px; padding-left:5px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                      {{> helpbutton}}
 
-                      <!-- Start Help View Modal -->
-                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
-                          <div class="modal-dialog modal-sm" role="document">
-                              <div class="modal-content">
-                                  <div class="modal-header" style="padding-bottom: 8px;">
-                                      <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                      <div class="modal-body">
-                                          <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a></p>
-                                          <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=186" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                          <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                          <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
-                                      </div>
-                                  <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                              </div>
-                          </div>
-                    </div>
-                      <!-- End Help View Modal -->
                     </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                 <div class="modal-body" style="background-color: #ededed;">
                     <input type="hidden" class="form-control" id="edtDepartmentID" name="edtDepartmentID" style="display:none;">
@@ -294,7 +249,8 @@
                 </div>
                 <div class="modal-footer" style="background-color: #ededed;">
                     <button class="btn btn-primary btnSaveDept vs1ButtonMargin" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-                    <button class="btn btn-danger btnDeleteDept vs1ButtonMargin" type="button"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
+                    <!-- <button class="btn btn-danger btnDeleteDept vs1ButtonMargin" type="button"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button> -->
+                    <span id="view-in-active"></span>
                     <button class="btn btn-secondary vs1ButtonMargin" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
                 </div>
             </div>
@@ -302,7 +258,7 @@
     </div>
     <!-- End Help Video Modal -->
     <!-- Import Modal -->
-    {{> import_template}}
+    {{> import_template ImportformName="Department Settings"}}
     <script>
         modalDraggable();
     </script>
