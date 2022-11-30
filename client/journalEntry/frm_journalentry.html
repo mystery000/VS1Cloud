@@ -1,4 +1,16 @@
 <template name="journalentrycard">
+    <style>
+        .templateItem {
+            display: inline-flex !important;
+        }
+        .btnPreviewTemplate {
+            padding: 6px;
+            cursor: pointer;
+        }
+        .btnPreviewTemplate:hover {
+            background-color: #f8f9fc;
+        }
+    </style>
     <div id="form" style="margin-top: -24px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
@@ -710,6 +722,24 @@
                 </div>
             </div>
 
+            <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
+                {{> departmentpop}}
+            </div>
+
+            <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
+                {{> newdepartmentpop}}
+            </div>
+
+            <div class="row no-gutters">
+                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">
+                    <button class="btn btn-success btnSave vs1ButtonMargin" type="button" ><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-danger btnDelete vs1ButtonMargin" type="button" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
+                    <button class="btn btn-primary vs1ButtonMargin" id="open_print_confirm" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                    <button class="btn btn-secondary btnBack vs1ButtonMargin" type="button" ><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                </div>
+
+            </div>
+
             <div class="modal fade" role="dialog" tabindex="-1" id="templateselection">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -730,7 +760,7 @@
                                                 <div class="card-body">
                                                     <ul class="list-group list-group-flush">
                                                         {{#each index in getTemplateNumber}}
-                                                            <li class="list-group-item templateItem justify-content-between" data-id="journal_entry" data-template-id="{{index}}">
+                                                            <li class="list-group-item templateItem justify-content-between" data-id="JournalEntry" data-template-id="{{index}}">
                                                                 <div class="custom-control custom-switch">
 
                                                                     {{#if equals index '1'}}
@@ -752,7 +782,7 @@
 
                                                                 </div>
 
-                                                                <i id="btnPreviewTemplate" data-id="journal_entry" class="far fa-eye btnPreviewTemplate" data-toggle="modal"></i>
+                                                                <i id="btnPreviewTemplate" data-id="JournalEntry" class="far fa-eye btnPreviewTemplate" data-toggle="modal"></i>
                                                             </li>
                                                         {{/each}}
                                                     </ul>
@@ -774,24 +804,6 @@
                             <button class="btn btn-primary printConfirm btnFooter" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Confirm Print</button>
                             <button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                     </div>
-                </div>
-
-            </div>
-
-            <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
-                {{> departmentpop}}
-            </div>
-
-            <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
-                {{> newdepartmentpop}}
-            </div>
-
-            <div class="row no-gutters">
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">
-                    <button class="btn btn-success btnSave vs1ButtonMargin" type="button" ><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button class="btn btn-danger btnDelete vs1ButtonMargin" type="button" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
-                    <button class="btn btn-primary vs1ButtonMargin" type="button" id="open_print_confirm"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                    <button class="btn btn-secondary btnBack vs1ButtonMargin" type="button" ><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                 </div>
 
             </div>
