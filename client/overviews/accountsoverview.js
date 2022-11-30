@@ -1224,6 +1224,16 @@ Template.accountsoverview.onRendered(function() {
                 $("#sltAccountType").attr("disabled", "disabled");
                 if (listData !== "") {
                     listData = Number(listData);
+
+                    // this is for EFT option
+                    $('#eftoption_accountid').val(listData);
+                    accountService.getOneAccountById(listData).then( function(data) {
+                      $('#chkEftOption_balance').prop('checked', data.taccountvs1[0].fields.IncludeBalanceRecord);
+                      $('#chkEftOption_net').prop('checked', data.taccountvs1[0].fields.IncludeNetTotal);
+                      $('#chkEftOption_credit').prop('checked', data.taccountvs1[0].fields.IncludeCreditTotal);
+                      $('#chkEftOption_debit').prop('checked', data.taccountvs1[0].fields.IncludeDebitTotal);
+                    }).catch(function(err) {
+                    })
                     //accountService.getOneAccount(listData).then(function (data) {
 
                     var accountid = listData || "";
