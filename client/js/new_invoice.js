@@ -33,7 +33,7 @@ let clickedInput = "";
 let isDropDown = false;
 
 let template_list = ["Invoices", "Invoice Back Orders", "Delivery Docket"];
-var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit", "Cheque"];
+var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit"];
 
 let defaultCurrencyCode = CountryAbbr;
 
@@ -11161,11 +11161,6 @@ Template.new_invoice.onRendered(function() {
     }
 
     exportSalesToPdf = async function(template_title, number) {
-        // if (template_title == "Invoices" && number == 1) {
-        //     exportSalesToPdf1();
-        // } else if (template_title == "Invoice Back Orders" && number == 1) {
-        //     exportSalesToPdf1();
-        // } else {
             if (template_title == "Invoices") {
                 await showInvoice1(template_title, number, true);
             } else if (template_title == "Delivery Docket") {
@@ -11245,15 +11240,14 @@ Template.new_invoice.onRendered(function() {
                         // $(".btnSave").trigger("click");
                     } else {
                     }
-                    $(".fullScreenSpin").css("display", "none");
-                    // $("#html-2-pdfwrapper_new").css("display", "none");
+                    $("#html-2-pdfwrapper_new").css("display", "none");
                     $("#html-2-pdfwrapper").css("display", "none");
                     $("#html-2-pdfwrapper2").css("display", "none");
                     $("#html-2-pdfwrapper3").css("display", "none");
+                    $(".fullScreenSpin").css("display", "none");
                 });
 
             return true;
-        // }
     };
 
     exportSalesToPdf1 = function() {
@@ -11836,9 +11830,7 @@ Template.new_invoice.onRendered(function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        $("#templatePreviewModal #total_tax_amount_print").text(
-            object_invoce[0]["gst"]
-        );
+        
 
         // table content
         var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -11918,9 +11910,7 @@ Template.new_invoice.onRendered(function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        $("#templatePreviewModal #total_tax_amount_print").text(
-            object_invoce[0]["gst"]
-        );
+        
 
         // table content
         var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -11988,9 +11978,7 @@ Template.new_invoice.onRendered(function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        $("#templatePreviewModal #total_tax_amount_print").text(
-            object_invoce[0]["gst"]
-        );
+        
 
         // table content
         var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -12356,9 +12344,7 @@ Template.new_invoice.onRendered(function() {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            $("#html-2-pdfwrapper_new #total_tax_amount_print").text(
-                object_invoce[0]["gst"]
-            );
+            
         }
 
         // table content

@@ -1,4 +1,16 @@
 <template name="statementlist">
+    <style>
+        .templateItem {
+            display: inline-flex !important;
+        }
+        .btnPreviewTemplate {
+            padding: 6px;
+            cursor: pointer;
+        }
+        .btnPreviewTemplate:hover {
+            background-color: #f8f9fc;
+        }
+    </style>
     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
@@ -151,7 +163,7 @@
                 </div>
                 <div class="col-6 col-md-5 col-lg-4">
                     <a class="btn btnOpenSettings float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#myModal2" ><i class="icon ion-android-more-horizontal"></i></a>
-                    <button class="btn btn-primary float-right printConfirm btnNav vs1ButtonMargin" type="button" ><i class="fa fa-print" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
+                    <button class="btn btn-primary float-right btnNav vs1ButtonMargin" id="open_print_confirm" type="button" ><i class="fa fa-print" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
                     <button class="btn btn-primary float-right export btnNav vs1ButtonMargin" type="button" id="emailbtn" name="emailbtn"><i class="far fa-envelope" style="padding-right: 5px;"></i>Email</button>
                 </div>
             </div>
@@ -305,6 +317,78 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="templateselection">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding-bottom: 8px;">
+                    <h4>Select Template</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row justify-content-center mb-3">
+
+
+                        <div class="row">
+                            {{#each title in getTemplateList}}
+                                <div class="col-12 ">
+                                    <div class="card shadow mb-3">
+                                        <div class="card-header py-3">
+                                            <span id="{{title}}_title" class="text-primary m-0 font-weight-bold">{{title}}</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                {{#each index in getTemplateNumber}}
+                                                    <li class="list-group-item templateItem justify-content-between" data-id="{{title}}" data-template-id="{{index}}">
+                                                        <div class="custom-control custom-switch">
+
+                                                            {{#if equals index '1'}}
+                                                                {{#if equals title 'Statements' }}
+                                                                <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                                {{/if}}
+                                                            {{else}}
+                                                                {{#if equals title 'Statements' }}
+                                                                <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                                                                {{/if}}
+                                                            {{/if}}
+
+                                                            {{#if equals title 'Statements' }}
+                                                            <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                                                            {{/if}}
+
+                                                            <input type="text" name="{{title}}_{{index}}" style="border: 1px solid rgb(209 211 226 / 0%);" value="Template {{index}}" />
+
+
+                                                        </div>
+
+                                                        <i id="btnPreviewTemplate" data-id="{{title}}" class="far fa-eye btnPreviewTemplate" data-toggle="modal"></i>
+                                                    </li>
+                                                {{/each}}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="custom-control custom-switch">
+                                            <input class="custom-control-input chkGlobalSettings" name="print_statement" checked type="checkbox" id="print_statement" autocomplete="off">
+                                            <label style="cursor: pointer;" class="custom-control-label" for="print_statement">Print Statement</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 6px;">
+                    <button class="btn btn-primary printConfirm btnFooter" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Confirm Print</button>
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog" aria-labelledby="templatePreviewLabel" aria-hidden="true">
+        {{> custom_print_template modalId="templatePreviewModal" idPrefix="html-2-pdfwrapper_quotes" namePrefix="pdfwrapper_quotes" }}
     </div>
 
     <!-- Start PDF-->
