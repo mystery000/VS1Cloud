@@ -9209,6 +9209,9 @@ Template.purchaseordercard.events({
       } else {
         reset_data[13].display = false;
       }
+      reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
       reset_data = reset_data.filter(redata => redata.display);
 
       $(".displaySettings").each(function (index) {
