@@ -195,6 +195,14 @@
                                                                 </td>
                                                                 {{#if equals item.formID 129}}
                                                                     <div class="d-none print-wrapper print-wrapper-129" id="profitTemp">
+                                                                        <style>
+                                                                            .print-wrapper-129 .customProfitLossTable table th {
+                                                                                min-width: 0 !important
+                                                                            }
+                                                                            .print-wrapper-129 .customProfitLossTable .table-sm th, .print-wrapper-129 .customProfitLossTable .table-sm td {
+                                                                                white-space: unset;
+                                                                            }
+                                                                        </style>
                                                                         {{> newprofitandloss}}
                                                                     </div>
                                                                 {{/if}}
@@ -1464,21 +1472,21 @@
                                                             <div class="row">
                                                                 <div class="col-7 col-md-8 contactcheckboxcol d-flex align-items-center justify-content-start"
                                                                     style="padding: 16px 32px 0px 32px; display: inline-flex;">
-                                                                    <div class="custom-control custom-switch" style="width: 155px;">
+                                                                    <div class="custom-control custom-switch" style="width: 180px;">
                                                                         <input class="custom-control-input" type="checkbox"
                                                                             value="swtAllCustomers" id="swtAllCustomers"
                                                                             name="swtAllCustomers" style="cursor: pointer;">
                                                                         <label class="custom-control-label" for="swtAllCustomers"
                                                                             style="cursor: pointer;">All Customers</label>
                                                                     </div>
-                                                                    <div class="custom-control custom-switch" style="width: 155px;">
+                                                                    <div class="custom-control custom-switch" style="width: 180px;">
                                                                         <input class="custom-control-input" type="checkbox"
                                                                             value="swtAllEmployees" id="swtAllEmployees"
                                                                             name="swtAllEmployees" style="cursor: pointer;">
                                                                         <label class="custom-control-label" for="swtAllEmployees"
                                                                             style="cursor: pointer;">All Employees</label>
                                                                     </div>
-                                                                    <div class="custom-control custom-switch" style="width: 155px;">
+                                                                    <div class="custom-control custom-switch" style="width: 180px;">
                                                                         <input class="custom-control-input" type="checkbox"
                                                                             value="swtAllSuppliers" id="swtAllSuppliers"
                                                                             name="swtAllSuppliers" style="cursor: pointer;">
@@ -1487,11 +1495,16 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-5 col-md-4 d-xl-flex justify-content-xl-end align-items-center" style="padding-top: 16px; padding-right: 32px;">
-                                                                    {{> export_import_print_display_button}}
+                                                                    {{> export_import_print_display_button tablename="tblContactlist"}}
                                                                 </div>
-                                                                <div class="col-12 contactlistcol">
-                                                                    {{> contactlistpop}}
-                                                                        <!-- {{> non_transactional_list}} -->
+                                                                <div class="col-12 contactlistcol p-4">
+                                                                    <!-- {{> contactlistpop}} -->
+                                                                    <style>
+                                                                        #tblContactlist th.chBox, #tblContactlist td.chBox {
+                                                                            max-width: 50px;
+                                                                        }
+                                                                    </style>
+                                                                        {{> non_transactional_list tablename="tblContactlist"}}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1751,7 +1764,8 @@
         </div>
     </div>
     <!-- End Help Video Modal -->
-
+    <!-- Import Modal -->
+    {{> import_template}}
     <script>
         modalDraggable();
     </script>
