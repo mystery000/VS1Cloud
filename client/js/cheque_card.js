@@ -21,6 +21,12 @@ import "../lib/global/indexdbstorage.js";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let times = 0;
+
+var template_list = [
+  "Cheques",
+];
+var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit"];
+
 Template.chequecard.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar();
@@ -3883,6 +3889,570 @@ Template.chequecard.onRendered(() => {
       }
     });
 
+    $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
+      title = $(this).parent().attr("data-id");
+      number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
+      templateObject.generateInvoiceData(title,number);
+  });
+
+  function showChequeData1(template_title, number, bprint)
+  {
+      var array_data = [];
+      let lineItems = [];
+      let taxItems = {};
+      object_invoce = [];
+      let item_invoices = '';
+
+      let invoice_data =  templateObject.chequerecord.get();
+      let stripe_id = '';
+      let stripe_fee_method = '';
+      var erpGet = erpDb();
+
+      var customfield1 = $('#edtSaleCustField1').val() || '  ';
+      var customfield2 = $('#edtSaleCustField2').val() || '  ';
+      var customfield3 = $('#edtSaleCustField3').val() || '  ';
+
+      var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+      var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+      var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+      
+      $("#tblChequeLine > tbody > tr").each(function () {
+        var lineID = this.id;
+        let tdaccount = $("#" + lineID + " .lineAccountName").val();
+        let tddmemo = $("#" + lineID + " .lineMemo").text();
+        let tdamount = $("#" + lineID + " .colAmountExChange").val() || "$0.00";
+        let tdtaxAmount = $("#" + lineID + " .lineTaxAmount").text() || "$0.00";
+        let tdtaxrate = $("#" + lineID + " .lineTaxRate").text();
+        let tdtaxCode = $("#" + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
+        let erpLineID = $("#" + lineID + " .lineAccountName").attr("lineid");
+
+          array_data.push([
+              tdaccount,
+              tddmemo,
+              tdtaxAmount,
+              tdamount
+          ]);
+      });
+
+      let dtSODate = $("#dtSODate").val();
+      let supplier = $("#edtSupplierName").val();
+      let supplierEmail = $("#edtSupplierEmail").val();
+      let txabillingAddress = $("#txabillingAddress").val();
+
+      let bankAccount = $("#sltChequeBankAccountName").val();
+      let po = $("#ponumber").val();
+      let ref = $("#edtRef").val();
+
+      let shippingAddress = $("#txaShipingInfo").val();
+      let comments = $("#txaComment").val();
+      let pickingInfrmation = $("#txapickmemo").val();
+
+      let grandTotal = $("#grandTotal").text();
+      let subtotal_total = $("#subtotal_total").text() || "$0.00";
+      let subtotal_tax = $("#subtotal_tax").text() || "$0.00";
+      let total_paid = invoice_data.totalPaid || "$0.00";
+      let balancedue = invoice_data.balanceDue || "$0.00";
+
+      let customer = '';
+      let name = '';
+      let surname = '';
+      let dept = '';
+      let tax = '';
+      let company = Session.get('vs1companyName');
+      let vs1User = localStorage.getItem('mySession');
+      let customerEmail = '';
+      let id = $('.printID').attr("id") || "new";
+      let currencyname = (CountryAbbr).toLowerCase();
+      stringQuery = "?";
+      for (let l = 0; l < lineItems.length; l++) {
+          stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+      }
+      stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+      $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+
+      if(number == 1)
+      {
+            item_invoices = {
+
+              o_url: Session.get('vs1companyURL'),
+              o_name: Session.get('vs1companyName'),
+              o_address: Session.get('vs1companyaddress1'),
+              o_city: Session.get('vs1companyCity'),
+              o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+              o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+              o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+              o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+              title: 'Cheque',
+              value:invoice_data.id,
+              date: dtSODate,
+              invoicenumber:invoice_data.id,
+              refnumber: ref,
+              pqnumber: po,
+              duedate:"",
+              paylink: "",
+              supplier_type: supplier,
+              supplier_name : customer,
+              supplier_addr : txabillingAddress,
+              fields: {
+                "Account Name" : ["30", "left"],
+                "Description" : ["40", "left"],
+                "Tax" : ["15", "right"],
+                "Amount" : ["15", "right"]
+              },
+              subtotal :subtotal_total,
+              gst : subtotal_tax,
+              total : grandTotal,
+              paid_amount : total_paid,
+              bal_due : balancedue,
+              bsb :Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
+              account : Template.new_invoice.__helpers
+              .get("vs1companyBankAccountNo")
+              .call(),
+              swift : Template.new_invoice.__helpers
+              .get("vs1companyBankSwiftCode")
+              .call(),
+              data: array_data,
+              customfield1:'NA',
+              customfield2:'NA',
+              customfield3:'NA',
+              customfieldlabel1:'NA',
+              customfieldlabel2:'NA',
+              customfieldlabel3:'NA',
+              applied : "",
+              showFX:"",
+              comment:comments
+            };
+
+      }
+      else if(number == 2)
+      {
+          item_invoices = {
+              o_url: Session.get('vs1companyURL'),
+              o_name: Session.get('vs1companyName'),
+              o_address: Session.get('vs1companyaddress1'),
+              o_city: Session.get('vs1companyCity'),
+              o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+              o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+              o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+              o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+              title: 'Cheque',
+              value:invoice_data.id,
+              date: dtSODate,
+              invoicenumber:invoice_data.id,
+              refnumber: ref,
+              pqnumber: po,
+              duedate:"",
+              paylink: "",
+              supplier_type: supplier,
+              supplier_name : customer,
+              supplier_addr : txabillingAddress,
+              fields: {
+                "Account Name" : ["30", "left"],
+                "Description" : ["40", "left"],
+                "Tax" : ["15", "right"],
+                "Amount" : ["15", "right"]
+              },
+              subtotal :subtotal_total,
+              gst : subtotal_tax,
+              total : grandTotal,
+              paid_amount : total_paid,
+              bal_due : balancedue,
+              bsb :Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
+              account : Template.new_invoice.__helpers
+              .get("vs1companyBankAccountNo")
+              .call(),
+              swift : Template.new_invoice.__helpers
+              .get("vs1companyBankSwiftCode")
+              .call(),
+              data: array_data,
+              customfield1:customfield1,
+              customfield2:customfield2,
+              customfield3:customfield3,
+              customfieldlabel1:customfieldlabel1,
+              customfieldlabel2:customfieldlabel2,
+              customfieldlabel3:customfieldlabel3,
+              applied : "",
+              showFX:"",
+              comment:comments
+            };
+
+      }
+      else
+      {
+          item_invoices = {
+              o_url: Session.get('vs1companyURL'),
+              o_name: Session.get('vs1companyName'),
+              o_address: Session.get('vs1companyaddress1'),
+              o_city: Session.get('vs1companyCity'),
+              o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+              o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+              o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+              o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+              title: 'Cheque',
+              value:invoice_data.id,
+              date: dtSODate,
+              invoicenumber:invoice_data.id,
+              refnumber: ref,
+              pqnumber: po,
+              duedate:"",
+              paylink: "",
+              supplier_type: supplier,
+              supplier_name : customer,
+              supplier_addr : txabillingAddress,
+              fields: {
+                "Account Name" : ["30", "left"],
+                "Description" : ["40", "left"],
+                "Tax" : ["15", "right"],
+                "Amount" : ["15", "right"]
+              },
+              subtotal :subtotal_total,
+              gst : subtotal_tax,
+              total : grandTotal,
+              paid_amount : total_paid,
+              bal_due : balancedue,
+              bsb :Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
+              account : Template.new_invoice.__helpers
+              .get("vs1companyBankAccountNo")
+              .call(),
+              swift : Template.new_invoice.__helpers
+              .get("vs1companyBankSwiftCode")
+              .call(),
+              data: array_data,
+              customfield1:customfield1,
+              customfield2:customfield2,
+              customfield3:customfield3,
+              customfieldlabel1:customfieldlabel1,
+              customfieldlabel2:customfieldlabel2,
+              customfieldlabel3:customfieldlabel3,
+              applied : "",
+              showFX:"",
+              comment:comments
+            };
+
+      }
+
+      item_invoices.taxItems = taxItems;
+
+      object_invoce.push(item_invoices);
+
+      $("#templatePreviewModal .field_payment").show();
+      $("#templatePreviewModal .field_amount").show();
+
+      if (bprint == false) {
+          $("#html-2-pdfwrapper_quotes").css("width", "90%");
+          $("#html-2-pdfwrapper_quotes2").css("width", "90%");
+          $("#html-2-pdfwrapper_quotes3").css("width", "90%");
+      } else {
+          $("#html-2-pdfwrapper_quotes").css("width", "210mm");
+          $("#html-2-pdfwrapper_quotes2").css("width", "210mm");
+          $("#html-2-pdfwrapper_quotes3").css("width", "210mm");
+      }
+
+      if (number == 1) {
+          updateTemplate1(object_invoce, bprint);
+        } else if (number == 2) {
+          updateTemplate2(object_invoce, bprint);
+        } else {
+          updateTemplate3(object_invoce, bprint);
+        }
+
+      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
+  }
+
+  function loadTemplateBody1(object_invoce) {
+      // table content
+      var tbl_content = $("#templatePreviewModal .tbl_content");
+      tbl_content.empty();
+      const data = object_invoce[0]["data"];
+      let idx = 0;
+      for(item of data){
+          idx = 0;
+          var html = '';
+          html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+          for(item_temp of item){
+              if (idx > 1)
+                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+              else
+                  html = html + "<td>" + item_temp + "</td>";
+              idx++;
+          }
+
+          html +="</tr>";
+          tbl_content.append(html);
+      }
+      // total amount
+      if (noHasTotals.includes(object_invoce[0]["title"])) {
+          $("#templatePreviewModal .field_amount").hide();
+          $("#templatePreviewModal .field_payment").css("borderRight", "0px solid black");
+      } else {
+          $("#templatePreviewModal .field_amount").show();
+          $("#templatePreviewModal .field_payment").css("borderRight", "1px solid black");
+      }
+
+      $('#templatePreviewModal #subtotal_total').text("Sub total");
+      $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+
+      $('#templatePreviewModal #grandTotal').text("Grand total");
+      $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+
+      $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
+
+      $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+
+      $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
+  }
+
+  function loadTemplateBody2(object_invoce) {
+      // table content
+      var tbl_content = $("#templatePreviewModal .tbl_content");
+      tbl_content.empty();
+      const data = object_invoce[0]["data"];
+      let idx = 0;
+      for(item of data){
+          idx = 0;
+          var html = '';
+          html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+          for(item_temp of item){
+              if (idx > 1)
+                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+              else
+                  html = html + "<td>" + item_temp + "</td>";
+              idx++;
+          }
+
+          html +="</tr>";
+          tbl_content.append(html);
+      }
+
+      // total amount
+      if (noHasTotals.includes(object_invoce[0]["title"])) {
+          $(".subtotal2").hide();
+      } else {
+          $(".subtotal2").show();
+      }
+
+      $("#templatePreviewModal #subtotal_totalPrint2").text(
+          object_invoce[0]["subtotal"]
+      );
+      $("#templatePreviewModal #grandTotalPrint2").text(
+          object_invoce[0]["total"]
+      );
+      $("#templatePreviewModal #totalBalanceDuePrint2").text(
+          object_invoce[0]["bal_due"]
+      );
+      $("#templatePreviewModal #paid_amount2").text(
+          object_invoce[0]["paid_amount"]
+      );
+  }
+
+  function loadTemplateBody3(object_invoce) {
+      // table content
+      var tbl_content = $("#templatePreviewModal .tbl_content");
+      tbl_content.empty();
+      const data = object_invoce[0]["data"];
+      let idx = 0;
+      for(item of data){
+          idx = 0;
+          var html = '';
+          html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+          for(item_temp of item){
+              if (idx > 1)
+                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+              else
+                  html = html + "<td>" + item_temp + "</td>";
+              idx++;
+          }
+
+          html +="</tr>";
+          tbl_content.append(html);
+      }
+
+      // total amount
+      if (noHasTotals.includes(object_invoce[0]["title"])) {
+          $(".subtotal3").hide();
+      } else {
+          $(".subtotal3").show();
+      }
+      
+      $("#templatePreviewModal #subtotal_totalPrint3").text(
+          object_invoce[0]["subtotal"]
+      );
+      $("#templatePreviewModal #totalTax_totalPrint3").text(
+          object_invoce[0]["gst"]
+      );
+      $("#templatePreviewModal #totalBalanceDuePrint3").text(
+          object_invoce[0]["bal_due"]
+      );
+  }
+
+  function updateTemplate1(object_invoce, bprint) {
+      initTemplateHeaderFooter1();
+      $("#html-2-pdfwrapper_quotes").show();
+      $("#html-2-pdfwrapper_quotes2").hide();
+      $("#html-2-pdfwrapper_quotes3").hide();
+      if (bprint == false)
+          $("#templatePreviewModal").modal("toggle");
+      loadTemplateHeaderFooter1(object_invoce);
+      loadTemplateBody1(object_invoce);
+  }
+
+  function updateTemplate2(object_invoce, bprint) {
+      initTemplateHeaderFooter2();
+      $("#html-2-pdfwrapper_quotes").hide();
+      $("#html-2-pdfwrapper_quotes2").show();
+      $("#html-2-pdfwrapper_quotes3").hide();
+      if (bprint == false)
+          $("#templatePreviewModal").modal("toggle");
+      loadTemplateHeaderFooter2(object_invoce);
+      loadTemplateBody2(object_invoce);
+  }
+
+  function updateTemplate3(object_invoce, bprint) {
+      initTemplateHeaderFooter3();
+      $("#html-2-pdfwrapper_quotes").hide();
+      $("#html-2-pdfwrapper_quotes2").hide();
+      $("#html-2-pdfwrapper_quotes3").show();
+      if (bprint == false)
+          $("#templatePreviewModal").modal("toggle");
+      loadTemplateHeaderFooter3(object_invoce);
+      loadTemplateBody3(object_invoce);
+  }
+
+  templateObject.generateInvoiceData = function (template_title,number) {
+      object_invoce = [];
+      switch (template_title) {
+
+      case "Cheques":
+          showChequeData1(template_title, number, false);
+          break;
+      }
+  };
+
+  exportSalesToPdf1 = async function(template_title,number) {
+      if(template_title == 'Cheques')
+      {
+          await showChequeData1(template_title, number, true);
+      }
+
+      let margins = {
+          top: 0,
+          bottom: 0,
+          left: 0,
+          width: 100
+      };
+
+      let invoice_data_info = templateObject.chequerecord.get();
+      // document.getElementById('html-2-pdfwrapper_new').style.display="block";
+      // var source = document.getElementById('html-2-pdfwrapper_new');
+      var source;
+      if (number == 1) {
+          $("#html-2-pdfwrapper_quotes").show();
+          $("#html-2-pdfwrapper_quotes2").hide();
+          $("#html-2-pdfwrapper_quotes3").hide();
+          source = document.getElementById("html-2-pdfwrapper_quotes");
+      } else if (number == 2) {
+          $("#html-2-pdfwrapper_quotes").hide();
+          $("#html-2-pdfwrapper_quotes2").show();
+          $("#html-2-pdfwrapper_quotes3").hide();
+          source = document.getElementById("html-2-pdfwrapper_quotes2");
+      } else {
+          $("#html-2-pdfwrapper_quotes").hide();
+          $("#html-2-pdfwrapper_quotes2").hide();
+          $("#html-2-pdfwrapper_quotes3").show();
+          source = document.getElementById("html-2-pdfwrapper_quotes3");
+      }
+
+      let file = "Cheque.pdf";
+      if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+          if(template_title == 'Cheques')
+          {
+              file = 'Cheque-' + invoice_data_info.id + '.pdf';
+          }
+      }
+      var opt = {
+          margin: 0,
+          filename: file,
+          image: {
+              type: 'jpeg',
+              quality: 0.98
+          },
+          html2canvas: {
+              scale: 2
+          },
+          jsPDF: {
+              unit: 'in',
+              format: 'a4',
+              orientation: 'portrait'
+          }
+      };
+
+      html2pdf().set(opt).from(source).toPdf().output('datauristring').then((data)=>{
+        let attachment = [];
+        let base64data = data.split(',')[1];
+        let chequeId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: ''
+        pdfObject = {
+            filename: 'Cheque-' + chequeId + '.pdf',
+            content: base64data,
+            encoding: 'base64'
+        };
+        attachment.push(pdfObject);
+        let values = [];
+        let basedOnTypeStorages = Object.keys(localStorage);
+        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split('_')[2];
+            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            return storage.includes('BasedOnType_');
+        });
+        let j = basedOnTypeStorages.length;
+        if (j > 0) {
+            while (j--) {
+                values.push(localStorage.getItem(basedOnTypeStorages[j]));
+            }
+        }
+        if(values.length > 0) {
+          values.forEach(value => {
+              let reportData = JSON.parse(value);
+              let temp = {... reportData};
+
+              temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+              reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+              temp.attachments = attachment;
+              if (temp.BasedOnType.includes("P")) {
+                  if (temp.FormID == 1) {
+                      let formIds = temp.FormIDs.split(',');
+                      if (formIds.includes("18")) {
+                          temp.FormID = 18;
+                          Meteor.call('sendNormalEmail', temp);
+                      }
+                  } else {
+                      if (temp.FormID == 18)
+                          Meteor.call('sendNormalEmail', temp);
+                  }
+              }
+          });
+        }
+        
+      });
+      
+      html2pdf().set(opt).from(source).save().then(function (dataObject) {
+          if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+              // $(".btnSave").trigger("click");
+          } else {
+              
+          }
+          $('#html-2-pdfwrapper').css('display', 'none');
+          $("#html-2-pdfwrapper_quotes").hide();
+          $("#html-2-pdfwrapper_quotes2").hide();
+          $("#html-2-pdfwrapper_quotes3").hide();
+          $('.fullScreenSpin').css("display", "none");
+      });
+      return true;
+
+  };
+
+  function saveTemplateFields(key, value){
+      localStorage.setItem(key, value)
+  }
 
 });
 
@@ -4127,6 +4697,13 @@ Template.chequecard.onRendered(function () {
 });
 
 Template.chequecard.helpers({
+  getTemplateList: function () {
+    return template_list;
+  },
+  getTemplateNumber: function () {
+    let template_numbers = ["1", "2", "3"];
+    return template_numbers;
+  },
   chequerecord: () => {
     return Template.instance().chequerecord.get();
   },
@@ -5520,122 +6097,37 @@ Template.chequecard.events({
       }
     }
   },
-  "click .printConfirm": function (event) {
+  'click #open_print_confirm' : function(event) {
     playPrintAudio();
     setTimeout(function(){
-    $("#html-2-pdfwrapper").css("display", "block");
-    $(".pdfCustomerName").html($("#edtSupplierName").val());
-    $(".pdfCustomerAddress").html(
-      $("#txabillingAddress")
-        .val()
-        .replace(/[\r\n]/g, "<br />")
-    );
-    $("#printcomment").html(
-      $("#txaComment")
-        .val()
-        .replace(/[\r\n]/g, "<br />")
-    );
-
-    exportSalesToPdf =  () =>{
-      let margins = {
-        top: 0,
-        bottom: 0,
-        left: 0,
-        width: 100,
-      };
-      let id = $(".printID").attr("id");
-
-      var source = document.getElementById("html-2-pdfwrapper");
-
-      let file = "Cheque.pdf";
-      if (
-          $(".printID").attr("id") != undefined ||
-          $(".printID").attr("id") != ""
-      ) {
-        file = "Cheque-" + id + ".pdf";
+        $('#templateselection').modal('toggle');
+    }, delayTimeAfterSound);
+  },
+  "click .printConfirm": async function (event) {
+    playPrintAudio();
+    setTimeout(async function(){
+      var printTemplate = [];
+      $('.fullScreenSpin').css('display', 'inline-block');
+      $('#html-2-pdfwrapper').css('display', 'block');
+      if($('#print_cheque').is(':checked')) {
+          printTemplate.push('Cheques');
       }
 
-      var opt = {
-        margin: 0,
-        filename: file,
-        image: {
-          type: "jpeg",
-          quality: 0.98,
-        },
-        html2canvas: {
-          scale: 2,
-        },
-        jsPDF: {
-          unit: "in",
-          format: "a4",
-          orientation: "portrait",
-        },
-      };
-
-      html2pdf().set(opt).from(source).toPdf().output('datauristring').then((data)=>{
-        let attachment = [];
-        let base64data = data.split(',')[1];
-        let chequeId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: ''
-        pdfObject = {
-            filename: 'Bill-' + chequeId + '.pdf',
-            content: base64data,
-            encoding: 'base64'
-        };
-        attachment.push(pdfObject);
-        let values = [];
-        let basedOnTypeStorages = Object.keys(localStorage);
-        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-            let employeeId = storage.split('_')[2];
-            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-            return storage.includes('BasedOnType_');
-        });
-        let j = basedOnTypeStorages.length;
-        if (j > 0) {
-            while (j--) {
-                values.push(localStorage.getItem(basedOnTypeStorages[j]));
-            }
-        }
-        if(values.length > 0) {
-          values.forEach(value => {
-              let reportData = JSON.parse(value);
-              let temp = {... reportData};
-
-              temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-              reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-              temp.attachments = attachment;
-              if (temp.BasedOnType.includes("P")) {
-                  if (temp.FormID == 1) {
-                      let formIds = temp.FormIDs.split(',');
-                      if (formIds.includes("18")) {
-                          temp.FormID = 18;
-                          Meteor.call('sendNormalEmail', temp);
-                      }
-                  } else {
-                      if (temp.FormID == 18)
-                          Meteor.call('sendNormalEmail', temp);
-                  }
+      if(printTemplate.length > 0) {
+          for(var i = 0; i < printTemplate.length; i++)
+          {
+              if(printTemplate[i] == 'Cheques')
+              {
+                  var template_number = $('input[name="Cheques"]:checked').val();
               }
-          });
-        }
-        html2pdf().set(opt).from(source).save().then(function (dataObject) {
-              if (
-                  $(".printID").attr("id") == undefined ||
-                  $(".printID").attr("id") == ""
-              ) {
-                $(".btnSave").trigger("click");
-              } else {
-                $("#html-2-pdfwrapper").css("display", "none");
-                $(".fullScreenSpin").css("display", "none");
+              let result = await exportSalesToPdf1(printTemplate[i],template_number);
+              if(result == true)
+              {
+
               }
-            });
-      })
-      // pdf.addHTML(source, function() {
-      //     pdf.save('Cheque '+id+'.pdf');
-      //     $('#html-2-pdfwrapper').css('display', 'none');
-      // });
-    };
-    exportSalesToPdf();
-  }, delayTimeAfterSound);
+          }
+      }
+    }, delayTimeAfterSound);
   },
   "keydown .lineQty, keydown .lineUnitPrice, keydown .lineAmount": function (
     event

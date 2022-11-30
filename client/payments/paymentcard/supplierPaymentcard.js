@@ -23,7 +23,7 @@ var times = 0;
 let clickedTableID = 0;
 
 var template_list = ["Supplier Payments"];
-var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit", "Cheque"];
+var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit"];
 let defaultCurrencyCode = CountryAbbr;
 
 Template.supplierpaymentcard.onCreated(() => {
@@ -458,13 +458,13 @@ Template.supplierpaymentcard.onRendered(() => {
                     supplier_name : customer,
                     supplier_addr : invoice_data.shipToDesc,
                     fields: {
-                      "Date": ["20", "left"],
-                      "Type": ["20", "left"],
-                      "No.": ["10", "left"],
-                      "Amount": ["10", "right"],
-                      "Due": ["10", "right"],
-                      "Paid": ["10", "right"],
-                      "Outstanding": ["20", "right"]
+                      "Date": ["15", "left"],
+                      "Type": ["15", "left"],
+                      "No": ["10", "left"],
+                      "Amount": ["15", "right"],
+                      "Due": ["15", "right"],
+                      "Paid": ["15", "right"],
+                      "Outstanding": ["15", "right"]
                     },
                     subtotal :"",
                     gst :  "",
@@ -515,13 +515,13 @@ Template.supplierpaymentcard.onRendered(() => {
                     supplier_name : customer,
                     supplier_addr : invoice_data.shipToDesc,
                     fields: {
-                      "Date": ["20", "left"],
-                      "Type": ["20", "left"],
-                      "No.": ["10", "left"],
-                      "Amount": ["10", "right"],
-                      "Due": ["10", "right"],
-                      "Paid": ["10", "right"],
-                      "Outstanding": ["20", "right"]
+                      "Date": ["15", "left"],
+                      "Type": ["15", "left"],
+                      "No": ["10", "left"],
+                      "Amount": ["15", "right"],
+                      "Due": ["15", "right"],
+                      "Paid": ["15", "right"],
+                      "Outstanding": ["15", "right"]
                     },
                     subtotal :"",
                     gst :  "",
@@ -579,13 +579,13 @@ Template.supplierpaymentcard.onRendered(() => {
                     supplier_name : customer,
                     supplier_addr : invoice_data.shipToDesc,
                     fields: {
-                      "Date": ["20", "left"],
-                      "Type": ["20", "left"],
-                      "No.": ["10", "left"],
-                      "Amount": ["10", "right"],
-                      "Due": ["10", "right"],
-                      "Paid": ["10", "right"],
-                      "Outstanding": ["20", "right"]
+                      "Date": ["15", "left"],
+                      "Type": ["15", "left"],
+                      "No": ["10", "left"],
+                      "Amount": ["15", "right"],
+                      "Due": ["15", "right"],
+                      "Paid": ["15", "right"],
+                      "Outstanding": ["15", "right"]
                     },
                     subtotal :"",
                     gst :  "",
@@ -7528,12 +7528,6 @@ Template.supplierpaymentcard.onRendered(() => {
   };
 
   exportSalesToPdf = async function (template_title, number) {
-
-    // if(template_title== "Supplier Payments" && number == 1)
-    // {
-    //     exportSalesToPdf1();
-    // }
-    // else{
       if (template_title == "Supplier Payments") {
         await showSuppliers1(template_title, number, true);
       }
@@ -7566,13 +7560,13 @@ Template.supplierpaymentcard.onRendered(() => {
           source = document.getElementById("html-2-pdfwrapper_quotes3");
       }
 
-      let file = "Supplier_payment.pdf";
+      let file = "Supplier Payment.pdf";
       if (
         $(".printID").attr("id") != undefined ||
         $(".printID").attr("id") != ""
       ) {
         if (template_title == "Supplier Payments") {
-          file = "Supplier payment-" + invoice_data_info.lid + ".pdf";
+          file = "Supplier Payment-" + invoice_data_info.lid + ".pdf";
         }
       }
 
@@ -7610,7 +7604,7 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#html-2-pdfwrapper_quotes").hide();
           $("#html-2-pdfwrapper_quotes2").hide();
           $("#html-2-pdfwrapper_quotes3").hide();
-          LoadingOverlay.hide();
+          $('.fullScreenSpin').css("display", "none");
         });
       return true;
     // }
@@ -8339,54 +8333,53 @@ Template.supplierpaymentcard.events({
 
      });
 
-    $("#html-2-pdfwrapper").css("display", "block");
-    if ($(".edtCustomerEmail").val() != "") {
-      $(".pdfCustomerName").html($("#edtCustomerName").val());
-      $(".pdfCustomerAddress").html(
-        $("#txabillingAddress")
-          .val()
-          .replace(/[\r\n]/g, "<br />")
-      );
-      //$('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-      var ponumber = $("#ponumber").val() || ".";
-      $(".po").text(ponumber);
-      var rowCount = $(".tblInvoiceLine tbody tr").length;
-
-      if (
-        $("#print_supplier_payment").is(":checked") ||
-        $("#print_supplier_payment_second").is(":checked")
-      ) {
-        printTemplate.push("Supplier Payments");
-      }
-
-      if (printTemplate.length > 0) {
-        for (var i = 0; i < printTemplate.length; i++) {
-          if (printTemplate[i] == "Supplier Payments") {
-            var template_number = $(
-              'input[name="Supplier Payments"]:checked'
-            ).val();
-          }
-          let result = await exportSalesToPdf(
-            printTemplate[i],
-            template_number
-          );
-          if (result == true) {
-          }
-        }
-      }
-    } else {
-      swal({
-        title: "Customer Email Required",
-        text: "Please enter customer email",
-        type: "error",
-        showCancelButton: false,
-        confirmButtonText: "OK",
-      }).then((result) => {
-        if (result.value) {
-        } else if (result.dismiss === "cancel") {
-        }
-      });
+     if (
+      $("#print_supplier_payment").is(":checked") ||
+      $("#print_supplier_payment_second").is(":checked")
+    ) {
+      printTemplate.push("Supplier Payments");
     }
+
+    if (printTemplate.length > 0) {
+      for (var i = 0; i < printTemplate.length; i++) {
+        if (printTemplate[i] == "Supplier Payments") {
+          var template_number = $(
+            'input[name="Supplier Payments"]:checked'
+          ).val();
+        }
+        let result = await exportSalesToPdf(
+          printTemplate[i],
+          template_number
+        );
+        if (result == true) {
+        }
+      }
+    }
+
+    // if ($(".edtCustomerEmail").val() != "") {
+    //   $(".pdfCustomerName").html($("#edtCustomerName").val());
+    //   $(".pdfCustomerAddress").html(
+    //     $("#txabillingAddress")
+    //       .val()
+    //       .replace(/[\r\n]/g, "<br />")
+    //   );
+    //   $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+    //   var ponumber = $("#ponumber").val() || ".";
+    //   $(".po").text(ponumber);
+    //   var rowCount = $(".tblInvoiceLine tbody tr").length;
+    // } else {
+    //   swal({
+    //     title: "Customer Email Required",
+    //     text: "Please enter customer email",
+    //     type: "error",
+    //     showCancelButton: false,
+    //     confirmButtonText: "OK",
+    //   }).then((result) => {
+    //     if (result.value) {
+    //     } else if (result.dismiss === "cancel") {
+    //     }
+    //   });
+    // }
   }, delayTimeAfterSound);
   },
 
