@@ -810,9 +810,10 @@ initTemplateHeaderFooter3 = function() {
 
 loadTemplateHeaderFooter1 = function(object_invoce) {
   if (object_invoce.length > 0) {
-      $("#templatePreviewModal #printcomment").text(
-          object_invoce[0]["comment"]
-      );
+      let pcomment = object_invoce[0]["comment"];
+      if (pcomment != "" && pcomment != null && pcomment != undefined)
+        pcomment = pcomment.replace(/[\r\n]/g, "<br/>");
+      $("#templatePreviewModal #printcomment").text(pcomment);
       
       if (LoggedCountry == "South Africa")
           $("#templatePreviewModal .o_abn_label").text("VAT No");
@@ -823,7 +824,7 @@ loadTemplateHeaderFooter1 = function(object_invoce) {
       
       let txabillingAddress = object_invoce[0]["supplier_addr"];
       if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
-          txabillingAddress = txabillingAddress.replace(/\n/g, '<br/>');
+          txabillingAddress = txabillingAddress.replace(/[\r\n]/g, "<br/>");
       $("#templatePreviewModal .pdfCustomerAddress").html(txabillingAddress);
       $("#templatePreviewModal .employeeName").text(object_invoce[0]["employee_name"]);
       $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
@@ -876,14 +877,15 @@ loadTemplateHeaderFooter1 = function(object_invoce) {
 
 loadTemplateHeaderFooter2 = function(object_invoce) {
   if (object_invoce.length > 0) {
-      $("#templatePreviewModal #printcomment2").text(
-          object_invoce[0]["comment"]
-      );
+      let pcomment = object_invoce[0]["comment"];
+      if (pcomment != "" && pcomment != null && pcomment != undefined)
+        pcomment = pcomment.replace(/[\r\n]/g, "<br/>");
+      $("#templatePreviewModal #printcomment2").text(pcomment);
       
       $("#templatePreviewModal .pdfCustomerAddress2").empty();
       let txabillingAddress = object_invoce[0]["supplier_addr"];
       if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
-          txabillingAddress = txabillingAddress.replace(/\n/g, '<br/>');
+          txabillingAddress = txabillingAddress.replace(/[\r\n]/g, "<br/>");
       $("#templatePreviewModal .pdfCustomerAddress2").html(txabillingAddress);
       $("#templatePreviewModal .print-header2").text(object_invoce[0]["title"]);
       $("#templatePreviewModal .modal-title").text(object_invoce[0]["title"] + " " + " Template");
@@ -945,7 +947,7 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
       $("#templatePreviewModal .pdfCustomerAddress3").empty();
       let txabillingAddress = object_invoce[0]["supplier_addr"];
       if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
-          txabillingAddress = txabillingAddress.replace(/\n/g, '<br/>');
+          txabillingAddress = txabillingAddress.replace(/[\r\n]/g, "<br/>");
       $("#templatePreviewModal .pdfCustomerAddress3").html(txabillingAddress);
       $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"].toUpperCase());
       $("#templatePreviewModal .toLabel3").text(object_invoce[0]["title"].toUpperCase() + " TO: ");

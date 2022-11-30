@@ -616,14 +616,14 @@ Template.vs1login.onRendered(function () {
 
     function pausevideo() {
       var myVS1Video = document.getElementById("myVS1Video");
-      var myVS1VideoLogin = document.getElementById("myVS1VideoLogin");
+      //var myVS1VideoLogin = document.getElementById("myVS1VideoLogin");
 
-       if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+       //if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 
-       }else{
+       //}else{
          myVS1Video.pause();
-	       myVS1VideoLogin.pause();
-       };
+	       // myVS1VideoLogin.pause();
+       //};
   };
 
     /* ERP Licence Info */
@@ -811,7 +811,7 @@ Template.vs1login.onRendered(function () {
                     $('.loginSpinner').css('display', 'none');
                     $('.fullScreenSpin').css('display', 'none');
                 } else{
-                  await delay(500);
+                  // await delay(500);
                   pausevideo();
                   $('.myVS1Video').css('display', 'none');
                   $('.myVS1VideoLogin').css('display', 'none');
@@ -1582,26 +1582,32 @@ Template.vs1login.onRendered(function () {
                 }
                 return (a.description.toLowerCase() > b.description.toLowerCase()) ? 1 : -1;
             });
-            if(isSetupWizard == true){
-              if (isAppointmentScheduling == true) {
-                  if (isAllocationLaunch == true) {
-                      window.open('/appointments#allocationModal', '_self');
-                    //   FlowRouter.go('/appointments#allocationModal');
-                    //   FlowRouter.go('/appointments');
-                  } else if (isAppointmentLaunch == true) {
-                    //   FlowRouter.go('/appointments');
-                      window.open('/appointments', '_self');
-                  } else {
-                    //   FlowRouter.go('/dashboard');
-                      window.open('/dashboard', '_self');
-                  }
-              } else {
-                //   FlowRouter.go('/dashboard');
-                  window.open('/dashboard', '_self');
-              }
-            }else{
-              handleSetupRedirection();
-            };
+
+            var vid = document.getElementById('myVS1Video');
+            //vid.addEventListener('ended', function(e) {
+            setTimeout(function(){
+              if(isSetupWizard == true){
+                if (isAppointmentScheduling == true) {
+                    if (isAllocationLaunch == true) {
+                        window.open('/appointments#allocationModal', '_self');
+                      //   FlowRouter.go('/appointments#allocationModal');
+                      //   FlowRouter.go('/appointments');
+                    } else if (isAppointmentLaunch == true) {
+                      //   FlowRouter.go('/appointments');
+                        window.open('/appointments', '_self');
+                    } else {
+                      //   FlowRouter.go('/dashboard');
+                        window.open('/dashboard', '_self');
+                    }
+                } else {
+                  //   FlowRouter.go('/dashboard');
+                    window.open('/dashboard', '_self');
+                }
+              }else{
+                handleSetupRedirection();
+              };
+              }, delayTimeAfterSound);
+             //}, false);
 
 
         } else {
@@ -1939,7 +1945,7 @@ Template.vs1login.onRendered(function () {
         e.preventDefault();
         /* VS1 Licence Info */
         var myVS1Video = document.getElementById("myVS1Video");
-        var myVS1VideoLogin = document.getElementById("myVS1VideoLogin");
+        // var myVS1VideoLogin = document.getElementById("myVS1VideoLogin");
 
         let licenceitemsoption = [];
         let licenceitemsObj = {};
@@ -2018,14 +2024,17 @@ Template.vs1login.onRendered(function () {
 
             let test = "";
             let isValidateEmailCheck = false;
-            if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-
-            }else{
+            // if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+            //
+            // }else{
+            //
+            //   //$('.fullScreenSpin').css('display','inline-block');
+            //   myVS1Video.currentTime = 0;
+            //   myVS1Video.play();
+            // };
               $('.myVS1Video').css('display', 'inline-block');
-              //$('.fullScreenSpin').css('display','inline-block');
               myVS1Video.currentTime = 0;
               myVS1Video.play();
-            };
               var serverTest = URLRequest + licenceIPAddress + ':' + checkSSLPorts + '/erpapi/Vs1_Logon?Vs1UserName="' + userLoginEmail + '"&vs1Password="' + userLoginPassword + '"';
               var oReq = new XMLHttpRequest();
               oReq.open("GET", serverTest, true);

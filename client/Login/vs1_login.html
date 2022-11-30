@@ -61,13 +61,15 @@
                 });
             });
         </script>
-        <video preload="none" id="myVS1Video" muted playsinline class="myVS1Video" style="display:none">
+        <!-- <video preload="none" id="myVS1Video" muted playsinline class="myVS1Video" style="display:none">
             <source src="vs1cloudsoftware.mp4" type="video/mp4">
-        </video>
+        </video> -->
 
         <video preload="none" id="myVS1VideoLogin" muted playsinline class="myVS1VideoLogin" style="display:none">
             <source src="vs1cloudsoftwarelogin.mp4" type="video/mp4">
         </video>
+
+        {{> vs1_login_video src="VS1_Intro.mp4"}}
 
         <form data-form-type="request" accept-charset="UTF-8" action="" id="formlogin" method="POST" style="background-color: rgba(255,255,255,0.78);width: 360px;max-width: 360px;filter: saturate(100%);">
             <h1 class="text-center" style="color: #00a3d3;font-size: 25px;line-height: 30px;">VS1 Cloud Sandbox</h1>

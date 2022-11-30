@@ -53,6 +53,7 @@ openDb = function(dbName) {
             db.createObjectStore("TDeptClassList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TDepartment", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TCurrency", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TCurrencyList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TLeadStatusType", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TLeadStatusTypeList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TShippingMethod", { keyPath: "EmployeeEmail" });

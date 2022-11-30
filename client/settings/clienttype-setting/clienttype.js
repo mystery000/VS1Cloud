@@ -106,7 +106,7 @@ Template.clienttypesettings.events({
         let clientTypeId = $('#edtClientTypeID').val();
 
         let objDetails = {
-            type: "TClientTypeList",
+            type: "TClientType",
             fields: {
                 Id: clientTypeId,
                 Active: false
@@ -156,7 +156,7 @@ Template.clienttypesettings.events({
         } else {
             if(id == "") {
             objDetails = {
-                type: "TClientTypeList",
+                type: "TClientType",
                 fields: {
                     TypeName: custType,
                     TypeDescription: typeDesc,
@@ -165,7 +165,7 @@ Template.clienttypesettings.events({
             }
         } else {
                 objDetails = {
-                type: "TClientTypeList",
+                type: "TClientType",
                 fields: {
                     Id: id,
                     TypeName: custType,
@@ -176,7 +176,7 @@ Template.clienttypesettings.events({
             }
             }
             objDetails = {
-                type: "TClientTypeList",
+                type: "TClientType",
                 fields: {
                     TypeName: custType,
                     TypeDescription: typeDesc,
@@ -378,7 +378,7 @@ Template.clienttypesettings.events({
                         for (let i = 0; i < results.data.length - 1; i++) {
                             typeDesc = results.data[i + 1][1] !== undefined ? results.data[i + 1][1] : '';
                             objDetails = {
-                                type: "TClientTypeList",
+                                type: "TClientType",
                                 fields: {
                                     TypeName: results.data[i + 1][0],
                                     TypeDescription: typeDesc || '',
