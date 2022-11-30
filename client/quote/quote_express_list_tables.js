@@ -18,12 +18,13 @@ Template.quoteslist.onCreated(function(){
     templateObject.custfields = new ReactiveVar([]);
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+    templateObject.convertedStatus = new ReactiveVar();
 });
 
 Template.quoteslist.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
-
+    templateObject.convertedStatus.set(FlowRouter.current().queryParams.converted == 'true' ? "Converted" : "Unconverted");
 
     // set initial table rest_data
     function init_reset_data() {
@@ -2343,6 +2344,10 @@ Template.quoteslist.helpers({
     displayfields: () => {
       return Template.instance().displayfields.get();
     },
+
+    convertedStatus: () => {
+      return Template.instance().convertedStatus.get();
+    }
 });
 
 Template.quoteslist.events({
