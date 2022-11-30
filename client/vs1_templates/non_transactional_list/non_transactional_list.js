@@ -135,10 +135,9 @@ Template.non_transactional_list.onRendered(function() {
                     { index: 1, label: 'Type Name', class: 'colTypeName', active: true, display: true, width: "200" },
                     { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
                     { index: 3, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "200" },
-                    { index: 4, label: 'Default Accounts', class: 'colDefaultAccount', active: false, display: true, width: "250" },
+                    { index: 4, label: 'Default Accounts', class: 'colDefaultAccount', active: false, display: true, width: "200" },
                     { index: 5, label: 'Grace Period', class: 'colGracePeriodtus', active: false, display: true, width: "100" },
-                    { index: 6, label: 'Terms', class: 'colTermsID', active: false, display: true, width: "100" },
-                    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+                    { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
                   ];
           }
           else if(currenttablename == "tblLeadStatusList") { //Done Something Here
@@ -282,25 +281,25 @@ Template.non_transactional_list.onRendered(function() {
     templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
-      getVS1Data("VS1_Customize").then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              templateObject.showCustomFieldDisplaySettings(reset_data);
-          }).catch(function (err) {
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          if(data.ProcessLog.Obj.CustomLayout.length > 0){
-           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-               templateObject.showCustomFieldDisplaySettings(reset_data);
-             }
-           }
-         };
-        }
-      });
+      // getVS1Data("VS1_Customize").then(function (dataObject) {
+      //   if (dataObject.length == 0) {
+      //     sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+      //         reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+      //         templateObject.showCustomFieldDisplaySettings(reset_data);
+      //     }).catch(function (err) {
+      //     });
+      //   } else {
+      //     let data = JSON.parse(dataObject[0].data);
+      //     if(data.ProcessLog.Obj.CustomLayout.length > 0){
+      //      for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+      //        if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+      //          reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+      //          templateObject.showCustomFieldDisplaySettings(reset_data);
+      //        }
+      //      }
+      //    };
+      //   }
+      // });
 
     } catch (error) {
 
@@ -2255,25 +2254,28 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
         let lineItems = [];
         let lineItemObj = {};
         let deleteFilter = false;
-        if(data.Params.Search.replace(/\s/g, "") == ""){
-          deleteFilter = true;
-        }else{
-          deleteFilter = false;
-        };
+        // if(data.Params.Search.replace(/\s/g, "") == ""){
+        //   deleteFilter = true;
+        // }else{
+        //   deleteFilter = false;
+        // };
 
-        for (let i = 0; i < data.tclienttypelist.length; i++) {
+        for (let i = 0; i < data.tclienttype.length; i++) {
           let mobile = "";
           //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
           let linestatus = '';
-          if (data.tclienttypelist[i].Active == true) {
+          if (data.tclienttype[i].fields.Active == true) {
               linestatus = "";
-          } else if (data.tclienttypelist[i].Active == false) {
+          } else if (data.tclienttype[i].fields.Active == false) {
               linestatus = "In-Active";
           };
           var dataList = [
-            data.tclienttypelist[i].ID || "",
-            data.tclienttypelist[i].TypeDescription || "",
-            data.tclienttypelist[i].TypeDescription || "",
+            data.tclienttype[i].fields.ID || "",
+            data.tclienttype[i].fields.TypeName || "",
+            data.tclienttype[i].fields.TypeDescription || "",
+            data.tclienttype[i].fields.CreditLimit || 0.0,
+            data.tclienttype[i].fields.DefaultPostAccount || "",
+            data.tclienttype[i].fields.GracePeriod || "",
             linestatus
           ];
 
@@ -2318,7 +2320,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     {
                       targets: 4,
                       className: "colDefaultAccount hiddenColumn",
-                      width: "250px",
+                      width: "200px",
                     },
                     {
                       targets: 5,
@@ -2327,11 +2329,6 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     },
                     {
                       targets: 6,
-                      className: "colTermsID hiddenColumn",
-                      width: "100px",
-                    },
-                    {
-                      targets: 7,
                       className: "colStatus",
                       width: "100px",
                     }
@@ -2404,25 +2401,26 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
                     sideBarService.getClientTypeDataList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
 
-                    for (let j = 0; j < dataObjectnew.clienttypelist.length; j++) {
-                      let mobile = sideBarService.changeDialFormat(dataObjectnew.clienttypelist[j].Mobile, dataObjectnew.clienttypelist[j].Country);
+                    for (let j = 0; j < dataObjectnew.tclienttype.fields.length; j++) {
+                      let mobile = sideBarService.changeDialFormat(dataObjectnew.tclienttype[j].fields.Mobile, dataObjectnew.tclienttype[j].fields.Country);
                       let linestatus = '';
-                      if (dataObjectnew.clienttypelist[j].Active == true) {
+                      if (dataObjectnew.tclienttype[j].fields.Active == true) {
                           linestatus = "";
-                      } else if (dataObjectnew.clienttypelist[j].Active == false) {
+                      } else if (dataObjectnew.tclienttype[j].fields.Active == false) {
                           linestatus = "In-Active";
                       };
 
-
                         var dataListDupp = [
-                          dataObjectnew.clienttypelist[j].ID || "",
-                          dataObjectnew.clienttypelist[j].TypeDescription || "",
-                          dataObjectnew.clienttypelist[j].TypeDescription || "",
+                          dataObjectnew.tclienttype[j].fields.ID || "",
+                          dataObjectnew.tclienttype[j].fields.TypeName || "",
+                          dataObjectnew.tclienttype[j].fields.TypeDescription || "",
+                          dataObjectnew.tclienttype[j].fields.CreditLimit || 0.0,
+                          dataObjectnew.tclienttype[j].fields.DefaultPostAccount || "",
+                          dataObjectnew.tclienttype[j].fields.GracePeriod || "",
                           linestatus
                         ];
 
                         splashArrayClientTypeList.push(dataListDupp);
-                        //}
                     }
                     let uniqueChars = [...new Set(splashArrayClientTypeList)];
                     templateObject.transactiondatatablerecords.set(uniqueChars);
@@ -2447,7 +2445,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 },
                 language: { search: "",searchPlaceholder: "Search List..." },
                 "fnInitComplete": function (oSettings) {
-                      if(data.Params.Search.replace(/\s/g, "") == ""){
+                      if(deleteFilter){
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
                       }else{
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
@@ -2455,9 +2453,9 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                       $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.Params.Count || 0; //get count from API data
-
-                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                    // let countTableData = data.Params.Count || 0; //get count from API data
+                    //
+                    // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
 
             }).on('page', function () {
