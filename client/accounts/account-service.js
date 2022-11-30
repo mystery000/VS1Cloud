@@ -194,6 +194,13 @@ export class AccountService extends BaseService {
         };
         return this.getList(this.ERPObjects.TAccountVS1, options);
     }
+    getOneAccountById(dataSearchId) {
+        let options = {
+            ListType: "Detail",
+            select: '[ID]="' + dataSearchId + '"'
+        };
+        return this.getList(this.ERPObjects.TAccountVS1, options);
+    }
 
     getAllJournalEnrtryLinesList() {
         let options = {
