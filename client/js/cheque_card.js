@@ -3915,7 +3915,7 @@ Template.chequecard.onRendered(() => {
       var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
       var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
       var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
-      
+
       $("#tblChequeLine > tbody > tr").each(function () {
         var lineID = this.id;
         let tdaccount = $("#" + lineID + " .lineAccountName").val();
@@ -4273,7 +4273,7 @@ Template.chequecard.onRendered(() => {
       } else {
           $(".subtotal3").show();
       }
-      
+
       $("#templatePreviewModal #subtotal_totalPrint3").text(
           object_invoce[0]["subtotal"]
       );
@@ -4431,14 +4431,14 @@ Template.chequecard.onRendered(() => {
               }
           });
         }
-        
+
       });
-      
+
       html2pdf().set(opt).from(source).save().then(function (dataObject) {
           if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
               // $(".btnSave").trigger("click");
           } else {
-              
+
           }
           $('#html-2-pdfwrapper').css('display', 'none');
           $("#html-2-pdfwrapper_quotes").hide();
@@ -4952,7 +4952,6 @@ Template.chequecard.events({
       if (getso_id[1]) {
         currentInvoice = parseInt(currentInvoice);
         var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
-        console.log(chequeData);
         var selectedType = chequeData.fields.CustField7;
         var frequencyVal = chequeData.fields.CustField8;
         var startDate = chequeData.fields.CustField9;
@@ -5284,11 +5283,11 @@ Template.chequecard.events({
                           var myArrResponse = JSON.parse(oPost.responseText);
                           var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                       } else if (oPost.readyState == 4 && oPost.status == 403) {
-                          
+
                       } else if (oPost.readyState == 4 && oPost.status == 406) {
-                          
+
                       } else if (oPost.readyState == "") {
-                          
+
                       }
                       $(".fullScreenSpin").css("display", "none");
                   };
@@ -5371,11 +5370,11 @@ Template.chequecard.events({
                     var myArrResponse = JSON.parse(oPost.responseText);
                     var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                 } else if (oPost.readyState == 4 && oPost.status == 403) {
-                    
+
                 } else if (oPost.readyState == 4 && oPost.status == 406) {
-                    
+
                 } else if (oPost.readyState == "") {
-                    
+
                 }
                 $(".fullScreenSpin").css("display", "none");
             };
@@ -6417,7 +6416,7 @@ Template.chequecard.events({
       } else {
         $("#btn_follow2").css("display", "none");
       }
-    }    
+    }
     times++;
 
     if (times == 1) {

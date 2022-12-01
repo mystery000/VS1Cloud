@@ -2177,9 +2177,6 @@ Template.bankrecon.events({
             };
         }
 
-        console.log("objDetails=", objDetails);
-
-
         reconService.saveReconciliation(objDetails).then(function(data) {
             FlowRouter.go('/reconciliationlist?success=true');
             localStorage.setItem("reconHoldState", "false");
