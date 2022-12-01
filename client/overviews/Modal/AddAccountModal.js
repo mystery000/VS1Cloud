@@ -958,10 +958,12 @@ Template.addAccountModal.events({
             const cancel = document.querySelector('.btn-apca-cancel')
         
             employee.addEventListener('click', () => {
+                FlowRouter.go('/employeescard');
                 swal.close();
             })
         
             supplier.addEventListener('click', () => {
+                FlowRouter.go('/supplierscard');
                 swal.close();
             })
         
