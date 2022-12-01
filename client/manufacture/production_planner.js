@@ -462,7 +462,8 @@ Template.production_planner.events({
     },
 
     'click .btn-print-event': function(event) {
-        document.title = 'Product BOM Setup';
+        document.title = 'Work order detail';
+        
         $(".eventInfo .eventDetail").print({
             // title   :  document.title +" | Product Sales Report | "+loggedCompany,
             // noPrintSelector : ".btnAddProduct",
@@ -578,6 +579,18 @@ Template.production_planner.events({
             templateObject.calendar.set(newCalendar)
         }
 
+    },
+
+    'click .btnPrintWorkSheet': function(event) {
+        document.title = 'production planner worksheet';
+        
+        $(".productionPlannerTable").print({
+            // title   :  document.title +" | Product Sales Report | "+loggedCompany,
+            // noPrintSelector : ".btnAddProduct",
+            // noPrintSelector : ".btnAddSubProduct",
+            // noPrintSelector : ".btn-remove-raw",
+            // noPrintSelector : ".btnAddAttachment",
+        });
     }
 })
 
