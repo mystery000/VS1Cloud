@@ -73,6 +73,7 @@ Template.eftOptionsModal.events({
         let accountService = new AccountService();
         accountService.saveAccount(data).then(function (data) {
           $(".fullScreenSpin").css("display", "none");
+          $('#eftOptionsModal').modal('hide');
         }).catch(function (err) {
           swal({
             title: "Oooops...",
