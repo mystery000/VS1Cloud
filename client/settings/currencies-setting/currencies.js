@@ -318,7 +318,7 @@ Template.currenciessettings.onRendered(function () {
               ],
               select: true,
               destroy: true,
-              colReorder: true,
+              // colReorder: true,
               length: 25,
               colReorder: {
                 fixedColumnsRight: 1
@@ -484,7 +484,7 @@ Template.currenciessettings.onRendered(function () {
             ],
             select: true,
             destroy: true,
-            colReorder: true,
+            // colReorder: true,
             colReorder: {
               fixedColumnsRight: 1
             },
@@ -650,7 +650,7 @@ Template.currenciessettings.onRendered(function () {
             ],
             select: true,
             destroy: true,
-            colReorder: true,
+            // colReorder: true,
             colReorder: {
               fixedColumnsRight: 1
             },
@@ -1426,7 +1426,19 @@ export const updateAllCurrencies = (employeeId,
   }) => {
   // let completeCount = 0;
   // let completeCountEnd = 1;
-  LoadingOverlay.show();
+
+  // LoadingOverlay.show();
+  const loadingUpdate = swal({
+    title: "Update in progress",
+    text: "Downloading currencies",
+    // text: "Do you wish to add an account ?",
+    allowEscapeKey: false,
+    allowOutsideClick: false,
+    onOpen: () => {
+      swal.showLoading();
+    }
+  });
+
   // we need to get all currencies and update them all
   const taxRateService = new TaxRateService();
   // taxRateService.getCurrencies().then(data => {
@@ -1453,23 +1465,21 @@ export const updateAllCurrencies = (employeeId,
      */
     let currencies = result.tcurrency;
 
+    swal.getContent().textContent = "Syncing to XE.com";
+
     // get all rates from xe currency
     FxApi.getAllRates({
       from: defaultCurrencyCode,
       callback: async response => {
+
+        if (response === false) {
+          loadingUpdate.close();
+          return;
+        }
         /**
          * List of Xe currencies
          */
         const xeCurrencies = response.to;
-
-        const result = await swal({
-          title: "Update in progress",
-         // text: "Do you wish to add an account ?",
-          type: "success",
-          showCancelButton: false,
-          confirmButtonText: "Ok",
-        });
-
         // if (result.value) {
         // } else if (result.dismiss === "cancel") {
         // }
@@ -1488,8 +1498,11 @@ export const updateAllCurrencies = (employeeId,
           });
         });
 
+        swal.getContent().textContent = "Save currencies";
+
         // Now we need to save this
         await FxApi.saveCurrencies(formatedList, async (response, error) => {
+          loadingUpdate.close();
           if(response) {
             LoadingOverlay.hide();
             await onSuccess();
