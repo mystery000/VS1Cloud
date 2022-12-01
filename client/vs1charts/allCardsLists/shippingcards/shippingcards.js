@@ -25,7 +25,6 @@ Template.shippingcards.onCreated(function() {
 });
 
 Template.shippingcards.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let accountService = new AccountService();
     const customerList = [];
@@ -41,7 +40,7 @@ Template.shippingcards.onRendered(function() {
 
     function onScanSuccess(decodedText, decodedResult) {
         //document.getElementById("barcodeScanInput").value = decodedText;
-        $('.fullScreenSpin').css('display', 'inline-block');
+
         var barcode = decodedText.toUpperCase();
         $('#scanBarcodeModalShippingOverview').modal('toggle');
         if (barcode != '') {

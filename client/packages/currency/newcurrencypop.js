@@ -27,30 +27,6 @@ Template.newcurrencypop.onRendered(function () {
   var countryService = new CountryService();
   let countries = [];
 
-  Meteor.call(
-    "readPrefMethod",
-    Session.get("mycloudLogonID"),
-    "tblCurrencyPopList",
-    function (error, result) {
-      if (error) {
-      } else {
-        if (result) {
-          for (let i = 0; i < result.customFields.length; i++) {
-            let customcolumn = result.customFields;
-            let columData = customcolumn[i].label;
-            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-            let hiddenColumn = customcolumn[i].hidden;
-            let columnClass = columHeaderUpdate.split(".")[1];
-            let columnWidth = customcolumn[i].width;
-
-            $("th." + columnClass + "").html(columData);
-            $("th." + columnClass + "").css("width", "" + columnWidth + "px");
-          }
-        }
-      }
-    }
-  );
-
   function MakeNegative() {
     $("td").each(function () {
       if (
@@ -61,6 +37,56 @@ Template.newcurrencypop.onRendered(function () {
         $(this).addClass("text-danger");
     });
   }
+
+  $("#tblCurrencyList tbody").on(
+    "click",
+    "tr .colCode, tr .colCurrency, tr .colSymbol, tr .colBuyRate, tr .colSellRate, tr .colCountry, tr .colRateLastModified, tr .colDescription",
+    function () {
+      var listData = $(this).closest("tr").attr("id");
+      if (listData) {
+        $("#add-currency-title").text("Edit Currency");
+        $("#sedtCountry").prop("readonly", true);
+        if (listData !== "") {
+          listData = Number(listData);
+          //taxRateService.getOneCurrency(listData).then(function (data) {
+
+          var currencyid = listData || "";
+          var country =
+            $(event.target).closest("tr").find(".colCountry").text() || "";
+          var currencyCode =
+            $(event.target).closest("tr").find(".colCode").text() || "";
+          var currencySymbol =
+            $(event.target).closest("tr").find(".colSymbol").text() || "";
+          var currencyName =
+            $(event.target).closest("tr").find(".colCurrency").text() || "";
+          var currencyDesc =
+            $(event.target).closest("tr").find(".colDescription").text() || "";
+          var currencyBuyRate =
+            $(event.target).closest("tr").find(".colBuyRate").text() || 0;
+          var currencySellRate =
+            $(event.target).closest("tr").find(".colSellRate").text() || 0;
+          //data.fields.Rate || '';
+          $("#edtCurrencyID").val(currencyid);
+          $("#sedtCountry").val(country);
+          $("#sedtCountry").attr("readonly", true);
+          $("#sedtCountry").attr("disabled", "disabled");
+          $("#currencyCode").val(currencyCode);
+          $("#currencySymbol").val(currencySymbol);
+          $("#edtCurrencyName").val(currencyName);
+          $("#edtCurrencyDesc").val(currencyDesc);
+          $("#edtBuyRate").val(currencyBuyRate);
+          $("#edtSellRate").val(currencySellRate);
+          $('#newcurrencypop').modal('show');
+          //Make btnDelete "Make Active or In-Active"
+          if(status == "In-Active"){
+              $('#view-in-active').html("<button class='btn btn-success btnActivateCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
+          }else{
+              $('#view-in-active').html("<button class='btn btn-danger btnDeleteCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
+          }
+        }
+      }
+    }
+  );
 
   templateObject.getTaxRates = function () {
     getVS1Data("TCurrency")
@@ -74,15 +100,15 @@ Template.newcurrencypop.onRendered(function () {
               for (let i = 0; i < data.tcurrency.length; i++) {
                 // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
                 var dataList = {
-                  id: data.tcurrency[i].Id || "",
+                  id: data.tcurrency[i].ID || "",
                   code: data.tcurrency[i].Code || "N/A",
                   currency: data.tcurrency[i].Currency || "N/A",
                   symbol: data.tcurrency[i].CurrencySymbol || currencySymbolEmpty,
                   buyrate: data.tcurrency[i].BuyRate || "-",
                   sellrate: data.tcurrency[i].SellRate || "-",
                   country: data.tcurrency[i].Country || "N/A",
-                  description: data.tcurrency[i].CurrencyDesc || "N/A",
                   ratelastmodified: data.tcurrency[i].RateLastModified || "-",
+                  description: data.tcurrency[i].CurrencyDesc || "N/A",
                 };
 
                 dataTableList.push(dataList);
@@ -95,7 +121,7 @@ Template.newcurrencypop.onRendered(function () {
                 Meteor.call(
                   "readPrefMethod",
                   Session.get("mycloudLogonID"),
-                  "tblCurrencyPopList",
+                  "tblCurrencyList",
                   function (error, result) {
                     if (error) {
                     } else {
@@ -133,7 +159,7 @@ Template.newcurrencypop.onRendered(function () {
 
               $(".fullScreenSpin").css("display", "none");
               // setTimeout(function() {
-              //     $('#tblCurrencyPopList').DataTable({
+              //     $('#tblCurrencyList').DataTable({
               //         columnDefs: [{
               //                 type: 'date',
               //                 targets: 0
@@ -182,7 +208,7 @@ Template.newcurrencypop.onRendered(function () {
               //             [0, "asc"]
               //         ],
               //         action: function() {
-              //             $('#tblCurrencyPopList').DataTable().ajax.reload();
+              //             $('#tblCurrencyList').DataTable().ajax.reload();
               //         },
               //         "fnDrawCallback": function(oSettings) {
               //             setTimeout(function() {
@@ -190,7 +216,7 @@ Template.newcurrencypop.onRendered(function () {
               //             }, 100);
               //         },
               //         "fnInitComplete": function() {
-              //             $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#newCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyPopList_filter");
+              //             $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#newCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyList_filter");
               //         },
               //
               //     }).on('page', function() {
@@ -207,11 +233,11 @@ Template.newcurrencypop.onRendered(function () {
               //         }, 100);
               //     });
               //
-              //     // $('#tblCurrencyPopList').DataTable().column( 0 ).visible( true );
+              //     // $('#tblCurrencyList').DataTable().column( 0 ).visible( true );
               //     $('.fullScreenSpin').css('display', 'none');
               // }, 0);
 
-              var columns = $("#tblCurrencyPopList th");
+              var columns = $("#tblCurrencyList th");
               let sTible = "";
               let sWidth = "";
               let sIndex = "";
@@ -279,7 +305,7 @@ Template.newcurrencypop.onRendered(function () {
 
           $(".fullScreenSpin").css("display", "none");
           setTimeout(function () {
-            // $('#tblCurrencyPopList').DataTable({
+            // $('#tblCurrencyList').DataTable({
             //     columnDefs: [
             //         // {type: 'date', targets: 0},
             //         // { "orderable": false, "targets": -1 }
@@ -325,7 +351,7 @@ Template.newcurrencypop.onRendered(function () {
             //         [0, "asc"]
             //     ],
             //     action: function() {
-            //         $('#tblCurrencyPopList').DataTable().ajax.reload();
+            //         $('#tblCurrencyList').DataTable().ajax.reload();
             //     },
             //     "fnDrawCallback": function(oSettings) {
             //         setTimeout(function() {
@@ -333,7 +359,7 @@ Template.newcurrencypop.onRendered(function () {
             //         }, 100);
             //     },
             //     "fnInitComplete": function() {
-            //         $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#newCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyPopList_filter");
+            //         $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#newCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyList_filter");
             //     },
             //
             // }).on('page', function() {
@@ -350,11 +376,11 @@ Template.newcurrencypop.onRendered(function () {
             //     }, 100);
             // });
 
-            // $('#tblCurrencyPopList').DataTable().column( 0 ).visible( true );
+            // $('#tblCurrencyList').DataTable().column( 0 ).visible( true );
             $(".fullScreenSpin").css("display", "none");
           }, 0);
 
-          var columns = $("#tblCurrencyPopList th");
+          var columns = $("#tblCurrencyList th");
           let sTible = "";
           let sWidth = "";
           let sIndex = "";
@@ -415,7 +441,7 @@ Template.newcurrencypop.onRendered(function () {
               Meteor.call(
                 "readPrefMethod",
                 Session.get("mycloudLogonID"),
-                "tblCurrencyPopList",
+                "tblCurrencyList",
                 function (error, result) {
                   if (error) {
                   } else {
@@ -452,7 +478,7 @@ Template.newcurrencypop.onRendered(function () {
 
             $(".fullScreenSpin").css("display", "none");
             // setTimeout(function() {
-            //     $('#tblCurrencyPopList').DataTable({
+            //     $('#tblCurrencyList').DataTable({
             //         columnDefs: [{
             //                 type: 'date',
             //                 targets: 0
@@ -501,7 +527,7 @@ Template.newcurrencypop.onRendered(function () {
             //             [0, "asc"]
             //         ],
             //         action: function() {
-            //             $('#tblCurrencyPopList').DataTable().ajax.reload();
+            //             $('#tblCurrencyList').DataTable().ajax.reload();
             //         },
             //         "fnDrawCallback": function(oSettings) {
             //             setTimeout(function() {
@@ -509,7 +535,7 @@ Template.newcurrencypop.onRendered(function () {
             //             }, 100);
             //         },
             //         "fnInitComplete": function() {
-            //             $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#newCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyPopList_filter");
+            //             $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#newCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyList_filter");
             //         },
             //
             //     }).on('page', function() {
@@ -526,11 +552,11 @@ Template.newcurrencypop.onRendered(function () {
             //         }, 100);
             //     });
             //
-            //     // $('#tblCurrencyPopList').DataTable().column( 0 ).visible( true );
+            //     // $('#tblCurrencyList').DataTable().column( 0 ).visible( true );
             //     $('.fullScreenSpin').css('display', 'none');
             // }, 0);
 
-            var columns = $("#tblCurrencyPopList th");
+            var columns = $("#tblCurrencyList th");
             let sTible = "";
             let sWidth = "";
             let sIndex = "";
@@ -611,7 +637,7 @@ Template.newcurrencypop.onRendered(function () {
     $("#deleteLineModal").modal("toggle");
   });
 
-  $("#tblCurrencyPopList tbody").on(
+  $("#tblCurrencyList tbody").on(
     "click",
     "tr .colCode, tr .colCurrency, tr .colSymbol, tr .colBuyRate, tr .colSellRate, tr .colCountry, tr .colRateLastModified, tr .colDescription",
     function () {
@@ -682,7 +708,7 @@ Template.newcurrencypop.events({
         /**
          * Let's call the Fx APis here
          */
-        
+
         for (let i = 0; i < data.tcurrency.length; i++) {
           if (data.tcurrency[i].Country === selectCountry) {
             var currencyid = data.tcurrency[i].Id || "";
@@ -728,7 +754,7 @@ Template.newcurrencypop.events({
     // FlowRouter.go('/invoicecard');
   },
   "click .chkDatatable": function (event) {
-    var columns = $("#tblCurrencyPopList th");
+    var columns = $("#tblCurrencyList th");
     let columnDataValue = $(event.target)
       .closest("div")
       .find(".divcolumn")
@@ -761,7 +787,7 @@ Template.newcurrencypop.events({
         var clientEmail = getcurrentCloudDetails.cloudEmail;
         var checkPrefDetails = CloudPreference.findOne({
           userid: clientID,
-          PrefName: "tblCurrencyPopList",
+          PrefName: "tblCurrencyList",
         });
         if (checkPrefDetails) {
           CloudPreference.remove(
@@ -814,7 +840,7 @@ Template.newcurrencypop.events({
         var clientEmail = getcurrentCloudDetails.cloudEmail;
         var checkPrefDetails = CloudPreference.findOne({
           userid: clientID,
-          PrefName: "tblCurrencyPopList",
+          PrefName: "tblCurrencyList",
         });
         if (checkPrefDetails) {
           CloudPreference.update(
@@ -827,7 +853,7 @@ Template.newcurrencypop.events({
                 username: clientUsername,
                 useremail: clientEmail,
                 PrefGroup: "salesform",
-                PrefName: "tblCurrencyPopList",
+                PrefName: "tblCurrencyList",
                 published: true,
                 customFields: lineItems,
                 updatedAt: new Date(),
@@ -848,7 +874,7 @@ Template.newcurrencypop.events({
               username: clientUsername,
               useremail: clientEmail,
               PrefGroup: "salesform",
-              PrefName: "tblCurrencyPopList",
+              PrefName: "tblCurrencyList",
               published: true,
               customFields: lineItems,
               createdAt: new Date(),
@@ -872,7 +898,7 @@ Template.newcurrencypop.events({
     let columnDatanIndex = $(event.target)
       .closest("div.columnSettings")
       .attr("id");
-    var datable = $("#tblCurrencyPopList").DataTable();
+    var datable = $("#tblCurrencyList").DataTable();
     var title = datable.column(columnDatanIndex).header();
     $(title).html(columData);
   },
@@ -892,7 +918,7 @@ Template.newcurrencypop.events({
       .prev()
       .find(".divcolumn")
       .text();
-    var datable = $("#tblCurrencyPopList th");
+    var datable = $("#tblCurrencyList th");
     $.each(datable, function (i, v) {
       if (v.innerText == columnDataValue) {
         let className = v.className;
@@ -903,7 +929,7 @@ Template.newcurrencypop.events({
   },
   "click .btnOpenSettings": function (event) {
     let templateObject = Template.instance();
-    var columns = $("#tblCurrencyPopList th");
+    var columns = $("#tblCurrencyList th");
 
     const tableHeaderList = [];
     let sTible = "";
@@ -934,7 +960,7 @@ Template.newcurrencypop.events({
   },
   "click #exportbtn": function () {
     LoadingOverlay.show();
-    jQuery("#tblCurrencyPopList_wrapper .dt-buttons .btntabletocsv").click();
+    jQuery("#tblCurrencyList_wrapper .dt-buttons .btntabletocsv").click();
     $(".fullScreenSpin").css("display", "none");
   },
   "click .btnRefresh": function () {
@@ -1024,13 +1050,19 @@ Template.newcurrencypop.events({
     $("#edtCurrencyName").val("");
     $("#edtBuyRate").val(1);
     $("#edtSellRate").val(1);
+    //Make btnDelete "Make Active or In-Active"
+    if(status == "In-Active"){
+        $('#view-in-active').html("<button class='btn btn-success btnActivateCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
+    }else{
+        $('#view-in-active').html("<button class='btn btn-danger btnDeleteCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
+    }
   },
 
   "click .newcurrencypop .btnSaveCurrency": function () {
     playSaveAudio();
     let taxRateService = new TaxRateService();
     setTimeout(function(){
-    
+
     LoadingOverlay.show();
     var currencyid = $("#edtCurrencyID").val();
     var country = $("#sedtCountry").val();
@@ -1040,6 +1072,12 @@ Template.newcurrencypop.events({
     var currencyDesc = $("#edtCurrencyDesc").val();
     var currencyBuyRate = $("#edtBuyRate").val() || 0;
     var currencySellRate = $("#edtSellRate").val() || 0;
+    //Make btnDelete "Make Active or In-Active"
+    if(status == "In-Active"){
+        $('#view-in-active').html("<button class='btn btn-success btnActivateCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
+    }else{
+        $('#view-in-active').html("<button class='btn btn-danger btnDeleteCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
+    }
 
     let objDetails = "";
     if (currencyName === "") {
@@ -1151,7 +1189,7 @@ Template.newcurrencypop.helpers({
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
       userid: Session.get("mycloudLogonID"),
-      PrefName: "tblCurrencyPopList",
+      PrefName: "tblCurrencyList",
     });
   },
   countryList: () => {

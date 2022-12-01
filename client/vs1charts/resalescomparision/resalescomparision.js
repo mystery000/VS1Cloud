@@ -155,7 +155,7 @@ if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
         }
         }
         });
-    }, 1000)
+    }, 0)
   });
 
   function getInvSales(callback) {
@@ -318,7 +318,7 @@ if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
       }
       }
       });
-  }, 1000)
+  }, 0)
 }
 
   });

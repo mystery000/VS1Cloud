@@ -451,7 +451,7 @@ Template.monthlyprofitandloss.onRendered(() => {
                 },
               },
             });
-          }, 1000)
+          }, 0)
         });
     });
 
@@ -778,7 +778,7 @@ Template.monthlyprofitandloss.onRendered(() => {
           },
         },
       });
-    }, 1000)
+    }, 0)
   }
 
   templateObject.reAttachChart = function () {
@@ -1205,7 +1205,7 @@ Template.monthlyprofitandloss.onRendered(() => {
                   },
                 },
               });
-            }, 1000)
+            }, 0)
           });
       });
 

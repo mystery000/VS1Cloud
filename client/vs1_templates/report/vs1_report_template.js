@@ -67,16 +67,54 @@ Template.vs1_report_template.onRendered(function() {
     switch (currenttablename) {
       case "tblgeneralledger":
         reset_data = [
-          { index: 0, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "195" },
-          { index: 1, label: 'Account No', class:'colAccountNo', active: true, display: true, width: "86" },
-          { index: 2, label: 'Date', class:'colDate', active: true, display: true, width: "86" },
-          { index: 3, label: 'Client Name', class:'colClientName', active: true, display: true, width: "192" },
-          { index: 4, label: 'Type', class:'colType', active: true, display: true, width: "137" },
-          { index: 5, label: 'Debits', class:'colDebits', active: true, display: true, width: "85" },
-          { index: 6, label: 'Credit', class:'colCredit', active: true, display: true, width: "85" },
-          { index: 7, label: 'Amount', class:'colAmount', active: true, display: true, width: "85" },
+          { index: 1, label: 'Date', class:'colAccountNo', active: true, display: true, width: "" },
+          { index: 2, label: 'Account Name', class:'colDate', active: true, display: true, width: "" },
+          { index: 3, label: 'Type', class:'colClientName', active: true, display: true, width: "" },
+          { index: 4, label: 'Department', class:'colType', active: false, display: true, width: "" },
+          { index: 5, label: 'Debits (Ex)', class:'colDebits', active: false, display: true, width: "" },
+          { index: 6, label: 'Credits (Ex)', class:'colCredit', active: false, display: true, width: "" },
+          { index: 7, label: 'Debits (Inc)', class:'colDebits', active: true, display: true, width: "" },
+          { index: 8, label: 'Credits (Inc)', class:'colCredit', active: true, display: true, width: "" },
+          { index: 9, label: 'Amount (Ex)', class:'colDebits', active: true, display: true, width: "" },
+          { index: 10, label: 'Amount (Inc)', class:'colCredit', active: true, display: true, width: "" },
+          { index: 11, label: 'Product ID', class:'colCredit', active: false, display: true, width: "" },
+          { index: 12, label: 'Product Description', class:'colCredit', active: false, display: true, width: "" },
+          { index: 13, label: 'Client Name', class:'colCredit', active: true, display: true, width: "" },
+          { index: 14, label: 'Rep Name', class:'colCredit', active: false, display: true, width: "" },
+          { index: 15, label: 'Accounts', class:'colCredit', active: false, display: true, width: "" },
+          { index: 16, label: 'Global Ref', class:'colCredit', active: false, display: true, width: "" },
+          { index: 17, label: 'Account Number', class:'colCredit', active: true, display: true, width: "" },
+          { index: 18, label: 'Tax Code', class:'colCredit', active: false, display: true, width: "150" },
+          { index: 19, label: 'Tax Rate', class:'colCredit', active: false, display: true, width: "" },
+          { index: 20, label: 'Class ID', class:'colCredit', active: false, display: true, width: "" },
+          { index: 21, label: 'Sale ID', class:'colCredit', active: false, display: true, width: "" },
+          { index: 22, label: 'Purchase Order ID', class:'colCredit', active: false, display: true, width: "" },
+          { index: 23, label: 'Payment ID', class:'colCredit', active: false, display: true, width: "" },
+          { index: 24, label: 'Details', class:'colCredit', active: false, display: true, width: "" },
+          { index: 25, label: 'Account ID', class:'colCredit', active: false, display: true, width: "" },
+          { index: 26, label: 'FixedAsset ID', class:'colCredit', active: false, display: true, width: "" },
+          { index: 27, label: 'Check Number', class:'colCredit', active: false, display: true, width: "" },
+          { index: 28, label: 'Memo', class:'colCredit', active: false, display: true, width: "" },
+          { index: 29, label: 'Ref No', class:'colCredit', active: false, display: true, width: "" },
+          { index: 30, label: 'PrepaymentID', class:'colCredit', active: false, display: true, width: "" },
         ];
-      break;
+        break;
+      case "taxSummary":
+        reset_data = [
+          { index: 1, label: 'TaxCode', class:'colAccountName', active: true, display: true, width: "" },
+          { index: 2, label: 'INPUTS Ex (Purchases)', class:'colAccountName', active: true, display: true, width: "" },
+          { index: 3, label: 'INPUTS Inc (Purchases)', class:'colAccountName', active: true, display: true, width: "" },
+          { index: 4, label: 'OUTPUTS Ex  (Sales)', class:'colAccountName', active: true, display: true, width: "" },
+          { index: 5, label: 'OUTPUTS Inc (Sales)', class:'colAccountName', active: true, display: true, width: "" },
+          { index: 6, label: 'Total Net', class:'colAccountName', active: true, display: true, width: "" },
+          { index: 7, label: 'Total Tax', class:'colAccountName', active: true, display: true, width: "" },
+          { index: 8, label: 'TaxRate', class:'colAccountName', active: true, display: true, width: "" },
+          { index: 9, label: 'Total Tax1', class:'colAccountName', active: false, display: true, width: "" },
+          { index: 10, label: 'ID', class:'colAccountName', active: false, display: true, width: "" },
+        ]
+        break;
+      default:
+        break;
     }
     templateObject.reset_data.set(reset_data);
   }

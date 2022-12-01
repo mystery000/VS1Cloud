@@ -16437,7 +16437,7 @@ Template.appointments.events({
                     };
                     var result = await appointmentService.saveAppointment(objDetails);
 
-                    let period = 0;
+                    let period = ""; // 0
                     let days = [];
                     let i = 0;
                     let frequency2 = 0;
@@ -16450,8 +16450,10 @@ Template.appointments.events({
                         thursday: 0,
                         friday: 0,
                     };
+                    let repeatMonths = [];
+                    let repeatDates = [];
                     if (radioFrequency == "frequencyDaily" || radioFrequency == "frequencyOnetimeonly") {
-                        period = 0;
+                        period = "Daily"; // 0
                         if (radioFrequency == "frequencyDaily") {
                             frequency2 = parseInt(everyDays);
                             if (dailyRadioOption == "dailyEveryDay") {
@@ -16468,11 +16470,14 @@ Template.appointments.events({
 
                             }
                         } else {
+                            repeatDates.push({
+                                "Dates": sDate2
+                            })
                             frequency2 = 1;
                         }
                     }
                     if (radioFrequency == "frequencyWeekly") {
-                        period = 1;
+                        period = "Weekly"; // 1
                         frequency2 = parseInt(everyWeeks);
                         let arrSelectDays = selectDays.split(",");
                         for (i = 0; i < arrSelectDays.length; i++) {
@@ -16494,7 +16499,9 @@ Template.appointments.events({
                         }
                     }
                     if (radioFrequency == "frequencyMonthly") {
-                        period = 2;
+                        period = "Monthly"; // 0
+                        repeatMonths = convertStrMonthToNum(ofMonths);
+                        repeatDates = getRepeatDates(sDate2, fDate2, repeatMonths, monthDate);
                         frequency2 = parseInt(monthDate);
                     }
                     if (days.length > 0) {
@@ -16510,13 +16517,13 @@ Template.appointments.events({
                                     Repeat_BaseDate: sDate2,
                                     Repeat_finalDateDate: fDate2,
                                     Repeat_Saturday: weekdayObj.saturday,
-                                    Repeat_sunday: weekdayObj.sunday,
+                                    Repeat_Sunday: weekdayObj.sunday,
                                     Repeat_Monday: weekdayObj.monday,
                                     Repeat_Tuesday: weekdayObj.tuesday,
                                     Repeat_Wednesday: weekdayObj.wednesday,
                                     Repeat_Thursday: weekdayObj.thursday,
                                     Repeat_Friday: weekdayObj.friday,
-                                    Repeat_holiday: 0,
+                                    Repeat_Holiday: 0,
                                     Repeat_Weekday: parseInt(days[x].toString()),
                                     Repeat_MonthOffset: 0,
                                 },
@@ -16639,28 +16646,55 @@ Template.appointments.events({
                             };
                         }
                     } else {
-                        let dayObj = {
-                            Name: "VS1_RepeatAppointment",
-                            Params: {
-                                CloudUserName: erpGet.ERPUsername,
-                                CloudPassword: erpGet.ERPPassword,
-                                AppointID: currentAppt,
-                                Repeat_Frequency: frequency2,
-                                Repeat_Period: period,
-                                Repeat_BaseDate: sDate2,
-                                Repeat_finalDateDate: fDate2,
-                                Repeat_Saturday: weekdayObj.saturday,
-                                Repeat_sunday: weekdayObj.sunday,
-                                Repeat_Monday: weekdayObj.monday,
-                                Repeat_Tuesday: weekdayObj.tuesday,
-                                Repeat_Wednesday: weekdayObj.wednesday,
-                                Repeat_Thursday: weekdayObj.thursday,
-                                Repeat_Friday: weekdayObj.friday,
-                                Repeat_holiday: 0,
-                                Repeat_Weekday: 0,
-                                Repeat_MonthOffset: 0,
-                            },
-                        };
+                        let dayObj = {};
+                        if (radioFrequency == "frequencyOnetimeonly" || radioFrequency == "frequencyMonthly") {
+                            dayObj = {
+                                Name: "VS1_RepeatAppointment",
+                                Params: {
+                                    CloudUserName: erpGet.ERPUsername,
+                                    CloudPassword: erpGet.ERPPassword,
+                                    AppointID: currentAppt,
+                                    Repeat_Dates: repeatDates,
+                                    Repeat_Frequency: frequency2,
+                                    Repeat_Period: period,
+                                    Repeat_BaseDate: sDate2,
+                                    Repeat_finalDateDate: fDate2,
+                                    Repeat_Saturday: weekdayObj.saturday,
+                                    Repeat_Sunday: weekdayObj.sunday,
+                                    Repeat_Monday: weekdayObj.monday,
+                                    Repeat_Tuesday: weekdayObj.tuesday,
+                                    Repeat_Wednesday: weekdayObj.wednesday,
+                                    Repeat_Thursday: weekdayObj.thursday,
+                                    Repeat_Friday: weekdayObj.friday,
+                                    Repeat_Holiday: 0,
+                                    Repeat_Weekday: 0,
+                                    Repeat_MonthOffset: 0,
+                                },
+                            };
+                        } else {
+                            dayObj = {
+                                Name: "VS1_RepeatAppointment",
+                                Params: {
+                                    CloudUserName: erpGet.ERPUsername,
+                                    CloudPassword: erpGet.ERPPassword,
+                                    AppointID: currentAppt,
+                                    Repeat_Frequency: frequency2,
+                                    Repeat_Period: period,
+                                    Repeat_BaseDate: sDate2,
+                                    Repeat_finalDateDate: fDate2,
+                                    Repeat_Saturday: weekdayObj.saturday,
+                                    Repeat_Sunday: weekdayObj.sunday,
+                                    Repeat_Monday: weekdayObj.monday,
+                                    Repeat_Tuesday: weekdayObj.tuesday,
+                                    Repeat_Wednesday: weekdayObj.wednesday,
+                                    Repeat_Thursday: weekdayObj.thursday,
+                                    Repeat_Friday: weekdayObj.friday,
+                                    Repeat_Holiday: 0,
+                                    Repeat_Weekday: 0,
+                                    Repeat_MonthOffset: 0,
+                                },
+                            };
+                        }
                         var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
                         var oPost = new XMLHttpRequest();
                         oPost.open(
@@ -18684,6 +18718,7 @@ Template.appointments.events({
                         window.open("/appointments", "_self");
                     });
                 }, 1000);
+                // $("#newLeaveRequestModal").modal("toggle");
             }
         });
     },

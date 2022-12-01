@@ -432,6 +432,8 @@ Template.new_workorder.events({
                     }else {
                         resolve('')
                     }
+                }).catch(function(e) {
+                    resolve('')
                 })
             })
 

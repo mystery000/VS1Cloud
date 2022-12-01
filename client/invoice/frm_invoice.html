@@ -261,8 +261,7 @@
                             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                                 <div class="formgoup">
                                     <div class="form-group"><label>Customer</label>
-                                        <select type="search" class="form-control" id="edtCustomerName" name="edtCustomerName" custid=" " custtaxcode=" " style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                        </select>
+                                        {{> vs1_dropdown}}
                                     </div>
                                     <div>
                                         <span data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" id="customerType" name="customerType" class="customerType" style="margin-left: 2px;color: #17a673;"></span>
@@ -1043,10 +1042,10 @@
                             </div>
                             <div class="col-12 col-md-12">
                                 <div class="row justify-content-center desktopButtons">
-                                  <!-- {{# transaction_buttons_bottom margin="14px" }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                                  {{/transaction_buttons_bottom}} -->
-                                    {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
-                                    <!-- <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 14px;margin-top: 0px;width: 100px;">
+                                    <!-- {{# transaction_buttons_bottom margin="14px" }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
+                                    {{/transaction_buttons_bottom}} -->
+                                    <!-- {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }} -->
+                                    <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 14px;margin-top: 0px;width: 100px;">
                                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save
                                     </button>
 
@@ -1054,11 +1053,15 @@
                                         <i class="fa fa-print" style="padding-right: 8px;"></i>Print
                                     </button>
 
+                                    <a class="btn btn-primary btn_Attachment btnFooter" role="button" style="margin: 14px;margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
+                                        {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
+                                    </a>
 
+                                    <button class="btn btn-danger btnDeleteInvoice2 btnFooter" type="button" style="margin: 14px;margin-top: 0px;"><i class="fa fa-remove" style="padding-right: 8px;"></i>Delete</button>
 
                                     <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 14px;margin-top: 0px;width: 100px;">
                                         <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                                    </button> -->
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1127,8 +1130,8 @@
                     <!-- {{# transaction_buttons_bottom margin="12px" AttachmentCount=attachmentCount }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
                     {{/transaction_buttons_bottom}} -->
 
-                    {{> transaction_buttons_bottom margin="12px" AttachmentCount=attachmentCount }}
-                    <!-- <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
+                    <!-- {{> transaction_buttons_bottom margin="12px" AttachmentCount=attachmentCount }} -->
+                    <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save
                     </button>
 
@@ -1140,9 +1143,11 @@
                         {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
                     </a>
 
+                    <button class="btn btn-danger btnDeleteInvoice2 btnFooter" type="button" style="margin: 14px;margin-top: 0px;"><i class="fa fa-remove" style="padding-right: 8px;"></i>Delete</button>
+
                     <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
                         <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                    </button> -->
+                    </button>
                 </div>
                 <div class="printID" style="display: none;"></div>
                 <style>

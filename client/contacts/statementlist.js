@@ -13,6 +13,12 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
 let statementMailObj = {};
+
+var template_list = [
+    "Statements",
+];
+var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit"];
+
 Template.statementlist.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -108,6 +114,102 @@ Template.statementlist.onRendered(function () {
     }
 
     templateObject.getOrganisationDetails();
+    templateObject.getStatePrintData1 = async function (clientID) {
+        let data = await contactService.getCustomerStatementPrintData(clientID);
+        let lineItems = [];
+        let lineItemObj = {};
+        let lineItemsTable = [];
+        let lineItemTableObj = {};
+
+        if (data.tstatementforcustomer.length) {
+            let lineItems = [];
+            let balance = data.tstatementforcustomer[0].closingBalance;
+            let stripe_id = templateObject.accountID.get();
+            let stripe_fee_method = templateObject.stripe_fee_method.get();
+            var erpGet = erpDb();
+            let company = Session.get('vs1companyName');
+            let vs1User = localStorage.getItem('mySession');
+            let dept = "Head Office";
+
+            let customerName = data.tstatementforcustomer[0].CustomerName;
+            let openingbalance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[0].OpeningBalance);
+            let closingbalance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[0].closingBalance);
+            let customerphone = data.tstatementforcustomer[0].Phone || '';
+            let customername = data.tstatementforcustomer[0].ClientName || '';
+            let billaddress = data.tstatementforcustomer[0].BillStreet || '';
+            let billstate = data.tstatementforcustomer[0].BillState || '';
+            let billcountry = data.tstatementforcustomer[0].BillCountry || '';
+            let statementId = data.tstatementforcustomer[0].TranstypeNo || '';
+            let email = data.tstatementforcustomer[0].Email || '';
+            let invoiceId = data.tstatementforcustomer[0].SaleID || '';
+            let date = moment(data.tstatementforcustomer[0].transdate).format('DD/MM/YYYY') || '';
+            let datedue = moment(data.tstatementforcustomer[0].Duedate).format('DD/MM/YYYY') || '';
+            // let paidAmt = data.tstatementforcustomer[0].Paidamt || '';
+            let paidAmt = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[0].Paidamt).toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                });
+            let stringQuery = "?";
+            for (let i = 0; i < data.tstatementforcustomer.length; i++) {
+                let id = data.tstatementforcustomer[i].SaleID;
+                let transdate =  moment(data.tstatementforcustomer[i].transdate).format('DD/MM/YYYY') ? moment(data.tstatementforcustomer[i].transdate).format('DD/MM/YYYY') : "";
+                let type = data.tstatementforcustomer[i].Transtype;
+                let status = '';
+                // let type = data.tstatementforcustomer[i].Transtype;
+                let total = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[i].Amount).toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                });
+                let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[i].Amount).toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                });
+                let balance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[i].Amount).toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                });
+
+                lineItemObj = {
+                    lineID: id,
+                    id: id || '',
+                    date: transdate || '',
+                    duedate: datedue,
+                    type: type || '',
+                    total: total || 0,
+                    paidamt:paidAmt || 0,
+                    totalPaid: totalPaid || 0,
+
+                    balance: balance || 0
+
+                };
+
+                lineItems.push(lineItemObj);
+            }
+
+            if (balance > 0) {
+                for (let l = 0; l < lineItems.length; l++) {
+                    stringQuery = stringQuery + "product" + l + "=" + lineItems[l].type + "&price" + l + "=" + lineItems[l].balance + "&qty" + l + "=" + 1 + "&"; ;
+                }
+                stringQuery = stringQuery + "tax=0" + "&total=" + closingbalance + "&customer=" + customerName + "&name=" + customerName + "&surname=" + customerName + "&quoteid=" + invoiceId + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + email + "&type=Statement&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept;
+            }
+
+            var currentDate = new Date();
+            var begunDate = moment(currentDate).format("DD/MM/YYYY");
+            let statmentrecord = {
+                id: '',
+                printdate: begunDate,
+                customername: customerName,
+                LineItems: lineItems,
+                phone: customerphone,
+                customername: customername,
+                billaddress: billaddress,
+                billstate: billstate,
+                billcountry: billcountry,
+                email: email,
+                openingBalance: openingbalance,
+                closingBalance: closingbalance
+            };
+            templateObject.statmentprintrecords.set(statmentrecord);
+            $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+        }
+    };
+
     templateObject.getStatePrintData = async function (clientID) {
 
         return new Promise(async (resolve, reject) =>{
@@ -1721,6 +1823,503 @@ Template.statementlist.onRendered(function () {
        }
     }
 
+    $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
+        title = $(this).parent().attr("data-id");
+        number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
+        templateObject.generateInvoiceData(title,number);
+    });
+
+    async function showCustomerStatements1(template_title, number, bprint, clientID)
+    {
+        await templateObject.getStatePrintData1(clientID);
+
+        var array_data = [];
+        let lineItems = [];
+        let taxItems = {};
+        object_invoce = [];
+        let item_invoices = '';
+
+        let invoice_data =  templateObject.statmentprintrecords.get();
+        lineItems = invoice_data.LineItems;
+        let i = 0;
+        for (i=0; i<lineItems.length; i++) {
+            array_data.push([
+                lineItems[i].lineID,
+                lineItems[i].date,
+                lineItems[i].type,
+                lineItems[i].duedate,
+                lineItems[i].total,
+                lineItems[i].paidamt,
+                lineItems[i].balance
+            ]);
+        }
+
+        let dtSODate = invoice_data.printdate;
+        let subtotal_total = "$0.00";
+        let subtotal_tax = "$0.00";
+        let grandTotal = invoice_data.closingBalance;
+        let total_paid = "$0.00";
+        let balancedue = "$0.00";
+        let customer = '';
+
+        if(number == 1)
+        {
+              item_invoices = {
+
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Statement',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber: "",
+                pqnumber: "",
+                duedate:"",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : '',
+                supplier_addr : '',
+                fields: {
+                    "ID": ["10", "left"],
+                    "Date": ["15", "left"],
+                    "Type": ["15", "left"],
+                    "Due Date": ["15", "left"],
+                    "Total": ["15", "right"],
+                    "Paid": ["15", "right"],
+                    "Balance": ["15", "right"]
+                },
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
+                account : Template.new_invoice.__helpers
+                .get("vs1companyBankAccountNo")
+                .call(),
+                swift : Template.new_invoice.__helpers
+                .get("vs1companyBankSwiftCode")
+                .call(),
+                data: array_data,
+                customfield1:'NA',
+                customfield2:'NA',
+                customfield3:'NA',
+                customfieldlabel1:'NA',
+                customfieldlabel2:'NA',
+                customfieldlabel3:'NA',
+                applied : "",
+                showFX:"",
+                comment:""
+              };
+
+        }
+        else if(number == 2)
+        {
+            item_invoices = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Statement',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber: "",
+                pqnumber: "",
+                duedate:"",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : '',
+                supplier_addr : '',
+                fields: {
+                    "ID": ["10", "left"],
+                    "Date": ["15", "left"],
+                    "Type": ["15", "left"],
+                    "Due Date": ["15", "left"],
+                    "Total": ["15", "right"],
+                    "Paid": ["15", "right"],
+                    "Balance": ["15", "right"]
+                },
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
+                account : Template.new_invoice.__helpers
+                .get("vs1companyBankAccountNo")
+                .call(),
+                swift : Template.new_invoice.__helpers
+                .get("vs1companyBankSwiftCode")
+                .call(),
+                data: array_data,
+                customfield1:'NA',
+                customfield2:'NA',
+                customfield3:'NA',
+                customfieldlabel1:'NA',
+                customfieldlabel2:'NA',
+                customfieldlabel3:'NA',
+                applied : "",
+                showFX:"",
+                comment:""
+              };
+
+        }
+        else
+        {
+            item_invoices = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Statement',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber: "",
+                pqnumber: "",
+                duedate:"",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : '',
+                supplier_addr : '',
+                fields: {
+                    "ID": ["10", "left"],
+                    "Date": ["15", "left"],
+                    "Type": ["15", "left"],
+                    "Due Date": ["15", "left"],
+                    "Total": ["15", "right"],
+                    "Paid": ["15", "right"],
+                    "Balance": ["15", "right"]
+                },
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
+                account : Template.new_invoice.__helpers
+                .get("vs1companyBankAccountNo")
+                .call(),
+                swift : Template.new_invoice.__helpers
+                .get("vs1companyBankSwiftCode")
+                .call(),
+                data: array_data,
+                customfield1:'NA',
+                customfield2:'NA',
+                customfield3:'NA',
+                customfieldlabel1:'NA',
+                customfieldlabel2:'NA',
+                customfieldlabel3:'NA',
+                applied : "",
+                showFX:"",
+                comment:""
+              };
+
+        }
+
+        item_invoices.taxItems = taxItems;
+
+        object_invoce.push(item_invoices);
+
+        $("#templatePreviewModal .field_payment").show();
+        $("#templatePreviewModal .field_amount").show();
+
+        if (bprint == false) {
+            $("#html-2-pdfwrapper_quotes").css("width", "90%");
+            $("#html-2-pdfwrapper_quotes2").css("width", "90%");
+            $("#html-2-pdfwrapper_quotes3").css("width", "90%");
+        } else {
+            $("#html-2-pdfwrapper_quotes").css("width", "210mm");
+            $("#html-2-pdfwrapper_quotes2").css("width", "210mm");
+            $("#html-2-pdfwrapper_quotes3").css("width", "210mm");
+        }
+
+        if (number == 1) {
+            updateTemplate1(object_invoce, bprint);
+          } else if (number == 2) {
+            updateTemplate2(object_invoce, bprint);
+          } else {
+            updateTemplate3(object_invoce, bprint);
+          }
+
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
+    }
+
+    function loadTemplateBody1(object_invoce) {
+        // table content
+        var tbl_content = $("#templatePreviewModal .tbl_content");
+        tbl_content.empty();
+        const data = object_invoce[0]["data"];
+        let idx = 0;
+        for(item of data){
+            idx = 0;
+            var html = '';
+            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+            for(item_temp of item){
+                if (idx > 3)
+                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                else
+                    html = html + "<td>" + item_temp + "</td>";
+                idx++;
+            }
+
+            html +="</tr>";
+            tbl_content.append(html);
+        }
+        // total amount
+        if (noHasTotals.includes(object_invoce[0]["title"])) {
+            $("#templatePreviewModal .field_amount").hide();
+            $("#templatePreviewModal .field_payment").css("borderRight", "0px solid black");
+        } else {
+            $("#templatePreviewModal .field_amount").show();
+            $("#templatePreviewModal .field_payment").css("borderRight", "1px solid black");
+        }
+
+        $('#templatePreviewModal #subtotal_total').text("Sub total");
+        $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+
+        $('#templatePreviewModal #grandTotal').text("Grand total");
+        $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+
+        $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
+
+        $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+
+        $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
+    }
+
+    function loadTemplateBody2(object_invoce) {
+        // table content
+        var tbl_content = $("#templatePreviewModal .tbl_content");
+        tbl_content.empty();
+        const data = object_invoce[0]["data"];
+        let idx = 0;
+        for(item of data){
+            idx = 0;
+            var html = '';
+            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+            for(item_temp of item){
+                if (idx > 3)
+                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                else
+                    html = html + "<td>" + item_temp + "</td>";
+                idx++;
+            }
+
+            html +="</tr>";
+            tbl_content.append(html);
+        }
+
+        // total amount
+        if (noHasTotals.includes(object_invoce[0]["title"])) {
+            $(".subtotal2").hide();
+        } else {
+            $(".subtotal2").show();
+        }
+
+        $("#templatePreviewModal #subtotal_totalPrint2").text(
+            object_invoce[0]["subtotal"]
+        );
+        $("#templatePreviewModal #grandTotalPrint2").text(
+            object_invoce[0]["total"]
+        );
+        $("#templatePreviewModal #totalBalanceDuePrint2").text(
+            object_invoce[0]["bal_due"]
+        );
+        $("#templatePreviewModal #paid_amount2").text(
+            object_invoce[0]["paid_amount"]
+        );
+    }
+
+    function loadTemplateBody3(object_invoce) {
+        // table content
+        var tbl_content = $("#templatePreviewModal .tbl_content");
+        tbl_content.empty();
+        const data = object_invoce[0]["data"];
+        let idx = 0;
+        for(item of data){
+            idx = 0;
+            var html = '';
+            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+            for(item_temp of item){
+                if (idx > 3)
+                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                else
+                    html = html + "<td>" + item_temp + "</td>";
+                idx++;
+            }
+
+            html +="</tr>";
+            tbl_content.append(html);
+        }
+
+        // total amount
+        if (noHasTotals.includes(object_invoce[0]["title"])) {
+            $(".subtotal3").hide();
+        } else {
+            $(".subtotal3").show();
+        }
+
+        $("#templatePreviewModal #subtotal_totalPrint3").text(
+            object_invoce[0]["subtotal"]
+        );
+        $("#templatePreviewModal #totalTax_totalPrint3").text(
+            object_invoce[0]["gst"]
+        );
+        $("#templatePreviewModal #totalBalanceDuePrint3").text(
+            object_invoce[0]["bal_due"]
+        );
+    }
+
+    function updateTemplate1(object_invoce, bprint) {
+        initTemplateHeaderFooter1();
+        $("#html-2-pdfwrapper_quotes").show();
+        $("#html-2-pdfwrapper_quotes2").hide();
+        $("#html-2-pdfwrapper_quotes3").hide();
+        if (bprint == false)
+            $("#templatePreviewModal").modal("toggle");
+        loadTemplateHeaderFooter1(object_invoce);
+        loadTemplateBody1(object_invoce);
+    }
+
+    function updateTemplate2(object_invoce, bprint) {
+        initTemplateHeaderFooter2();
+        $("#html-2-pdfwrapper_quotes").hide();
+        $("#html-2-pdfwrapper_quotes2").show();
+        $("#html-2-pdfwrapper_quotes3").hide();
+        if (bprint == false)
+            $("#templatePreviewModal").modal("toggle");
+        loadTemplateHeaderFooter2(object_invoce);
+        loadTemplateBody2(object_invoce);
+    }
+
+    function updateTemplate3(object_invoce, bprint) {
+        initTemplateHeaderFooter3();
+        $("#html-2-pdfwrapper_quotes").hide();
+        $("#html-2-pdfwrapper_quotes2").hide();
+        $("#html-2-pdfwrapper_quotes3").show();
+        if (bprint == false)
+            $("#templatePreviewModal").modal("toggle");
+        loadTemplateHeaderFooter3(object_invoce);
+        loadTemplateBody3(object_invoce);
+    }
+
+    templateObject.generateInvoiceData = async function (template_title,number) {
+        object_invoce = [];
+        let listIds = getListIds();
+        switch (template_title) {
+
+        case "Statements":
+            await showCustomerStatements1(template_title, number, false, listIds[0]);
+            break;
+        }
+    };
+
+    exportSalesToPdf1 = async function(template_title,number) {
+        let listIds = getListIds();
+        for (let i=0; i<listIds.length; i++) {
+            if(template_title == 'Statements')
+            {
+                await showCustomerStatements1(template_title, number, true, listIds[i]);
+            }
+
+            let margins = {
+                top: 0,
+                bottom: 0,
+                left: 0,
+                width: 100
+            };
+
+            let invoice_data_info = templateObject.statmentprintrecords.get();
+            // document.getElementById('html-2-pdfwrapper_new').style.display="block";
+            // var source = document.getElementById('html-2-pdfwrapper_new');
+            var source;
+            if (number == 1) {
+                $("#html-2-pdfwrapper_quotes").show();
+                $("#html-2-pdfwrapper_quotes2").hide();
+                $("#html-2-pdfwrapper_quotes3").hide();
+                source = document.getElementById("html-2-pdfwrapper_quotes");
+            } else if (number == 2) {
+                $("#html-2-pdfwrapper_quotes").hide();
+                $("#html-2-pdfwrapper_quotes2").show();
+                $("#html-2-pdfwrapper_quotes3").hide();
+                source = document.getElementById("html-2-pdfwrapper_quotes2");
+            } else {
+                $("#html-2-pdfwrapper_quotes").hide();
+                $("#html-2-pdfwrapper_quotes2").hide();
+                $("#html-2-pdfwrapper_quotes3").show();
+                source = document.getElementById("html-2-pdfwrapper_quotes3");
+            }
+
+            let file = "Customer Statement.pdf";
+            if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                if(template_title == 'Statements')
+                {
+                    file = 'Customer Statement-' + listIds[i] + '.pdf';
+                }
+            }
+            var opt = {
+                margin: 0,
+                filename: file,
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4',
+                    orientation: 'portrait'
+                }
+            };
+
+            html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                    // $(".btnSave").trigger("click");
+                } else {
+
+                }
+                $('#html-2-pdfwrapper').css('display', 'none');
+                $("#html-2-pdfwrapper_quotes").hide();
+                $("#html-2-pdfwrapper_quotes2").hide();
+                $("#html-2-pdfwrapper_quotes3").hide();
+                $('.fullScreenSpin').css("display", "none");
+            });
+        }
+        return true;
+    };
+
+    function saveTemplateFields(key, value){
+        localStorage.setItem(key, value)
+    }
+
+    getListIds = function() {
+        let retIds = [];
+        $('.chkBox').each(function () {
+            if ($(this).is(':checked')) {
+                var targetID = $(this).closest('tr').attr('id');
+                retIds.push(targetID);
+            } else {}
+        });
+        return retIds;
+    };
 });
 
 Template.statementlist.events({
@@ -2170,7 +2769,7 @@ Template.statementlist.events({
         setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#printstatmentdesign').css('display', 'block');
-        
+
         let listIds = [];
         $('.chkBox').each(function () {
             if ($(this).is(':checked')) {
@@ -2321,82 +2920,55 @@ Template.statementlist.events({
         }
     }, delayTimeAfterSound);
     },
+    'click #open_print_confirm' : function(event) {
+        playPrintAudio();
+        setTimeout(function(){
+            let listIds = getListIds();
+            if (listIds.length > 0) {
+                $('#templateselection').modal('toggle');
+            } else {
+                $('#printLineModal').modal('toggle');
+            }
+        }, delayTimeAfterSound);
+    },
     'click .printConfirm ': async function (event) {
         playPrintAudio();
         let templateObject = Template.instance();
         setTimeout(async function(){
-        $('.fullScreenSpin').css('display', 'block');
-        let attachment = [] ;
-        
-        let listIds = [];
-
-        $('.chkBox').each(function () {
-            if ($(this).is(':checked')) {
-                var targetID = $(this).closest('tr').attr('id');
-                listIds.push(targetID);
-            } else {}
-        });
-
-        if (listIds != '') {
-            // await templateObject.customerToMultiplePdf(listIds);
-            for (let j = 0; j < listIds.length; j++) {
-                let encodedPdf = await templateObject.getStatePrintData(listIds[j]);
-                let base64data = encodedPdf.split(',')[1];
-                pdfObject = {
-                    filename: 'Statement-' + listIds[j] + '.pdf',
-                    content: base64data,
-                    encoding: 'base64'
-                };
-                attachment.push(pdfObject);
+            $('#printstatmentdesign').css('display', 'none');
+            var printTemplate = [];
+            $('.fullScreenSpin').css('display', 'inline-block');
+            $('#html-2-pdfwrapper').css('display', 'block');
+            if($('#print_statement').is(':checked')) {
+                printTemplate.push('Statements');
             }
-        } else {
-            $('.fullScreenSpin').css('display', 'none');
-            $('#printLineModal').modal('toggle');
-        }
 
-        // for (let i = 0; i < selectedData.length; i++) {
-        //     let ids = [
-        //         selectedData[i].id,
-        //     ]
-        //     listIds.push(ids);
-        // }
-
-
-        let values = [];
-        let basedOnTypeStorages = Object.keys(localStorage);
-        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-            let employeeId = storage.split('_')[2];
-            return storage.includes('BasedOnType_');
-            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-        });
-        let i = basedOnTypeStorages.length;
-        if (i > 0) {
-            while (i--) {
-                values.push(localStorage.getItem(basedOnTypeStorages[i]));
-            }
-        }
-        values.forEach(value => {
-            let reportData = JSON.parse(value);
-            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-            if (reportData.BasedOnType.includes("P")) {
-                reportData.attachments = attachment;
-                if (reportData.FormID == 1) {
-                    let formIds = reportData.FormIDs.split(',');
-                    if (formIds.includes("177") || formIds.includes("17544")) {
-                        reportData.FormID = 177;
-                        Meteor.call('sendNormalEmail', reportData);
+            if(printTemplate.length > 0) {
+                for(var i = 0; i < printTemplate.length; i++)
+                {
+                    if(printTemplate[i] == 'Statements')
+                    {
+                        var template_number = $('input[name="Statements"]:checked').val();
                     }
-                } else {
-                    if (reportData.FormID == 177 || reportData.FormID == 17544)
-                        Meteor.call('sendNormalEmail', reportData);
+                    let result = await exportSalesToPdf1(printTemplate[i],template_number);
+                    if(result == true)
+                    {
+
+                    }
                 }
             }
-        });
-    }, delayTimeAfterSound);
+        }, delayTimeAfterSound);
     }
 });
 
 Template.statementlist.helpers({
+    getTemplateList: function () {
+        return template_list;
+    },
+    getTemplateNumber: function () {
+        let template_numbers = ["1", "2", "3"];
+        return template_numbers;
+    },
     datatablerecords: () => {
         return Template.instance().datatablerecords.get().sort(function (a, b) {
             if (a.company == 'NA') {
