@@ -706,6 +706,66 @@ checkSetupFinished = function () {
   }
 }
 
+convertStrMonthToNum = function (strMonths) {
+  let arrMonths = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+  let ret = [];
+  let arrStrMonths = strMonths.split(",");
+  let i = 0, idx = -1;
+  let mm = "";
+  for (i=0; i<arrStrMonths.length; i++) {
+      idx = arrMonths.indexOf(arrStrMonths[i]) + 1;
+      mm = ("0" + idx).toString().slice(-2);
+      ret.push(mm);
+  }
+  return ret;
+}
+
+getRepeatDates = function(startFrom, endBy, months, repdate) {
+  let ret = [];
+  let arrStartFrom = startFrom.split("-");
+  let arrEndBy = endBy.split("-");
+  let startYear = arrStartFrom[0];
+  let startMonth = arrStartFrom[1];
+  let startDate = arrStartFrom[2];
+  let endYear = arrEndBy[0];
+  let endMonth = arrEndBy[1];
+  let endDate = arrEndBy[2];
+  let i=0, j=0, k=0;
+  let mm = "";
+  for (j=parseInt(startMonth); j<=12; j++) {
+      mm = ("0" + j).toString().slice(-2);
+      if (months.includes(mm) && parseInt(repdate) >= parseInt(startDate)) {
+          ret.push({
+              "Dates": startYear + "-" + mm + "-" + repdate
+          });
+      }
+  }
+  for (i=parseInt(startYear)+1; i<parseInt(endYear); i++) {
+      for (j=0; j<months.length; j++) {
+          ret.push({
+              "Dates": i + "-" + months[j] + "-" + repdate
+          });
+      }
+  }
+  for (j=1; j<=parseInt(endMonth); j++) {
+      mm = ("0" + j).toString().slice(-2);
+      if (j < parseInt(endMonth)) {
+          if (months.includes(mm)) {
+              ret.push({
+                  "Dates": endYear + "-" + mm + "-" + repdate
+              });
+          }
+      } else {
+          if (months.includes(mm) && parseInt(repdate) <= parseInt(endDate)) {
+              ret.push({
+                  "Dates": endYear + "-" + mm + "-" + repdate
+              });
+          }
+      }
+  }
+  return ret;
+};
+
 convertDateFormatForPrint = function(pDate) {
   let ret = "";
   let sMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
