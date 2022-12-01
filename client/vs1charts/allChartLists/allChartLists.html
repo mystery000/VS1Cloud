@@ -201,8 +201,10 @@
         {{> dsmTop10Customers
             md=4 defaultPosition=24 key="dsmcharts__top_10_customers" }}
 
-        {{> dsmResalescomparision
-            md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison" }}
+        <!-- {{> dsmResalescomparision
+            md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison" }} -->
+
+        {{> resalescomparision md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison"}}
 
         {{#if equals isaccountoverview true}}
 

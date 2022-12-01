@@ -167,6 +167,7 @@ Template.dsmResalescomparision.onRendered(() => {
         return new Promise((res, rej) => {
             // var salesBoardService = new SalesBoardService();
             vs1chartService.getInvSaleByEmployee().then((data) => {
+              console.log('here 1');
                 // templateObject.getAllData(data);
                 let useData = data.tinvoiceex;
                 let invoiceItems = [];

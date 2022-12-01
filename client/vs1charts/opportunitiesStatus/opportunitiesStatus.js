@@ -211,7 +211,7 @@ Template.opportunitiesStatus.onRendered(function() {
 
     setTimeout(function() {
         templateObject.setDateVal();
-    }, 1000);
+    }, 0);
 });
 
 Template.opportunitiesStatus.events({

@@ -5,7 +5,6 @@ Template.seedtosalecards.onCreated(function() {
 });
 
 Template.seedtosalecards.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
 });
 
