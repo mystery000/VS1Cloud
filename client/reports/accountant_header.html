@@ -13,7 +13,7 @@
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Accountant Details 
+            <h2 style="margin: 16px;" id="accountant_detail"> 
                 <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help 
                     <i class="fa fa-question-circle-o " style="font-size: 20px;"></i>
                 </a>
@@ -275,4 +275,7 @@
             </li>
         </ul>
     </nav>
+    <script>
+        document.getElementById("accountant_detail").innerHTML = localStorage.getItem("accountant_detail");
+    </script>
 </template>
