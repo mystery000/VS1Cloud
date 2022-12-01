@@ -2168,7 +2168,6 @@ Template.appointmentlist.onRendered(async function() {
                 }
 
                 $("#event-modal").modal("toggle");
-                console.log("=======", result);
                 if (result[0].extraProducts != "") {
                     let extraProducts = result[0].extraProducts.split(":");
                     let extraProductFees = [];

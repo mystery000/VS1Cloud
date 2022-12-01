@@ -64,7 +64,6 @@ Template.vs1_report_template.onRendered(function() {
   // set initial table rest_data
   templateObject.init_reset_data = function(){
     let reset_data = [];
-    console.log(currenttablename, 'here')
     switch (currenttablename) {
       case "tblgeneralledger":
         reset_data = [
