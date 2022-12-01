@@ -1,13 +1,4 @@
 <template name="accountant_header">
-    <script>
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();                
-        today = dd + '/' + mm + '/' + yyyy;
-        document.getElementById("dateFrom").value = today;
-        document.getElementById("dateTo").value = today;
-    </script>
     <div style="margin-top: -24px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
@@ -276,6 +267,13 @@
         </ul>
     </nav>
     <script>
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();                
+        today = dd + '/' + mm + '/' + yyyy;
+        document.getElementById("dateFrom").value = today;
+        document.getElementById("dateTo").value = today;
         document.getElementById("accountant_detail").innerHTML = localStorage.getItem("accountant_detail");
     </script>
 </template>
