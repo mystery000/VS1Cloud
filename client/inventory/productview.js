@@ -4421,18 +4421,8 @@ Template.productview.events({
     },
     'click #loadrecenttransaction': function(event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        //modified by matthias
-        isShowRecentTrans = $('.product_recent_trans')[0].style.display;
-        if(isShowRecentTrans == 'none')
-        {
-            let templateObject = Template.instance();
-            templateObject.getAllProductRecentTransactions();
-        }
-        else
-        {
-            $('.product_recent_trans').hide();
-            $('.fullScreenSpin').css('display', 'none');
-        }
+        let templateObject = Template.instance();
+        templateObject.getAllProductRecentTransactions();
     },
     'click #btnSave': async function() {
         playSaveAudio();

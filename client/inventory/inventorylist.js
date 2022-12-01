@@ -340,7 +340,6 @@ Template.inventorylist.onRendered(function() {
                                 splashArrayProductList.push(dataList);
                                 dataTableList.push(dataList);
                             }
-                            
 
                             templateObject.datatablerecords.set(dataTableList);
                             templateObject.datatablebackuprecords.set(dataTableList);
@@ -410,7 +409,7 @@ Template.inventorylist.onRendered(function() {
                                       info: true,
                                       responsive: true,
                                       order: [
-                                          [1, "asc"] // modified by matthias
+                                          [0, "asc"]
                                       ],
                                       action: function() {
                                           $("#tblInventoryOverview").DataTable().ajax.reload();
@@ -553,8 +552,7 @@ Template.inventorylist.onRendered(function() {
                     splashArrayProductList.push(dataList);
                     dataTableList.push(dataList);
                 }
-                // added bu matthias
-                
+
                     templateObject.datatablerecords.set(dataTableList);
                     // templateObject.datatablebackuprecords.set(dataTableList);
 
@@ -622,7 +620,7 @@ Template.inventorylist.onRendered(function() {
                                 info: true,
                                 responsive: true,
                                 order: [
-                                    [1, "asc"] // modified by matthias
+                                    [0, "asc"]
                                 ],
                                 action: function() {
                                     $("#tblInventoryOverview").DataTable().ajax.reload();
@@ -759,10 +757,9 @@ Template.inventorylist.onRendered(function() {
                             data.tproductlist[i].CUSTFLD2 || "",
                         ];
                         splashArrayProductList.push(dataList);
-                        
                         dataTableList.push(dataList);
                     }
-                    
+
                         templateObject.datatablerecords.set(dataTableList);
                         templateObject.datatablebackuprecords.set(dataTableList);
 
@@ -830,7 +827,7 @@ Template.inventorylist.onRendered(function() {
                                   info: true,
                                   responsive: true,
                                   order: [
-                                      [1, "asc"] // modified by matthias
+                                      [0, "asc"]
                                   ],
                                   action: function() {
                                       $("#tblInventoryOverview").DataTable().ajax.reload();
