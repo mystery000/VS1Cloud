@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SalesBoardService } from "./sales-service";
 import { PurchaseBoardService } from "./purchase-service";
 import { ReactiveVar } from "meteor/reactive-var";
@@ -22,6 +23,7 @@ import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
 import { foreignCols } from "../vs1_templates/transaction_temp/transaction_line";
+import {Session} from 'meteor/session';
 // import { CustomerCreationSourceFilter } from "square-connect";
 
 let sideBarService = new SideBarService();
@@ -203,6 +205,15 @@ Template.new_invoice.onRendered(function() {
                 $("#formCheck-january").prop('checked', true);
             }
         }
+    templateObject.insertItemWithLabel = (x, a, b) => {
+        var data = [...x];
+        var aPos = data.findIndex((x) => x.label === a);
+        var bPos = data.findIndex(x => x.label === b);
+        if(aPos === -1 || bPos === -1) return data;
+        data[bPos] = {...data[bPos], index: aPos + 1};
+        for(var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index:data[i].index + 1}
+        return data.sort((a,b) => a.index - b.index);
+    }
         // $('#lotNumberModal .btnSelect').removeClass('d-none');
         // $('#lotNumberModal .btnAutoFill').addClass('d-none');
     $("#serialNumberModal .btnSelect").removeClass("d-none");
@@ -13106,6 +13117,7 @@ Template.new_invoice.onRendered(function() {
     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
         let templateObject = Template.instance();
         let reset_data = templateObject.reset_data.get();
+        reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
         templateObject.showCustomFieldDisplaySettings(reset_data);
 
         try {
@@ -13114,6 +13126,7 @@ Template.new_invoice.onRendered(function() {
                 if (dataObject.length == 0) {
                     sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
                         reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                        reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
                         templateObject.showCustomFieldDisplaySettings(reset_data);
                     }).catch(function(err) {});
                 } else {
@@ -13122,6 +13135,7 @@ Template.new_invoice.onRendered(function() {
                         for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                             if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
                                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                                reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
                                 templateObject.showCustomFieldDisplaySettings(reset_data);
                             }
                         }
@@ -13804,7 +13818,13 @@ Template.new_invoice.helpers({
 
     // custom field displaysettings
     displayfields: () => {
-        return Template.instance().displayfields.get();
+        let data = Template.instance().displayfields.get();
+        let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+        if (!isBatchSerialNoTracking) {
+            data.find((x) => x.class === 'SerialNo').display = false;
+            data.find((x) => x.class === 'SerialNo').active = false;
+        }
+        return data;
     },
     loggedInCountryVAT: () => {
         let countryVatLabel = "GST";
@@ -19445,6 +19465,7 @@ Template.new_invoice.events({
         } else {
             reset_data[11].display = false;
         }
+        reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
         reset_data = reset_data.filter(redata => redata.display);
 
         $(".displaySettings").each(function(index) {
