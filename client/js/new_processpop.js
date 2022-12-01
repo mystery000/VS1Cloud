@@ -56,13 +56,13 @@ Template.new_processpop.onRendered(() => {
     templateObject.getProcessDetail();
 
    
-    // setTimeout(()=>{
-    //     $('#edtCOGS').editableSelect();
-    //     $('#edtExpenseAccount').editableSelect();
-    //     $('#edtOverheadCOGS').editableSelect();
-    //     $('#edtOverheadExpenseAccount').editableSelect();
-    //     $('#edtWastage').editableSelect();
-    // }, 500)
+    setTimeout(()=>{
+        $('#edtCOGS').editableSelect();
+        $('#edtExpenseAccount').editableSelect();
+        $('#edtOverheadCOGS').editableSelect();
+        $('#edtOverheadExpenseAccount').editableSelect();
+        $('#edtWastage').editableSelect();
+    }, 500)
             // templateObject.selectedInventoryAssetAccount.set('Inventory Asset Wastage')
 });
 
@@ -149,17 +149,18 @@ Template.new_processpop.events({
                 KeyValue: processName,
                 Description: processDescription,
                 DailyHours:  dailyHours,
-                HourlyLabourCost: praseInt(hourlyCost.replace(Currency, '')),
+                HourlyLabourCost: hourlyCost,
                 COGS: cogs,
                 ExpenseAccount: expenseAccount,
-                OHourlyCost: parseInt(overheadHourlyCost.replace(Currency, '')),
+                OHourlyCost: overheadHourlyCost,
                 OCOGS: overheadCOGS,
                 OExpense: overheadExpenseAcc,
-                TotalHourlyCost: parseInt(totalHourCost.replace(Currency, '')),
+                TotalHourlyCost: totalHourCost,
                 Wastage: wastage
             }
         }
         manufacturingService.saveProcessData(objDetail).then(function(){
+            $('.fullScreenSpin').css('display', 'none');
             manufacturingService.getAllProcessData().then(function(datareturn) {
                 addVS1Data('TProcessStep', JSON.stringify(datareturn)).then(function(dataupdate) {
                     swal({
@@ -169,7 +170,6 @@ Template.new_processpop.events({
                         showCancelButton: false,
                         confirmButtonText: 'Continue',
                     }).then ((result)=>{
-                        $('.fullScreenSpin').css('display', 'none');
                         let datatable = $('#tblProcessPopList').DataTable();
                         let dataListProcess = [
                             objDetail.fields.KeyValue || '',
@@ -203,94 +203,94 @@ Template.new_processpop.events({
         $('#processListModal').modal('toggle')
     },
 
-    // 'click #edtCOGS': function (event) {
-    //     $('#edtCOGS').select();
-    //     $('#edtCOGS').editableSelect()
-    // },
+    'click #edtCOGS': function (event) {
+        $('#edtCOGS').select();
+        $('#edtCOGS').editableSelect()
+    },
 
-    // 'click #edtExpenseAccount': function(event) {
-    //     $('#edtExpenseAccount').select();
-    //     $('#edtExpenseAccount').editableSelect()
-    // },
+    'click #edtExpenseAccount': function(event) {
+        $('#edtExpenseAccount').select();
+        $('#edtExpenseAccount').editableSelect()
+    },
 
-    // 'click #edtOverheadCOGS': function(event) {
-    //     $('#edtOverheadCOGS').select();
-    //     $('#edtOverheadCOGS').editableSelect();
-    // },
+    'click #edtOverheadCOGS': function(event) {
+        $('#edtOverheadCOGS').select();
+        $('#edtOverheadCOGS').editableSelect();
+    },
 
-    // 'click #edtOverheadExpenseAccount': function (event) {
-    //     $('#edtOverheadExpenseAccount').select();
-    //     $('#edtOverheadExpenseAccount').editableSelect();
-    // },
+    'click #edtOverheadExpenseAccount': function (event) {
+        $('#edtOverheadExpenseAccount').select();
+        $('#edtOverheadExpenseAccount').editableSelect();
+    },
 
-    // 'click #edtWastage': function(event) {
-    //     $('#edtWastage').select();
-    //     $('#edtWastage').editableSelect();
-    // },
+    'click #edtWastage': function(event) {
+        $('#edtWastage').select();
+        $('#edtWastage').editableSelect();
+    },
 
 
-    // 'click #edtCOGS': function(e) {
-    //     let templateObject = Template.instance();
-    //     $('#accountListModal').modal();
-    //     templateObject.selectedAccount.set('cogs');
-    // },
-    // 'click #edtExpenseAccount': function (e) {
-    //     let templateObject = Template.instance();
-    //     $('#expenseAccountListModal').modal();
-    //     templateObject.selectedAccount.set('expenseAccount');
-    // },
-    // 'click #edtOverheadCOGS': function(e) {
-    //     let templateObject = Template.instance();
-    //     $('#accountListModal').modal();
-    //     templateObject.selectedAccount.set('overheadCOGS');
-    // },
-    // 'click #edtOverheadExpenseAccount': function (e) {
-    //     let templateObject = Template.instance();
-    //     $('#expenseAccountListModal').modal();
-    //     templateObject.selectedAccount.set('overheadExpenseAccount');
-    // },
+    'click #edtCOGS': function(e) {
+        let templateObject = Template.instance();
+        $('#accountListModal').modal();
+        templateObject.selectedAccount.set('cogs');
+    },
+    'click #edtExpenseAccount': function (e) {
+        let templateObject = Template.instance();
+        $('#expenseAccountListModal').modal();
+        templateObject.selectedAccount.set('expenseAccount');
+    },
+    'click #edtOverheadCOGS': function(e) {
+        let templateObject = Template.instance();
+        $('#accountListModal').modal();
+        templateObject.selectedAccount.set('overheadCOGS');
+    },
+    'click #edtOverheadExpenseAccount': function (e) {
+        let templateObject = Template.instance();
+        $('#expenseAccountListModal').modal();
+        templateObject.selectedAccount.set('overheadExpenseAccount');
+    },
 
-    // 'click #edtWastage': function(e){
-    //     $('#assetAccountListModal').modal();
-    // },
-    // 'click #accountListModal table tr': function(e) {
-    //     let templateObject = Template.instance();
-    //     let columnDataValue = $(e.target).closest('tr').find('.productName').text();
-    //     switch(templateObject.selectedAccount.get()) {
-    //         case 'cogs':
-    //             $('#edtCOGS').val(columnDataValue);
-    //             break;
+    'click #edtWastage': function(e){
+        $('#assetAccountListModal').modal();
+    },
+    'click #accountListModal table tr': function(e) {
+        let templateObject = Template.instance();
+        let columnDataValue = $(e.target).closest('tr').find('.productName').text();
+        switch(templateObject.selectedAccount.get()) {
+            case 'cogs':
+                $('#edtCOGS').val(columnDataValue);
+                break;
            
-    //         case 'overheadCOGS':
-    //             $('#edtOverheadCOGS').val(columnDataValue);
-    //             break;
+            case 'overheadCOGS':
+                $('#edtOverheadCOGS').val(columnDataValue);
+                break;
            
-    //         default:
-    //             break;
-    //     }
-    //     $('#accountListModal').modal('toggle');
-    // },
-    // 'click #expenseAccountListModal table tr': function(e){
-    //     let templateObject = Template.instance();
-    //     let columnDataValue = $(e.target).closest('tr').find('.productName').text();
-    //     switch(templateObject.selectedAccount.get()) {
-    //         case 'expenseAccount':
-    //             $('#edtExpenseAccount').val(columnDataValue);
-    //             break;
-    //         case 'overheadExpenseAccount':
-    //             $('#edtOverheadExpenseAccount').val(columnDataValue);
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    //     $('#expenseAccountListModal').modal('toggle');
-    // }, 
+            default:
+                break;
+        }
+        $('#accountListModal').modal('toggle');
+    },
+    'click #expenseAccountListModal table tr': function(e){
+        let templateObject = Template.instance();
+        let columnDataValue = $(e.target).closest('tr').find('.productName').text();
+        switch(templateObject.selectedAccount.get()) {
+            case 'expenseAccount':
+                $('#edtExpenseAccount').val(columnDataValue);
+                break;
+            case 'overheadExpenseAccount':
+                $('#edtOverheadExpenseAccount').val(columnDataValue);
+                break;
+            default:
+                break;
+        }
+        $('#expenseAccountListModal').modal('toggle');
+    }, 
 
-    // 'click #assetAccountListModal table tr': function(e) {
-    //     let columnDataValue = $(e.target).closest('tr').find('.productName').text();
-    //     $('#edtWastage').val(columnDataValue);
-    //     $('#assetAccountListModal').modal('toggle');
-    // },
+    'click #assetAccountListModal table tr': function(e) {
+        let columnDataValue = $(e.target).closest('tr').find('.productName').text();
+        $('#edtWastage').val(columnDataValue);
+        $('#assetAccountListModal').modal('toggle');
+    },
     'blur .edtHourlyCost': function(e) {
         if($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() == '') {
             $('#edtTotalHourlyCosts').val($('#edtHourlyCost').val())
