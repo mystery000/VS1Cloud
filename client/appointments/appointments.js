@@ -18718,6 +18718,19 @@ Template.appointments.events({
                         window.open("/appointments", "_self");
                     });
                 }, 1000);
+
+                // $('#edtEmpID').val(empID);
+                // $('#newLeaveRequestLabel').text('New Leave Request');
+                // let today = new Date();
+                // const dd = String(today.getDate()).padStart(2, '0');
+                // const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                // const yyyy = today.getFullYear();
+                // today = dd + '/' + mm + '/' + yyyy;
+                // $('#leaveRequestForm')[0].reset();
+                // $('#edtLeaveStartDate').val(today);
+                // $('#edtLeaveEndDate').val(today);
+                // $('#removeLeaveRequestBtn').hide();
+
                 // $("#newLeaveRequestModal").modal("toggle");
             }
         });
