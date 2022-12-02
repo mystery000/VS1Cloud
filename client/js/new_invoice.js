@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { SalesBoardService } from "./sales-service";
 import { PurchaseBoardService } from "./purchase-service";
 import { ReactiveVar } from "meteor/reactive-var";
@@ -3986,8 +3985,10 @@ Template.new_invoice.onRendered(function() {
                             let customerData = templateObject.clientrecords.get();
 
                             var added = false;
+                            console.log("useData=", useData);
                             for (let d = 0; d < useData.length; d++) {
                                 if (parseInt(useData[d].fields.ID) === currentInvoice) {
+                                    alert(1);
                                     added = true;
                                     $(".fullScreenSpin").css("display", "none");
                                     let cust_result = customerData.filter((cust_data) => {
@@ -4064,6 +4065,7 @@ Template.new_invoice.onRendered(function() {
 
 
                                     if (useData[d].fields.Lines.length) {
+                                        console.log("---------", useData[d].fields.Lines);
                                         for (let i = 0; i < useData[d].fields.Lines.length; i++) {
 
                                             let AmountGbp =
@@ -4501,6 +4503,7 @@ Template.new_invoice.onRendered(function() {
                                 accountService
                                     .getOneInvoicedataEx(currentInvoice)
                                     .then(async function(data) {
+                                        console.log("data======", data);
                                         templateObject.singleInvoiceData.set(data);
                                         $(".fullScreenSpin").css("display", "none");
                                         let lineItems = [];
@@ -4947,6 +4950,7 @@ Template.new_invoice.onRendered(function() {
                         accountService
                             .getOneInvoicedataEx(currentInvoice)
                             .then(function(data) {
+                                alert(6);
                                 templateObject.singleInvoiceData.set(data);
                                 let cust_result = customerData.filter((cust_data) => {
                                     return cust_data.customername == data.fields.CustomerName;
@@ -7114,10 +7118,10 @@ Template.new_invoice.onRendered(function() {
                 supplier_type: "Customer",
                 supplier_name: customer,
                 supplier_addr: txabillingAddress,
-                fields: {
-                    "Product Name": ["40", "left"],
-                    "Description": ["40", "left"],
-                    "Qty": ["20", "right"]
+                fields: { 
+                    "Product Name": ["40", "left"], 
+                    "Description": ["40", "left"], 
+                    "Qty": ["20", "right"] 
                 },
                 subtotal: "",
                 gst: "",
@@ -7159,10 +7163,10 @@ Template.new_invoice.onRendered(function() {
                 supplier_type: "Customer",
                 supplier_name: customer,
                 supplier_addr: txabillingAddress,
-                fields: {
-                    "Product Name": ["40", "left"],
-                    "Description": ["40", "left"],
-                    "Qty": ["20", "right"]
+                fields: { 
+                    "Product Name": ["40", "left"], 
+                    "Description": ["40", "left"], 
+                    "Qty": ["20", "right"] 
                 },
                 subtotal: "",
                 gst: "",
@@ -7204,10 +7208,10 @@ Template.new_invoice.onRendered(function() {
                 supplier_type: "Customer",
                 supplier_name: customer,
                 supplier_addr: txabillingAddress,
-                fields: {
-                    "Product Name": ["40", "left"],
-                    "Description": ["40", "left"],
-                    "Qty": ["20", "right"]
+                fields: { 
+                    "Product Name": ["40", "left"], 
+                    "Description": ["40", "left"], 
+                    "Qty": ["20", "right"] 
                 },
                 subtotal: "",
                 gst: "",
@@ -11788,19 +11792,19 @@ Template.new_invoice.onRendered(function() {
         // } else {
         //     $("#templatePreviewModal .pdfPONumber").show();
         // }
-
+    
         // if (object_invoce[0]["invoicenumber"] == "") {
         //     $("#templatePreviewModal .invoiceNumber").hide();
         // } else {
         //     $("#templatePreviewModal .invoiceNumber").show();
         // }
-
+        
         // if (object_invoce[0]["refnumber"] == "") {
         //     $("#templatePreviewModal .refNumber").hide();
         // } else {
         //     $("#templatePreviewModal .refNumber").show();
         // }
-
+        
         // if (object_invoce[0]["duedate"] == "") {
         //     $("#templatePreviewModal .pdfTerms").hide();
         // } else {
@@ -11859,7 +11863,7 @@ Template.new_invoice.onRendered(function() {
             tbl_content.append(html);
         }
 
-
+        
         // total amount
         if (noHasTotals.includes(object_invoce[0]["title"])) {
             $("#templatePreviewModal .field_amount").hide();
@@ -11868,25 +11872,25 @@ Template.new_invoice.onRendered(function() {
             $("#templatePreviewModal .field_amount").show();
             $("#templatePreviewModal .field_payment").css("borderRight", "1px solid black");
         }
-
+        
         $("#templatePreviewModal #subtotal_total").text("Sub total");
         $("#templatePreviewModal #subtotal_totalPrint").text(
             object_invoce[0]["subtotal"]
         );
-
+    
         $("#templatePreviewModal #grandTotal").text("Grand total");
         $("#templatePreviewModal #totalTax_totalPrint").text(
             object_invoce[0]["gst"]
         );
-
+    
         $("#templatePreviewModal #grandTotalPrint").text(
             object_invoce[0]["total"]
         );
-
+    
         $("#templatePreviewModal #totalBalanceDuePrint").text(
             object_invoce[0]["bal_due"]
         );
-
+    
         $("#templatePreviewModal #paid_amount").text(
             object_invoce[0]["paid_amount"]
         );
@@ -11939,13 +11943,13 @@ Template.new_invoice.onRendered(function() {
             tbl_content.append(html);
         }
 
-
+        
         if (noHasTotals.includes(object_invoce[0]["title"])) {
             $(".subtotal2").hide();
         } else {
             $(".subtotal2").show();
         }
-
+        
         $("#templatePreviewModal #subtotal_totalPrint2").text(
             object_invoce[0]["subtotal"]
         );
@@ -11957,7 +11961,7 @@ Template.new_invoice.onRendered(function() {
         );
         $("#templatePreviewModal #paid_amount2").text(
             object_invoce[0]["paid_amount"]
-        );
+        );  
     }
 
     function loadTemplateBody3(object_invoce) {
@@ -12012,7 +12016,7 @@ Template.new_invoice.onRendered(function() {
         } else {
             $(".subtotal3").show();
         }
-
+        
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -12877,8 +12881,6 @@ Template.new_invoice.onRendered(function() {
                                         targets: [3],
                                     },
                                 ],
-                                select: true,
-                                destroy: true,
                                 colReorder: true,
 
                                 pageLength: initialDatatableLoad,
@@ -12951,8 +12953,6 @@ Template.new_invoice.onRendered(function() {
                                     targets: [3],
                                 },
                             ],
-                            select: true,
-                            destroy: true,
                             colReorder: true,
 
                             pageLength: initialDatatableLoad,
@@ -13026,8 +13026,6 @@ Template.new_invoice.onRendered(function() {
                                     targets: [3],
                                 },
                             ],
-                            select: true,
-                            destroy: true,
                             colReorder: true,
 
                             pageLength: initialDatatableLoad,
@@ -13818,13 +13816,7 @@ Template.new_invoice.helpers({
 
     // custom field displaysettings
     displayfields: () => {
-        let data = Template.instance().displayfields.get();
-        let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-        if (!isBatchSerialNoTracking) {
-            data.find((x) => x.class === 'SerialNo').display = false;
-            data.find((x) => x.class === 'SerialNo').active = false;
-        }
-        return data;
+        return Template.instance().displayfields.get();
     },
     loggedInCountryVAT: () => {
         let countryVatLabel = "GST";
@@ -13968,7 +13960,7 @@ Template.new_invoice.events({
     },
     "click  #open_print_confirm": function(event) {
         playPrintAudio();
-        setTimeout(function() {
+        setTimeout(async function() {
             if ($("#choosetemplate").is(":checked")) {
                 let invoice_type = FlowRouter.current().queryParams.type;
 
@@ -13986,37 +13978,37 @@ Template.new_invoice.events({
                 $("#templateselection").modal("show");
             } else {
                 $(".fullScreenSpin").css("display", "inline-block");
-                $("#html-2-pdfwrapper").css("display", "block");
-                if ($(".edtCustomerEmail").val() != "") {
-                    $(".pdfCustomerName").html($("#edtCustomerName").val());
-                    $(".pdfCustomerAddress").html(
-                        $("#txabillingAddress")
-                        .val()
-                        .replace(/[\r\n]/g, "<br />")
-                    );
-                    $("#printcomment").html(
-                        $("#txaComment")
-                        .val()
-                        .replace(/[\r\n]/g, "<br />")
-                    );
-                    var ponumber = $("#ponumber").val() || ".";
-                    $(".po").text(ponumber);
-                    var rowCount = $(".tblInvoiceLine tbody tr").length;
+                // $("#html-2-pdfwrapper").css("display", "block");
+                let result = await exportSalesToPdf(template_list[0], 1);
+                // if ($(".edtCustomerEmail").val() != "") {
+                //     $(".pdfCustomerName").html($("#edtCustomerName").val());
+                //     $(".pdfCustomerAddress").html(
+                //         $("#txabillingAddress")
+                //         .val()
+                //         .replace(/[\r\n]/g, "<br />")
+                //     );
+                //     $("#printcomment").html(
+                //         $("#txaComment")
+                //         .val()
+                //         .replace(/[\r\n]/g, "<br />")
+                //     );
+                //     var ponumber = $("#ponumber").val() || ".";
+                //     $(".po").text(ponumber);
+                //     var rowCount = $(".tblInvoiceLine tbody tr").length;
 
-                    exportSalesToPdf1();
-                } else {
-                    swal({
-                        title: "Customer Email Required",
-                        text: "Please enter customer email",
-                        type: "error",
-                        showCancelButton: false,
-                        confirmButtonText: "OK",
-                    }).then((result) => {
-                        if (result.value) {} else if (result.dismiss === "cancel") {}
-                    });
-                }
-
-                $("#confirmprint").modal("hide");
+                //     exportSalesToPdf1();
+                // } else {
+                //     swal({
+                //         title: "Customer Email Required",
+                //         text: "Please enter customer email",
+                //         type: "error",
+                //         showCancelButton: false,
+                //         confirmButtonText: "OK",
+                //     }).then((result) => {
+                //         if (result.value) {} else if (result.dismiss === "cancel") {}
+                //     });
+                // }
+                // $("#confirmprint").modal("hide");
             }
         }, delayTimeAfterSound);
     },
@@ -17392,31 +17384,6 @@ Template.new_invoice.events({
         var targetID = $(event.target).closest("tr").attr("id");
         $("#selectDeleteLineID").val(targetID);
 
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = "";
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var invData = await salesService.getOneInvoicedataEx(currentInvoice);
-            var saleDate = invData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingInvoices = await sideBarService.getAllTInvoiceListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var invList = followingInvoices.tinvoicelist;
-            if (invList.length > 0) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }
-        }
-
         times++;
         if (times == 1) {
             $("#deleteLineModal").modal("toggle");
@@ -17724,7 +17691,6 @@ Template.new_invoice.events({
                     FlowRouter.go("/invoicelist?success=true");
                 }
             }
-            $("#deleteLineModal").modal("toggle");
         }, delayTimeAfterSound);
     },
     "click .btnDeleteInvoice": function(event) {
@@ -20721,7 +20687,7 @@ Template.new_invoice.events({
         //       var currentInvoice = getso_id[getso_id.length - 1];
 
         //       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-        //       let ForeignExchangeRate = $('#exchange_rate').val()||0;
+        //       let ForeignExchangeRate = $('#exchange_rate').val();
         //       var objDetails = "";
         //       if (getso_id[1]) {
         //         currentInvoice = parseInt(currentInvoice);

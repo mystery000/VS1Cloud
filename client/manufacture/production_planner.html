@@ -26,8 +26,8 @@
                                 }
                                 
                             </style>
-                            <div id="calendar" style="width: 100%; resize: horizontal; overflow: auto;"></div>
-                            <div class="eventInfo">
+                            <div id="calendar" class="w-75"></div>
+                            <div class="eventInfo w-25">
                                 <style>
                                     .eventInfo {
                                         display: flex;
@@ -48,69 +48,6 @@
                                         position: relative;
                                         background-image: url(img/Group-2.png);
                                         background-size: 100% 100%                                        
-                                    }
-
-                                    .current-progress {
-                                        position: relative;
-                                        display: flex;
-                                        align-items: flex-start;
-                                        justify-content: center;
-                                        color: black
-                                    }
-
-                                    .current-progress .progress-percentage {
-                                        position: absolute;
-                                        top: 0;
-                                        left: 0;
-                                        display: flex;
-                                        align-items: center;
-                                        justify-content: center;
-                                        background-color: rgba(255, 255, 255, 0.7);
-                                        height: 100%;
-                                        font-size: 18px;
-                                        color: black;
-                                    }
-
-                                    .process-event {
-                                        position: relative
-                                    }
-                                    
-                                    .process-event::before {
-                                        content: '';
-                                        position: absolute;
-                                        top: 0;
-                                        left: 0;
-                                        width: 100%;
-                                        height: 20px;
-                                        background: linear-gradient(to right, rgba(255,255,255,0.5) , rgba(255,255,255,0.1));
-                                        z-index: -1;
-                                    }
-
-                                    .productionplannermodule .fc-timeline-events, .productionplannermodule .fc-timeline-event-harness, .productionplannermodule .fc-timeline-event, .productionPlannerTable .fc-event-main {
-                                        height: 100% !important;
-                                    }
-
-                                .productionplannermodule .fc-timeline-event {
-                                        padding: 0 0!important
-                                    }
-
-                                    .productionplannermodule .fc-h-event {
-                                        border: 0!important
-                                    }
-
-                                    .productionplannermodule .fc-timeline-events {
-                                        padding-bottom: 0px !important;
-                                    }
-
-                                    .productionplannermodule .fc-timeline-lane-frame {
-                                        height: 60px !important;
-                                    }
-
-                                    .productionplannermodule .fc-h-event.highlighted {
-                                        box-sizing: border-box!important;
-                                        -moz-box-sizing: border-box!important;
-                                        -webkit-box-sizing: border-box!important;
-                                        border: 2px solid #f00 !important;
                                     }
 
                                     /* .unable-process::before {
@@ -172,7 +109,6 @@
                             </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-center w-100 mt-3" style="height: 50px; gap: 20px">
-                    <button class="btn btn-success btn-round btnPrintWorkSheet">Print Worksheet</button>
                     <button class="btn btn-success btn-round btnApply">Apply</button>
                     <button class="btn btn-danger btn-round btn-optimize">Optimize</button>
                     <button class="btn btn-primary btn-round btn-raw-material">Raw Material</button>

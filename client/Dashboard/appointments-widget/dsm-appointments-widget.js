@@ -258,11 +258,12 @@ Template.dsmAppointmentsWidget.onRendered(function() {
             globalSet.id = "";
         }
     }
+    $('.fullScreenSpin').css('display', 'inline-block');
 
     const refreshPage = () => window.open('/appointments', '_self')
 
     templateObject.fetchAppointments = function() {
-
+        $('.fullScreenSpin').css('display', 'inline-block');
         sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
             addVS1Data('TAppointment', JSON.stringify(dataUpdate)).then(function(datareturn) {
                 refreshPage();
@@ -1684,6 +1685,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
         let jobs;
         let dataList;
         addVS1Data('TAppointment', JSON.stringify(data));
+        $('.fullScreenSpin').css('display', 'inline-block');
         let appColor = '#00a3d3';
         let dataColor = '';
         let allEmp = templateObject.employeerecords.get();

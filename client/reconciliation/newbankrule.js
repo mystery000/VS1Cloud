@@ -59,7 +59,7 @@ Template.newbankrule.onRendered(function() {
     };
     function setAccountListVS1(data) {
         let splashArrayAccountList = [];
-        for (let i = 0; i < data.taccountvs1.length; i++) {
+        for (let i = 0; i < data.taccountvs1.length; i++) {            
             let accBalance = 0;
             if (!isNaN(data.taccountvs1[i].fields.Balance)) {
                 accBalance = utilityService.modifynegativeCurrencyFormat(data.taccountvs1[i].fields.Balance) || 0.00;
@@ -169,8 +169,6 @@ Template.newbankrule.onRendered(function() {
                         targets: [3],
                     },
                 ],
-                select: true,
-                destroy: true,
                 colReorder: true,
 
                 pageLength: initialDatatableLoad,

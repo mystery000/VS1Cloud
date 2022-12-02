@@ -1566,8 +1566,6 @@ Template.productview.onRendered(function() {
                                 className: "taxRate text-right",
                                 "targets": [3]
                             }],
-                            select: true,
-                            destroy: true,
                             colReorder: true,
 
                             pageLength: initialDatatableLoad,
@@ -1632,8 +1630,6 @@ Template.productview.onRendered(function() {
                             className: "taxRate text-right",
                             "targets": [3]
                         }],
-                        select: true,
-                        destroy: true,
                         colReorder: true,
 
                         pageLength: initialDatatableLoad,
@@ -1699,8 +1695,6 @@ Template.productview.onRendered(function() {
                             className: "taxRate text-right",
                             "targets": [3]
                         }],
-                        select: true,
-                        destroy: true,
                         colReorder: true,
 
                         pageLength: initialDatatableLoad,
@@ -4964,7 +4958,7 @@ Template.productview.events({
                     };
 
                     saveBOMStructure()
-
+                    
 
                     sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(dataReload) {
                         addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
@@ -4998,11 +4992,11 @@ Template.productview.events({
             let bomObject = templateObject.bomStructure.get();
 
             let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')):[];
-
+    
             let existIndex = bomProducts.findIndex(product =>{
                 return product.fields.productName == bomObject.fields.productName;
             })
-
+    
             let temp = JSON.parse(JSON.stringify(bomObject));
             temp.fields.productDescription = templateObject.records.get().salesdescription
             temp.fields.totalQtyInStock = templateObject.records.get().totalqtyinstock;
@@ -5017,12 +5011,12 @@ Template.productview.events({
                     return product.fields.productName != bomObject.fields.productName;
                 })
             }
-
+    
             localStorage.setItem('TProcTree', JSON.stringify(bomProducts));
         }
 
-
-
+        
+                    
     }, delayTimeAfterSound);
     },
     'click .btnBack': function(event) {
@@ -6114,7 +6108,7 @@ Template.productview.events({
     },
 
     'click .btn-save-bom': function(event) {
-
+       
         const tempObject = Template.instance();
         playSaveAudio();
         setTimeout(function(){
@@ -6268,7 +6262,7 @@ Template.productview.events({
         }
     },
 
-
+   
 
     'click #closeBOMSetupModal': function(event) {
         $('.btn-cancel-bom').trigger('click');

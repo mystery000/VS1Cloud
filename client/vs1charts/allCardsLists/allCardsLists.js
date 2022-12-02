@@ -44,6 +44,7 @@ Template.allCardsLists.onRendered(function () {
     }
 
     templateObject.setCardPositions = async () => {
+        $(".fullScreenSpin").css("display", "block");
         setTimeout(async function(){
             $('.card-visibility').addClass('hideelement')
             let Tvs1CardPref = await getVS1Data('Tvs1CardPreference');
@@ -99,6 +100,7 @@ Template.allCardsLists.onRendered(function () {
                 $(`[chartgroup='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
                 $(`[chartgroup='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
             }
+            $(".fullScreenSpin").css("display", "none");
         }, 0);
     };
     templateObject.setCardPositions();

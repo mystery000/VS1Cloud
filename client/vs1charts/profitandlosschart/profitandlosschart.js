@@ -146,7 +146,7 @@ Template.profitandlosschart.onRendered(()=>{
             }else{
               templateObject.expenseperc.set(totalExpensePerc);
             }
-          }, 0)
+          }, 1000)
 
         }
         templateObject.records.set(records);
@@ -211,7 +211,7 @@ Template.profitandlosschart.onRendered(()=>{
             }else{
               templateObject.expenseperc.set(totalExpensePerc);
             }
-          }, 0)
+          }, 1000)
 
 
         }
@@ -277,7 +277,7 @@ Template.profitandlosschart.onRendered(()=>{
                 setTimeout(function () {
                     utilityService.exportReportToCsv(rows, filename, 'xls');
                     $('.fullScreenSpin').css('display','none');
-                }, 0);
+                }, 1000);
             }
 
         });

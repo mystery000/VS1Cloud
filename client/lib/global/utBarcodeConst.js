@@ -36,16 +36,6 @@
   Barcode_Prefix_LOT     = 'LOT';
   Barcode_Prefix_Lead = 'LED';
 
-  Barcode_Prefix_Appointment = 'APP';
-  Barcode_Prefix_Credit = 'CR';
-  Barcode_Prefix_CRM = 'CRM';
-  Barcode_Prefix_Deposit = 'DEP';
-  Barcode_Prefix_FixedAsset = 'FA';
-  Barcode_Prefix_ReceiptClaim = 'RC';
-  Barcode_Prefix_Task = 'TSK';
-  Barcode_Prefix_WorkOrder = 'WO';
-
-  
  licenceIPAddress = "login.vs1cloud.com"; //165.228.147.127
  //licenceIPAddress = "sandboxcoreedi.vs1cloud.com"; //192.168.15.124
   //Global Declaration

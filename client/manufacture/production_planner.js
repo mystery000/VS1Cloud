@@ -26,7 +26,6 @@ Template.production_planner.onCreated(function() {
     templateObject.calendar = new ReactiveVar();
     templateObject.calendarOptions = new ReactiveVar();
     templateObject.startDate = new ReactiveVar();
-    templateObject.selectedEventSalesorderId = new ReactiveVar(-1);
 })
 let manufacturingService = new ManufacturingService();
 Template.production_planner.onRendered(async function() {
@@ -165,20 +164,13 @@ Template.production_planner.onRendered(async function() {
             center: 'title',
             right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
         },
-        contentHeight: resources.length * 60 + 80,
+        contentHeight: resources.length * 40 + 80,
         editable: true,
         resourceAreaHeaderContent: 'Resources',
         resources: await getResources(),
         events: templateObject.events.get().length == 0 ? events : templateObject.events.get(),
         eventOverlap: true,
         eventResourceEditable: false,
-        eventClassNames: function(arg) {
-            if (arg.event.extendedProps.orderId.split('_')[0] == templateObject.selectedEventSalesorderId.get()) {
-                return [ 'highlighted' ]
-              } else {
-                return [ 'normal' ]
-              }
-        },
         eventContent:  function (arg) {
             var event = arg.event;
 
@@ -214,9 +206,6 @@ Template.production_planner.onRendered(async function() {
                             subQuantity += subEvents[j].extendedProps.quantity
                         }
                         
-                        for(let n = 0; n< events.length; n++) {
-                            let e = events[n];
-                        }
                        
                         let filteredMainEvents = events.filter(e => new Date(e.start).getTime() <= new Date(event.start).getTime() && new Date(e.end).getTime() > new Date().getTime() && e.extendedProps.builds.includes(subEvents[j].title) )
                         for (let k = 0; k< filteredMainEvents.length; k++) {
@@ -247,25 +236,10 @@ Template.production_planner.onRendered(async function() {
             var customHtml = '';
             
             if(available == true) {
-                customHtml += "<div class='w-100 h-100 d-flex align-items-start justify-content-center process-event' style='color: black'>" + event.title + "</div>"
+                customHtml += event.title
             }else {
 
-                customHtml += "<div class='w-100 h-100 unable-process d-flex align-items-start justify-content-center process-event' style='color: black'>" + event.title + "</div>";
-            }
-
-
-            let sTime = event.start;
-            let eTime = event.end;
-            let current = new Date();
-            if(available == true) {
-                if(current.getTime() > sTime.getTime() && current.getTime() < eTime.getTime()) {
-                    let totalDuration = eTime.getTime() - sTime.getTime();
-                    let progressed = current.getTime() - sTime.getTime();
-                    let percent = Math.round((progressed / totalDuration) * 100);
-                    customHtml = "<div class='w-100 h-100 current-progress process-event' style='color: black'>" + event.title + "<div class='progress-percentage' style='width:"+percent+"%'>" + percent + "%</div></div>"
-                } else if (current.getTime() >= eTime.getTime()) {
-                    customHtml = "<div class='w-100 h-100 current-progress process-event' style='color: black'>" + event.title + "<div class='progress-percentage w-100'>Completed</div></div>"
-                }
+                customHtml += "<div class='w-100 h-100 unable-process'>" + event.title + "</div>";
             }
             
             // customHtml += "<span class='r10 highlighted-badge font-xxs font-bold'>" + event.extendedProps.age + text + "</span>";
@@ -274,21 +248,11 @@ Template.production_planner.onRendered(async function() {
             return { html: customHtml }
         },
         eventDidMount : function(arg) {
-            let event = arg.event;
             arg.el.ondblclick = (()=>{
+                let event = arg.event;
                 let id = event.extendedProps.orderId;
                 FlowRouter.go('/workordercard?id=' + id)
             })
-            let sTime = event.start
-            let current = new Date().getTime()
-            if(current>sTime.getTime())   {
-                let unableProcesses = arg.el.getElementsByClassName('unable-process');
-                if(unableProcesses.length == 0) {
-                    arg.el.classList.remove('fc-event-resizable');
-                    arg.el.classList.remove('fc-event-draggable');
-                }
-            }
-            
             
         },
         businessHours: [{
@@ -379,6 +343,7 @@ Template.production_planner.onRendered(async function() {
                     calendar = new Calendar(calendarEl, {
                         ...calendarOptions,
                         events: events,
+                        firstDay: dayIndex
                     })
                     calendar.render();
                 }
@@ -389,12 +354,6 @@ Template.production_planner.onRendered(async function() {
                 events[targetIndex].start = newStart;
                 events[targetIndex].end = newEnd;
                 templateObject.events.set(events);
-                calendar.destroy();
-                calendar = new Calendar(calendarEl, {
-                    ...calendarOptions,
-                    events: events
-                })
-                calendar.render()
             }
 
             // calendar.render()
@@ -420,17 +379,6 @@ Template.production_planner.onRendered(async function() {
                     Percentage: percentage + '%',
                 }
                 templateObject.viewInfoData.set(object);
-                let orderId = info.event.extendedProps.orderId;
-                let salesorderId = orderId.split('_')[0];
-                templateObject.selectedEventSalesorderId.set(salesorderId);
-                let dayIndex = info.event.start.getDay();
-                calendar.destroy();
-                calendar = new Calendar(calendarEl, {
-                    ...calendarOptions,
-                    firstDay: dayIndex,
-                    events: templateObject.events.get()
-                })
-                calendar.render();
             }
             // expandRows: true,
             // events: [{"resourceId":"1","title":"event 1","start":"2022-11-14","end":"2022-11-16"},{"resourceId":"2","title":"event 3","start":"2022-11-15T12:00:00+00:00","end":"2022-11-16T06:00:00+00:00"},{"resourceId":"0","title":"event 4","start":"2022-11-15T07:30:00+00:00","end":"2022-11-15T09:30:00+00:00"},{"resourceId":"2","title":"event 5","start":"2022-11-15T10:00:00+00:00","end":"2022-11-15T15:00:00+00:00"},{"resourceId":"1","title":"event 2","start":"2022-11-15T09:00:00+00:00","end":"2022-11-15T14:00:00+00:00"}]
@@ -462,8 +410,7 @@ Template.production_planner.events({
     },
 
     'click .btn-print-event': function(event) {
-        document.title = 'Work order detail';
-        
+        document.title = 'Product BOM Setup';
         $(".eventInfo .eventDetail").print({
             // title   :  document.title +" | Product Sales Report | "+loggedCompany,
             // noPrintSelector : ".btnAddProduct",
@@ -487,47 +434,32 @@ Template.production_planner.events({
                 return new Date(a.start) - new Date(b.start);
             }); 
 
-            if(new Date(filteredEvents[0].start).getTime() > new Date().getTime()) {
-                let firstDuration = new Date(filteredEvents[0].end).getTime() - new Date(filteredEvents[0].start).getTime()
-                filteredEvents[0].start = new Date();
-                filteredEvents[0].end  = new Date(new Date().getTime() + firstDuration); 
-            }
-            let firstIndex = cloneEvents.findIndex(event => {
-                return event.resourceId == filteredEvents[0].resourceId && event.extendedProps.orderId == filteredEvents[0].extendedProps.orderId
-            })
-            if(firstIndex > -1) {
-                cloneEvents[firstIndex] = filteredEvents[0];
-            }
 
-            if(filteredEvents.length >=1) {
-                for (let j = 1; j<filteredEvents.length; j++) {
-                    async function updateEvent() {
-                        return new Promise(async(resolve, reject) => {
-                            let eventDuration = new Date(filteredEvents[j].end).getTime() - new Date(filteredEvents[j].start).getTime();
-                            let index = cloneEvents.findIndex(event => {
-                                return event.resourceId == filteredEvents[j].resourceId && event.title == filteredEvents[j].title;
-                            })
-                            cloneEvents[index].start =  new Date(filteredEvents[j-1].end);
-                            let endTime = new Date()
-                            endTime.setTime(new Date(filteredEvents[j - 1].end).getTime() + eventDuration)
-                            cloneEvents[index].end = endTime;
-                            resolve()
+            for (let j = 1; j<filteredEvents.length; j++) {
+                async function updateEvent() {
+                    return new Promise(async(resolve, reject) => {
+                        let eventDuration = new Date(filteredEvents[j].end).getTime() - new Date(filteredEvents[j].start).getTime();
+                        let index = cloneEvents.findIndex(event => {
+                            return event.resourceId == filteredEvents[j].resourceId && event.title == filteredEvents[j].title;
                         })
-                    }
-                    updateEvent()
+                        cloneEvents[index].start =  new Date(filteredEvents[j-1].end);
+                        let endTime = new Date()
+                        endTime.setTime(new Date(filteredEvents[j - 1].end).getTime() + eventDuration)
+                        cloneEvents[index].end = endTime;
+                        resolve()
+                    })
                 }
-            }else {
-
+                updateEvent()
             }
         }
         templateObject.events.set(cloneEvents);
         if(templateObject.calendar.get() != null) {
             let calendar = templateObject.calendar.get();
             calendar.destroy();
-            // let dayIndex = new Date(events[0].start).getDay();
+            let dayIndex = new Date(events[0].start).getDay();
             let calendarOptions = templateObject.calendarOptions.get();
             let calendarEl= document.getElementById('calendar');
-            let newCalendar = new Calendar(calendarEl, {...calendarOptions, events: cloneEvents})
+            let newCalendar = new Calendar(calendarEl, {...calendarOptions, events: cloneEvents, firstDay: dayIndex})
             newCalendar.render();
             templateObject.calendar.set(newCalendar)
         }
@@ -574,23 +506,11 @@ Template.production_planner.events({
             let dayIndex = new Date(events[0].start).getDay();
             let calendarOptions = templateObject.calendarOptions.get();
             let calendarEl= document.getElementById('calendar');
-            let newCalendar = new Calendar(calendarEl, {...calendarOptions, events: events})
+            let newCalendar = new Calendar(calendarEl, {...calendarOptions, events: events, firstDay: dayIndex})
             newCalendar.render();
             templateObject.calendar.set(newCalendar)
         }
 
-    },
-
-    'click .btnPrintWorkSheet': function(event) {
-        document.title = 'production planner worksheet';
-        
-        $(".productionPlannerTable").print({
-            // title   :  document.title +" | Product Sales Report | "+loggedCompany,
-            // noPrintSelector : ".btnAddProduct",
-            // noPrintSelector : ".btnAddSubProduct",
-            // noPrintSelector : ".btn-remove-raw",
-            // noPrintSelector : ".btnAddAttachment",
-        });
     }
 })
 

@@ -294,6 +294,32 @@ Template.appointments.onRendered(function() {
         }
     }
 
+    templateObject.hasFollowings = async function() {
+        var currentDate = new Date();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var apptData = await appointmentService.getOneAppointmentdataEx(currentInvoice);
+            let apptIds = await appointmentService.getAllAppointmentListCount();
+            let apptIdList = apptIds.tappointmentex;
+            let cnt = 0;
+            for (let i = 0; i < apptIdList.length; i++) {
+                if (apptIdList[i].Id > apptData.fields.ID) {
+                    cnt++;
+                }
+            }
+            if (cnt > 1) {
+                $("#btn_follow2").css("display", "inline-block");
+            } else {
+                $("#btn_follow2").css("display", "none");
+            }
+        }
+    }
+    templateObject.hasFollowings();
+
     // $("#employeeListModal").modal("show");
 
     let currentId = FlowRouter.current().context.hash;
@@ -18718,19 +18744,6 @@ Template.appointments.events({
                         window.open("/appointments", "_self");
                     });
                 }, 1000);
-
-                // $('#edtEmpID').val(empID);
-                // $('#newLeaveRequestLabel').text('New Leave Request');
-                // let today = new Date();
-                // const dd = String(today.getDate()).padStart(2, '0');
-                // const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                // const yyyy = today.getFullYear();
-                // today = dd + '/' + mm + '/' + yyyy;
-                // $('#leaveRequestForm')[0].reset();
-                // $('#edtLeaveStartDate').val(today);
-                // $('#edtLeaveEndDate').val(today);
-                // $('#removeLeaveRequestBtn').hide();
-
                 // $("#newLeaveRequestModal").modal("toggle");
             }
         });

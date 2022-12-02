@@ -1059,7 +1059,7 @@ Template.refundcard.onRendered(() => {
             } else {
                 $(".subtotal2").show();
             }
-
+            
             $("#templatePreviewModal #subtotal_totalPrint2").text(
                 object_invoce[0]["subtotal"]
             );
@@ -1071,7 +1071,7 @@ Template.refundcard.onRendered(() => {
             );
             $("#templatePreviewModal #paid_amount2").text(
                 object_invoce[0]["paid_amount"]
-            );
+            );  
         }
 
         function loadTemplateBody3(object_invoce) {
@@ -1128,7 +1128,7 @@ Template.refundcard.onRendered(() => {
             } else {
                 $(".subtotal3").show();
             }
-
+            
             $("#templatePreviewModal #subtotal_totalPrint3").text(
                 object_invoce[0]["subtotal"]
             );
@@ -4980,7 +4980,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                       }
                   });
                 }
-
+                
             });
 
             html2pdf().set(opt).from(source).save().then(function (dataObject) {
@@ -5350,8 +5350,6 @@ Template.refundcard.onRendered(function() {
                                     "targets": [3]
                                 }
                             ],
-                            select: true,
-                            destroy: true,
                             colReorder: true,
 
 
@@ -5435,8 +5433,6 @@ Template.refundcard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
-                        select: true,
-                        destroy: true,
                         colReorder: true,
 
 
@@ -5519,8 +5515,6 @@ Template.refundcard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
-                        select: true,
-                        destroy: true,
                         colReorder: true,
 
 
@@ -5839,7 +5833,7 @@ Template.refundcard.helpers({
             // if (LoggedCountry == "South Africa") {
             //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
             // }
-
+            
             return countryABNValue;
         },
 
@@ -5920,27 +5914,26 @@ Template.refundcard.events({
     'click  #open_print_confirm':function(event)
     {
         playPrintAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
         if($('#choosetemplate').is(':checked'))
         {
             $('#templateselection').modal('show');
         }
         else
         {
-
             LoadingOverlay.show();
-            $('#html-2-pdfwrapper').css('display', 'block');
-            if ($('.edtCustomerEmail').val() != "") {
-                $('.pdfCustomerName').html($('#edtCustomerName').val());
-                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-                var ponumber = $('#ponumber').val() || '.';
-                $('.po').text(ponumber);
-                var rowCount = $('.tblInvoiceLine tbody tr').length;
-                exportSalesToPdf1();
-            }
-
-            $('#confirmprint').modal('hide');
+            // $('#html-2-pdfwrapper').css('display', 'block');
+            let result = await exportSalesToPdf(template_list[0], 1);            
+            // if ($('.edtCustomerEmail').val() != "") {
+            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+            //     var ponumber = $('#ponumber').val() || '.';
+            //     $('.po').text(ponumber);
+            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+            //     exportSalesToPdf1();
+            // }
+            // $('#confirmprint').modal('hide');
         }
     }, delayTimeAfterSound);
     },
@@ -7305,7 +7298,7 @@ Template.refundcard.events({
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         setTimeout(async function(){
-
+        
         swal({
             title: 'Delete Refund',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -7357,7 +7350,7 @@ Template.refundcard.events({
         let salesService = new SalesBoardService();
         setTimeout(function(){
         LoadingOverlay.show();
-
+        
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -7387,7 +7380,7 @@ Template.refundcard.events({
 
                     }
                 });
-
+                
             });
         } else {
             window.open('/refundlist', '_self');
@@ -7667,9 +7660,9 @@ Template.refundcard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentInvoice = getso_id[getso_id.length - 1];
-
+            
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val()||0;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             let foreignCurrencyFields = {}
             if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {
@@ -8501,7 +8494,7 @@ Template.refundcard.events({
         lineItems.push(lineItemObj);
       });
 
-
+      
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
@@ -8810,7 +8803,7 @@ Template.refundcard.events({
             var currentInvoice = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val()||0;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             let foreignCurrencyFields = {}
             if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {

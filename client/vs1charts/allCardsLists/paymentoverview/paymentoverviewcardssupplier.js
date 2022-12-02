@@ -11,7 +11,7 @@ Template.paymentoverviewcardssupplier.onCreated(function() {
 });
 
 Template.paymentoverviewcardssupplier.onRendered(function() {
-
+    $('.fullScreenSpin').css('display', 'inline-block');
     var url = window.location.href;
     let supplierID = 0;
     if (url.indexOf("supplierscard?id=") > 0) {

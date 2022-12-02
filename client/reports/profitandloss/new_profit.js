@@ -35,7 +35,6 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.recordslayout = new ReactiveVar([]);
   templateObject.profitlosslayoutrecords = new ReactiveVar([]);
   templateObject.profitlosslayoutfields = new ReactiveVar([]);
-  templateObject.daterange = new ReactiveVar();
   FxGlobalFunctions.initVars(templateObject);
 });
 
@@ -82,6 +81,7 @@ Template.newprofitandloss.onRendered(function () {
   LoadingOverlay.show();
   const templateObject = Template.instance();
   const deptrecords = [];
+
   templateObject.setReportOptions = async function (compPeriod = 0, formatDateFrom = new Date(), formatDateTo = new Date() ) {
     // New Code Start here
     let fromYear = moment(formatDateFrom).format("YYYY");
@@ -106,7 +106,7 @@ Template.newprofitandloss.onRendered(function () {
         departments: [],
         showDecimal: true,
         showtotal: true,
-        showPercentage:true
+        showPercentage:true  
       };
     }
     templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
@@ -302,7 +302,7 @@ Template.newprofitandloss.onRendered(function () {
           let data = await CachedHttp.get(erpObject.TProfitAndLossPeriodCompareReport, async () => {
             return await reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths );
           }, {
-            useIndexDb: true,
+            useIndexDb: true, 
             useLocalStorage: false,
             validate: (cachedResponse) => {
               return false;
@@ -386,7 +386,7 @@ Template.newprofitandloss.onRendered(function () {
             }
 
             // Set Table Data
-            options.showPercentage = true;
+            options.showPercentage = true;  
             templateObject.reportOptions.set(options);
             templateObject.records.set(records);
             // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
@@ -429,7 +429,7 @@ Template.newprofitandloss.onRendered(function () {
           let data = await CachedHttp.get(erpObject.ProfitLossReport, async () => {
             return await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );
           }, {
-            useIndexDb: true,
+            useIndexDb: true, 
             useLocalStorage: false,
             validate: (cachedResponse) => {
               return false;
@@ -518,7 +518,7 @@ Template.newprofitandloss.onRendered(function () {
             }
 
             // Set Table Data
-            options.showPercentage = false;
+            options.showPercentage = false;  
             templateObject.reportOptions.set(options);
             templateObject.records.set(records);
             // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
@@ -589,12 +589,10 @@ Template.newprofitandloss.onRendered(function () {
     if (url.indexOf("?daterange=monthly") > 0) {
       fromDate = moment().startOf("month").format("YYYY-MM-DD");
       endDate = moment().endOf("month").format("YYYY-MM-DD");
-      templateObject.daterange.set("- Monthly");
     }
     if (url.indexOf("?daterange=quarterly") > 0) {
       fromDate = moment().startOf("Q").format("YYYY-MM-DD");
       endDate = moment().endOf("Q").format("YYYY-MM-DD");
-      templateObject.daterange.set("- Quarterly");
     }
     if (url.indexOf("?daterange=yearly") > 0) {
       if (moment().quarter() == 4) {
@@ -604,12 +602,10 @@ Template.newprofitandloss.onRendered(function () {
         fromDate = moment().subtract(1, "year").month("July").startOf("month").format("YYYY-MM-DD");
         endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
       }
-      templateObject.daterange.set("- Yearly");
     }
     if (url.indexOf("?daterange=ytd") > 0) {
       fromDate = moment().month("january").startOf("month").format("YYYY-MM-DD");
       endDate = moment().format("YYYY-MM-DD");
-      templateObject.daterange.set("- YTD");
     }
     localStorage.setItem('VS1ProfitAndLoss_Report', '');
     templateObject.setReportOptions(0, fromDate, endDate);
@@ -1121,7 +1117,7 @@ Template.newprofitandloss.events({
     setTimeout(async function(){
     let periods = $("#comparisonPeriodNum").val();
     $(".fullScreenSpin").css("display", "block");
-
+    
     let defaultOptions = await templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.compPeriod = periods;
@@ -2368,9 +2364,6 @@ Template.newprofitandloss.helpers({
   },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
-  },
-  daterange: () => {
-    return Template.instance().daterange.get();
   },
   companyname: () => {
     return loggedCompany;

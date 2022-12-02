@@ -69,8 +69,8 @@ Template.earningRateSettings.onRendered(function() {
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );
-
+        );                
+        
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -79,8 +79,8 @@ Template.earningRateSettings.onRendered(function() {
                 await addVS1Data('TEarnings', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
-        }
-        return '';
+        }  
+        return '';      
     }
 
     /**
@@ -116,12 +116,12 @@ Template.earningRateSettings.onRendered(function() {
             const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
                 employeePayrolApis.collectionNames.TEarnings
             );
-
+        
             employeePayrolEndpoint.url.searchParams.append(
                 "ListType",
                 "'Detail'"
-            );
-
+            );                
+            
             const response = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
             if (response.ok == true) {
                 let earnings = await response.json();
@@ -129,7 +129,7 @@ Template.earningRateSettings.onRendered(function() {
                     return earnings.tearnings;
                 }
                 return null;
-            }
+            }  
 
             return null;
         }, {
@@ -139,9 +139,9 @@ Template.earningRateSettings.onRendered(function() {
             }
         });
 
+        
 
-
-
+    
 
         // const resp = await getVS1Data(erpObject.TEarningData);
         // let data = resp.length > 0 ? JSON.parse(resp[0].data) : [];
@@ -149,7 +149,7 @@ Template.earningRateSettings.onRendered(function() {
 
         let earnings = response.map(e => e.fields != undefined ? e.fields : e);
 
-
+       
 
         await templateObject.earnings.set(earnings);
 
@@ -231,14 +231,14 @@ Template.earningRateSettings.onRendered(function() {
         try {
             let data = {};
             let splashArrayEarningList = new Array();
-            let dataObject = await getVS1Data('TEarnings')
+            let dataObject = await getVS1Data('TEarnings')   
             if ( dataObject.length == 0) {
                 data = await templateObject.saveDataLocalDB();
             }else{
                 data = JSON.parse(dataObject[0].data);
             }
             if( data.tearnings.length > 0 ){
-                for (let i = 0; i < data.tearnings.length; i++) {
+                for (let i = 0; i < data.tearnings.length; i++) {            
                     let dataList = [
                         data.tearnings[i].fields.ID || '',
                         data.tearnings[i].fields.EarningsName || '',
@@ -249,18 +249,18 @@ Template.earningRateSettings.onRendered(function() {
                         data.tearnings[i].fields.EarningsExemptPaygWithholding || '',
                         data.tearnings[i].fields.EarningsExemptSuperannuationGuaranteeCont || '',
                         data.tearnings[i].fields.EarningsReportableW1onActivityStatement || ''
-                    ];
+                    ];    
                     splashArrayEarningList.push(dataList);
                 }
             }
             templateObject.datatablerecords.set(splashArrayEarningList);
             $('.fullScreenSpin').css('display', 'none');
             setTimeout(function () {
-                $('#tblEarnings').DataTable({
+                $('#tblEarnings').DataTable({  
                     data: splashArrayEarningList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    columnDefs: [
-
+                    columnDefs: [                              
+                        
                         {
                             className: "colEarningsID hiddenColumn",
                             "targets": [0]
@@ -268,19 +268,19 @@ Template.earningRateSettings.onRendered(function() {
                         {
                             className: "colEarningsNames",
                             "targets": [1]
-                        },
+                        },  
                         {
                             className: "colEarningsType",
                             "targets": [2]
-                        },
+                        },      
                         {
                         className: "colEarningsDisplayName",
                         "targets": [3]
-                        },
+                        }, 
                         {
                         className: "colEarningsAccounts",
                         "targets": [4]
-                        },
+                        },   
                         {
                         className: "colEarningsRateType",
                         "targets": [5]
@@ -288,11 +288,11 @@ Template.earningRateSettings.onRendered(function() {
                         {
                         className: "colEarningsPAYG hiddenColumn"  ,
                         "targets": [6]
-                        },
+                        },  
                         {
                         className: "colEarningsSuperannuation hiddenColumn",
                         "targets": [7]
-                        },
+                        },  
                         {
                         className: "colEarningsReportableasW1 hiddenColumn",
                         "targets": [8]
@@ -332,7 +332,7 @@ Template.earningRateSettings.onRendered(function() {
 
                                 sideBarService.getEarnings(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
-                                    for (let i = 0; i < data.tearnings.length; i++) {
+                                    for (let i = 0; i < data.tearnings.length; i++) {              
                                         var dataList = [
                                         data.tearnings[i].fields.ID || '',
                                         data.tearnings[i].fields.EarningsName || '',
@@ -461,8 +461,6 @@ Template.earningRateSettings.onRendered(function() {
                                     targets: [3],
                                 },
                             ],
-                            select: true,
-                            destroy: true,
                             colReorder: true,
 
                             pageLength: initialDatatableLoad,
@@ -532,8 +530,6 @@ Template.earningRateSettings.onRendered(function() {
                                 targets: [3],
                             },
                         ],
-                        select: true,
-                        destroy: true,
                         colReorder: true,
 
                         pageLength: initialDatatableLoad,
@@ -603,8 +599,6 @@ Template.earningRateSettings.onRendered(function() {
                                 targets: [3],
                             },
                         ],
-                        select: true,
-                        destroy: true,
                         colReorder: true,
 
                         pageLength: initialDatatableLoad,
@@ -765,7 +759,7 @@ Template.earningRateSettings.onRendered(function() {
         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
             $('#rateTypeListModel').modal('show');
         } else {
-            if (searchName.replace(/\s/g, '') == '') {
+            if (searchName.replace(/\s/g, '') == '') {             
                 $('#rateTypeListModel').modal('show');
                 return false
             }
@@ -782,13 +776,13 @@ Template.earningRateSettings.onRendered(function() {
                     if( item.fields.Description == searchName ){
                         return item;
                     }
-                });
+                });   
                 if( useData.length > 0 ){
                     $('#edtRateID').val( useData[0].fields.ID || '' );
-                    $('#edtRateDescription').val(useData[0].fields.Description || '');
-                }
-                $('#addRateModel').modal('show');
-            }
+                    $('#edtRateDescription').val(useData[0].fields.Description || '');   
+                }    
+                $('#addRateModel').modal('show');  
+            }  
         }
     });
 
@@ -809,7 +803,7 @@ Template.earningRateSettings.onRendered(function() {
         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
             $('#accountListModal').modal('show');
         } else {
-            if (searchName.replace(/\s/g, '') == '') {
+            if (searchName.replace(/\s/g, '') == '') {             
                 $('#accountListModal').modal('show');
                 return false
             }
@@ -820,7 +814,7 @@ Template.earningRateSettings.onRendered(function() {
                     if( item.fields.AccountName == searchName ){
                         return item;
                     }
-                });
+                });   
 
                 var accountid = tAccounts[0].fields.ID || '';
                 var accounttype = tAccounts[0].fields.AccountTypeName;
@@ -877,8 +871,8 @@ Template.earningRateSettings.onRendered(function() {
                 }else{
                     $('.showOnTransactions').prop('checked', false);
                 }
-            }
-            $('#addAccountModal').modal('show');
+            }      
+            $('#addAccountModal').modal('show');  
         }
     });
     // Standard drop down
@@ -894,12 +888,12 @@ Template.earningRateSettings.onRendered(function() {
             $('#earningRateForm')[0].reset();
             $('#earningRateSettingsModal').modal('show');
         } else {
-            if (searchName.replace(/\s/g, '') == '') {
+            if (searchName.replace(/\s/g, '') == '') {             
                 $('#earningRateSettingsModal').modal('show');
                 return false
             }
             let data = {};
-            let dataObject = await getVS1Data('TEarnings');
+            let dataObject = await getVS1Data('TEarnings');   
             if ( dataObject.length == 0) {
                 data = await templateObject.saveDataLocalDB();
             }else{
@@ -913,7 +907,7 @@ Template.earningRateSettings.onRendered(function() {
                 });
                 $('#headerEarningLabel').text('Edit Earning');
                 $('#earningRateForm')[0].reset();
-                $('#addEarningsLineModal').modal('hide');
+                $('#addEarningsLineModal').modal('hide');                
                 if( tEarnings.length > 0 ){
                     let earningRate = tEarnings[0];
                     $('#earningID').val(earningRate.fields.ID)
@@ -993,7 +987,7 @@ Template.earningRateSettings.events({
         $('#earningRateForm')[0].reset();
         $('#addEarningsLineModal').modal('hide');
     },
-    'click .btnRefreshEarnings':function(event){
+    'click .btnRefreshEarnings':function(event){      
         let templateObject = Template.instance();
         var splashArrayEarningList = new Array();
         const lineExtaSellItems = [];
@@ -1004,7 +998,7 @@ Template.earningRateSettings.events({
                 $(".btnRefreshEarnings").removeClass('btnSearchAlert');
                 let lineItems = [];
                 if (data.tearnings.length > 0) {
-                    for (let i = 0; i < data.tearnings.length; i++) {
+                    for (let i = 0; i < data.tearnings.length; i++) {              
                         let dataList = [
                           data.tearnings[i].fields.ID || '',
                           data.tearnings[i].fields.EarningsName || '',
@@ -1028,10 +1022,10 @@ Template.earningRateSettings.events({
                     }, 400);
 
                     $('.fullScreenSpin').css('display', 'none');
-
+    
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
-
+    
                     swal({
                         title: 'Question',
                         text: "Earning Rate does not exist, would you like to create it?",
@@ -1053,7 +1047,7 @@ Template.earningRateSettings.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         } else {
-
+    
           $(".btnRefresh").trigger("click");
         }
 
@@ -1061,7 +1055,7 @@ Template.earningRateSettings.events({
     'click .saveEarningRates': async function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
-
+        
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -1092,7 +1086,7 @@ Template.earningRateSettings.events({
             handleValidationError('Please enter Expense Account!', 'edtExpenseAccount');
             return false;
         }
-
+        
 
         /**
          * Saving Earning Object in localDB
@@ -1119,7 +1113,7 @@ Template.earningRateSettings.events({
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(earningRateSetting),
             });
-
+        
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
                 $('#earningRateForm')[0].reset();
@@ -1138,7 +1132,7 @@ Template.earningRateSettings.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) { }
-                    }
+                    } 
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -1150,7 +1144,7 @@ Template.earningRateSettings.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });
+                });  
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -1162,7 +1156,7 @@ Template.earningRateSettings.events({
                 confirmButtonText: 'Try Again'
             }).then((result) => {
                 if (result.value) {}
-            });
+            });  
         }
     },
     "click #tblEarnings tbody tr": (e, ui) => {
@@ -1172,7 +1166,7 @@ Template.earningRateSettings.events({
         $('#' + earningRateID).val(earningRate);
         $('#earningRateSettingsModal').modal('toggle');
     },
-
+   
 });
 
 Template.earningRateSettings.helpers({

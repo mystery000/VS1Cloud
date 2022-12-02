@@ -564,6 +564,7 @@ Template.myTasksWidget.onRendered(function() {
             },
         };
         if (id) {
+            $(".fullScreenSpin").css("display", "inline-block");
             crmService.saveNewTask(objDetails).then(function(data) {
                 templateObject.getAllTaskList();
                 $(".fullScreenSpin").css("display", "none");
