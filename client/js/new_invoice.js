@@ -11230,39 +11230,18 @@ Template.new_invoice.onRendered(function() {
             },
         };
 
-            let invoice_data_info = templateObject.invoicerecord.get();
-            // document.getElementById("html-2-pdfwrapper_new").style.display = "block";
-            // var source = document.getElementById("html-2-pdfwrapper_new");
-            var source;
-            if (number == 1) {
-                $("#html-2-pdfwrapper").show();
-                $("#html-2-pdfwrapper2").hide();
-                $("#html-2-pdfwrapper3").hide();
-                source = document.getElementById("html-2-pdfwrapper");
-            } else if (number == 2) {
-                $("#html-2-pdfwrapper").hide();
-                $("#html-2-pdfwrapper2").show();
-                $("#html-2-pdfwrapper3").hide();
-                source = document.getElementById("html-2-pdfwrapper2");
-            } else {
-                $("#html-2-pdfwrapper").hide();
-                $("#html-2-pdfwrapper2").hide();
-                $("#html-2-pdfwrapper3").show();
-                source = document.getElementById("html-2-pdfwrapper3");
-            }
-
-            let file = "Invoice.pdf";
-            if (
-                $(".printID").attr("id") != undefined ||
-                $(".printID").attr("id") != ""
-            ) {
-                if (template_title == "Invoices") {
-                    file = "Invoice-" + invoice_data_info.id + ".pdf";
-                } else if (template_title == "Invoice Back Orders") {
-                    file = "Invoice Back Orders-" + invoice_data_info.id + ".pdf";
-                } else if (template_title == "Delivery Docket") {
-                    file = "Delivery Docket-" + invoice_data_info.id + ".pdf";
-                } else {}
+        html2pdf()
+            .set(opt)
+            .from(source)
+            .save()
+            .then(function(dataObject) {
+                if (
+                    $(".printID").attr("id") == undefined ||
+                    $(".printID").attr("id") == ""
+                ) {
+                    // $(".btnSave").trigger("click");
+                } else {
+                }
                 $("#html-2-pdfwrapper_new").css("display", "none");
                 $("#html-2-pdfwrapper").css("display", "none");
                 $("#html-2-pdfwrapper2").css("display", "none");
