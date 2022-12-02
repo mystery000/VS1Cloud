@@ -201,6 +201,10 @@ Template.new_invoice.onRendered(function() {
                 }
             }
         }
+        if (dateone == "") {
+            $("#formCheck-january").prop('checked', true);
+        }
+    }
     templateObject.insertItemWithLabel = (x, a, b) => {
         var data = [...x];
         var aPos = data.findIndex((x) => x.label === a);
