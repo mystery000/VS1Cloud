@@ -391,7 +391,7 @@ Template.eftExportModal.onRendered(function () {
 Template.eftExportModal.events({
 
   "click .btnOptionsEft": () => {
-    $('#eftOptionsModal').modal();
+    $('#eftOptionsModal').modal('toggle');
   },
 
   "click .btnSelectAllEft": () => {
@@ -514,9 +514,75 @@ Template.eftExportModal.events({
         return false;
       }
 
+
+
+      var arrData = [];
+      var eftData = '';
+      $("#eftExportTableBody tr").each(function () {
+        var currentRow = $(this);
+        var accountName = '';
+        var colBsb = '';
+        var colAccountNo = '';
+        var colTransactionCode = '';
+        var colLodgement = '';
+        var colAmount = '';
+        var colFromBsb = '';
+        var colFromAccountNo = '';
+
+        currentRow.find("td:eq(0)").find("input").each(function () {
+          if (this.checked) {
+            currentRow.find("td:eq(1)").find("input").each(function () {
+              accountName = this.value
+            });
+
+            currentRow.find("td:eq(2)").find("input").each(function () {
+              colBsb = this.value
+            });
+
+            currentRow.find("td:eq(3)").find("input").each(function () {
+              colAccountNo = this.value
+            });
+
+            currentRow.find("td:eq(4)").find("select").each(function () {
+              colTransactionCode = this.value
+            });
+
+            currentRow.find("td:eq(5)").find("input").each(function () {
+              colLodgement = this.value
+            });
+
+            currentRow.find("td:eq(6)").find("input").each(function () {
+              colAmount = this.value
+            });
+
+            currentRow.find("td:eq(7)").find("input").each(function () {
+              colFromBsb = this.value
+            });
+
+            currentRow.find("td:eq(8)").find("input").each(function () {
+              colFromAccountNo = this.value
+            });
+
+            eftData += colBsb + ' ' + colAccountNo + ' ' + accountName + ' ' + colLodgement + colFromBsb + ' ' + colFromAccountNo + '\n'
+
+            var obj = {};
+            obj.accountName = accountName;
+            obj.bsb = colBsb;
+            obj.accountNo = colAccountNo;
+            obj.transactionCode = colTransactionCode;
+            obj.lodgement = colLodgement;
+            obj.amount = colAmount;
+            obj.fromBsb = colFromBsb;
+            obj.fromAccountNo = colFromAccountNo;
+
+            arrData.push(obj);
+          }
+        });
+      });
+
       $(".fullScreenSpin").css("display", "inline-block");
       const link = document.createElement("a");
-      const content = sltAccountType + sltBankName + eftProcessingDate + eftUserName + eftNumberUser + sltTransactionDescription;
+      const content = sltAccountType + sltBankName + moment(eftProcessingDate).format("DDMMYY") + eftUserName + eftNumberUser + sltTransactionDescription + '\n' + eftData;
       const file = new Blob([content], { type: 'text/plain' });
       link.href = URL.createObjectURL(file);
       link.download = "eft" + (new Date()).getTime() + ".aba";

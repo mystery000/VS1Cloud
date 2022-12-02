@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {SalesBoardService} from './sales-service';
 import {PurchaseBoardService} from './purchase-service';
 import {ReactiveVar} from 'meteor/reactive-var';
@@ -20,7 +21,8 @@ import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
-
+import { rest, template } from 'lodash';
+import {Session} from 'meteor/session';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 var times = 0;
@@ -79,8 +81,111 @@ Template.purchaseordercard.onCreated(() => {
 
     templateObject.isbackorderredirect = new ReactiveVar();
     templateObject.isbackorderredirect.set(false);
+
+    templateObject.monthArr = new ReactiveVar();
+    templateObject.plusArr = new ReactiveVar();
+
 });
 Template.purchaseordercard.onRendered(() => {
+    const plusArr = [];
+  const monthArr = [];
+  let isGreenTrack = Session.get('isGreenTrack');
+  let regionData = Session.get('ERPLoggedCountry');
+  let recordObj = null;
+  if(isGreenTrack) {
+    $.get("/GreentrackModules.json").success(function (data) {
+        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
+
+            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
+                recordObj = {
+                    type: data.tvs1licenselevelsnmodules[i].TYPE,
+                    region: data.tvs1licenselevelsnmodules[i].Region,
+                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
+                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
+                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
+                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
+                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
+                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
+                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
+                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
+                    pricenocurrency: data.tvs1licenselevelsnmodules[i].Price || 0,
+                    price: utilityService.modifynegativeCurrencyFormat(data.tvs1licenselevelsnmodules[i].Price) || 0,
+                    discount: data.tvs1licenselevelsnmodules[i].discount,
+                };
+                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "Xero") {
+                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
+                        plusArr.push(recordObj);
+                    }
+                }
+               
+            }
+
+        };
+        templateObject.plusArr.set(plusArr);
+    });
+  } else { 
+    $.get("MasterVS1Pricing.json").success(async function (data) {
+        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
+
+            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
+                recordObj = {
+                    type: data.tvs1licenselevelsnmodules[i].TYPE,
+                    region: data.tvs1licenselevelsnmodules[i].Region,
+                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
+                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
+                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
+                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
+                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
+                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
+                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
+                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
+                    discount: data.tvs1licenselevelsnmodules[i].discount,
+                };
+                if ((data.tvs1licenselevelsnmodules[i].ModuleName != "") && (data.tvs1licenselevelsnmodules[i].IsExtra == true) && (data.tvs1licenselevelsnmodules[i].IsMonthly == true)) {
+                    monthArr.push(recordObj);
+                }
+
+                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "PLUS") {
+                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
+                        plusArr.push(recordObj);
+                    }
+                }
+            }
+        };
+        let purchaedAdModuleList = [];
+            let additionModuleSettings = await getVS1Data('vscloudlogininfo');
+            if( additionModuleSettings.length > 0 ){
+                let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
+                if( additionModules.length > 0 ){
+                    let adModulesList = additionModules.filter((item) => {
+                        if( item.ExtraModules == true && item.ModuleActive == true ){
+                            return item;
+                        }
+                    });
+                    if( adModulesList.length > 0 ){
+                        for (const item of adModulesList) {
+                            purchaedAdModuleList.push(item.ModuleName)
+                        }
+                    }
+                }
+            }
+        templateObject.plusArr.set(plusArr);
+        var monthResult = [];
+        $.each(monthArr, function (i, e) {
+            var matchingItemsMonth = $.grep(monthResult, function (itemMonth) {
+                return itemMonth.moduleName === e.moduleName;
+            });
+            e.isPurchased = false
+            if (matchingItemsMonth.length === 0) {
+                if( purchaedAdModuleList.includes(monthArr[i].moduleName) == true ){
+                    e.isPurchased = true
+                }
+                monthResult.push(e);
+            }
+        });
+        templateObject.monthArr.set(monthResult);
+    });
+  };
     let templateObject = Template.instance();
     $('#edtFrequencyDetail').css('display', 'none');
     // $('#onEventSettings').css('display', 'none');
@@ -103,7 +208,7 @@ Template.purchaseordercard.onRendered(() => {
       changeYear: true,
       yearRange: "-90:+10",
     });
-  
+
     templateObject.getDayNumber = function (day) {
       day = day.toLowerCase();
       if (day == "") {
@@ -184,37 +289,6 @@ Template.purchaseordercard.onRendered(() => {
           $("#formCheck-january").prop('checked', true);
       }
     }
-
-    templateObject.hasFollowings = async function() {
-        var currentDate = new Date();
-        let purchaseService = new PurchaseBoardService();        
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = '';
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
-            var orderDate = poData.fields.OrderDate;
-            var fromDate = orderDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingPOs = await sideBarService.getAllTPurchaseOrderListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var poList = followingPOs.tpurchaseorderlist;
-            if (poList.length > 1) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }
-        }
-
-    }
-    templateObject.hasFollowings();
     $('#choosetemplate').attr('checked', true);
     const dataListTable = [
         ' ' || '',
@@ -288,18 +362,34 @@ Template.purchaseordercard.onRendered(() => {
       templateObject.reset_data.set(reset_data);
     }
     init_reset_data();
+    templateObject.insertItemWithLabel = (x, a, b) => {
+        var data = [...x];
+        var aPos = data.findIndex((x) => x.label === a);
+        var bPos = data.findIndex(x => x.label === b);
+        if(aPos === -1 || bPos === -1) return data;
+        data[bPos] = {...data[bPos], index: aPos + 1};
+        for(var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index:data[i].index + 1}
+        return data.sort((a,b) => a.index - b.index);
+    }
     // set initial table rest_data
     // custom field displaysettings
      templateObject.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
+      reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
       showCustomFieldDisplaySettings(reset_data);
-
+    
       try {
         getVS1Data("VS1_Customize").then(function (dataObject) {
           if (dataObject.length == 0) {
             sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              if(!reset_data[16]) reset_data.push({ index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: false, display: false })
+              reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+              reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+              reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
               showCustomFieldDisplaySettings(reset_data);
             }).catch(function (err) {
             });
@@ -309,6 +399,10 @@ Template.purchaseordercard.onRendered(() => {
              for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
                  reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                 if(!reset_data[16]) reset_data.push({ index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: false, display: false })
+                 reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+                 reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+                 reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
                  showCustomFieldDisplaySettings(reset_data);
                }
              }
@@ -320,7 +414,7 @@ Template.purchaseordercard.onRendered(() => {
       }
       return;
     }
-
+    
     function showCustomFieldDisplaySettings(reset_data) {
 
       let custFields = [];
@@ -1254,7 +1348,7 @@ templateObject.getLastPOData = async function() {
         } else {
             $(".subtotal2").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint2").text(
             object_invoce[0]["subtotal"]
         );
@@ -1325,7 +1419,7 @@ templateObject.getLastPOData = async function() {
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -4689,7 +4783,7 @@ templateObject.getLastPOData = async function() {
                             }
                         }
                     }
-                }); 
+                });
             });
             html2pdf().set(opt).from(source).save().then(function (dataObject) {
                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
@@ -4855,7 +4949,7 @@ templateObject.getLastPOData = async function() {
             });
         })
 
-      
+
 
     };
 
@@ -5240,6 +5334,8 @@ Template.purchaseordercard.onRendered(function() {
                                     "targets": [3]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
 
 
@@ -5322,6 +5418,8 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
 
 
@@ -5405,6 +5503,8 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
 
 
@@ -5660,7 +5760,16 @@ Template.purchaseordercard.helpers({
     isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
     // custom field displaysettings
     displayfields: () => {
-      return Template.instance().displayfields.get();
+        let data = Template.instance().displayfields.get();
+        let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+        if (!isBatchSerialNoTracking) {
+          data.find((x) => x.class === 'SerialNo').display = false;
+          data.find((x) => x.class === 'SerialNo').active = false;
+        }
+        let monthArr = Template.instance().monthArr.get();  
+        data.find((x) => x.class === 'FixedAsset').display = monthArr.find((x) => x.moduleName === 'Fixed Assets').isPurchased;
+        data.find((x) => x.class === 'FixedAsset').active = monthArr.find((x) => x.moduleName === 'Fixed Assets').isPurchased;
+      return data;
     },
 
     isForeignEnabled: () => {
@@ -7192,26 +7301,29 @@ Template.purchaseordercard.events({
     'click  #open_print_confirm':function(event)
     {
         playPrintAudio();
-        setTimeout(async function(){
+        setTimeout(function(){
         if($('#choosetemplate').is(':checked'))
         {
             $('#templateselection').modal('show');
         }
         else
         {
+
             $('.fullScreenSpin').css('display', 'inline-block');
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // }
-            // $('#confirmprint').modal('hide');
+            $('#html-2-pdfwrapper').css('display', 'block');
+            if ($('.edtCustomerEmail').val() != "") {
+                $('.pdfCustomerName').html($('#edtCustomerName').val());
+                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+                $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+                var ponumber = $('#ponumber').val() || '.';
+                $('.po').text(ponumber);
+                var rowCount = $('.tblInvoiceLine tbody tr').length;
+
+                exportSalesToPdf1();
+
+            }
+
+            $('#confirmprint').modal('hide');
         }
     }, delayTimeAfterSound);
     },
@@ -7494,6 +7606,31 @@ Template.purchaseordercard.events({
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
 
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
+            var orderDate = poData.fields.OrderDate;
+            var fromDate = orderDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingPOs = await sideBarService.getAllTPurchaseOrderListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var poList = followingPOs.tpurchaseorderlist;
+            if (poList.length > 0) {
+                $("#btn_follow2").css("display", "inline-block");
+            } else {
+                $("#btn_follow2").css("display", "none");
+            }
+        }
+
         times++;
 
         if (times == 1) {
@@ -7609,7 +7746,7 @@ Template.purchaseordercard.events({
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         setTimeout(async function(){
-        
+
         swal({
             title: 'Delete Purchase Order',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -7717,6 +7854,7 @@ Template.purchaseordercard.events({
             };
           };
         }
+        $('#deleteLineModal').modal('toggle');
     }, delayTimeAfterSound);
     },
     'click .btnDeletePO': async function(event) {
@@ -7785,9 +7923,9 @@ Template.purchaseordercard.events({
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         setTimeout(function(){
-        
+
         let taxcodeList = templateObject.taxraterecords.get();
-        
+
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblPurchaseOrderLine tbody>tr').length > 1) {
             this.click;
@@ -7955,7 +8093,7 @@ Template.purchaseordercard.events({
         saveCurrencyHistory();
         let isBORedirect = await tempObject.isbackorderredirect.get() || false;
         let suppliername = $('#edtSupplierName');
-        
+
         let termname = $('#sltTerms').val() || '';
         if (termname === '') {
             swal('Terms has not been selected!', '', 'warning');
@@ -8133,9 +8271,9 @@ Template.purchaseordercard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentPurchaseOrder = getso_id[getso_id.length - 1];
-            
+
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
+            let ForeignExchangeRate = $('#exchange_rate').val()||0;
             let foreignCurrencyFields = {}
             if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {
@@ -9095,7 +9233,7 @@ Template.purchaseordercard.events({
         lineItems.push(lineItemObj);
       });
 
-      
+
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
@@ -9141,6 +9279,9 @@ Template.purchaseordercard.events({
       } else {
         reset_data[13].display = false;
       }
+      reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
       reset_data = reset_data.filter(redata => redata.display);
 
       $(".displaySettings").each(function (index) {
@@ -9592,7 +9733,7 @@ Template.purchaseordercard.events({
     },
     'click #btnCopyToInvoice': function() {
         playCopyAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         let i = 0;
         setTimeout(async function(){
@@ -9815,7 +9956,7 @@ Template.purchaseordercard.events({
     //             var url = FlowRouter.current().path;
     //             var getso_id = url.split('?id=');
     //             var currentPurchaseOrder = getso_id[getso_id.length - 1];
-    
+
     //             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //             var objDetails = '';
     //             if (getso_id[1]) {
@@ -9981,7 +10122,7 @@ Template.purchaseordercard.events({
     },
     'click #btnCopyPO': function() {
         playCopyAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         let i = 0;
         setTimeout(async function(){
@@ -10220,7 +10361,7 @@ Template.purchaseordercard.events({
     //         var url = FlowRouter.current().path;
     //         var getso_id = url.split('?id=');
     //         var currentPurchaseOrder = getso_id[getso_id.length - 1];
-    
+
     //         var currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //         var objDetails = '';
     //         if (getso_id[1]) {
@@ -10408,7 +10549,7 @@ Template.purchaseordercard.events({
     },
     'click .btnSaveFrequency': async function () {
         playSaveAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         let selectedType = '';
         let frequencyVal = '';
@@ -10425,7 +10566,7 @@ Template.purchaseordercard.events({
         let selectDays = '';
         let dailyRadioOption = '';
         let everyDays = '';
-        
+
         const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
         let basedOnTypeTexts = '';
         let basedOnTypeAttr = '';
@@ -10450,7 +10591,7 @@ Template.purchaseordercard.events({
         //   });
         //   if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
         //   if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
-    
+
           let formId = parseInt($("#formid").val());
           let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
           frequencyVal = radioFrequency + '@';

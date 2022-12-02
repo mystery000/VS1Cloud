@@ -201,7 +201,7 @@ Template.allChartLists.onRendered(function() {
                     chartList = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
                 }
             }
-            if (chartList.length > 0) {
+            /*if (chartList.length > 0) {
                 let my_tasksChart = {
                     fields: {
                         Active: true,
@@ -404,7 +404,7 @@ Template.allChartLists.onRendered(function() {
                     }
                 };
                 chartList.push(myBankAccountschart);
-            }
+            } */
         }
 
         if (chartList.length > 0) {

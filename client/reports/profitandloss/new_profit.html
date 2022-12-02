@@ -4,7 +4,7 @@
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Profit and Loss {{> helpbutton}}
+            <h2 style="margin: 16px;">Profit and Loss {{daterange}} {{> helpbutton}}
             </h2>
         </header>
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -293,7 +293,7 @@
             <div class="col-12 col-md-8">
                 <div class="card shadow mb-3">
                     <div class="card-header py-3" style="background-color: rgb(248,249,252);">
-                        <p class="text-primary m-0 font-weight-bold">Profit and Loss</p>
+                        <p class="text-primary m-0 font-weight-bold">Profit and Loss {{daterange}}</p>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -456,7 +456,7 @@
                         <div class="printReport">
                             <div class="row">
                                 <div class="col">
-                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Profit and Loss
+                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Profit and Loss {{daterange}}
                                         </p>
                                     <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
                                     <p class="text-center" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
@@ -1027,7 +1027,7 @@
         <div class="modal-dialog" role="document" style="max-width: 670px!important;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="title-header">Profit and Loss</h4>
+                    <h4 class="title-header">Profit and Loss  {{daterange}}</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
@@ -1051,7 +1051,8 @@
                     {{#each item in deptrecords}}
                         <div class="custom-control custom-switch" style="margin: 8px;">
                             <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
-                            <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
+                            <!-- <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label> -->
+                            <div class="custom-control-label" for="formCheck-{{item.id}}">{{item.DeptClassName}}</div>
                         </div>
                     {{/each}}
                 </div>
@@ -1799,6 +1800,20 @@
                     <div class="container-fluid">
                         <div class="form-group-sm">
                             <script type="text/javascript" src="jquery-calx-1.1.8.min.js"></script>
+                            <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+                            <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                            <script>
+                                $( function() {
+                                  $( "#sortable" ).sortable();
+                                  $( "#sortable" ).disableSelection();
+                                } );
+                                function changeColor(element) {
+                                $('.childInner').css({'background-color' : '#F3F3F3'});
+                                $('.childInner').children().css({'color':'#858796'});
+                                element.children[1].style.backgroundColor="#028DDE";
+                                element.children[1].children[1].style.color="#fff";
+                                }
+                            </script> -->
                             <div class="row">
                                 <div class="col-8 sortableAccountParent">
                                     <!--
@@ -1990,13 +2005,11 @@
                                     </style>
                                     {{#if profitlosslayoutrecords}}
                                         <div class="customSortableDiv">
-
-
                                             <form action="" name="" method="POST">
 
                                                 <ol class='nested_with_switch vertical'>
                                                     {{#each item in profitlosslayoutrecords }}
-                                                        <li key="layoutFields-{{ item.ID }}" plid="{{ item.ID }}" data-group="{{ item.AccountName }}" position="{{ item.Level0Order }}" class="mainList pSortItems">
+                                                    <li key="layoutFields-{{ item.ID }}" plid="{{ item.ID }}" data-group="{{ item.AccountName }}" position="{{ item.Level0Order }}" class="mainList pSortItems">
                                                             <div class="mainHeadingDiv">
                                                                 <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
                                                             </div>
@@ -2013,13 +2026,13 @@
                                                                             <ol class="ddllkk" parent="{{ acItem.Level1Order }}">
                                                                                 {{#each subacItem in acItem.subAccounts }}
                                                                                     {{#if isAccount subacItem }}
-                                                                                        <li class="subChild scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
+                                                                                    <li class="subChild scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
                                                                                             <span class="childInner">
                                                                                                 <span class="collepsDiv fas"></span>{{ subacItem.AccountName }}
                                                                                             </span>
                                                                                         </li>
                                                                                     {{else}}
-                                                                                        <li class="subChild noDrag scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
+                                                                                    <li class="subChild noDrag scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
                                                                                             <ol class="ddllkk"></ol>
                                                                                             <span class="childInner">
                                                                                                 <span class="collepsDiv fas"></span><strong>{{ subacItem.AccountName }}</strong>

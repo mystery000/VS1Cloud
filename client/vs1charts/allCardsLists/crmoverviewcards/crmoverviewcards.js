@@ -10,7 +10,6 @@ Template.crmoverviewcards.onRendered(function () {
   let templateObject = Template.instance();
 
   templateObject.getInitialAllTaskList = function () {
-    $(".fullScreenSpin").css("display", "inline-block");
     getVS1Data("TCRMTaskList").then(function (dataObject) {
       if (dataObject.length == 0) {
         templateObject.getAllTaskList();
@@ -40,7 +39,6 @@ Template.crmoverviewcards.onRendered(function () {
         $(".crm_today_count").text(today_records.length);
         $(".crm_upcoming_count").text(upcoming_records.length);
 
-        $(".fullScreenSpin").css("display", "none");
       }
     }).catch(function (err) {
       templateObject.getAllTaskList();
@@ -75,7 +73,6 @@ Template.crmoverviewcards.onRendered(function () {
         $(".crm_today_count").text(0);
         $(".crm_upcoming_count").text(0);
       }
-      $(".fullScreenSpin").css("display", "none");
     }).catch(function (err) {
       $(".fullScreenSpin").css("display", "none");
     });

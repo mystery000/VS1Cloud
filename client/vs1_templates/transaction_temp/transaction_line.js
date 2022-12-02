@@ -1,11 +1,13 @@
+// @ts-nocheck
+import {Session} from 'meteor/session';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
 import {UtilityService} from "../../utility-service";
 import '../../lib/global/indexdbstorage.js';
 import { SideBarService } from '../../js/sidebar-service';
 import TableHandler from '../../js/Table/TableHandler';
-
 import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
+import { template } from 'lodash';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -21,8 +23,109 @@ Template.transaction_line.onCreated(function(){
   templateObject.displayfields = new ReactiveVar([]);
   templateObject.reset_data = new ReactiveVar([]);
   templateObject.initialTableWidth = new ReactiveVar('');
+  templateObject.monthArr = new ReactiveVar();
+  templateObject.plusArr = new ReactiveVar();
 });
 Template.transaction_line.onRendered(function() {
+  const plusArr = [];
+  const monthArr = [];
+  let isGreenTrack = Session.get('isGreenTrack');
+  let regionData = Session.get('ERPLoggedCountry');
+  let recordObj = null;
+  if(isGreenTrack) {
+    $.get("/GreentrackModules.json").success(function (data) {
+        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
+
+            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
+                recordObj = {
+                    type: data.tvs1licenselevelsnmodules[i].TYPE,
+                    region: data.tvs1licenselevelsnmodules[i].Region,
+                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
+                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
+                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
+                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
+                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
+                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
+                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
+                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
+                    pricenocurrency: data.tvs1licenselevelsnmodules[i].Price || 0,
+                    price: utilityService.modifynegativeCurrencyFormat(data.tvs1licenselevelsnmodules[i].Price) || 0,
+                    discount: data.tvs1licenselevelsnmodules[i].discount,
+                };
+                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "Xero") {
+                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
+                        plusArr.push(recordObj);
+                    }
+                }
+               
+            }
+
+        };
+        templateObject.plusArr.set(plusArr);
+    });
+  } else { 
+    $.get("MasterVS1Pricing.json").success(async function (data) {
+        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
+
+            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
+                recordObj = {
+                    type: data.tvs1licenselevelsnmodules[i].TYPE,
+                    region: data.tvs1licenselevelsnmodules[i].Region,
+                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
+                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
+                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
+                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
+                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
+                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
+                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
+                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
+                    discount: data.tvs1licenselevelsnmodules[i].discount,
+                };
+                if ((data.tvs1licenselevelsnmodules[i].ModuleName != "") && (data.tvs1licenselevelsnmodules[i].IsExtra == true) && (data.tvs1licenselevelsnmodules[i].IsMonthly == true)) {
+                    monthArr.push(recordObj);
+                }
+
+                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "PLUS") {
+                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
+                        plusArr.push(recordObj);
+                    }
+                }
+            }
+        };
+        let purchaedAdModuleList = [];
+            let additionModuleSettings = await getVS1Data('vscloudlogininfo');
+            if( additionModuleSettings.length > 0 ){
+                let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
+                if( additionModules.length > 0 ){
+                    let adModulesList = additionModules.filter((item) => {
+                        if( item.ExtraModules == true && item.ModuleActive == true ){
+                            return item;
+                        }
+                    });
+                    if( adModulesList.length > 0 ){
+                        for (const item of adModulesList) {
+                            purchaedAdModuleList.push(item.ModuleName)
+                        }
+                    }
+                }
+            }
+        templateObject.plusArr.set(plusArr);
+        var monthResult = [];
+        $.each(monthArr, function (i, e) {
+            var matchingItemsMonth = $.grep(monthResult, function (itemMonth) {
+                return itemMonth.moduleName === e.moduleName;
+            });
+            e.isPurchased = false
+            if (matchingItemsMonth.length === 0) {
+                if( purchaedAdModuleList.includes(monthArr[i].moduleName) == true ){
+                    e.isPurchased = true
+                }
+                monthResult.push(e);
+            }
+        });
+        templateObject.monthArr.set(monthResult);
+    });
+  };
   let templateObject = Template.instance();
   let currenttranstablename = templateObject.data.tablename||"";
   // set initial table rest_data
@@ -66,25 +169,34 @@ Template.transaction_line.onRendered(function() {
       } else {
           reset_data[14].display = false;
       }
-
       let templateObject = Template.instance();
       templateObject.reset_data.set(reset_data);
   }
   templateObject.init_reset_data();
-  // set initial table rest_data
-
+  // set initial table rest_data        let data = reset_data.slice();
+  templateObject.insertItemWithLabel = (x, a, b) => {
+    var data = [...x];
+    var aPos = data.findIndex((x) => x.label === a);
+    var bPos = data.findIndex(x => x.label === b);
+    if(aPos === -1 || bPos === -1) return data;
+    data[bPos] = {...data[bPos], index: aPos + 1};
+    for(var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index:data[i].index + 1}
+    return data.sort((a,b) => a.index - b.index);
+    }
   // custom field displaysettings
   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
+     
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
+      reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
       templateObject.showCustomFieldDisplaySettings(reset_data);
-
       try {
 
           getVS1Data("VS1_Customize").then(function(dataObject) {
               if (dataObject.length == 0) {
                   sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
                       reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                      reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
                       templateObject.showCustomFieldDisplaySettings(reset_data);
                   }).catch(function(err) {});
               } else {
@@ -93,6 +205,7 @@ Template.transaction_line.onRendered(function() {
                       for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                           if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
                               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                              reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
                               templateObject.showCustomFieldDisplaySettings(reset_data);
                           }
                       }
@@ -131,7 +244,7 @@ Template.transaction_line.onRendered(function() {
   }
 
   templateObject.initCustomFieldDisplaySettings("", currenttranstablename);
-
+  
 });
 
 Template.transaction_line.events({
@@ -146,8 +259,8 @@ Template.transaction_line.events({
       } else {
           reset_data[11].display = false;
       }
+      reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
       reset_data = reset_data.filter(redata => redata.display);
-
       $(".displaySettings").each(function(index) {
           let $tblrow = $(this);
           $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -191,15 +304,19 @@ Template.transaction_line.events({
   'mouseleave .transTable .dataTable': async function (event, template) {
       let templateObject = Template.instance();
       let currenttranstablename = templateObject.data.tablename||"";
-
-
   },
 });
 
 Template.transaction_line.helpers({
   // custom field displaysettings
   displayfields: () => {
-      return Template.instance().displayfields.get();
+      let data = Template.instance().displayfields.get();
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+      if (!isBatchSerialNoTracking) {
+        data.find((x) => x.class === 'SerialNo').display = false;
+        data.find((x) => x.class === 'SerialNo').active = false;
+      }
+      return data;
   },
 
   displayFieldColspan: (displayfield, isForeignEnabled) => {

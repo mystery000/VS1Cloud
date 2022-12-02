@@ -2424,7 +2424,7 @@ Template.creditcard.onRendered(() => {
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -4758,6 +4758,8 @@ Template.creditcard.onRendered(function() {
                                     "targets": [3]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
 
 
@@ -4837,8 +4839,9 @@ Template.creditcard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -4905,6 +4908,8 @@ Template.creditcard.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
                         bStateSave: true,
                         pageLength: initialDatatableLoad,
@@ -5163,37 +5168,43 @@ Template.creditcard.events({
     'click  #open_print_confirm':function(event)
     {
         playPrintAudio();
-        setTimeout(async function(){
+        setTimeout(function(){
         if($('#choosetemplate').is(':checked'))
         {
             $('#templateselection').modal('show');
         }
         else
         {
+
             $('.fullScreenSpin').css('display', 'inline-block');
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // } else {
-            //     swal({
-            //         title: 'Customer Email Required',
-            //         text: 'Please enter customer email',
-            //         type: 'error',
-            //         showCancelButton: false,
-            //         confirmButtonText: 'OK'
-            //     }).then((result) => {
-            //         if (result.value) {}
-            //         else if (result.dismiss === 'cancel') {}
-            //     });
-            // }
-            // $('#confirmprint').modal('hide');
+            $('#html-2-pdfwrapper').css('display', 'block');
+            if ($('.edtCustomerEmail').val() != "") {
+                $('.pdfCustomerName').html($('#edtCustomerName').val());
+                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+                $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+                var ponumber = $('#ponumber').val() || '.';
+                $('.po').text(ponumber);
+                var rowCount = $('.tblInvoiceLine tbody tr').length;
+
+                exportSalesToPdf1();
+
+
+            } else {
+                swal({
+                    title: 'Customer Email Required',
+                    text: 'Please enter customer email',
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {}
+                    else if (result.dismiss === 'cancel') {}
+                });
+            }
+
+
+
+            $('#confirmprint').modal('hide');
         }
     }, delayTimeAfterSound);
     },
@@ -6543,7 +6554,7 @@ Template.creditcard.events({
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         setTimeout(async function(){
-        
+
         swal({
             title: 'Delete Credit',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -6600,7 +6611,7 @@ Template.creditcard.events({
         let purchaseService = new PurchaseBoardService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -6653,7 +6664,7 @@ Template.creditcard.events({
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         setTimeout(function(){
-        
+
         let taxcodeList = templateObject.taxraterecords.get();
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblCreditLine tbody>tr').length > 1) {
@@ -6791,7 +6802,7 @@ Template.creditcard.events({
         let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(function(){
         saveCurrencyHistory();
-        
+
         let suppliername = $('#edtSupplierName');
         let termname = $('#sltTerms').val() || '';
         if (termname === '') {
@@ -6870,9 +6881,9 @@ Template.creditcard.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentCredit = getso_id[getso_id.length - 1];
-            
+
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
+            let ForeignExchangeRate = $('#exchange_rate').val()||0;
             let foreignCurrencyFields = {}
             if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {
@@ -7671,7 +7682,7 @@ Template.creditcard.events({
         lineItems.push(lineItemObj);
       });
 
-      
+
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
@@ -7974,7 +7985,7 @@ Template.creditcard.events({
             var currentCredit = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
+            let ForeignExchangeRate = $('#exchange_rate').val()||0;
             let foreignCurrencyFields = {}
             if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {

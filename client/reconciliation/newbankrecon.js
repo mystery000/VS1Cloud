@@ -107,7 +107,7 @@ Template.newbankrecon.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         });
     };
-    
+
     templateObject.getAllAccounts = function() {
         getVS1Data('TAccountVS1').then(function(dataObject) {
             if (dataObject.length === 0) {
@@ -126,7 +126,7 @@ Template.newbankrecon.onRendered(function() {
     };
     function setAccountListVS1(data) {
         let splashArrayAccountList = [];
-        for (let i = 0; i < data.taccountvs1.length; i++) {            
+        for (let i = 0; i < data.taccountvs1.length; i++) {
             let accBalance = 0;
             if (!isNaN(data.taccountvs1[i].fields.Balance)) {
                 accBalance = utilityService.modifynegativeCurrencyFormat(data.taccountvs1[i].fields.Balance) || 0.00;
@@ -236,6 +236,8 @@ Template.newbankrecon.onRendered(function() {
                         targets: [3],
                     },
                 ],
+                select: true,
+                destroy: true,
                 colReorder: true,
 
                 pageLength: initialDatatableLoad,

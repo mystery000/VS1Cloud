@@ -79,7 +79,7 @@ Template.supplierpaymentcard.onRendered(() => {
   }
    $('#choosetemplate').attr('checked', true);
 
-
+  $('#sltTransactionDescription').val('Supplier')
   $(".currency-container label").text("Foreign currency");
 
  $("#edtSupplierName").attr("readonly", true);
@@ -1355,14 +1355,18 @@ Template.supplierpaymentcard.onRendered(() => {
             $(".heading").html("New Supplier Payment " +''+'<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
           }
           $("#edtSelectBankAccountName").val(lastBankAccount);
+          $("#sltBankAccountName").val(lastBankAccount);
+          
           $("#sltDepartment").val(lastDepartment);
         }, 50);
       })
       .catch(function (err) {
         if (Session.get("bankaccount")) {
           $("#edtSelectBankAccountName").val(Session.get("bankaccount"));
+          $("#sltBankAccountName").val(Session.get("bankaccount"));
         } else {
           $("#edtSelectBankAccountName").val(lastBankAccount);
+          $("#sltBankAccountName").val(lastBankAccount);
         }
         $("#sltDepartment").val(lastDepartment);
       });
@@ -2096,6 +2100,8 @@ Template.supplierpaymentcard.onRendered(() => {
     let accountname = table.find(".productName").text();
     $("#accountListModal").modal("toggle");
     $("#edtSelectBankAccountName").val(accountname);
+    $("#sltBankAccountName").val(accountname);
+    
     if ($tblrows.find(".lineProductName").val() == "") {
       //$tblrows.find(".colProductName").addClass('boldtablealertsborder');
     }
@@ -2112,6 +2118,9 @@ Template.supplierpaymentcard.onRendered(() => {
     var tableSupplier = $(this);
     let $tblrows = $("#tblSupplierPaymentcard tbody tr");
     $("#edtSupplierName").val(tableSupplier.find(".colCompany").text());
+    $("#eftUserName").val(tableSupplier.find(".colCompany").text());
+    $("#eftNumberUser").val(tableSupplier.find(".colID").text());
+    
     // $('#edtSupplierName').attr("custid", tableSupplier.find(".colID").text());
     $("#supplierListModal").modal("toggle");
 
@@ -3565,6 +3574,11 @@ Template.supplierpaymentcard.onRendered(() => {
                 $("#sltPaymentMethod").val(data.fields.PaymentMethodName);
                 $("#edtSupplierName").val(data.fields.CompanyName);
 
+                $("#eftUserName").val(data.fields.CompanyName);
+                $("#eftNumberUser").val(data.fields.ID);
+                $("#eftProcessingDate").val(record.paymentDate);
+                $('#sltBankAccountName').val(data.fields.AccountName);
+
                 $("#edtSupplierName").attr("readonly", true);
                 $("#edtSupplierName").css("background-color", "#eaecf4");
                 $("#edtSupplierEmail").attr("readonly", true);
@@ -3808,12 +3822,17 @@ Template.supplierpaymentcard.onRendered(() => {
                 $("#sltDepartment").val(useData[d].fields.DeptClassName);
                 $("#sltPaymentMethod").val(useData[d].fields.PaymentMethodName);
 
+                $("#eftUserName").val(useData[d].fields.CompanyName);
+                $("#eftNumberUser").val(useData[d].fields.ID);
+                $("#eftProcessingDate").val(record.paymentDate);
+
                 $("#edtSupplierName").attr("readonly", true);
                 $("#edtSupplierName").css("background-color", "#eaecf4");
                 $("#edtSupplierEmail").attr("readonly", true);
 
                 $("#edtPaymentAmount").attr("readonly", true);
 
+                $('#sltBankAccountName').val(useData[d].fields.AccountName);
                 $("#edtSelectBankAccountName").val(
                   useData[d].fields.AccountName
                 );
@@ -7427,7 +7446,7 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#edtSelectBankAccountName").attr("readonly", false);
     setTimeout(function () {
       if (localStorage.getItem("check_acc")) {
-        $("#sltBankAccountName").val(localStorage.getItem("check_acc"));
+        // $("#sltBankAccountName").val(localStorage.getItem("check_acc"));
       } else {
         // $('#sltBankAccountName').val('Bank');
       }
@@ -8366,39 +8385,40 @@ Template.supplierpaymentcard.events({
 
   "click  #open_print_confirm": function (event) {
     playPrintAudio();
-    setTimeout(async function(){
+    setTimeout(function(){
     if ($("#choosetemplate").is(":checked")) {
         $('#templateselection').modal('show');
     } else {
       LoadingOverlay.show();
-      // $("#html-2-pdfwrapper").css("display", "block");
-      let result = await exportSalesToPdf(template_list[0], 1);      
-      // if ($(".edtCustomerEmail").val() != "") {
-      //   $(".pdfCustomerName").html($("#edtCustomerName").val());
-      //   $(".pdfCustomerAddress").html(
-      //     $("#txabillingAddress")
-      //       .val()
-      //       .replace(/[\r\n]/g, "<br />")
-      //   );
-      //   $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-      //   var ponumber = $("#ponumber").val() || ".";
-      //   $(".po").text(ponumber);
-      //   var rowCount = $(".tblInvoiceLine tbody tr").length;
-      //   exportSalesToPdf1();
-      // } else {
-      //   swal({
-      //     title: "Customer Email Required",
-      //     text: "Please enter customer email",
-      //     type: "error",
-      //     showCancelButton: false,
-      //     confirmButtonText: "OK",
-      //   }).then((result) => {
-      //     if (result.value) {
-      //     } else if (result.dismiss === "cancel") {
-      //     }
-      //   });
-      // }
-      // $("#confirmprint").modal("hide");
+      $("#html-2-pdfwrapper").css("display", "block");
+      if ($(".edtCustomerEmail").val() != "") {
+        $(".pdfCustomerName").html($("#edtCustomerName").val());
+        $(".pdfCustomerAddress").html(
+          $("#txabillingAddress")
+            .val()
+            .replace(/[\r\n]/g, "<br />")
+        );
+        // $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+        var ponumber = $("#ponumber").val() || ".";
+        $(".po").text(ponumber);
+        var rowCount = $(".tblInvoiceLine tbody tr").length;
+
+        exportSalesToPdf1();
+      } else {
+        swal({
+          title: "Customer Email Required",
+          text: "Please enter customer email",
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+        }).then((result) => {
+          if (result.value) {
+          } else if (result.dismiss === "cancel") {
+          }
+        });
+      }
+
+      $("#confirmprint").modal("hide");
     }
   }, delayTimeAfterSound);
   },

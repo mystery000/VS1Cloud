@@ -168,36 +168,6 @@ Template.chequecard.onRendered(() => {
         $("#formCheck-january").prop('checked', true);
     }
   }
-  templateObject.hasFollowings = async function() {
-    var currentDate = new Date();
-    let purchaseService = new PurchaseBoardService();
-    var url = FlowRouter.current().path;
-    var getso_id = url.split("?id=");
-    var currentInvoice = getso_id[getso_id.length - 1];
-    var objDetails = "";
-    if (getso_id[1]) {
-      currentInvoice = parseInt(currentInvoice);
-      var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
-      var orderDate = chequeData.fields.OrderDate;
-      var fromDate = orderDate.substring(0, 10);
-      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-      var followingCheques = await sideBarService.getAllChequeListData(
-        fromDate,
-        toDate,
-        false,
-        initialReportLoad,
-        0
-      );
-      var chequeList = followingCheques.tchequelist;
-      if (chequeList.length > 1) {
-        $("#btn_follow2").css("display", "inline-block");
-      } else {
-        $("#btn_follow2").css("display", "none");
-      }
-    }    
-  }
-  templateObject.hasFollowings();
-  
   $(window).on("load", function () {
     var win = $(this); //this = window
     if (win.width() <= 1024 && win.width() >= 450) {
@@ -3945,7 +3915,7 @@ Template.chequecard.onRendered(() => {
       var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
       var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
       var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
-      
+
       $("#tblChequeLine > tbody > tr").each(function () {
         var lineID = this.id;
         let tdaccount = $("#" + lineID + " .lineAccountName").val();
@@ -4303,7 +4273,7 @@ Template.chequecard.onRendered(() => {
       } else {
           $(".subtotal3").show();
       }
-      
+
       $("#templatePreviewModal #subtotal_totalPrint3").text(
           object_invoce[0]["subtotal"]
       );
@@ -4461,14 +4431,14 @@ Template.chequecard.onRendered(() => {
               }
           });
         }
-        
+
       });
-      
+
       html2pdf().set(opt).from(source).save().then(function (dataObject) {
           if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
               // $(".btnSave").trigger("click");
           } else {
-              
+
           }
           $('#html-2-pdfwrapper').css('display', 'none');
           $("#html-2-pdfwrapper_quotes").hide();
@@ -4548,6 +4518,8 @@ Template.chequecard.onRendered(function () {
                     targets: [3],
                   },
                 ],
+                select: true,
+                destroy: true,
                 colReorder: true,
 
                 pageLength: initialDatatableLoad,
@@ -4619,6 +4591,8 @@ Template.chequecard.onRendered(function () {
                   targets: [3],
                 },
               ],
+              select: true,
+              destroy: true,
               colReorder: true,
 
               pageLength: initialDatatableLoad,
@@ -4691,6 +4665,8 @@ Template.chequecard.onRendered(function () {
                   targets: [3],
                 },
               ],
+              select: true,
+              destroy: true,
               colReorder: true,
 
               pageLength: initialDatatableLoad,
@@ -4958,7 +4934,7 @@ Template.chequecard.events({
   },
   'click #copyCheque': async function(event) {
     playCopyAudio();
-    let templateObject = Template.instance();      
+    let templateObject = Template.instance();
     let purchaseService = new PurchaseBoardService();
     let i = 0;
     setTimeout(async function(){
@@ -4976,7 +4952,6 @@ Template.chequecard.events({
       if (getso_id[1]) {
         currentInvoice = parseInt(currentInvoice);
         var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
-        console.log(chequeData);
         var selectedType = chequeData.fields.CustField7;
         var frequencyVal = chequeData.fields.CustField8;
         var startDate = chequeData.fields.CustField9;
@@ -5076,7 +5051,7 @@ Template.chequecard.events({
   },
   'click .btnSaveFrequency': async function () {
     playSaveAudio();
-    let templateObject = Template.instance();      
+    let templateObject = Template.instance();
     let purchaseService = new PurchaseBoardService();
     let selectedType = '';
     let frequencyVal = '';
@@ -5093,7 +5068,7 @@ Template.chequecard.events({
     let selectDays = '';
     let dailyRadioOption = '';
     let everyDays = '';
-    
+
     // const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
     let basedOnTypeTexts = '';
     let basedOnTypeAttr = '';
@@ -5308,11 +5283,11 @@ Template.chequecard.events({
                           var myArrResponse = JSON.parse(oPost.responseText);
                           var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                       } else if (oPost.readyState == 4 && oPost.status == 403) {
-                          
+
                       } else if (oPost.readyState == 4 && oPost.status == 406) {
-                          
+
                       } else if (oPost.readyState == "") {
-                          
+
                       }
                       $(".fullScreenSpin").css("display", "none");
                   };
@@ -5395,11 +5370,11 @@ Template.chequecard.events({
                     var myArrResponse = JSON.parse(oPost.responseText);
                     var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                 } else if (oPost.readyState == 4 && oPost.status == 403) {
-                    
+
                 } else if (oPost.readyState == 4 && oPost.status == 406) {
-                    
+
                 } else if (oPost.readyState == "") {
-                    
+
                 }
                 $(".fullScreenSpin").css("display", "none");
             };
@@ -6418,6 +6393,30 @@ Template.chequecard.events({
     var targetID = $(event.target).closest("tr").attr("id");
     $("#selectDeleteLineID").val(targetID);
 
+    var url = FlowRouter.current().path;
+    var getso_id = url.split("?id=");
+    var currentInvoice = getso_id[getso_id.length - 1];
+    var objDetails = "";
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
+      var orderDate = chequeData.fields.OrderDate;
+      var fromDate = orderDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingCheques = await sideBarService.getAllChequeListData(
+        fromDate,
+        toDate,
+        false,
+        initialReportLoad,
+        0
+      );
+      var chequeList = followingCheques.tchequelist;
+      if (chequeList.length > 0) {
+        $("#btn_follow2").css("display", "inline-block");
+      } else {
+        $("#btn_follow2").css("display", "none");
+      }
+    }
     times++;
 
     if (times == 1) {
@@ -6593,7 +6592,7 @@ Template.chequecard.events({
     let purchaseService = new PurchaseBoardService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    
+
     var url = FlowRouter.current().path;
     var getso_id = url.split("?id=");
     var currentInvoice = getso_id[getso_id.length - 1];
@@ -6646,7 +6645,7 @@ Template.chequecard.events({
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
     setTimeout(function(){
-    
+
     let taxcodeList = templateObject.taxraterecords.get();
     let selectLineID = $("#selectDeleteLineID").val();
     if ($("#tblChequeLine tbody>tr").length > 1) {
@@ -6805,7 +6804,7 @@ Template.chequecard.events({
     let purchaseService = new PurchaseBoardService();
     let uploadedItems = templateObject.uploadedFiles.get();
     setTimeout(function(){
-    
+
     let suppliername = $("#edtSupplierName");
     // let termname = $('#sltTerms').val() || '';
     // if (termname === '') {
@@ -6883,7 +6882,7 @@ Template.chequecard.events({
       var url = FlowRouter.current().path;
       var getso_id = url.split("?id=");
       var currentCheque = getso_id[getso_id.length - 1];
-      
+
       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
       var objDetails = "";
       if (getso_id[1]) {

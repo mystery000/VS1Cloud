@@ -190,37 +190,6 @@ Template.new_quote.onRendered(() => {
         $("#formCheck-january").prop('checked', true);
     }
   }
-
-  templateObject.hasFollowings = async function() {
-    var currentDate = new Date();
-    const salesService = new SalesBoardService();
-    var url = FlowRouter.current().path;
-    var getso_id = url.split('?id=');
-    var currentInvoice = getso_id[getso_id.length - 1];
-    var objDetails = '';
-    if (getso_id[1]) {
-        currentInvoice = parseInt(currentInvoice);
-        var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
-        var saleDate = quoteData.fields.SaleDate;
-        var fromDate = saleDate.substring(0, 10);
-        var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-        var followingQuotes = await sideBarService.getAllTQuoteListData(
-            fromDate,
-            toDate,
-            false,
-            initialReportLoad,
-            0
-        );
-        var quoteList = followingQuotes.tquotelist;
-        if (quoteList.length > 1) {
-            $("#btn_follow2").css("display", "inline-block");
-        } else {
-            $("#btn_follow2").css("display", "none");
-        }
-    }        
-  }
-  templateObject.hasFollowings();
-
     $('#choosetemplate').attr('checked', true);
     $(window).on('load', function() {
         const win = $(this); //this = window
@@ -1101,7 +1070,7 @@ Template.new_quote.onRendered(() => {
         } else {
             $(".subtotal2").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint2").text(
             object_invoce[0]["subtotal"]
         );
@@ -1170,7 +1139,7 @@ Template.new_quote.onRendered(() => {
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -5295,8 +5264,9 @@ Template.new_quote.onRendered(function() {
                                     "targets": [3]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-                            bStateSave: true,
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5362,8 +5332,9 @@ Template.new_quote.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5431,8 +5402,9 @@ Template.new_quote.onRendered(function() {
                                 "targets": [3]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5906,23 +5878,22 @@ Template.new_quote.events({
     },
     'click  #open_print_confirm': function(event) {
         playPrintAudio();
-        setTimeout(async function(){
+        setTimeout(function(){
         if($('#choosetemplate').is(':checked')) {
             $('#templateselection').modal('show');
         } else {
-            LoadingOverlay.show();
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // }
-            // $('#confirmprint').modal('hide');
+           LoadingOverlay.show();
+            $('#html-2-pdfwrapper').css('display', 'block');
+            if ($('.edtCustomerEmail').val() != "") {
+                $('.pdfCustomerName').html($('#edtCustomerName').val());
+                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+                $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+                var ponumber = $('#ponumber').val() || '.';
+                $('.po').text(ponumber);
+                var rowCount = $('.tblInvoiceLine tbody tr').length;
+                exportSalesToPdf1();
+            }
+            $('#confirmprint').modal('hide');
         }
     }, delayTimeAfterSound);
     },
@@ -7255,6 +7226,30 @@ Template.new_quote.events({
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
 
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
+            var saleDate = quoteData.fields.SaleDate;
+            var fromDate = saleDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingQuotes = await sideBarService.getAllTQuoteListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var quoteList = followingQuotes.tquotelist;
+            if (quoteList.length > 0) {
+                $("#btn_follow2").css("display", "inline-block");
+            } else {
+                $("#btn_follow2").css("display", "none");
+            }
+        }        
         times++;
 
         if (times == 1) {
@@ -7392,7 +7387,7 @@ Template.new_quote.events({
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         setTimeout(async function(){
-        
+
         swal({
             title: 'Delete Quote',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -7491,6 +7486,7 @@ Template.new_quote.events({
             FlowRouter.go('/quoteslist?success=true');
           }
         }
+        $('#deleteLineModal').modal('toggle');
     }, delayTimeAfterSound);
     },    
     'click .btnDeleteQuote': function(event) {
@@ -7499,7 +7495,7 @@ Template.new_quote.events({
         let salesService = new SalesBoardService();
         setTimeout(function(){
         LoadingOverlay.show();
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -7712,7 +7708,7 @@ Template.new_quote.events({
         let customername = $('#edtCustomerName');
         let name = $('#edtCustomerEmail').attr('customerfirstname');
         let surname = $('#edtCustomerEmail').attr('customerlastname');
-        
+
         let termname = $('#sltTerms').val() || '';
         // if (termname === '') {
         //     swal('Terms has not been selected!', '', 'warning');
@@ -7862,9 +7858,9 @@ Template.new_quote.events({
             const url = FlowRouter.current().path;
             const getso_id = url.split('?id=');
             let currentQuote = getso_id[getso_id.length - 1];
-            
+
             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
+            let ForeignExchangeRate = $('#exchange_rate').val()||0;
             let foreignCurrencyFields = {}
             if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {
@@ -8847,7 +8843,7 @@ Template.new_quote.events({
             };
             lineItems.push(lineItemObj);
         });
-        
+
         let reset_data = templateObject.reset_data.get();
         reset_data = reset_data.filter(redata => redata.display == false);
         lineItems.push(...reset_data);
@@ -9218,7 +9214,7 @@ Template.new_quote.events({
                     let currentQuote = getso_id[getso_id.length - 1];
                     let uploadedItems = templateObject.uploadedFiles.get();
                     const currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                    let ForeignExchangeRate = $('#exchange_rate').val();
+                    let ForeignExchangeRate = $('#exchange_rate').val()||0;
                     let foreignCurrencyFields = {}
                     if( FxGlobalFunctions.isCurrencyEnabled() ){
                         foreignCurrencyFields = {
@@ -9829,7 +9825,7 @@ Template.new_quote.events({
             let currentQuote = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
+            let ForeignExchangeRate = $('#exchange_rate').val()||0;
             let foreignCurrencyFields = {}
             if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {
@@ -10015,7 +10011,7 @@ Template.new_quote.events({
     'click #btnCopyToOrder': function(e) {
         bOrderInvoice = 1;
         playCopyAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         let i = 0;
         setTimeout(async function(){
@@ -10223,7 +10219,7 @@ Template.new_quote.events({
     //             url = FlowRouter.current().path;
     //             const getso_id = url.split('?id=');
     //             let currentQuote = getso_id[getso_id.length - 1];
-    
+
     //             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //             let ForeignExchangeRate = $('#exchange_rate').val();
     //             let foreignCurrencyFields = {}
@@ -10403,7 +10399,7 @@ Template.new_quote.events({
     'click #btnCopyToInvoice': function(e) {
         bOrderInvoice = 2;
         playCopyAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         let i = 0;
         setTimeout(async function(){
@@ -10613,7 +10609,7 @@ Template.new_quote.events({
     //             url = FlowRouter.current().path;
     //             const getso_id = url.split('?id=');
     //             let currentQuote = getso_id[getso_id.length - 1];
-    
+
     //             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
     //             let ForeignExchangeRate = $('#exchange_rate').val();
     //             let foreignCurrencyFields = {}
@@ -10799,7 +10795,7 @@ Template.new_quote.events({
     },
     'click .btnSaveFrequency': async function () {
         playSaveAudio();
-        let templateObject = Template.instance();      
+        let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         // let selectedType = '';
         let selectedType = "basedOnFrequency";
@@ -10817,7 +10813,7 @@ Template.new_quote.events({
         let selectDays = '';
         let dailyRadioOption = '';
         let everyDays = '';
-        
+
         // const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
         let basedOnTypeTexts = '';
         // let basedOnTypeAttr = '';
@@ -10843,7 +10839,7 @@ Template.new_quote.events({
         //   });
         //   if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
         //   if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
-    
+
           let formId = parseInt($("#formid").val());
           let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
           frequencyVal = radioFrequency + '@';

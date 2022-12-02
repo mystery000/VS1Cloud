@@ -891,7 +891,7 @@ Template.paymentcard.onRendered(() => {
 
         }
 
-        
+
         // total amount
         if (noHasTotals.includes(object_invoce[0]["title"])) {
             $("#templatePreviewModal .field_amount").hide();
@@ -900,7 +900,7 @@ Template.paymentcard.onRendered(() => {
             $("#templatePreviewModal .field_amount").show();
             $("#templatePreviewModal .field_payment").css("borderRight", "1px solid black");
         }
-        
+
         $('#templatePreviewModal #subtotal_total').text("Sub total");
         $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
         $('#templatePreviewModal #grandTotal').text("Grand total");
@@ -942,7 +942,7 @@ Template.paymentcard.onRendered(() => {
 
         }
 
-        
+
         // total amount
         if (noHasTotals.includes(object_invoce[0]["title"])) {
             $(".subtotal2").hide();
@@ -996,14 +996,14 @@ Template.paymentcard.onRendered(() => {
             i++;
 
         }
-        
+
         // total amount
         if (noHasTotals.includes(object_invoce[0]["title"])) {
             $(".subtotal3").hide();
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -5009,7 +5009,7 @@ Template.paymentcard.events({
         //     ForeignCurrencyAmount = Number(ForeignCurrencyAmount.replace(/[^0-9.-]+/g, ""));
         // }
         let ForeignExchangeCode = $('#sltCurrency').val();
-        let ForeignExchangeRate = $('#exchange_rate').val();
+        let ForeignExchangeRate = $('#exchange_rate').val()||0;
         let ForeignVariationAmount = $('#edtVariation').val();
         let Amount = $('#edtPaymentAmount').val();
         if (isNaN(Amount) || !Amount) {
@@ -9545,34 +9545,40 @@ Template.paymentcard.events({
 
     'click  #open_print_confirm': function (event) {
         playPrintAudio();
-        setTimeout(async function(){
+        setTimeout(function(){
         if ($('#choosetemplate').is(':checked')) {
             $('#templateselection').modal('show');
         } else {
+
             LoadingOverlay.show();
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);            
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // } else {
-            //     swal({
-            //         title: 'Customer Email Required',
-            //         text: 'Please enter customer email',
-            //         type: 'error',
-            //         showCancelButton: false,
-            //         confirmButtonText: 'OK'
-            //     }).then((result) => {
-            //         if (result.value) {
-            //         } else if (result.dismiss === 'cancel') {
-            //         }
-            //     });
-            // }
-            // $('#confirmprint').modal('hide');
+            $('#html-2-pdfwrapper').css('display', 'block');
+            if ($('.edtCustomerEmail').val() != "") {
+                $('.pdfCustomerName').html($('#edtCustomerName').val());
+                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+
+                var ponumber = $('#ponumber').val() || '.';
+                $('.po').text(ponumber);
+                var rowCount = $('.tblInvoiceLine tbody tr').length;
+
+                exportSalesToPdf1();
+
+
+            } else {
+                swal({
+                    title: 'Customer Email Required',
+                    text: 'Please enter customer email',
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                    } else if (result.dismiss === 'cancel') {
+                    }
+                });
+            }
+
+
+            $('#confirmprint').modal('hide');
         }
     }, delayTimeAfterSound);
     },

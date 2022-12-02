@@ -1175,9 +1175,7 @@
                           {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
                       </a>
                       <button class="btn btn-danger btnDeletePayment vs1ButtonMargin" type="button" style="margin-top: 0px;width: 100px;"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
-                      <button class="btn btn-danger btnRemove btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
-                            <i class="fa fa-remove" style="padding-right: 8px;"></i>Delete
-                        </button>
+                      {{> deleteBtn_footers }}
                       <button class="btn btn-secondary btnBack btnFooter vs1ButtonMargin" type="button" style="margin-top: 0px; width: 100px;">
                           <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
                       </button>
@@ -1434,6 +1432,13 @@
 
     <!-- End Modal Supplier -->
 
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="eftExportModal">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered generated-id" role="document" style="max-width: 90vw;">
+        {{> eftExportModal}}
+      </div>
+    </div>
+
     <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
         {{> accountlistpop}}
     </div>
@@ -1460,12 +1465,6 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="newPaymentMethodModal">
         {{> newpaymentmethodpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="eftExportModal">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered generated-id" role="document" style="max-width: 90vw;">
-        {{> eftExportModal}}
-      </div>
     </div>
 
     <!-- End Help Video Modal -->

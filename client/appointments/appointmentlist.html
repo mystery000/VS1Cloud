@@ -340,242 +340,6 @@
                           -->
                             </tbody>
                         </table>
-                        <div class="modal fade" role="dialog"  id="event-modal" >
-                            <form id="frmAppointment">
-                                <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document" style="width:100%;">
-                                    <div class="modal-content modalCreateAppointments" id="modalCreateAppointments">
-                                        <div class="modal-header">
-                                            <h4 style="margin-bottom: 0px;">Create Appointments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                        </div>
-                                        <div class="modal-body" style="padding: 0px;">
-
-                                            <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
-                                                <div class="col" style="padding: 0px;">
-                                                    <div class="row" style="padding: 0px 8px;">
-                                                        <div class="col-6 colCustJobName" id="colCustJobName">
-                                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Customer /
-                                                                Job
-                                                                Name</label>
-                                                                <select type="search" class="form-control" id="customer" name="customer" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-2 colMobno" id="colMobno">
-                                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Mobile
-                                                                No.</label><input type="text" id="mobile" name="mobile" class="form-control"></div>
-                                                        </div>
-                                                        <div class="col-2 colPhoneno" id="colPhoneno">
-                                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Phone
-                                                                No.</label><input type="text" id="phone" name="phone" class="form-control"></div>
-                                                        </div>
-                                                        <div class="col-2 colAppID" id="colAppID">
-                                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>App
-                                                                ID</label><input type="text" id="appID" name="appID" class="form-control" readonly>
-                                                                <input type="hidden" id="updateID" name="updateID" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="padding: 0px 8px;">
-                                                        <div class="col-4 colStreetAddress" id="colStreetAddress">
-                                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Street
-                                                                Address</label><input type="text" id="address" name="address" class="form-control"></div>
-                                                        </div>
-                                                        <div class="col-2 colCityTown" id="colCityTown">
-                                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                                                <label>Suburb</label><input type="text" id="suburb" name="suburb" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-2 colState" id="colState">
-                                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                                                <label>State</label><input type="text" id="state" name="state" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-2 colCountry" id="colCountry">
-                                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                                                <label>Country</label><input type="text" id="country" name="country" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-2 colZip" id="colZip">
-                                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Zip
-                                                                Code</label><input type="text" id="zip" name="zip" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <hr style="margin: 8px">
-                                                    <div class="row" style="padding: 0px 8px;">
-                                                        <div class="col-12">
-                                                            <a href="#" style="margin: 8px 0px;" id="googleLink" class="googleLink">Google Maps Link</a>
-                                                        </div>
-                                                    </div>
-                                                    <hr style="margin: 8px">
-                                                    <div class="row" style="padding: 0px 8px;">
-                                                        <div class="col-6 colEmpName" id="colEmpName">
-                                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Employee
-                                                                Name</label><input id="employee_name" name="employee_name" type="text" class="form-control employee_name" readonly></div>
-                                                        </div>
-                                                        <div class="col-3 colStartDate" id="colStartDate">
-                                                            <div class="form-group" style="margin: 8px 0px;">
-                                                                <label>Start Date</label>
-                                                                <div class="input-group date" style="cursor: pointer;">
-                                                                    <input type="text" class="form-control formClassDate statementDate" id="dtSODate" name="dtSODate" value="{{invoicerecord.saledate}}">
-                                                                    <div class="input-group-addon" style="">
-                                                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-3 colEndDate" id="colEndDate">
-                                                            <div class="form-group" style="margin: 8px 0px;">
-                                                                <label>End Date</label>
-                                                                <div class="input-group date" style="cursor: pointer;">
-                                                                    <input type="text" class="form-control formClassDate statementDate" id="dtSODate2" name="dtSODate2" value="{{invoicerecord.saledate}}">
-                                                                    <div class="input-group-addon" style="">
-                                                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="padding: 0px 8px;">
-                                                        <div class="col-4 colNotesParent" id="colNotesParent">
-                                                            <div class="row" style="padding: 0px 8px;">
-                                                                <div class="col-12 colNotes" id="colNotes" style="padding-left: 2px; padding-right: 0px;">
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                                                        <label>Notes</label>
-                                                                        <textarea class="border rounded form-control" rows="5" id="txtNotes" name="txtNotes" style="width: 100%; border: 1px solid #d1d3e2 !important;"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-8" id="colBookedTimeParent">
-                                                            <div class="row" style="padding: 0px 8px;">
-                                                                <div class="col-3 colBookedTime" id="colBookedTime">
-                                                                    <h5 class="float-right bookedTimeHeader" id="bookedTimeHeader" style="margin: 8px 0px; margin-top: 2.5em;">
-                                                                        Booked Time</h5>
-                                                                </div>
-                                                                <div class="col-3 colBookedStartTime" id="colBookedStartTime" style="padding-left: .5rem;">
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                                                        <label>Start
-                                                                            Time</label><input class="form-control" id="startTime" name="startTime" type="time">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-3 colBookedEndTime" id="colBookedEndTime">
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>End
-                                                                        Time</label><input class="form-control" id="endTime" name="endTime" type="time"></div>
-                                                                </div>
-                                                                <div class="col-2 colBookedHours" id="colBookedHours" style="padding-right: .3rem;">
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                                                        <label>Hours</label><input type="text" id="txtBookedHoursSpent" name="txtBookedHoursSpent" class="form-control" readonly>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-1" style="padding-right: .3rem;">
-                                                                </div>
-                                                            </div>
-                                                            <div class="row" style="padding: 0px 8px;">
-                                                                <div class="col-3 colActualTime" id="colActualTime">
-                                                                    <h5 class="float-right timeHeader" id="timeHeader" style="margin: 8px 0px; margin-top: 2.5em;">
-                                                                        Actual Time</h5>
-                                                                </div>
-                                                                <div class="col-3 colActualStartTime" id="colActualStartTime"
-                                                                     style="padding-left: .5rem;">
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                                                        <label>Start
-                                                                            Time</label><input class="form-control" type="time"
-                                                                                               id="tActualStartTime" name="tActualStartTime">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-3 colActualEndTime" id="colActualEndTime">
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>End
-                                                                        Time</label><input class="form-control" type="time"
-                                                                                           id="tActualEndTime" name="tActualEndTime">
-
-                                                                        <span class="btn btn-warning paused" style="margin: 8px 0px; width: 100%; margin-top: -56px; background-color: rgba(246, 194, 62, 0.4); cursor: default;">Paused</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-2 colActualHours" id="colActualHours"
-                                                                     style="padding-right: .3rem;">
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                                                        <label>Hours</label><input type="text" id="txtActualHoursSpent"
-                                                                                                   name="txtActualHoursSpent" class="form-control">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-1 colAppointmentList" id="colAppointmentList"
-                                                                     style="padding-right: .3rem;">
-                                                                    <label></label>
-                                                                    <button class="btn btn-success btnAppointmentList" type="button" style="margin: 15px 0px; width: 48px;" id="btnAppointmentList"><i class="far fa-clock"></i></button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- <div class="row" style="padding: 0px 8px;">
-<div class="col-12">
-<a href="#" style="margin: 8px 0px; text-align:right;">View Time List</a>
-</div>
-</div> -->
-                                                    </div>
-                                                    <hr style="margin: 8px">
-                                                    <div class="row" style="padding: 0px 8px;">
-                                                        <div class="col-6 colProductService2" id="colProductService2">
-                                                            <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Product /
-                                                                Service</label><select id="product-list" name="product-list" class="form-control">
-                                                                {{#if datatablerecords}}
-                                                                {{#each item in datatablerecords}}
-                                                                <option value="{{item.id}}">{{item.productname}}</option>
-                                                                {{/each}}
-                                                                {{/if}}
-                                                                </select></div>
-                                                        </div>
-                                                        <div class="col-2 colStart" id="colStart" style="padding-top: 2em;">
-                                                            <button class="btn btn-success" type="button" style="margin: 8px 0px; width: 100%;" id="btnStartActualTime">Start</button>
-                                                        </div>
-                                                        <div class="col-2 colOnHold" id="colOnHold" style="padding-top: 2em;">
-                                                            <button class="btn btn-warning" type="button" style="margin: 8px 0px; width: 100%;" id="btnHold">On Hold</button>
-                                                        </div>
-                                                        <div class="col-2 colStop" id="colStop" style="padding-top: 2em;">
-                                                            <button class="btn btn-danger" type="button" style="margin: 8px 0px; width: 100%;" id="btnEndActualTime">Stop</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button class="btn btn-success btnSaveAppointment" type="submit" style="margin: 8px;" id="btnSaveAppointment" name="btnSaveAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                            <button class="btn btn-danger btnDelete" type="button" style="margin: 8px;" id="btnDelete" name="btnDelete"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
-
-                                            <div class="btn-group" style="margin: 8px;">
-                                                <button class="btn btn-warning dropdown-toggle dropdown-toggle-split btnOptions" type="button"  id="btnOptions" name="btnOptions" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button>
-                                                <style>
-                                                    .btn-group .dropdown-toggle-split:focus {
-                                                        color: #ffffff !important;
-                                                        background-color: #f4b619 !important;
-                                                        border-color: #f4b30d !important;
-                                                    }
-                                                    .delete-dropdown {
-                                                        transform: translate3d(-170px, -110px, 0px) !important;
-                                                    }
-                                                    .dropdown-toggle:after {
-                                                        display: inline-block !important;
-                                                        vertical-align: 0em !important;
-                                                        content: "" !important;
-                                                        border-bottom: 0em solid !important;
-                                                        border-right: 0em solid transparent !important;
-                                                        border-top: 0 !important;
-                                                        border-left: 0em solid transparent !important;
-                                                    }
-                                                </style>
-                                                <div role="menu" class="dropdown-menu dropdown-menu-right delete-dropdown">
-                                                    <a role="presentation" class="dropdown-item" href="#">Delete this Appointment and following Appointments</a>
-                                                    <a role="presentation" class="dropdown-item" href="#">Copy this Appointment to Another Day</a>
-                                                    <a role="presentation" class="dropdown-item" href="#myModal2" data-toggle="modal">Repeat This Appointment</a>
-                                                    <a role="presentation" class="dropdown-item" href="#" id="createInvoice" data-toggle="modal">Create Invoice</a>
-                                                </div>
-                                            </div>
-
-                                            <button class="btn btn-secondary" id="btnDeleteAppointment" name="btnDeleteAppointment" data-dismiss="modal" type="button" style="margin: 8px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -603,10 +367,99 @@
             </div>
         </div>
     </div>
-
     <!-- End Help Video Modal -->
-    
-    {{> frmappointmentpop}}
+    <div class="modal fade" role="dialog" id="event-modal">
+        {{> frmappointmentpop}}
+    </div>
+    <div class="modal fade stopAppointment" role="dialog" tabindex="-1" id="stopAppointment">
+        <div class="modal-dialog modal-sm" role="document" style="max-width: 800px;">
+            <div class="modal-content">
+                <div class="modal-header" style="padding-bottom: 8px;">
+                    <h4>Stop Appointment</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="swal2-icon swal2-warning" style="display: block;">!</div>
+                    <div class="swal2-contentwrapper">
+                        <!-- <h2 class="swal2-title" id="swal2-title">Stop Appointment</h2> -->
+                        <div id="swal2-content" class="swal2-content" style="display: block; text-align:center">Once an appointment has ended, it cannot be restarted.</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-8 colProductService2" id="colProductService2">
+                            <div class="form-group flex-grow-1" style="margin: 20px 0px;">
+                                <label>Product / Service for Appointment</label>
+                                <input type="search" autocomplete="off" id="product-list-1" name="product-list-1" class="form-control es-input product-list" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                <ul class="es-list" style="top: 77px; left: 12px; width: 350px;"></ul>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 colProductService1" id="colProductService1" style="padding-top: 44px;">
+                            <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment-1" autocomplete="off"> 0 <i
+                                    class="fa fa-paperclip"></i></button>
+                            <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera-1" autocomplete="off"><i class="fa fa-camera"
+                                    aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <!-- <button class="btn btn-primary addExtraProduct" type="button" style="margin-bottom: 36px; margin-left: 16px;">Extra Product / Service Fees</button> -->
+                            <table id="tblExtraProducts" style="width:100%" class="table table-striped table-bordered tblInventory">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="thProductName" style="width: 25% !important;">Product Name</th>
+                                        <th class="colDescription">Sales Description</th>
+                                        <!-- <th class="thColBarcode hiddenColumn">Barcode</th> -->
+                                        <th class="thCostPrice hiddenColumn" style="width: 13% !important;text-align: left!important;">Cost Price</th>
+                                        <th class="thSalesPrice" style="width: 13% !important;text-align: left!important;">Sale Price</th>
+                                        <th class="thQty hiddenColumn" style="width: 8% !important;">Quantity</th>
+                                        <th class="thTax hiddenColumn" style="width: 8% !important;text-align: left!important;">Tax Rate</th>
+                                        
+                                        <th style="width: 25px !important;"></th>
+                                        <th class="thExtraSellPrice hiddenColumn">Prouct ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each item in extraProductFees}}
+                                    <tr class="dnd-moved" id={{item.Id}}>
+                                        <td class="thProductName">
+                                            <input class="es-input highlightSelect lineProductName" type="search" value="{{item.ProductName}}" itemid="{{item.Id}}">
+                                        </td>
+                                        <td class="lineProductDesc colDescription">{{item.SalesDescription}}</td>
+                                        <!-- <th class="thColBarcode hiddenColumn">Barcode</th> -->
+                                        <td class="thCostPrice hiddenColumn" style="text-align: left!important;"></td>
+                                        <td class="thSalesPrice lineSalesPrice" style="text-align: left!important;">{{item.SellQty1Price}}</td>
+                                        <td class="thQty hiddenColumn">Quantity</td>
+                                        <td class="thTax hiddenColumn" style="text-align: left!important;">Tax Rate</td>
+                                        <td>
+                                            <span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
+                                            class="fa fa-remove"></i></button></span>
+                                        </td>
+                                        <td class="thExtraSellPrice hiddenColumn">Prouct ID</td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary" type="button" id="addRow" style="margin: 12px;">+ Add New Entry</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col colNotes" id="colNotes">
+                            <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                <label>Enter Extra Work Done and Materials Used</label>
+                                <textarea class="border rounded form-control txtNotes" rows="4" id="txtNotes-1" name="txtNotes-1" style="width: 100%; border: 1px solid #d1d3e2 !important;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 6px;">
+                    <button class="btn btn-primary" type="button" id="btnEndAppointment" autocomplete="off">End Appointment</button>
+                    <button class="btn btn-light" data-dismiss="modal" type="button" id="btnCloseStopAppointment">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         modalDraggable();
     </script>
