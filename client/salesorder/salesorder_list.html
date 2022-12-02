@@ -10,7 +10,7 @@
         </style> -->
         <div style="margin-top: -24px;">
             <header style="padding: 16px;background-color: #ededed;">
-                <h2 style="margin: 16px; margin-bottom: 0px;">Sales Orders - {{convertedStatus}} {{> helpbutton}}
+                <h2 style="margin: 16px; margin-bottom: 0px;">Sales Order List {{> helpbutton}}
 
                     <style>
                         @media screen and (max-width: 376px) {
@@ -82,7 +82,7 @@
                                               <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                               <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
                                           </div>
-                                        </div>
+                                        </div> 
                                         {{/if}}
                                         {{/each}}
                                     </div>
@@ -208,10 +208,10 @@
                                     {{#each displayfield in displayfields}}
                                       {{#if displayfield.display}}
                                       <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
-                                          {{displayfield.custfieldlabel}}
+                                          {{displayfield.custfieldlabel}} 
                                         </th>
                                       {{/if}}
-                                    {{/each}}
+                                    {{/each}} 
                                 </tr>
                             </thead>
                             <tbody>

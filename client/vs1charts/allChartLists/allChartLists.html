@@ -144,7 +144,7 @@
             md=4 defaultPosition=2 key="dscharts__my_tasks" }}
 
         {{> dsmAppointmentsWidget
-            md=8 defaultPosition=3 key="dsmcharts__appointment_chart" }}
+            md=8 defaultPosition=3 key="dsmcharts__appointment_list" }}
 
         {{> quotedsalesorderinvoicedamounts
             md=4 defaultPosition=1 key="sales__sales_overview" }}
@@ -175,7 +175,7 @@
 
         {{> quotedinvoicedamounts
             md=6 defaultPosition=16 key="dashboard__quoted_amounts_/_invoiced_amounts" }}
-
+        
         {{> activeEmployees
             md=4 defaultPosition=17 key="contacts__active_employees" }}
 
@@ -197,38 +197,35 @@
         <!-- position 17 to 18, 24 -->
         {{> dashboardManagerCharts}}
 
-
         {{> dsmTop10Customers
             md=4 defaultPosition=24 key="dsmcharts__top_10_customers" }}
 
-        <!-- {{> dsmResalescomparision
-            md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison" }} -->
-
-        {{> resalescomparision md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison"}}
+        {{> dsmResalescomparision
+            md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison" }}
 
         {{#if equals isaccountoverview true}}
 
         {{else}}
+
         {{> accountslistchart
         md=12 defaultPosition=29 key="dashboard__account_list" }}
 
         {{/if}}
 
-        <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="27" data-default-class="col-md-8" key="dscharts__appointment_chart">
+        <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="27" data-default-class="col-md-8" key="dscharts__appointment_list">
             {{> dsAppointmentsWidget}}
         </div>
 
+        {{> opportunitiesStatus
+            md=4 defaultPosition=30 key="dsmcharts__opportunities_status" }}
 
-        {{> opportunitiesStatus md=4 defaultPosition=30 key="dsmcharts__opportunities_status" }}
-
-        {{> dsmleadlistchart md=12 defaultPosition=31 key="dsmcharts__lead_list" }}
-
-        <!-- <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="31" data-default-class="col-md-12" key="dsmcharts__lead_list" style="margin-top:25px !important">
+        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="31" data-default-class="col-md-12" key="dsmcharts__lead_list" style="margin-top:25px !important">
             {{> dsmleadlistchart}}
-        </div> -->
+        </div>
         <!-- position 30, 31 -->
         {{> dashboardSalesCharts}}
-        {{> dsleadlistchart md=12 defaultPosition=33 key="dscharts__lead_list" }}
+        {{> dsleadlistchart
+            md=12 defaultPosition=33 key="dscharts__lead_list" }}
 
     </div>
     <div class="row no-gutters justify-content-center">

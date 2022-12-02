@@ -718,6 +718,7 @@ Template.accountslistchart.onRendered(()=>{
           }, 100);
       }
 
+      $(".fullScreenSpin").css("display", "none");
       setTimeout(function() {
           $('#tblDashboardCategory').dataTable({
               data: categoryAccountList,

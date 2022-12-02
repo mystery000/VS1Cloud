@@ -71,6 +71,21 @@ Template.addcustomerpop.onRendered(function () {
     const tableHeaderListJob = [];
 
     let salestaxcode = '';
+
+    setTimeout(function () {
+        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'defaulttax', function (error, result) {
+            if (error) {
+                salestaxcode = loggedTaxCodeSalesInc;
+                templateObject.defaultsaletaxcode.set(salestaxcode);
+            } else {
+                if (result) {
+                    salestaxcode = result.customFields[1].taxvalue || loggedTaxCodeSalesInc;
+                    templateObject.defaultsaletaxcode.set(salestaxcode);
+                }
+
+            }
+        });
+    }, 500);
     setTimeout(function () {
         $(".addcustomerpop #dtAsOf").datepicker({
             showOn: 'button',

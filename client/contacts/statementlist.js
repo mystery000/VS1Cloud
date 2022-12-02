@@ -1832,7 +1832,7 @@ Template.statementlist.onRendered(function () {
     async function showCustomerStatements1(template_title, number, bprint, clientID)
     {
         await templateObject.getStatePrintData1(clientID);
-
+        
         var array_data = [];
         let lineItems = [];
         let taxItems = {};
@@ -1861,7 +1861,7 @@ Template.statementlist.onRendered(function () {
         let total_paid = "$0.00";
         let balancedue = "$0.00";
         let customer = '';
-
+        
         if(number == 1)
         {
               item_invoices = {
@@ -2174,7 +2174,7 @@ Template.statementlist.onRendered(function () {
         } else {
             $(".subtotal3").show();
         }
-
+        
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -2294,7 +2294,7 @@ Template.statementlist.onRendered(function () {
                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                     // $(".btnSave").trigger("click");
                 } else {
-
+                    
                 }
                 $('#html-2-pdfwrapper').css('display', 'none');
                 $("#html-2-pdfwrapper_quotes").hide();
@@ -2318,6 +2318,7 @@ Template.statementlist.onRendered(function () {
                 retIds.push(targetID);
             } else {}
         });
+        console.log(retIds);
         return retIds;
     };
 });
@@ -2769,7 +2770,7 @@ Template.statementlist.events({
         setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#printstatmentdesign').css('display', 'block');
-
+        
         let listIds = [];
         $('.chkBox').each(function () {
             if ($(this).is(':checked')) {

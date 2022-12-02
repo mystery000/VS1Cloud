@@ -13,6 +13,7 @@ Template.purchasesoverviewcards.onCreated(function() {
 });
 
 Template.purchasesoverviewcards.onRendered(function() {
+    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     const dataTableList = [];
   const tableHeaderList = [];

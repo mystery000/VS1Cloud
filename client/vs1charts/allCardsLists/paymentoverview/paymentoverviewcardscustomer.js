@@ -11,6 +11,8 @@ Template.paymentoverviewcardscustomer.onCreated(function() {
 });
 
 Template.paymentoverviewcardscustomer.onRendered(function() {
+    $('.fullScreenSpin').css('display', 'inline-block');
+
     var url = window.location.href;
     let customerID = 0;
     if (url.indexOf("customerscard?id=") > 0) {

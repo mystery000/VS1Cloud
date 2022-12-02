@@ -6,7 +6,6 @@ import {UtilityService} from "../utility-service";
 import {CoreService} from '../js/core-service';
 import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-
 var CronJob = require('cron').CronJob;
 
 let utilityService = new UtilityService();
@@ -230,89 +229,6 @@ Template.newsidenav.onRendered(function() {
       templateObject.isSNTrackChecked.set(false);
     }
 
-    function MyPopper (button, popper) {
-      this.body = $('#popperBounder');
-      this.button = $(button);
-      this.popper = $(popper).clone().appendTo(this.body);
-      
-      this.arrow = $('<div class="popper-arrow"></div>').appendTo(this.popper);
-    }
-    
-    MyPopper.prototype.createInstance = function () {
-      this.instance = Popper.createPopper(this.button[0], this.popper[0], {
-        placement: "bottom", //preferred placement of popper
-        modifiers: [
-          {
-            name: "offset", //offsets popper from the reference/button
-            options: {
-              offset: [0, 8]
-            }
-          },
-          {
-            name: "flip", //flips popper with allowed placements
-            options: {
-              allowedAutoPlacements: ["right", "left", "top", "bottom"],
-              rootBoundary: "viewport"
-            }
-          },
-          {
-            name: 'preventOverflow',
-            options: {
-              boundary: this.body[0],
-            },
-          },
-        ]
-      });
-    }
-    MyPopper.prototype.destroyInstance = function () {
-      if (this.instance) {
-        this.instance.destroy();
-        this.instance = null;
-      }
-    }
-    
-    MyPopper.prototype.showPopper = function () {
-      this.popper.addClass('popper-popup');
-      this.popper.attr("show-popper", "");
-      this.arrow.attr("data-popper-arrow", "");
-      this.createInstance();
-    }
-    MyPopper.prototype.hidePopper = function () {
-      this.popper.removeClass('popper-popup');
-      this.popper.removeAttr("show-popper");
-      this.arrow.removeAttr("data-popper-arrow");
-      this.destroyInstance();
-    }
-    MyPopper.prototype.togglePopper = function () {
-      if (this.popper[0].hasAttribute("show-popper")) {
-        this.hidePopper();
-      } else {
-        this.showPopper();
-      }
-    }
-    const poppers = [];
-    function init () {
-      $('body #sidebar .components > li').each((index, li) => {
-        const ul = $(li).find('> ul')[0];
-        if (ul) {
-          const a = $(li).find('> a')[0];
-          a.popper = new MyPopper(a, ul);
-          poppers.push(a.popper);
-        }
-      })
-      $('body').on('mouseover', '.top #sidebar .components > li > a', function (e) {
-        if (e.currentTarget.popper) {
-          poppers.forEach(popper => e.currentTarget.popper !== popper && popper.hidePopper());
-          e.currentTarget.popper.showPopper();
-        }
-      })
-      $('#colContent').on('click', function () {
-        poppers.forEach(popper => popper.hidePopper());
-      })
-    }
-    setTimeout(() => {
-      init();
-    }, 2000);
     templateObject.getSetSideNavFocus = function() {
         var currentLoc = FlowRouter.current().route.path;
         setTimeout(function() {
@@ -9411,4 +9327,3 @@ Template.newsidenav.helpers({
       return Template.instance().isAppointmentSMS.get();
     }
 });
-

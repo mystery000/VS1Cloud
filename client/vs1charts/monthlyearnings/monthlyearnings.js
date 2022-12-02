@@ -51,7 +51,7 @@ Template.monthlyearnings.onRendered(() => {
       //                 setTimeout(function  (){
       //                      $('#myMonthlyEarningChart').hide();
       //                 },500)
-
+                 
       //           };
     if (!localStorage.getItem('VS1SalesListReport_dash')) {
         getInvSales(function (data) {
@@ -168,7 +168,7 @@ Template.monthlyearnings.onRendered(() => {
 
                         }
                     }
-                }, 0);
+                }, 1000);
             }
 
             // topData.topTenData.set(data);
@@ -299,7 +299,7 @@ Template.monthlyearnings.onRendered(() => {
                         }
                     }
                 });
-            }, 0);
+            }, 1000);
 
         });
 
@@ -434,7 +434,7 @@ Template.monthlyearnings.onRendered(() => {
                             }
                         }
                     },
-
+                    
                     // bezierCurve : true,
                     //                        animation: {
                     //                            onComplete: done

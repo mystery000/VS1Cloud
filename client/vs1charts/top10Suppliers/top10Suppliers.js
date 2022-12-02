@@ -23,6 +23,7 @@ Template.top10Suppliers.onRendered(() => {
   }
 
   getSupplierPurchases(function (data) {
+    setTimeout(function () {
       topTenSuppData1 = _.take(data, 10);
       let totalBalance = 0;
       let itemName = [];
@@ -129,7 +130,7 @@ Template.top10Suppliers.onRendered(() => {
           },
         },
       });
-
+    }, 1000)
   });
   function getSupplierPurchases(callback) {
     return new Promise((res, rej) => {

@@ -20,7 +20,6 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accountService = new SalesBoardService();
 let productService = new ProductService();
-let contactService = new ContactService();
 let times = 0;
 let clickedInput = "";
 let isDropDown = false;
@@ -43,7 +42,7 @@ Template.new_workorder.onCreated(function() {
     templateObject.selectedProductField = new ReactiveVar();
     templateObject.isMobileDevices = new ReactiveVar(false);
     templateObject.bomStructure = new ReactiveVar();
-    templateObject.quantityBuild = new ReactiveVar(true);
+    templateObject.quantityBuild = new ReactiveVar(false);
     templateObject.showBOMModal = new ReactiveVar(false);
 })
 
@@ -214,7 +213,7 @@ Template.new_workorder.onRendered(function(){
         }else {
             setTimeout(()=>{
                 $('#salesOrderListModal').modal('toggle')
-            }, 1000)
+            }, 500)
         }
     } else {
         templateObject.getWorkorderRecord();
@@ -271,10 +270,10 @@ Template.new_workorder.events({
                   if(templateObject.workOrderLineId.get() == -1) {
                       swal({
                           title: 'Oooops...',
-                          text: 'This record is not available to create work order.',
+                          text: err,
                           type: 'error',
                           showCancelButton: false,
-                          confirmButtonText: 'Ok'
+                          confirmButtonText: 'This record is not available to create work order.'
                       }).then((result) => {
                           if (result.value) {}
                           else if (result.dismiss === 'cancel') {
@@ -416,24 +415,26 @@ Template.new_workorder.events({
         async function getSupplierDetail ()  {
             return new Promise(async(resolve, reject)=>{
                 let supplierName = 'Misc Supplier';
-                
-                contactService.getOneSupplierDataExByName(supplierName).then(function(dataObject) {
-                    let data = dataObject.tsupplier;
-                    if(data.length > 0) {
-                        let clientName = data[0].fields.ClientName;
-                        let street = data[0].fields.Street || '';
-                        let city = data[0].fields.Street2 || '';
-                        let state = data[0].fields.State || '';
-                        let zipCode = data[0].fields.Postcode || '';
-                        let country = data[0].fields.Country || '';
-                        
-                        let postalAddress = data[0].fields.ClientName + '\n' + street + '\n' + city + ' ' + state + ' ' + zipCode + '\n' + country;
-                        resolve(postalAddress)
+                getVS1Data('TSupplierVS1').then(function(dataObject) {
+                    if(dataObject.length == 0) {
+
                     }else {
-                        resolve('')
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.tsuppliervs1;
+                        for(let i = 0; i< useData.length; i++) {
+                            if(useData[i].fields.ClientName == supplierName) {
+                                let clientName = useData[i].fields.ClientName;
+                                let street = useData[i].fields.Street || '';
+                                let city = useData[i].fields.Street2 || '';
+                                let state = useData[i].fields.State || '';
+                                let zipCode = useData[i].fields.Postcode || '';
+                                let country = useData[i].fields.Country || '';
+                                
+                                let postalAddress = useData[i].fields.ClientName + '\n' + street + '\n' + city + ' ' + state + ' ' + zipCode + '\n' + country;
+                                resolve(postalAddress)
+                            }
+                        }
                     }
-                }).catch(function(e) {
-                    resolve('')
                 })
             })
 
@@ -784,6 +785,7 @@ Template.new_workorder.events({
                 Quantity: record.line.fields.Qty || 1,
                 InProgress: record.isStarted,
             }
+            await createPurchaseOrder(objDetail.BOM.productName, objDetail.Quantity)
             let tempArray = localStorage.getItem('TWorkorders');
             let workorders = tempArray?JSON.parse(tempArray): [];
             objDetail.ID = objDetail.SalesOrderID+ "_" + (workorders.length + 1).toString();

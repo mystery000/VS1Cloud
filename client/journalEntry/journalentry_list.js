@@ -102,18 +102,18 @@ Template.journalentrylist.onRendered(function() {
   // set initial table rest_data
   function init_reset_data() {
     let reset_data = [
-      { index: 0, label: 'Transaction Date', class:'colAccountName', active: true, display: true, width: "85" },
-      { index: 1, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 2, label: 'Department Name', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 3, label: 'Entry No', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 4, label: 'Debit Amount', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 5, label: 'Credit Amount', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 6, label: 'Tax Amount', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 7, label: 'Account No', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 8, label: 'Employee Name', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 9, label: 'Approved', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 10, label: 'Journal Memo', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 11, label: 'Memo', class:'colAccountName', active: false, display: true, width: "" },
+      { index: 0, label: 'ID', class:'ID', active: false, display: false, width: "0" },
+      { index: 1, label: "Transaction Date", class: "TransactionDate", active: true, display: true, width: "" },
+      { index: 2, label: "Entry No", class: "EntryNo", active: true, display: true, width: "" },
+      { index: 3, label: "Account Name", class: "AccountName", active: true, display: true, width: "" },
+      { index: 4, label: "Department", class: "Department", active: true, display: true, width: "" },
+      { index: 5, label: "Debit Amount", class: "DebitAmount", active: true, display: true, width: "" },
+      { index: 6, label: "Credit Amount", class: "CreditAmount", active: true, display: true, width: "" },
+      { index: 7, label: "Tax Amount", class: "TaxAmount", active: true, display: true, width: "" },
+      { index: 8, label: "Status", class: "Status", active: true, display: true, width: "" },
+      { index: 9, label: "Account No", class: "AccountNo", active: false, display: true, width: "" },
+      { index: 10, label: "Employee", class: "Employee", active: false, display: true, width: "" },
+      { index: 11, label: "Memo", class: "Memo", active: true, display: true, width: "" },
     ];
 
     let templateObject = Template.instance();
@@ -130,27 +130,27 @@ Template.journalentrylist.onRendered(function() {
     templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
-      // getVS1Data("VS1_Customize").then(function (dataObject) {
-      //   if (dataObject.length == 0) {
-      //     sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-      //         // reset_data = data.ProcessLog.CustomLayout.Columns;
-      //         reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-      //         templateObject.showCustomFieldDisplaySettings(reset_data);
-      //     }).catch(function (err) {
-      //     });
-      //   } else {
-      //     let data = JSON.parse(dataObject[0].data);
-      //     if(data.ProcessLog.Obj.CustomLayout.length > 0){
-      //      for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-      //        if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-      //          reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-      //          templateObject.showCustomFieldDisplaySettings(reset_data);
-      //        }
-      //      }
-      //    };
-      //     // handle process here
-      //   }
-      // });
+      getVS1Data("VS1_Customize").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+              // reset_data = data.ProcessLog.CustomLayout.Columns;
+              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              templateObject.showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          if(data.ProcessLog.Obj.CustomLayout.length > 0){
+           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+               templateObject.showCustomFieldDisplaySettings(reset_data);
+             }
+           }
+         };
+          // handle process here
+        }
+      });
     } catch (error) {
     }
     return;

@@ -166,7 +166,7 @@ Template.employeeAbsentDays.onRendered(() => {
             });
 
             $(".fullScreenSpin").css("display", "none");
-          }, 0);
+          }, 1000);
         }).catch(function (err) {
           // Bert.alert('<strong>' + err + '</strong>!', 'danger');
           $(".fullScreenSpin").css("display", "none");
@@ -302,7 +302,7 @@ Template.employeeAbsentDays.onRendered(() => {
               }
             }
           });
-        }, 0);
+        }, 1000);
         //let url = window.location.href;
         $(".fullScreenSpin").css("display", "none");
       }
@@ -437,7 +437,7 @@ Template.employeeAbsentDays.onRendered(() => {
               }
             }
           });
-        }, 0);
+        }, 1000);
         $(".fullScreenSpin").css("display", "none");
       }).catch(function (err) {
         // Bert.alert('<strong>' + err + '</strong>!', 'danger');

@@ -42,18 +42,11 @@ Template.departmentSettings.onRendered(function() {
         let deptName = $(event.target).closest('tr').find('.colDeptName').text();
         let deptDesc = $(event.target).closest('tr').find('.colDescription').text();
         let siteCode = $(event.target).closest('tr').find('.colSiteCode').text();
-        let status = $(event.target).closest('tr').find('.colStatus').text();
         $('#edtDepartmentID').val(deptID);
         $('#edtDeptName').val(deptName);
         $('#txaDescription').val(deptDesc);
         $('#edtSiteCode').val(deptDesc);
         $('#myModalDepartment').modal('show');
-        //Make btnDelete "Make Active or In-Active"
-        if(status == "In-Active"){
-            $('#view-in-active').html("<button class='btn btn-success btnActivateDept vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
-        }else{
-            $('#view-in-active').html("<button class='btn btn-danger btnDeleteDept vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
-        }
 
     });
 });
@@ -75,25 +68,18 @@ Template.departmentSettings.events({
       $(".fullScreenSpin").css("display", "none");
     },
     'click .btnRefresh': function () {
-        $(".fullScreenSpin").css("display", "inline-block");
-        sideBarService.getDepartment().then(function(dataReload) {
-            addVS1Data('TDeptClass', JSON.stringify(dataReload)).then(function(datareturn) {
-              sideBarService.getDepartmentDataList(initialBaseDataLoad, 0, false).then(async function(dataDeptList) {
-                  await addVS1Data('TDeptClassList', JSON.stringify(dataDeptList)).then(function(datareturn) {
-                      Meteor._reload.reload();
-                  }).catch(function(err) {
-                      Meteor._reload.reload();
-                  });
-              }).catch(function(err) {
-                  Meteor._reload.reload();
-              });
-            }).catch(function(err) {
-                Meteor._reload.reload();
-            });
-        }).catch(function(err) {
-            Meteor._reload.reload();
-        });
+      sideBarService.getDepartmentDataList(initialBaseDataLoad, 0,false).then(async function (data) {
+          await addVS1Data('TDepartment', JSON.stringify(data));
+          window.open("/departmentSettings", "_self");
+      }).catch(function (err) {
+          Meteor._reload.reload();
+      });
+      // Meteor._reload.reload();
   },
+    'click .btnAddNewDepart': function () {
+        $('#newdepartment').css('display','block');
+
+    },
     'click .btnCloseAddNewDept': function () {
         playCancelAudio();
         setTimeout(function(){
@@ -105,39 +91,24 @@ Template.departmentSettings.events({
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let deptID = $('#edtDepartmentID').val() || '';
-        let deptName = $('#edtDeptName').val() || '';
-        let deptDesc = $('#txaDescription').val() || '';
-        let siteCode = $('#edtSiteCode').val() || '';
+        let deptId = $('#edtDepartmentID').val();
+
         let objDetails = {
             type: "TDeptClass",
             fields: {
-                Id: deptID,
-                DeptClassName: deptName,
-                Description: deptDesc,
-                SiteCode: siteCode,
+                Id: deptId,
                 Active: false
             }
         };
 
         taxRateService.saveDepartment(objDetails).then(function (objDetails) {
-            sideBarService.getDepartment().then(function(dataReload) {
-                addVS1Data('TDeptClass', JSON.stringify(dataReload)).then(function(datareturn) {
-                  sideBarService.getDepartmentDataList(initialBaseDataLoad, 0, false).then(async function(dataDeptList) {
-                      await addVS1Data('TDeptClassList', JSON.stringify(dataDeptList)).then(function(datareturn) {
-                          Meteor._reload.reload();
-                      }).catch(function(err) {
-                          Meteor._reload.reload();
-                      });
-                  }).catch(function(err) {
-                      Meteor._reload.reload();
-                  });
-                }).catch(function(err) {
-                    Meteor._reload.reload();
-                });
-            }).catch(function(err) {
-                Meteor._reload.reload();
+            sideBarService.getDepartmentDataList(initialBaseDataLoad, 0,true).then(function (dataReload) {
+                addVS1Data('TDepartment', JSON.stringify(dataReload)).then(function (datareturn) {
+               Meteor._reload.reload();
+            }).catch(function (err) {
+               Meteor._reload.reload();
             });
+        });
 
         }).catch(function (err) {
             swal({
@@ -155,140 +126,27 @@ Template.departmentSettings.events({
         });
     }, delayTimeAfterSound);
     },
-    'click .btnActivateDept': function() {
-        playSaveAudio();
-        let contactService = new ContactService();
-        setTimeout(function() {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            let deptID = $('#edtDepartmentID').val() || '';
-            let deptName = $('#edtDeptName').val() || '';
-            let deptDesc = $('#txaDescription').val() || '';
-            let siteCode = $('#edtSiteCode').val() || '';
-            let objDetails = {
-                type: "TDeptClass",
-                fields: {
-                    Id: deptID,
-                    DeptClassName: deptName,
-                    Description: deptDesc,
-                    SiteCode: siteCode,
-                    Active: false
-                }
-            };
-            contactService.saveDepartment(objDetails).then(function(result) {
-                sideBarService.getDepartment().then(function(dataReload) {
-                    addVS1Data('TDeptClass', JSON.stringify(dataReload)).then(function(datareturn) {
-                      sideBarService.getDepartmentDataList(initialBaseDataLoad, 0, false).then(async function(dataDeptList) {
-                          await addVS1Data('TDeptClassList', JSON.stringify(dataDeptList)).then(function(datareturn) {
-                              Meteor._reload.reload();
-                          }).catch(function(err) {
-                              Meteor._reload.reload();
-                          });
-                      }).catch(function(err) {
-                          Meteor._reload.reload();
-                      });
-                    }).catch(function(err) {
-                        Meteor._reload.reload();
-                    });
-                }).catch(function(err) {
-                    Meteor._reload.reload();
-                });
-            }).catch(function(err) {
-                    swal({
-                        title: 'Oooops...',
-                        text: err,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                        if (result.value) {
-                            // Meteor._reload.reload();
-                        } else if (result.dismiss === 'cancel') {}
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                });
-        }, delayTimeAfterSound);
-    },
     'click .btnSaveDept': function () {
         playSaveAudio();
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-        let objDetails = {};
+
         let deptID = $('#edtDepartmentID').val()||0;
         //let headerDept = $('#sltDepartment').val();
         let deptName = $('#edtDeptName').val()||'';
+        if (deptName === ''){
+        swal('Department name cannot be blank!', '', 'warning');
+        $('.fullScreenSpin').css('display','none');
+        e.preventDefault();
+        }
+
         let deptDesc = $('#txaDescription').val()||'';
         let siteCode = $('#edtSiteCode').val()||'';
         let checkDeptID ='';
+        let objDetails = '';
         let objStSDetails = null;
-        if (deptName === ''){
-            swal('Department name cannot be blank!', '', 'warning');
-            $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
-        }else{
-            if(deptID == ""){
-                objDetails = {
-                    type: "TDeptClass",
-                    fields: {
-                        //DeptClassGroup: headerDept,
-                        DeptClassName: deptName,
-                        Description: deptDesc,
-                        SiteCode: siteCode,
-                        StSClass: objStSDetails,
-                        Active: true
-                    }
-                }
-            }else{
-                objDetails = {
-                    type: "TDeptClass",
-                    fields: {
-                        ID: parseInt(deptID)||0,
-                        //DeptClassGroup: headerDept,
-                        DeptClassName: deptName,
-                        Description: deptDesc,
-                        SiteCode: siteCode,
-                        StSClass: objStSDetails,
-                        Active: true
-                    }
-                }
-            }
 
-            taxRateService.saveDepartment(objDetails).then(function (objDetails) {
-              sideBarService.getDepartment().then(function(dataReload) {
-                  addVS1Data('TDeptClass',JSON.stringify(dataReload)).then(function (datareturn) {
-                    sideBarService.getDepartmentDataList(initialBaseDataLoad, 0, false).then(async function(dataDeptList) {
-                        await addVS1Data('TDeptClassList', JSON.stringify(dataDeptList)).then(function(datareturn) {
-                            Meteor._reload.reload();
-                        }).catch(function(err) {
-                            Meteor._reload.reload();
-                        });
-                    }).catch(function(err) {
-                        Meteor._reload.reload();
-                    });
-                  }).catch(function(err) {
-                      Meteor._reload.reload();
-                  });
-              }).catch(function(err) {
-                  Meteor._reload.reload();
-              });
-            }).catch(function (err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                        // Meteor._reload.reload();
-                    } else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-                $('.fullScreenSpin').css('display','none');
-            });
-
-        }
         if (isModuleGreenTrack) {
 
             let sltMainContact = $('#sltMainContact').val();
@@ -307,7 +165,138 @@ Template.departmentSettings.events({
                 }
             }
         }
-        }, delayTimeAfterSound);
+
+        if (deptName === ''){
+            Bert.alert('<strong>WARNING:</strong> Department Name cannot be blank!', 'warning');
+            e.preventDefault();
+        }
+
+        if(deptID == ""){
+
+            taxRateService.checkDepartmentByName(deptName).then(function (data) {
+                deptID = data.tdeptclass[0].Id;
+                objDetails = {
+                    type: "TDeptClass",
+                    fields: {
+                        ID: parseInt(deptID)||0,
+                        Active: true,
+                        //DeptClassGroup: headerDept,
+                        DeptClassName: deptName,
+                        Description: deptDesc,
+                        SiteCode: siteCode,
+                        StSClass: objStSDetails
+                    }
+                };
+
+                taxRateService.saveDepartment(objDetails).then(function (objDetails) {
+                  sideBarService.getDepartment().then(function(dataReload) {
+                      addVS1Data('TDeptClass',JSON.stringify(dataReload)).then(function (datareturn) {
+                      location.reload(true);
+                      }).catch(function (err) {
+                        location.reload(true);
+                      });
+                  }).catch(function(err) {
+                      location.reload(true);
+                  });
+                }).catch(function (err) {
+                    swal({
+                        title: 'Oooops...',
+                        text: err,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {
+                            // Meteor._reload.reload();
+                        } else if (result.dismiss === 'cancel') {
+
+                        }
+                    });
+                    $('.fullScreenSpin').css('display','none');
+                });
+
+            }).catch(function (err) {
+                objDetails = {
+                    type: "TDeptClass",
+                    fields: {
+                        Active: true,
+                        DeptClassName: deptName,
+                        Description: deptDesc,
+                        SiteCode: siteCode,
+                        StSClass: objStSDetails
+                    }
+                };
+
+                taxRateService.saveDepartment(objDetails).then(function (objDetails) {
+                  sideBarService.getDepartment().then(function(dataReload) {
+                      addVS1Data('TDeptClass',JSON.stringify(dataReload)).then(function (datareturn) {
+                      location.reload(true);
+                      }).catch(function (err) {
+                        location.reload(true);
+                      });
+                  }).catch(function(err) {
+                      location.reload(true);
+                  });
+                }).catch(function (err) {
+                    swal({
+                        title: 'Oooops...',
+                        text: err,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {
+                            // Meteor._reload.reload();
+                        } else if (result.dismiss === 'cancel') {
+
+                        }
+                    });
+                    $('.fullScreenSpin').css('display','none');
+                });
+            });
+
+        }else{
+            objDetails = {
+                type: "TDeptClass",
+                fields: {
+                    ID: parseInt(deptID),
+                    Active: true,
+                    //  DeptClassGroup: headerDept,
+                    DeptClassName: deptName,
+                    Description: deptDesc,
+                    SiteCode: siteCode,
+                    StSClass: objStSDetails
+                }
+            };
+
+            taxRateService.saveDepartment(objDetails).then(function (objDetails) {
+              sideBarService.getDepartment().then(function(dataReload) {
+                  addVS1Data('TDeptClass',JSON.stringify(dataReload)).then(function (datareturn) {
+                  location.reload(true);
+                  }).catch(function (err) {
+                    location.reload(true);
+                  });
+              }).catch(function(err) {
+                  location.reload(true);
+              });
+            }).catch(function (err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                        // Meteor._reload.reload();
+                    } else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display','none');
+            });
+        }
+    }, delayTimeAfterSound);
     },
     'click .btnAddDept': function () {
         $('#add-dept-title').text('Add New Department');
@@ -316,8 +305,6 @@ Template.departmentSettings.events({
         $('#edtDeptName').val('');
         $('#edtDeptName').prop('readonly', false);
         $('#edtDeptDesc').val('');
-        $('#myModalDepartment').modal('show');
-        $('#view-in-active').html("<button class='btn btn-danger btnDeleteDept vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
     },
     'click .btnBack':function(event){
         playCancelAudio();
@@ -547,7 +534,7 @@ Template.departmentSettings.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblDepartmentList'});
+        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'departmentList'});
     },
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b){

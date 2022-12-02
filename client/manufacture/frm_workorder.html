@@ -67,7 +67,8 @@
                             <div class="col-12 col-md-6 col-lg-6 col-xl-4">
                                 <div class="formgoup">
                                     <div class="form-group"><label>Customer</label>
-                                        {{> vs1_dropdown value=workorderrecord.customer}}
+                                        <select type="search" class="form-control" id="edtCustomerName" name="edtCustomerName" value="{{workorderrecord.customer}}" custid=" " style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +119,7 @@
                             </div>
                             {{#if equals quantityBuild true}}
                             <div class="col-6 form-group">
-                                <input type="text" class="w-100 form-control text-center edtTotalQuantity" id="edtTotalQuantity" value="{{workorderrecord.line.fields.Qty}}"/>
+                                <input type="text" class="w-100 form-control text-center edtTotalQuantity" id="edtTotalQuantity"/>
                             </div>
                             {{/if}}
                             <div class="col-6 mb-3">
@@ -786,7 +787,7 @@
                                     <a class="btn btn-primary btn_Attachment btnFooter" role="button" style="margin: 16px;margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
                                         {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
                                     </a>
-                                    {{> deleteBtn_footers }}
+  
                                     <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
                                         <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
                                     </button>

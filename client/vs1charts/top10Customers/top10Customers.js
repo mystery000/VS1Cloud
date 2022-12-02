@@ -26,6 +26,7 @@ Template.top10Customers.onRendered(function () {
     FlowRouter.go("/customerdetailsreport?daterange=ignore");
   }
   getInvSales(function (data) {
+    setTimeout(function () {
       let customerList = [];
       topTenData1 = _.take(data, 10);
       let totalBalance = 0;
@@ -149,7 +150,7 @@ Template.top10Customers.onRendered(function () {
           },
         },
       });
-
+    }, 1000)
   });
 
   function getInvSales(callback) {

@@ -15,6 +15,7 @@ Template.dsleadlistchart.onCreated(function() {
 });
 
 Template.dsleadlistchart.onRendered(function() {
+    $('.fullScreenSpin').css('display', 'inline-block');
     let contactService = new ContactService();
     let templateObject = Template.instance();
     let splashArrayLeadList = [];
