@@ -205,6 +205,36 @@ Template.new_invoice.onRendered(function() {
             $("#formCheck-january").prop('checked', true);
         }
     }
+
+    templateObject.hasFollowings = async function() {
+        var currentDate = new Date();
+        let salesService = new SalesBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split("?id=");
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = "";
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var invData = await salesService.getOneInvoicedataEx(currentInvoice);
+            var saleDate = invData.fields.SaleDate;
+            var fromDate = saleDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingInvoices = await sideBarService.getAllTInvoiceListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var invList = followingInvoices.tinvoicelist;
+            if (invList.length > 1) {
+                $("#btn_follow2").css("display", "inline-block");
+            } else {
+                $("#btn_follow2").css("display", "none");
+            }
+        }
+    }
+    templateObject.hasFollowings();    
     templateObject.insertItemWithLabel = (x, a, b) => {
         var data = [...x];
         var aPos = data.findIndex((x) => x.label === a);
@@ -13969,7 +13999,7 @@ Template.new_invoice.events({
     },
     "click  #open_print_confirm": function(event) {
         playPrintAudio();
-        setTimeout(function() {
+        setTimeout(async function() {
             if ($("#choosetemplate").is(":checked")) {
                 let invoice_type = FlowRouter.current().queryParams.type;
 
@@ -13987,37 +14017,37 @@ Template.new_invoice.events({
                 $("#templateselection").modal("show");
             } else {
                 $(".fullScreenSpin").css("display", "inline-block");
-                $("#html-2-pdfwrapper").css("display", "block");
-                if ($(".edtCustomerEmail").val() != "") {
-                    $(".pdfCustomerName").html($("#edtCustomerName").val());
-                    $(".pdfCustomerAddress").html(
-                        $("#txabillingAddress")
-                        .val()
-                        .replace(/[\r\n]/g, "<br />")
-                    );
-                    $("#printcomment").html(
-                        $("#txaComment")
-                        .val()
-                        .replace(/[\r\n]/g, "<br />")
-                    );
-                    var ponumber = $("#ponumber").val() || ".";
-                    $(".po").text(ponumber);
-                    var rowCount = $(".tblInvoiceLine tbody tr").length;
+                // $("#html-2-pdfwrapper").css("display", "block");
+                let result = await exportSalesToPdf(template_list[0], 1);
+                // if ($(".edtCustomerEmail").val() != "") {
+                //     $(".pdfCustomerName").html($("#edtCustomerName").val());
+                //     $(".pdfCustomerAddress").html(
+                //         $("#txabillingAddress")
+                //         .val()
+                //         .replace(/[\r\n]/g, "<br />")
+                //     );
+                //     $("#printcomment").html(
+                //         $("#txaComment")
+                //         .val()
+                //         .replace(/[\r\n]/g, "<br />")
+                //     );
+                //     var ponumber = $("#ponumber").val() || ".";
+                //     $(".po").text(ponumber);
+                //     var rowCount = $(".tblInvoiceLine tbody tr").length;
 
-                    exportSalesToPdf1();
-                } else {
-                    swal({
-                        title: "Customer Email Required",
-                        text: "Please enter customer email",
-                        type: "error",
-                        showCancelButton: false,
-                        confirmButtonText: "OK",
-                    }).then((result) => {
-                        if (result.value) {} else if (result.dismiss === "cancel") {}
-                    });
-                }
-
-                $("#confirmprint").modal("hide");
+                //     exportSalesToPdf1();
+                // } else {
+                //     swal({
+                //         title: "Customer Email Required",
+                //         text: "Please enter customer email",
+                //         type: "error",
+                //         showCancelButton: false,
+                //         confirmButtonText: "OK",
+                //     }).then((result) => {
+                //         if (result.value) {} else if (result.dismiss === "cancel") {}
+                //     });
+                // }
+                // $("#confirmprint").modal("hide");
             }
         }, delayTimeAfterSound);
     },
@@ -17393,31 +17423,6 @@ Template.new_invoice.events({
         var targetID = $(event.target).closest("tr").attr("id");
         $("#selectDeleteLineID").val(targetID);
 
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = "";
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var invData = await salesService.getOneInvoicedataEx(currentInvoice);
-            var saleDate = invData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingInvoices = await sideBarService.getAllTInvoiceListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var invList = followingInvoices.tinvoicelist;
-            if (invList.length > 0) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }
-        }
-
         times++;
         if (times == 1) {
             $("#deleteLineModal").modal("toggle");
@@ -17725,7 +17730,6 @@ Template.new_invoice.events({
                     FlowRouter.go("/invoicelist?success=true");
                 }
             }
-            $("#deleteLineModal").modal("toggle");
         }, delayTimeAfterSound);
     },
     "click .btnDeleteInvoice": function(event) {
