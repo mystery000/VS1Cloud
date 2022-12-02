@@ -190,6 +190,37 @@ Template.new_quote.onRendered(() => {
         $("#formCheck-january").prop('checked', true);
     }
   }
+
+  templateObject.hasFollowings = async function() {
+    var currentDate = new Date();
+    const salesService = new SalesBoardService();
+    var url = FlowRouter.current().path;
+    var getso_id = url.split('?id=');
+    var currentInvoice = getso_id[getso_id.length - 1];
+    var objDetails = '';
+    if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
+        var saleDate = quoteData.fields.SaleDate;
+        var fromDate = saleDate.substring(0, 10);
+        var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+        var followingQuotes = await sideBarService.getAllTQuoteListData(
+            fromDate,
+            toDate,
+            false,
+            initialReportLoad,
+            0
+        );
+        var quoteList = followingQuotes.tquotelist;
+        if (quoteList.length > 1) {
+            $("#btn_follow2").css("display", "inline-block");
+        } else {
+            $("#btn_follow2").css("display", "none");
+        }
+    }        
+  }
+  templateObject.hasFollowings();
+
     $('#choosetemplate').attr('checked', true);
     $(window).on('load', function() {
         const win = $(this); //this = window
@@ -5878,22 +5909,23 @@ Template.new_quote.events({
     },
     'click  #open_print_confirm': function(event) {
         playPrintAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
         if($('#choosetemplate').is(':checked')) {
             $('#templateselection').modal('show');
         } else {
            LoadingOverlay.show();
-            $('#html-2-pdfwrapper').css('display', 'block');
-            if ($('.edtCustomerEmail').val() != "") {
-                $('.pdfCustomerName').html($('#edtCustomerName').val());
-                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-                var ponumber = $('#ponumber').val() || '.';
-                $('.po').text(ponumber);
-                var rowCount = $('.tblInvoiceLine tbody tr').length;
-                exportSalesToPdf1();
-            }
-            $('#confirmprint').modal('hide');
+            // $('#html-2-pdfwrapper').css('display', 'block');
+            let result = await exportSalesToPdf(template_list[0], 1);
+            // if ($('.edtCustomerEmail').val() != "") {
+            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+            //     var ponumber = $('#ponumber').val() || '.';
+            //     $('.po').text(ponumber);
+            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+            //     exportSalesToPdf1();
+            // }
+            // $('#confirmprint').modal('hide');
         }
     }, delayTimeAfterSound);
     },
@@ -7226,30 +7258,6 @@ Template.new_quote.events({
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
 
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = '';
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
-            var saleDate = quoteData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingQuotes = await sideBarService.getAllTQuoteListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var quoteList = followingQuotes.tquotelist;
-            if (quoteList.length > 0) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }
-        }        
         times++;
 
         if (times == 1) {
@@ -7486,7 +7494,6 @@ Template.new_quote.events({
             FlowRouter.go('/quoteslist?success=true');
           }
         }
-        $('#deleteLineModal').modal('toggle');
     }, delayTimeAfterSound);
     },    
     'click .btnDeleteQuote': function(event) {

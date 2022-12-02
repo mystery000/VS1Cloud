@@ -8385,40 +8385,39 @@ Template.supplierpaymentcard.events({
 
   "click  #open_print_confirm": function (event) {
     playPrintAudio();
-    setTimeout(function(){
+    setTimeout(async function(){
     if ($("#choosetemplate").is(":checked")) {
         $('#templateselection').modal('show');
     } else {
       LoadingOverlay.show();
-      $("#html-2-pdfwrapper").css("display", "block");
-      if ($(".edtCustomerEmail").val() != "") {
-        $(".pdfCustomerName").html($("#edtCustomerName").val());
-        $(".pdfCustomerAddress").html(
-          $("#txabillingAddress")
-            .val()
-            .replace(/[\r\n]/g, "<br />")
-        );
-        // $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-        var ponumber = $("#ponumber").val() || ".";
-        $(".po").text(ponumber);
-        var rowCount = $(".tblInvoiceLine tbody tr").length;
-
-        exportSalesToPdf1();
-      } else {
-        swal({
-          title: "Customer Email Required",
-          text: "Please enter customer email",
-          type: "error",
-          showCancelButton: false,
-          confirmButtonText: "OK",
-        }).then((result) => {
-          if (result.value) {
-          } else if (result.dismiss === "cancel") {
-          }
-        });
-      }
-
-      $("#confirmprint").modal("hide");
+      // $("#html-2-pdfwrapper").css("display", "block");
+      let result = await exportSalesToPdf(template_list[0], 1);      
+      // if ($(".edtCustomerEmail").val() != "") {
+      //   $(".pdfCustomerName").html($("#edtCustomerName").val());
+      //   $(".pdfCustomerAddress").html(
+      //     $("#txabillingAddress")
+      //       .val()
+      //       .replace(/[\r\n]/g, "<br />")
+      //   );
+      //   $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+      //   var ponumber = $("#ponumber").val() || ".";
+      //   $(".po").text(ponumber);
+      //   var rowCount = $(".tblInvoiceLine tbody tr").length;
+      //   exportSalesToPdf1();
+      // } else {
+      //   swal({
+      //     title: "Customer Email Required",
+      //     text: "Please enter customer email",
+      //     type: "error",
+      //     showCancelButton: false,
+      //     confirmButtonText: "OK",
+      //   }).then((result) => {
+      //     if (result.value) {
+      //     } else if (result.dismiss === "cancel") {
+      //     }
+      //   });
+      // }
+      // $("#confirmprint").modal("hide");
     }
   }, delayTimeAfterSound);
   },
