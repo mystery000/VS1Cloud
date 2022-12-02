@@ -7008,7 +7008,7 @@ Template.employeescard.events({
         today = dd + '/' + mm + '/' + yyyy;
         $('#leaveRequestForm')[0].reset();
         $('#edtLeaveStartDate').val(today);
-        $('#edtLeaveStartDate').val(today);
+        $('#edtLeaveEndDate').val(today);
         $('#removeLeaveRequestBtn').hide();
     },
     'change #taxes :input, #taxes :select': async function() {
