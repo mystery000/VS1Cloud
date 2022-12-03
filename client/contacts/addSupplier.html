@@ -608,26 +608,26 @@
                                                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-6" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
 
                                                                 <div class="row" style="margin: 6px;">
-                                                                    <div class="col-12 col-md-5">
+                                                                    <div class="col-12 col-md-12">
                                                                         <div class="row">
-                                                                            <div class="col-6">
-                                                                                <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Payment Method</label>
-                                                                                    <select type="search" class="form-control" id="sltPreferredPayment" name="sltPreferredPayment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                                    </select>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-6">
+                                                                            <div class="col-md-3">
                                                                                 <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Terms</label>
                                                                                     <select type="search" class="form-control" id="sltTerms" name="sltTerms" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                                     </select>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-6">
+                                                                            <div class="col-md-3">
+                                                                                <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Payment Method</label>
+                                                                                    <select type="search" class="form-control" id="sltPreferredPayment" name="sltPreferredPayment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-3">
                                                                                 <div class="form-group" style="margin: 4px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">Account No</label>
                                                                                     <input type="text" class="form-control" id="suppAccountNo" name="suppAccountNo" value="{{record.accountnumber}}">
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-6">
+                                                                            <div class="col-md-3">
                                                                                 <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Contractor 1099</label>
                                                                                     <div class="custom-control custom-checkbox chkBox" style="text-align: center;">
                                                                                         {{#if equals record.isContractor true}}
