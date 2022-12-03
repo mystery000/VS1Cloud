@@ -163,14 +163,7 @@
 
                         <div class="card shadow mb-4 cardSizing">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="text-primary font-weight-bold m-0">
-                                    {{#if notEquals record.id ''}}
-                                        SUP-{{record.id}} -
-                                        <!-- SUP-{{record.id}} - -->
-                                    {{/if}}
-                                    {{record.company}} - {{record.firstname}} {{record.lastname}}
-                                    <!-- {{record.company}} - {{record.firstname}} {{record.lastname}} - {{record.phone}} -->
-                                </h6>
+                                {{> vs1_contact_card_header isJob=isJob record=record id="supplierInfo"}}
                                 <div>
                                     <button type="button" class="btn btn-success btnMakeSupplierPayment" style="margin:14px;" id="btnMakeSupplierPayment"><i class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Make Payment</button>
 

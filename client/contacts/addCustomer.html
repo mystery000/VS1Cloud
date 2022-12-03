@@ -233,22 +233,7 @@
                     <div class="card shadow mb-4 cardSizing">
                         <div class="card-header d-flex justify-content-between align-items-xl-center">
                             <!-- <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input" type="checkbox" id="activeChk" checked><label class="custom-control-label" for="activeChk"></label></div> -->
-
-                            <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 customerInfo"
-                                id="customerInfo" style="color: #00A3D3;">
-
-                                {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}}
-                                {{record.joblastname}}-{{record.phone}}
-                                <!-- {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}}
-                                     {{record.joblastname}}-{{record.phone}} -->
-                                <!-- {{record.joblastname}} - {{record.jobphone}} -->
-                                {{else}}
-                                <!-- {{record.company}} - {{record.firstname}} {{record.lastname}} -->
-                                {{#if notEquals record.id ''}}
-                                CUS-{{record.id}} - 
-                                {{/if}}{{record.company}}
-                                {{/if}}
-                            </h6>
+                            {{> vs1_contact_card_header isJob=isJob record=record id="customerInfo"}}
                             <!--here-->
                             <div>
                                 <!-- <span class="font-weight-bold m-0" style="color: #00A3D3;margin-right:14px;">
@@ -468,7 +453,8 @@
                                                         <div class="form-group" style="margin: 4px;">
                                                             <label>Email</label><input type="text" class="form-control"
                                                                 id="edtJobCustomerEmail" name="edtJobCustomerEmail"
-                                                                value="{{record.jobemail}}"></div>
+                                                                value="{{record.jobemail}}">
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -688,7 +674,8 @@
                                                                                     </option>
                                                                                     {{/if}}
                                                                                     {{/each}}
-                                                                                </select></div>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -817,7 +804,8 @@
                                                                                                 {{item}}</option>
                                                                                             {{/if}}
                                                                                             {{/each}}
-                                                                                        </select></div>
+                                                                                        </select>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -2481,7 +2469,8 @@
                                                                                 class="form-control"
                                                                                 id="edtJobCustomerEmail"
                                                                                 name="edtJobCustomerEmail"
-                                                                                value="{{record.jobemail}}"></div>
+                                                                                value="{{record.jobemail}}">
+                                                                        </div>
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col d-xl-flex align-items-xl-start"
