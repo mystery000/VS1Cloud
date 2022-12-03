@@ -1701,20 +1701,6 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-2 col-6" style="padding: 0;">
-                                                                    <div class="form-group d-xl-flex flex-column align-items-xl-start"
-                                                                        style="margin: 4px;"><label
-                                                                            class="text-nowrap">Preferred Payment
-                                                                            Method</label>
-
-                                                                        <select type="search"
-                                                                            class="form-control preferredPaymentMethodSelect"
-                                                                            id="sltPreferredPayment"
-                                                                            name="sltPreferredPayment"
-                                                                            style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-2 col-6" style="padding: 0;">
                                                                     <div class="form-group"
                                                                         style="margin: 4px;padding-left:4px;">
                                                                         <label>Terms</label>
@@ -1729,6 +1715,17 @@
                                                                     <div class="form-group d-xl-flex flex-column justify-content-xl-start"
                                                                         style="margin: 4px;padding-left:4px;"><label
                                                                             class="text-nowrap">% Discount</label>
+                                                                        <input type="text" class="form-control pointer"
+                                                                            id="edtCustomerCardDiscount"
+                                                                            name="edtCustomerCardDiscount"
+                                                                            value="{{record.discount}}">
+                                                                    </div>
+                                                                </div>
+                                                                <!-- I need to talk with Josef for this part-->
+                                                                <div class="col-md-2 col-6" style="padding: 0;">
+                                                                    <div class="form-group d-xl-flex flex-column justify-content-xl-start"
+                                                                        style="margin: 4px;padding-left:4px;"><label
+                                                                            class="text-nowrap">Credit Limit</label>
                                                                         <input type="text" class="form-control pointer"
                                                                             id="edtCustomerCardDiscount"
                                                                             name="edtCustomerCardDiscount"
