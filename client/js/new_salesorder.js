@@ -197,6 +197,36 @@ Template.new_salesorder.onRendered(function () {
       }
     }
 
+    templateObject.hasFollowings = async function() {
+        var currentDate = new Date();
+        let salesService = new SalesBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
+            var saleDate = soData.fields.SaleDate;
+            var fromDate = saleDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingSOs = await sideBarService.getAllTSalesOrderListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var soList = followingSOs.tsalesorderlist;
+            if (soList.length > 1) {
+                $("#btn_follow2").css("display", "inline-block");
+            } else {
+                $("#btn_follow2").css("display", "none");
+            }
+        }        
+    }
+    templateObject.hasFollowings();
+
     $('#choosetemplate').attr('checked', true);
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
 
@@ -8022,29 +8052,26 @@ Template.new_salesorder.events({
         'click  #open_print_confirm':function(event)
         {
             playPrintAudio();
-            setTimeout(function(){
+            setTimeout(async function(){
             if($('#choosetemplate').is(':checked'))
             {
                 $('#templateselection').modal('show');
             }
             else
             {
-
                 LoadingOverlay.show();
-                $('#html-2-pdfwrapper').css('display', 'block');
-                if ($('.edtCustomerEmail').val() != "") {
-                    $('.pdfCustomerName').html($('#edtCustomerName').val());
-                    $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                    $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-                    var ponumber = $('#ponumber').val() || '.';
-                    $('.po').text(ponumber);
-                    var rowCount = $('.tblInvoiceLine tbody tr').length;
-
-                    exportSalesToPdf1();
-
-                }
-
-                $('#confirmprint').modal('hide');
+                // $('#html-2-pdfwrapper').css('display', 'block');
+                let result = await exportSalesToPdf(template_list[0], 1);
+                // if ($('.edtCustomerEmail').val() != "") {
+                //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+                //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+                //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+                //     var ponumber = $('#ponumber').val() || '.';
+                //     $('.po').text(ponumber);
+                //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+                //     exportSalesToPdf1();
+                // }
+                // $('#confirmprint').modal('hide');                
             }
         }, delayTimeAfterSound);
         },
@@ -9548,30 +9575,6 @@ Template.new_salesorder.events({
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
 
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = '';
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
-            var saleDate = soData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingSOs = await sideBarService.getAllTSalesOrderListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var soList = followingSOs.tsalesorderlist;
-            if (soList.length > 0) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }
-        }
         times++;
 
         if (times == 1) {
@@ -9799,7 +9802,6 @@ Template.new_salesorder.events({
         } else {
             FlowRouter.go('/salesorderslist?success=true');
         }
-        $('#deleteLineModal').modal('toggle');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteSO': function(event) {

@@ -23,7 +23,7 @@ import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
 import { foreignCols } from "../vs1_templates/transaction_temp/transaction_line";
-import { Session } from 'meteor/session';
+import {Session} from 'meteor/session';
 // import { CustomerCreationSourceFilter } from "square-connect";
 
 let sideBarService = new SideBarService();
@@ -205,15 +205,45 @@ Template.new_invoice.onRendered(function() {
             $("#formCheck-january").prop('checked', true);
         }
     }
-    templateObject.insertItemWithLabel = (x, a, b) => {
-            var data = [...x];
-            var aPos = data.findIndex((x) => x.label === a);
-            var bPos = data.findIndex(x => x.label === b);
-            if (aPos === -1 || bPos === -1) return data;
-            data[bPos] = {...data[bPos], index: aPos + 1 };
-            for (var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index: data[i].index + 1 }
-            return data.sort((a, b) => a.index - b.index);
+
+    templateObject.hasFollowings = async function() {
+        var currentDate = new Date();
+        let salesService = new SalesBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split("?id=");
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = "";
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var invData = await salesService.getOneInvoicedataEx(currentInvoice);
+            var saleDate = invData.fields.SaleDate;
+            var fromDate = saleDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingInvoices = await sideBarService.getAllTInvoiceListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var invList = followingInvoices.tinvoicelist;
+            if (invList.length > 1) {
+                $("#btn_follow2").css("display", "inline-block");
+            } else {
+                $("#btn_follow2").css("display", "none");
+            }
         }
+    }
+    templateObject.hasFollowings();    
+    templateObject.insertItemWithLabel = (x, a, b) => {
+        var data = [...x];
+        var aPos = data.findIndex((x) => x.label === a);
+        var bPos = data.findIndex(x => x.label === b);
+        if(aPos === -1 || bPos === -1) return data;
+        data[bPos] = {...data[bPos], index: aPos + 1};
+        for(var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index:data[i].index + 1}
+        return data.sort((a,b) => a.index - b.index);
+    }
         // $('#lotNumberModal .btnSelect').removeClass('d-none');
         // $('#lotNumberModal .btnAutoFill').addClass('d-none');
     $("#serialNumberModal .btnSelect").removeClass("d-none");
@@ -11244,7 +11274,8 @@ Template.new_invoice.onRendered(function() {
                     $(".printID").attr("id") == ""
                 ) {
                     // $(".btnSave").trigger("click");
-                } else {}
+                } else {
+                }
                 $("#html-2-pdfwrapper_new").css("display", "none");
                 $("#html-2-pdfwrapper").css("display", "none");
                 $("#html-2-pdfwrapper2").css("display", "none");
@@ -13117,7 +13148,7 @@ Template.new_invoice.onRendered(function() {
     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
         let templateObject = Template.instance();
         let reset_data = templateObject.reset_data.get();
-        reset_data = templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No');
+        reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
         templateObject.showCustomFieldDisplaySettings(reset_data);
 
         try {
@@ -13126,7 +13157,7 @@ Template.new_invoice.onRendered(function() {
                 if (dataObject.length == 0) {
                     sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
                         reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                        reset_data = templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No');
+                        reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
                         templateObject.showCustomFieldDisplaySettings(reset_data);
                     }).catch(function(err) {});
                 } else {
@@ -13135,7 +13166,7 @@ Template.new_invoice.onRendered(function() {
                         for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                             if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
                                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                                reset_data = templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No');
+                                reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
                                 templateObject.showCustomFieldDisplaySettings(reset_data);
                             }
                         }
@@ -13968,7 +13999,7 @@ Template.new_invoice.events({
     },
     "click  #open_print_confirm": function(event) {
         playPrintAudio();
-        setTimeout(function() {
+        setTimeout(async function() {
             if ($("#choosetemplate").is(":checked")) {
                 let invoice_type = FlowRouter.current().queryParams.type;
 
@@ -13986,37 +14017,37 @@ Template.new_invoice.events({
                 $("#templateselection").modal("show");
             } else {
                 $(".fullScreenSpin").css("display", "inline-block");
-                $("#html-2-pdfwrapper").css("display", "block");
-                if ($(".edtCustomerEmail").val() != "") {
-                    $(".pdfCustomerName").html($("#edtCustomerName").val());
-                    $(".pdfCustomerAddress").html(
-                        $("#txabillingAddress")
-                        .val()
-                        .replace(/[\r\n]/g, "<br />")
-                    );
-                    $("#printcomment").html(
-                        $("#txaComment")
-                        .val()
-                        .replace(/[\r\n]/g, "<br />")
-                    );
-                    var ponumber = $("#ponumber").val() || ".";
-                    $(".po").text(ponumber);
-                    var rowCount = $(".tblInvoiceLine tbody tr").length;
+                // $("#html-2-pdfwrapper").css("display", "block");
+                let result = await exportSalesToPdf(template_list[0], 1);
+                // if ($(".edtCustomerEmail").val() != "") {
+                //     $(".pdfCustomerName").html($("#edtCustomerName").val());
+                //     $(".pdfCustomerAddress").html(
+                //         $("#txabillingAddress")
+                //         .val()
+                //         .replace(/[\r\n]/g, "<br />")
+                //     );
+                //     $("#printcomment").html(
+                //         $("#txaComment")
+                //         .val()
+                //         .replace(/[\r\n]/g, "<br />")
+                //     );
+                //     var ponumber = $("#ponumber").val() || ".";
+                //     $(".po").text(ponumber);
+                //     var rowCount = $(".tblInvoiceLine tbody tr").length;
 
-                    exportSalesToPdf1();
-                } else {
-                    swal({
-                        title: "Customer Email Required",
-                        text: "Please enter customer email",
-                        type: "error",
-                        showCancelButton: false,
-                        confirmButtonText: "OK",
-                    }).then((result) => {
-                        if (result.value) {} else if (result.dismiss === "cancel") {}
-                    });
-                }
-
-                $("#confirmprint").modal("hide");
+                //     exportSalesToPdf1();
+                // } else {
+                //     swal({
+                //         title: "Customer Email Required",
+                //         text: "Please enter customer email",
+                //         type: "error",
+                //         showCancelButton: false,
+                //         confirmButtonText: "OK",
+                //     }).then((result) => {
+                //         if (result.value) {} else if (result.dismiss === "cancel") {}
+                //     });
+                // }
+                // $("#confirmprint").modal("hide");
             }
         }, delayTimeAfterSound);
     },
@@ -14355,7 +14386,7 @@ Template.new_invoice.events({
                     var currentInvoice = getso_id[getso_id.length - 1];
                     let uploadedItems = templateObject.uploadedFiles.get();
                     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                    let ForeignExchangeRate = $('#exchange_rate').val() || 0;
+                    let ForeignExchangeRate = $('#exchange_rate').val()||0;
                     var objDetails = "";
                     if (getso_id[1]) {
                         currentInvoice = parseInt(currentInvoice);
@@ -17392,31 +17423,6 @@ Template.new_invoice.events({
         var targetID = $(event.target).closest("tr").attr("id");
         $("#selectDeleteLineID").val(targetID);
 
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = "";
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var invData = await salesService.getOneInvoicedataEx(currentInvoice);
-            var saleDate = invData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingInvoices = await sideBarService.getAllTInvoiceListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var invList = followingInvoices.tinvoicelist;
-            if (invList.length > 0) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }
-        }
-
         times++;
         if (times == 1) {
             $("#deleteLineModal").modal("toggle");
@@ -17724,7 +17730,6 @@ Template.new_invoice.events({
                     FlowRouter.go("/invoicelist?success=true");
                 }
             }
-            $("#deleteLineModal").modal("toggle");
         }, delayTimeAfterSound);
     },
     "click .btnDeleteInvoice": function(event) {
@@ -18236,7 +18241,7 @@ Template.new_invoice.events({
                 var currentInvoice = getso_id[getso_id.length - 1];
 
                 var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                let ForeignExchangeRate = $('#exchange_rate').val() || 0;
+                let ForeignExchangeRate = $('#exchange_rate').val()||0;
                 var objDetails = "";
                 if (departement === "") {
                     swal({
@@ -19464,7 +19469,7 @@ Template.new_invoice.events({
         } else {
             reset_data[11].display = false;
         }
-        reset_data = templateObject.insertItemWithLabel(reset_data, 'BO', 'Serial/Lot No');
+        reset_data = templateObject.insertItemWithLabel(reset_data, 'BO','Serial/Lot No');
         reset_data = reset_data.filter(redata => redata.display);
 
         $(".displaySettings").each(function(index) {
@@ -19826,7 +19831,7 @@ Template.new_invoice.events({
             var currentInvoice = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val() || 0;
+            let ForeignExchangeRate = $('#exchange_rate').val()||0;
             var objDetails = "";
             if (getso_id[1]) {
                 currentInvoice = parseInt(currentInvoice);

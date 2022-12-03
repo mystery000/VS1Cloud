@@ -332,10 +332,6 @@ Template.emailsettings.onRendered(function () {
 
     }
 
-
-
-
-
     templateObject.getDayName = function (day) {
         if (day == 1 || day == 0) {
             $("#formCheck-monday").prop('checked', true);
@@ -1482,7 +1478,6 @@ Template.emailsettings.onRendered(function () {
             if (!isEssential) {
                 oldSettings = oldSettings.filter(oldSetting => oldSetting.fields.FormID != 54 && oldSetting.fields.FormID != 177 && oldSetting.fields.FormID != 129);
             }
-
             try {
                 let promise = settings.map(async (setting) => {
                     const formID = $(setting).attr('data-id');
@@ -1714,7 +1709,7 @@ Template.emailsettings.onRendered(function () {
                         if (typeof recipients == 'string') {
                             recipients = recipients.split('; ');
                         }
-
+                        
                         let saveSettingPromises = recipientIds.map(async (recipientId, index) => {
                             const starttime = frequencyEl.attr('data-starttime');
 
@@ -1733,8 +1728,6 @@ Template.emailsettings.onRendered(function () {
                             attachments.map(attachment =>{
                                 documents.push(attachment.pdfObject)
                             })
-
-
 
                             let objDetail = {
                                 type: "TReportSchedules",
@@ -2483,7 +2476,7 @@ Template.emailsettings.events({
     },
     'click #emailsetting-essential': async function () {
         const templateObject = Template.instance();
-        const essentialSettings = $('#tblEssentialAutomatedEmails tbody tr').map(function () { return $(this) }).get();
+        const essentialSettings = $('#tblEssentialAutomatedEmails tbody tr.dnd-moved').map(function () { return $(this) }).get();
         $('.fullScreenSpin').css('display', 'inline-block');
 
         const saveResult = await templateObject.saveSchedules(essentialSettings, true);

@@ -37,6 +37,8 @@ Template.frmappointmentpop.onCreated(() => {
     templateObject.extraProductFees = new ReactiveVar([]);
     templateObject.employeeOptions = new ReactiveVar([]);
     templateObject.globalSettings = new ReactiveVar([]);
+    templateObject.datatablerecords = new ReactiveVar([]);
+    templateObject.allnoninvproducts = new ReactiveVar([]);
 });
 
 Template.frmappointmentpop.onRendered(function() {
@@ -1134,9 +1136,9 @@ Template.frmappointmentpop.onRendered(function() {
                             }
 
                             if (splashArrayProductServiceList) {
-                                // templateObject.allnoninvproducts.set(
-                                //     splashArrayProductServiceList
-                                // );
+                                templateObject.allnoninvproducts.set(
+                                    splashArrayProductServiceList
+                                );
                                 $("#tblInventoryPayrollService")
                                     .dataTable({
                                         data: splashArrayProductServiceList,
@@ -1293,7 +1295,7 @@ Template.frmappointmentpop.onRendered(function() {
                     }
 
                     if (splashArrayProductServiceList) {
-                        // templateObject.allnoninvproducts.set(splashArrayProductServiceList);
+                        templateObject.allnoninvproducts.set(splashArrayProductServiceList);
                         $("#tblInventoryPayrollService")
                             .dataTable({
                                 data: splashArrayProductServiceList,
@@ -1453,9 +1455,9 @@ Template.frmappointmentpop.onRendered(function() {
                         }
 
                         if (splashArrayProductServiceList) {
-                            // templateObject.allnoninvproducts.set(
-                            //     splashArrayProductServiceList
-                            // );
+                            templateObject.allnoninvproducts.set(
+                                splashArrayProductServiceList
+                            );
                             $("#tblInventoryPayrollService")
                                 .dataTable({
                                     data: splashArrayProductServiceList,
@@ -1566,6 +1568,67 @@ Template.frmappointmentpop.onRendered(function() {
             });
     };
     templateObject.getAllProductData();
+
+    templateObject.getAllSelectedProducts = function(employeeID) {
+        let productlist = [];
+        templateObject.datatablerecords.set([]);
+        var splashArrayProductServiceList = new Array();
+        var splashArrayProductServiceListGet = [];
+        //$('#product-list').editableSelect('clear');
+        sideBarService
+            .getSelectedProducts(employeeID)
+            .then(function(data) {
+                var dataList = {};
+
+                let getallinvproducts = templateObject.allnoninvproducts.get();
+                if (data.trepservices.length > 0) {
+                    for (let i = 0; i < data.trepservices.length; i++) {
+                        dataList = {
+                            id: data.trepservices[i].Id || "",
+                            productname: data.trepservices[i].ServiceDesc || "",
+                            productcost: data.trepservices[i].Rate || 0.0,
+                        };
+                        let checkServiceArray =
+                            getallinvproducts.filter(function(prodData) {
+                                if (prodData[1] === data.trepservices[i].ServiceDesc) {
+                                    var prodservicedataList = [
+                                        prodData[0],
+                                        prodData[1] || "-",
+                                        prodData[2] || "",
+                                        prodData[3] || "",
+                                        prodData[4],
+                                        prodData[5],
+                                        prodData[6],
+                                        prodData[7] || "",
+                                        prodData[8] || "",
+                                        prodData[9] || null,
+                                        prodData[10],
+                                    ];
+                                    splashArrayProductServiceListGet.push(prodservicedataList);
+                                    //splashArrayProductServiceListGet.push(prodservicedataList);
+                                    return prodservicedataList || "";
+                                }
+                            }) || "";
+
+                        productlist.push(dataList);
+                    }
+                    if (splashArrayProductServiceListGet) {
+                        let uniqueChars = [...new Set(splashArrayProductServiceListGet)];
+                        var datatable = $("#tblInventoryPayrollService").DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                    }
+
+                    templateObject.datatablerecords.set(productlist);
+                } else {
+                    templateObject.getAllProductData();
+                }
+            })
+            .catch(function(err) {
+                templateObject.getAllProductData();
+            });
+    };
 
     getVS1Data("TAppointmentPreferences")
         .then(function(dataObject) {
@@ -4345,6 +4408,207 @@ Template.frmappointmentpop.events({
         } else {
             $("#frmOnHoldModal").modal();
         }
+    },
+    "click #btnDelete": function(event) {
+        $("#deleteLineModal").modal("toggle");
+    },
+    "click .btnDeleteAppointment": function(event) {
+        playDeleteAudio();
+        setTimeout(function() {
+            let id = document.getElementById("updateID").value || "0";
+            swal({
+                title: "Delete Appointment",
+                text: "Are you sure you want to delete Appointment?",
+                type: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+            }).then((result) => {
+                if (result.value) {
+                    $(".fullScreenSpin").css("display", "inline-block");
+                    if (id == "0" || id == null) {
+                        swal({
+                            title: "Can't delete appointment, it does not exist",
+                            text: "Can't delete appointment, it does not exist",
+                            type: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "Try Again",
+                        });
+                    } else {
+                        let objectData = {
+                            type: "TAppointmentEx",
+                            fields: {
+                                Id: parseInt(id),
+                                Active: false,
+                            },
+                        };
+
+                        appointmentService
+                            .saveAppointment(objectData)
+                            .then(function(data) {
+                                $("#event-modal").modal("hide");
+                                sideBarService
+                                    .getAllAppointmentList(initialDataLoad, 0)
+                                    .then(function(dataList) {
+                                        addVS1Data("TAppointment", JSON.stringify(dataList))
+                                            .then(function(datareturn) {
+                                                setTimeout(function() {
+                                                    Meteor._reload.reload();
+                                                }, 500);
+                                            })
+                                            .catch(function(err) {
+                                                Meteor._reload.reload();
+                                            });
+                                    })
+                                    .catch(function(err) {
+                                        Meteor._reload.reload();
+                                    });
+                            })
+                            .catch(function(err) {
+                                $(".fullScreenSpin").css("display", "none");
+                            });
+                    }
+                } else if (result.dismiss === "cancel") {} else {}
+            });
+        }, delayTimeAfterSound);
+    },
+    "click .btnDeleteFollowingAppointments": function(event) {
+        playDeleteAudio();
+        var erpGet = erpDb();
+        setTimeout(function() {
+            swal({
+                title: "Delete Appointment",
+                text: "Are you sure you want to delete this Appointment and the following Appointments?",
+                type: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+            }).then((result) => {
+                if (result.value) {
+                    if ($("#updateID").val() != "") {
+                        $(".fullScreenSpin").css("display", "block");
+                        let id = $("#updateID").val();
+                        let data = {
+                            Name: "VS1_DeleteAllAppts",
+                            Params: {
+                                AppointID: parseInt(id),
+                            },
+                        };
+                        var myString = '"JsonIn"' + ":" + JSON.stringify(data);
+                        var oPost = new XMLHttpRequest();
+                        oPost.open(
+                            "POST",
+                            URLRequest +
+                            erpGet.ERPIPAddress +
+                            ":" +
+                            erpGet.ERPPort +
+                            "/" +
+                            'erpapi/VS1_Cloud_Task/Method?Name="VS1_DeleteAllAppts"',
+                            true
+                        );
+                        oPost.setRequestHeader("database", erpGet.ERPDatabase);
+                        oPost.setRequestHeader("username", erpGet.ERPUsername);
+                        oPost.setRequestHeader("password", erpGet.ERPPassword);
+                        oPost.setRequestHeader("Accept", "application/json");
+                        oPost.setRequestHeader("Accept", "application/html");
+                        oPost.setRequestHeader("Content-type", "application/json");
+                        // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
+                        oPost.send(myString);
+
+                        oPost.onreadystatechange = function() {
+                            if (oPost.readyState == 4 && oPost.status == 200) {
+                                var myArrResponse = JSON.parse(oPost.responseText);
+                                if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
+                                    sideBarService
+                                        .getAllAppointmentList(initialDataLoad, 0)
+                                        .then(function(data) {
+                                            addVS1Data("TAppointment", JSON.stringify(data))
+                                                .then(function(datareturn) {
+                                                    Meteor._reload.reload();
+                                                })
+                                                .catch(function(err) {
+                                                    Meteor._reload.reload();
+                                                });
+                                        })
+                                        .catch(function(err) {
+                                            Meteor._reload.reload();
+                                        });
+                                } else {
+                                    $(".modal-backdrop").css("display", "none");
+                                    $(".fullScreenSpin").css("display", "none");
+                                    swal({
+                                        title: "Oops...",
+                                        text: myArrResponse.ProcessLog.ResponseStatus,
+                                        type: "warning",
+                                        showCancelButton: false,
+                                        confirmButtonText: "Try Again",
+                                    }).then((result) => {
+                                        if (result.value) {} else if (result.dismiss === "cancel") {}
+                                    });
+                                }
+                            } else if (oPost.readyState == 4 && oPost.status == 403) {
+                                $(".fullScreenSpin").css("display", "none");
+                                swal({
+                                    title: "Oops...",
+                                    text: oPost.getResponseHeader("errormessage"),
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Try Again",
+                                }).then((result) => {
+                                    if (result.value) {} else if (result.dismiss === "cancel") {}
+                                });
+                            } else if (oPost.readyState == 4 && oPost.status == 406) {
+                                $(".fullScreenSpin").css("display", "none");
+                                var ErrorResponse = oPost.getResponseHeader("errormessage");
+                                var segError = ErrorResponse.split(":");
+
+                                if (segError[1] == ' "Unable to lock object') {
+                                    swal({
+                                        title: "Oops...",
+                                        text: oPost.getResponseHeader("errormessage"),
+                                        type: "error",
+                                        showCancelButton: false,
+                                        confirmButtonText: "Try Again",
+                                    }).then((result) => {
+                                        if (result.value) {} else if (result.dismiss === "cancel") {}
+                                    });
+                                } else {
+                                    $(".fullScreenSpin").css("display", "none");
+                                    swal({
+                                        title: "Oops...",
+                                        text: oPost.getResponseHeader("errormessage"),
+                                        type: "error",
+                                        showCancelButton: false,
+                                        confirmButtonText: "Try Again",
+                                    }).then((result) => {
+                                        if (result.value) {} else if (result.dismiss === "cancel") {}
+                                    });
+                                }
+                            } else if (oPost.readyState == "") {
+                                $(".fullScreenSpin").css("display", "none");
+                                swal({
+                                    title: "Oops...",
+                                    text: oPost.getResponseHeader("errormessage"),
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Try Again",
+                                }).then((result) => {
+                                    if (result.value) {} else if (result.dismiss === "cancel") {}
+                                });
+                            }
+                        };
+                    } else {
+                        swal({
+                            title: "Oops...",
+                            text: "Appointment Does Not Exist",
+                            type: "warning",
+                            showCancelButton: false,
+                            confirmButtonText: "Try Again",
+                        }).then((result) => {
+                            if (result.value) {} else if (result.dismiss === "cancel") {}
+                        });
+                    }
+                }
+            });
+        }, delayTimeAfterSound);
     },
     "click #btnCreateInvoice": function(event) {
         $(".fullScreenSpin").css("display", "inline-block");

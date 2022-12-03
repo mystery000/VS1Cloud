@@ -760,6 +760,7 @@ Template.non_transactional_list.onRendered(function() {
                           }
 
                             var dataListContactDupp = [
+                              '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"><label class="custom-control-label chkBox pointer" for="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"></label></div>',
                               dataObjectnew.terpcombinedcontactsvs1[j].ID || "",
                               dataObjectnew.terpcombinedcontactsvs1[j].name || "",
                               clienttype || "",

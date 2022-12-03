@@ -2249,8 +2249,9 @@ Template.appointmentlist.events({
             });
             return false;
         } else {
-            localStorage.setItem("appt_historypage", "appointmentlist");
-            FlowRouter.go('/appointments');
+            // localStorage.setItem("appt_historypage", "appointmentlist");
+            // FlowRouter.go('/appointments');
+            $("#employeeListModal").modal("toggle");
         };
 
     },

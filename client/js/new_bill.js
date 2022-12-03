@@ -109,6 +109,37 @@ Template.billcard.onRendered(() => {
       yearRange: "-90:+10",
     });
 
+    templateObject.hasFollowings = async function() {
+        var currentDate = new Date();
+        let purchaseService = new PurchaseBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split("?id=");
+        var currentInvoice = getso_id[getso_id.length - 1];
+        let billTotal = $('#grandTotal').text();
+        var objDetails = "";
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var billData = await purchaseService.getOneBilldataEx(currentInvoice);
+            var orderDate = billData.fields.OrderDate;
+            var fromDate = orderDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingBills = await sideBarService.getAllBillListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var billList = followingBills.tbilllist;
+            if (billList.length > 1) {
+                $("#btn_follow2").css("display", "inline-block");
+            } else {
+                $("#btn_follow2").css("display", "none");
+            }            
+        }
+    }
+    templateObject.hasFollowings();
+
     templateObject.getDayNumber = function (day) {
       day = day.toLowerCase();
       if (day == "") {
@@ -7595,52 +7626,43 @@ Template.billcard.events({
     'click  #open_print_confirm':function(event)
     {
         playPrintAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
         if($('#choosetemplate').is(':checked'))
         {
-
             $('#templateselection').modal('show');
         }
         else
         {
-
             $('.fullScreenSpin').css('display', 'inline-block');
-            $('#html-2-pdfwrapper').css('display', 'block');
-            if ($('.edtCustomerEmail').val() != "") {
-                $('.pdfCustomerName').html($('#edtCustomerName').val());
-                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-                var ponumber = $('#ponumber').val() || '.';
-                $('.po').text(ponumber);
-                var rowCount = $('.tblInvoiceLine tbody tr').length;
-
-                exportSalesToPdf1();
-
-
-            } else {
-                swal({
-                    title: 'Customer Email Required',
-                    text: 'Please enter customer email',
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.value) {}
-                    else if (result.dismiss === 'cancel') {}
-                });
-            }
-
-
-
-            $('#confirmprint').modal('hide');
+            // $('#html-2-pdfwrapper').css('display', 'block');
+            let result = await exportSalesToPdf(template_list[0], 1);
+            // if ($('.edtCustomerEmail').val() != "") {
+            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+            //     var ponumber = $('#ponumber').val() || '.';
+            //     $('.po').text(ponumber);
+            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+            //     exportSalesToPdf1();
+            // } else {
+            //     swal({
+            //         title: 'Customer Email Required',
+            //         text: 'Please enter customer email',
+            //         type: 'error',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'OK'
+            //     }).then((result) => {
+            //         if (result.value) {}
+            //         else if (result.dismiss === 'cancel') {}
+            //     });
+            // }
+            // $('#confirmprint').modal('hide');            
         }
     }, delayTimeAfterSound);
     },
 
     'click #choosetemplate':function(event)
     {
-
-
         if($('#choosetemplate').is(':checked'))
         {
             $('#templateselection').modal('show');
@@ -7649,7 +7671,6 @@ Template.billcard.events({
         {
            $('#templateselection').modal('hide');
         }
-
     },
     // 'click .printConfirm': function(event) {
     //     $('.fullScreenSpin').css('display', 'inline-block');
@@ -7693,31 +7714,6 @@ Template.billcard.events({
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
 
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        let billTotal = $('#grandTotal').text();
-        var objDetails = "";
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var billData = await purchaseService.getOneBilldataEx(currentInvoice);
-            var orderDate = billData.fields.OrderDate;
-            var fromDate = orderDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingBills = await sideBarService.getAllBillListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var billList = followingBills.tbilllist;
-            if (billList.length > 0) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }            
-        }
         times++;
 
         if (times == 1) {
@@ -7936,7 +7932,6 @@ Template.billcard.events({
             FlowRouter.go('/billlist?success=true');
           };
         }
-        $('#deleteLineModal').modal('toggle');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteBill': function(event) {
