@@ -657,11 +657,12 @@ Template.supplierscard.onRendered(function () {
             bankAccountName: data.fields.BankAccountName || '',
             bankAccountBSB: data.fields.BankAccountBSB || '',
             bankAccountNo: data.fields.BankAccountNo || '',
+            foreignExchangeCode:data.fields.ForeignExchangeCode || CountryAbbr,
             // openingbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
             // taxcode:data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
         };
 
-
+        console.log("In addSupplier.js ===", data);
         $('#sltCurrency').val(data.fields.ForeignExchangeCode || CountryAbbr);
 
         if((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2)
@@ -2679,6 +2680,7 @@ Template.supplierscard.helpers({
         if(temp && temp.mobile) {
             temp.mobile = temp.mobile.replace('+61', '0')
         }
+        //console.log(temp);
         return temp;
     },
     countryList: () => {
