@@ -231,13 +231,21 @@ Template.newsidenav.onRendered(function() {
     }
 
     function MyPopper (button, popper) {
-      this.body = $('#popperBounder');
+      this.timer = null;
+      this.bounder = $('#popperBounder');
       this.button = $(button);
-      this.popper = $(popper).clone().appendTo(this.body);
+      this.popper = $(popper).clone().appendTo(this.bounder);
+      this.popper.hover(() => {
+        clearTimeout(this.timer);
+      }, () => {
+        this.timer = setTimeout(() => {
+          this.timer = null;
+          this.hidePopper();
+        }, 1500);
+      });
       
       this.arrow = $('<div class="popper-arrow"></div>').appendTo(this.popper);
     }
-    
     MyPopper.prototype.createInstance = function () {
       this.instance = Popper.createPopper(this.button[0], this.popper[0], {
         placement: "bottom", //preferred placement of popper
@@ -258,7 +266,7 @@ Template.newsidenav.onRendered(function() {
           {
             name: 'preventOverflow',
             options: {
-              boundary: this.body[0],
+              boundary: this.bounder[0],
             },
           },
         ]
@@ -270,7 +278,6 @@ Template.newsidenav.onRendered(function() {
         this.instance = null;
       }
     }
-    
     MyPopper.prototype.showPopper = function () {
       this.popper.addClass('popper-popup');
       this.popper.attr("show-popper", "");
@@ -282,6 +289,10 @@ Template.newsidenav.onRendered(function() {
       this.popper.removeAttr("show-popper");
       this.arrow.removeAttr("data-popper-arrow");
       this.destroyInstance();
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
     }
     MyPopper.prototype.togglePopper = function () {
       if (this.popper[0].hasAttribute("show-popper")) {
@@ -304,6 +315,10 @@ Template.newsidenav.onRendered(function() {
         if (e.currentTarget.popper) {
           poppers.forEach(popper => e.currentTarget.popper !== popper && popper.hidePopper());
           e.currentTarget.popper.showPopper();
+          if (e.currentTarget.popper.timer) clearTimeout(e.currentTarget.popper.timer);
+          e.currentTarget.popper.timer = setTimeout(() => {
+            e.currentTarget.popper.hidePopper();
+          }, 3000);
         }
       })
       $('#colContent').on('click', function () {
@@ -313,6 +328,7 @@ Template.newsidenav.onRendered(function() {
     setTimeout(() => {
       init();
     }, 2000);
+
     templateObject.getSetSideNavFocus = function() {
         var currentLoc = FlowRouter.current().route.path;
         setTimeout(function() {
