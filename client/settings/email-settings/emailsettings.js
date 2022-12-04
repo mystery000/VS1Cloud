@@ -1703,6 +1703,7 @@ Template.emailsettings.onRendered(function () {
                             })
                         }
                         await getAttachments()
+                        console.log("1111111111111111111")
                         if (typeof recipientIds == 'string') {
                             recipientIds = recipientIds.split('; ');
                         }
@@ -1877,7 +1878,7 @@ Template.emailsettings.onRendered(function () {
                                 // objDetail.fields.Active = false;
                             }
 
-
+                            console.log("2222222222222222222")
                             if (formID == '1') {
                                 // if report type is Grouped Reports....
 
@@ -1965,7 +1966,9 @@ Template.emailsettings.onRendered(function () {
                                 try {
                                     // Save email settings
                                     await taxRateService.saveScheduleSettings(objDetail).then(dataReturn=>{
+                                        console.log('&&&&&&&& schedule saved on ERP')
                                         taxRateService.getScheduleSettings().then(dataUpdate => {
+                                            console.log("********** saved schedules", dataUpdate)
                                             addVS1Data('TReportSchedules', JSON.stringify(dataUpdate)).then(()=>{})
                                         }).catch(function(error){})
                                     }).catch(function(err){
@@ -1973,18 +1976,21 @@ Template.emailsettings.onRendered(function () {
                                 } catch (e) {
                                 }
 
-                                if(transIDs.includes(formID) == false) {
-                                    objDetail.fields.attachments = documents;
-                                }
-
+                                // if(transIDs.includes(formID) == false) {
+                                //     objDetail.fields.attachments = documents;
+                                // }
+                                console.log('33333333333333')
                                 objDetail.fields.Offset = new Date().getTimezoneOffset();
 
                                 const nextDueDate = await new Promise((resolve, reject) => {
                                     Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
-                                        if (error) return reject(error);
+                                        if (error){console.log("############", error); return reject(error);} 
+                                        console.log("%%%%%%%%% result", result)
                                         resolve(result);
                                     });
                                 });
+
+                                console.log('5555555555555555')
                                 objDetail.fields.NextDueDate = nextDueDate;
 
 
@@ -1992,16 +1998,20 @@ Template.emailsettings.onRendered(function () {
                                 objDetail.fields.FormName = formName;
                                 objDetail.fields.EmployeeEmail = recipients[index];
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
+                                console.log("oooooobject detail", objDetail, basedOnType)
                                 //TODO: Set basedon type here
-                                localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
-                                    ...objDetail.fields,
-                                    BasedOnType: basedOnType,
-                                    connectionInfo: connectionDetails
-                                }));
-
+                                async function setBasedOnType() {
+                                    localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                        ...objDetail.fields,
+                                        BasedOnType: basedOnType,
+                                        connectionInfo: connectionDetails
+                                    }));
+                                }
+                                await setBasedOnType()
+                                console.log('6666666666666')
                                 let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
                                 cloneObjDetailFields.attachments = documents;
-
+                                console.log('4444444444444')
                                 if(basedOnType.includes('EN') == true || basedOnType.includes('EU' == true)) {
                                     // ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     //     ...cloneObjDetailFields,

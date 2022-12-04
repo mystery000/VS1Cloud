@@ -468,7 +468,7 @@ Template.agedreceivables.events({
             targetElement.style.width = "210mm";
             targetElement.style.backgroundColor = "#ffffff";
             targetElement.style.padding = "20px";
-            targetElement.style.height = "297mm";
+            targetElement.style.height = "fit-content";
             targetElement.style.fontSize = "13.33px";
             targetElement.style.color = "#000000";
             targetElement.style.overflowX = "visible";
