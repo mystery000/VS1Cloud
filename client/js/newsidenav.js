@@ -318,7 +318,7 @@ Template.newsidenav.onRendered(function() {
           if (e.currentTarget.popper.timer) clearTimeout(e.currentTarget.popper.timer);
           e.currentTarget.popper.timer = setTimeout(() => {
             e.currentTarget.popper.hidePopper();
-          }, 3000);
+          }, 1500);
         }
       })
       $('#colContent').on('click', function () {
