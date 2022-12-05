@@ -1583,8 +1583,6 @@ Template.vs1login.onRendered(function () {
                 return (a.description.toLowerCase() > b.description.toLowerCase()) ? 1 : -1;
             });
 
-            var vid = document.getElementById('myVS1Video');
-            //vid.addEventListener('ended', function(e) {
             setTimeout(function(){
               if(isSetupWizard == true){
                 if (isAppointmentScheduling == true) {
@@ -1607,7 +1605,6 @@ Template.vs1login.onRendered(function () {
                 handleSetupRedirection();
               };
               }, delayTimeAfterSound);
-             //}, false);
 
 
         } else {
