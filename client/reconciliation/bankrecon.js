@@ -1353,6 +1353,38 @@ Template.bankrecon.onRendered(function() {
 
     $(document).ready(function() {
         $('#bankAccountName').editableSelect();
+        setTimeout(function() {
+            Split(['#topList', '#bottomList'], {
+                direction: 'vertical',
+                sizes: [50, 50],
+                minSize: [30, 30],
+                gutterSize: 4,
+            });
+
+            $(document).on("click", ".gutter", function(e) {
+                setTimeout(function() {
+                    var topHeight = parseInt($("#topList").height()) - 73;
+                    $("#topList .card-body").css("height", topHeight);
+                    var bottomHeight = parseInt($("#bottomList").height()) - 73;
+                    $("#bottomList .card-body").css("height", bottomHeight);
+
+                    localStorage.setItem('topPanHeight', $("#topList").height());
+                    localStorage.setItem('bottomPanHeight', $("#bottomList").height());
+                    localStorage.setItem('topListHeight', topHeight);
+                    localStorage.setItem('bottomListHeight', bottomHeight);
+                }, 100);
+            });
+
+            if (localStorage.getItem('topListHeight')) {
+                $("#topList").css("height", parseInt(localStorage.getItem('topPanHeight')));
+                $("#topList .card-body").css("height", parseInt(localStorage.getItem('topListHeight')));
+            }
+
+            if (localStorage.getItem('bottomListHeight')) {
+                $("#bottomList").css("height", parseInt(localStorage.getItem('bottomPanHeight')));
+                $("#bottomList .card-body").css("height", parseInt(localStorage.getItem('bottomListHeight')));
+            }
+        }, 1000);
     });
 
     $('#bankAccountName').editableSelect().on('click.editable-select', function(e, li) {
@@ -2176,6 +2208,8 @@ Template.bankrecon.events({
                 }
             };
         }
+
+        console.log("---------", objDetails);
 
         reconService.saveReconciliation(objDetails).then(function(data) {
             FlowRouter.go('/reconciliationlist?success=true');
