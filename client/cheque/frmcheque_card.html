@@ -1434,72 +1434,7 @@
       </div>
     </div>
     <!-- Modal print-button -modal -->
-    <div class="modal fade chequecard" role="dialog" tabindex="-1" id="accountListModal">
-      {{> accountlistpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
-      {{> addaccountpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="statusPopModal">
-      {{> statuspop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="newStatusPopModal">
-      {{> newstatuspop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="shipViaModal">
-      {{> shipviapop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="newShipViaModal">
-      {{> newshipvia}}
-    </div>
-
-    <!-- End Modal Product -->
-    <!-- Modal Tax Rate -modal -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
-      {{> taxratelistpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
-      {{> newtaxratepop}}
-    </div>
-    <!-- End Modal Tax Rate -->
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
-      {{> copyfrequencypop}}
-    </div>
-
-    <!-- ModalSupplier -->
-    <div class="modal fade supplierListModal" role="dialog" tabindex="-1" id="supplierListModal">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable supplierListModalInner" role="document"
-        style="max-width: 90vw;">
-        <div class="modal-content supplierListContent">
-          <div class="modal-header">
-            <h4>Supplier List</h4><button type="button" class="close checkclose" data-dismiss="modal"
-              aria-label="Close"><span aria-hidden="true">×</span></button>
-          </div>
-          <div class="modal-body mainSupplierModalBody" style="padding: 0px; overflow-x: hidden;">
-            <input type="hidden" style="width: 100%; display:none;" id="supplierSelectLineID"
-              name="supplierSelectLineID" readonly>
-            {{> supplierlistpop}}
-
-          </div>
-          <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal"
-              type="button">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- End Modal Supplier -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
-      {{> addsupplierpop}}
-    </div>
-
+    {{> all_transaction_modals}}
   </div>
 
   <!-- Start Help Video Modal -->
