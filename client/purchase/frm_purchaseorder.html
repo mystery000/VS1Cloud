@@ -1519,68 +1519,14 @@
                           <textarea class="form-control" rows="4" id="txapickmemo" name="txapickmemo">{{invoicerecord.pickmemo}}</textarea>
                       </div>
                   </div> -->
-                  <div class="col-12 col-md-6 col-lg-4 col-xl-2" id="totalSection" style="padding-right: 1.5rem; padding-left: 1.5rem;">
-                      <div class="row">
-                          <div class="col-4" style="padding: 0px;">
-                              <p class="lead">Subtotal</p>
-                          </div>
-                          <div class="col-8" style="padding: 0px;">
-                              <p class="lead" id="subtotal_total" name="subtotal_total">{{purchaseorderrecord.SubTotal}}</p>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-4" style="padding: 0px;">
-                              <p class="lead">Tax</p>
-                          </div>
-                          <div class="col-8" style="padding: 0px;">
-                              <p class="lead" id="subtotal_tax" name="subtotal_tax">{{purchaseorderrecord.TotalTax}}</p>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-12" style="padding: 0px;">
-                              <hr style="border-top: 1px solid #696969;" />
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-4" style="padding: 0px;">
-                              <p class="lead leadTotal">TOTAL</p>
-                          </div>
-                          <div class="col-8" style="padding: 0px;">
-                              <p class="lead leadTotal" id="grandTotal" name="grandTotal">{{purchaseorderrecord.Total}}</p>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-12" style="padding: 0px;">
-                              <hr style="border-top: 3px solid #696969;" />
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-4" style="padding: 0px;">
-                              {{#if equals purchaseorderrecord.isPartialPaid true}}
-                                  <p class="lead text-success pointer btnTransactionPaid" id=""><i class="fas fa-comments-dollar paidIcon"></i> Paid</p>
-                              {{else}}
-                                  <p class="lead">Paid</p>
-                              {{/if}}
-                          </div>
-                          <div class="col-8" style="padding: 0px;">
-                              <p class="lead" id="totalPaidAmt" name="totalPaidAmt">{{purchaseorderrecord.totalPaid}}</p>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-4" style="padding: 0px;">
-                              <p class="lead">Due</p>
-                          </div>
-                          <div class="col-8" style="padding: 0px;">
-                              <p class="lead" id="totalBalanceDue" name="totalBalanceDue">{{purchaseorderrecord.balanceDue}}</p>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col-12" style="padding: 0px;">
-                              <hr style="border-top: 3px solid #696969;" />
-                              <p style="display:none;" id="totalBalanceDue" name="totalBalanceDue">{{purchaseorderrecord.balanceDue}}</p>
-                          </div>
-                      </div>
-                  </div>
+                  {{> transaction_calculation
+                    isPartialPaid=purchaseorderrecord.isPartialPaid
+                    SubTotal=purchaseorderrecord.SubTotal
+                    TotalTax=purchaseorderrecord.TotalTax
+                    Total=purchaseorderrecord.Total
+                    TotalPaid=purchaseorderrecord.totalPaid
+                    BalanceDue=purchaseorderrecord.balanceDue
+                    }}
               </div>
 
               <div class="row justify-content-center mobileButtons" style="display: none;">

@@ -982,67 +982,14 @@
               {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
           </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-4 col-xl-2" id="totalSection"
-          style="padding-right: 1.5rem; padding-left: 1.5rem; margin-bottom: 12px;">
-          <div class="row">
-            <div class="col-4" style="padding: 0px;">
-              <p class="lead">Subtotal</p>
-            </div>
-            <div class="col-8" style="padding: 0px;">
-              <p class="lead" id="subtotal_total" name="subtotal_total">{{chequerecord.SubTotal}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4" style="padding: 0px;">
-              <p class="lead">Tax</p>
-            </div>
-            <div class="col-8" style="padding: 0px;">
-              <p class="lead" id="subtotal_tax" name="subtotal_tax">{{chequerecord.TotalTax}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4" style="padding: 0px;">
-              <p class="lead">Net</p>
-            </div>
-            <div class="col-8" style="padding: 0px;">
-              <p class="lead" id="subtotal_net" name="subtotal_net">{{chequerecord.Total}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12" style="padding: 0px;">
-              <hr style="border-top: 1px solid #696969;" />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4" style="padding: 0px;">
-              <p class="lead leadTotal">TOTAL</p>
-            </div>
-            <div class="col-8" style="padding: 0px;">
-              <p class="lead leadTotal" id="grandTotal" name="grandTotal">{{chequerecord.Total}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12" style="padding: 0px;">
-              <hr style="border-top: 3px solid #696969;" />
-            </div>
-          </div>
-          <!--
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Paid</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="totalPaidAmt" name="totalPaidAmt">{{chequerecord.totalPaid}}</p>
-                            </div>
-                        </div>
--->
-          <!-- <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 3px solid #696969;" />
-                                <p style="display:none;" id="totalBalanceDue" name="totalBalanceDue">{{chequerecord.balanceDue}}</p>
-                            </div>
-                        </div> -->
-        </div>
+        {{> transaction_calculation
+          isPartialPaid=chequerecord.isPartialPaid
+          SubTotal=chequerecord.SubTotal
+          TotalTax=chequerecord.TotalTax
+          Total=chequerecord.Total
+          TotalPaid=chequerecord.totalPaid
+          BalanceDue=chequerecord.balanceDue
+          }}
       </div>
       <div class="row justify-content-center mobileButtons" style="display: none;">
           {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}

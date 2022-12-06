@@ -1434,87 +1434,16 @@
 
                       </div>
 
-
-
-                    <div class="col-12 col-md-6 col-lg-4 col-xl-2" id="totalSection" style="padding-right: 1.5rem; padding-left: 1.5rem;">
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Subtotal</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_total" name="subtotal_total">{{salesorderrecord.SubTotal}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Tax</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_tax" name="subtotal_tax">{{salesorderrecord.TotalTax}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Net</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_nett" name="subtotal_nett">{{salesorderrecord.Total}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 1px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="lead">Discount</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="lead" id="subtotal_discount" name="subtotal_discount">{{salesorderrecord.TotalDiscount}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 1px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead leadTotal">TOTAL</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead leadTotal" id="grandTotal" name="grandTotal">{{salesorderrecord.Total}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 3px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Paid</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="totalPaidAmt" name="totalPaidAmt">{{salesorderrecord.totalPaid}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Due</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="totalBalanceDue" name="totalBalanceDue">{{salesorderrecord.balanceDue}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 3px solid #696969;" />
-                                <p style="display:none;" id="totalBalanceDue" name="totalBalanceDue">{{salesorderrecord.balanceDue}}</p>
-                            </div>
-                        </div>
-                    </div>
+                      {{> transaction_calculation
+                        isPartialPaid=salesorderrecord.isPartialPaid
+                        SubTotal=salesorderrecord.SubTotal
+                        TotalTax=salesorderrecord.TotalTax
+                        NetTotal=salesorderrecord.Total
+                        TotalDiscount=salesorderrecord.TotalDiscount
+                        Total=salesorderrecord.Total
+                        TotalPaid=salesorderrecord.totalPaid
+                        BalanceDue=salesorderrecord.balanceDue
+                        }}
                 </div>
                 <div class="row justify-content-center mobileButtons" style="display: none;">
                     {{> transaction_buttons_bottom margin="12px" AttachmentCount=attachmentCount }}

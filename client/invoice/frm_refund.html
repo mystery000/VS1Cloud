@@ -1337,86 +1337,16 @@
                             <textarea class="form-control" rows="4" id="txapickmemo" name="txapickmemo">{{invoicerecord.pickmemo}}</textarea>
                         </div>
                     </div> -->
-
-                    <div class="col-12 col-md-6 col-lg-4 col-xl-2" id="totalSection" style="padding-right: 1.5rem; padding-left: 1.5rem;">
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Subtotal</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_total" name="subtotal_total">{{invoicerecord.SubTotal}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Tax</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_tax" name="subtotal_tax">{{invoicerecord.TotalTax}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Net</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="subtotal_nett" name="subtotal_nett">{{invoicerecord.Total}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 1px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="lead">Discount</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="lead" id="subtotal_discount" name="subtotal_discount">{{invoicerecord.TotalDiscount}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 1px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead leadTotal">TOTAL</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead leadTotal" id="grandTotal" name="grandTotal">{{invoicerecord.Total}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 3px solid #696969;" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Paid</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="totalPaidAmt" name="totalPaidAmt">{{invoicerecord.totalPaid}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Due</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="totalBalanceDue" name="totalBalanceDue">{{invoicerecord.balanceDue}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 3px solid #696969;" />
-                                <p style="display:none;" id="totalBalanceDue" name="totalBalanceDue">{{invoicerecord.balanceDue}}</p>
-                            </div>
-                        </div>
-                    </div>
+                    {{> transaction_calculation
+                        isPartialPaid=invoicerecord.isPartialPaid
+                        SubTotal=invoicerecord.SubTotal
+                        TotalTax=invoicerecord.TotalTax
+                        NetTotal=invoicerecord.Total
+                        TotalDiscount=invoicerecord.TotalDiscount
+                        Total=invoicerecord.Total
+                        TotalPaid=invoicerecord.totalPaid
+                        BalanceDue=invoicerecord.balanceDue
+                        }}
                 </div>
                 <div class="row justify-content-center mobileButtons" style="display: none;">
                     {{> transaction_buttons_bottom margin="16px" AttachmentCount=attachmentCount }}
