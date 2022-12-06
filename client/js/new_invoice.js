@@ -17422,6 +17422,28 @@ Template.new_invoice.events({
         var clicktimes = 0;
         var targetID = $(event.target).closest("tr").attr("id");
         $("#selectDeleteLineID").val(targetID);
+
+        var url = FlowRouter.current().path;
+        var getso_id = url.split("?id=");
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = "";
+        var invList = [];
+        if (getso_id[1]) {
+            $(".fullScreenSpin").css("display", "inline-block");
+            currentInvoice = parseInt(currentInvoice);
+            var invData = await salesService.getOneInvoicedataEx(currentInvoice);
+            var saleDate = invData.fields.SaleDate;
+            var fromDate = saleDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingInvoices = await sideBarService.getAllTInvoiceListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var invList = followingInvoices.tinvoicelist;
+        }
         if(targetID){      
             times++;
             if (times == 1) {
@@ -17601,8 +17623,10 @@ Template.new_invoice.events({
                     $("#deleteLineModal").modal("toggle");
                 }
             }
-        } else {
+        } else if(invList.lenght) {
             $("#footerDeleteModal2").modal("toggle");
+        } else {
+            $("#footerDeleteModal1").modal("toggle");
         }
     },
     "click .btnDeleteFollowingInvoices": async function(event) {
