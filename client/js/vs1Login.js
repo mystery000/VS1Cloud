@@ -1609,7 +1609,7 @@ Template.vs1login.onRendered(function () {
 
         } else {
             pausevideo();
-            $('.myVS1Video').css('display', 'none');
+            //$('.myVS1Video').css('display', 'none');
             $('.myVS1VideoLogin').css('display', 'none');
             $('.loginSpinner').css('display', 'none');
             $('.fullScreenSpin').css('display', 'none');
@@ -2016,7 +2016,7 @@ Template.vs1login.onRendered(function () {
 
             $('.loginSpinner').css('display', 'inline-block');
             if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-                $('.fullScreenSpin').css('display', 'inline-block');
+                //$('.fullScreenSpin').css('display', 'inline-block');
             }
 
             let test = "";
