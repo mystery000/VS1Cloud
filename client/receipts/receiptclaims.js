@@ -1663,20 +1663,20 @@ Template.receiptsoverview.onRendered(function() {
             let errText = "";
             if (err.error == "401") {
                 errText = "You have run out of free scans. Please upgrade your account to get more scans";
+                swal({
+                    title: 'Oooops...',
+                    text: errText,
+                    type: 'error',
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    // confirmButtonText: 'Try Again'
+                    timer: 2000
+                }).then((result) => {
+                    swal.close();
+                });
             } else {
                 errText = err;
             }
-            swal({
-                title: 'Oooops...',
-                text: errText,
-                type: 'error',
-                showCancelButton: false,
-                showConfirmButton: false,
-                // confirmButtonText: 'Try Again'
-                timer: 2000
-            }).then((result) => {
-                swal.close();
-            });
             $('.fullScreenSpin').css('display', 'none');
         });
     };
