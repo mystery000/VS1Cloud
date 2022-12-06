@@ -17623,7 +17623,7 @@ Template.new_invoice.events({
                     $("#deleteLineModal").modal("toggle");
                 }
             }
-        } else if(invList.lenght) {
+        } else if(invList.length) {
             $("#footerDeleteModal2").modal("toggle");
         } else {
             $("#footerDeleteModal1").modal("toggle");
