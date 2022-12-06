@@ -3853,7 +3853,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                   data.tunitofmeasurelist[i].UnitName || '',
                   data.tunitofmeasurelist[i].UnitDescription || '',
                   data.tunitofmeasurelist[i].UnitProductKeyName || '',
-                  data.tunitofmeasurelist[ij].BaseUnitName || '',
+                  data.tunitofmeasurelist[i].BaseUnitName || '',
                   data.tunitofmeasurelist[i].BaseUnitID || '',
                   data.tunitofmeasurelist[i].PartID || '',
                   data.tunitofmeasurelist[i].Multiplier || 0,
