@@ -3619,7 +3619,84 @@
                                                             opacity: 1;
                                                         }
                                                     </style>
-                                                        {{> vs1_filtered_data_table  datatablerecords=datatablerecords headers=tableHeaderItems}}   
+                                                        <!-- {{> vs1_filtered_data_table  datatablerecords=datatablerecords headers=tableHeaderItems}}    -->
+                                                        <table id="tblJoblist" name="tblJoblist" style="width:100%"
+                                                        class="dataTable table table-striped table-bordered tblJoblist">
+                                                        <thead>
+                                                            <tr class="dnd-moved">
+                                                                <th class="th colCompany" style="width:200px;">Company
+                                                                </th>
+                                                                <th class="th colPhone" style="width:95px;">Phone</th>                                                                                                       
+                                                                <th class="th colARBalance" style="width:80px;">AR
+                                                                    Balance</th>
+                                                                <th class="th colCreditBalance" style="width:80px;">
+                                                                    Credit Balance</th>
+                                                                <th class="th colBalance" style="width:80px;">Balance
+                                                                </th>
+                                                                <th class="th colCreditLimit" style="width:80px;">Credit
+                                                                    Limit</th>
+                                                                <th class="th colSalesOrderBalance" style="width:80px;">
+                                                                    Order Balance</th>
+                                                                <th class="th colCountry" style="width:100px;">Country
+                                                                </th>
+                                                                <th class="th colEmail hiddenColumn">Email</th>
+                                                                <th class="th colAccountNo hiddenColumn">Account No</th>
+                                                                <th class="th colClientNo hiddenColumn">Custom Field 1
+                                                                </th>
+                                                                <th class="th colJobTitle hiddenColumn">Custom Field 2
+                                                                </th>
+                                                                <th class="th colNotes">Notes</th>
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {{#if datatablerecordsjob}}
+                                                            {{#each itemjob in datatablerecordsjob}}
+                                                            <tr class="dnd-moved" id="{{itemjob.id}}"
+                                                                style="cursor: pointer;">
+                                                                <td contenteditable="false" class="colCompany">
+                                                                    {{itemjob.company}}</td>
+
+                                                                <td contenteditable="false" class="colPhone">
+                                                                    {{itemjob.phone}}</td>
+                                                                <td contenteditable="false" class="colARBalance"
+                                                                    style="text-align: right!important;">
+                                                                    {{itemjob.arbalance}}
+                                                                </td>
+                                                                <td contenteditable="false" class="colCreditBalance"
+                                                                    style="text-align: right!important;">
+                                                                    {{itemjob.creditbalance}}</td>
+                                                                <td contenteditable="false" class="colBalance"
+                                                                    style="text-align: right!important;">
+                                                                    {{itemjob.balance}}
+                                                                </td>
+                                                                <td contenteditable="false" class="colCreditLimit"
+                                                                    style="text-align: right!important;">
+                                                                    {{itemjob.creditlimit}}
+                                                                </td>
+                                                                <td contenteditable="false" class="colSalesOrderBalance"
+                                                                    style="text-align: right!important;">
+                                                                    {{itemjob.salesorderbalance}}</td>
+                                                                <td contenteditable="false" class="colCountry">
+                                                                    {{itemjob.country}}</td>
+                                                                <td contenteditable="false"
+                                                                    class="colEmail hiddenColumn">{{itemjob.email}}</td>
+                                                                <td contenteditable="false"
+                                                                    class="colAccountNo hiddenColumn">
+                                                                    {{itemjob.accountno}}</td>
+                                                                <td contenteditable="false"
+                                                                    class="colClientNo hiddenColumn">
+                                                                    {{itemjob.clientno}}</td>
+                                                                <td contenteditable="false"
+                                                                    class="colJobTitle hiddenColumn">
+                                                                    {{itemjob.jobtitle}}</td>
+                                                                <td contenteditable="false" class="colNotes">
+                                                                    {{itemjob.notes}}</td>
+                                                            </tr>
+                                                            {{/each}}
+                                                            {{/if}}
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
