@@ -3704,12 +3704,12 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                                 linestatus,
                                 tdProgressPayment,
                                 tdRequired,
-                                data.ttermsvs1list[i].EarlyPaymentDiscount || 0.00,
-                                data.ttermsvs1list[i].EarlyPaymentDays || 0.00,
-                                data.ttermsvs1list[i].ProgressPaymentType || "",
-                                data.ttermsvs1list[i].ProgressPaymentDuration || 0.00,
-                                data.ttermsvs1list[i].ProgressPaymentInstallments || 0.00,
-                                data.ttermsvs1list[i].ProgressPaymentfirstPayonSaleDate || 0.00,
+                                data.ttermsvs1list[j].EarlyPaymentDiscount || 0.00,
+                                data.ttermsvs1list[j].EarlyPaymentDays || 0.00,
+                                data.ttermsvs1list[j].ProgressPaymentType || "",
+                                data.ttermsvs1list[j].ProgressPaymentDuration || 0.00,
+                                data.ttermsvs1list[j].ProgressPaymentInstallments || 0.00,
+                                data.ttermsvs1list[j].ProgressPaymentfirstPayonSaleDate || 0.00,
                               ];
 
                               splashArrayTermsList.push(dataListDupp);
