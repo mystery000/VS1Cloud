@@ -530,7 +530,9 @@
                                                                     {{/if}}
                                                                 {{/each}}
                                                             {{/if}}
-                                                        <th class="text-left"></th>
+                                                        {{#if not daterange}}
+                                                            <th class="text-left"></th>
+                                                        {{/if}}
                                                     {{/each}}
                                                 {{/if}}
 

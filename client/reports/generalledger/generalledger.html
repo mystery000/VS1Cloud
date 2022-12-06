@@ -92,7 +92,7 @@
                                                         {{# if c.active}}
 
 <!--                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" style="min-width: 100px !important;" class="Total1Indented MenuLeft text-nowrap Indent1 rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">-->
-                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft Indent1 rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
+                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft Indent1 text-nowrap rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
                                                                 <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{convertAmount subItem.value c}}</a>
                                                             </td>
 

@@ -1139,7 +1139,7 @@ Template.generalledger.helpers({
     return activeArray.length;
   },
   currencyColumnSize : (count) => {
-    let siz = count > 0 ? count * 90 : 90;
+    let siz = count > 0 ? count * 130 : 90;
     //alert(siz);
     return siz;          //column size auto per 85px
   },
