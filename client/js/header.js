@@ -922,9 +922,6 @@ Template.header.onRendered(function() {
             } else if (segs[0] == Barcode_Prefix_Supplier) {
                 productService.getGlobalSearchSupplier(segs[1]).then(function(data) {
                     let dataSelectID = '';
-                    let isProcessed = '';
-                    var splashArrayList = new Array();
-                    var splashArrayListDupp = new Array();
                     $('.fullScreenSpin').css('display', 'none');
                     let dataTableList = [];
                     let dataTableListDupp = [];
