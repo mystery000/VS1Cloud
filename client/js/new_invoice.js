@@ -17420,7 +17420,7 @@ Template.new_invoice.events({
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
         let salesService = new SalesBoardService();
-        var currentDate = new Date();◘
+        var currentDate = new Date();
         var clicktimes = 0;
         var targetID = $(event.target).closest("tr").attr("id");
         $("#selectDeleteLineID").val(targetID);
