@@ -122,10 +122,18 @@ Template.supplierpaymentcard.onRendered(() => {
   templateObject.fetchSupplierPayment = async function () {
       let supplierPaymentData = await getVS1Data('TSupplierPayment');
       if( supplierPaymentData.length > 0 ){
-        var getsale_id = url.split("?id=");
+
+        var getsale_id = url.split("?billid=");
         var currentSalesID = getsale_id[getsale_id.length - 1];
         let paymentID = parseInt(currentSalesID);
         let useData = JSON.parse( supplierPaymentData[0].data );
+
+        if(paymentID > 0) {
+            $("#sltCurrency").val(Session.get("tempCurrencyState"));
+            $("#exchange_rate").val(Session.get("tempExchangeRateState"));
+            //FxGlobalFunctions.handleChangedCurrency(Session.get("tempCurrencyState"), defaultCurrencyCode);
+        }
+
         if( useData.tsupplierpayment.length > 0 ){
           let suppPayment =  useData.tsupplierpayment.filter(function( item ){
               if( item.fields.ID == paymentID ){
@@ -134,7 +142,6 @@ Template.supplierpaymentcard.onRendered(() => {
           });
           if( suppPayment.length > 0 ){
             $('#sltCurrency').val(suppPayment[0].fields.ForeignExchangeCode);
-
             $('#exchange_rate').val(suppPayment[0].fields.ForeignExchangeRate);
           }
         }
