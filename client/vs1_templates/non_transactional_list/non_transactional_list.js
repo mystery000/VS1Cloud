@@ -318,13 +318,18 @@ Template.non_transactional_list.onRendered(function() {
               { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: true,  width: "10"},
               { index: 1, label: 'Code', class: 'colCode', active: true, display: true, width: "50"},
               { index: 2, label: 'Currency', class: 'colCurrency', active: true, display: true, width: "100"},
-              { index: 3, label: 'Symbol', class: 'colSymbol', active: true, display: true, width: "100"},
+              { index: 3, label: 'Symbol', class: 'colCurrencySymbol', active: true, display: true, width: "100"},
               { index: 4, label: 'Buy Rate', class: 'colBuyRate', active: true, display: true, width: "100"},
               { index: 5, label: 'Sell Rate', class: 'colSellRate', active: true, display: true, width: "100"},
               { index: 6, label: 'Country', class: 'colCountry', active: true, display: true, width: "200"},
               { index: 7, label: 'Rate Last Modified', class: 'colRateLastModified', active: false, display: true, width: "200"},
               { index: 8, label: 'Description', class: 'colDescription', active: true, display: true, width: ""},
               { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
+              { index: 9, label: 'Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100"},
+              { index: 9, label: 'Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150"},
+              { index: 9, label: 'Lower Variation', class: 'colLowerVariation', active: false, display: true, width: "150"},
+              { index: 9, label: 'Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250"},
+              { index: 9, label: 'Country ID', class: 'colCountryID', active: false, display: true, width: "100"},
           ];
           }
         templateObject.reset_data.set(reset_data);
@@ -2511,6 +2516,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 },
                 language: { search: "",searchPlaceholder: "Search List..." },
                 "fnInitComplete": function (oSettings) {
+                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
                       if(deleteFilter){
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
                       }else{
@@ -2788,8 +2794,10 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 },
                 language: { search: "",searchPlaceholder: "Search List..." },
                 "fnInitComplete": function (oSettings) {
+
+                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalLeadStatus' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
                       if(data.Params.Search.replace(/\s/g, "") == ""){
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                          $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
 
                       }else{
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
@@ -3010,7 +3018,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
               let dataLenght = oSettings._iDisplayLength;
               let customerSearch = $('#'+currenttablename+'_filter input').val();
 
-                sideBarService.getAllTDepartmentList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+                sideBarService.getDepartmentDataList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
                 for (let j = 0; j < dataObjectnew.tdeptclasslist.length; j++) {
                   let deptFName = '';
                   let linestatus = '';
@@ -3019,8 +3027,6 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                   } else if (dataObjectnew.tdeptclasslist[j].Active == false) {
                       linestatus = "In-Active";
                   };
-                    //deptFName = dataObjectnew.tdeptclasslist[j].ClassName+" "+data.tdeptclasslist[j].SiteCode;
-
                     var dataListDupp = [
                       dataObjectnew.tdeptclasslist[j].ID || "",
                       dataObjectnew.tdeptclasslist[j].ClassName || "",
@@ -3033,7 +3039,6 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     ];
 
                     splashArrayDepartmentList.push(dataListDupp);
-                    //}
                 }
                 let uniqueChars = [...new Set(splashArrayDepartmentList)];
                 templateObject.transactiondatatablerecords.set(uniqueChars);
@@ -3058,6 +3063,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             },
             language: { search: "",searchPlaceholder: "Search List..." },
             "fnInitComplete": function (oSettings) {
+                $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalDepartment' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
                   if(data.Params.Search.replace(/\s/g, "") == ""){
                     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
                   }else{
@@ -3129,40 +3135,36 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             let lineItems = [];
             let lineItemObj = {};
             let deleteFilter = false;
-            // if(data.Params.Search.replace(/\s/g, "") == ""){
-            //   deleteFilter = true;
-            // }else{
-            //   deleteFilter = false;
-            // };
+            if(data.Params.Search.replace(/\s/g, "") == ""){
+              deleteFilter = true;
+            }else{
+              deleteFilter = false;
+            };
 
-            for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-              //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
+            for (let i = 0; i < data.tpaymentmethodlist.length; i++) {
+
               let linestatus = '';
-              if (data.tpaymentmethodvs1[i].fields.Active == true) {
+              if (data.tpaymentmethodlist[i].Active == true) {
                   linestatus = "";
-              } else if (data.tpaymentmethodvs1[i].fields.Active == false) {
+              } else if (data.tpaymentmethodlist[i].Active == false) {
                   linestatus = "In-Active";
               };
               let tdIsCreditCard = '';
 
-              if(data.tpaymentmethodvs1[i].fields.IsCreditCard == true){
-                  tdIsCreditCard = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-'+data.tpaymentmethodvs1[i].fields.ID+'" checked><label class="custom-control-label chkBox" for="iscreditcard-'+data.tpaymentmethodvs1[i].fields.ID+'"></label></div>';
+              if(data.tpaymentmethodlist[i].IsCreditCard == true){
+                  tdIsCreditCard = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-'+data.tpaymentmethodlist[i].PayMethodID+'" checked><label class="custom-control-label chkBox" for="iscreditcard-'+data.tpaymentmethodlist[i].PayMethodID+'"></label></div>';
               }else{
-                  tdIsCreditCard = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-'+data.tpaymentmethodvs1[i].fields.ID+'"><label class="custom-control-label chkBox" for="iscreditcard-'+data.tpaymentmethodvs1[i].fields.ID+'"></label></div>';
+                  tdIsCreditCard = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-'+data.tpaymentmethodlist[i].PayMethodID+'"><label class="custom-control-label chkBox" for="iscreditcard-'+data.tpaymentmethodlist[i].PayMethodID+'"></label></div>';
               };
               var dataList = [
-                data.tpaymentmethodvs1[i].fields.ID || "",
-                data.tpaymentmethodvs1[i].fields.PaymentMethodName || "",
+                data.tpaymentmethodlist[i].PayMethodID || "",
+                data.tpaymentmethodlist[i].Name || "",
                 tdIsCreditCard,
                 linestatus,
               ];
 
-              //if (data.temployeelist[i].EmployeeName.replace(/\s/g, "") !== "") {
                 splashArrayPaymentMethodList.push(dataList);
                 templateObject.transactiondatatablerecords.set(splashArrayPaymentMethodList);
-              //}
-
-              //}
             }
 
             if (templateObject.transactiondatatablerecords.get()) {
@@ -3267,25 +3269,27 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
                         sideBarService.getAllTPaymentMethodList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
 
-                        for (let j = 0; j < dataObjectnew.tpaymentmethodvs1.length; j++) {
-                          let mobile = sideBarService.changeDialFormat(dataObjectnew.tpaymentmethodvs1[j].Mobile, dataObjectnew.tpaymentmethodvs1[j].Country);
+                        for (let j = 0; j < dataObjectnew.tpaymentmethodlist.length; j++) {
                           let linestatus = '';
-                          if (dataObjectnew.tpaymentmethodvs1[j].Active == true) {
+                          if (dataObjectnew.tpaymentmethodlist[j].Active == true) {
                               linestatus = "";
-                          } else if (dataObjectnew.tpaymentmethodvs1[j].Active == false) {
+                          } else if (dataObjectnew.tpaymentmethodlist[j].Active == false) {
                               linestatus = "In-Active";
                           };
-
+                          if(dataObjectnew.tpaymentmethodlist[i].IsCreditCard == true){
+                              tdIsCreditCard = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-'+dataObjectnew.tpaymentmethodlist[j].PayMethodID+'" checked><label class="custom-control-label chkBox" for="iscreditcard-'+data.tpaymentmethodlist[j].PayMethodID+'"></label></div>';
+                          }else{
+                              tdIsCreditCard = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-'+dataObjectnew.tpaymentmethodlist[j].PayMethodID+'"><label class="custom-control-label chkBox" for="iscreditcard-'+dataObjectnew.tpaymentmethodlist[j].PayMethodID+'"></label></div>';
+                          };
 
                             var dataListDupp = [
-                              dataObjectnew.tpaymentmethodvs1[j].fields.ID || "",
-                              dataObjectnew.tpaymentmethodvs1[j].fields.PaymentMethodName || "",
+                              dataObjectnew.tpaymentmethodlist[j].ID || "",
+                              dataObjectnew.tpaymentmethodlist[j].Name || "",
                               tdIsCreditCard,
-                              linestatus,
+                              linestatus
                             ];
 
                             splashArrayPaymentMethodList.push(dataListDupp);
-                            //}
                         }
                         let uniqueChars = [...new Set(splashArrayPaymentMethodList)];
                         templateObject.transactiondatatablerecords.set(uniqueChars);
@@ -3310,7 +3314,8 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     },
                     language: { search: "",searchPlaceholder: "Search List..." },
                     "fnInitComplete": function (oSettings) {
-                          if(deleteFilter){
+                        $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalPaymentMethod' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
+                          if(data.Params.Search.replace(/\s/g, "") == ""){
                             $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
                           }else{
                             $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
@@ -3318,9 +3323,9 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                           $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
                     },
                     "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                        //let countTableData = data.Params.Count || 0; //get count from API data
+                        let countTableData = data.Params.Count || 0; //get count from API data
 
-                        //return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                        return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                     }
 
                 }).on('page', function () {
@@ -3413,37 +3418,37 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     tdEOM = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseom-'+data.ttermsvs1list[i].ID+'" checked><label class="custom-control-label chkBox" for="iseom-'+data.ttermsvs1list[i].ID+'"></label></div>';
                 }else{
                     tdEOM = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseom-'+data.ttermsvs1list[i].ID+'"><label class="custom-control-label chkBox" for="iseom-'+data.ttermsvs1list[i].ID+'"></label></div>';
-                };
+                }
                 //Check if EOM Plus is checked
                 if(data.ttermsvs1list[i].IsEOMPlus == true){
                     tdEOMPlus = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+data.ttermsvs1list[i].ID+'" checked><label class="custom-control-label chkBox" for="iseomplus-'+data.ttermsvs1list[i].ID+'"></label></div>';
                 }else{
                     tdEOMPlus = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+data.ttermsvs1list[i].ID+'"><label class="custom-control-label chkBox" for="iseomplus-'+data.ttermsvs1list[i].ID+'"></label></div>';
-                };
+                }
                 //Check if Customer Default is checked // //isSalesdefault
                 if(data.ttermsvs1list[i].isSalesdefault == true){
                     tdCustomerDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-'+data.ttermsvs1list[i].ID+'" checked><label class="custom-control-label chkBox" for="isSalesdefault-'+data.ttermsvs1list[i].ID+'"></label></div>';
                 }else{
                     tdCustomerDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-'+data.ttermsvs1list[i].ID+'"><label class="custom-control-label chkBox" for="isSalesdefault-'+data.ttermsvs1list[i].ID+'"></label></div>';
-                };
+                }
                 //Check if Supplier Default is checked // isPurchasedefault
                 if(data.ttermsvs1list[i].isPurchasedefault == true){
                     tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isPurchasedefault-'+data.ttermsvs1list[i].ID+'" checked><label class="custom-control-label chkBox" for="isPurchasedefault-'+data.ttermsvs1list[i].ID+'"></label></div>';
                 }else{
                     tdSupplierDef= '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+data.ttermsvs1list[i].ID+'"><label class="custom-control-label chkBox" for="isPurchasedefault-'+data.ttermsvs1list[i].ID+'"></label></div>';
-                };
+                }
                 //Check if is progress payment is checked
                 if(data.ttermsvs1list[i].IsProgressPayment == true){
                     tdProgressPayment = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="IsProgressPayment-'+data.ttermsvs1list[i].ID+'" checked><label class="custom-control-label chkBox" for="IsProgressPayment-'+data.ttermsvs1list[i].ID+'"></label></div>';
                 }else{
                     tdProgressPayment = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="IsProgressPayment-'+data.ttermsvs1list[i].ID+'"><label class="custom-control-label chkBox" for="IsProgressPayment-'+data.ttermsvs1list[i].ID+'"></label></div>';
-                };
+                }
                 //Check if Required is checked
                 if(data.ttermsvs1list[i].Required == true){
                     tdRequired = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="Required-'+data.ttermsvs1list[i].ID+'" checked><label class="custom-control-label chkBox" for="Required-'+data.ttermsvs1list[i].ID+'"></label></div>';
                 }else{
                     tdRequired = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="Required-'+data.ttermsvs1list[i].ID+'"><label class="custom-control-label chkBox" for="Required-'+data.ttermsvs1list[i].ID+'"></label></div>';
-                };
+                }
 
                 //Check if ProgressPaymentfirstPayonSaleDate is checked
                 if(data.ttermsvs1list[i].ProgressPaymentfirstPayonSaleDate == true){
@@ -3639,7 +3644,6 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                           sideBarService.getTermsDataList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
 
                           for (let j = 0; j < dataObjectnew.ttermsvs1list.length; j++) {
-                            // let mobile = sideBarService.changeDialFormat(dataObjectnew.ttermsvs1list[j].Mobile, dataObjectnew.ttermsvs1list[j].Country);
                             let linestatus = '';
                             if (dataObjectnew.ttermsvs1list[j].Active == true) {
                                 linestatus = "";
@@ -3652,45 +3656,45 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                                 tdEOM = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseom-'+dataObjectnew.ttermsvs1list[j].ID+'" checked><label class="custom-control-label chkBox" for="iseom-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
                             }else{
                                 tdEOM = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseom-'+dataObjectnew.ttermsvs1list[j].ID+'"><label class="custom-control-label chkBox" for="iseom-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
-                            };
+                            }
                             //Check if EOM Plus is checked
                             if(dataObjectnew.ttermsvs1list[j].IsEOMPlus == true){
                                 tdEOMPlus = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+dataObjectnew.ttermsvs1list[j].ID+'" checked><label class="custom-control-label chkBox" for="iseomplus-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
                             }else{
                                 tdEOMPlus = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+dataObjectnew.ttermsvs1list[j].ID+'"><label class="custom-control-label chkBox" for="iseomplus-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
-                            };
+                            }
                             //Check if Customer Default is checked // //isSalesdefault
                             if(dataObjectnew.ttermsvs1list[j].isSalesdefault == true){
                                 tdCustomerDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-'+dataObjectnew.ttermsvs1list[j].ID+'" checked><label class="custom-control-label chkBox" for="isSalesdefault-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
                             }else{
                                 tdCustomerDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-'+dataObjectnew.ttermsvs1list[j].ID+'"><label class="custom-control-label chkBox" for="isSalesdefault-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
-                            };
+                            }
                             //Check if Supplier Default is checked // isPurchasedefault
                             if(dataObjectnew.ttermsvs1list[j].isPurchasedefault == true){
                                 tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isPurchasedefault-'+dataObjectnew.ttermsvs1list[j].ID+'" checked><label class="custom-control-label chkBox" for="isPurchasedefault-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
                             }else{
                                 tdSupplierDef= '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-'+dataObjectnew.ttermsvs1list[j].ID+'"><label class="custom-control-label chkBox" for="isPurchasedefault-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
-                            };
+                            }
 
                             //Check if is progress payment is checked
                             if(dataObjectnew.ttermsvs1list[j].IsProgressPayment == true){
                                 tdProgressPayment = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="IsProgressPayment-'+dataObjectnew.ttermsvs1list[j].ID+'" checked><label class="custom-control-label chkBox" for="IsProgressPayment-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
                             }else{
                                 tdProgressPayment = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="IsProgressPayment-'+dataObjectnew.ttermsvs1list[j].ID+'"><label class="custom-control-label chkBox" for="IsProgressPayment-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
-                            };
+                            }
                             //Check if Required is checked
                             if(dataObjectnew.ttermsvs1list[j].Required == true){
                                 tdRequired = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="Required-'+dataObjectnew.ttermsvs1list[j].ID+'" checked><label class="custom-control-label chkBox" for="Required-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
                             }else{
                                 tdRequired = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="Required-'+dataObjectnew.ttermsvs1list[j].ID+'"><label class="custom-control-label chkBox" for="Required-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
-                            };
+                            }
 
                             //Check if ProgressPaymentfirstPayonSaleDate is checked
                             if(dataObjectnew.ttermsvs1list[j].ProgressPaymentfirstPayonSaleDate == true){
                                 tdPayOnSale = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="ProgressPaymentfirstPayonSaleDate-'+dataObjectnew.ttermsvs1list[j].ID+'" checked><label class="custom-control-label chkBox" for="ProgressPaymentfirstPayonSaleDate-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
                             }else{
                                 tdPayOnSale = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="ProgressPaymentfirstPayonSaleDate-'+dataObjectnew.ttermsvs1list[j].ID+'"><label class="custom-control-label chkBox" for="ProgressPaymentfirstPayonSaleDate-'+dataObjectnew.ttermsvs1list[j].ID+'"></label></div>';
-                            };
+                            }
 
                               var dataListDupp = [
                                 dataObjectnew.ttermsvs1list[j].ID || "",
@@ -3709,7 +3713,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                                 data.ttermsvs1list[j].ProgressPaymentType || "",
                                 data.ttermsvs1list[j].ProgressPaymentDuration || 0.00,
                                 data.ttermsvs1list[j].ProgressPaymentInstallments || 0.00,
-                                data.ttermsvs1list[j].ProgressPaymentfirstPayonSaleDate || 0.00,
+                                data.ttermsvs1list[j].ProgressPaymentfirstPayonSaleDate || 0.00
                               ];
 
                               splashArrayTermsList.push(dataListDupp);
@@ -3738,6 +3742,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                       },
                       language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function (oSettings) {
+                          $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalTerms' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
                             if(data.Params.Search.replace(/\s/g, "") == ""){
                               $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
                             }else{
@@ -3817,7 +3822,6 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
             for (let i = 0; i < data.tunitofmeasurelist.length; i++) {
               let mobile = "";
-              //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
               let linestatus = '';
               let tdCustomerDef = ''; //isSalesdefault
               let tdSupplierDef = ''; //isPurchasedefault
@@ -3833,20 +3837,20 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                   tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-'+data.tunitofmeasurelist[i].ID+'" checked><label class="custom-control-label chkBox" for="swtSalesDefault-'+data.tunitofmeasurelist[i].ID+'"></label></div>';
               }else{
                   tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-'+data.tunitofmeasurelist[i].ID+'"><label class="custom-control-label chkBox" for="swtSalesDefault-'+data.tunitofmeasurelist[i].ID+'"></label></div>';
-              };
+              }
               //Check if Purchase default is checked
               if(data.tunitofmeasurelist[i].PurchasesDefault == true){
                   tdPurchaseDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+data.tunitofmeasurelist[i].ID+'" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+data.tunitofmeasurelist[i].ID+'"></label></div>';
               }else{
                   tdPurchaseDef= '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+data.tunitofmeasurelist[i].ID+'"><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+data.tunitofmeasurelist[i].ID+'"></label></div>';
-              };
+              }
 
               //Check if UseforAutoSplitQtyinSales is checked
               if(data.tunitofmeasurelist[i].UseforAutoSplitQtyinSales == true){
                   tdUseforAutoSplitQtyinSales = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+data.tunitofmeasurelist[i].ID+'" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+data.tunitofmeasurelist[i].ID+'"></label></div>';
               }else{
                   tdUseforAutoSplitQtyinSales= '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+data.tunitofmeasurelist[i].ID+'"><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+data.tunitofmeasurelist[i].ID+'"></label></div>';
-              };
+              }
 
               var dataList = [
                   data.tunitofmeasurelist[i].ID || '',
@@ -3866,7 +3870,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                   data.tunitofmeasurelist[i].Length || 0,
                   data.tunitofmeasurelist[i].Volume || 0,
                   linestatus,
-                  tdUseforAutoSplitQtyinSales,
+                  tdUseforAutoSplitQtyinSales
               ];
                 splashArrayUOMList.push(dataList);
                 templateObject.transactiondatatablerecords.set(splashArrayUOMList);
@@ -4032,33 +4036,32 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                         sideBarService.getUOMDataList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
 
                         for (let j = 0; j < dataObjectnew.tunitofmeasurelist.length; j++) {
-                          let mobile = sideBarService.changeDialFormat(dataObjectnew.tunitofmeasurelist[j].Mobile, dataObjectnew.tunitofmeasurelist[j].Country);
 
                           if (dataObjectnew.tunitofmeasurelist[j].Active == true) {
                               linestatus = "";
                           } else if (dataObjectnew.tunitofmeasurelist[j].Active == false) {
                               linestatus = "In-Active";
-                          };
+                          }
 
                           //Check if Sales defaultis checked
                           if(dataObjectnew.tunitofmeasurelist[j].SalesDefault == true){
                               tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'" checked><label class="custom-control-label chkBox" for="swtSalesDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'"></label></div>';
                           }else{
                               tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'"><label class="custom-control-label chkBox" for="swtSalesDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'"></label></div>';
-                          };
+                          }
                           //Check if Purchase default is checked
                           if(dataObjectnew.tunitofmeasurelist[j].PurchasesDefault == true){
                               tdPurchaseDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'"></label></div>';
                           }else{
                               tdPurchaseDef= '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'"><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'"></label></div>';
-                          };
+                          }
 
                           //Check if UseforAutoSplitQtyinSales is checked
                           if(dataObjectnew.tunitofmeasurelist[j].UseforAutoSplitQtyinSales == true){
                               tdUseforAutoSplitQtyinSales = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'"></label></div>';
                           }else{
                               tdUseforAutoSplitQtyinSales= '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'"><label class="custom-control-label chkBox" for="swtPurchaseDefault-'+dataObjectnew.tunitofmeasurelist[j].ID+'"></label></div>';
-                          };
+                          }
 
                             var dataListDupp = [
                               dataObjectnew.tunitofmeasurelist[j].ID || '',
@@ -4078,7 +4081,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                               dataObjectnew.tunitofmeasurelist[j].Length || 0,
                               dataObjectnew.tunitofmeasurelist[j].Volume || 0,
                               linestatus,
-                              tdUseforAutoSplitQtyinSales,
+                              tdUseforAutoSplitQtyinSales
                             ];
 
                             splashArrayUOMList.push(dataListDupp);
@@ -4107,6 +4110,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     },
                     language: { search: "",searchPlaceholder: "Search List..." },
                     "fnInitComplete": function (oSettings) {
+                        $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newUomModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
                           if(data.Params.Search.replace(/\s/g, "") == ""){
                             $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
                           }else{
@@ -4400,31 +4404,36 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             let lineItems = [];
             let lineItemObj = {};
             let deleteFilter = false;
-            // if(data.Params.Search.replace(/\s/g, "") == ""){
-            //   deleteFilter = true;
-            // }else{
-            //   deleteFilter = false;
-            // };
+            if(data.Params.Search.replace(/\s/g, "") == ""){
+              deleteFilter = true;
+            }else{
+              deleteFilter = false;
+            };
 
-            for (let i = 0; i < data.tcurrency.length; i++) {
+            for (let i = 0; i < data.tcurrencylist.length; i++) {
               let linestatus = '';
-              if (data.tcurrency[i].fields.Active == true) {
+              if (data.tcurrencylist[i].Active == true) {
                   linestatus = "";
-              } else if (data.tcurrency[i].fields.Active == false) {
+              } else if (data.tcurrencylist[i].Active == false) {
                   linestatus = "In-Active";
-              };
+              }
 
               var dataList = [
-                data.tcurrency[i].fields.ID|| "",
-                data.tcurrency[i].fields.Code || "",
-                data.tcurrency[i].fields.Currency || "",
-                data.tcurrency[i].fields.CurrencySymbol || "",
-                data.tcurrency[i].fields.BuyRate || 0.00,
-                data.tcurrency[i].fields.SellRate || 0.00,
-                data.tcurrency[i].fields.Country || "",
-                data.tcurrency[i].fields.RateLastModified || "",
-                data.tcurrency[i].fields.CurrencyDesc || "",
-                linestatus
+                data.tcurrencylist[i].CurrencyID|| "",
+                data.tcurrencylist[i].Code || "",
+                data.tcurrencylist[i].Currency || "",
+                data.tcurrencylist[i].CurrencySymbol || "",
+                data.tcurrencylist[i].BuyRate || 0.00,
+                data.tcurrencylist[i].SellRate || 0.00,
+                data.tcurrencylist[i].Country || "",
+                data.tcurrencylist[i].RateLastModified || "",
+                data.tcurrencylist[i].CurrencyDesc || "",
+                linestatus,
+                data.tcurrencylist[i].FixedRate || 0.00,
+                data.tcurrencylist[i].UpperVariation || 0.00,
+                data.tcurrencylist[i].LowerVariation || 0.00,
+                data.tcurrencylist[i].TriggerPriceVariation || 0.00,
+                data.tcurrencylist[i].CountryID || ""
               ];
 
                 splashArrayCurrencyList.push(dataList);
@@ -4462,7 +4471,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                         },
                         {
                           targets: 3,
-                          className: "colSymbol",
+                          className: "colCurrencySymbol",
                           width: "100px",
                         },
                         {
@@ -4492,6 +4501,31 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                         {
                           targets: 9,
                           className: "colStatus",
+                          width: "100px",
+                        },
+                        {
+                          targets: 10,
+                          className: "colFixedRate hiddenColumn",
+                          width: "100px",
+                        },
+                        {
+                          targets: 11,
+                          className: "colUpperVariation hiddenColumn",
+                          width: "150px",
+                        },
+                        {
+                          targets: 12,
+                          className: "colLowerVariation hiddenColumn",
+                          width: "150px",
+                        },
+                        {
+                          targets: 13,
+                          className: "colTriggerPriceVariation hiddenColumn",
+                          width: "250px",
+                        },
+                        {
+                          targets: 14,
+                          className: "colCountryID hiddenColumn",
                           width: "100px",
                         }
                     ],
@@ -4561,24 +4595,30 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                       let dataLenght = oSettings._iDisplayLength;
                       let customerSearch = $('#'+currenttablename+'_filter input').val();
 
-                        sideBarService.getCurrencyListData(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
-                        for (let j = 0; j < dataObjectnew.tcurrency.length; j++) {
+                        sideBarService.getCurrencyDataList(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+                        for (let j = 0; j < dataObjectnew.tcurrencylist.length; j++) {
                           let linestatus = '';
-                          if (dataObjectnew.tcurrency[j].fields.Active == true) {
+                          if (dataObjectnew.tcurrencylist[j].Active == true) {
                               linestatus = "";
-                          } else if (dataObjectnew.tcurrency[j].fields.Active == false) {
+                          } else if (dataObjectnew.tcurrencylist[j].Active == false) {
                               linestatus = "In-Active";
-                          };
+                          }
+
                             var dataListDupp = [
-                              dataObjectnew.tcurrency[j].fields.Code || "",
-                              dataObjectnew.tcurrency[j].fields.Currency || "",
-                              dataObjectnew.tcurrency[j].fields.CurrencySymbol || "",
-                              dataObjectnew.tcurrency[j].fields.BuyRate || 0.00,
-                              dataObjectnew.tcurrency[j].fields.SellRate || 0.00,
-                              dataObjectnew.tcurrency[j].fields.Country || "",
-                              dataObjectnew.tcurrency[j].fields.RateLastModified || "",
-                              dataObjectnew.tcurrency[j].fields.CurrencyDesc || "",
-                              linestatus
+                              dataObjectnew.tcurrencylist[j].Code || "",
+                              dataObjectnew.tcurrencylist[j].Currency || "",
+                              dataObjectnew.tcurrencylist[j].CurrencySymbol || "",
+                              dataObjectnew.tcurrencylist[j].BuyRate || 0.00,
+                              dataObjectnew.tcurrencylist[j].SellRate || 0.00,
+                              dataObjectnew.tcurrencylist[j].Country || "",
+                              dataObjectnew.tcurrencylist[j].RateLastModified || "",
+                              dataObjectnew.tcurrencylist[j].CurrencyDesc || "",
+                              linestatus,
+                              data.tcurrencylist[j].FixedRate || 0.00,
+                              data.tcurrencylist[j].UpperVariation || 0.00,
+                              data.tcurrencylist[j].LowerVariation || 0.00,
+                              data.tcurrencylist[j].TriggerPriceVariation || 0.00,
+                              data.tcurrencylist[j].CountryID || ""
                             ];
 
                             splashArrayCurrencyList.push(dataListDupp);
@@ -4606,7 +4646,8 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     },
                     language: { search: "",searchPlaceholder: "Search List..." },
                     "fnInitComplete": function (oSettings) {
-                          if(deleteFilter){
+                        $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
+                          if(data.Params.Search.replace(/\s/g, "") == ""){
                             $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
                           }else{
                             $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
@@ -4614,9 +4655,9 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                           $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
                     },
                     "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                        // let countTableData = data.Params.Count || 0; //get count from API data
-                        //
-                        // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                        let countTableData = data.Params.Count || 0; //get count from API data
+
+                        return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                     }
 
                 }).on('page', function () {

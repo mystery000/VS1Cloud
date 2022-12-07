@@ -3089,7 +3089,7 @@ export class SideBarService extends BaseService {
   getCurrencies() {
     let options = {
       ListType: "Detail",
-      select: "[Active]=true",
+      Search: "Active = true",
     };
     return this.getList(this.ERPObjects.TCurrency, options);
   }
@@ -3128,7 +3128,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TCurrency, options);
+    return this.getList(this.ERPObjects.TCurrencyList, options);
   }
 
   getAccountTypesToAddNew() {
@@ -3518,14 +3518,14 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"Description asc"',
-            select: "[Active]=true",
+            orderby: '"Name asc"',
+            Search: "Active = true",
         };
       } else {
         options = {
-          orderby: '"Description asc"',
+          orderby: '"Name asc"',
           ListType: "Detail",
-          select: "[Active]=true",
+          Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -3534,11 +3534,11 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"Description asc"',
+            orderby: '"Name asc"',
         };
       } else {
         options = {
-            orderby: '"Description asc"',
+            orderby: '"Name asc"',
             ListType: "Detail",
             LimitCount: parseInt(limitcount),
             LimitFrom: parseInt(limitfrom),
@@ -3546,7 +3546,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TPaymentMethodVS1, options);
+    return this.getList(this.ERPObjects.TPaymentMethodList, options);
   }
 
   getPaymentMethodVS1() {

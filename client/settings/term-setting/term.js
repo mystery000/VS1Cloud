@@ -167,7 +167,7 @@ Template.termsettings.events({
     //$('.fullScreenSpin').css('display', 'inline-block');
     let termsId = $('#edtTermsID').val();
     let objDetails = {
-        type: "TTerms",
+        type: "TTermsVS1",
         fields: {
             Id: parseInt(termsId),
             Active: false
@@ -176,7 +176,7 @@ Template.termsettings.events({
 
     taxRateService.saveTerms(objDetails).then(function (objDetails) {
       sideBarService.getTermsVS1().then(function(dataReload) {
-            addVS1Data('TTerms',JSON.stringify(dataReload)).then(function (datareturn) {
+            addVS1Data('TTermsVS1List',JSON.stringify(dataReload)).then(function (datareturn) {
               Meteor._reload.reload();
             }).catch(function (err) {
               Meteor._reload.reload();
@@ -251,7 +251,7 @@ Template.termsettings.events({
           }
           termsID = data.tterms[0].Id;
           let objDetails = {
-             type: "TTermsVS1List",
+             type: "TTermsVS1",
              fields: {
                  ID: parseInt(termsID),
                  TermsName: termsName,
@@ -354,7 +354,7 @@ Template.termsettings.events({
       taxRateService.checkTermByName(termsName).then(function (data) {
         termsID = data.tterms[0].Id;
         objDetails = {
-           type: "TTermsVS1List",
+           type: "TTermsVS1",
            fields: {
                ID: parseInt(termsID),
                TermsName: termsName,
@@ -397,7 +397,7 @@ Template.termsettings.events({
        });
       }).catch(function (err) {
         objDetails = {
-           type: "TTermsVS1List",
+           type: "TTermsVS1",
            fields: {
                TermsName: termsName,
                Description: description,
@@ -439,7 +439,7 @@ Template.termsettings.events({
 
    }else{
      objDetails = {
-        type: "TTermsVS1List",
+        type: "TTermsVS1",
         fields: {
             ID: parseInt(termsID),
             TermsName: termsName,
@@ -653,7 +653,7 @@ Template.termsettings.events({
                             isPurchasedefault = results.data[i + 1][5] !== undefined ? results.data[i + 1][5] : false;
                             isSalesdefault = results.data[i + 1][6] !== undefined ? results.data[i + 1][6] : false;
                             objDetails = {
-                                type: "TTermsVS1List",
+                                type: "TTermsVS1",
                                 fields: {
                                     TermsName: results.data[i + 1][0],
                                     Days: days,
