@@ -958,13 +958,19 @@ Template.addAccountModal.events({
             const cancel = document.querySelector('.btn-apca-cancel')
         
             employee.addEventListener('click', () => {
-                FlowRouter.go('/employeescard');
                 swal.close();
+                $("#addNewAccount").modal("toggle");
+                setTimeout(() => {
+                  FlowRouter.go('/employeelist');
+                }, 150);
             })
         
             supplier.addEventListener('click', () => {
-                FlowRouter.go('/supplierscard');
                 swal.close();
+                $("#addNewAccount").modal("toggle");
+                setTimeout(() => {
+                  FlowRouter.go('/supplierlist');
+                }, 150);
             })
         
             cancel.addEventListener('click', () => {
