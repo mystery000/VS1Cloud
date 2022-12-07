@@ -64,9 +64,9 @@ export class ProductService extends BaseService {
     getGlobalSearchCRM(searchName) {//CRM-123
         //TProjectList?select=[Id]=1
         let options = {
-            select: "[ID]='" + searchName,
+            select: "[ID]='" + searchName + "' AND [Active]=true",
         };
-        return this.getList(this.ERPObjects.TProjectList, options);
+        return this.getList(this.ERPObjects.TProjectTasksList, options);
     }
     getGlobalSearchDeposit(searchName) {//DEP-123
         let options = {
@@ -89,10 +89,11 @@ export class ProductService extends BaseService {
     }
     getGlobalSearchTasks(searchName) {//TSK-123
         //TTasks?select=[id]=1
+        //TProjectTasksList
         let options = {
-            select: "[ID]='" + searchName,
+            select: "[ID]='" + searchName + "' AND [Active]=true",
         };
-        return this.getList(this.ERPObjects.TTasks, options);
+        return this.getList(this.ERPObjects.TProjectTasksList, options);
     }
     getGlobalSearchWorkOrders(searchName) {//WO-123
         //TWorkOrderList?select=[PPid]=2033

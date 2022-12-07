@@ -82,7 +82,7 @@
                     }
 
                 </style>
-                {{> customerscard isModal=true record_modal=record}}
+                {{> customerscard isModal=true record=customerRecord isJob=isJob}}
                 <!-- <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                     <div class="col">
                         <div class="row">
@@ -644,7 +644,7 @@
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success btnSaveCustPOP" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button>
+                <!-- <button class="btn btn-success btnSaveCustPOP" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button> -->
                 <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
             </div>
         </div>

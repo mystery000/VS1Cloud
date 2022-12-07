@@ -628,7 +628,14 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-3">
-                                                                                <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Contractor 1099</label>
+                                                                                <div class="row justify-content-left desktopButtons" style=" margin-left:0px;">
+                                                                                    {{#if equals record.scountry "Unite States"}}
+                                                                                        {{> toggle_button className="chkGlobalSettings" id="contactor-1099" width="131px" for="choosetemplate" displayName="Contractor 1099"}}
+                                                                                    {{else}}
+                                                                                        <!-- {{> toggle_button className="chkGlobalSettings" id="contactor-1099" width="131px" for="choosetemplate" displayName="Contractor 1099"}} -->
+                                                                                    {{/if}}
+                                                                                </div>
+                                                                                <!-- <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Contractor 1099</label>
                                                                                     <div class="custom-control custom-checkbox chkBox" style="text-align: center;">
                                                                                         {{#if equals record.isContractor true}}
                                                                                             <input class="custom-control-input chkBox" type="checkbox" id="isformcontractor" name="isformcontractor" autocomplete="off" checked><label class="custom-control-label chkBox" for="isformcontractor" style="height: calc(1.5em + 0.75rem );"></label>
@@ -636,7 +643,7 @@
                                                                                             <input class="custom-control-input chkBox" type="checkbox" id="isformcontractor" name="isformcontractor" autocomplete="off"><label class="custom-control-label chkBox" for="isformcontractor" style="height: calc(1.5em + 0.75rem );"></label>
                                                                                         {{/if}}
                                                                                     </div>
-                                                                                </div>
+                                                                                </div> -->
                                                                             </div>
                                                                         </div>
                                                                     </div>

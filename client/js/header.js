@@ -1047,12 +1047,12 @@ Template.header.onRendered(function () {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] === Barcode_Prefix_CRM) {
-                productService.getGlobalSearchCRM(segs[1]).then(function (data) {
+                productService.getGlobalSearchCRM(segs[1]).then(function (data) {//
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
                     dataSelectID = segs[1] || '';
-                    if (data.tcreditlist.length > 0) {
-                        window.open('/crmoverview?tabview=projects?id=' + dataSelectID, '_self');
+                    if (data.tprojecttaskslist.length > 0) {
+                        window.open('/crmoverview?id=' + dataSelectID, '_self');
                     } else {
                         swal('No record with that exact number "' + barcode + '"', '', 'warning');
                         $('.fullScreenSpin').css('display', 'none');
@@ -1093,7 +1093,7 @@ Template.header.onRendered(function () {
                 });
 
             } else if (segs[0] === Barcode_Prefix_ReceiptClaim) {
-                productService.getGlobalSearchReceiptClaims(segs[1]).then(function (data) {
+                productService.getGlobalSearchReceiptClaims(segs[1]).then(function (data) {// DONE Vladyslav
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
                     dataSelectID = segs[1] || '';
@@ -1112,8 +1112,8 @@ Template.header.onRendered(function () {
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
                     dataSelectID = segs[1] || '';
-                    if (data.ttasks.length > 0) {
-                        window.open('/crmoverview?tabview=tasks?id=' + dataSelectID, '_self');
+                    if (data.tprojecttaskslist.length > 0) {
+                        window.open('/crmoverview?id=' + dataSelectID, '_self');
                     } else {
                         swal('No record with that exact number "' + barcode + '"', '', 'warning');
                         $('.fullScreenSpin').css('display', 'none');

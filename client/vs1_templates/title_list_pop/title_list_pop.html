@@ -6,7 +6,8 @@
                         aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" style="width: 100%; display:none;" id="selectTitleLineID" name="selectTitleLineID"
+                {{> non_transactional_list tablename="tblTitleList"}}
+                <!-- <input type="hidden" style="width: 100%; display:none;" id="selectTitleLineID" name="selectTitleLineID"
                     readonly>
                 <div class="card-body p-1 rounded">
                     <div class="table-responsive">
@@ -91,7 +92,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="modal-footer">
                 <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>

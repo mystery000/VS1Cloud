@@ -326,7 +326,14 @@ Template.non_transactional_list.onRendered(function() {
               { index: 8, label: 'Description', class: 'colDescription', active: true, display: true, width: ""},
               { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
           ];
+          }else if(currenttablename === "tblTitleList"){
+            reset_data = [
+              { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: true,  width: "10"},
+              { index: 0, label: 'Title', class: 'colTitleName', active: true, display: true,  width: "200"},
+              { index: 1, label: 'Active', class: 'chkBox', active: true, display: true, width: "20"},
+          ];
           }
+
         templateObject.reset_data.set(reset_data);
       }
       templateObject.init_reset_data();
@@ -4395,6 +4402,9 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
           });
         });
       }
+
+    
+
       templateObject.displayCurrencyListData = async function (data) {
             var splashArrayCurrencyList = new Array();
             let lineItems = [];
@@ -4648,6 +4658,155 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
           }
 
+          templateObject.getTitleListData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
+            let data = {
+            }
+            templateObject.displayTitleListData(data); //Call this function to display data on the table
+          }
+
+          templateObject.displayTitleListData = async function (data){
+            var splashArrayClientTypeList = [
+              [1,"Mr",'<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>',],
+              [2,"Mrs",'<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
+              [3,"MIss",'<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
+              [4,"Ms",'<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
+            ];
+            let deleteFilter = false;
+            setTimeout(function () {
+                //$('#'+currenttablename).removeClass('hiddenColumn');
+                $('#'+currenttablename).DataTable({
+                    data: splashArrayClientTypeList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
+                        {
+                        targets: 0,
+                        className: "colClientTypeID colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function (td, cellData, rowData, row, col) {
+                          $(td).closest("tr").attr("id", rowData[0]);
+                        }},
+                        {
+                          targets: 1,
+                          className: "colTypeName",
+                          width: "200px",
+                        },
+                        {
+                          targets: 2,
+                          className: "chkBox pointer",
+                          width: "20px",
+                        },
+                    ],
+                    buttons: [
+                        {
+                            extend: 'csvHtml5',
+                            text: '',
+                            download: 'open',
+                            className: "btntabletocsv hiddenColumn",
+                            filename: "Customer Type Settings",
+                            orientation:'portrait',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },{
+                            extend: 'print',
+                            download: 'open',
+                            className: "btntabletopdf hiddenColumn",
+                            text: '',
+                            title: 'Customer Type Settings',
+                            filename: "Customer Type Settings",
+                            exportOptions: {
+                                columns: ':visible',
+                                stripHtml: false
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: '',
+                            download: 'open',
+                            className: "btntabletoexcel hiddenColumn",
+                            filename: "Customer Type Settings",
+                            orientation:'portrait',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+    
+                        }],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[1, "asc"]],
+                    action: function () {
+                        $('#'+currenttablename).DataTable().ajax.reload();
+                    },
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#'+currenttablename+'_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+    
+                            }
+                        } else {
+    
+                        }
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+    
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                      $('.fullScreenSpin').css('display', 'inline-block');
+                      });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                    },
+                    language: { search: "",searchPlaceholder: "Search List..." },
+                    "fnInitComplete": function (oSettings) {
+                          if(deleteFilter){
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                          }else{
+                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                          }
+                          $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+                    },
+                    "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                        // let countTableData = data.Params.Count || 0; //get count from API data
+                        //
+                        // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                    }
+    
+                }).on('page', function () {
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                }).on('column-reorder', function () {
+    
+                }).on('length.dt', function (e, settings, len) {
+    
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  let dataLenght = settings._iDisplayLength;
+                  if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                      $(".fullScreenSpin").css("display", "none");
+                    } else {
+                      $(".fullScreenSpin").css("display", "none");
+                    }
+                  } else {
+                    $(".fullScreenSpin").css("display", "none");
+                  }
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
+                $(".fullScreenSpin").css("display", "none");
+            }, 0);
+    
+            $('div.dataTables_filter input').addClass('form-control form-control-sm');
+          }
+
         //Check URL to make right call.
         if(currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist"){
             templateObject.getContactOverviewData();
@@ -4675,6 +4834,8 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             templateObject.getLeadListData();
         }else if(currenttablename == "tblCurrencyList") {
             templateObject.getCurrencyListData();
+        }else if(currenttablename === "tblTitleList"){
+          templateObject.getTitleListData();
         }
       tableResize();
     });
@@ -4724,6 +4885,8 @@ Template.non_transactional_list.events({
     }else if(currenttablename == "tblCurrencyList"){
       await clearData('TCurrency');
       templateObject.getCurrencyListData(true);
+    }else if(currenttablename === "tblTitleList"){
+      templateObject.getTitleListData(true);
     }
 
     },
@@ -4775,6 +4938,8 @@ Template.non_transactional_list.events({
     }else if(currenttablename == "tblCurrencyList"){
       await clearData('TCurrency');
       templateObject.getCurrencyListData(false);
+    }else if(currenttablename === "tblTitleList"){
+      templateObject.getTitleListData(false);
     }
 
     },
