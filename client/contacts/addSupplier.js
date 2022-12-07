@@ -25,6 +25,24 @@ Template.supplierscard.onCreated(function() {
     templateObject.defaultpurchaseterm = new ReactiveVar();
     templateObject.isSameAddress = new ReactiveVar();
     templateObject.isSameAddress.set(false);
+
+    templateObject.tableHeaderItems = new ReactiveVar([
+        {classString:"th colSortDate hiddenColumn", itemStyle:"",itemLabel:"id"},
+        {classString:"th colOrderDate", itemStyle:"",itemLabel:"Order Date"},
+        {classString:"th colPurchaseNo", itemStyle:"",itemLabel:"P/O No."},
+        {classString:"th colSupplier", itemStyle:"",itemLabel:"Supplier"},
+        {classString:"th colAmountEx", itemStyle:"",itemLabel:"Amount (Ex)"},
+        {classString:"th colTax", itemStyle:"",itemLabel:"Tax"},
+        {classString:"th colAmount", itemStyle:"",itemLabel:"Amount"},
+        {classString:"th colPaid", itemStyle:"",itemLabel:"Paid"},
+        {classString:"th colBalanceOutstanding", itemStyle:"",itemLabel:"Balance Outstanding"},
+        {classString:"th colStatus", itemStyle:"",itemLabel:"Type"},
+        {classString:"th colPurchaseCustField1 hiddenColumn", itemStyle:"",itemLabel:"Custom Field 1"},
+        {classString:"th colPurchaseCustField2 hiddenColumn", itemStyle:"",itemLabel:"Custom Field 2"},
+        {classString:"th colEmployee hiddenColumn", itemStyle:"",itemLabel:"Employee"},
+        {classString:"th colComments", itemStyle:"",itemLabel:"Comments"}
+    ])
+
     /* Attachments */
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
@@ -2752,6 +2770,9 @@ Template.supplierscard.helpers({
     },
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
+    },
+    tableHeaderItems:() => {
+        return Template.instance().tableHeaderItems.get();
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblSalesOverview' });

@@ -14,6 +14,7 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import { saveCurrencyHistory } from "../../packages/currency/CurrencyWidget";
+import { EftService } from "../../eft/eft-service"
 
 
 let sideBarService = new SideBarService();
@@ -97,7 +98,92 @@ Template.supplierpaymentcard.onRendered(() => {
     yearRange: "-90:+10",
   });
 
+  templateObject.saveAddToEft = function (data) { 
+    let paymentAmt = $("#edtPaymentAmount").val(); 
 
+    let bankAccount = $("#edtSelectBankAccountName").val() || "Bank";
+    let reference = $("#edtReference").val(); 
+
+    let colAccountID = $("#colAccountID").val(); 
+    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    let employeeName = Session.get("mySessionEmployee");
+
+    let lines = templateObject.outstandingExpenses.get();
+    let eftService = new EftService();
+
+    let descRecord = {
+      type: "TABADescriptiveRecord",
+      fields: {
+        "AccountID": data.ID, 
+        "DirectEntryUserID": employeeID.toString(),
+        "DirectEntryUserName": employeeName, 
+        // "TransactionDescription": "Payroll",
+        "UserBankName": bankAccount
+      }
+    }
+    eftService.saveTABADescriptiveRecord(descRecord).then(function (data) {
+    })
+    .catch(function (err) {
+    });
+
+    for (let index = 0; index < lines.length; index++) {
+      const line = lines[index];
+      let detailRecord = {
+        type: "TABADetailRecord",
+        fields: {
+          "AccountID": data.ID,
+          "AccountName": bankAccount,
+          "Amount": parseFloat(line.paymentAmount.replace(/[^0-9.-]+/g, "")) || 0, 
+          "BSB": data.BSB,
+          "CreditDebitAccountNumber": line.receiptNo, 
+          "LodgementReferences": reference,  
+          "TransactionCode": "53",
+          "TransCodeDesc": "Pay",
+          "TransID": line.awaitingId,
+          "TransType": line.type,
+          "UsersAccountNumber": "",
+          "UsersBSB": ""
+        }
+      }
+      eftService.saveTABADetailRecord(detailRecord).then(function (data) {
+      })
+      .catch(function (err) {
+      });
+    }
+  }
+
+  templateObject.prepareSaveAddToEft = function (accountDataName) {
+    let accountService = new AccountService();
+
+    getVS1Data("TAccountVS1")
+    .then(function (dataObject) {
+      if (dataObject.length == 0) {
+        accountService
+          .getOneAccountByName(accountDataName)
+          .then(function (data) {
+            templateObject.saveAddToEft(data.taccountvs1[0].fields);
+          })
+          .catch(function (err) {
+          });
+      } else {
+        let data = JSON.parse(dataObject[0].data); 
+        let filterdata = data.taccountvs1.filter(item => item.fields.AccountName === accountDataName);
+        if (filterdata.length) {
+          templateObject.saveAddToEft(filterdata[0].fields);
+        } else {
+          accountService
+            .getOneAccountByName(accountDataName)
+            .then(function (data) {
+              templateObject.saveAddToEft(data.taccountvs1[0].fields);
+            })
+            .catch(function (err) {
+            });
+        }
+      }
+    })
+    .catch(function (err) {
+    });
+  }
   // /**
   //  * Lets load the default currency
   //  */
@@ -2090,21 +2176,16 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#paymentMethodModal").modal("toggle");
   });
 
-  $(document).on("click", "#tblAccount tbody tr", function (e) {
-    //$(".colProductName").removeClass('boldtablealertsborder');
-    let selectLineID = $("#selectLineID").val();
-    var table = $(this);
-    let utilityService = new UtilityService();
-    let $tblrows = $("#tblStockAdjustmentLine tbody tr");
+  $(document).on("click", "#tblAccount tbody tr", function (e) { 
+    var table = $(this); 
 
+    let colAccountID = table.find(".colAccountID").text();
     let accountname = table.find(".productName").text();
     $("#accountListModal").modal("toggle");
+
     $("#edtSelectBankAccountName").val(accountname);
     $("#sltBankAccountName").val(accountname);
-    
-    if ($tblrows.find(".lineProductName").val() == "") {
-      //$tblrows.find(".colProductName").addClass('boldtablealertsborder');
-    }
+    $("#colAccountID").val(colAccountID); 
 
     $("#tblAccount_filter .form-control-sm").val("");
     setTimeout(function () {
@@ -3573,7 +3654,6 @@ Template.supplierpaymentcard.onRendered(() => {
                 $("#sltDepartment").val(data.fields.DeptClassName);
                 $("#sltPaymentMethod").val(data.fields.PaymentMethodName);
                 $("#edtSupplierName").val(data.fields.CompanyName);
-
                 $("#eftUserName").val(data.fields.CompanyName);
                 $("#eftNumberUser").val(data.fields.ID);
                 $("#eftProcessingDate").val(record.paymentDate);
@@ -8474,6 +8554,8 @@ Template.supplierpaymentcard.events({
   "click .btnSave": (e, ui) => {
   playSaveAudio();
   let templateObject = Template.instance();
+
+
   let paymentService = new PaymentsService();
   setTimeout(function(){
     LoadingOverlay.show();
@@ -8483,6 +8565,7 @@ Template.supplierpaymentcard.events({
     let paymentDate = paymentDateTime.getFullYear() + "-" + (paymentDateTime.getMonth() + 1) + "-" + paymentDateTime.getDate();
 
     let bankAccount = $("#edtSelectBankAccountName").val() || "Bank";
+
     let reference = $("#edtReference").val();
     let payMethod = $("#sltPaymentMethod").val();
     let notes = $("#txaNotes").val();
@@ -12033,6 +12116,10 @@ Template.supplierpaymentcard.events({
           LoadingOverlay.hide();
         });
     }
+    if ($("#chkEFT").is(":checked")) {
+      templateObject.prepareSaveAddToEft(bankAccount);
+    }
+
     LoadingOverlay.hide();
   }, delayTimeAfterSound);
   },
@@ -13140,13 +13227,13 @@ Template.supplierpaymentcard.events({
   // },
 
 
-  "click #chkEFT": function (event) {
-    if ($("#chkEFT").is(":checked")) {
-      $("#eftExportModal").modal("show");
-    } else {
-      $("#eftExportModal").modal("hide");
-    }
-  },
+  // "click #chkEFT": function (event) {
+  //   if ($("#chkEFT").is(":checked")) {
+  //     $("#eftExportModal").modal("show");
+  //   } else {
+  //     $("#eftExportModal").modal("hide");
+  //   }
+  // },
 });
 
 
