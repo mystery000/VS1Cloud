@@ -959,10 +959,18 @@ Template.addAccountModal.events({
         
             employee.addEventListener('click', () => {
                 swal.close();
+                $("#addNewAccount").modal("toggle");
+                setTimeout(() => {
+                  FlowRouter.go('/employeelist');
+                }, 150);
             })
         
             supplier.addEventListener('click', () => {
                 swal.close();
+                $("#addNewAccount").modal("toggle");
+                setTimeout(() => {
+                  FlowRouter.go('/supplierlist');
+                }, 150);
             })
         
             cancel.addEventListener('click', () => {

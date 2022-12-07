@@ -148,7 +148,6 @@ Template.basreturn.onRendered(function() {
     accountService
         .getBASReturnDetail()
         .then(function(data) {
-            console.log("===========", data);
         })
         .catch(function(err) {
             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -159,7 +158,6 @@ Template.basreturn.onRendered(function() {
     accountService
         .getBASReturnLines()
         .then(function(data) {
-            console.log("===========", data);
         })
         .catch(function(err) {
             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -2753,7 +2751,6 @@ Template.basreturn.onRendered(function() {
                             })
                         } else {
                             let data = JSON.parse(dataObject[0].data);
-                            console.log("data=", data);
                             for (let i = 0; i < data.tbasreturn.length; i++) {
                                 if (getid[1] == data.tbasreturn[i].fields.ID) {
                                     $("#description").val(data.tbasreturn[i].fields.BasSheetDesc);
@@ -4176,7 +4173,6 @@ Template.basreturn.events({
                         for (var i = 0; i < accountsList.length; i++) {
                             if ($("#f-1-" + accountsList[i].id).prop('checked') == true) {
                                 accounts1 = (accounts1 == "") ? accountsList[i].accountname : accounts1 + "," + accountsList[i].accountname;
-                                console.log(accounts1);
                             }
                             if ($("#f-2-" + accountsList[i].id).prop('checked') == true) {
                                 accounts2 = (accounts2 == "") ? accountsList[i].accountname : accounts2 + "," + accountsList[i].accountname;
@@ -5205,8 +5201,6 @@ Template.basreturn.events({
                     if (templateObject.getId.get()) {
                         jsonObj.fields.ID = parseInt(templateObject.getId.get());
                     }
-
-                    console.log("jsonObj=", jsonObj);
 
                     reportService.saveBASReturn(jsonObj).then(function(res) {
                         reportService.getAllBASReturn().then(function(data) {

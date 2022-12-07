@@ -42,7 +42,7 @@ var times = 0;
 var template_list = [
     "Customer Payments",
 ];
-var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit", "Cheque"];
+var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit"];
 
 const defaultCurrencyCode = CountryAbbr;
 
@@ -445,13 +445,13 @@ Template.paymentcard.onRendered(() => {
                 supplier_name: customer,
                 supplier_addr: "",
                 fields: {
-                    "Date": ["20", "left"],
-                    "Type": ["20", "left"],
-                    "No.": ["10", "left"],
-                    "Amount": ["10", "right"],
-                    "Due": ["10", "right"],
-                    "Paid": ["10", "right"],
-                    "Outstanding": ["20", "right"]
+                    "Date": ["15", "left"],
+                    "Type": ["15", "left"],
+                    "No": ["10", "left"],
+                    "Amount": ["15", "right"],
+                    "Due": ["15", "right"],
+                    "Paid": ["15", "right"],
+                    "Outstanding": ["15", "right"]
                 },
                 subtotal: "",
                 gst: "",
@@ -496,13 +496,13 @@ Template.paymentcard.onRendered(() => {
                 supplier_name: customer,
                 supplier_addr: "",
                 fields: {
-                    "Date": ["20", "left"],
-                    "Type": ["20", "left"],
-                    "No.": ["10", "left"],
-                    "Amount": ["10", "right"],
-                    "Due": ["10", "right"],
-                    "Paid": ["10", "right"],
-                    "Outstanding": ["20", "right"]
+                    "Date": ["15", "left"],
+                    "Type": ["15", "left"],
+                    "No": ["10", "left"],
+                    "Amount": ["15", "right"],
+                    "Due": ["15", "right"],
+                    "Paid": ["15", "right"],
+                    "Outstanding": ["15", "right"]
                 },
                 subtotal: "",
                 gst: "",
@@ -551,13 +551,13 @@ Template.paymentcard.onRendered(() => {
                 supplier_name: customer,
                 supplier_addr: "",
                 fields: {
-                    "Date": ["20", "left"],
-                    "Type": ["20", "left"],
-                    "No.": ["10", "left"],
-                    "Amount": ["10", "right"],
-                    "Due": ["10", "right"],
-                    "Paid": ["10", "right"],
-                    "Outstanding": ["20", "right"]
+                    "Date": ["15", "left"],
+                    "Type": ["15", "left"],
+                    "No": ["10", "left"],
+                    "Amount": ["15", "right"],
+                    "Due": ["15", "right"],
+                    "Paid": ["15", "right"],
+                    "Outstanding": ["15", "right"]
                 },
                 subtotal: "",
                 gst: "",
@@ -4624,10 +4624,6 @@ Template.paymentcard.onRendered(() => {
     };
 
     exportSalesToPdf = async function (template_title, number) {
-        // if (template_title == 'Customer Payments' && number == 1) {
-        //     exportSalesToPdf1();
-
-        // } else {
             if (template_title == 'Customer Payments') {
                 await showCustomerPayment1(template_title, number, true);
 
@@ -4661,10 +4657,10 @@ Template.paymentcard.onRendered(() => {
                 source = document.getElementById("html-2-pdfwrapper_quotes3");
             }
 
-            let file = "Customer_Payments.pdf";
+            let file = "Customer_Payment.pdf";
             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
                 if (template_title == 'Customer Payments') {
-                    file = 'Customer Payments-' + invoice_data_info.lid + '.pdf';
+                    file = 'Customer Payment-' + invoice_data_info.lid + '.pdf';
                 }
             }
 
@@ -4752,8 +4748,6 @@ Template.paymentcard.onRendered(() => {
             });
 
             return true;
-        // }
-
     };
 
     $(document).ready(function () {
@@ -9551,40 +9545,34 @@ Template.paymentcard.events({
 
     'click  #open_print_confirm': function (event) {
         playPrintAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
         if ($('#choosetemplate').is(':checked')) {
             $('#templateselection').modal('show');
         } else {
-
-            LoadingOverlay.show();
-            $('#html-2-pdfwrapper').css('display', 'block');
-            if ($('.edtCustomerEmail').val() != "") {
-                $('.pdfCustomerName').html($('#edtCustomerName').val());
-                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-
-                var ponumber = $('#ponumber').val() || '.';
-                $('.po').text(ponumber);
-                var rowCount = $('.tblInvoiceLine tbody tr').length;
-
-                exportSalesToPdf1();
-
-
-            } else {
-                swal({
-                    title: 'Customer Email Required',
-                    text: 'Please enter customer email',
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.value) {
-                    } else if (result.dismiss === 'cancel') {
-                    }
-                });
-            }
-
-
-            $('#confirmprint').modal('hide');
+            LoadingOverlay.show();            
+            // $('#html-2-pdfwrapper').css('display', 'block');
+            let result = await exportSalesToPdf(template_list[0], 1);            
+            // if ($('.edtCustomerEmail').val() != "") {
+            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+            //     var ponumber = $('#ponumber').val() || '.';
+            //     $('.po').text(ponumber);
+            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+            //     exportSalesToPdf1();
+            // } else {
+            //     swal({
+            //         title: 'Customer Email Required',
+            //         text: 'Please enter customer email',
+            //         type: 'error',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'OK'
+            //     }).then((result) => {
+            //         if (result.value) {
+            //         } else if (result.dismiss === 'cancel') {
+            //         }
+            //     });
+            // }
+            // $('#confirmprint').modal('hide');
         }
     }, delayTimeAfterSound);
     },

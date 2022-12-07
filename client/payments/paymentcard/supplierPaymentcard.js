@@ -14,6 +14,7 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import { saveCurrencyHistory } from "../../packages/currency/CurrencyWidget";
+import { EftService } from "../../eft/eft-service"
 
 
 let sideBarService = new SideBarService();
@@ -23,7 +24,7 @@ var times = 0;
 let clickedTableID = 0;
 
 var template_list = ["Supplier Payments"];
-var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit", "Cheque"];
+var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit"];
 let defaultCurrencyCode = CountryAbbr;
 
 Template.supplierpaymentcard.onCreated(() => {
@@ -97,7 +98,92 @@ Template.supplierpaymentcard.onRendered(() => {
     yearRange: "-90:+10",
   });
 
+  templateObject.saveAddToEft = function (data) { 
+    let paymentAmt = $("#edtPaymentAmount").val(); 
 
+    let bankAccount = $("#edtSelectBankAccountName").val() || "Bank";
+    let reference = $("#edtReference").val(); 
+
+    let colAccountID = $("#colAccountID").val(); 
+    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    let employeeName = Session.get("mySessionEmployee");
+
+    let lines = templateObject.outstandingExpenses.get();
+    let eftService = new EftService();
+
+    let descRecord = {
+      type: "TABADescriptiveRecord",
+      fields: {
+        "AccountID": data.ID, 
+        "DirectEntryUserID": employeeID.toString(),
+        "DirectEntryUserName": employeeName, 
+        // "TransactionDescription": "Payroll",
+        "UserBankName": bankAccount
+      }
+    }
+    eftService.saveTABADescriptiveRecord(descRecord).then(function (data) {
+    })
+    .catch(function (err) {
+    });
+
+    for (let index = 0; index < lines.length; index++) {
+      const line = lines[index];
+      let detailRecord = {
+        type: "TABADetailRecord",
+        fields: {
+          "AccountID": data.ID,
+          "AccountName": bankAccount,
+          "Amount": parseFloat(line.paymentAmount.replace(/[^0-9.-]+/g, "")) || 0, 
+          "BSB": data.BSB,
+          "CreditDebitAccountNumber": line.receiptNo, 
+          "LodgementReferences": reference,  
+          "TransactionCode": "53",
+          "TransCodeDesc": "Pay",
+          "TransID": line.awaitingId,
+          "TransType": line.type,
+          "UsersAccountNumber": "",
+          "UsersBSB": ""
+        }
+      }
+      eftService.saveTABADetailRecord(detailRecord).then(function (data) {
+      })
+      .catch(function (err) {
+      });
+    }
+  }
+
+  templateObject.prepareSaveAddToEft = function (accountDataName) {
+    let accountService = new AccountService();
+
+    getVS1Data("TAccountVS1")
+    .then(function (dataObject) {
+      if (dataObject.length == 0) {
+        accountService
+          .getOneAccountByName(accountDataName)
+          .then(function (data) {
+            templateObject.saveAddToEft(data.taccountvs1[0].fields);
+          })
+          .catch(function (err) {
+          });
+      } else {
+        let data = JSON.parse(dataObject[0].data); 
+        let filterdata = data.taccountvs1.filter(item => item.fields.AccountName === accountDataName);
+        if (filterdata.length) {
+          templateObject.saveAddToEft(filterdata[0].fields);
+        } else {
+          accountService
+            .getOneAccountByName(accountDataName)
+            .then(function (data) {
+              templateObject.saveAddToEft(data.taccountvs1[0].fields);
+            })
+            .catch(function (err) {
+            });
+        }
+      }
+    })
+    .catch(function (err) {
+    });
+  }
   // /**
   //  * Lets load the default currency
   //  */
@@ -458,13 +544,13 @@ Template.supplierpaymentcard.onRendered(() => {
                     supplier_name : customer,
                     supplier_addr : invoice_data.shipToDesc,
                     fields: {
-                      "Date": ["20", "left"],
-                      "Type": ["20", "left"],
-                      "No.": ["10", "left"],
-                      "Amount": ["10", "right"],
-                      "Due": ["10", "right"],
-                      "Paid": ["10", "right"],
-                      "Outstanding": ["20", "right"]
+                      "Date": ["15", "left"],
+                      "Type": ["15", "left"],
+                      "No": ["10", "left"],
+                      "Amount": ["15", "right"],
+                      "Due": ["15", "right"],
+                      "Paid": ["15", "right"],
+                      "Outstanding": ["15", "right"]
                     },
                     subtotal :"",
                     gst :  "",
@@ -515,13 +601,13 @@ Template.supplierpaymentcard.onRendered(() => {
                     supplier_name : customer,
                     supplier_addr : invoice_data.shipToDesc,
                     fields: {
-                      "Date": ["20", "left"],
-                      "Type": ["20", "left"],
-                      "No.": ["10", "left"],
-                      "Amount": ["10", "right"],
-                      "Due": ["10", "right"],
-                      "Paid": ["10", "right"],
-                      "Outstanding": ["20", "right"]
+                      "Date": ["15", "left"],
+                      "Type": ["15", "left"],
+                      "No": ["10", "left"],
+                      "Amount": ["15", "right"],
+                      "Due": ["15", "right"],
+                      "Paid": ["15", "right"],
+                      "Outstanding": ["15", "right"]
                     },
                     subtotal :"",
                     gst :  "",
@@ -579,13 +665,13 @@ Template.supplierpaymentcard.onRendered(() => {
                     supplier_name : customer,
                     supplier_addr : invoice_data.shipToDesc,
                     fields: {
-                      "Date": ["20", "left"],
-                      "Type": ["20", "left"],
-                      "No.": ["10", "left"],
-                      "Amount": ["10", "right"],
-                      "Due": ["10", "right"],
-                      "Paid": ["10", "right"],
-                      "Outstanding": ["20", "right"]
+                      "Date": ["15", "left"],
+                      "Type": ["15", "left"],
+                      "No": ["10", "left"],
+                      "Amount": ["15", "right"],
+                      "Due": ["15", "right"],
+                      "Paid": ["15", "right"],
+                      "Outstanding": ["15", "right"]
                     },
                     subtotal :"",
                     gst :  "",
@@ -2090,21 +2176,16 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#paymentMethodModal").modal("toggle");
   });
 
-  $(document).on("click", "#tblAccount tbody tr", function (e) {
-    //$(".colProductName").removeClass('boldtablealertsborder');
-    let selectLineID = $("#selectLineID").val();
-    var table = $(this);
-    let utilityService = new UtilityService();
-    let $tblrows = $("#tblStockAdjustmentLine tbody tr");
+  $(document).on("click", "#tblAccount tbody tr", function (e) { 
+    var table = $(this); 
 
+    let colAccountID = table.find(".colAccountID").text();
     let accountname = table.find(".productName").text();
     $("#accountListModal").modal("toggle");
+
     $("#edtSelectBankAccountName").val(accountname);
     $("#sltBankAccountName").val(accountname);
-    
-    if ($tblrows.find(".lineProductName").val() == "") {
-      //$tblrows.find(".colProductName").addClass('boldtablealertsborder');
-    }
+    $("#colAccountID").val(colAccountID); 
 
     $("#tblAccount_filter .form-control-sm").val("");
     setTimeout(function () {
@@ -3573,7 +3654,6 @@ Template.supplierpaymentcard.onRendered(() => {
                 $("#sltDepartment").val(data.fields.DeptClassName);
                 $("#sltPaymentMethod").val(data.fields.PaymentMethodName);
                 $("#edtSupplierName").val(data.fields.CompanyName);
-
                 $("#eftUserName").val(data.fields.CompanyName);
                 $("#eftNumberUser").val(data.fields.ID);
                 $("#eftProcessingDate").val(record.paymentDate);
@@ -7528,12 +7608,6 @@ Template.supplierpaymentcard.onRendered(() => {
   };
 
   exportSalesToPdf = async function (template_title, number) {
-
-    // if(template_title== "Supplier Payments" && number == 1)
-    // {
-    //     exportSalesToPdf1();
-    // }
-    // else{
       if (template_title == "Supplier Payments") {
         await showSuppliers1(template_title, number, true);
       }
@@ -7566,13 +7640,13 @@ Template.supplierpaymentcard.onRendered(() => {
           source = document.getElementById("html-2-pdfwrapper_quotes3");
       }
 
-      let file = "Supplier_payment.pdf";
+      let file = "Supplier Payment.pdf";
       if (
         $(".printID").attr("id") != undefined ||
         $(".printID").attr("id") != ""
       ) {
         if (template_title == "Supplier Payments") {
-          file = "Supplier payment-" + invoice_data_info.lid + ".pdf";
+          file = "Supplier Payment-" + invoice_data_info.lid + ".pdf";
         }
       }
 
@@ -7610,7 +7684,7 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#html-2-pdfwrapper_quotes").hide();
           $("#html-2-pdfwrapper_quotes2").hide();
           $("#html-2-pdfwrapper_quotes3").hide();
-          LoadingOverlay.hide();
+          $('.fullScreenSpin').css("display", "none");
         });
       return true;
     // }
@@ -8339,93 +8413,91 @@ Template.supplierpaymentcard.events({
 
      });
 
-    $("#html-2-pdfwrapper").css("display", "block");
-    if ($(".edtCustomerEmail").val() != "") {
-      $(".pdfCustomerName").html($("#edtCustomerName").val());
-      $(".pdfCustomerAddress").html(
-        $("#txabillingAddress")
-          .val()
-          .replace(/[\r\n]/g, "<br />")
-      );
-      //$('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-      var ponumber = $("#ponumber").val() || ".";
-      $(".po").text(ponumber);
-      var rowCount = $(".tblInvoiceLine tbody tr").length;
-
-      if (
-        $("#print_supplier_payment").is(":checked") ||
-        $("#print_supplier_payment_second").is(":checked")
-      ) {
-        printTemplate.push("Supplier Payments");
-      }
-
-      if (printTemplate.length > 0) {
-        for (var i = 0; i < printTemplate.length; i++) {
-          if (printTemplate[i] == "Supplier Payments") {
-            var template_number = $(
-              'input[name="Supplier Payments"]:checked'
-            ).val();
-          }
-          let result = await exportSalesToPdf(
-            printTemplate[i],
-            template_number
-          );
-          if (result == true) {
-          }
-        }
-      }
-    } else {
-      swal({
-        title: "Customer Email Required",
-        text: "Please enter customer email",
-        type: "error",
-        showCancelButton: false,
-        confirmButtonText: "OK",
-      }).then((result) => {
-        if (result.value) {
-        } else if (result.dismiss === "cancel") {
-        }
-      });
+     if (
+      $("#print_supplier_payment").is(":checked") ||
+      $("#print_supplier_payment_second").is(":checked")
+    ) {
+      printTemplate.push("Supplier Payments");
     }
+
+    if (printTemplate.length > 0) {
+      for (var i = 0; i < printTemplate.length; i++) {
+        if (printTemplate[i] == "Supplier Payments") {
+          var template_number = $(
+            'input[name="Supplier Payments"]:checked'
+          ).val();
+        }
+        let result = await exportSalesToPdf(
+          printTemplate[i],
+          template_number
+        );
+        if (result == true) {
+        }
+      }
+    }
+
+    // if ($(".edtCustomerEmail").val() != "") {
+    //   $(".pdfCustomerName").html($("#edtCustomerName").val());
+    //   $(".pdfCustomerAddress").html(
+    //     $("#txabillingAddress")
+    //       .val()
+    //       .replace(/[\r\n]/g, "<br />")
+    //   );
+    //   $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+    //   var ponumber = $("#ponumber").val() || ".";
+    //   $(".po").text(ponumber);
+    //   var rowCount = $(".tblInvoiceLine tbody tr").length;
+    // } else {
+    //   swal({
+    //     title: "Customer Email Required",
+    //     text: "Please enter customer email",
+    //     type: "error",
+    //     showCancelButton: false,
+    //     confirmButtonText: "OK",
+    //   }).then((result) => {
+    //     if (result.value) {
+    //     } else if (result.dismiss === "cancel") {
+    //     }
+    //   });
+    // }
   }, delayTimeAfterSound);
   },
 
   "click  #open_print_confirm": function (event) {
     playPrintAudio();
-    setTimeout(function(){
+    setTimeout(async function(){
     if ($("#choosetemplate").is(":checked")) {
         $('#templateselection').modal('show');
     } else {
       LoadingOverlay.show();
-      $("#html-2-pdfwrapper").css("display", "block");
-      if ($(".edtCustomerEmail").val() != "") {
-        $(".pdfCustomerName").html($("#edtCustomerName").val());
-        $(".pdfCustomerAddress").html(
-          $("#txabillingAddress")
-            .val()
-            .replace(/[\r\n]/g, "<br />")
-        );
-        // $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-        var ponumber = $("#ponumber").val() || ".";
-        $(".po").text(ponumber);
-        var rowCount = $(".tblInvoiceLine tbody tr").length;
-
-        exportSalesToPdf1();
-      } else {
-        swal({
-          title: "Customer Email Required",
-          text: "Please enter customer email",
-          type: "error",
-          showCancelButton: false,
-          confirmButtonText: "OK",
-        }).then((result) => {
-          if (result.value) {
-          } else if (result.dismiss === "cancel") {
-          }
-        });
-      }
-
-      $("#confirmprint").modal("hide");
+      // $("#html-2-pdfwrapper").css("display", "block");
+      let result = await exportSalesToPdf(template_list[0], 1);      
+      // if ($(".edtCustomerEmail").val() != "") {
+      //   $(".pdfCustomerName").html($("#edtCustomerName").val());
+      //   $(".pdfCustomerAddress").html(
+      //     $("#txabillingAddress")
+      //       .val()
+      //       .replace(/[\r\n]/g, "<br />")
+      //   );
+      //   $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+      //   var ponumber = $("#ponumber").val() || ".";
+      //   $(".po").text(ponumber);
+      //   var rowCount = $(".tblInvoiceLine tbody tr").length;
+      //   exportSalesToPdf1();
+      // } else {
+      //   swal({
+      //     title: "Customer Email Required",
+      //     text: "Please enter customer email",
+      //     type: "error",
+      //     showCancelButton: false,
+      //     confirmButtonText: "OK",
+      //   }).then((result) => {
+      //     if (result.value) {
+      //     } else if (result.dismiss === "cancel") {
+      //     }
+      //   });
+      // }
+      // $("#confirmprint").modal("hide");
     }
   }, delayTimeAfterSound);
   },
@@ -8482,6 +8554,8 @@ Template.supplierpaymentcard.events({
   "click .btnSave": (e, ui) => {
   playSaveAudio();
   let templateObject = Template.instance();
+
+
   let paymentService = new PaymentsService();
   setTimeout(function(){
     LoadingOverlay.show();
@@ -8491,6 +8565,7 @@ Template.supplierpaymentcard.events({
     let paymentDate = paymentDateTime.getFullYear() + "-" + (paymentDateTime.getMonth() + 1) + "-" + paymentDateTime.getDate();
 
     let bankAccount = $("#edtSelectBankAccountName").val() || "Bank";
+
     let reference = $("#edtReference").val();
     let payMethod = $("#sltPaymentMethod").val();
     let notes = $("#txaNotes").val();
@@ -12041,6 +12116,10 @@ Template.supplierpaymentcard.events({
           LoadingOverlay.hide();
         });
     }
+    if ($("#chkEFT").is(":checked")) {
+      templateObject.prepareSaveAddToEft(bankAccount);
+    }
+
     LoadingOverlay.hide();
   }, delayTimeAfterSound);
   },
@@ -13122,13 +13201,13 @@ Template.supplierpaymentcard.events({
   // },
 
 
-  "click #chkEFT": function (event) {
-    if ($("#chkEFT").is(":checked")) {
-      $("#eftExportModal").modal("show");
-    } else {
-      $("#eftExportModal").modal("hide");
-    }
-  },
+  // "click #chkEFT": function (event) {
+  //   if ($("#chkEFT").is(":checked")) {
+  //     $("#eftExportModal").modal("show");
+  //   } else {
+  //     $("#eftExportModal").modal("hide");
+  //   }
+  // },
 });
 
 

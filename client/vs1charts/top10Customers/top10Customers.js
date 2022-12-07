@@ -26,7 +26,6 @@ Template.top10Customers.onRendered(function () {
     FlowRouter.go("/customerdetailsreport?daterange=ignore");
   }
   getInvSales(function (data) {
-    setTimeout(function () {
       let customerList = [];
       topTenData1 = _.take(data, 10);
       let totalBalance = 0;
@@ -57,27 +56,6 @@ Template.top10Customers.onRendered(function () {
       topData.topTenData.set(data);
 
       templateObject.topTenData.set(topTenData1);
-
-      var animationOptions = {
-            animationEnabled: true,
-            //Boolean - Whether we should show a stroke on each segment
-            segmentShowStroke: true,
-            //String - The colour of each segment stroke
-            segmentStrokeColor: "#fff",
-            //Number - The width of each segment stroke
-            segmentStrokeWidth: 2,
-            //Number - The percentage of the chart that we cut out of the middle
-            percentageInnerCutout: 50, // This is 0 for Pie charts
-            //Number - Amount of animation steps
-            animationSteps: 100,
-            //String - Animation easing effect
-            animationEasing: "easeOutBounce",
-            //Boolean - Whether we animate the rotation of the Doughnut
-            animateRotate: true,
-            //Boolean - Whether we animate scaling the Doughnut from the centre
-            animateScale: false,
-            //Boolean - whether to make the chart responsive to window resizing
-        };
 
       // Chart.js
       var ctx = document.getElementById("top10customers").getContext("2d");
@@ -114,7 +92,6 @@ Template.top10Customers.onRendered(function () {
           onClick: chartClickEvent,
           maintainAspectRatio: false,
           responsive: true,
-          animationOptions,
           tooltips: {
             callbacks: {
               label: function (tooltipItem, data) {
@@ -172,7 +149,7 @@ Template.top10Customers.onRendered(function () {
           },
         },
       });
-    }, 0)
+
   });
 
   function getInvSales(callback) {

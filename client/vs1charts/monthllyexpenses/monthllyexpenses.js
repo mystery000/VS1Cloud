@@ -204,7 +204,7 @@ if (!localStorage.getItem('VS1PNLPeriodReport_dash')) {
             }
             }
             });
-      }, 1000);
+      }, 0);
     }else{
       setTimeout(function () {
         let filterData = _.filter(sessionmyExpenses.tapreport, function (sessionmyExpenses) {

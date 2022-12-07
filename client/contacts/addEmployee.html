@@ -196,14 +196,7 @@
 
                         <div class="card shadow mb-4 cardSizing" style="margin: 8px;">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="text-primary font-weight-bold m-0">
-                                  {{#if notEquals record.id ''}}
-                                    EMP-{{record.id}} - {{record.phone}}
-                                    <!-- EMP-{{record.id}} - -->
-                                  {{/if}}
-                                   {{record.company}}
-                                   <!-- {{record.company}} - {{record.phone}} -->
-                                </h6>
+                                {{> vs1_contact_card_header isJob=isJob record=record id="employeeInfo"}}
 
                                 <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
                             </div>
@@ -3619,8 +3612,7 @@
                                                                 width: 100% !important;
                                                             } */
                                                         </style>
-
-
+                                                        <!-- {{> vs1_filtered_data_table  datatablerecords=datatablerecords headers=tableHeaderItems}}    -->
                                                         <table id="tblTransactionlist" style="width:100%" class="dataTable table table-striped table-bordered tblTransactionlist">
                                                             <thead>
                                                                 <tr class="dnd-moved">

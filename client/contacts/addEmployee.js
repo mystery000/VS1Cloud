@@ -108,6 +108,23 @@ Template.employeescard.onCreated(function() {
     templateObject.taxCodeList = new ReactiveVar();
     templateObject.defaultsaletaxcode = new ReactiveVar();
 
+    templateObject.tableHeaderItems = new ReactiveVar([
+        {classString:"th colSortDate hiddenColumn", itemLabel:"id",itemStyle:""},
+        {classString:"th colSaleDate", itemLabel:"Sale Date",itemStyle:"width:80px;"},
+        {classString:"th colSalesNo", itemLabel:"Sales No.",itemStyle:"width:80px;"},
+        {classString:"th colCustomer", itemLabel:"Customer",itemStyle:"width:200px;"},
+        {classString:"th colAmountEx", itemLabel:"Amount (Ex)",itemStyle:"width:80px;"},
+        {classString:"th colTax", itemLabel:"Tax",itemStyle:"width:80px;"},
+        {classString:"th colAmount", itemLabel:"Amount",itemStyle:"width:80px;"},
+        {classString:"th colPaid", itemLabel:"Paid",itemStyle:"width:80px;"},
+        {classString:"th colBalanceOutstanding", itemLabel:"Balance Outstanding",itemStyle:"width:80px;"},
+        {classString:"th colStatus hiddenColumn", itemLabel:"Status",itemStyle:""},
+        {classString:"th colSaleCustField1 hiddenColumn", itemLabel:"Custom Field 1",itemStyle:""},
+        {classString:"th colSaleCustField2 hiddenColumn", itemLabel:"Custom Field 2",itemStyle:""},
+        {classString:"th colEmployee hiddenColumn", itemLabel:"Employee",itemStyle:""},
+        {classString:"th colComments", itemLabel:"Comments",itemStyle:""}
+    ])
+
     /* Attachments */
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
@@ -7008,7 +7025,7 @@ Template.employeescard.events({
         today = dd + '/' + mm + '/' + yyyy;
         $('#leaveRequestForm')[0].reset();
         $('#edtLeaveStartDate').val(today);
-        $('#edtLeaveStartDate').val(today);
+        $('#edtLeaveEndDate').val(today);
         $('#removeLeaveRequestBtn').hide();
     },
     'change #taxes :input, #taxes :select': async function() {
@@ -11286,5 +11303,8 @@ Template.employeescard.helpers({
     earningLines: () => {
         return Template.instance().earningLines.get();
     },
-    formatPrice: (price) => GlobalFunctions.formatPrice(price)
+    formatPrice: (price) => GlobalFunctions.formatPrice(price),
+    tableHeaderItems:() => {
+        return Template.instance().tableHeaderItems.get();
+    },
 });

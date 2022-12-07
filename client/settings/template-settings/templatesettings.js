@@ -24,7 +24,7 @@ var template_list = [
   "Deposits",
   "Cheques",
 ];
-var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit", "Cheque"];
+var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit"];
 var modal_data = [];
 
 Template.templatesettings.onCreated(() => {
@@ -1939,7 +1939,7 @@ Template.templatesettings.onRendered(function () {
               o_phone: "Phone : 25151944",
               title: 'Bill',
               value:'751',
-              date: "30 / 03 / 2022",
+              date: "30/03/2022",
               invoicenumber:'751',
               refnumber: "",
               pqnumber: "",
@@ -1950,9 +1950,9 @@ Template.templatesettings.onRendered(function () {
               supplier_addr : "Antri\nGwalior\nMadhya Pradesh",
               fields: {
                 "Account Name" : ["30", "left"],
-                "Memo" : ["30", "left"],
-                "Tax" : ["20", "right"],
-                "Amount" : ["20", "right"]
+                "Description" : ["40", "left"],
+                "Tax" : ["15", "right"],
+                "Amount" : ["15", "right"]
               },
               subtotal : "$900.00",
               gst : "$0.00",
@@ -1988,7 +1988,7 @@ Template.templatesettings.onRendered(function () {
               o_phone: "Phone : 25151944",
               title: 'Bill',
               value:'751',
-              date: "30 / 03 / 2022",
+              date: "30/03/2022",
               invoicenumber:'751',
               refnumber: "",
               pqnumber: "",
@@ -1999,9 +1999,9 @@ Template.templatesettings.onRendered(function () {
               supplier_addr : "Antri\nGwalior\nMadhya Pradesh",
               fields: {
                 "Account Name" : ["30", "left"],
-                "Memo" : ["30", "left"],
-                "Tax" : ["20", "right"],
-                "Amount" : ["20", "right"]
+                "Description" : ["40", "left"],
+                "Tax" : ["15", "right"],
+                "Amount" : ["15", "right"]
               },
               subtotal : "$900.00",
               gst : "$0.00",
@@ -2035,7 +2035,7 @@ Template.templatesettings.onRendered(function () {
           o_phone: "Phone : 25151944",
           title: 'Bill',
           value:'751',
-          date: "30 / 03 / 2022",
+          date: "30/03/2022",
           invoicenumber:'751',
           refnumber: "",
           pqnumber: "",
@@ -2046,9 +2046,9 @@ Template.templatesettings.onRendered(function () {
           supplier_addr : "Antri\nGwalior\nMadhya Pradesh",
           fields: {
             "Account Name" : ["30", "left"],
-            "Memo" : ["30", "left"],
-            "Tax" : ["20", "right"],
-            "Amount" : ["20", "right"]
+            "Description" : ["40", "left"],
+            "Tax" : ["15", "right"],
+            "Amount" : ["15", "right"]
           },
           subtotal : "$900.00",
           gst : "$0.00",
@@ -2130,9 +2130,9 @@ Template.templatesettings.onRendered(function () {
           supplier_addr : "123 Street\nPE Eastern 5115\nAustralia",
           fields: {
             "Account Name" : ["30", "left"],
-            "Memo" : ["30", "left"],
-            "Tax" : ["20", "right"],
-            "Amount" : ["20", "right"]
+            "Description" : ["40", "left"],
+            "Tax" : ["15", "right"],
+            "Amount" : ["15", "right"]
           },
           subtotal : "$125.00",
           gst : "$0.00",
@@ -2180,9 +2180,9 @@ Template.templatesettings.onRendered(function () {
             supplier_addr : "123 Street\nPE Eastern 5115\nAustralia",
             fields: {
               "Account Name" : ["30", "left"],
-              "Memo" : ["30", "left"],
-              "Tax" : ["20", "right"],
-              "Amount" : ["20", "right"]
+              "Description" : ["40", "left"],
+              "Tax" : ["15", "right"],
+              "Amount" : ["15", "right"]
             },
             subtotal : "$125.00",
             gst : "$0.00",
@@ -2230,9 +2230,9 @@ Template.templatesettings.onRendered(function () {
           supplier_addr : "123 Street\nPE Eastern 5115\nAustralia",
           fields: {
             "Account Name" : ["30", "left"],
-            "Memo" : ["30", "left"],
-            "Tax" : ["20", "right"],
-            "Amount" : ["20", "right"]
+            "Description" : ["40", "left"],
+            "Tax" : ["15", "right"],
+            "Amount" : ["15", "right"]
           },
           subtotal : "$125.00",
           gst : "$0.00",
@@ -2312,13 +2312,13 @@ Template.templatesettings.onRendered(function () {
               supplier_name : "<p>Brand New <br> Company </p>",
               supplier_addr : "JHB\nA1515\nAustralia",
               fields: {
-                "Date": ["20", "left"],
-                "Type": ["10", "left"],
+                "Date": ["15", "left"],
+                "Type": ["15", "left"],
                 "Trans": ["10", "left"],
-                "Original": ["20", "right"],
-                "Due": ["10", "right"],
-                "Paid": ["10", "right"],
-                "Outstanding": ["20", "right"]
+                "Original": ["15", "right"],
+                "Due": ["15", "right"],
+                "Paid": ["15", "right"],
+                "Outstanding": ["15", "right"]
               },
               subtotal : "$0.00",
               gst : "$0.00",
@@ -2366,13 +2366,13 @@ Template.templatesettings.onRendered(function () {
           supplier_name : "<p>Brand New <br> Company </p>",
           supplier_addr : "JHB\nA1515\nAustralia",
           fields: {
-            "Date": ["20", "left"],
-            "Type": ["10", "left"],
+            "Date": ["15", "left"],
+            "Type": ["15", "left"],
             "Trans": ["10", "left"],
-            "Original": ["20", "right"],
-            "Due": ["10", "right"],
-            "Paid": ["10", "right"],
-            "Outstanding": ["20", "right"]
+            "Original": ["15", "right"],
+            "Due": ["15", "right"],
+            "Paid": ["15", "right"],
+            "Outstanding": ["15", "right"]
           },
           subtotal : "",
           gst : "",
@@ -2419,13 +2419,13 @@ Template.templatesettings.onRendered(function () {
           supplier_name : "<p>Brand New <br> Company </p>",
           supplier_addr : "JHB\nA1515\nAustralia",
           fields: {
-            "Date": ["20", "left"],
-            "Type": ["10", "left"],
+            "Date": ["15", "left"],
+            "Type": ["15", "left"],
             "Trans": ["10", "left"],
-            "Original": ["20", "right"],
-            "Due": ["10", "right"],
-            "Paid": ["10", "right"],
-            "Outstanding": ["20", "right"]
+            "Original": ["15", "right"],
+            "Due": ["15", "right"],
+            "Paid": ["15", "right"],
+            "Outstanding": ["15", "right"]
           },
           subtotal : "",
           gst : "",
@@ -2525,12 +2525,12 @@ Template.templatesettings.onRendered(function () {
                 supplier_addr : "",
                 fields: {
                   "ID": ["10", "left"],
-                  "Date": ["10", "left"],
-                  "Type": ["10", "left"],
-                  "Due Date": ["20", "left"],
-                  "Total": ["20", "right"],
-                  "Paid": ["10", "right"],
-                  "Balance": ["20", "right"]
+                  "Date": ["15", "left"],
+                  "Type": ["15", "left"],
+                  "Due Date": ["15", "left"],
+                  "Total": ["15", "right"],
+                  "Paid": ["15", "right"],
+                  "Balance": ["15", "right"]
                 },
                 subtotal : "$0.00",
                 gst : "$0.00",
@@ -2577,12 +2577,12 @@ Template.templatesettings.onRendered(function () {
               supplier_addr : "",
               fields: {
                 "ID": ["10", "left"],
-                "Date": ["10", "left"],
-                "Type": ["10", "left"],
-                "Due Date": ["20", "left"],
-                "Total": ["20", "right"],
-                "Paid": ["10", "right"],
-                "Balance": ["20", "right"]
+                "Date": ["15", "left"],
+                "Type": ["15", "left"],
+                "Due Date": ["15", "left"],
+                "Total": ["15", "right"],
+                "Paid": ["15", "right"],
+                "Balance": ["15", "right"]
               },
               subtotal : "$0.00",
               gst : "$0.00",
@@ -2629,12 +2629,12 @@ Template.templatesettings.onRendered(function () {
               supplier_addr : "",
               fields: {
                 "ID": ["10", "left"],
-                "Date": ["10", "left"],
-                "Type": ["10", "left"],
-                "Due Date": ["20", "left"],
-                "Total": ["20", "right"],
-                "Paid": ["10", "right"],
-                "Balance": ["20", "right"]
+                "Date": ["15", "left"],
+                "Type": ["15", "left"],
+                "Due Date": ["15", "left"],
+                "Total": ["15", "right"],
+                "Paid": ["15", "right"],
+                "Balance": ["15", "right"]
               },
               subtotal : "$0.00",
               gst : "$0.00",
@@ -2731,11 +2731,11 @@ Template.templatesettings.onRendered(function () {
                 "Tax": ["10", "right"],
                 "Amount": ["15", "right"],
               },
-              subtotal :"500",
-              gst : "15",
-              total : "515",
-              paid_amount : "400",
-              bal_due : "115",
+              subtotal :"$500.00",
+              gst : "$15.00",
+              total : "$515.00",
+              paid_amount : "$400.00",
+              bal_due : "$115.00",
               bsb : "4654-454",
               account : "16161616",
               swift : "WPOCA5s",
@@ -2782,11 +2782,11 @@ Template.templatesettings.onRendered(function () {
               "Tax": ["10", "right"],
               "Amount": ["15", "right"],
             },
-            subtotal :"500",
-            gst : "15",
-            total : "515",
-            paid_amount : "400",
-            bal_due : "115",
+            subtotal :"$500.00",
+            gst : "$15.00",
+            total : "$515.00",
+            paid_amount : "$400.00",
+            bal_due : "$115.00",
             bsb : "4654-454",
             account : "16161616",
             swift : "WPOCA5s",
@@ -2833,11 +2833,11 @@ Template.templatesettings.onRendered(function () {
               "Tax": ["10", "right"],
               "Amount": ["15", "right"],
             },
-            subtotal :"500",
-            gst : "15",
-            total : "515",
-            paid_amount : "400",
-            bal_due : "115",
+            subtotal :"$500.00",
+            gst : "$15.00",
+            total : "$515.00",
+            paid_amount : "$400.00",
+            bal_due : "$115.00",
             bsb : "4654-454",
             account : "16161616",
             swift : "WPOCA5s",
@@ -2928,11 +2928,11 @@ Template.templatesettings.onRendered(function () {
                 "Tax": ["10", "right"],
                 "Amount": ["15", "right"],
               },
-              subtotal :"500",
-              gst : "15",
-              total : "515",
-              paid_amount : "400",
-              bal_due : "115",
+              subtotal :"$500.00",
+              gst : "$15.00",
+              total : "$515.00",
+              paid_amount : "$400.00",
+              bal_due : "$115.00",
               bsb : "4654-454",
               account : "16161616",
               swift : "WPOCA5s",
@@ -2979,11 +2979,11 @@ Template.templatesettings.onRendered(function () {
               "Tax": ["10", "right"],
               "Amount": ["15", "right"],
             },
-            subtotal :"500",
-            gst : "15",
-            total : "515",
-            paid_amount : "400",
-            bal_due : "115",
+            subtotal :"$500.00",
+            gst : "$15.00",
+            total : "$515.00",
+            paid_amount : "$400.00",
+            bal_due : "$115.00",
             bsb : "4654-454",
             account : "16161616",
             swift : "WPOCA5s",
@@ -3030,11 +3030,11 @@ Template.templatesettings.onRendered(function () {
               "Tax": ["10", "right"],
               "Amount": ["15", "right"],
             },
-            subtotal :"500",
-            gst : "15",
-            total : "515",
-            paid_amount : "400",
-            bal_due : "115",
+            subtotal :"$500.00",
+            gst : "$15.00",
+            total : "$515.00",
+            paid_amount : "$400.00",
+            bal_due : "$115.00",
             bsb : "4654-454",
             account : "16161616",
             swift : "WPOCA5s",
@@ -3672,11 +3672,11 @@ Template.templatesettings.onRendered(function () {
                   "Tax": ["10", "right"],
                   "Amount": ["15", "right"],
                 },
-                subtotal :"500",
-                gst : "15",
-                total : "515",
-                paid_amount : "400",
-                bal_due : "115",
+                subtotal :"$500.00",
+                gst : "$15.00",
+                total : "$515.00",
+                paid_amount : "$400.00",
+                bal_due : "$115.00",
                 bsb : "4654-454",
                 account : "16161616",
                 swift : "WPOCA5s",
@@ -3723,11 +3723,11 @@ Template.templatesettings.onRendered(function () {
                 "Tax": ["10", "right"],
                 "Amount": ["15", "right"],
               },
-              subtotal :"500",
-              gst : "15",
-              total : "515",
-              paid_amount : "400",
-              bal_due : "115",
+              subtotal :"$500.00",
+              gst : "$15.00",
+              total : "$515.00",
+              paid_amount : "$400.00",
+              bal_due : "$115.00",
               bsb : "4654-454",
               account : "16161616",
               swift : "WPOCA5s",
@@ -3774,11 +3774,11 @@ Template.templatesettings.onRendered(function () {
                 "Tax": ["10", "right"],
                 "Amount": ["15", "right"],
               },
-              subtotal :"500",
-              gst : "15",
-              total : "515",
-              paid_amount : "400",
-              bal_due : "115",
+              subtotal :"$500.00",
+              gst : "$15.00",
+              total : "$515.00",
+              paid_amount : "$400.00",
+              bal_due : "$115.00",
               bsb : "4654-454",
               account : "16161616",
               swift : "WPOCA5s",
@@ -3850,13 +3850,13 @@ Template.templatesettings.onRendered(function () {
                 supplier_name : "Brand New Company",
                 supplier_addr : "",
                 fields: {
-                  "Date": ["20", "left"],
-                  "Type": ["10", "left"],
+                  "Date": ["15", "left"],
+                  "Type": ["15", "left"],
                   "No": ["10", "left"],
-                  "Amount": ["20", "right"],
-                  "Due": ["10", "right"],
-                  "Paid": ["10", "right"],
-                  "Outstanding": ["20", "right"]
+                  "Amount": ["15", "right"],
+                  "Due": ["15", "right"],
+                  "Paid": ["15", "right"],
+                  "Outstanding": ["15", "right"]
                 },
                 subtotal : "",
                 gst : "",
@@ -3902,13 +3902,13 @@ Template.templatesettings.onRendered(function () {
               supplier_name : "Brand New Company",
               supplier_addr : "",
               fields: {
-                "Date": ["20", "left"],
-                "Type": ["10", "left"],
+                "Date": ["15", "left"],
+                "Type": ["15", "left"],
                 "No": ["10", "left"],
-                "Amount": ["20", "right"],
-                "Due": ["10", "right"],
-                "Paid": ["10", "right"],
-                "Outstanding": ["20", "right"]
+                "Amount": ["15", "right"],
+                "Due": ["15", "right"],
+                "Paid": ["15", "right"],
+                "Outstanding": ["15", "right"]
               },
               subtotal : "",
               gst : "",
@@ -3953,13 +3953,13 @@ Template.templatesettings.onRendered(function () {
                 supplier_name : "Brand New Company",
                 supplier_addr : "",
                 fields: {
-                  "Date": ["20", "left"],
-                  "Type": ["10", "left"],
+                  "Date": ["15", "left"],
+                  "Type": ["15", "left"],
                   "No": ["10", "left"],
-                  "Amount": ["20", "right"],
-                  "Due": ["10", "right"],
-                  "Paid": ["10", "right"],
-                  "Outstanding": ["20", "right"]
+                  "Amount": ["15", "right"],
+                  "Due": ["15", "right"],
+                  "Paid": ["15", "right"],
+                  "Outstanding": ["15", "right"]
                 },
                 subtotal : "",
                 gst : "",
@@ -4038,13 +4038,13 @@ Template.templatesettings.onRendered(function () {
             supplier_name : "Brand New Company",
             supplier_addr : "",
             fields: {
-              "Date": ["20", "left"],
-              "Type": ["10", "left"],
+              "Date": ["15", "left"],
+              "Type": ["15", "left"],
               "No": ["10", "left"],
-              "Amount": ["20", "right"],
-              "Due": ["10", "right"],
-              "Paid": ["10", "right"],
-              "Outstanding": ["20", "right"]
+              "Amount": ["15", "right"],
+              "Due": ["15", "right"],
+              "Paid": ["15", "right"],
+              "Outstanding": ["15", "right"]
             },
             subtotal : "$0.00",
             gst : "$0.00",
@@ -4090,13 +4090,13 @@ Template.templatesettings.onRendered(function () {
             supplier_name : "Brand New Company",
             supplier_addr : "",
             fields: {
-              "Date": ["20", "left"],
-              "Type": ["10", "left"],
+              "Date": ["15", "left"],
+              "Type": ["15", "left"],
               "No": ["10", "left"],
-              "Amount": ["20", "right"],
-              "Due": ["10", "right"],
-              "Paid": ["10", "right"],
-              "Outstanding": ["20", "right"]
+              "Amount": ["15", "right"],
+              "Due": ["15", "right"],
+              "Paid": ["15", "right"],
+              "Outstanding": ["15", "right"]
             },
             subtotal : "$0.00",
             gst : "$0.00",
@@ -4142,13 +4142,13 @@ Template.templatesettings.onRendered(function () {
             supplier_name : "Brand New Company",
             supplier_addr : "",
             fields: {
-              "Date": ["20", "left"],
-              "Type": ["10", "left"],
+              "Date": ["15", "left"],
+              "Type": ["15", "left"],
               "No": ["10", "left"],
-              "Amount": ["20", "right"],
-              "Due": ["10", "right"],
-              "Paid": ["10", "right"],
-              "Outstanding": ["20", "right"]
+              "Amount": ["15", "right"],
+              "Due": ["15", "right"],
+              "Paid": ["15", "right"],
+              "Outstanding": ["15", "right"]
             },
             subtotal : "$0.00",
             gst : "$0.00",
@@ -4417,9 +4417,9 @@ Template.templatesettings.onRendered(function () {
               supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
               fields: {
                 "Account Name" : ["30", "left"],
-                "Memo" : ["30", "left"],
-                "Credit (Ex)" : ["20", "right"],
-                "Debit (Ex)" : ["20", "right"]
+                "Description" : ["40", "left"],
+                "Credit (Ex)" : ["15", "right"],
+                "Debit (Ex)" : ["15", "right"]
               },
               subtotal : "$700.00",
               gst : "$0.00",
@@ -4466,9 +4466,9 @@ Template.templatesettings.onRendered(function () {
               supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
               fields: {
                 "Account Name" : ["30", "left"],
-                "Memo" : ["30", "left"],
-                "Credit (Ex)" : ["20", "right"],
-                "Debit (Ex)" : ["20", "right"]
+                "Description" : ["40", "left"],
+                "Credit (Ex)" : ["15", "right"],
+                "Debit (Ex)" : ["15", "right"]
               },
               subtotal : "$700.00",
               gst : "$0.00",
@@ -4513,9 +4513,9 @@ Template.templatesettings.onRendered(function () {
           supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
           fields: {
             "Account Name" : ["30", "left"],
-            "Memo" : ["30", "left"],
-            "Credit (Ex)" : ["20", "right"],
-            "Debit (Ex)" : ["20", "right"]
+            "Description" : ["40", "left"],
+            "Credit (Ex)" : ["15", "right"],
+            "Debit (Ex)" : ["15", "right"]
           },
           subtotal : "$700.00",
           gst : "$0.00",
@@ -4594,8 +4594,8 @@ Template.templatesettings.onRendered(function () {
                 "From Account" : ["20", "left"],
                 "Payment Method" : ["20", "left"],
                 "Reference No" : ["20", "left"],
-                "Received From" : ["20", "left"],
-                "Amount" : ["20", "right"]
+                "Received From" : ["25", "left"],
+                "Amount" : ["15", "right"]
               },
               subtotal : "-$900.00",
               gst : "$0.00",
@@ -4644,8 +4644,8 @@ Template.templatesettings.onRendered(function () {
                 "From Account" : ["20", "left"],
                 "Payment Method" : ["20", "left"],
                 "Reference No" : ["20", "left"],
-                "Received From" : ["20", "left"],
-                "Amount" : ["20", "right"]
+                "Received From" : ["25", "left"],
+                "Amount" : ["15", "right"]
               },
               subtotal : "-$900.00",
               gst : "$0.00",
@@ -4694,8 +4694,8 @@ Template.templatesettings.onRendered(function () {
             "From Account" : ["20", "left"],
             "Payment Method" : ["20", "left"],
             "Reference No" : ["20", "left"],
-            "Received From" : ["20", "left"],
-            "Amount" : ["20", "right"]
+            "Received From" : ["25", "left"],
+            "Amount" : ["15", "right"]
           },
           subtotal : "-$900.00",
           gst : "$0.00",
@@ -4770,9 +4770,9 @@ Template.templatesettings.onRendered(function () {
               supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
               fields: {
                 "Account Name" : ["30", "left"],
-                "Memo" : ["30", "left"],
-                "Tax" : ["20", "right"],
-                "Amount" : ["20", "right"]
+                "Description" : ["40", "left"],
+                "Tax" : ["15", "right"],
+                "Amount" : ["15", "right"]
               },
               subtotal : "$900.00",
               gst : "$0.00",
@@ -4819,9 +4819,9 @@ Template.templatesettings.onRendered(function () {
               supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
               fields: {
                 "Account Name" : ["30", "left"],
-                "Memo" : ["30", "left"],
-                "Tax" : ["20", "right"],
-                "Amount" : ["20", "right"]
+                "Description" : ["40", "left"],
+                "Tax" : ["15", "right"],
+                "Amount" : ["15", "right"]
               },
               subtotal : "$900.00",
               gst : "$0.00",
@@ -4867,9 +4867,9 @@ Template.templatesettings.onRendered(function () {
           supplier_addr : "ABC Company Test R\n123 Main Street\nBrooklyn New York 1234\nUnited States",
           fields: {
             "Account Name" : ["30", "left"],
-            "Memo" : ["30", "left"],
-            "Tax" : ["20", "right"],
-            "Amount" : ["20", "right"]
+            "Description" : ["40", "left"],
+            "Tax" : ["15", "right"],
+            "Amount" : ["15", "right"]
           },
           subtotal : "$900.00",
           gst : "$0.00",

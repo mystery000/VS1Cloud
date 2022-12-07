@@ -1,3 +1,29 @@
 <template name="vs1_login_video">
+  <style media="screen">
+  .myVS1Video {
+   max-width: 100%;
+   height: auto;
+   cursor: pointer!important;
+   object-fit: fill;
+ };
+ video::-webkit-media-controls {
+  display: none;
+}
+video {
+  pointer-events: none;
+  object-fit: fill;
+}
+
+/* Could Use thise as well for Individual Controls */
+video::-webkit-media-controls-play-button {}
+
+video::-webkit-media-controls-volume-slider {}
+
+video::-webkit-media-controls-mute-button {}
+
+video::-webkit-media-controls-timeline {}
+
+video::-webkit-media-controls-current-time-display {}
+  </style>
   <div id="video-parent" class="myVS1Video" style="display:none;"></div>
 </template>

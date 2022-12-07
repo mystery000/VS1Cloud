@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {SalesBoardService} from './sales-service';
 import {PurchaseBoardService} from './purchase-service';
 import {ReactiveVar} from 'meteor/reactive-var';
@@ -20,7 +21,8 @@ import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
-
+import { rest, template } from 'lodash';
+import {Session} from 'meteor/session';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 var times = 0;
@@ -28,7 +30,7 @@ let purchaseDefaultTerms = "";
 var template_list = [
     "Purchase Orders",
 ];
-var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit", "Cheque"];
+var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment", "Statement", "Delivery Docket", "Journal Entry", "Deposit"];
 let defaultCurrencyCode = CountryAbbr;
 
 Template.purchaseordercard.onCreated(() => {
@@ -79,8 +81,111 @@ Template.purchaseordercard.onCreated(() => {
 
     templateObject.isbackorderredirect = new ReactiveVar();
     templateObject.isbackorderredirect.set(false);
+
+    templateObject.monthArr = new ReactiveVar();
+    templateObject.plusArr = new ReactiveVar();
+
 });
 Template.purchaseordercard.onRendered(() => {
+    const plusArr = [];
+  const monthArr = [];
+  let isGreenTrack = Session.get('isGreenTrack');
+  let regionData = Session.get('ERPLoggedCountry');
+  let recordObj = null;
+  if(isGreenTrack) {
+    $.get("/GreentrackModules.json").success(function (data) {
+        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
+
+            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
+                recordObj = {
+                    type: data.tvs1licenselevelsnmodules[i].TYPE,
+                    region: data.tvs1licenselevelsnmodules[i].Region,
+                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
+                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
+                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
+                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
+                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
+                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
+                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
+                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
+                    pricenocurrency: data.tvs1licenselevelsnmodules[i].Price || 0,
+                    price: utilityService.modifynegativeCurrencyFormat(data.tvs1licenselevelsnmodules[i].Price) || 0,
+                    discount: data.tvs1licenselevelsnmodules[i].discount,
+                };
+                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "Xero") {
+                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
+                        plusArr.push(recordObj);
+                    }
+                }
+               
+            }
+
+        };
+        templateObject.plusArr.set(plusArr);
+    });
+  } else { 
+    $.get("MasterVS1Pricing.json").success(async function (data) {
+        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
+
+            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
+                recordObj = {
+                    type: data.tvs1licenselevelsnmodules[i].TYPE,
+                    region: data.tvs1licenselevelsnmodules[i].Region,
+                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
+                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
+                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
+                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
+                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
+                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
+                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
+                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
+                    discount: data.tvs1licenselevelsnmodules[i].discount,
+                };
+                if ((data.tvs1licenselevelsnmodules[i].ModuleName != "") && (data.tvs1licenselevelsnmodules[i].IsExtra == true) && (data.tvs1licenselevelsnmodules[i].IsMonthly == true)) {
+                    monthArr.push(recordObj);
+                }
+
+                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "PLUS") {
+                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
+                        plusArr.push(recordObj);
+                    }
+                }
+            }
+        };
+        let purchaedAdModuleList = [];
+            let additionModuleSettings = await getVS1Data('vscloudlogininfo');
+            if( additionModuleSettings.length > 0 ){
+                let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
+                if( additionModules.length > 0 ){
+                    let adModulesList = additionModules.filter((item) => {
+                        if( item.ExtraModules == true && item.ModuleActive == true ){
+                            return item;
+                        }
+                    });
+                    if( adModulesList.length > 0 ){
+                        for (const item of adModulesList) {
+                            purchaedAdModuleList.push(item.ModuleName)
+                        }
+                    }
+                }
+            }
+        templateObject.plusArr.set(plusArr);
+        var monthResult = [];
+        $.each(monthArr, function (i, e) {
+            var matchingItemsMonth = $.grep(monthResult, function (itemMonth) {
+                return itemMonth.moduleName === e.moduleName;
+            });
+            e.isPurchased = false
+            if (matchingItemsMonth.length === 0) {
+                if( purchaedAdModuleList.includes(monthArr[i].moduleName) == true ){
+                    e.isPurchased = true
+                }
+                monthResult.push(e);
+            }
+        });
+        templateObject.monthArr.set(monthResult);
+    });
+  };
     let templateObject = Template.instance();
     $('#edtFrequencyDetail').css('display', 'none');
     // $('#onEventSettings').css('display', 'none');
@@ -184,6 +289,37 @@ Template.purchaseordercard.onRendered(() => {
           $("#formCheck-january").prop('checked', true);
       }
     }
+
+    templateObject.hasFollowings = async function() {
+        var currentDate = new Date();
+        let purchaseService = new PurchaseBoardService();        
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
+            var orderDate = poData.fields.OrderDate;
+            var fromDate = orderDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingPOs = await sideBarService.getAllTPurchaseOrderListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var poList = followingPOs.tpurchaseorderlist;
+            if (poList.length > 1) {
+                $("#btn_follow2").css("display", "inline-block");
+            } else {
+                $("#btn_follow2").css("display", "none");
+            }
+        }
+
+    }
+    templateObject.hasFollowings();    
     $('#choosetemplate').attr('checked', true);
     const dataListTable = [
         ' ' || '',
@@ -257,18 +393,34 @@ Template.purchaseordercard.onRendered(() => {
       templateObject.reset_data.set(reset_data);
     }
     init_reset_data();
+    templateObject.insertItemWithLabel = (x, a, b) => {
+        var data = [...x];
+        var aPos = data.findIndex((x) => x.label === a);
+        var bPos = data.findIndex(x => x.label === b);
+        if(aPos === -1 || bPos === -1) return data;
+        data[bPos] = {...data[bPos], index: aPos + 1};
+        for(var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index:data[i].index + 1}
+        return data.sort((a,b) => a.index - b.index);
+    }
     // set initial table rest_data
     // custom field displaysettings
      templateObject.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
+      reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
       showCustomFieldDisplaySettings(reset_data);
-
+    
       try {
         getVS1Data("VS1_Customize").then(function (dataObject) {
           if (dataObject.length == 0) {
             sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              if(!reset_data[16]) reset_data.push({ index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: false, display: false })
+              reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+              reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+              reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
               showCustomFieldDisplaySettings(reset_data);
             }).catch(function (err) {
             });
@@ -278,6 +430,10 @@ Template.purchaseordercard.onRendered(() => {
              for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
                  reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                 if(!reset_data[16]) reset_data.push({ index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: false, display: false })
+                 reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+                 reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+                 reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
                  showCustomFieldDisplaySettings(reset_data);
                }
              }
@@ -289,7 +445,7 @@ Template.purchaseordercard.onRendered(() => {
       }
       return;
     }
-
+    
     function showCustomFieldDisplaySettings(reset_data) {
 
       let custFields = [];
@@ -1125,7 +1281,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
+        
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1193,7 +1349,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
+        
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1264,7 +1420,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
+        
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1609,7 +1765,7 @@ templateObject.getLastPOData = async function() {
                         $("#html-2-pdfwrapper_new #tax_list_print").remove();
                     }
                 }
-                $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
+                
         }
 
          // table content
@@ -1659,7 +1815,7 @@ templateObject.getLastPOData = async function() {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
+            
 
             }
 
@@ -4552,12 +4708,6 @@ templateObject.getLastPOData = async function() {
 
     exportSalesToPdf = async function (template_title,number)
     {
-        // if(template_title == 'Purchase Orders' && number == 1)
-        // {
-        //        exportSalesToPdf1();
-        // }
-        // else
-        // {
             if(template_title == 'Purchase Orders')
             {
                 await showPurchaseOrder1(template_title, number, true);
@@ -4680,7 +4830,6 @@ templateObject.getLastPOData = async function() {
             });
 
             return true;
-        // }
     }
 
 
@@ -5642,7 +5791,16 @@ Template.purchaseordercard.helpers({
     isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
     // custom field displaysettings
     displayfields: () => {
-      return Template.instance().displayfields.get();
+        let data = Template.instance().displayfields.get();
+        let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+        if (!isBatchSerialNoTracking) {
+          data.find((x) => x.class === 'SerialNo').display = false;
+          data.find((x) => x.class === 'SerialNo').active = false;
+        }
+        let monthArr = Template.instance().monthArr.get();  
+        data.find((x) => x.class === 'FixedAsset').display = monthArr.find((x) => x.moduleName === 'Fixed Assets').isPurchased;
+        data.find((x) => x.class === 'FixedAsset').active = monthArr.find((x) => x.moduleName === 'Fixed Assets').isPurchased;
+      return data;
     },
 
     isForeignEnabled: () => {
@@ -7174,29 +7332,26 @@ Template.purchaseordercard.events({
     'click  #open_print_confirm':function(event)
     {
         playPrintAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
         if($('#choosetemplate').is(':checked'))
         {
             $('#templateselection').modal('show');
         }
         else
         {
-
             $('.fullScreenSpin').css('display', 'inline-block');
-            $('#html-2-pdfwrapper').css('display', 'block');
-            if ($('.edtCustomerEmail').val() != "") {
-                $('.pdfCustomerName').html($('#edtCustomerName').val());
-                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-                var ponumber = $('#ponumber').val() || '.';
-                $('.po').text(ponumber);
-                var rowCount = $('.tblInvoiceLine tbody tr').length;
-
-                exportSalesToPdf1();
-
-            }
-
-            $('#confirmprint').modal('hide');
+            // $('#html-2-pdfwrapper').css('display', 'block');
+            let result = await exportSalesToPdf(template_list[0], 1);
+            // if ($('.edtCustomerEmail').val() != "") {
+            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+            //     var ponumber = $('#ponumber').val() || '.';
+            //     $('.po').text(ponumber);
+            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+            //     exportSalesToPdf1();
+            // }
+            // $('#confirmprint').modal('hide');
         }
     }, delayTimeAfterSound);
     },
@@ -7394,53 +7549,44 @@ Template.purchaseordercard.events({
 
           });
 
-        $('#html-2-pdfwrapper-new').css('display', 'none');
-        if ($('.edtCustomerEmail').val() != "") {
-            $('.pdfCustomerName').html($('#edtCustomerName').val());
-            $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            var ponumber = $('#ponumber').val() || '.';
-            $('.po').text(ponumber);
-            var rowCount = $('.tblInvoiceLine tbody tr').length;
-
-            if($('#print_purchase_order').is(':checked') || $('#print_purchase_order_second').is(':checked')) {
-                printTemplate.push('Purchase Orders');
-            }
-
-            if(printTemplate.length > 0) {
-
-                  for(var i = 0; i < printTemplate.length; i++)
-                  {
-                    if(printTemplate[i] == 'Purchase Orders')
-                    {
-                        var template_number = $('input[name="Purchase Orders"]:checked').val();
-                    }
-
-
-                    let result = await exportSalesToPdf(printTemplate[i],template_number);
-                    if(result == true)
-                    {
-
-                    }
-
-                  }
-
-            }
-
-
-
-        } else {
-            swal({
-                title: 'Customer Email Required',
-                text: 'Please enter customer email',
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.value) {}
-                else if (result.dismiss === 'cancel') {}
-            });
+        
+        if($('#print_purchase_order').is(':checked') || $('#print_purchase_order_second').is(':checked')) {
+            printTemplate.push('Purchase Orders');
         }
+
+        if(printTemplate.length > 0) {
+              for(var i = 0; i < printTemplate.length; i++)
+              {
+                if(printTemplate[i] == 'Purchase Orders')
+                {
+                    var template_number = $('input[name="Purchase Orders"]:checked').val();
+                }
+                let result = await exportSalesToPdf(printTemplate[i],template_number);
+                if(result == true)
+                {
+
+                }
+              }
+        }
+        // if ($('.edtCustomerEmail').val() != "") {
+        //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+        //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+        //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+        //     var ponumber = $('#ponumber').val() || '.';
+        //     $('.po').text(ponumber);
+        //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+        // } else {
+        //     swal({
+        //         title: 'Customer Email Required',
+        //         text: 'Please enter customer email',
+        //         type: 'error',
+        //         showCancelButton: false,
+        //         confirmButtonText: 'OK'
+        //     }).then((result) => {
+        //         if (result.value) {}
+        //         else if (result.dismiss === 'cancel') {}
+        //     });
+        // }
     }, delayTimeAfterSound);
     },
     // 'click .printConfirm': function(event) {
@@ -7479,7 +7625,7 @@ Template.purchaseordercard.events({
             event.preventDefault();
         }
     },
-    'click .btnRemove': function(event) {
+    'click .btnRemove': async function(event) {
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -7651,6 +7797,66 @@ Template.purchaseordercard.events({
                 $("#deleteLineModal").modal("toggle");
             }
         });
+    }, delayTimeAfterSound);
+    },
+    'click .btnDeletePO2': async function(event) {
+        playDeleteAudio();
+        setTimeout(async function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+        let isBORedirect = await templateObject.isbackorderredirect.get() || false;
+        let purchaseService = new PurchaseBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var objDetails = {
+                type: "TPurchaseOrderEx",
+                fields: {
+                    ID: currentInvoice,
+                    Deleted: true
+                }
+            };
+
+            purchaseService.savePurchaseOrderEx(objDetails).then(function(objDetails) {
+
+                if(FlowRouter.current().queryParams.trans){
+                  FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                }else{
+                  if(isBORedirect == true){
+                    FlowRouter.go('/purchaseorderlistBO?success=true');
+                  }else{
+                    FlowRouter.go('/purchaseorderlist?success=true');
+                  };
+                };
+            }).catch(function(err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                    else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+          if(FlowRouter.current().queryParams.trans){
+            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+          }else{
+            if(isBORedirect == true){
+              FlowRouter.go('/purchaseorderlistBO?success=true');
+            }else{
+              FlowRouter.go('/purchaseorderlist?success=true');
+            };
+          };
+        }
     }, delayTimeAfterSound);
     },
     'click .btnDeletePO': async function(event) {
@@ -9075,6 +9281,9 @@ Template.purchaseordercard.events({
       } else {
         reset_data[13].display = false;
       }
+      reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
+      reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
       reset_data = reset_data.filter(redata => redata.display);
 
       $(".displaySettings").each(function (index) {
@@ -9581,7 +9790,9 @@ Template.purchaseordercard.events({
             document.getElementById("oneTimeOnlySettings").style.display = "none";
             var monthDate = arrFrequencyVal[1];
             $("#sltDay").val('day' + monthDate);
-            var ofMonths = arrFrequencyVal[2];
+            var arrOfMonths = [];
+            if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
+              arrOfMonths = ofMonths.split(",");
             var arrOfMonths = ofMonths.split(",");
             for (i=0; i<arrOfMonths.length; i++) {
                 $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
@@ -9969,7 +10180,9 @@ Template.purchaseordercard.events({
             var monthDate = arrFrequencyVal[1];
             $("#sltDay").val('day' + monthDate);
             var ofMonths = arrFrequencyVal[2];
-            var arrOfMonths = ofMonths.split(",");
+            var arrOfMonths = [];
+            if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
+              arrOfMonths = ofMonths.split(",");
             for (i=0; i<arrOfMonths.length; i++) {
                 $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
             }
@@ -10359,6 +10572,9 @@ Template.purchaseordercard.events({
         const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
         let basedOnTypeTexts = '';
         let basedOnTypeAttr = '';
+        var erpGet = erpDb();
+        let sDate2 = '';
+        let fDate2 = '';        
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -10424,7 +10640,8 @@ Template.purchaseordercard.events({
           convertedFinishDate = finishDate ? finishDate.split('/')[2] + '-' + finishDate.split('/')[1] + '-' + finishDate.split('/')[0] : '';
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
-
+          sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -10447,6 +10664,219 @@ Template.purchaseordercard.events({
                 }
               };
               var result = await purchaseService.savePurchaseOrderEx(objDetails);
+              let period = ""; // 0
+              let days = [];
+              let i = 0;
+              let frequency2 = 0;
+              let weekdayObj = {
+                  saturday: 0,
+                  sunday: 0,
+                  monday: 0,
+                  tuesday: 0,
+                  wednesday: 0,
+                  thursday: 0,
+                  friday: 0,
+              };
+              let repeatMonths = [];
+              let repeatDates = [];
+              if (radioFrequency == "frequencyDaily" || radioFrequency == "frequencyOnetimeonly") {
+                  period = "Daily"; // 0
+                  if (radioFrequency == "frequencyDaily") {
+                      frequency2 = parseInt(everyDays);
+                      if (dailyRadioOption == "dailyEveryDay") {
+                          for (i = 0; i < 7; i++) {
+                              days.push(i);
+                          }
+                      }
+                      if (dailyRadioOption == "dailyWeekdays") {
+                          for (i = 1; i < 6; i++) {
+                              days.push(i);
+                          }
+                      }
+                      if (dailyRadioOption == "dailyEvery") {
+              
+                      }
+                  } else {
+                      repeatDates.push({
+                          "Dates": sDate2
+                      })
+                      frequency2 = 1;
+                  }
+              }
+              if (radioFrequency == "frequencyWeekly") {
+                  period = "Weekly"; // 1
+                  frequency2 = parseInt(everyWeeks);
+                  let arrSelectDays = selectDays.split(",");
+                  for (i = 0; i < arrSelectDays.length; i++) {
+                      days.push(arrSelectDays[i]);
+                      if (parseInt(arrSelectDays[i]) == 0)
+                          weekdayObj.sunday = 1;
+                      if (parseInt(arrSelectDays[i]) == 1)
+                          weekdayObj.monday = 1;
+                      if (parseInt(arrSelectDays[i]) == 2)
+                          weekdayObj.tuesday = 1;
+                      if (parseInt(arrSelectDays[i]) == 3)
+                          weekdayObj.wednesday = 1;
+                      if (parseInt(arrSelectDays[i]) == 4)
+                          weekdayObj.thursday = 1;
+                      if (parseInt(arrSelectDays[i]) == 5)
+                          weekdayObj.friday = 1;
+                      if (parseInt(arrSelectDays[i]) == 6)
+                          weekdayObj.saturday = 1;
+                  }
+              }
+              if (radioFrequency == "frequencyMonthly") {
+                  period = "Monthly"; // 0
+                  repeatMonths = convertStrMonthToNum(ofMonths);
+                  repeatDates = getRepeatDates(sDate2, fDate2, repeatMonths, monthDate);
+                  frequency2 = parseInt(monthDate);
+              }
+              if (days.length > 0) {
+                  for (let x = 0; x < days.length; x++) {
+                      let dayObj = {
+                          Name: "VS1_RepeatTrans",
+                          Params: {
+                              CloudUserName: erpGet.ERPUsername,
+                              CloudPassword: erpGet.ERPPassword,
+                              TransID: currentInvoice,
+                              TransType: "Cheque",
+                              Repeat_Frequency: frequency2,
+                              Repeat_Period: period,
+                              Repeat_BaseDate: sDate2,
+                              Repeat_finalDateDate: fDate2,
+                              Repeat_Saturday: weekdayObj.saturday,
+                              Repeat_Sunday: weekdayObj.sunday,
+                              Repeat_Monday: weekdayObj.monday,
+                              Repeat_Tuesday: weekdayObj.tuesday,
+                              Repeat_Wednesday: weekdayObj.wednesday,
+                              Repeat_Thursday: weekdayObj.thursday,
+                              Repeat_Friday: weekdayObj.friday,
+                              Repeat_Holiday: 0,
+                              Repeat_Weekday: parseInt(days[x].toString()),
+                              Repeat_MonthOffset: 0,
+                          },
+                      };
+                      var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
+                      var oPost = new XMLHttpRequest();
+                      oPost.open(
+                          "POST",
+                          URLRequest +
+                          erpGet.ERPIPAddress +
+                          ":" +
+                          erpGet.ERPPort +
+                          "/" +
+                          'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatTrans"',
+                          true
+                      );
+                      oPost.setRequestHeader("database", erpGet.ERPDatabase);
+                      oPost.setRequestHeader("username", erpGet.ERPUsername);
+                      oPost.setRequestHeader("password", erpGet.ERPPassword);
+                      oPost.setRequestHeader("Accept", "application/json");
+                      oPost.setRequestHeader("Accept", "application/html");
+                      oPost.setRequestHeader("Content-type", "application/json");
+                      oPost.send(myString);
+              
+                      oPost.onreadystatechange = function() {
+                          if (oPost.readyState == 4 && oPost.status == 200) {
+                              var myArrResponse = JSON.parse(oPost.responseText);
+                              var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
+                          } else if (oPost.readyState == 4 && oPost.status == 403) {
+                              
+                          } else if (oPost.readyState == 4 && oPost.status == 406) {
+                              
+                          } else if (oPost.readyState == "") {
+                              
+                          }
+                          $(".fullScreenSpin").css("display", "none");
+                      };
+                  }
+              } else {
+                  let dayObj = {};
+                  if (radioFrequency == "frequencyOnetimeonly" || radioFrequency == "frequencyMonthly") {
+                      dayObj = {
+                          Name: "VS1_RepeatTrans",
+                          Params: {
+                              CloudUserName: erpGet.ERPUsername,
+                              CloudPassword: erpGet.ERPPassword,
+                              TransID: currentInvoice,
+                              TransType: "Cheque",
+                              Repeat_Dates: repeatDates,
+                              Repeat_Frequency: frequency2,
+                              Repeat_Period: period,
+                              Repeat_BaseDate: sDate2,
+                              Repeat_finalDateDate: fDate2,
+                              Repeat_Saturday: weekdayObj.saturday,
+                              Repeat_Sunday: weekdayObj.sunday,
+                              Repeat_Monday: weekdayObj.monday,
+                              Repeat_Tuesday: weekdayObj.tuesday,
+                              Repeat_Wednesday: weekdayObj.wednesday,
+                              Repeat_Thursday: weekdayObj.thursday,
+                              Repeat_Friday: weekdayObj.friday,
+                              Repeat_Holiday: 0,
+                              Repeat_Weekday: 0,
+                              Repeat_MonthOffset: 0,
+                          },
+                      };
+                  } else {
+                      dayObj = {
+                          Name: "VS1_RepeatTrans",
+                          Params: {
+                              CloudUserName: erpGet.ERPUsername,
+                              CloudPassword: erpGet.ERPPassword,
+                              TransID: currentInvoice,
+                              TransType: "Cheque",
+                              Repeat_Frequency: frequency2,
+                              Repeat_Period: period,
+                              Repeat_BaseDate: sDate2,
+                              Repeat_finalDateDate: fDate2,
+                              Repeat_Saturday: weekdayObj.saturday,
+                              Repeat_Sunday: weekdayObj.sunday,
+                              Repeat_Monday: weekdayObj.monday,
+                              Repeat_Tuesday: weekdayObj.tuesday,
+                              Repeat_Wednesday: weekdayObj.wednesday,
+                              Repeat_Thursday: weekdayObj.thursday,
+                              Repeat_Friday: weekdayObj.friday,
+                              Repeat_Holiday: 0,
+                              Repeat_Weekday: 0,
+                              Repeat_MonthOffset: 0,
+                          },
+                      };
+                  }
+                  var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
+                  var oPost = new XMLHttpRequest();
+                  oPost.open(
+                      "POST",
+                      URLRequest +
+                      erpGet.ERPIPAddress +
+                      ":" +
+                      erpGet.ERPPort +
+                      "/" +
+                      'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatTrans"',
+                      true
+                  );
+                  oPost.setRequestHeader("database", erpGet.ERPDatabase);
+                  oPost.setRequestHeader("username", erpGet.ERPUsername);
+                  oPost.setRequestHeader("password", erpGet.ERPPassword);
+                  oPost.setRequestHeader("Accept", "application/json");
+                  oPost.setRequestHeader("Accept", "application/html");
+                  oPost.setRequestHeader("Content-type", "application/json");
+                  // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
+                  oPost.send(myString);
+              
+                  oPost.onreadystatechange = function() {
+                    if (oPost.readyState == 4 && oPost.status == 200) {
+                        var myArrResponse = JSON.parse(oPost.responseText);
+                        var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
+                    } else if (oPost.readyState == 4 && oPost.status == 403) {
+                        
+                    } else if (oPost.readyState == 4 && oPost.status == 406) {
+                        
+                    } else if (oPost.readyState == "") {
+                        
+                    }
+                    $(".fullScreenSpin").css("display", "none");
+                };
+              }              
             }
           } else {
             // window.open("/invoicecard", "_self");

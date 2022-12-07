@@ -763,7 +763,7 @@ Template.quotedsalesorderinvoicedamounts.onRendered(()=>{
                 });
 
 
-            }, 1000);
+            }, 0);
 
         });
     });
