@@ -17419,6 +17419,8 @@ Template.new_invoice.events({
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
+        let salesService = new SalesBoardService();
+        var currentDate = new Date();◘
         var clicktimes = 0;
         var targetID = $(event.target).closest("tr").attr("id");
         $("#selectDeleteLineID").val(targetID);
@@ -17429,7 +17431,6 @@ Template.new_invoice.events({
         var objDetails = "";
         var invList = [];
         if (getso_id[1]) {
-            $(".fullScreenSpin").css("display", "inline-block");
             currentInvoice = parseInt(currentInvoice);
             var invData = await salesService.getOneInvoicedataEx(currentInvoice);
             var saleDate = invData.fields.SaleDate;
@@ -17442,9 +17443,9 @@ Template.new_invoice.events({
                 initialReportLoad,
                 0
             );
-            var invList = followingInvoices.tinvoicelist;
+            invList = followingInvoices.tinvoicelist;
         }
-        if(targetID){      
+        if(targetID != undefined){
             times++;
             if (times == 1) {
                 $("#deleteLineModal").modal("toggle");
@@ -17623,11 +17624,10 @@ Template.new_invoice.events({
                     $("#deleteLineModal").modal("toggle");
                 }
             }
-        } else if(invList.length) {
-            $("#footerDeleteModal2").modal("toggle");
         } else {
-            $("#footerDeleteModal1").modal("toggle");
-        }
+            if(invList.length) $("#footerDeleteModal2").modal("toggle");
+            else $("#footerDeleteModal1").modal("toggle");
+        } 
     },
     "click .btnDeleteFollowingInvoices": async function(event) {
         playDeleteAudio();
