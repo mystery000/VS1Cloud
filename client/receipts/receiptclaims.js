@@ -1471,6 +1471,7 @@ Template.receiptsoverview.onRendered(function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         ocrService.POST(imageData, fileName).then(function(data) {
             $('.fullScreenSpin').css('display', 'none');
+
             let from = $('#employeeListModal').attr('data-from');
             let paymenttype = data.payment_type;
             let transactionTypeName = "Cash";
@@ -1493,35 +1494,39 @@ Template.receiptsoverview.onRendered(function() {
                 parentElement = "#nav-time";
             }
             let objDetails;
-            let supplier_name = data.vendor.name? data.vendor.name:"";
-            let phone_number = data.vendor.phone_number? data.vendor.phone_number:"";
-            let email = data.vendor.email? data.vendor.email:"";
-            let currency_code = data.currency_code? data.currency_code:"";
-            let note = data.note? data.note:"";
-            let address = data.vendor.address? data.vendor.address:"";
-            let vendor_type = data.vendor.vendor_type? data.vendor.vendor_type:"";
-            if (supplier_name == "") {
-                let keyword = "Store:";
-                let start_pos = data.ocr_text.indexOf(keyword);
-                if (start_pos > 0) {
-                    start_pos += keyword.length;
-                    let subtext = data.ocr_text.substring(start_pos, data.ocr_text.length-1);
-                    let end_pos = subtext.trim().indexOf("\n");
-                    let subtext2 = subtext.substring(0, end_pos+1);
-                    let end_pos2 = subtext2.trim().indexOf("\t");
-                    if (end_pos2 != -1) {
-                        supplier_name = subtext2.substring(0, end_pos2+1);
-                    } else {
-                        supplier_name = subtext2;
-                    }
-                    supplier_name = supplier_name.trim();
-                } else if (data.vendor.address && data.vendor.address != "") {
-                    let pos = data.ocr_text.indexOf(data.vendor.address);
-                    supplier_name = data.ocr_text.substring(0, pos-1);
-                    supplier_name = supplier_name.replace("\n", " ");
-                    supplier_name = supplier_name.trim();
-                }
-            }
+            let supplier_name = data.supplier.value?  data.supplier.value:"";
+            let phone_number = "";
+            // let phone_number = data.vendor.phone_number? data.vendor.phone_number:"";
+            let email = "";
+            // let email = data.vendor.email? data.vendor.email:"";
+            let currency_code = data.locale.currency? data.locale.currency:"";
+            let note = data.tip.value? data.tip.value:"";
+            // let address = data.vendor.address? data.vendor.address:"";
+            let address = "";
+            let vendor_type = data.category.value? data.category.value : "";
+
+            // if (supplier_name == "") {
+            //     let keyword = "Store:";
+            //     let start_pos = data.ocr_text.indexOf(keyword);
+            //     if (start_pos > 0) {
+            //         start_pos += keyword.length;
+            //         let subtext = data.ocr_text.substring(start_pos, data.ocr_text.length-1);
+            //         let end_pos = subtext.trim().indexOf("\n");
+            //         let subtext2 = subtext.substring(0, end_pos+1);
+            //         let end_pos2 = subtext2.trim().indexOf("\t");
+            //         if (end_pos2 != -1) {
+            //             supplier_name = subtext2.substring(0, end_pos2+1);
+            //         } else {
+            //             supplier_name = subtext2;
+            //         }
+            //         supplier_name = supplier_name.trim();
+            //     } else if (data.vendor.address && data.vendor.address != "") {
+            //         let pos = data.ocr_text.indexOf(data.vendor.address);
+            //         supplier_name = data.ocr_text.substring(0, pos-1);
+            //         supplier_name = supplier_name.replace("\n", " ");
+            //         supplier_name = supplier_name.trim();
+            //     }
+            // }
             if (supplier_name != "") {
                 let isExistSupplier = false;
                 templateObject.suppliers.get().forEach(supplier => {
@@ -1630,9 +1635,9 @@ Template.receiptsoverview.onRendered(function() {
             $(parentElement + ' .employees').val(loggedUserName);
             // $(parentElement + ' .currencies').val(currency);
             $(parentElement + ' .currencies').val(currency_code);
-            $(parentElement + ' .dtReceiptDate').datepicker('setDate', new Date(data.date));
+            $(parentElement + ' .dtReceiptDate').datepicker('setDate', new Date(data.date.value));
             // $(parentElement + ' .edtTotal').val('$' + data.total);
-            $(parentElement + ' .edtTotal').val(data.total);
+            $(parentElement + ' .edtTotal').val(data.total_amount.value);
             $(parentElement + ' .transactionTypes').val(transactionTypeName);
             $(parentElement + ' #txaDescription').val(note);
         }).catch(function(err) {
