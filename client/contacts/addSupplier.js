@@ -2725,7 +2725,6 @@ Template.supplierscard.helpers({
         if (temp && temp.mobile) {
             temp.mobile = temp.mobile.replace('+61', '0')
         }
-        console.log('temp:',temp)
         return temp;
     },
     countryList: () => {
