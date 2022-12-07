@@ -9586,51 +9586,76 @@ Template.paymentcard.events({
 
     },
 
-    'click .btnRemove': function (event) {
+    'click .btnRemove': async function (event) {
         $('.btnDeleteLine').show();
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         var clicktimes = 0;
+        var currentDate = new Date();
+        let paymentService = new PaymentsService();
         var targetID = $(event.target).closest('tr').attr('id') || 0; // table row ID
         $('#selectDeleteLineID').val(targetID);
-
-        times++;
-        if (times == 1) {
-            if (targetID == 0) {
-                $(event.target).closest('tr').remove();
-            } else {
-                $('#deleteLineModal').modal('toggle');
-            }
-
-        } else {
-            if ($('#tblPaymentcard tbody>tr').length > 1) {
-                this.click;
-                let total = 0;
-                $(event.target).closest('tr').remove();
-                event.preventDefault();
-                let $tblrows = $("#tblPaymentcard tbody tr");
-                $tblrows.each(function (index) {
-                    var $tblrow = $(this);
-                    total += parseFloat($tblrow.find(".linePaymentamount ").val().replace(/[^0-9.-]+/g, "")) || 0;
-                });
-                $('.appliedAmount').text(utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
-                return false;
-
-            } else {
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var paymentList = [];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var paymentData = await paymentService.getOneCustomerPayment(currentInvoice);
+            var paymentDate = paymentData.fields.PaymentDate;
+            var fromDate = paymentDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingPayments = await sideBarService.getAllTCustomerPaymentListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            paymentList = followingPayments.tcustomerpaymentlist;
+        }
+        if(targetID != undefined){
+            times++;
+            if (times == 1) {
                 if (targetID == 0) {
                     $(event.target).closest('tr').remove();
                 } else {
                     $('#deleteLineModal').modal('toggle');
                 }
-            }
 
+            } else {
+                if ($('#tblPaymentcard tbody>tr').length > 1) {
+                    this.click;
+                    let total = 0;
+                    $(event.target).closest('tr').remove();
+                    event.preventDefault();
+                    let $tblrows = $("#tblPaymentcard tbody tr");
+                    $tblrows.each(function (index) {
+                        var $tblrow = $(this);
+                        total += parseFloat($tblrow.find(".linePaymentamount ").val().replace(/[^0-9.-]+/g, "")) || 0;
+                    });
+                    $('.appliedAmount').text(utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+                    return false;
+
+                } else {
+                    if (targetID == 0) {
+                        $(event.target).closest('tr').remove();
+                    } else {
+                        $('#deleteLineModal').modal('toggle');
+                    }
+                }
+
+            }
+        } else {
+            if(paymentList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            else $("#footerDeleteModal1").modal("toggle");
         }
     },
     'click .btnDeleteFollowingPayments': async function (event) {
         playDeleteAudio();
         var currentDate = new Date();
-        let templateObject = Template.instance();
         let paymentService = new PaymentsService();
+        let templateObject = Template.instance();
         setTimeout(async function(){
 
         swal({
