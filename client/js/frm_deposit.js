@@ -4035,7 +4035,7 @@ Template.depositcard.events({
                 }
             }
         } else {
-            if(depositList.length) $("#footerDeleteModal2").modal("toggle");
+            if(depositList.length > 1) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },

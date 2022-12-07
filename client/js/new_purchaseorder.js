@@ -7763,7 +7763,7 @@ Template.purchaseordercard.events({
                 }
             }
         } else {
-            if(poList.length) $("#footerDeleteModal2").modal("toggle");
+            if(poList.length > 1) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },

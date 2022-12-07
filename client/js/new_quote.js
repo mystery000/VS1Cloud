@@ -7410,7 +7410,7 @@ Template.new_quote.events({
                 }
             }
         } else {
-            if(quoteList.length) $("#footerDeleteModal2").modal("toggle");
+            if(quoteList.length > 1) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },

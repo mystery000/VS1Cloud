@@ -7320,7 +7320,7 @@ Template.refundcard.events({
                 }
             }
         } else {
-            if(refundList.length) $("#footerDeleteModal2").modal("toggle");
+            if(refundList.length > 1) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },

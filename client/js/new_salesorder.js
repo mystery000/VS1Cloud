@@ -9728,7 +9728,7 @@ Template.new_salesorder.events({
                 }, 1000)
             }
         } else {
-            if(soList.length) $("#footerDeleteModal2").modal("toggle");
+            if(soList.length > 1) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },

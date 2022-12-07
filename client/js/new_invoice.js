@@ -17625,7 +17625,7 @@ Template.new_invoice.events({
                 }
             }
         } else {
-            if(invList.length) $("#footerDeleteModal2").modal("toggle");
+            if(invList.length > 1) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         } 
     },

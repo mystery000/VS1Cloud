@@ -6556,7 +6556,7 @@ Template.chequecard.events({
         }
       }
     } else {
-      if(chequeList.length) $("#footerDeleteModal2").modal("toggle");
+      if(chequeList.length > 1) $("#footerDeleteModal2").modal("toggle");
       else $("#footerDeleteModal1").modal("toggle");
     }
   },

@@ -6561,7 +6561,7 @@ Template.creditcard.events({
                 }
             }
         } else {
-            if(creditList.length) $("#footerDeleteModal2").modal("toggle");
+            if(creditList.length > 1) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },
