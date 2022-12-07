@@ -184,6 +184,30 @@ Template.supplierpaymentcard.onRendered(() => {
     .catch(function (err) {
     });
   }
+
+  templateObject.fillBankInfoFromUrl = function () {
+    var queryParams = FlowRouter.current().queryParams;
+    if(queryParams.bank) {
+      let edtBankName = queryParams.edtBankName;
+      let edtBankAccountName = queryParams.edtBankAccountName;
+      let edtBSB = queryParams.edtBSB;
+      let edtBankAccountNo = queryParams.edtBankAccountNo;
+      let swiftCode = queryParams.swiftCode;
+      let apcaNo = queryParams.apcaNo;
+      let routingNo = queryParams.routingNo;
+      let sltBankCodes = queryParams.sltBankCodes;
+      $('#tab-6').click();
+      $('#edtBankName').val(edtBankName)
+      $('#edtBankAccountName').val(edtBankAccountName)
+      $('#edtBsb').val(edtBSB)
+      $('#edtBankAccountNumber').val(edtBankAccountNo)
+      $('#edtSwiftCode').val(swiftCode)
+      $('#edtRoutingNumber').val(routingNo)
+      // $('#sltCurrency').val()
+    }
+  }
+  templateObject.fillBankInfoFromUrl();
+
   // /**
   //  * Lets load the default currency
   //  */

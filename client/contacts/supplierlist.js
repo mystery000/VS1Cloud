@@ -38,7 +38,20 @@ Template.supplierlist.onRendered(function() {
     $('#tblSupplierlist tbody').on( 'click', 'tr', function () {
         const listData = $(this).closest('tr').attr('id');
         if(listData){
-            FlowRouter.go('/supplierscard?id=' + listData);
+          let params = ''
+          var queryParams = FlowRouter.current().queryParams;
+          if(queryParams.bank) {
+            let edtBankName = queryParams.edtBankName;
+            let edtBankAccountName = queryParams.edtBankAccountName;
+            let edtBSB = queryParams.edtBSB;
+            let edtBankAccountNo = queryParams.edtBankAccountNo;
+            let swiftCode = queryParams.swiftCode;
+            let apcaNo = queryParams.apcaNo;
+            let routingNo = queryParams.routingNo;
+            let sltBankCodes = queryParams.sltBankCodes;
+            params = '&bank=true&edtBankName='+edtBankName+'&edtBankAccountName='+edtBankAccountName+'&edtBSB='+edtBSB+'&edtBankAccountNo='+edtBankAccountNo+'&swiftCode='+swiftCode+'&apcaNo='+apcaNo+'&routingNo='+routingNo+'&sltBankCodes='+sltBankCodes;
+          }
+          FlowRouter.go('/supplierscard?id=' + listData + params);
         }
     });
     templateObject.checkSetupWizardFinished = async function () {

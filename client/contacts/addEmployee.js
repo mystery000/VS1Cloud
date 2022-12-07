@@ -180,6 +180,64 @@ Template.employeescard.onRendered(function() {
     let totAmount = 0;
     let totAmountOverDue = 0;
 
+    setTimeout(() => {
+      $("#edtBankName").editableSelect();
+      $("#edtBankName")
+        .editableSelect()
+        .on("click.editable-select", function (e, li) {
+          var $earch = $(this);
+          var offset = $earch.offset();
+          var bankName = e.target.value || "";
+
+          if (e.pageX > offset.left + $earch.width() - 8) {
+            $("#bankNameModal").modal();
+            $(".fullScreenSpin").css("display", "none");
+
+          } else {
+            if (bankName.replace(/\s/g, "") != "") {
+              $("#bankNameModal").modal("toggle");
+            } else {
+              $("#bankNameModal").modal();
+            }
+          }
+        });
+      
+    }, 2500);
+
+    $(document).on("click", "#tblBankName tbody tr", function (e) {
+      var table = $(this);
+      let BankName = table.find(".bankName").text();
+      $('#bankNameModal').modal('toggle');
+      $('#edtBankName').val(BankName);
+    }); 
+
+    templateObject.fillBankInfoFromUrl = function () {
+      var queryParams = FlowRouter.current().queryParams;
+      if(queryParams.bank) {
+        let edtBankName = queryParams.edtBankName;
+        let edtBankAccountName = queryParams.edtBankAccountName;
+        let edtBSB = queryParams.edtBSB;
+        let edtBankAccountNo = queryParams.edtBankAccountNo;
+        let swiftCode = queryParams.swiftCode;
+        let apcaNo = queryParams.apcaNo;
+        let routingNo = queryParams.routingNo;
+        let sltBankCodes = queryParams.sltBankCodes;
+        $('.payrollTab').click();
+        setTimeout(() => {
+          $('#contact-tab').click();
+          $('#edtBankName').val(edtBankName)
+          $('#bankAccountName').val(edtBankAccountName)
+          $('#bankAccountBSB').val(edtBSB)
+          $('#bankAccountNo').val(edtBankAccountNo)
+          $('#edtSwiftCode').val(swiftCode)
+          $('#edtRoutingNumber').val(routingNo)
+          // $('#sltCurrency').val()
+        }, 500);
+      }
+    }
+    setTimeout(() => {
+      templateObject.fillBankInfoFromUrl();
+    }, 3500);
     // setTimeout(function() {
     //     $('#tblLeaveRequests').DataTable({
     //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",

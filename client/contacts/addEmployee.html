@@ -2136,6 +2136,13 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-6 col-md-3">
+                                                                          <div class="form-group" style="margin: 4px;">
+                                                                              <label>Bank Name</label> 
+                                                                              <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName" value="{{record.bankName}}">
+                                                                              </select>
+                                                                          </div>
+                                                                      </div>
+                                                                        <div class="col-6 col-md-3">
                                                                             <div class="form-group">
                                                                                 <label>Account Name</label>
                                                                                 <input type="text" class="form-control primaryAccName" id="bankAccountName" value="{{employeePaySetting.BankAccountName}}">
@@ -2151,6 +2158,18 @@
                                                                             <div class="form-group">
                                                                                 <label>Account Number</label>
                                                                                 <input type="text" class="form-control primaryAccNumber" id="bankAccountNo" value="{{employeePaySetting.BankAccountNo}}">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-6 col-md-3">
+                                                                            <div class="form-group" style="margin: 4px;">
+                                                                                <label>Swift Code</label>
+                                                                                <input type="text" class="form-control" id="edtSwiftCode" name="edtSwiftCode" value="{{record.bankAccountNo}}">
+                                                                            </div>
+                                                                        </div> 
+                                                                        <div class="col-6 col-md-3">
+                                                                            <div class="form-group" style="margin: 4px;">
+                                                                                <label>Routing Number</label>
+                                                                                <input type="text" class="form-control" id="edtRoutingNumber" name="edtRoutingNumber" value="{{record.routingNumber}}">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -3693,6 +3712,10 @@
         {{> AppTableModal AppTableModalData=AppTableModalData}}
     </div>
 
+    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal" style="z-index: 99999999 !important;">
+      {{> bankNameModal}}
+    </div>
+
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
         <div class="modal-dialog" role="document" style="max-width: 670px!important;">
@@ -3813,6 +3836,7 @@
             </div>
         </div>
     </div>
+
 
     {{> SelectPayCalendar }}
     <script>
