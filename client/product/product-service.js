@@ -83,9 +83,9 @@ export class ProductService extends BaseService {
     }
     getGlobalSearchReceiptClaims(searchName) {
         let options = {
-            select: "[ID]='" + searchName,
+            select: "[MetaID]='" + searchName,
         };
-        return this.getList(this.ERPObjects.TFixedAssets, options);
+        return this.getList(this.ERPObjects.TExpenseClaimList, options);
     }
     getGlobalSearchTasks(searchName) {//TSK-123
         //TTasks?select=[id]=1

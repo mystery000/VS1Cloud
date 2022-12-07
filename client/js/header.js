@@ -1017,7 +1017,7 @@ Template.header.onRendered(function () {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else if (segs[0] === Barcode_Prefix_Appointment) {
-                productService.getGlobalSearchAppointment(segs[1]).then(function (data) {
+                productService.getGlobalSearchAppointment(segs[1]).then(function (data) {//Done Vladyslav
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
                     dataSelectID = segs[1] || '';
@@ -1031,7 +1031,7 @@ Template.header.onRendered(function () {
                 }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            } else if (segs[0] === Barcode_Prefix_Credit) {
+            } else if (segs[0] === Barcode_Prefix_Credit) {//Done Vladyslav
                 productService.getGlobalSearchCredit(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
@@ -1061,7 +1061,7 @@ Template.header.onRendered(function () {
                 }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            } else if (segs[0] === Barcode_Prefix_Deposit) {
+            } else if (segs[0] === Barcode_Prefix_Deposit) {//Done Vladyslav
                 productService.getGlobalSearchDeposit(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
@@ -1076,7 +1076,7 @@ Template.header.onRendered(function () {
                 }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            } else if (segs[0] === Barcode_Prefix_FixedAsset) {
+            } else if (segs[0] === Barcode_Prefix_FixedAsset) {//Done Vladyslav
                 productService.getGlobalSearchFixedAssets(segs[1]).then(function (data) {
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
@@ -1097,7 +1097,7 @@ Template.header.onRendered(function () {
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
                     dataSelectID = segs[1] || '';
-                    if (data.tfixedassets.length > 0) {
+                    if (data.texpenseclaimlist.length > 0) {
                         window.open('/receiptsoverview?id='+dataSelectID, '_self');
                     } else {
                         swal('No record with that exact number "' + barcode + '"', '', 'warning');
