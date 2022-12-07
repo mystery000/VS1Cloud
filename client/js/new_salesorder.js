@@ -9571,7 +9571,7 @@ Template.new_salesorder.events({
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
         var currentDate = new Date();
-        let salesService = new SalesBoardService();◘
+        let salesService = new SalesBoardService();
         var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
@@ -9735,7 +9735,7 @@ Template.new_salesorder.events({
     'click .btnDeleteFollowingSOs': async function(event) {
         playDeleteAudio();
         var currentDate = new Date();
-        let salesService = new SalesBoardService();◘
+        let salesService = new SalesBoardService();
         let templateObject = Template.instance();
         setTimeout(async function(){
 

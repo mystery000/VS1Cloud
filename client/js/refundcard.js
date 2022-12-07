@@ -7199,7 +7199,7 @@ Template.refundcard.events({
             event.preventDefault();
         }
     },
-    'click .btnRemove': function(event) {
+    'click .btnRemove':async function(event) {
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -7212,7 +7212,7 @@ Template.refundcard.events({
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
         var refundList = [];
-        LoadingOverlay.show();
+        
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var refundData = await salesService.getRefundSales(currentInvoice);
