@@ -4028,39 +4028,62 @@ Template.journalentrycard.events({
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
-
+        var currentDate = new Date();
+        let purchaseService = new PurchaseBoardService();
         var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-
-        times++;
-
-        if (times == 1) {
-            $('#deleteLineModal').modal('toggle');
-        } else {
-            if ($('#tblJournalEntryLine tbody>tr').length > 1) {
-                this.click;
-                $(event.target).closest('tr').remove();
-                event.preventDefault();
-                let $tblrows = $("#tblJournalEntryLine tbody tr");
-
-                let lineAmount = 0;
-                let subGrandTotal = 0;
-                let taxGrandTotal = 0;
-
-
-                return false;
-
-            } else {
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var journalList = [];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var journalData = await purchaseService.getOneJournalEnrtyData(currentInvoice);
+            var transactionDate = journalData.fields.TransactionDate;
+            var fromDate = transactionDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingJournals = await sideBarService.getTJournalEntryListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            journalList = followingJournals.tjournalentrylist;
+        }
+        if(targetID != undefined){
+            times++;
+            if (times == 1) {
                 $('#deleteLineModal').modal('toggle');
+            } else {
+                if ($('#tblJournalEntryLine tbody>tr').length > 1) {
+                    this.click;
+                    $(event.target).closest('tr').remove();
+                    event.preventDefault();
+                    let $tblrows = $("#tblJournalEntryLine tbody tr");
+
+                    let lineAmount = 0;
+                    let subGrandTotal = 0;
+                    let taxGrandTotal = 0;
+
+
+                    return false;
+
+                } else {
+                    $('#deleteLineModal').modal('toggle');
+                }
             }
+        } else {
+            if(journalList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            else $("#footerDeleteModal1").modal("toggle");
         }
     },
     'click .btnDeleteFollowingJournals': async function(event) {
         playDeleteAudio();
         var currentDate = new Date();
-        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        let templateObject = Template.instance();
         setTimeout(async function(){
 
         swal({
