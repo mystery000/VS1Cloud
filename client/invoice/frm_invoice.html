@@ -82,35 +82,35 @@
           float: right;
         }
 
-        .leadTotal {
-          font-weight: 800 !important;
+      .leadTotal {
+        font-weight: 800 !important;
+      }
+
+      .leadHidden {
+        visibility: hidden;
+        height: 0px !important;
+      }
+
+      @media screen and (min-width: 1366px) {
+        .colComments {
+          padding-right: 2.5rem;
+        }
+      }
+
+      @media screen and (max-width: 450px) {
+        .desktopButtons {
+          display: none;
         }
 
-        .leadHidden {
-          visibility: hidden;
-          height: 0px !important;
+        .mobileButtons {
+          display: flex !important;
         }
+      }
 
-        @media screen and (min-width: 1366px) {
-          .colComments {
-            padding-right: 2.5rem;
-          }
-        }
-
-        @media screen and (max-width: 450px) {
-          .desktopButtons {
-            display: none;
-          }
-
-          .mobileButtons {
-            display: flex !important;
-          }
-        }
-
-        .paidIcon {
-          animation: blink 2s ease-in infinite;
-          -webkit-animation: blink 2s ease-in infinite;
-        }
+      .paidIcon {
+        animation: blink 2s ease-in infinite;
+        -webkit-animation: blink 2s ease-in infinite;
+      }
     </style>
 
     {{#if invoicerecord}}
