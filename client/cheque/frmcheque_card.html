@@ -982,67 +982,14 @@
               {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
           </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-4 col-xl-2" id="totalSection"
-          style="padding-right: 1.5rem; padding-left: 1.5rem; margin-bottom: 12px;">
-          <div class="row">
-            <div class="col-4" style="padding: 0px;">
-              <p class="lead">Subtotal</p>
-            </div>
-            <div class="col-8" style="padding: 0px;">
-              <p class="lead" id="subtotal_total" name="subtotal_total">{{chequerecord.SubTotal}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4" style="padding: 0px;">
-              <p class="lead">Tax</p>
-            </div>
-            <div class="col-8" style="padding: 0px;">
-              <p class="lead" id="subtotal_tax" name="subtotal_tax">{{chequerecord.TotalTax}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4" style="padding: 0px;">
-              <p class="lead">Net</p>
-            </div>
-            <div class="col-8" style="padding: 0px;">
-              <p class="lead" id="subtotal_net" name="subtotal_net">{{chequerecord.Total}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12" style="padding: 0px;">
-              <hr style="border-top: 1px solid #696969;" />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4" style="padding: 0px;">
-              <p class="lead leadTotal">TOTAL</p>
-            </div>
-            <div class="col-8" style="padding: 0px;">
-              <p class="lead leadTotal" id="grandTotal" name="grandTotal">{{chequerecord.Total}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12" style="padding: 0px;">
-              <hr style="border-top: 3px solid #696969;" />
-            </div>
-          </div>
-          <!--
-                        <div class="row">
-                            <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Paid</p>
-                            </div>
-                            <div class="col-8" style="padding: 0px;">
-                                <p class="lead" id="totalPaidAmt" name="totalPaidAmt">{{chequerecord.totalPaid}}</p>
-                            </div>
-                        </div>
--->
-          <!-- <div class="row">
-                            <div class="col-12" style="padding: 0px;">
-                                <hr style="border-top: 3px solid #696969;" />
-                                <p style="display:none;" id="totalBalanceDue" name="totalBalanceDue">{{chequerecord.balanceDue}}</p>
-                            </div>
-                        </div> -->
-        </div>
+        {{> transaction_calculation
+          isPartialPaid=chequerecord.isPartialPaid
+          SubTotal=chequerecord.SubTotal
+          TotalTax=chequerecord.TotalTax
+          Total=chequerecord.Total
+          TotalPaid=chequerecord.totalPaid
+          BalanceDue=chequerecord.balanceDue
+          }}
       </div>
       <div class="row justify-content-center mobileButtons" style="display: none;">
           {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
@@ -1487,72 +1434,7 @@
       </div>
     </div>
     <!-- Modal print-button -modal -->
-    <div class="modal fade chequecard" role="dialog" tabindex="-1" id="accountListModal">
-      {{> accountlistpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
-      {{> addaccountpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="statusPopModal">
-      {{> statuspop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="newStatusPopModal">
-      {{> newstatuspop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="shipViaModal">
-      {{> shipviapop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="newShipViaModal">
-      {{> newshipvia}}
-    </div>
-
-    <!-- End Modal Product -->
-    <!-- Modal Tax Rate -modal -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
-      {{> taxratelistpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
-      {{> newtaxratepop}}
-    </div>
-    <!-- End Modal Tax Rate -->
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
-      {{> copyfrequencypop}}
-    </div>
-
-    <!-- ModalSupplier -->
-    <div class="modal fade supplierListModal" role="dialog" tabindex="-1" id="supplierListModal">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable supplierListModalInner" role="document"
-        style="max-width: 90vw;">
-        <div class="modal-content supplierListContent">
-          <div class="modal-header">
-            <h4>Supplier List</h4><button type="button" class="close checkclose" data-dismiss="modal"
-              aria-label="Close"><span aria-hidden="true">×</span></button>
-          </div>
-          <div class="modal-body mainSupplierModalBody" style="padding: 0px; overflow-x: hidden;">
-            <input type="hidden" style="width: 100%; display:none;" id="supplierSelectLineID"
-              name="supplierSelectLineID" readonly>
-            {{> supplierlistpop}}
-
-          </div>
-          <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal"
-              type="button">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- End Modal Supplier -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
-      {{> addsupplierpop}}
-    </div>
-
+    {{> all_transaction_modals}}
   </div>
 
   <!-- Start Help Video Modal -->

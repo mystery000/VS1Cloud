@@ -25,6 +25,24 @@ Template.supplierscard.onCreated(function() {
     templateObject.defaultpurchaseterm = new ReactiveVar();
     templateObject.isSameAddress = new ReactiveVar();
     templateObject.isSameAddress.set(false);
+
+    templateObject.tableHeaderItems = new ReactiveVar([
+        {classString:"th colSortDate hiddenColumn", itemStyle:"",itemLabel:"id"},
+        {classString:"th colOrderDate", itemStyle:"",itemLabel:"Order Date"},
+        {classString:"th colPurchaseNo", itemStyle:"",itemLabel:"P/O No."},
+        {classString:"th colSupplier", itemStyle:"",itemLabel:"Supplier"},
+        {classString:"th colAmountEx", itemStyle:"",itemLabel:"Amount (Ex)"},
+        {classString:"th colTax", itemStyle:"",itemLabel:"Tax"},
+        {classString:"th colAmount", itemStyle:"",itemLabel:"Amount"},
+        {classString:"th colPaid", itemStyle:"",itemLabel:"Paid"},
+        {classString:"th colBalanceOutstanding", itemStyle:"",itemLabel:"Balance Outstanding"},
+        {classString:"th colStatus", itemStyle:"",itemLabel:"Type"},
+        {classString:"th colPurchaseCustField1 hiddenColumn", itemStyle:"",itemLabel:"Custom Field 1"},
+        {classString:"th colPurchaseCustField2 hiddenColumn", itemStyle:"",itemLabel:"Custom Field 2"},
+        {classString:"th colEmployee hiddenColumn", itemStyle:"",itemLabel:"Employee"},
+        {classString:"th colComments", itemStyle:"",itemLabel:"Comments"}
+    ])
+
     /* Attachments */
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
@@ -57,6 +75,62 @@ Template.supplierscard.onRendered(function() {
 
     let purchasetaxcode = '';
     templateObject.defaultpurchasetaxcode.set(loggedTaxCodeSalesInc);
+
+    setTimeout(() => {
+      $("#edtBankName").editableSelect();
+      $("#edtBankName")
+        .editableSelect()
+        .on("click.editable-select", function (e, li) {
+          var $earch = $(this);
+          var offset = $earch.offset();
+          var bankName = e.target.value || "";
+
+          if (e.pageX > offset.left + $earch.width() - 8) {
+            $("#bankNameModal").modal();
+            $(".fullScreenSpin").css("display", "none");
+
+          } else {
+            if (bankName.replace(/\s/g, "") != "") {
+              $("#bankNameModal").modal("toggle");
+            } else {
+              $("#bankNameModal").modal();
+            }
+          }
+        });
+      
+    }, 2500);
+
+    $(document).on("click", "#tblBankName tbody tr", function (e) {
+      var table = $(this);
+      let BankName = table.find(".bankName").text();
+      $('#bankNameModal').modal('toggle');
+      $('#edtBankName').val(BankName);
+    }); 
+    
+    templateObject.fillBankInfoFromUrl = function () {
+      var queryParams = FlowRouter.current().queryParams;
+      if(queryParams.bank) {
+        let edtBankName = queryParams.edtBankName;
+        let edtBankAccountName = queryParams.edtBankAccountName;
+        let edtBSB = queryParams.edtBSB;
+        let edtBankAccountNo = queryParams.edtBankAccountNo;
+        let swiftCode = queryParams.swiftCode;
+        let apcaNo = queryParams.apcaNo;
+        let routingNo = queryParams.routingNo;
+        let sltBankCodes = queryParams.sltBankCodes;
+        $('.bilingTab').click();
+        $('#edtBankName').val(edtBankName)
+        $('#edtBankAccountName').val(edtBankAccountName)
+        $('#edtBsb').val(edtBSB)
+        $('#edtBankAccountNumber').val(edtBankAccountNo)
+        $('#edtSwiftCode').val(swiftCode)
+        $('#edtRoutingNumber').val(routingNo)
+        // $('#sltCurrency').val()
+      }
+    }
+    setTimeout(() => {
+      templateObject.fillBankInfoFromUrl();
+    }, 3500);
 
     // $(document).ready(function () {
     //     history.pushState(null, document.title, location.href);
@@ -669,11 +743,12 @@ Template.supplierscard.onRendered(function() {
             bankAccountName: data.fields.BankAccountName || '',
             bankAccountBSB: data.fields.BankAccountBSB || '',
             bankAccountNo: data.fields.BankAccountNo || '',
+            foreignExchangeCode:data.fields.ForeignExchangeCode || CountryAbbr,
             // openingbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
             // taxcode:data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
         };
 
-
+        console.log("In addSupplier.js ===", data);
         $('#sltCurrency').val(data.fields.ForeignExchangeCode || CountryAbbr);
 
         if ((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2) &&
@@ -2707,6 +2782,7 @@ Template.supplierscard.helpers({
         if (temp && temp.mobile) {
             temp.mobile = temp.mobile.replace('+61', '0')
         }
+        //console.log(temp);
         return temp;
     },
     countryList: () => {
@@ -2752,6 +2828,9 @@ Template.supplierscard.helpers({
     },
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
+    },
+    tableHeaderItems:() => {
+        return Template.instance().tableHeaderItems.get();
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblSalesOverview' });
