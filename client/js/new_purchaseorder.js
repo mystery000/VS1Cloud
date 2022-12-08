@@ -7867,12 +7867,12 @@ Template.purchaseordercard.events({
     }, delayTimeAfterSound);
     },
     'click .btnDeletePO': async function(event) {
+        let templateObject = Template.instance();
+        let purchaseService = new PurchaseBoardService();
         playDeleteAudio();
         setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        let templateObject = Template.instance();
         let isBORedirect = await templateObject.isbackorderredirect.get() || false;
-        let purchaseService = new PurchaseBoardService();
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
