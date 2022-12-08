@@ -83,12 +83,42 @@ Template.new_quote.onCreated(() => {
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.subtaxcodes = new ReactiveVar([]);
+    templateObject.hasFollow = new ReactiveVar(false);
 
     templateObject.customerRecord = new ReactiveVar();
 });
 
 Template.new_quote.onRendered(() => {
     let templateObject = Template.instance();
+    templateObject.hasFollowings = async function() {
+        let templateObject = Template.instance();
+        var currentDate = new Date();
+        let salesService = new SalesBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
+            var saleDate = quoteData.fields.SaleDate;
+            var fromDate = saleDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingQuotes = await sideBarService.getAllTQuoteListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var quoteList = followingQuotes.tquotelist;
+            if (quoteList.length > 1) {
+                templateObject.hasFollow.set(true);
+            } else {
+                templateObject.hasFollow.set(false);
+            }
+        }
+    }
+    templateObject.hasFollowings();
     $('#edtFrequencyDetail').css('display', 'none');
 //     $('#onEventSettings').css('display', 'none');
 //   $('#basedOnFrequency').prop('checked', false);
@@ -190,35 +220,6 @@ Template.new_quote.onRendered(() => {
     if (dateone == "") {
         $("#formCheck-january").prop('checked', true);
     }
-  }
-
-  templateObject.hasFollowings = async function() {
-    var currentDate = new Date();
-    const salesService = new SalesBoardService();
-    var url = FlowRouter.current().path;
-    var getso_id = url.split('?id=');
-    var currentInvoice = getso_id[getso_id.length - 1];
-    var objDetails = '';
-    if (getso_id[1]) {
-        currentInvoice = parseInt(currentInvoice);
-        var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
-        var saleDate = quoteData.fields.SaleDate;
-        var fromDate = saleDate.substring(0, 10);
-        var toDate = (currentDate.getFullYear() + 10) + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-        var followingQuotes = await sideBarService.getAllTQuoteListData(
-            fromDate,
-            toDate,
-            false,
-            initialReportLoad,
-            0
-        );
-        var quoteList = followingQuotes.tquotelist;
-        if (quoteList.length > 1) {
-            $("#btn_follow2").css("display", "inline-block");
-        } else {
-            $("#btn_follow2").css("display", "none");
-        }
-    }        
   }
 
     $('#choosetemplate').attr('checked', true);
@@ -7285,33 +7286,10 @@ Template.new_quote.events({
     },
     'click .btnRemove': async function(event) {
         let templateObject = Template.instance();
-        await templateObject.hasFollowings();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
-        var currentDate = new Date();
-        let salesService = new SalesBoardService();
-        var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var quoteList = [];
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
-            var saleDate = quoteData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingQuotes = await sideBarService.getAllTQuoteListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            quoteList = followingQuotes.tquotelist;
-        }
         if(targetID != undefined) {
             times++;
 
@@ -7444,7 +7422,7 @@ Template.new_quote.events({
                 }
             }
         } else {
-            if(quoteList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },

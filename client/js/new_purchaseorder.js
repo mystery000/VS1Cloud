@@ -84,10 +84,10 @@ Template.purchaseordercard.onCreated(() => {
 
     templateObject.monthArr = new ReactiveVar();
     templateObject.plusArr = new ReactiveVar();
-
+    templateObject.hasFollow = new ReactiveVar(false);
 });
 Template.purchaseordercard.onRendered(() => {
-    const plusArr = [];
+  const plusArr = [];
   const monthArr = [];
   let isGreenTrack = Session.get('isGreenTrack');
   let regionData = Session.get('ERPLoggedCountry');
@@ -292,17 +292,16 @@ Template.purchaseordercard.onRendered(() => {
 
     templateObject.hasFollowings = async function() {
         var currentDate = new Date();
-        let purchaseService = new PurchaseBoardService();        
+        let purchaseService = new PurchaseBoardService();
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = '';
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
             var orderDate = poData.fields.OrderDate;
             var fromDate = orderDate.substring(0, 10);
-            var toDate = (currentDate.getFullYear() + 10) + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
             var followingPOs = await sideBarService.getAllTPurchaseOrderListData(
                 fromDate,
                 toDate,
@@ -311,15 +310,15 @@ Template.purchaseordercard.onRendered(() => {
                 0
             );
             var poList = followingPOs.tpurchaseorderlist;
-            if (poList.length > 1) {
-                $("#btn_follow2").css("display", "inline-block");
+            if(poList.length > 1) {
+                templateObject.hasFollow.set(true);
             } else {
-                $("#btn_follow2").css("display", "none");
+                templateObject.hasFollow.set(false);
             }
         }
 
     }
-    
+    templateObject.hasFollowings();
     $('#choosetemplate').attr('checked', true);
     const dataListTable = [
         ' ' || '',
@@ -7632,33 +7631,11 @@ Template.purchaseordercard.events({
     },
     'click .btnRemove': async function(event) {
         let templateObject = Template.instance();
-        await templateObject.hasFollowings();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
-        var currentDate = new Date();
-        let purchaseService = new PurchaseBoardService();
-        var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var poList = [];
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
-            var orderDate = poData.fields.OrderDate;
-            var fromDate = orderDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingPOs = await sideBarService.getAllTPurchaseOrderListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            poList = followingPOs.tpurchaseorderlist;
-        }
+        
         if(targetID != undefined) {
             times++;
 
@@ -7769,7 +7746,7 @@ Template.purchaseordercard.events({
                 }
             }
         } else {
-            if(poList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },
