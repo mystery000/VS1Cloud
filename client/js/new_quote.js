@@ -4477,10 +4477,7 @@ Template.new_quote.onRendered(() => {
     }
 
     $('#edtCustomerName').editableSelect().on('click.editable-select', function(e, li) {
-<<<<<<< HEAD
-=======
 
->>>>>>> b520f9f8c049c272843aae99b6094e86bc6207c8
         const $each = $(this);
         const offset = $each.offset();
         $('#edtCustomerPOPID').val('');

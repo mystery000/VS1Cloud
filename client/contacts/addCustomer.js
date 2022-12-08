@@ -1947,12 +1947,7 @@ Template.customerscard.onRendered(function () {
         $('#' + selectedTermsDropdownID + '').val($(this).find(".colTermName").text());
         $('#termsListModal').modal('toggle');
     });
-<<<<<<< HEAD
     $(document).on("click", "#paymentmethodList tbody tr", function (e) {
-=======
-
-    $(document).on("click", "#paymentmethodList tbody tr", function(e) {
->>>>>>> b520f9f8c049c272843aae99b6094e86bc6207c8
         let selectedDropdownID = $('#selectPaymentMethodLineID').val() || 'sltPreferredPayment';
         $('#' + selectedDropdownID + '').val($(this).find(".colName").text());
         $('#paymentMethodModal').modal('toggle');
@@ -2799,7 +2794,6 @@ Template.customerscard.events({
                     }
                 }
             }
-<<<<<<< HEAD
             objDetails = {
                 type: "TCustomerEx",
                 fields: {
@@ -2863,69 +2857,6 @@ Template.customerscard.events({
                         }).catch(function (err) {
                             window.open('/customerlist', '_self');
                         });
-=======
-        }
-        objDetails = {
-            type: "TCustomerEx",
-            fields: {
-                ID: TCustomerID,
-                Title: title,
-                ClientName: company,
-                FirstName: firstname,
-                MiddleName: middlename,
-                CUSTFLD10: middlename,
-                LastName: lastname,
-                PublishOnVS1: true,
-                Email: email,
-                Phone: phone,
-                Mobile: mobile,
-                SkypeName: skype,
-                Faxnumber: fax,
-                // Sex: gender,
-                ClientTypeName: customerType,
-                // Position: position,
-                Street: streetAddress,
-                Street2: city,
-                Suburb: suburb,
-                State: state,
-                PostCode: postalcode,
-                Country: country,
-                BillStreet: bstreetAddress,
-                BillStreet2: bcity,
-                BillState: bstate,
-                BillPostCode: bzipcode,
-                Billcountry: bcountry,
-                IsSupplier:isSupplier,
-                Notes: notes,
-                // CustFld1: custfield1,
-                // CustFld2: custfield2,
-                URL: website,
-                PaymentMethodName: sltPaymentMethodName,
-                TermsName: sltTermsName,
-                ShippingMethodName: sltShippingMethodName,
-                // RewardPointsOpeningBalance:parseInt(rewardPointsOpeningBalance),
-                // RewardPointsOpeningDate:openingDate,
-                TaxCodeName: sltTaxCodeName,
-                Attachments: uploadedItems,
-                CUSTFLD1: custField1,
-                CUSTFLD2: custField2,
-                CUSTFLD3: custField3,
-                CUSTFLD4: custField4,
-                Discount: parseFloat(permanentDiscount) || 0,
-                Status: status,
-                SourceName: sourceName,
-                RepName: repName,
-                //CUSTFLD12: salesQuota,
-                ForeignExchangeCode: $("#sltCurrency").val(),
-            }
-        };
-        contactService.saveCustomerEx(objDetails).then(function (objDetails) {
-            let customerSaveID = objDetails.fields.ID;
-            if (customerSaveID) {
-                sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function (dataReload) {
-                    addVS1Data('TCustomerVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-                        window.open('/customerlist', '_self');
->>>>>>> b520f9f8c049c272843aae99b6094e86bc6207c8
                     }).catch(function (err) {
                         window.open('/customerlist', '_self');
                     });
