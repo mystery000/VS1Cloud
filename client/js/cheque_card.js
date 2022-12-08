@@ -168,6 +168,36 @@ Template.chequecard.onRendered(() => {
         $("#formCheck-january").prop('checked', true);
     }
   }
+  templateObject.hasFollowings = async function() {
+    var currentDate = new Date();
+    let purchaseService = new PurchaseBoardService();
+    var url = FlowRouter.current().path;
+    var getso_id = url.split("?id=");
+    var currentInvoice = getso_id[getso_id.length - 1];
+    var objDetails = "";
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
+      var orderDate = chequeData.fields.OrderDate;
+      var fromDate = orderDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingCheques = await sideBarService.getAllChequeListData(
+        fromDate,
+        toDate,
+        false,
+        initialReportLoad,
+        0
+      );
+      var chequeList = followingCheques.tchequelist;
+      if (chequeList.length > 1) {
+        $("#btn_follow2").css("display", "inline-block");
+      } else {
+        $("#btn_follow2").css("display", "none");
+      }
+    }    
+  }
+  templateObject.hasFollowings();
+
   $(window).on("load", function () {
     var win = $(this); //this = window
     if (win.width() <= 1024 && win.width() >= 450) {
@@ -6388,15 +6418,15 @@ Template.chequecard.events({
     let templateObject = Template.instance();
     let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
-
+    var currentDate = new Date();
+    let purchaseService = new PurchaseBoardService();
     var clicktimes = 0;
     var targetID = $(event.target).closest("tr").attr("id");
     $("#selectDeleteLineID").val(targetID);
-
     var url = FlowRouter.current().path;
     var getso_id = url.split("?id=");
     var currentInvoice = getso_id[getso_id.length - 1];
-    var objDetails = "";
+    var chequeList = [];
     if (getso_id[1]) {
       currentInvoice = parseInt(currentInvoice);
       var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
@@ -6410,86 +6440,36 @@ Template.chequecard.events({
         initialReportLoad,
         0
       );
-      var chequeList = followingCheques.tchequelist;
-      if (chequeList.length > 0) {
-        $("#btn_follow2").css("display", "inline-block");
-      } else {
-        $("#btn_follow2").css("display", "none");
-      }
+      chequeList = followingCheques.tchequelist;
     }
-    times++;
+    if(targetID != undefined){
+      times++;
+      if (times == 1) {
+        $("#deleteLineModal").modal("toggle");
+      } else {
+        if ($("#tblChequeLine tbody>tr").length > 1) {
+          this.click;
+          $(event.target).closest("tr").remove();
+          $(".cheque_print #" + targetID).remove();
+          event.preventDefault();
+          let $tblrows = $("#tblChequeLine tbody tr");
+          let $printrows = $(".cheque_print tbody tr");
 
-    if (times == 1) {
-      $("#deleteLineModal").modal("toggle");
-    } else {
-      if ($("#tblChequeLine tbody>tr").length > 1) {
-        this.click;
-        $(event.target).closest("tr").remove();
-        $(".cheque_print #" + targetID).remove();
-        event.preventDefault();
-        let $tblrows = $("#tblChequeLine tbody tr");
-        let $printrows = $(".cheque_print tbody tr");
+          let lineAmount = 0;
+          let subGrandTotal = 0;
+          let taxGrandTotal = 0;
+          let taxGrandTotalPrint = 0;
 
-        let lineAmount = 0;
-        let subGrandTotal = 0;
-        let taxGrandTotal = 0;
-        let taxGrandTotalPrint = 0;
-
-        $tblrows.each(function (index) {
-          var $tblrow = $(this);
-          var amount = $tblrow.find(".colAmountExChange").val() || 0;
-          var taxcode = $tblrow.find(".lineTaxCode").val() || 0;
-
-          var taxrateamount = 0;
-          if (taxcodeList) {
-            for (var i = 0; i < taxcodeList.length; i++) {
-              if (taxcodeList[i].codename == taxcode) {
-                taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
-              }
-            }
-          }
-
-          var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
-          var taxTotal =
-            parseFloat(amount.replace(/[^0-9.-]+/g, "")) *
-            parseFloat(taxrateamount);
-          $tblrow
-            .find(".lineTaxAmount")
-            .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-          if (!isNaN(subTotal)) {
-            subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-            document.getElementById("subtotal_total").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subGrandTotal);
-          }
-
-          if (!isNaN(taxTotal)) {
-            taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
-            document.getElementById("subtotal_tax").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(taxGrandTotal);
-          }
-
-          if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
-            let GrandTotal =
-              parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
-            document.getElementById("grandTotal").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
-            //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-            //document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-          }
-        });
-
-        if ($(".printID").val() == "") {
-          $printrows.each(function (index) {
-            var $printrows = $(this);
-            var amount = $printrows.find("#lineAmount").text() || "0";
-            var taxcode = $printrows.find("#lineTaxCode").text() || 0;
+          $tblrows.each(function (index) {
+            var $tblrow = $(this);
+            var amount = $tblrow.find(".colAmountExChange").val() || 0;
+            var taxcode = $tblrow.find(".lineTaxCode").val() || 0;
 
             var taxrateamount = 0;
             if (taxcodeList) {
               for (var i = 0; i < taxcodeList.length; i++) {
                 if (taxcodeList[i].codename == taxcode) {
-                  taxrateamount =
-                    taxcodeList[i].coderate.replace("%", "") / 100 || 0;
+                  taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
                 }
               }
             }
@@ -6498,45 +6478,94 @@ Template.chequecard.events({
             var taxTotal =
               parseFloat(amount.replace(/[^0-9.-]+/g, "")) *
               parseFloat(taxrateamount);
-            $printrows
-              .find("#lineTaxAmount")
+            $tblrow
+              .find(".lineTaxAmount")
               .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-
             if (!isNaN(subTotal)) {
-              $printrows
-                .find("#lineAmt")
-                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
               subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-              document.getElementById("subtotal_totalPrint").innerHTML =
-                $("#subtotal_total").text();
+              document.getElementById("subtotal_total").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(subGrandTotal);
             }
 
             if (!isNaN(taxTotal)) {
-              taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+              taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
+              document.getElementById("subtotal_tax").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(taxGrandTotal);
             }
+
             if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
               let GrandTotal =
                 parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
-              document.getElementById("grandTotalPrint").innerHTML =
-                $("#grandTotal").text();
+              document.getElementById("grandTotal").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(GrandTotal);
               //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-              document.getElementById("totalBalanceDuePrint").innerHTML =
-                $("#totalBalanceDue").text();
+              //document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
             }
           });
+
+          if ($(".printID").val() == "") {
+            $printrows.each(function (index) {
+              var $printrows = $(this);
+              var amount = $printrows.find("#lineAmount").text() || "0";
+              var taxcode = $printrows.find("#lineTaxCode").text() || 0;
+
+              var taxrateamount = 0;
+              if (taxcodeList) {
+                for (var i = 0; i < taxcodeList.length; i++) {
+                  if (taxcodeList[i].codename == taxcode) {
+                    taxrateamount =
+                      taxcodeList[i].coderate.replace("%", "") / 100 || 0;
+                  }
+                }
+              }
+
+              var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
+              var taxTotal =
+                parseFloat(amount.replace(/[^0-9.-]+/g, "")) *
+                parseFloat(taxrateamount);
+              $printrows
+                .find("#lineTaxAmount")
+                .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+
+              if (!isNaN(subTotal)) {
+                $printrows
+                  .find("#lineAmt")
+                  .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+                document.getElementById("subtotal_totalPrint").innerHTML =
+                  $("#subtotal_total").text();
+              }
+
+              if (!isNaN(taxTotal)) {
+                taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+              }
+              if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
+                let GrandTotal =
+                  parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+                document.getElementById("grandTotalPrint").innerHTML =
+                  $("#grandTotal").text();
+                //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                document.getElementById("totalBalanceDuePrint").innerHTML =
+                  $("#totalBalanceDue").text();
+              }
+            });
+          }
+          return false;
+        } else {
+          $("#deleteLineModal").modal("toggle");
         }
-        return false;
-      } else {
-        $("#deleteLineModal").modal("toggle");
       }
+    } else {
+      if(chequeList.length > 1) $("#footerDeleteModal2").modal("toggle");
+      else $("#footerDeleteModal1").modal("toggle");
     }
   },
   "click .btnDeleteFollowingCheques": async function (event) {
     playDeleteAudio();
     setTimeout(async function(){
     var currentDate = new Date();
-    let templateObject = Template.instance();
     let purchaseService = new PurchaseBoardService();
+    let templateObject = Template.instance();
     swal({
       title: 'Delete Cheque',
       text: "Do you wish to delete this transaction and all others associated with it moving forward?",

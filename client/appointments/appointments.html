@@ -549,6 +549,7 @@
                                 <div class="form-group flex-grow-1 my-2"><label>App
                                         ID</label><input type="text" id="appID" name="appID" class="form-control" readonly>
                                     <input type="hidden" id="updateID" name="updateID" class="form-control">
+                                    <input type="hidden" id="logID" name="logID" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4 colStreetAddress" id="colStreetAddress">
@@ -1289,7 +1290,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                             </div>
                         </div>
                         <div class="col-12 col-md-4 colProductService1" id="colProductService1" style="padding-top: 44px;">
-                            <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment-1" autocomplete="off"> 0 <i
+                            <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment-1" autocomplete="off"> {{attachmentCount}} <i
                                     class="fa fa-paperclip"></i></button>
                             <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera-1" autocomplete="off"><i class="fa fa-camera"
                                     aria-hidden="true"></i></button>
@@ -1469,6 +1470,8 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
             </div>
         </div>
     </div>
+    
+    <!-- {{> newLeaveRequestModal}} -->
 
     <style>
         .fc-next-button {

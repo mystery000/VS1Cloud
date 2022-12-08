@@ -332,10 +332,6 @@ Template.emailsettings.onRendered(function () {
 
     }
 
-
-
-
-
     templateObject.getDayName = function (day) {
         if (day == 1 || day == 0) {
             $("#formCheck-monday").prop('checked', true);
@@ -1482,7 +1478,6 @@ Template.emailsettings.onRendered(function () {
             if (!isEssential) {
                 oldSettings = oldSettings.filter(oldSetting => oldSetting.fields.FormID != 54 && oldSetting.fields.FormID != 177 && oldSetting.fields.FormID != 129);
             }
-
             try {
                 let promise = settings.map(async (setting) => {
                     const formID = $(setting).attr('data-id');
@@ -1707,7 +1702,7 @@ Template.emailsettings.onRendered(function () {
                                 }
                             })
                         }
-                        await getAttachments()
+                        await getAttachments();
                         if (typeof recipientIds == 'string') {
                             recipientIds = recipientIds.split('; ');
                         }
@@ -1734,8 +1729,6 @@ Template.emailsettings.onRendered(function () {
                                 documents.push(attachment.pdfObject)
                             })
 
-
-
                             let objDetail = {
                                 type: "TReportSchedules",
                                 fields: {
@@ -1755,7 +1748,7 @@ Template.emailsettings.onRendered(function () {
                                     // attachments: attachments,
                                 }
                             };
-                            
+
 
                             let transIDs = ['54', '177', '12', '18', '21', '61', '69', '71', '74', '77', '17544', '94'];
                             if(transIDs.includes(formID.toString()) == true) {
@@ -1884,7 +1877,6 @@ Template.emailsettings.onRendered(function () {
                                 // objDetail.fields.Active = false;
                             }
 
-
                             if (formID == '1') {
                                 // if report type is Grouped Reports....
 
@@ -1935,7 +1927,7 @@ Template.emailsettings.onRendered(function () {
 
                                 let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
                                 cloneObjDetailFields.attachments = documents;
-                               
+
                                 if(basedOnType.includes('EN') == true || basedOnType.includes('EU' == true)) {
                                     getVS1Data('TBasedOnType').then(function(dataObject) {
                                         let temp = dataObject.length > 0 ? JSON.parse(dataObject) : [];
@@ -1980,18 +1972,17 @@ Template.emailsettings.onRendered(function () {
                                 } catch (e) {
                                 }
 
-                                if(transIDs.includes(formID) == false) {
-                                    objDetail.fields.attachments = documents;
-                                }
-
                                 objDetail.fields.Offset = new Date().getTimezoneOffset();
 
                                 const nextDueDate = await new Promise((resolve, reject) => {
                                     Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
-                                        if (error) return reject(error);
+                                        if (error){
+                                          return reject(error);
+                                        }
                                         resolve(result);
                                     });
                                 });
+
                                 objDetail.fields.NextDueDate = nextDueDate;
 
 
@@ -2000,15 +1991,16 @@ Template.emailsettings.onRendered(function () {
                                 objDetail.fields.EmployeeEmail = recipients[index];
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
                                 //TODO: Set basedon type here
-                                localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
-                                    ...objDetail.fields,
-                                    BasedOnType: basedOnType,
-                                    connectionInfo: connectionDetails
-                                }));
-
+                                async function setBasedOnType() {
+                                    localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                        ...objDetail.fields,
+                                        BasedOnType: basedOnType,
+                                        connectionInfo: connectionDetails
+                                    }));
+                                }
+                                await setBasedOnType()
                                 let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
                                 cloneObjDetailFields.attachments = documents;
-
                                 if(basedOnType.includes('EN') == true || basedOnType.includes('EU' == true)) {
                                     // ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     //     ...cloneObjDetailFields,
@@ -2132,7 +2124,7 @@ Template.emailsettings.onRendered(function () {
                             BeginFromOption: "",
                             ContinueIndefinitely: true,
                             EmployeeId: parseInt(recipientId),
-                            EmployeeEmailID: recipients[index], 
+                            EmployeeEmailID: recipients[index],
                             Every: 1,
                             EndDate: fDate,
                             FormID: parseInt(formID),
@@ -2357,7 +2349,7 @@ Template.emailsettings.events({
         // let taxRateService = new TaxRateService();
         let templateObject = Template.instance();
         setTimeout(function(){
-        
+
         // let startTime = "";
         // let startDate = "";
         // let date = "";
@@ -2483,7 +2475,7 @@ Template.emailsettings.events({
     },
     'click #emailsetting-essential': async function () {
         const templateObject = Template.instance();
-        const essentialSettings = $('#tblEssentialAutomatedEmails tbody tr').map(function () { return $(this) }).get();
+        const essentialSettings = $('#tblEssentialAutomatedEmails tbody tr.dnd-moved').map(function () { return $(this) }).get();
         $('.fullScreenSpin').css('display', 'inline-block');
 
         const saveResult = await templateObject.saveSchedules(essentialSettings, true);
