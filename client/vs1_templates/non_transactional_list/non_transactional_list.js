@@ -128,11 +128,12 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
                 { index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
               ];
-          }else if(currenttablename == "tblAccountOverview") {
+          }else if(currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
                let bsbname = "Branch Code";
                if (Session.get("ERPLoggedCountry") === "Australia") {
                    bsbname = "BSB";
                }
+               if (currenttablename == "tblAccountOverview") {
                 reset_data = [
                   { index: 0, label: '#ID', class: 'AccountId', active: false, display: true, width: "10" },
                   { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
@@ -180,11 +181,7 @@ Template.non_transactional_list.onRendered(function() {
                   // { index: 22, label: 'Sort Order', class:'colAccountName', active: false, display: true, width: "" },
                   // { index: 23, label: 'Allow Expense Claim?', class:'colAccountName', active: false, display: true, width: "" },
                 ];
-            } else if (currenttablename == "tblDashboardAccountChartList") {
-                let bsbname = "Branch Code";
-                if (Session.get("ERPLoggedCountry") === "Australia") {
-                    bsbname = "BSB";
-                }
+               } else {
                 reset_data = [
                   { index: 0, label: '#ID', class: 'AccountId', active: false, display: true, width: "10" },
                   { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
@@ -229,6 +226,7 @@ Template.non_transactional_list.onRendered(function() {
                   // { index: 22, label: 'Sort Order', class:'colAccountName', active: false, display: true, width: "" },
                   // { index: 23, label: 'Allow Expense Claim?', class:'colAccountName', active: false, display: true, width: "" },
                 ];
+               }
             } else if(currenttablename == "tblClienttypeList") { //Do Something Here
                   reset_data = [
                     { index: 0, label: '#ID', class: 'colClientTypeID', active: false, display: true, width: "10" },

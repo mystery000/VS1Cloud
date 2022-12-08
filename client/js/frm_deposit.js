@@ -1475,7 +1475,15 @@ Template.depositcard.onRendered(()=>{
         var table = $(this);
         let isHeader = table.find(".isHeader").text() == "true";
         if (isHeader) {
-            alert("This account is header");
+            swal({
+                title: 'This account is header',
+                text: "You can't do anything on this account",
+                type: 'info',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+                }).then((result) => {
+                    return;
+                });
             return; 
         }
         $(".colAccount").removeClass('boldtablealertsborder');
