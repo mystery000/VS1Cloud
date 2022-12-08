@@ -242,10 +242,10 @@
                               {{/if}}
                              </span> -->
                                 <button type="button" class="btn btn-success btnReceiveCustomerPayment"
-                                    style="margin:14px;" id="btnReceiveCustomerPayment"><i
+                                    style="margin:7px;" id="btnReceiveCustomerPayment"><i
                                         class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Receive
                                     Payment</button>
-                                <a class="btn btnOpenSettings" role="button" style="margin:14px;margin-right:0px;"
+                                <a class="btn btnOpenSettings" role="button" style="margin:7px;margin-right:0px;"
                                     data-toggle="modal" href="#myModal4"><i
                                         class="fas fa-ellipsis-v text-gray-400"></i></a>
                             </div>
@@ -3467,6 +3467,12 @@
                                                         class="fas fa-file-export"
                                                         style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                                             </div>
+                                        </div>
+                                        <div class="row" style="justify-content:space-around;">
+                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_appointments_toggle" width="131px" for="customer_transctionList_appointments_toggle" displayName="Appointments"}}
+                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_quotes_toggle" width="131px" for="customer_transctionList_quotes_toggle" displayName="Quotes"}}
+                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_sales_orders_toggle" width="131px" for="customer_transctionList_sales_orders_toggle" displayName="Sales Orders"}}
+                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_invoices_toggle" width="131px" for="customer_transctionList_invoices_toggle" displayName="Invoices"}}
                                         </div>
                                         <div class="row rowB" style="margin: 14px; margin-top: 0">
                                             <div class="card-body rounded" style="padding: 0;">
