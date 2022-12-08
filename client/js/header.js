@@ -76,12 +76,11 @@ Template.header.onCreated(function() {
     templateObject.isCloudSidePanelMenu.set(false);
     templateObject.isCloudTopPanelMenu = new ReactiveVar();
     templateObject.isCloudTopPanelMenu.set(false);
-
-
     templateObject.profilePhoto = new ReactiveVar();
-
     templateObject.searchdatatablerecords = new ReactiveVar([]);
 
+    templateObject.confirmedStepCount = new ReactiveVar([]);
+    templateObject.confirmedStepCount.set(0);
 
     $(document).ready(function() {
 
@@ -93,6 +92,17 @@ Template.header.onCreated(function() {
 
 Template.header.onRendered(function() {
     const templateObject = Template.instance();
+
+    // templateObject.getConfirmedStepCount = async function() {
+    //     let data = await organizationService.getOrganisationDetail();
+    //     let companyInfo = data.tcompanyinfo[0];
+    //     let cntConfirmedSteps = companyInfo.Address3 == "" ? 0 : parseInt(companyInfo.Address3);
+    //     templateObject.confirmedStepCount.set(cntConfirmedSteps);
+    // }
+    // templateObject.getConfirmedStepCount();
+    
+    checkSetupFinished2();
+
     let sidePanelToggle = Session.get('sidePanelToggle');
 
     var dontOpenSearchGuide = localStorage.getItem('dontopensearchguide') || 'false';
@@ -2213,6 +2223,13 @@ Template.header.helpers({
     },
     isSetupWizardComplete: function() {
         return localStorage.getItem("IS_SETUP_FINISHED") || false;
+    },
+    isAllStepsConfirmed: function() {
+        let cntConfirmedSteps = Template.instance().confirmedStepCount.get();
+        let allStepsConfirmed = false;
+        if (parseInt(cntConfirmedSteps) == confirmStepCount)
+            allStepsConfirmed = true;
+        return allStepsConfirmed;
     },
     searchdatatablerecords: () => {
         return Template.instance().searchdatatablerecords.get().sort(function(a, b) {

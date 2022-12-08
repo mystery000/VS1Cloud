@@ -649,7 +649,9 @@
                                                                     <div class="col-6 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Bank Name</label>
-                                                                            <input type="text" class="form-control" id="edtBankName" name="edtBankName" value="{{record.bankName}}">
+                                                                            <!-- <input type="text" class="form-control" id="edtBankName" name="edtBankName" value="{{record.bankName}}"> -->
+                                                                            <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName" value="{{record.bankName}}">
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6 col-md-3">
@@ -691,7 +693,7 @@
                                                                     </div>
                                                                     
                                                                     <div class="col-6 col-md-3">
-                                                                        {{> CurrencyWidget onlyCurrencyField="true"}}
+                                                                        {{> CurrencyWidget onlyCurrencyField="true" CurrentForeignExchangeCode = record.foreignExchangeCode}}
                                                                     </div>
                                                                    
                                                                 </div>
@@ -1521,6 +1523,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">
+      {{> bankNameModal}}
     </div>
 
     <!-- End Help Video Modal -->
