@@ -360,7 +360,7 @@ Template.processlistpopup.onRendered(function(e){
 
        
     }
-    templateObject.getProcessList();
+    // templateObject.getProcessList();
 
     
 })
