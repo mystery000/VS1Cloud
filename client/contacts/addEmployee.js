@@ -223,8 +223,7 @@ Template.employeescard.onRendered(function() {
         let routingNo = queryParams.routingNo;
         let sltBankCodes = queryParams.sltBankCodes;
         $('.payrollTab').click();
-        setTimeout(() => {
-          $('#contact-tab').click();
+          $('.bank-account-tab').click();
           $('#edtBankName').val(edtBankName)
           $('#bankAccountName').val(edtBankAccountName)
           $('#bankAccountBSB').val(edtBSB)
@@ -232,7 +231,6 @@ Template.employeescard.onRendered(function() {
           $('#edtSwiftCode').val(swiftCode)
           $('#edtRoutingNumber').val(routingNo)
           // $('#sltCurrency').val()
-        }, 500);
       }
     }
     setTimeout(() => {

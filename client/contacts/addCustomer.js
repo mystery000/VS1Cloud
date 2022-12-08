@@ -1389,7 +1389,9 @@ Template.customerscard.onRendered(function () {
 
         };
 
-        $('#sltCurrency').val(data.fields.ForeignExchangeCode || CountryAbbr);
+        setTimeout(function() {
+            $('#sltCurrency').val(data.fields.ForeignExchangeCode || CountryAbbr);
+        }, 100);
 
         if ((data.fields.Street == data.fields.BillStreet) && (data.fields.Street2 == data.fields.BillStreet2)
             && (data.fields.State == data.fields.BillState) && (data.fields.Postcode == data.fields.Postcode)

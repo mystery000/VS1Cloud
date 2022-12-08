@@ -1974,7 +1974,7 @@ Template.refundcard.onRendered(() => {
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                     $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $('#sltPaymentMethod').val(data.fields.PayMethod);
-
+                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
                     // tempcode
                     // setTimeout(function () {
                     //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
@@ -2298,7 +2298,7 @@ Template.refundcard.onRendered(() => {
                                     templateObject.CleintName.set(useData[d].fields.CustomerName);
                                     $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
                                     $('#sltPaymentMethod').val(useData[d].fields.PayMethod);
-
+                                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
                     // tempcode
                                     // setTimeout(function () {
                                     //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
@@ -2598,7 +2598,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                     $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $('#sltPaymentMethod').val(data.fields.PayMethod);
-
+                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
                     // tempcode
                     // setTimeout(function () {
                     //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
@@ -2918,7 +2918,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                     $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $('#sltPaymentMethod').val(data.fields.PayMethod);
-
+                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
                     // tempcode
                     // setTimeout(function () {
                     //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
