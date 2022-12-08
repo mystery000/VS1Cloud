@@ -93,11 +93,12 @@
                       }}
                     </div>
                     <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Payment Method</label>
-                        <select type="search" class="form-control" id="sltPaymentMethod" name="sltPaymentMethod"
-                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                        </select>
-                      </div>
+                      {{> default_select
+                        label="Payment Method"
+                        type="search"
+                        id="sltPaymentMethod"
+                        name="sltPaymentMethod"
+                      }}
                     </div>
                   </div>
                 </div>
@@ -115,11 +116,12 @@
                       </div>
                     </div>
                     <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Department</label>
-                        <select type="search" class="form-control" id="sltDepartment" name="sltDepartment"
-                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                        </select>
-                      </div>
+                      {{> default_select
+                        label="Department"
+                        type="search"
+                        id="sltDepartment"
+                        name="sltDepartment"
+                      }}
                     </div>
                   </div>
                 </div>
