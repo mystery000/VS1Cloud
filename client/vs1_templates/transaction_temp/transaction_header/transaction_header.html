@@ -1,6 +1,6 @@
 <!-- Invoice header template -->
 <!-- 
-  invoicerecord
+  data
   uploadedFile
   isCurrencyEnable
   custfields
@@ -27,7 +27,7 @@
   <header
     style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
     <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
-      {{invoicerecord.lid}}
+      {{data.lid}}
       {{> helpbutton}}
       <a 
         class="btn btnSettings"
@@ -38,6 +38,7 @@
         <i class="icon ion-android-more-horizontal"></i>
       </a>
     </h2>
+    <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
   </header>
 
   {{> help_modal}}
@@ -65,7 +66,7 @@
   </div>
   {{/if}}
   <div class="row" style="background-color: #ededed;">
-    {{#if equals invoicerecord.ispaid true}}
+    {{#if equals data.ispaid true}}
     <div class="col-12 colPaid" style="display: none;">
       <p style="font-size: 25px;font-weight: 700 ;color: #e74a3b; margin: 16px 32px 0px 32px;">Paid</p>
       <input class="form-control form-control ispaidInv" type="hidden" value="true">
@@ -75,10 +76,14 @@
     <div class="col-12 col-xl-10">
       <div class="row" style="margin: 8px 16px 0px 16px;">
         <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-        {{> customer_selector}}
+        {{> customer_selector
+          label=getUserLabel
+        }}
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-          {{> customer_email_input}}
+          {{> customer_email_input
+            label=getUserLabel
+          }}
         </div>
       </div>
       
@@ -89,12 +94,16 @@
             row="5" 
             id="txabillingAddress"
             name="txabillingAddress"
-          }}{{invoicerecord.invoiceToDesc}}{{/vs1_textarea}}
+          }}{{data.invoiceToDesc}}{{/vs1_textarea}}
         </div>
         <div class="col-12 col-md-6 col-lg-8 col-xl-9 ">
           <div class="row row-middle">
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-            {{> sale_date_selector}}
+            {{> sale_date_selector
+              label=getDateInputLabel
+              SODdate=data.saledate
+              DueDate=data.duedate
+            }}
             </div>
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
               {{> po_number_input}}
@@ -122,7 +131,7 @@
                 type="text"
                 id="edtRef"
                 name="edtRef"
-                defaultValue=invoicerecord.reference
+                defaultValue=data.reference
               }}
             </div>
 
@@ -155,7 +164,7 @@
             <div class="col-12 col-md-4">
               <div class="collapse" id="collapse-notes" style="margin-top: 8px;">
                 {{# vs1_textarea label="Shipping Address" row="3" id="txaShipingInfo"
-                name="txaShipingInfo"}}{{invoicerecord.shipToDesc}}{{/vs1_textarea}}
+                name="txaShipingInfo"}}{{data.shipToDesc}}{{/vs1_textarea}}
               </div>
             </div>
           </div>
@@ -168,9 +177,9 @@
         {{> transaction_buttons_top 
           showBalanceDue=true
           showButtons=showTransactionButtons
-          recorddeleted=invoicerecord.deleted
-          recordispaid=invoicerecord.ispaid
-          recordbalanceDue=invoicerecord.balanceDue
+          recorddeleted=data.deleted
+          recordispaid=data.ispaid
+          recordbalanceDue=data.balanceDue
         }}
       </div>
     </div>
