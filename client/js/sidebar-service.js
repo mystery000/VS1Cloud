@@ -4115,4 +4115,30 @@ export class SideBarService extends BaseService {
       }
       return mobileResult;
   }
+
+  getVS1MenuConfig() {
+    console.log('this.erpGet.TPreference: ', this.erpGet.TPreference);
+    const data = this.GET(this.erpGet.TPreference);
+    return data;
+  }
+
+  updateVS1MenuConfig (menuType) {
+    const prefValue = '{"Location": \"' + menuType + '\", "AccessLevel": 1, "AccessLevelName": \"Full Access\"}'
+    return this.POST( 
+      this.erpGet.TPreference, 
+      {
+          "type": "TPreference",
+          "fields": {
+            "Department": "",
+            "IndustryId": 1,
+            "PackageID": 0,
+            "PrefDesc": "",
+            "PrefGroup": "GuiPrefs",
+            "PrefName": "VS1Menu",
+            "PrefType": "",
+            "PrefValue": prefValue,
+        }
+      }
+    )
+  }
 }

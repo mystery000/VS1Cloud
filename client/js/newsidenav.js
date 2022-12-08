@@ -134,24 +134,28 @@ Template.newsidenav.onCreated(function() {
 
     templateObject.isSerialNumberList = new ReactiveVar();
     templateObject.isSerialNumberList.set(false);
-    getVS1Data('VS1_Dashboard').then(function(dataObject) {
-      if (dataObject.length == 0) {
-      }else{
-      let dataReturnRes = JSON.parse(dataObject[0].data);
-      //if(dataObject[0] && dataObject[0].data && dataObject[0].data.processLog && dataObject[0].data.processLog.TUser && dataObject[0].data.processLog.TUser.updateEmployeeFormAccessDetail && dataObject[0].data.processLog.TUser.updateEmployeeFormAccessDetail.items){
-        let userAccessData = dataReturnRes.ProcessLog.TUser.TEmployeeFormAccessDetail.items||'';
-        userAccessData.map(item=>{
-          if(item.fields.FormName == "FnCloudSidePanelMenu" && item.fields.AccessLevel == 1){
-            templateObject.sideBarPositionClass.set('side');
-            $('#sidebar').removeClass('top');
-            $('#bodyContainer').removeClass('top');
-            $('#sidebarToggleBtn .text').text('Top');
-          }
-        })
-      //}
+    sideBarService.getVS1MenuConfig().then((data) => {
+      if(data.tpreference && !!data.tpreference.length) {
+        const latestAction = data.tpreference[data.tpreference.length - 1];
+        const menuItem = JSON.parse(latestAction.PrefValue);
+        if(menuItem.Location === "TopMenu") {
+          templateObject.sideBarPositionClass.set('top');
+          $('#sidebar').addClass('top');
+          $('#bodyContainer').addClass('top');
+          $('#sidebarToggleBtn .text').text('Side');
+        } else {
+          templateObject.sideBarPositionClass.set('side');
+          $('#sidebar').removeClass('top');
+          $('#bodyContainer').removeClass('top');
+          $('#sidebarToggleBtn .text').text('Top');
+        }
+      } else {
+          templateObject.sideBarPositionClass.set('side');
+          $('#sidebar').removeClass('top');
+          $('#bodyContainer').removeClass('top');
+          $('#sidebarToggleBtn .text').text('Top');
       }
     });
-
     $(document).ready(function() {
         var erpGet = erpDb();
         var LoggedDB = erpGet.ERPDatabase;
@@ -6710,23 +6714,23 @@ Template.newsidenav.events({
     let payload = "";
 
     if ($('#sidebar').hasClass("top")) {
-        payload = {
-          Name: "VS1_EmployeeAccess",
-          Params: {
-              VS1EmployeeAccessList:
-              [
-                  {
-                      EmployeeId:parseInt(Session.get('mySessionEmployeeLoggedID'))||0,
-                      formID:7256,
-                      Access:1
-                  }
-              ]
-          }
-        };
-        //sideBarService.updateEmployeeFormAccessDetail(payload);
-        $('#sidebar').removeClass('top');
-        $('#bodyContainer').removeClass('top');
-        $('#sidebarToggleBtn .text').text('Top');
+      payload = {
+        Name: "VS1_EmployeeAccess",
+        Params: {
+            VS1EmployeeAccessList:
+            [
+                {
+                    EmployeeId:parseInt(Session.get('mySessionEmployeeLoggedID'))||0,
+                    formID:7256,
+                    Access:1
+                }
+            ]
+        }
+      };
+      sideBarService.updateVS1MenuConfig('SideMenu')
+      $('#sidebar').removeClass('top');
+      $('#bodyContainer').removeClass('top');
+      $('#sidebarToggleBtn .text').text('Top');
     } else {
       payload = {
         Name: "VS1_EmployeeAccess",
@@ -6741,7 +6745,7 @@ Template.newsidenav.events({
             ]
         }
       };
-      //sideBarService.updateEmployeeFormAccessDetail(payload);
+      sideBarService.updateVS1MenuConfig('TopMenu')
       $('#sidebar').addClass('top');
       $('#bodyContainer').addClass('top');
       $('#sidebarToggleBtn .text').text('Side');
