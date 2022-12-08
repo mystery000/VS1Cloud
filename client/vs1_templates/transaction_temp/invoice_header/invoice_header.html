@@ -4,9 +4,9 @@
   uploadedFile
   isCurrencyEnable
   custfields
-  getTemplateList
   showTemplateModals
   showUploadAttachment
+  showTransactionButtons
  -->
 <template name="invoice_header">
   <style>
@@ -51,10 +51,7 @@
   {{/if}}
 
   {{#if showTemplateModals}}
-  {{> template_selection_modal
-    getTemplateList=getTemplateList
-  }}
-
+  {{> template_selection_modal}}
   <div 
     class="modal fade" 
     id="templatePreviewModal" 
@@ -172,6 +169,7 @@
       <div class="row justify-content-end">
         {{> transaction_buttons_top 
           showBalanceDue=true
+          showButtons=showTransactionButtons
           recorddeleted=invoicerecord.deleted
           recordispaid=invoicerecord.ispaid
           recordbalanceDue=invoicerecord.balanceDue
