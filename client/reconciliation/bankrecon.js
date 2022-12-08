@@ -1937,6 +1937,7 @@ Template.bankrecon.events({
                 let withamount = $("#" + withID + "_amount").text() || 0;
                 let withref = $("#" + withID + "_ref").text() || '';
                 let withpaymentid = $("#" + withID + "_payid").text() || '';
+                withpaymentid = withID;
                 let withaccountname = $('#bankAccountName').val() || '';
 
                 let splitwithdepositdate = withdepositdate.split("/");
