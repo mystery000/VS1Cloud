@@ -4,9 +4,13 @@
             <div class="spinner"></div>
         </div>
         <div style="margin-top: 24px">
-            <header style="padding: 16px; padding-bottom: 1px; background-color: #ededed;">
-                <h2 style="margin: 16px 16px 0;">Bill Of Materials {{> helpbutton}}
-                </h2>
+            <header class="row">
+                <div class="col-12 col-md-4">
+                    <h2>Bill Of Materials {{> helpbutton}}</h2>
+                </div>
+                <div class="col-12 col-md-4">
+                    {{> loggedcompanyoverview}}
+                </div>
             </header>
             <div class="row d-xl-flex flex-row justify-content-between" style="padding: 0px 20px; background-color: #ededed;">
                  <div class="col-6 col-md-8 d-xl-flex flex-grow-1 align-items-xl-start">

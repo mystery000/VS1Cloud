@@ -11,9 +11,13 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <header class="py-2 d-flex align-items-center">
-            <h2 class="mr-1">Inventory Overview {{> helpbutton}}</h2>
-            {{> loggedcompanyoverview}}
+        <header class="row">
+            <div class="col-12 col-md-4">
+                <h2 class="mr-1">Inventory Overview {{> helpbutton}}</h2>
+            </div>
+            <div class="col-12 col-md-4">
+                {{> loggedcompanyoverview}}
+            </div>
 
             <!-- Start Help View Modal -->
             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
