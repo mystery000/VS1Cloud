@@ -286,11 +286,13 @@ Template.organisationsettings.onRendered(function() {
         let companyName = mainData.CompanyName;
         let postalAddress =
             mainData.PoBox + "\n" + mainData.PoBox2 + "\n" + mainData.PoBox3;
-        let physicalAddress =
-            mainData.Address + "\n" + mainData.Address2 + "\n" + mainData.Address3;
+        // let physicalAddress =
+        //     mainData.Address + "\n" + mainData.Address2 + "\n" + mainData.Address3;
+        let physicalAddress = mainData.Address + "\n" + mainData.Address2;
         templateObject.samePhysicalAddress1.set(mainData.Address);
         templateObject.samePhysicalAddress2.set(mainData.Address2);
-        templateObject.samePhysicalAddress3.set(mainData.Address3);
+        // templateObject.samePhysicalAddress3.set(mainData.Address3);
+        templateObject.samePhysicalAddress3.set("");
 
         $("#displayname").val(mainData.CompanyName);
         $("#tradingname").val(mainData.TradingName);
