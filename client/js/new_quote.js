@@ -85,6 +85,7 @@ Template.new_quote.onCreated(() => {
     templateObject.subtaxcodes = new ReactiveVar([]);
     templateObject.hasFollow = new ReactiveVar(false);
 
+    templateObject.customerRecord = new ReactiveVar();
 });
 
 Template.new_quote.onRendered(() => {
@@ -4610,6 +4611,36 @@ Template.new_quote.onRendered(() => {
             $('#chkSameAsSupplier').removeAttr("checked");
         }
         setTimeout(function() {
+            let customerRecord = {
+                id:popCustomerID,
+                phone:popCustomerPhone,
+                firstname:popCustomerFirstName,
+                middlename: popCustomerMiddleName,
+                lastname:popCustomerLastName,
+                company:data.tcustomer[0].fields.Companyname || '',
+                email: popCustomerEmail,
+                title: popCustomerTitle,
+                tfn: popCustomertfn,
+                mobile: popCustomerMobile,
+                fax: popCustomerFaxnumber,
+                shippingaddress: popCustomerStreet,
+                scity: popCustomerStreet2,
+                sstate: popCustomerCountry,
+                terms: '',
+                spostalcode: popCustomerPostcode,
+                scountry: popCustomerState,
+                billingaddress: popCustomerbillingaddress,
+                bcity: popCustomerbcity,
+                bstate: popCustomerbstate,
+                bpostalcode: popCustomerbpostalcode,
+                bcountry: popCustomerCountry,
+                custFld1: popCustomercustfield1,
+                custFld2: popCustomercustfield2,
+                jobbcountry: '',
+                jobscountry: '',
+                discount:0
+            }
+            templateObject.customerRecord.set(customerRecord);
             $('#addCustomerModal').modal('show');
         }, 200);
     }
@@ -5656,6 +5687,9 @@ Template.new_quote.helpers({
     },
     record: () => {
         return Template.instance().record.get();
+    },
+    customerRecord: () => {
+        return Template.instance().customerRecord.get();
     },
     querystring: () => {
         return Template.instance().querystring.get();

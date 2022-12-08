@@ -48,7 +48,7 @@ export class ProductService extends BaseService {
         };
         return this.getList(this.ERPObjects.TCustomerVS1, options);
     }
-    getGlobalSearchAppointment(searchName) {
+    getGlobalSearchAppointment(searchName) {//APP-123
         let options = {
             select: "[ID]='" + searchName + "' AND [Active]=true",
         };
@@ -57,16 +57,50 @@ export class ProductService extends BaseService {
     getGlobalSearchCredit(searchName) {
 
         let options = {
-            select: "[ID]='" + searchName,
+            select: "[PurchaseOrderID]='" + searchName,
         };
         return this.getList(this.ERPObjects.TCreditList, options);
     }
-    getGlobalSearchCRM(searchName) {
-
+    getGlobalSearchCRM(searchName) {//CRM-123
+        //TProjectList?select=[Id]=1
+        let options = {
+            select: "[ID]='" + searchName + "' AND [Active]=true",
+        };
+        return this.getList(this.ERPObjects.TProjectTasksList, options);
+    }
+    getGlobalSearchDeposit(searchName) {//DEP-123
+        let options = {
+            select: "[DepositID]='" + searchName,
+        };
+        return this.getList(this.ERPObjects.TBankDepositList, options);
+    }
+    getGlobalSearchFixedAssets(searchName) {
+        //TFixedAssets?select=[id]=1
         let options = {
             select: "[ID]='" + searchName,
         };
-        return this.getList(this.ERPObjects.TCreditList, options);
+        return this.getList(this.ERPObjects.TFixedAssets, options);
+    }
+    getGlobalSearchReceiptClaims(searchName) {
+        let options = {
+            select: "[MetaID]='" + searchName,
+        };
+        return this.getList(this.ERPObjects.TExpenseClaimList, options);
+    }
+    getGlobalSearchTasks(searchName) {//TSK-123
+        //TTasks?select=[id]=1
+        //TProjectTasksList
+        let options = {
+            select: "[ID]='" + searchName + "' AND [Active]=true",
+        };
+        return this.getList(this.ERPObjects.TProjectTasksList, options);
+    }
+    getGlobalSearchWorkOrders(searchName) {//WO-123
+        //TWorkOrderList?select=[PPid]=2033
+        let options = {
+            select: "[PPid]='" + searchName,
+        };
+        return this.getList(this.ERPObjects.TWorkOrderList, options);
     }
 
     getGlobalSearchTimeSheet(searchName) {
