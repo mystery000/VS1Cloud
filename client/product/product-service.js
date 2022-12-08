@@ -55,14 +55,14 @@ export class ProductService extends BaseService {
         return this.getList(this.ERPObjects.TAppointment, options);
     }
     getGlobalSearchCredit(searchName) {
-        console.log('this.ERPObjects:',this.ERPObjects)
+
         let options = {
             select: "[ID]='" + searchName,
         };
         return this.getList(this.ERPObjects.TCreditList, options);
     }
     getGlobalSearchCRM(searchName) {
-        console.log('this.ERPObjects:',this.ERPObjects)
+
         let options = {
             select: "[ID]='" + searchName,
         };

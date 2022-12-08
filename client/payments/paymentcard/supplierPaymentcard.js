@@ -13192,7 +13192,7 @@ Template.supplierpaymentcard.events({
   "change #exchange_rate": (e) => {
       let srcamount = $(".dynamic-converter-js input.linePaymentamount.convert-from").val();
       let dstamount = convertToForeignAmount(srcamount, $("#exchange_rate").val(), getCurrentCurrencySymbol());
-      console.log(srcamount, dstamount);
+
       $(".linePaymentamount.convert-to").text(dstamount);
     onExchangeRateChange(e);
   },
