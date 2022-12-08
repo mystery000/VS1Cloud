@@ -51,6 +51,7 @@ Template.supplierpaymentcard.onCreated(() => {
   templateObject.isInvoiceNo.set(true);
   templateObject.accountID = new ReactiveVar();
   templateObject.stripe_fee_method = new ReactiveVar();
+  templateObject.hasFollow = new ReactiveVar(false);
 });
 
 
@@ -71,6 +72,34 @@ export const _getTmpAppliedAmount = () => {
 Template.supplierpaymentcard.onRendered(() => {
   _setTmpAppliedAmount();
   const templateObject = Template.instance();
+  templateObject.hasFollowings = async function() {
+    var currentDate = new Date();
+    let paymentService = new PaymentsService();
+    var url = FlowRouter.current().path;
+    var getso_id = url.split('?id=');
+    var currentInvoice = getso_id[getso_id.length - 1];
+    if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        var paymentData = await paymentService.getOneSupplierPayment(currentInvoice);
+        var paymentDate = paymentData.fields.PaymentDate;
+        var fromDate = paymentDate.substring(0, 10);
+        var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+        var followingPayments = await sideBarService.getAllTSupplierPaymentListData(
+            fromDate,
+            toDate,
+            false,
+            initialReportLoad,
+            0
+        );
+        var paymentList = followingPayments.tsupplierpaymentlist;
+        if (paymentList.length > 1) {
+          templateObject.hasFollow.set(true);
+        } else {
+            templateObject.hasFollow.set(false);
+        }
+    }
+  }
+  templateObject.hasFollowings();
   const dataTableList = [];
   const tableHeaderList = [];
   LoadingOverlay.show();
@@ -12628,33 +12657,10 @@ Template.supplierpaymentcard.events({
   },
   "click .btnRemove": async function (event) {
     $(".btnDeleteLine").show();
-    let templateObject = Template.instance();
     let utilityService = new UtilityService();
-    var clicktimes = 0;
     var targetID = $(event.target).closest("tr").attr("id") || 0; // table row ID
-    
     $("#selectDeleteLineID").val(targetID);
-    var currentDate = new Date();
-    let paymentService = new PaymentsService();
-    var url = FlowRouter.current().path;
-    var getso_id = url.split('?id=');
-    var currentInvoice = getso_id[getso_id.length - 1];
-    var paymentList = [];
-    if (getso_id[1]) {
-        currentInvoice = parseInt(currentInvoice);
-        var paymentData = await paymentService.getOneSupplierPayment(currentInvoice);
-        var paymentDate = paymentData.fields.PaymentDate;
-        var fromDate = paymentDate.substring(0, 10);
-        var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-        var followingPayments = await sideBarService.getAllTSupplierPaymentListData(
-            fromDate,
-            toDate,
-            false,
-            initialReportLoad,
-            0
-        );
-        paymentList = followingPayments.tsupplierpaymentlist;
-    }
+    
     if(targetID != undefined){
       times++;
       if (times == 1) {
@@ -12695,7 +12701,7 @@ Template.supplierpaymentcard.events({
         }
       }
     } else {
-      if(paymentList.length > 1) $("#footerDeleteModal2").modal("toggle");
+      if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
       else $("#footerDeleteModal1").modal("toggle");
     }
   },
