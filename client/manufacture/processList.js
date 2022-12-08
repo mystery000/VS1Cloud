@@ -626,105 +626,105 @@ Template.processList.onRendered (function() {
 
         // templateObject.getCustomFieldData();
     }
-    templateObject.getProcessRecords();
+    // templateObject.getProcessRecords();
 
     // custom field displaysettings
-    templateObject.getCustomFieldData = function() {
+    // templateObject.getCustomFieldData = function() {
 
-        let custFields = [];
-        let dispFields = [];
-        let customData = {};
-        let customFieldCount = 11;
-        let listType = "ltProcessList";
+    //     let custFields = [];
+    //     let dispFields = [];
+    //     let customData = {};
+    //     let customFieldCount = 11;
+    //     let listType = "ltProcessList";
   
-        let reset_data = [
-          { label: 'Name', class: 'colName', active: true },
-          { label: 'Description', class: 'colDescription', active: true },
-          { label: 'Daily Hours', class: 'colDailyHours', active: true },
-          { label: 'Hourly Labour Cost', class: 'colHourlyLabourCost', active: true },
-          { label: 'Cost of Goods Sold', class: 'colCOGS', active: true },
-          { label: 'Expense Account', class: 'colExpense', active: true },
-          { label: 'Hourly Overhead Cost', class: 'colHourlyOverheadCost', active: true },
-          { label: 'Cost of Goods Sold(Overhead)', class: 'colOverCOGS', active: true },
-          { label: 'Expense Account(Overhead)', class: 'colOverExpense', active: false },
-          { label: 'Total Hourly Costs', class: 'colTotalHourlyCosts', active: true },
-          { label: 'Inventory Asset Wastage', class: 'colWastage', active: true },
-        ];
+    //     let reset_data = [
+    //       { label: 'Name', class: 'colName', active: true },
+    //       { label: 'Description', class: 'colDescription', active: true },
+    //       { label: 'Daily Hours', class: 'colDailyHours', active: true },
+    //       { label: 'Hourly Labour Cost', class: 'colHourlyLabourCost', active: true },
+    //       { label: 'Cost of Goods Sold', class: 'colCOGS', active: true },
+    //       { label: 'Expense Account', class: 'colExpense', active: true },
+    //       { label: 'Hourly Overhead Cost', class: 'colHourlyOverheadCost', active: true },
+    //       { label: 'Cost of Goods Sold(Overhead)', class: 'colOverCOGS', active: true },
+    //       { label: 'Expense Account(Overhead)', class: 'colOverExpense', active: false },
+    //       { label: 'Total Hourly Costs', class: 'colTotalHourlyCosts', active: true },
+    //       { label: 'Inventory Asset Wastage', class: 'colWastage', active: true },
+    //     ];
   
-        sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-          for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-            if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
-              customData = {
-                active: data.tcustomfieldlist[x].fields.Active || false,
-                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-                datatype: data.tcustomfieldlist[x].fields.DataType || "",
-                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-              };
-              custFields.push(customData);
-            } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
-              customData = {
-                active: data.tcustomfieldlist[x].fields.Active || false,
-                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-                datatype: data.tcustomfieldlist[x].fields.DataType || "",
-                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-              };
-              dispFields.push(customData);
-            }
-          }
+    //     sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+    //       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+    //         if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
+    //           customData = {
+    //             active: data.tcustomfieldlist[x].fields.Active || false,
+    //             id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+    //             custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+    //             datatype: data.tcustomfieldlist[x].fields.DataType || "",
+    //             isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+    //             iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+    //             dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+    //           };
+    //           custFields.push(customData);
+    //         } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
+    //           customData = {
+    //             active: data.tcustomfieldlist[x].fields.Active || false,
+    //             id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+    //             custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+    //             datatype: data.tcustomfieldlist[x].fields.DataType || "",
+    //             isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+    //             iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+    //             dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+    //           };
+    //           dispFields.push(customData);
+    //         }
+    //       }
   
-          if (custFields.length < 3) {
-            let remainder = 3 - custFields.length;
-            let getRemCustomFields = parseInt(custFields.length);
-            for (let r = 0; r < remainder; r++) {
-              getRemCustomFields++;
-              customData = {
-                active: false,
-                id: "",
-                custfieldlabel: "Custom Field " + getRemCustomFields,
-                datatype: "",
-                isempty: true,
-                iscombo: false,
-              };
-              // count++;
-              custFields.push(customData);
-            }
-          }
+    //       if (custFields.length < 3) {
+    //         let remainder = 3 - custFields.length;
+    //         let getRemCustomFields = parseInt(custFields.length);
+    //         for (let r = 0; r < remainder; r++) {
+    //           getRemCustomFields++;
+    //           customData = {
+    //             active: false,
+    //             id: "",
+    //             custfieldlabel: "Custom Field " + getRemCustomFields,
+    //             datatype: "",
+    //             isempty: true,
+    //             iscombo: false,
+    //           };
+    //           // count++;
+    //           custFields.push(customData);
+    //         }
+    //       }
   
-          if (dispFields.length < customFieldCount) {
-            let remainder = customFieldCount - dispFields.length;
-            let getRemCustomFields = parseInt(dispFields.length);
-            for (let r = 0; r < remainder; r++) {
-              customData = {
-                active: reset_data[getRemCustomFields].active,
-                id: "",
-                custfieldlabel: reset_data[getRemCustomFields].label,
-                datatype: "",
-                isempty: true,
-                iscombo: false,
-              };
-              getRemCustomFields++;
-              // count++;
-              dispFields.push(customData);
-            }
-          }
+    //       if (dispFields.length < customFieldCount) {
+    //         let remainder = customFieldCount - dispFields.length;
+    //         let getRemCustomFields = parseInt(dispFields.length);
+    //         for (let r = 0; r < remainder; r++) {
+    //           customData = {
+    //             active: reset_data[getRemCustomFields].active,
+    //             id: "",
+    //             custfieldlabel: reset_data[getRemCustomFields].label,
+    //             datatype: "",
+    //             isempty: true,
+    //             iscombo: false,
+    //           };
+    //           getRemCustomFields++;
+    //           // count++;
+    //           dispFields.push(customData);
+    //         }
+    //       }
   
-          for (let index = 0; index < custFields.length; index++) {
-            const element = custFields[index];
-            dispFields.push(element);
+    //       for (let index = 0; index < custFields.length; index++) {
+    //         const element = custFields[index];
+    //         dispFields.push(element);
   
-          }
+    //       }
   
-          templateObject.custfields.set(custFields);
-          templateObject.displayfields.set(dispFields);
+    //       templateObject.custfields.set(custFields);
+    //       templateObject.displayfields.set(dispFields);
   
-        })
-      }
+    //     })
+    //   }
 
     
 });
@@ -923,32 +923,32 @@ Template.processList.events({
         setTimeout(function () {
             templateObject.getProcessRecords();
             window.open('/processlist', '_self');
-            }, 3000);
-        },
-    
-        'click .processList #exportbtn': function() {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            jQuery('#tblProcessList_wrapper .dt-buttons .btntabletocsv').click();
-            $('.fullScreenSpin').css('display', 'none');
-        },
-    
-        'click .processList .printConfirm': function() {
-            playPrintAudio();
-            setTimeout(function(){
-            $('.fullScreenSpin').css('display', 'inline-block');
-            jQuery('#tblProcessList_wrapper .dt-buttons .btntabletopdf').click();
-            $('.fullScreenSpin').css('display', 'none');
-        }, delayTimeAfterSound);
-        },
-    
-        'click .processList #btnNewProcess': function (e) {
-            FlowRouter.go('/processcard');
-        },
+        }, 3000);
+    },
 
-    
-        'click #tblProcessList tbody tr': function (e) {
-            var listData = $(e.target).closest('tr').attr('id');
-            FlowRouter.go('/processcard?id=' + listData)
-        }
+    'click .processList #exportbtn': function() {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        jQuery('#tblProcessList_wrapper .dt-buttons .btntabletocsv').click();
+        $('.fullScreenSpin').css('display', 'none');
+    },
+
+    'click .processList .printConfirm': function() {
+        playPrintAudio();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        jQuery('#tblProcessList_wrapper .dt-buttons .btntabletopdf').click();
+        $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
+    },
+
+    'click .processList #btnNewProcess': function (e) {
+        FlowRouter.go('/processcard');
+    },
+
+
+    'click #tblProcessList tbody tr': function (e) {
+        var listData = $(e.target).closest('tr').attr('id');
+        FlowRouter.go('/processcard?id=' + listData)
+    }
 
 })
