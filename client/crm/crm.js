@@ -522,6 +522,9 @@ Template.crmoverview.onRendered(function () {
     let colID = table.find(".colID").text();
     let colType = table.find(".colType").text();
 
+    let colPhone = table.find(".colPhone").text();
+    let colEmail = table.find(".colEmail").text();
+
     //if (colType != 'Prospect' && colType != 'Customer') {
       colType = colType == 'Customer / Supplier' ? 'Supplier' : colType;
       colType = colType == 'Customer / Prospect / Supplier' ? 'Supplier' : colType;
@@ -534,6 +537,9 @@ Template.crmoverview.onRendered(function () {
 
       $('#contactID').val(colID)
       $('#contactType').val(colType)
+
+      $('#contactEmailClient').val(colEmail);
+      $('#contactPhoneClient').val(colPhone);
     //} else {
     //  swal("Please select valid type of contact", "", "error");
     //  return false;
@@ -545,6 +551,9 @@ Template.crmoverview.onRendered(function () {
     let colEmployeeName = table.find(".colEmployeeName").text();
     let colID = table.find(".colID").text();
 
+    let colPhone = table.find(".colPhone").text();
+    let colEmail = table.find(".colEmail").text();
+
     $('#employeeListModal').modal('toggle');
 
     // for add modal
@@ -553,6 +562,9 @@ Template.crmoverview.onRendered(function () {
     $('#crmEditSelectEmployeeList').val(colEmployeeName);
 
     $('#assignedID').val(colID)
+
+    $('#contactEmailUser').val(colEmail);
+    $('#contactPhoneUser').val(colPhone);
   });
   ///////////////////////////////////////////////////
 
@@ -1646,9 +1658,13 @@ function setContactDataToDetail(data, contactType) {
     $('#crmEditSelectLeadList').val('');
     $('#contactID').val('')
     $('#contactType').val('')
+    $('#contactEmailClient').val('');
+    $('#contactPhoneClient').val('');
   } else {
     $('#crmEditSelectLeadList').val(data.fields.ClientName);
     $('#contactID').val(data.fields.ID)
     $('#contactType').val(contactType)
+    $('#contactEmailClient').val(data.fields.colEmail);
+    $('#contactPhoneClient').val(data.fields.colPhone);
   }
 }

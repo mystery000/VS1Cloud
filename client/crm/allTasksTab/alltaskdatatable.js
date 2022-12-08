@@ -2356,6 +2356,11 @@ Template.alltaskdatatable.events({
         let contactID = $('#contactID').val();
         let contactName = $('#crmEditSelectLeadList').val();
 
+        let userEmail = $('#contactEmailUser').val();
+        let userPhone = $('#contactPhoneUser').val();
+        let clientEmail = $('#contactEmailClient').val();
+        let clientPhone = $('#contactPhoneClient').val();
+
         let contactType = $('#contactType').val();
         let customerID = 0;
         let leadID = 0;
@@ -2382,7 +2387,11 @@ Template.alltaskdatatable.events({
             AssignID: assignId,
             AssignName: assignName,
             ContactName: contactName,
-            Completed: completed
+            Completed: completed,
+            UserPhone: userPhone,
+            UserEmail: userEmail,
+            ClientPhone: clientPhone,
+            ClientEmail: clientEmail
           },
         };
         $(".fullScreenSpin").css("display", "inline-block");
@@ -3982,7 +3991,7 @@ function openEditTaskModal(id, type) {
     $(".fullScreenSpin").css("display", "none");
     if (data.fields.ID == id) {
       let selected_record = data.fields;
-
+ 
       $("#txtCrmTaskID").val(selected_record.ID);
       $("#txtCrmProjectID").val(selected_record.ProjectID);
       $("#txtCommentsDescription").val("");
@@ -3995,6 +4004,11 @@ function openEditTaskModal(id, type) {
       let assignId = selected_record.AssignID ? selected_record.AssignID : Session.get("mySessionEmployeeLoggedID");
       $('#crmEditSelectEmployeeList').val(employeeName);
       $('#assignedID').val(assignId)
+
+      $('#contactEmailUser').val(selected_record.UserEmail);
+      $('#contactPhoneUser').val(selected_record.UserPhone);
+      $('#contactEmailClient').val(selected_record.ClientEmail);
+      $('#contactPhoneClient').val(selected_record.ClientPhone);
 
       let colClientName = selected_record.ContactName;
       $('#crmEditSelectLeadList').val(colClientName);
