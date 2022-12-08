@@ -7012,7 +7012,6 @@ Template.employeescard.events({
         $('#edtLeaveEndDate').val(new Date(nextWeek.setDate( new Date().getDate() + 7)).toLocaleDateString());
         $('#removeLeaveRequestBtn').hide();
         $(`#edtLeavePayPeriod`).val();
-        console.log($(`#edtPayPeriod`).val(), "------------");
         await templateObject.getEmployeePaySettings(true); 
     },
     'change #taxes :input, #taxes :select': async function() {

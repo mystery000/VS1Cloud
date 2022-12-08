@@ -1055,8 +1055,6 @@ Template.appointments.onRendered(function() {
             },
             eventClick: function(info) {
 
-                console.log(info, 'event click info');
-
                 $("#frmAppointment")[0].reset();
                 $("#btnHold").prop("disabled", false);
                 $("#btnStartAppointment").prop("disabled", false);
@@ -1779,8 +1777,6 @@ Template.appointments.onRendered(function() {
             },
             eventClick: function(info) {
 
-                console.log(info, '------------eventclick');
-
                 $("#frmAppointment")[0].reset();
                 $("#btnHold").prop("disabled", false);
                 $("#btnStartAppointment").prop("disabled", false);
@@ -2371,15 +2367,13 @@ Template.appointments.onRendered(function() {
             },
             eventContent: function(event) {
 
-                console.log(event, '---------event');
-
                 let title = document.createElement("p");
                 if (event.event.title) {
                     title.innerHTML = event.timeText + " " + event.event.title;
                     title.style.backgroundColor = event.backgroundColor;
                     title.style.color = "#ffffff";
                 } else {
-                    // title.innerHTML = event.timeText + " " + event.event.title;
+                    title.innerHTML = event.timeText + " " + event.event.title;
                     // let leaveemployeerecords = templateObject.leaveemployeerecords.get(); 
                     // console.log(leaveemployeerecords, "----------leaveemployeerecords");
                     // let empID = $(event.draggedEl.childNodes[1]).attr('id').split("_")[1];
@@ -2394,7 +2388,7 @@ Template.appointments.onRendered(function() {
                     //         leaveFlag = true;
                     //     }
                     // });
-                    title.innerHTML = "<h3>Annual Leave</h3><h4>Status: Waiting</h4>";
+                    title.innerHTML = "Annual Leave : Status: Waiting";
                 }
 
                 let arrayOfDomNodes = [title];
