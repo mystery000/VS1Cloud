@@ -38,7 +38,7 @@ Template.production_planner.onRendered(async function() {
         return new Promise(async(resolve, reject) => {
             getVS1Data('TProcessStep').then(function(dataObject) {
                 if (dataObject.length == 0) {
-                    manufacturingService.getAllProcessData().then(function(data) {
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(function(data) {
                         addVS1Data('TProcessStep', JSON.stringify(data))
                         let useData = data.tprocessstep;
                         let temp = []
