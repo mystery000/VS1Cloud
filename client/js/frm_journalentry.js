@@ -4191,6 +4191,7 @@ Template.journalentrycard.events({
             window.open('/billlist', '_self');
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDelete': function(event) {

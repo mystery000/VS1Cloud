@@ -2257,6 +2257,7 @@ Template.stockadjustmentcard.events({
             $('.modal-backdrop').css('display', 'none');
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteStockAdjust': function (event) {
