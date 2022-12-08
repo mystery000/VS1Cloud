@@ -54,13 +54,19 @@ export class ProductService extends BaseService {
         };
         return this.getList(this.ERPObjects.TAppointment, options);
     }
+<<<<<<< HEAD
     getGlobalSearchCredit(searchName) {//CR-123
         //TCreditList?search="PurchaseOrderID=45"
+=======
+    getGlobalSearchCredit(searchName) {
+
+>>>>>>> b520f9f8c049c272843aae99b6094e86bc6207c8
         let options = {
             select: "[PurchaseOrderID]='" + searchName,
         };
         return this.getList(this.ERPObjects.TCreditList, options);
     }
+<<<<<<< HEAD
     getGlobalSearchCRM(searchName) {//CRM-123
         //TProjectList?select=[Id]=1
         let options = {
@@ -76,6 +82,10 @@ export class ProductService extends BaseService {
     }
     getGlobalSearchFixedAssets(searchName) {
         //TFixedAssets?select=[id]=1
+=======
+    getGlobalSearchCRM(searchName) {
+
+>>>>>>> b520f9f8c049c272843aae99b6094e86bc6207c8
         let options = {
             select: "[ID]='" + searchName,
         };

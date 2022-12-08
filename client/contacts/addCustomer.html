@@ -840,6 +840,7 @@
 
                                                                         <select type="search" class="form-control"
                                                                             id="sltJobCustomerType"
+                                                                            value="{{record.clienttype}}"
                                                                             name="sltJobCustomerType"
                                                                             style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
@@ -862,6 +863,7 @@
                                                                         <select type="search" class="form-control"
                                                                             id="sltJobPreferredPayment"
                                                                             name="sltJobPreferredPayment"
+                                                                            value="{{record.preferedpayment}}"
                                                                             style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
                                                                     </div>
@@ -879,6 +881,7 @@
                                                                                                 </select> -->
                                                                         <select type="search" class="form-control"
                                                                             id="sltJobTerms" name="sltJobTerms"
+                                                                            value="{{record.jobterms}}"
                                                                             style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
                                                                     </div>
@@ -1153,7 +1156,7 @@
                                                                             style="margin: 4px;"><label
                                                                                 class="text-nowrap">Tax
                                                                                 Code</label>
-                                                                            <select type="search" class="form-control"
+                                                                            <select type="search" class="form-control" value="{{record.jobtaxcode}}"
                                                                                 style="width: 260px; background-color:rgb(255, 255, 255); cursor: pointer;"
                                                                                 id="sltJobTaxCode" name="sltJobTaxCode">
                                                                                 <!-- {{#each item in taxCodeList}}
@@ -1694,10 +1697,25 @@
                                                                             class="text-nowrap">Customer Type</label>
 
                                                                         <select type="search" class="form-control"
-                                                                            id="sltCustomerType" name="sltCustomerType"
+                                                                            id="sltCustomerType" name="sltCustomerType" value="{{record.clienttype}}"
                                                                             style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
 
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2 col-6" style="padding: 0;">
+                                                                    <div class="form-group d-xl-flex flex-column align-items-xl-start"
+                                                                        style="margin: 4px;"><label
+                                                                            class="text-nowrap">Preferred Payment
+                                                                            Method</label>
+
+                                                                        <select type="search"
+                                                                            class="form-control preferredPaymentMethodSelect"
+                                                                            id="sltPreferredPayment"
+                                                                            name="sltPreferredPayment"
+                                                                            value="{{record.preferedpayment}}"
+                                                                            style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                        </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-2 col-6" style="padding: 0;">
@@ -1706,6 +1724,7 @@
                                                                         <label>Terms</label>
                                                                         <select type="search" class="form-control"
                                                                             id="sltTerms" name="sltTerms"
+                                                                            value="{{record.terms}}"
                                                                             style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
                                                                     </div>
@@ -1734,7 +1753,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-2 col-6" style="padding: 0;">
-                                                                    {{> CurrencyWidget onlyCurrencyField="true"}}
+                                                                    {{> CurrencyWidget onlyCurrencyField="true"     }}
                                                                 </div>
 
 
@@ -2060,7 +2079,7 @@
                                                                                 class="text-nowrap">Tax
                                                                                 Code</label>
                                                                             <select type="search"
-                                                                                class="form-control taxCodeSelect"
+                                                                                class="form-control taxCodeSelect" value="{{record.taxcode}}"
                                                                                 style="width: 260px; background-color:rgb(255, 255, 255); cursor: pointer;"
                                                                                 id="sltTaxCode" name="sltTaxCode">
                                                                                 <!-- {{#each item in taxCodeList}}
@@ -2927,6 +2946,7 @@
                                                                                                 class="form-control"
                                                                                                 id="sltJobCustomerType"
                                                                                                 name="sltJobCustomerType"
+                                                                                                value="{{record.jobclienttype}}"
                                                                                                 style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                                             </select>
                                                                                         </div>

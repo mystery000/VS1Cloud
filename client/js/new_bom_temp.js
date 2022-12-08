@@ -621,7 +621,7 @@ Template.bom_template.events({
         event.preventDefault();
         event.stopPropagation();
         let templateObject = Template.instance()
-        let processName = $(event.target).closest('tr').find('.colProcessName').text();
+        let processName = $(event.target).closest('tr').find('.colName').text();
         let selEle = templateObject.selectedProcessField.get();
         selEle.val(processName);
         $('#processListModal').modal('toggle')

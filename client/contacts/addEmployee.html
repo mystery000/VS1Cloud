@@ -384,7 +384,7 @@
                                                         <div class="col-12 col-md-3" style="padding: 0px;">
                                                             <div class="form-group" style="margin: 4px; padding-left:4px;">
                                                                 <label>Dashboard Options</label>
-                                                                <select type="search" class="form-control" id="edtDashboardOptions" name="edtDashboardOptions" defaultlogin="All" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                <select class="form-control" id="edtDashboardOptions" value="{{record.dashboardOptions}}" name="edtDashboardOptions" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                 </select>
                                                                 <!-- <select class="form-control" id="edtDashboardOptions" name="edtDashboardOptions" style="cursor: pointer;">
                                                                   {{#each item in dashboardOptionsList}}
@@ -1411,7 +1411,7 @@
                                                                 <a class="nav-link hideSaveButton" id="contact-tab" data-toggle="tab" href="#leave" role="tab" aria-controls="contact" aria-selected="false">Leave</a>
                                                             </li>
                                                             <li class="nav-item">
-                                                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#bankaccounts" role="tab" aria-controls="contact" aria-selected="false">Bank Accounts</a>
+                                                                <a class="nav-link bank-account-tab" id="contact-tab" data-toggle="tab" href="#bankaccounts" role="tab" aria-controls="contact" aria-selected="false">Bank Accounts</a>
                                                             </li>
                                                             <li class="nav-item">
                                                                 <a class="nav-link hideSaveButton" id="contact-tab" data-toggle="tab" href="#payslips" role="tab" aria-controls="contact" aria-selected="false">Payslips</a>
@@ -2135,6 +2135,13 @@
                                                                                 <input type="text" class="form-control primaryStatementText" id="bankAccountStatement" value="{{employeePaySetting.StatementText}}">
                                                                             </div>
                                                                         </div>
+                                                                        <!-- <div class="col-6 col-md-3">
+                                                                          <div class="form-group" style="margin: 4px;">
+                                                                              <label>Bank Name</label> 
+                                                                              <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName" value="{{record.bankName}}">
+                                                                              </select>
+                                                                          </div>
+                                                                      </div> -->
                                                                         <div class="col-6 col-md-3">
                                                                             <div class="form-group">
                                                                                 <label>Account Name</label>
@@ -2151,6 +2158,18 @@
                                                                             <div class="form-group">
                                                                                 <label>Account Number</label>
                                                                                 <input type="text" class="form-control primaryAccNumber" id="bankAccountNo" value="{{employeePaySetting.BankAccountNo}}">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-6 col-md-3">
+                                                                            <div class="form-group" style="margin: 4px;">
+                                                                                <label>Swift Code</label>
+                                                                                <input type="text" class="form-control" id="edtSwiftCode" name="edtSwiftCode" value="{{record.bankAccountNo}}">
+                                                                            </div>
+                                                                        </div> 
+                                                                        <div class="col-6 col-md-3">
+                                                                            <div class="form-group" style="margin: 4px;">
+                                                                                <label>Routing Number</label>
+                                                                                <input type="text" class="form-control" id="edtRoutingNumber" name="edtRoutingNumber" value="{{record.routingNumber}}">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -3693,6 +3712,10 @@
         {{> AppTableModal AppTableModalData=AppTableModalData}}
     </div>
 
+    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal" style="z-index: 99999999 !important;">
+      {{> bankNameModal}}
+    </div>
+
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
         <div class="modal-dialog" role="document" style="max-width: 670px!important;">
@@ -3813,6 +3836,7 @@
             </div>
         </div>
     </div>
+
 
     {{> SelectPayCalendar }}
     <script>
