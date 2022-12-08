@@ -1389,7 +1389,7 @@ Template.customerscard.onRendered(function () {
 
         };
 
-        setTimeout(function() {
+        setTimeout(function () {
             $('#sltCurrency').val(data.fields.ForeignExchangeCode || CountryAbbr);
         }, 100);
 
@@ -2367,7 +2367,13 @@ Template.customerscard.events({
     },
     'click .tblCrmList tbody tr': function (event) {
         const taskID = $(event.target).parent().attr('id');
-        const taskCategory = $(event.target).parent().attr('category');
+        let crmRecords = Template.instance().crmRecords.get();
+        const currentRecordIndex = crmRecords.findIndex(item => item.id == taskID);
+        let taskCategory = "";
+        if (currentRecordIndex > -1) {
+            taskCategory = crmRecords[currentRecordIndex].category;
+        }
+        // const taskCategory = $(event.target).parent().attr('category');
         if (taskID !== undefined) {
             if (taskCategory == 'task') {
                 FlowRouter.go('/crmoverview?taskid=' + taskID);
@@ -4153,9 +4159,9 @@ Template.customerscard.helpers({
     },
     isJob: () => {
         let parentIsJob = Template.parentData(0).isJob;
-        if(parentIsJob){
+        if (parentIsJob) {
             return parentIsJob
-        }else{
+        } else {
             return Template.instance().isJob.get();
         }
     },
