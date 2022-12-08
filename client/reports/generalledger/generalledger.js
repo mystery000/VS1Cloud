@@ -966,7 +966,6 @@ Template.generalledger.events({
               } else {
                 if (reportData.FormID == 225) {
                   reportData.attachments = await getAttachments();
-                  console.log("@@@@@@@@@", reportData.attachments)
                   Meteor.call("sendNormalEmail", reportData);
                   resolve()
                 }
@@ -1212,6 +1211,11 @@ Template.generalledger.helpers({
     }
     let activeArray = array.filter((c) => c.active == true);
     return activeArray.length;
+  },
+  currencyColumnSize : (count) => {
+    let siz = count > 0 ? count * 130 : 90;
+    //alert(siz);
+    return siz;          //column size auto per 85px
   },
   currencyList: () => {
     return Template.instance().currencyList.get();

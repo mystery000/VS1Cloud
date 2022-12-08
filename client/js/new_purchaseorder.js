@@ -84,10 +84,10 @@ Template.purchaseordercard.onCreated(() => {
 
     templateObject.monthArr = new ReactiveVar();
     templateObject.plusArr = new ReactiveVar();
-
+    templateObject.hasFollow = new ReactiveVar(false);
 });
 Template.purchaseordercard.onRendered(() => {
-    const plusArr = [];
+  const plusArr = [];
   const monthArr = [];
   let isGreenTrack = Session.get('isGreenTrack');
   let regionData = Session.get('ERPLoggedCountry');
@@ -292,11 +292,10 @@ Template.purchaseordercard.onRendered(() => {
 
     templateObject.hasFollowings = async function() {
         var currentDate = new Date();
-        let purchaseService = new PurchaseBoardService();        
+        let purchaseService = new PurchaseBoardService();
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = '';
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
@@ -311,15 +310,15 @@ Template.purchaseordercard.onRendered(() => {
                 0
             );
             var poList = followingPOs.tpurchaseorderlist;
-            if (poList.length > 1) {
-                $("#btn_follow2").css("display", "inline-block");
+            if(poList.length > 1) {
+                templateObject.hasFollow.set(true);
             } else {
-                $("#btn_follow2").css("display", "none");
+                templateObject.hasFollow.set(false);
             }
         }
 
     }
-    templateObject.hasFollowings();    
+    templateObject.hasFollowings();
     $('#choosetemplate').attr('checked', true);
     const dataListTable = [
         ' ' || '',
@@ -2291,6 +2290,7 @@ templateObject.getLastPOData = async function() {
                             $('#sltDept').val(getDepartmentVal);
                             $('#sltStatus').val(data.fields.OrderStatus);
                             $('#shipvia').val(data.fields.Shipping);
+                            FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -2532,6 +2532,7 @@ templateObject.getLastPOData = async function() {
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(useData[d].fields.OrderStatus);
                                 $('#shipvia').val(useData[d].fields.Shipping);
+                                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -2753,6 +2754,7 @@ templateObject.getLastPOData = async function() {
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(data.fields.OrderStatus);
                                 $('#shipvia').val(data.fields.Shipping);
+                                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
                                 if (data.fields.Attachments) {
@@ -2970,6 +2972,7 @@ templateObject.getLastPOData = async function() {
                         $('#sltDept').val(getDepartmentVal);
                         $('#sltStatus').val(data.fields.OrderStatus);
                         $('#shipvia').val(data.fields.Shipping);
+                        FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -3176,6 +3179,7 @@ templateObject.getLastPOData = async function() {
                 $('#sltDept').val(getDepartmentVal);
                 $('#sltStatus').val(data.fields.OrderStatus);
                 $('#shipvia').val(data.fields.Shipping);
+                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                 templateObject.attachmentCount.set(0);
                 if (data.fields.Attachments) {
@@ -7629,125 +7633,128 @@ Template.purchaseordercard.events({
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
-
-        var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
+        
+        if(targetID != undefined) {
+            times++;
 
-        times++;
+            if (times == 1) {
+                $('#deleteLineModal').modal('toggle');
+            } else {
+                if ($('#tblPurchaseOrderLine tbody>tr').length > 1) {
+                    this.click;
+                    $(event.target).closest('tr').remove();
+                    $('.purchase_print #' + targetID).remove();
+                    event.preventDefault();
+                    let $tblrows = $("#tblPurchaseOrderLine tbody tr");
+                    let $printrows = $(".purchase_print tbody tr");
+                    let lineAmount = 0;
+                    let subGrandTotal = 0;
+                    let taxGrandTotal = 0;
+                    let taxGrandTotalPrint = 0;
 
-        if (times == 1) {
-            $('#deleteLineModal').modal('toggle');
-        } else {
-            if ($('#tblPurchaseOrderLine tbody>tr').length > 1) {
-                this.click;
-                $(event.target).closest('tr').remove();
-                $('.purchase_print #' + targetID).remove();
-                event.preventDefault();
-                let $tblrows = $("#tblPurchaseOrderLine tbody tr");
-                let $printrows = $(".purchase_print tbody tr");
-                let lineAmount = 0;
-                let subGrandTotal = 0;
-                let taxGrandTotal = 0;
-                let taxGrandTotalPrint = 0;
+                    $tblrows.each(function(index) {
+                        var $tblrow = $(this);
+                        var qty = $tblrow.find(".lineQty").val() || 0;
+                        var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+                        var taxcode = $tblrow.find(".lineTaxCode").val() || 0;
 
-                $tblrows.each(function(index) {
-                    var $tblrow = $(this);
-                    var qty = $tblrow.find(".lineQty").val() || 0;
-                    var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-                    var taxcode = $tblrow.find(".lineTaxCode").val() || 0;
-
-                    var taxrateamount = 0;
-                    if (taxcodeList) {
-                        for (var i = 0; i < taxcodeList.length; i++) {
-                            if (taxcodeList[i].codename == taxcode) {
-                                taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-                            }
-                        }
-                    }
-
-
-                    var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                    var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                    let lineTotalAmount = subTotal + taxTotal;
-                    $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-
-                    let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
-                    let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
-                    let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
-                    $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
-                    $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
-
-                    if (!isNaN(subTotal)) {
-                      $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                      $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
-                        subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-                        document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotal);
-                    }
-
-                    if (!isNaN(taxTotal)) {
-                        taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
-                        document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotal);
-                    }
-
-                    if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                        let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                        document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-
-                    }
-                });
-
-                if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-                    $printrows.each(function(index) {
-                        var $printrows = $(this);
-                        var qty = $printrows.find("#lineQty").text() || 0;
-                        var price = $printrows.find("#lineUnitPrice").text() || "0";
                         var taxrateamount = 0;
-                        var taxRate = $printrows.find("#lineTaxCode").text();
                         if (taxcodeList) {
                             for (var i = 0; i < taxcodeList.length; i++) {
-                                if (taxcodeList[i].codename == taxRate) {
+                                if (taxcodeList[i].codename == taxcode) {
                                     taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
                                 }
                             }
                         }
 
+
                         var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
                         var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                        $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
+                        let lineTotalAmount = subTotal + taxTotal;
+                        $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+
+                        let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
+                        let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
+                        let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
+                        $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+                        $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
+
                         if (!isNaN(subTotal)) {
-                            $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                        $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                        $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
                             subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-                            document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
+                            document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotal);
                         }
 
                         if (!isNaN(taxTotal)) {
-                            taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+                            taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
+                            document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotal);
                         }
+
                         if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
                             let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                            document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
-                            //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
-                            //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                            //document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+                            document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                            document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                            document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
 
                         }
                     });
-                }
-                return false;
 
-            } else {
-                $('#deleteLineModal').modal('toggle');
+                    if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                        $printrows.each(function(index) {
+                            var $printrows = $(this);
+                            var qty = $printrows.find("#lineQty").text() || 0;
+                            var price = $printrows.find("#lineUnitPrice").text() || "0";
+                            var taxrateamount = 0;
+                            var taxRate = $printrows.find("#lineTaxCode").text();
+                            if (taxcodeList) {
+                                for (var i = 0; i < taxcodeList.length; i++) {
+                                    if (taxcodeList[i].codename == taxRate) {
+                                        taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+                                    }
+                                }
+                            }
+
+                            var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+                            var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+                            $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
+                            if (!isNaN(subTotal)) {
+                                $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                                subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+                                document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
+                            }
+
+                            if (!isNaN(taxTotal)) {
+                                taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+                            }
+                            if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+                                let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+                                document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
+                                //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
+                                //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                                //document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+
+                            }
+                        });
+                    }
+                    return false;
+
+                } else {
+                    $('#deleteLineModal').modal('toggle');
+                }
             }
+        } else {
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
+            else $("#footerDeleteModal1").modal("toggle");
         }
     },
     'click .btnDeleteFollowingPOs': async function(event) {
         playDeleteAudio();
         var currentDate = new Date();
-        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        let templateObject = Template.instance();
         setTimeout(async function(){
 
         swal({
@@ -7918,6 +7925,7 @@ Template.purchaseordercard.events({
           };
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
@@ -8087,6 +8095,7 @@ Template.purchaseordercard.events({
         }, delayTimeAfterSound);
     },
     'click .btnSave': async (event, templateObject) => {
+
         playSaveAudio();
         let tempObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -9252,6 +9261,7 @@ Template.purchaseordercard.events({
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
               addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
           });
+
             swal({
               title: 'SUCCESS',
               text: "Display settings is updated!",
@@ -9740,114 +9750,95 @@ Template.purchaseordercard.events({
         let i = 0;
         setTimeout(async function(){
             $("#basedOnFrequency").prop('checked', true);
-        $('#edtFrequencyDetail').css('display', 'flex');
-        $(".ofMonthList input[type=checkbox]").each(function() {
-            $(this).prop('checked', false);
-        });
-        $(".selectDays input[type=checkbox]").each(function (){
-            $(this).prop('checked', false);
-        });
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
-            var selectedType = poData.fields.CustField7;
-            var frequencyVal = poData.fields.CustField8;
-            var startDate = poData.fields.CustField9;
-            var finishDate = poData.fields.CustField10;
-            var subStartDate = startDate.substring(0, 10);
-            var subFinishDate = finishDate.substring(0, 10);
-            var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
-            var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
-            // if (selectedType == "basedOnEvent") {
-            // $("#basedOnEvent").prop('checked', true);
-            // $('#onEventSettings').css('display', 'block');
-            // $('#settingsOnEvents').prop('checked', true);
-            // } else {
-            // $("#basedOnEvent").prop('checked', false);
-            // $('#onEventSettings').css('display', 'none');
-            // $('#settingsOnEvents').prop('checked', false);
-            // $('#settingsOnLogout').prop('checked', false);
+            $('#edtFrequencyDetail').css('display', 'flex');
+            $(".ofMonthList input[type=checkbox]").each(function() {
+                $(this).prop('checked', false);
+            });
+            $(".selectDays input[type=checkbox]").each(function (){
+                $(this).prop('checked', false);
+            });
+            // var url = FlowRouter.current().path;
+            // var getso_id = url.split("?id=");
+            // var currentInvoice = getso_id[getso_id.length - 1];
+            // if (getso_id[1]) {
+            //     currentInvoice = parseInt(currentInvoice);
+            //     var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
+            //     var selectedType = poData.fields.TypeOfBasedOn;
+            //     var frequencyVal = poData.fields.FrequenctyValues;
+            //     var startDate = poData.fields.CopyStartDate;
+            //     var finishDate = poData.fields.CopyFinishDate;
+            //     var subStartDate = startDate.substring(0, 10);
+            //     var subFinishDate = finishDate.substring(0, 10);
+            //     var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
+            //     var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
+            //     var arrFrequencyVal = frequencyVal.split("@");
+            //     var radioFrequency = arrFrequencyVal[0];
+            //     $("#" + radioFrequency).prop('checked', true);
+            //     if (radioFrequency == "frequencyMonthly") {
+            //     document.getElementById("monthlySettings").style.display = "block";
+            //     document.getElementById("weeklySettings").style.display = "none";
+            //     document.getElementById("dailySettings").style.display = "none";
+            //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //     var monthDate = arrFrequencyVal[1];
+            //     $("#sltDay").val('day' + monthDate);
+            //     var arrOfMonths = [];
+            //     if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
+            //     arrOfMonths = ofMonths.split(",");
+            //     var arrOfMonths = ofMonths.split(",");
+            //     for (i=0; i<arrOfMonths.length; i++) {
+            //         $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
+            //     }
+            //     $('#edtMonthlyStartDate').val(convertedStartDate);
+            //     $('#edtMonthlyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyWeekly") {
+            //     document.getElementById("weeklySettings").style.display = "block";
+            //     document.getElementById("monthlySettings").style.display = "none";
+            //     document.getElementById("dailySettings").style.display = "none";
+            //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //     var everyWeeks = arrFrequencyVal[1];
+            //     $("#weeklyEveryXWeeks").val(everyWeeks);
+            //     var selectDays = arrFrequencyVal[2];
+            //     var arrSelectDays = selectDays.split(",");
+            //     for (i=0; i<arrSelectDays.length; i++) {
+            //         if (parseInt(arrSelectDays[i]) == 0)
+            //         $("#formCheck-sunday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 1)
+            //         $("#formCheck-monday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 2)
+            //         $("#formCheck-tuesday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 3)
+            //         $("#formCheck-wednesday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 4)
+            //         $("#formCheck-thursday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 5)
+            //         $("#formCheck-friday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 6)
+            //         $("#formCheck-saturday").prop('checked', true);
+            //     }
+            //     $('#edtWeeklyStartDate').val(convertedStartDate);
+            //     $('#edtWeeklyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyDaily") {
+            //     document.getElementById("dailySettings").style.display = "block";
+            //     document.getElementById("monthlySettings").style.display = "none";
+            //     document.getElementById("weeklySettings").style.display = "none";
+            //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //     var dailyRadioOption = arrFrequencyVal[1];
+            //     $("#" + dailyRadioOption).prop('checked', true);
+            //     var everyDays = arrFrequencyVal[2];
+            //     $("#dailyEveryXDays").val(everyDays);
+            //     $('#edtDailyStartDate').val(convertedStartDate);
+            //     $('#edtDailyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyOnetimeonly") {
+            //     document.getElementById("oneTimeOnlySettings").style.display = "block";
+            //     document.getElementById("monthlySettings").style.display = "none";
+            //     document.getElementById("weeklySettings").style.display = "none";
+            //     document.getElementById("dailySettings").style.display = "none";
+            //     $('#edtOneTimeOnlyDate').val(convertedStartDate);
+            //     $('#edtOneTimeOnlyTimeError').css('display', 'none');
+            //     $('#edtOneTimeOnlyDateError').css('display', 'none');
+            //     }
             // }
-            // if (selectedType == 'basedOnFrequency') {
-            // $("#basedOnFrequency").prop('checked', true);
-            // $('#edtFrequencyDetail').css('display', 'flex');
-            // $('#basedOnSettingsTitle').css('border-top-width', '1px');
-            // } else {
-            // $("#basedOnFrequency").prop('checked', false);
-            // $('#edtFrequencyDetail').css('display', 'none');
-            // $('#basedOnSettingsTitle').css('border-top-width', '0px');
-            // }
-            var arrFrequencyVal = frequencyVal.split("@");
-            var radioFrequency = arrFrequencyVal[0];
-            $("#" + radioFrequency).prop('checked', true);
-            if (radioFrequency == "frequencyMonthly") {
-            document.getElementById("monthlySettings").style.display = "block";
-            document.getElementById("weeklySettings").style.display = "none";
-            document.getElementById("dailySettings").style.display = "none";
-            document.getElementById("oneTimeOnlySettings").style.display = "none";
-            var monthDate = arrFrequencyVal[1];
-            $("#sltDay").val('day' + monthDate);
-            var arrOfMonths = [];
-            if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
-              arrOfMonths = ofMonths.split(",");
-            var arrOfMonths = ofMonths.split(",");
-            for (i=0; i<arrOfMonths.length; i++) {
-                $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
-            }
-            $('#edtMonthlyStartDate').val(convertedStartDate);
-            $('#edtMonthlyFinishDate').val(convertedFinishDate);
-            } else if (radioFrequency == "frequencyWeekly") {
-            document.getElementById("weeklySettings").style.display = "block";
-            document.getElementById("monthlySettings").style.display = "none";
-            document.getElementById("dailySettings").style.display = "none";
-            document.getElementById("oneTimeOnlySettings").style.display = "none";
-            var everyWeeks = arrFrequencyVal[1];
-            $("#weeklyEveryXWeeks").val(everyWeeks);
-            var selectDays = arrFrequencyVal[2];
-            var arrSelectDays = selectDays.split(",");
-            for (i=0; i<arrSelectDays.length; i++) {
-                if (parseInt(arrSelectDays[i]) == 0)
-                $("#formCheck-sunday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 1)
-                $("#formCheck-monday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 2)
-                $("#formCheck-tuesday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 3)
-                $("#formCheck-wednesday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 4)
-                $("#formCheck-thursday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 5)
-                $("#formCheck-friday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 6)
-                $("#formCheck-saturday").prop('checked', true);
-            }
-            $('#edtWeeklyStartDate').val(convertedStartDate);
-            $('#edtWeeklyFinishDate').val(convertedFinishDate);
-            } else if (radioFrequency == "frequencyDaily") {
-            document.getElementById("dailySettings").style.display = "block";
-            document.getElementById("monthlySettings").style.display = "none";
-            document.getElementById("weeklySettings").style.display = "none";
-            document.getElementById("oneTimeOnlySettings").style.display = "none";
-            var dailyRadioOption = arrFrequencyVal[1];
-            $("#" + dailyRadioOption).prop('checked', true);
-            var everyDays = arrFrequencyVal[2];
-            $("#dailyEveryXDays").val(everyDays);
-            $('#edtDailyStartDate').val(convertedStartDate);
-            $('#edtDailyFinishDate').val(convertedFinishDate);
-            } else if (radioFrequency == "frequencyOnetimeonly") {
-            document.getElementById("oneTimeOnlySettings").style.display = "block";
-            document.getElementById("monthlySettings").style.display = "none";
-            document.getElementById("weeklySettings").style.display = "none";
-            document.getElementById("dailySettings").style.display = "none";
-            $('#edtOneTimeOnlyDate').val(convertedStartDate);
-            $('#edtOneTimeOnlyTimeError').css('display', 'none');
-            $('#edtOneTimeOnlyDateError').css('display', 'none');
-            }
-        }
-        $("#copyFrequencyModal").modal("toggle");
+            $("#copyFrequencyModal").modal("toggle");
         }, delayTimeAfterSound);
     //             let uploadedItems = templateObject.uploadedFiles.get();
     //     setTimeout(function(){
@@ -10129,114 +10120,95 @@ Template.purchaseordercard.events({
         let i = 0;
         setTimeout(async function(){
             $("#basedOnFrequency").prop('checked', true);
-        $('#edtFrequencyDetail').css('display', 'flex');
-        $(".ofMonthList input[type=checkbox]").each(function() {
-            $(this).prop('checked', false);
-        });
-        $(".selectDays input[type=checkbox]").each(function (){
-            $(this).prop('checked', false);
-        });
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
-            var selectedType = poData.fields.CustField7;
-            var frequencyVal = poData.fields.CustField8;
-            var startDate = poData.fields.CustField9;
-            var finishDate = poData.fields.CustField10;
-            var subStartDate = startDate.substring(0, 10);
-            var subFinishDate = finishDate.substring(0, 10);
-            var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
-            var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
-            // if (selectedType == "basedOnEvent") {
-            // $("#basedOnEvent").prop('checked', true);
-            // $('#onEventSettings').css('display', 'block');
-            // $('#settingsOnEvents').prop('checked', true);
-            // } else {
-            // $("#basedOnEvent").prop('checked', false);
-            // $('#onEventSettings').css('display', 'none');
-            // $('#settingsOnEvents').prop('checked', false);
-            // $('#settingsOnLogout').prop('checked', false);
+            $('#edtFrequencyDetail').css('display', 'flex');
+            $(".ofMonthList input[type=checkbox]").each(function() {
+                $(this).prop('checked', false);
+            });
+            $(".selectDays input[type=checkbox]").each(function (){
+                $(this).prop('checked', false);
+            });
+            // var url = FlowRouter.current().path;
+            // var getso_id = url.split("?id=");
+            // var currentInvoice = getso_id[getso_id.length - 1];
+            // if (getso_id[1]) {
+            //     currentInvoice = parseInt(currentInvoice);
+            //     var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
+            //     var selectedType = poData.fields.TypeOfBasedOn;
+            //     var frequencyVal = poData.fields.FrequenctyValues;
+            //     var startDate = poData.fields.CopyStartDate;
+            //     var finishDate = poData.fields.CopyFinishDate;
+            //     var subStartDate = startDate.substring(0, 10);
+            //     var subFinishDate = finishDate.substring(0, 10);
+            //     var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
+            //     var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
+            //     var arrFrequencyVal = frequencyVal.split("@");
+            //     var radioFrequency = arrFrequencyVal[0];
+            //     $("#" + radioFrequency).prop('checked', true);
+            //     if (radioFrequency == "frequencyMonthly") {
+            //     document.getElementById("monthlySettings").style.display = "block";
+            //     document.getElementById("weeklySettings").style.display = "none";
+            //     document.getElementById("dailySettings").style.display = "none";
+            //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //     var monthDate = arrFrequencyVal[1];
+            //     $("#sltDay").val('day' + monthDate);
+            //     var ofMonths = arrFrequencyVal[2];
+            //     var arrOfMonths = [];
+            //     if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
+            //     arrOfMonths = ofMonths.split(",");
+            //     for (i=0; i<arrOfMonths.length; i++) {
+            //         $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
+            //     }
+            //     $('#edtMonthlyStartDate').val(convertedStartDate);
+            //     $('#edtMonthlyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyWeekly") {
+            //     document.getElementById("weeklySettings").style.display = "block";
+            //     document.getElementById("monthlySettings").style.display = "none";
+            //     document.getElementById("dailySettings").style.display = "none";
+            //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //     var everyWeeks = arrFrequencyVal[1];
+            //     $("#weeklyEveryXWeeks").val(everyWeeks);
+            //     var selectDays = arrFrequencyVal[2];
+            //     var arrSelectDays = selectDays.split(",");
+            //     for (i=0; i<arrSelectDays.length; i++) {
+            //         if (parseInt(arrSelectDays[i]) == 0)
+            //         $("#formCheck-sunday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 1)
+            //         $("#formCheck-monday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 2)
+            //         $("#formCheck-tuesday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 3)
+            //         $("#formCheck-wednesday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 4)
+            //         $("#formCheck-thursday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 5)
+            //         $("#formCheck-friday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 6)
+            //         $("#formCheck-saturday").prop('checked', true);
+            //     }
+            //     $('#edtWeeklyStartDate').val(convertedStartDate);
+            //     $('#edtWeeklyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyDaily") {
+            //     document.getElementById("dailySettings").style.display = "block";
+            //     document.getElementById("monthlySettings").style.display = "none";
+            //     document.getElementById("weeklySettings").style.display = "none";
+            //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //     var dailyRadioOption = arrFrequencyVal[1];
+            //     $("#" + dailyRadioOption).prop('checked', true);
+            //     var everyDays = arrFrequencyVal[2];
+            //     $("#dailyEveryXDays").val(everyDays);
+            //     $('#edtDailyStartDate').val(convertedStartDate);
+            //     $('#edtDailyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyOnetimeonly") {
+            //     document.getElementById("oneTimeOnlySettings").style.display = "block";
+            //     document.getElementById("monthlySettings").style.display = "none";
+            //     document.getElementById("weeklySettings").style.display = "none";
+            //     document.getElementById("dailySettings").style.display = "none";
+            //     $('#edtOneTimeOnlyDate').val(convertedStartDate);
+            //     $('#edtOneTimeOnlyTimeError').css('display', 'none');
+            //     $('#edtOneTimeOnlyDateError').css('display', 'none');
+            //     }
             // }
-            // if (selectedType == 'basedOnFrequency') {
-            // $("#basedOnFrequency").prop('checked', true);
-            // $('#edtFrequencyDetail').css('display', 'flex');
-            // $('#basedOnSettingsTitle').css('border-top-width', '1px');
-            // } else {
-            // $("#basedOnFrequency").prop('checked', false);
-            // $('#edtFrequencyDetail').css('display', 'none');
-            // $('#basedOnSettingsTitle').css('border-top-width', '0px');
-            // }
-            var arrFrequencyVal = frequencyVal.split("@");
-            var radioFrequency = arrFrequencyVal[0];
-            $("#" + radioFrequency).prop('checked', true);
-            if (radioFrequency == "frequencyMonthly") {
-            document.getElementById("monthlySettings").style.display = "block";
-            document.getElementById("weeklySettings").style.display = "none";
-            document.getElementById("dailySettings").style.display = "none";
-            document.getElementById("oneTimeOnlySettings").style.display = "none";
-            var monthDate = arrFrequencyVal[1];
-            $("#sltDay").val('day' + monthDate);
-            var ofMonths = arrFrequencyVal[2];
-            var arrOfMonths = [];
-            if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
-              arrOfMonths = ofMonths.split(",");
-            for (i=0; i<arrOfMonths.length; i++) {
-                $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
-            }
-            $('#edtMonthlyStartDate').val(convertedStartDate);
-            $('#edtMonthlyFinishDate').val(convertedFinishDate);
-            } else if (radioFrequency == "frequencyWeekly") {
-            document.getElementById("weeklySettings").style.display = "block";
-            document.getElementById("monthlySettings").style.display = "none";
-            document.getElementById("dailySettings").style.display = "none";
-            document.getElementById("oneTimeOnlySettings").style.display = "none";
-            var everyWeeks = arrFrequencyVal[1];
-            $("#weeklyEveryXWeeks").val(everyWeeks);
-            var selectDays = arrFrequencyVal[2];
-            var arrSelectDays = selectDays.split(",");
-            for (i=0; i<arrSelectDays.length; i++) {
-                if (parseInt(arrSelectDays[i]) == 0)
-                $("#formCheck-sunday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 1)
-                $("#formCheck-monday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 2)
-                $("#formCheck-tuesday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 3)
-                $("#formCheck-wednesday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 4)
-                $("#formCheck-thursday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 5)
-                $("#formCheck-friday").prop('checked', true);
-                if (parseInt(arrSelectDays[i]) == 6)
-                $("#formCheck-saturday").prop('checked', true);
-            }
-            $('#edtWeeklyStartDate').val(convertedStartDate);
-            $('#edtWeeklyFinishDate').val(convertedFinishDate);
-            } else if (radioFrequency == "frequencyDaily") {
-            document.getElementById("dailySettings").style.display = "block";
-            document.getElementById("monthlySettings").style.display = "none";
-            document.getElementById("weeklySettings").style.display = "none";
-            document.getElementById("oneTimeOnlySettings").style.display = "none";
-            var dailyRadioOption = arrFrequencyVal[1];
-            $("#" + dailyRadioOption).prop('checked', true);
-            var everyDays = arrFrequencyVal[2];
-            $("#dailyEveryXDays").val(everyDays);
-            $('#edtDailyStartDate').val(convertedStartDate);
-            $('#edtDailyFinishDate').val(convertedFinishDate);
-            } else if (radioFrequency == "frequencyOnetimeonly") {
-            document.getElementById("oneTimeOnlySettings").style.display = "block";
-            document.getElementById("monthlySettings").style.display = "none";
-            document.getElementById("weeklySettings").style.display = "none";
-            document.getElementById("dailySettings").style.display = "none";
-            $('#edtOneTimeOnlyDate').val(convertedStartDate);
-            $('#edtOneTimeOnlyTimeError').css('display', 'none');
-            $('#edtOneTimeOnlyDateError').css('display', 'none');
-            }
-        }
-        $("#copyFrequencyModal").modal("toggle");
+            $("#copyFrequencyModal").modal("toggle");
         }, delayTimeAfterSound);
     //         let uploadedItems = templateObject.uploadedFiles.get();
     //     setTimeout(function(){
@@ -10653,17 +10625,17 @@ Template.purchaseordercard.events({
             var currentInvoice = getso_id[getso_id.length - 1];
             if (getso_id[1]) {
               currentInvoice = parseInt(currentInvoice);
-              objDetails = {
-                type: "TPurchaseOrderEx",
-                fields: {
-                  ID: currentInvoice,
-                  CustField7: selectedType,
-                  CustField8: frequencyVal,
-                  CustField9: sDate,
-                  CustField10: fDate,
-                }
-              };
-              var result = await purchaseService.savePurchaseOrderEx(objDetails);
+            //   objDetails = {
+            //     type: "TPurchaseOrderEx",
+            //     fields: {
+            //       ID: currentInvoice,
+            //       TypeOfBasedOn: selectedType,
+            //       FrequenctyValues: frequencyVal,
+            //       CopyStartDate: sDate2,
+            //       CopyFinishDate: fDate2,
+            //     }
+            //   };
+            //   var result = await purchaseService.savePurchaseOrderEx(objDetails);
               let period = ""; // 0
               let days = [];
               let i = 0;
@@ -10733,29 +10705,29 @@ Template.purchaseordercard.events({
               }
               if (days.length > 0) {
                   for (let x = 0; x < days.length; x++) {
-                      let dayObj = {
-                          Name: "VS1_RepeatTrans",
-                          Params: {
-                              CloudUserName: erpGet.ERPUsername,
-                              CloudPassword: erpGet.ERPPassword,
-                              TransID: currentInvoice,
-                              TransType: "Cheque",
-                              Repeat_Frequency: frequency2,
-                              Repeat_Period: period,
-                              Repeat_BaseDate: sDate2,
-                              Repeat_finalDateDate: fDate2,
-                              Repeat_Saturday: weekdayObj.saturday,
-                              Repeat_Sunday: weekdayObj.sunday,
-                              Repeat_Monday: weekdayObj.monday,
-                              Repeat_Tuesday: weekdayObj.tuesday,
-                              Repeat_Wednesday: weekdayObj.wednesday,
-                              Repeat_Thursday: weekdayObj.thursday,
-                              Repeat_Friday: weekdayObj.friday,
-                              Repeat_Holiday: 0,
-                              Repeat_Weekday: parseInt(days[x].toString()),
-                              Repeat_MonthOffset: 0,
-                          },
-                      };
+                    let dayObj = {
+                        Name: "VS1_RepeatTrans",
+                        Params: {
+                            CloudUserName: erpGet.ERPUsername,
+                            CloudPassword: erpGet.ERPPassword,
+                            TransID: currentInvoice,
+                            TransType: "PurchaseOrder",
+                            Repeat_Frequency: frequency2,
+                            Repeat_Period: period,
+                            Repeat_BaseDate: sDate2,
+                            Repeat_finalDateDate: fDate2,
+                            Repeat_Saturday: weekdayObj.saturday,
+                            Repeat_Sunday: weekdayObj.sunday,
+                            Repeat_Monday: weekdayObj.monday,
+                            Repeat_Tuesday: weekdayObj.tuesday,
+                            Repeat_Wednesday: weekdayObj.wednesday,
+                            Repeat_Thursday: weekdayObj.thursday,
+                            Repeat_Friday: weekdayObj.friday,
+                            Repeat_Holiday: 0,
+                            Repeat_Weekday: parseInt(days[x].toString()),
+                            Repeat_MonthOffset: 0,
+                        },
+                    };
                       var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
                       var oPost = new XMLHttpRequest();
                       oPost.open(
@@ -10793,54 +10765,54 @@ Template.purchaseordercard.events({
               } else {
                   let dayObj = {};
                   if (radioFrequency == "frequencyOnetimeonly" || radioFrequency == "frequencyMonthly") {
-                      dayObj = {
-                          Name: "VS1_RepeatTrans",
-                          Params: {
-                              CloudUserName: erpGet.ERPUsername,
-                              CloudPassword: erpGet.ERPPassword,
-                              TransID: currentInvoice,
-                              TransType: "Cheque",
-                              Repeat_Dates: repeatDates,
-                              Repeat_Frequency: frequency2,
-                              Repeat_Period: period,
-                              Repeat_BaseDate: sDate2,
-                              Repeat_finalDateDate: fDate2,
-                              Repeat_Saturday: weekdayObj.saturday,
-                              Repeat_Sunday: weekdayObj.sunday,
-                              Repeat_Monday: weekdayObj.monday,
-                              Repeat_Tuesday: weekdayObj.tuesday,
-                              Repeat_Wednesday: weekdayObj.wednesday,
-                              Repeat_Thursday: weekdayObj.thursday,
-                              Repeat_Friday: weekdayObj.friday,
-                              Repeat_Holiday: 0,
-                              Repeat_Weekday: 0,
-                              Repeat_MonthOffset: 0,
-                          },
-                      };
+                    dayObj = {
+                        Name: "VS1_RepeatTrans",
+                        Params: {
+                            CloudUserName: erpGet.ERPUsername,
+                            CloudPassword: erpGet.ERPPassword,
+                            TransID: currentInvoice,
+                            TransType: "PurchaseOrder",
+                            Repeat_Dates: repeatDates,
+                            Repeat_Frequency: frequency2,
+                            Repeat_Period: period,
+                            Repeat_BaseDate: sDate2,
+                            Repeat_finalDateDate: fDate2,
+                            Repeat_Saturday: weekdayObj.saturday,
+                            Repeat_Sunday: weekdayObj.sunday,
+                            Repeat_Monday: weekdayObj.monday,
+                            Repeat_Tuesday: weekdayObj.tuesday,
+                            Repeat_Wednesday: weekdayObj.wednesday,
+                            Repeat_Thursday: weekdayObj.thursday,
+                            Repeat_Friday: weekdayObj.friday,
+                            Repeat_Holiday: 0,
+                            Repeat_Weekday: 0,
+                            Repeat_MonthOffset: 0,
+                        },
+                    };
                   } else {
-                      dayObj = {
-                          Name: "VS1_RepeatTrans",
-                          Params: {
-                              CloudUserName: erpGet.ERPUsername,
-                              CloudPassword: erpGet.ERPPassword,
-                              TransID: currentInvoice,
-                              TransType: "Cheque",
-                              Repeat_Frequency: frequency2,
-                              Repeat_Period: period,
-                              Repeat_BaseDate: sDate2,
-                              Repeat_finalDateDate: fDate2,
-                              Repeat_Saturday: weekdayObj.saturday,
-                              Repeat_Sunday: weekdayObj.sunday,
-                              Repeat_Monday: weekdayObj.monday,
-                              Repeat_Tuesday: weekdayObj.tuesday,
-                              Repeat_Wednesday: weekdayObj.wednesday,
-                              Repeat_Thursday: weekdayObj.thursday,
-                              Repeat_Friday: weekdayObj.friday,
-                              Repeat_Holiday: 0,
-                              Repeat_Weekday: 0,
-                              Repeat_MonthOffset: 0,
-                          },
-                      };
+                    dayObj = {
+                        Name: "VS1_RepeatTrans",
+                        Params: {
+                            CloudUserName: erpGet.ERPUsername,
+                            CloudPassword: erpGet.ERPPassword,
+                            TransID: currentInvoice,
+                            TransType: "PurchaseOrder",
+                            Repeat_Frequency: frequency2,
+                            Repeat_Period: period,
+                            Repeat_BaseDate: sDate2,
+                            Repeat_finalDateDate: fDate2,
+                            Repeat_Saturday: weekdayObj.saturday,
+                            Repeat_Sunday: weekdayObj.sunday,
+                            Repeat_Monday: weekdayObj.monday,
+                            Repeat_Tuesday: weekdayObj.tuesday,
+                            Repeat_Wednesday: weekdayObj.wednesday,
+                            Repeat_Thursday: weekdayObj.thursday,
+                            Repeat_Friday: weekdayObj.friday,
+                            Repeat_Holiday: 0,
+                            Repeat_Weekday: 0,
+                            Repeat_MonthOffset: 0,
+                        },
+                    };
                   }
                   var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
                   var oPost = new XMLHttpRequest();

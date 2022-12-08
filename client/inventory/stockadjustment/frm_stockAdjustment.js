@@ -18,6 +18,7 @@ let utilityService = new UtilityService();
 var times = 0;
 Template.stockadjustmentcard.onCreated(() => {
     const templateObject = Template.instance();
+    templateObject.hasFollow = new ReactiveVar(false);
     templateObject.records = new ReactiveVar();
     templateObject.originrecord = new ReactiveVar();
     templateObject.deptrecords = new ReactiveVar();
@@ -74,11 +75,30 @@ Template.stockadjustmentcard.onCreated(() => {
 
 });
 Template.stockadjustmentcard.onRendered(() => {
+    const templateObject = Template.instance();
+    templateObject.hasFollowings = async function() {
+        let stockTransferService = new StockTransferService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var stockData = await stockTransferService.getOneStockAdjustData(currentInvoice);
+            var followingStocks = await sideBarService.getAllStockAdjustEntry("All", stockData.fields.Recno);//initialDataLoad
+            var stockList = followingStocks.tstockadjustentry;
+            if(stockList.length > 1){
+                templateObject.hasFollow.set(true);
+            } else {
+                templateObject.hasFollow.set(false);
+            }
+        }
+    }
+    templateObject.hasFollowings();
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
         $('.uploadedImage').attr('src', imageData);
     };
-    const templateObject = Template.instance();
+
     const records = [];
     let stockTransferService = new StockTransferService();
 
@@ -2121,33 +2141,33 @@ Template.stockadjustmentcard.events({
             event.preventDefault();
         }
     },
-    'click .btnRemove': function (event) {
-        let templateObject = Template.instance();
-        let utilityService = new UtilityService();
-
-        var clicktimes = 0;
+    'click .btnRemove': async function (event) {
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
-
-        times++;
-        if (times == 1) {
-            $('#deleteLineModal').modal('toggle');
-        } else {
-            if ($('#tblStockAdjustmentLine tbody>tr').length > 1) {
-                this.click;
-                $(event.target).closest('tr').remove();
-                event.preventDefault();
-                let $tblrows = $("#tblStockAdjustmentLine tbody tr");
-                //if(selectLineID){
-                let lineAmount = 0;
-                let subGrandTotal = 0;
-                let taxGrandTotal = 0;
-
-                return false;
-
-            } else {
+        if(targetID != undefined) {    
+            times++;
+            if (times == 1) {
                 $('#deleteLineModal').modal('toggle');
+            } else {
+                if ($('#tblStockAdjustmentLine tbody>tr').length > 1) {
+                    this.click;
+                    $(event.target).closest('tr').remove();
+                    event.preventDefault();
+                    let $tblrows = $("#tblStockAdjustmentLine tbody tr");
+                    //if(selectLineID){
+                    let lineAmount = 0;
+                    let subGrandTotal = 0;
+                    let taxGrandTotal = 0;
+
+                    return false;
+
+                } else {
+                    $('#deleteLineModal').modal('toggle');
+                }
             }
+        } else {
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
+            else $("#footerDeleteModal1").modal("toggle");
         }
     },
     'click .btnDeleteFollowingStocks': async function (event) {
@@ -2238,6 +2258,7 @@ Template.stockadjustmentcard.events({
             $('.modal-backdrop').css('display', 'none');
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteStockAdjust': function (event) {

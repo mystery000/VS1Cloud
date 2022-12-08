@@ -36,6 +36,21 @@
                             <input type="search" class="form-control sltTaxCode" id="sltTaxCode" name="sltTaxCode" style="background-color: #fff; cursor: pointer;" />
                         </div>
                     </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-group" style="margin: 4px;"><label>Sub Account1</label>
+                            <input type="text" class="form-control" id="edtSubAccount1" name="edtSubAccount1">
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-group" style="margin: 4px;"><label>Sub Account2</label>
+                            <input type="text" class="form-control" id="edtSubAccount2" name="edtSubAccount2">
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="form-group" style="margin: 4px;"><label>Sub Account3</label>
+                            <input type="text" class="form-control" id="edtSubAccount2" name="edtSubAccount2">
+                        </div>
+                    </div>
                     <div class="col-12">
                         <div class="form-group" style="margin: 4px;">
                             <label>Account Description</label>
@@ -117,7 +132,9 @@
                             </div>
                             <div class="col-6 col-md-4">
                                 <div class="form-group" style="margin: 4px;"><label>Bank Name</label>
-                                    <input type="text" class="form-control" id="edtBankName" name="edtBankName">
+                                    <!-- <input type="text" class="form-control" id="edtBankName" name="edtBankName"> -->
+                                    <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName">
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-6 col-md-4">
@@ -302,8 +319,8 @@
         </div>
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="bankCodeModal">
-      {{> bankCodeModal}}
+    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">
+      {{> bankNameModal}}
     </div>
     {{> eftOptionsModal}}
     {{> eftBankCodesModal}}

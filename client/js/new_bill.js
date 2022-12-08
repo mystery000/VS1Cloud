@@ -84,9 +84,38 @@ Template.billcard.onCreated(() => {
 
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+    templateObject.hasFollow = new ReactiveVar(false);
 });
 Template.billcard.onRendered(() => {
     let templateObject = Template.instance();
+    templateObject.hasFollowings = async function() {
+        var currentDate = new Date();
+        let purchaseService = new PurchaseBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split("?id=");
+        var currentInvoice = getso_id[getso_id.length - 1];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var billData = await purchaseService.getOneBilldataEx(currentInvoice);
+            var orderDate = billData.fields.OrderDate;
+            var fromDate = orderDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingBills = await sideBarService.getAllBillListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var billList = followingBills.tbilllist;
+            if (billList.length > 1) {
+                templateObject.hasFollow.set(true);
+            } else {
+                templateObject.hasFollow.set(false);
+            }
+        }
+    }
+    templateObject.hasFollowings();
     $('#edtFrequencyDetail').css('display', 'none');
     // $('#onEventSettings').css('display', 'none');
     // $('#basedOnFrequency').prop('checked', false);
@@ -108,37 +137,6 @@ Template.billcard.onRendered(() => {
       changeYear: true,
       yearRange: "-90:+10",
     });
-
-    templateObject.hasFollowings = async function() {
-        var currentDate = new Date();
-        let purchaseService = new PurchaseBoardService();
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        let billTotal = $('#grandTotal').text();
-        var objDetails = "";
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var billData = await purchaseService.getOneBilldataEx(currentInvoice);
-            var orderDate = billData.fields.OrderDate;
-            var fromDate = orderDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingBills = await sideBarService.getAllBillListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var billList = followingBills.tbilllist;
-            if (billList.length > 1) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }            
-        }
-    }
-    templateObject.hasFollowings();
 
     templateObject.getDayNumber = function (day) {
       day = day.toLowerCase();
@@ -1462,9 +1460,9 @@ Template.billcard.onRendered(() => {
                             $('#sltStatus').val(data.fields.OrderStatus);
                             $('#shipvia').val(data.fields.Shipping);
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                            FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-
                             $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+
+                            FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -1688,9 +1686,8 @@ Template.billcard.onRendered(() => {
                                 templateObject.CleintName.set(useData[d].fields.SupplierName);
                                 $('#shipvia').val(useData[d].fields.Shipping);
                                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
-                                FxGlobalFunctions.handleChangedCurrency(useData[d].fields.ForeignExchangeCode, defaultCurrencyCode);
-
                                 $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
+                                FxGlobalFunctions.handleChangedCurrency(useData[d].fields.ForeignExchangeCode, defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -1920,9 +1917,8 @@ Template.billcard.onRendered(() => {
                                 $('#sltStatus').val(data.fields.OrderStatus);
                                 $('#shipvia').val(data.fields.Shipping);
                                 $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                                FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-
                                 $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                                FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
                                 if (data.fields.Attachments) {
@@ -2146,8 +2142,8 @@ Template.billcard.onRendered(() => {
                         $('#sltStatus').val(data.fields.OrderStatus);
                         $('#shipvia').val(data.fields.Shipping);
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                        FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
                         $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                        FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -5549,116 +5545,97 @@ Template.billcard.events({
         let purchaseService = new PurchaseBoardService();
         let i = 0;
         setTimeout(async function(){
-        $("#basedOnFrequency").prop('checked', true);
-      $('#edtFrequencyDetail').css('display', 'flex');
-      $(".ofMonthList input[type=checkbox]").each(function() {
-        $(this).prop('checked', false);
-      });
-      $(".selectDays input[type=checkbox]").each(function (){
-        $(this).prop('checked', false);
-      });
-      var url = FlowRouter.current().path;
-      var getso_id = url.split("?id=");
-      var currentInvoice = getso_id[getso_id.length - 1];
-      if (getso_id[1]) {
-        currentInvoice = parseInt(currentInvoice);
-        var billData = await purchaseService.getOneBilldataEx(currentInvoice);
-        var selectedType = billData.fields.CustField7;
-        var frequencyVal = billData.fields.CustField8;
-        var startDate = billData.fields.CustField9;
-        var finishDate = billData.fields.CustField10;
-        var subStartDate = startDate.substring(0, 10);
-        var subFinishDate = finishDate.substring(0, 10);
-        var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
-        var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
-        // if (selectedType == "basedOnEvent") {
-        //   $("#basedOnEvent").prop('checked', true);
-        //   $('#onEventSettings').css('display', 'block');
-        //   $('#settingsOnEvents').prop('checked', true);
-        // } else {
-        //   $("#basedOnEvent").prop('checked', false);
-        //   $('#onEventSettings').css('display', 'none');
-        //   $('#settingsOnEvents').prop('checked', false);
-        //   $('#settingsOnLogout').prop('checked', false);
-        // }
-        // if (selectedType == 'basedOnFrequency') {
-        //   $("#basedOnFrequency").prop('checked', true);
-        //   $('#edtFrequencyDetail').css('display', 'flex');
-        //   $('#basedOnSettingsTitle').css('border-top-width', '1px');
-        // } else {
-        //   $("#basedOnFrequency").prop('checked', false);
-        //   $('#edtFrequencyDetail').css('display', 'none');
-        //   $('#basedOnSettingsTitle').css('border-top-width', '0px');
-        // }
-        var arrFrequencyVal = frequencyVal.split("@");
-        var radioFrequency = arrFrequencyVal[0];
-        $("#" + radioFrequency).prop('checked', true);
-        if (radioFrequency == "frequencyMonthly") {
-          document.getElementById("monthlySettings").style.display = "block";
-          document.getElementById("weeklySettings").style.display = "none";
-          document.getElementById("dailySettings").style.display = "none";
-          document.getElementById("oneTimeOnlySettings").style.display = "none";
-          var monthDate = arrFrequencyVal[1];
-          $("#sltDay").val('day' + monthDate);
-          var ofMonths = arrFrequencyVal[2];
-          var arrOfMonths = [];
-          if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
-            arrOfMonths = ofMonths.split(",");
-          for (i=0; i<arrOfMonths.length; i++) {
-            $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
-          }
-          $('#edtMonthlyStartDate').val(convertedStartDate);
-          $('#edtMonthlyFinishDate').val(convertedFinishDate);
-        } else if (radioFrequency == "frequencyWeekly") {
-          document.getElementById("weeklySettings").style.display = "block";
-          document.getElementById("monthlySettings").style.display = "none";
-          document.getElementById("dailySettings").style.display = "none";
-          document.getElementById("oneTimeOnlySettings").style.display = "none";
-          var everyWeeks = arrFrequencyVal[1];
-          $("#weeklyEveryXWeeks").val(everyWeeks);
-          var selectDays = arrFrequencyVal[2];
-          var arrSelectDays = selectDays.split(",");
-          for (i=0; i<arrSelectDays.length; i++) {
-            if (parseInt(arrSelectDays[i]) == 0)
-              $("#formCheck-sunday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 1)
-              $("#formCheck-monday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 2)
-              $("#formCheck-tuesday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 3)
-              $("#formCheck-wednesday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 4)
-              $("#formCheck-thursday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 5)
-              $("#formCheck-friday").prop('checked', true);
-            if (parseInt(arrSelectDays[i]) == 6)
-              $("#formCheck-saturday").prop('checked', true);
-          }
-          $('#edtWeeklyStartDate').val(convertedStartDate);
-          $('#edtWeeklyFinishDate').val(convertedFinishDate);
-        } else if (radioFrequency == "frequencyDaily") {
-          document.getElementById("dailySettings").style.display = "block";
-          document.getElementById("monthlySettings").style.display = "none";
-          document.getElementById("weeklySettings").style.display = "none";
-          document.getElementById("oneTimeOnlySettings").style.display = "none";
-          var dailyRadioOption = arrFrequencyVal[1];
-          $("#" + dailyRadioOption).prop('checked', true);
-          var everyDays = arrFrequencyVal[2];
-          $("#dailyEveryXDays").val(everyDays);
-          $('#edtDailyStartDate').val(convertedStartDate);
-          $('#edtDailyFinishDate').val(convertedFinishDate);
-        } else if (radioFrequency == "frequencyOnetimeonly") {
-          document.getElementById("oneTimeOnlySettings").style.display = "block";
-          document.getElementById("monthlySettings").style.display = "none";
-          document.getElementById("weeklySettings").style.display = "none";
-          document.getElementById("dailySettings").style.display = "none";
-          $('#edtOneTimeOnlyDate').val(convertedStartDate);
-          $('#edtOneTimeOnlyTimeError').css('display', 'none');
-          $('#edtOneTimeOnlyDateError').css('display', 'none');
-        }
-      }
-      $("#copyFrequencyModal").modal("toggle");
-    }, delayTimeAfterSound);
+            $("#basedOnFrequency").prop('checked', true);
+            $('#edtFrequencyDetail').css('display', 'flex');
+            $(".ofMonthList input[type=checkbox]").each(function() {
+                $(this).prop('checked', false);
+            });
+            $(".selectDays input[type=checkbox]").each(function (){
+                $(this).prop('checked', false);
+            });
+            // var url = FlowRouter.current().path;
+            // var getso_id = url.split("?id=");
+            // var currentInvoice = getso_id[getso_id.length - 1];
+            // if (getso_id[1]) {
+            //     currentInvoice = parseInt(currentInvoice);
+            //     var billData = await purchaseService.getOneBilldataEx(currentInvoice);
+            //     var selectedType = billData.fields.TypeOfBasedOn;
+            //     var frequencyVal = billData.fields.FrequenctyValues;
+            //     var startDate = billData.fields.CopyStartDate;
+            //     var finishDate = billData.fields.CopyFinishDate;
+            //     var subStartDate = startDate.substring(0, 10);
+            //     var subFinishDate = finishDate.substring(0, 10);
+            //     var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
+            //     var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
+            //     var arrFrequencyVal = frequencyVal.split("@");
+            //     var radioFrequency = arrFrequencyVal[0];
+            //     $("#" + radioFrequency).prop('checked', true);
+            //     if (radioFrequency == "frequencyMonthly") {
+            //     document.getElementById("monthlySettings").style.display = "block";
+            //     document.getElementById("weeklySettings").style.display = "none";
+            //     document.getElementById("dailySettings").style.display = "none";
+            //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //     var monthDate = arrFrequencyVal[1];
+            //     $("#sltDay").val('day' + monthDate);
+            //     var ofMonths = arrFrequencyVal[2];
+            //     var arrOfMonths = [];
+            //     if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
+            //         arrOfMonths = ofMonths.split(",");
+            //     for (i=0; i<arrOfMonths.length; i++) {
+            //         $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
+            //     }
+            //     $('#edtMonthlyStartDate').val(convertedStartDate);
+            //     $('#edtMonthlyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyWeekly") {
+            //     document.getElementById("weeklySettings").style.display = "block";
+            //     document.getElementById("monthlySettings").style.display = "none";
+            //     document.getElementById("dailySettings").style.display = "none";
+            //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //     var everyWeeks = arrFrequencyVal[1];
+            //     $("#weeklyEveryXWeeks").val(everyWeeks);
+            //     var selectDays = arrFrequencyVal[2];
+            //     var arrSelectDays = selectDays.split(",");
+            //     for (i=0; i<arrSelectDays.length; i++) {
+            //         if (parseInt(arrSelectDays[i]) == 0)
+            //         $("#formCheck-sunday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 1)
+            //         $("#formCheck-monday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 2)
+            //         $("#formCheck-tuesday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 3)
+            //         $("#formCheck-wednesday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 4)
+            //         $("#formCheck-thursday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 5)
+            //         $("#formCheck-friday").prop('checked', true);
+            //         if (parseInt(arrSelectDays[i]) == 6)
+            //         $("#formCheck-saturday").prop('checked', true);
+            //     }
+            //     $('#edtWeeklyStartDate').val(convertedStartDate);
+            //     $('#edtWeeklyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyDaily") {
+            //     document.getElementById("dailySettings").style.display = "block";
+            //     document.getElementById("monthlySettings").style.display = "none";
+            //     document.getElementById("weeklySettings").style.display = "none";
+            //     document.getElementById("oneTimeOnlySettings").style.display = "none";
+            //     var dailyRadioOption = arrFrequencyVal[1];
+            //     $("#" + dailyRadioOption).prop('checked', true);
+            //     var everyDays = arrFrequencyVal[2];
+            //     $("#dailyEveryXDays").val(everyDays);
+            //     $('#edtDailyStartDate').val(convertedStartDate);
+            //     $('#edtDailyFinishDate').val(convertedFinishDate);
+            //     } else if (radioFrequency == "frequencyOnetimeonly") {
+            //     document.getElementById("oneTimeOnlySettings").style.display = "block";
+            //     document.getElementById("monthlySettings").style.display = "none";
+            //     document.getElementById("weeklySettings").style.display = "none";
+            //     document.getElementById("dailySettings").style.display = "none";
+            //     $('#edtOneTimeOnlyDate').val(convertedStartDate);
+            //     $('#edtOneTimeOnlyTimeError').css('display', 'none');
+            //     $('#edtOneTimeOnlyDateError').css('display', 'none');
+            //     }
+            // }
+            $("#copyFrequencyModal").modal("toggle");
+        }, delayTimeAfterSound);
     },
     'click .btnSaveFrequency': async function () {
         playSaveAudio();
@@ -5687,7 +5664,7 @@ Template.billcard.events({
         let basedOnTypeAttr = 'F,';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -5764,17 +5741,17 @@ Template.billcard.events({
             var currentInvoice = getso_id[getso_id.length - 1];
             if (getso_id[1]) {
               currentInvoice = parseInt(currentInvoice);
-              objDetails = {
-                type: "TBillEx",
-                fields: {
-                  ID: currentInvoice,
-                  CustField7: selectedType,
-                  CustField8: frequencyVal,
-                  CustField9: sDate,
-                  CustField10: fDate,
-                }
-              };
-              var result = await purchaseService.saveBillEx(objDetails);
+            //   objDetails = {
+            //     type: "TBillEx",
+            //     fields: {
+            //       ID: currentInvoice,
+            //       TypeOfBasedOn: selectedType,
+            //       FrequenctyValues: frequencyVal,
+            //       CopyStartDate: sDate2,
+            //       CopyFinishDate: fDate2,
+            //     }
+            //   };
+            //   var result = await purchaseService.saveBillEx(objDetails);
               let period = ""; // 0
               let days = [];
               let i = 0;
@@ -5850,7 +5827,7 @@ Template.billcard.events({
                               CloudUserName: erpGet.ERPUsername,
                               CloudPassword: erpGet.ERPPassword,
                               TransID: currentInvoice,
-                              TransType: "Cheque",
+                              TransType: "Bill",
                               Repeat_Frequency: frequency2,
                               Repeat_Period: period,
                               Repeat_BaseDate: sDate2,
@@ -5910,7 +5887,7 @@ Template.billcard.events({
                               CloudUserName: erpGet.ERPUsername,
                               CloudPassword: erpGet.ERPPassword,
                               TransID: currentInvoice,
-                              TransType: "Cheque",
+                              TransType: "Bill",
                               Repeat_Dates: repeatDates,
                               Repeat_Frequency: frequency2,
                               Repeat_Period: period,
@@ -5935,7 +5912,7 @@ Template.billcard.events({
                               CloudUserName: erpGet.ERPUsername,
                               CloudPassword: erpGet.ERPPassword,
                               TransID: currentInvoice,
-                              TransType: "Cheque",
+                              TransType: "Bill",
                               Repeat_Frequency: frequency2,
                               Repeat_Period: period,
                               Repeat_BaseDate: sDate2,
@@ -7709,78 +7686,37 @@ Template.billcard.events({
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
-
-        var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
-        $('#selectDeleteLineID').val(targetID);
-
-        times++;
-
-        if (times == 1) {
-            $('#deleteLineModal').modal('toggle');
-        } else {
-            if ($('#tblBillLine tbody>tr').length > 1) {
-                this.click;
-                $(event.target).closest('tr').remove();
-                $(".bill_print #" + targetID).remove();
-                event.preventDefault();
-                let $tblrows = $("#tblBillLine tbody tr");
-                let $printrows = $(".bill_print tbody tr");
-
-
-                let lineAmount = 0;
-                let subGrandTotal = 0;
-                let taxGrandTotal = 0;
-                let taxGrandTotalPrint = 0;
-
-                $tblrows.each(function(index) {
-                    var $tblrow = $(this);
-                    var amount = $tblrow.find(".colAmountExChange").val() || 0;
-                    var taxcode = $tblrow.find(".lineTaxCode").val() || 0;
-
-                    var taxrateamount = 0;
-                    if (taxcodeList) {
-                        for (var i = 0; i < taxcodeList.length; i++) {
-                            if (taxcodeList[i].codename == taxcode) {
-                                taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-                            }
-                        }
-                    }
+        $('#selectDeleteLineID').val(targetID);  
+        if(targetID != undefined){
+            times++;
+            if (times == 1) {
+                $('#deleteLineModal').modal('toggle');
+            } else {
+                if ($('#tblBillLine tbody>tr').length > 1) {
+                    this.click;
+                    $(event.target).closest('tr').remove();
+                    $(".bill_print #" + targetID).remove();
+                    event.preventDefault();
+                    let $tblrows = $("#tblBillLine tbody tr");
+                    let $printrows = $(".bill_print tbody tr");
 
 
-                    var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
-                    var taxTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                    $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-                    if (!isNaN(subTotal)) {
-                        subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-                        document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotal.toFixed(2));
-                    }
+                    let lineAmount = 0;
+                    let subGrandTotal = 0;
+                    let taxGrandTotal = 0;
+                    let taxGrandTotalPrint = 0;
 
-                    if (!isNaN(taxTotal)) {
-                        taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
-                        document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotal.toFixed(2));
-                    }
-
-                    if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                        let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                        document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
-                        document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
-                        document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
-
-                    }
-                });
-
-                if ($(".printID").val() == "") {
-                    $printrows.each(function(index) {
-                        var $printrows = $(this);
-                        var amount = $printrows.find("#lineAmount").text() || "0";
-                        var taxcode = $printrows.find("#lineTaxCode").text() || 0;
+                    $tblrows.each(function(index) {
+                        var $tblrow = $(this);
+                        var amount = $tblrow.find(".colAmountExChange").val() || 0;
+                        var taxcode = $tblrow.find(".lineTaxCode").val() || 0;
 
                         var taxrateamount = 0;
                         if (taxcodeList) {
                             for (var i = 0; i < taxcodeList.length; i++) {
                                 if (taxcodeList[i].codename == taxcode) {
-                                    taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100 || 0;
+                                    taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
                                 }
                             }
                         }
@@ -7788,38 +7724,80 @@ Template.billcard.events({
 
                         var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
                         var taxTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                        $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
-
+                        $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal));
                         if (!isNaN(subTotal)) {
-                            $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
                             subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-                            document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
+                            document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotal.toFixed(2));
                         }
 
                         if (!isNaN(taxTotal)) {
-                            taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+                            taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
+                            document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotal.toFixed(2));
                         }
+
                         if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
                             let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                            document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
-                            //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                            document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+                            document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
+                            document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
+                            document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
 
                         }
                     });
-                }
-                return false;
 
-            } else {
-                $('#deleteLineModal').modal('toggle');
+                    if ($(".printID").val() == "") {
+                        $printrows.each(function(index) {
+                            var $printrows = $(this);
+                            var amount = $printrows.find("#lineAmount").text() || "0";
+                            var taxcode = $printrows.find("#lineTaxCode").text() || 0;
+
+                            var taxrateamount = 0;
+                            if (taxcodeList) {
+                                for (var i = 0; i < taxcodeList.length; i++) {
+                                    if (taxcodeList[i].codename == taxcode) {
+                                        taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100 || 0;
+                                    }
+                                }
+                            }
+
+
+                            var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
+                            var taxTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+                            $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
+
+                            if (!isNaN(subTotal)) {
+                                $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                                subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+                                document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
+                            }
+
+                            if (!isNaN(taxTotal)) {
+                                taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+                            }
+                            if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+                                let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+                                document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
+                                //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                                document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+
+                            }
+                        });
+                    }
+                    return false;
+
+                } else {
+                    $('#deleteLineModal').modal('toggle');
+                }
             }
+        } else {
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
+            else $("#footerDeleteModal1").modal("toggle");
         }
     },
     'click .btnDeleteFollowingBills': async function(event) {
         playDeleteAudio();
         var currentDate = new Date();
-        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
+        let templateObject = Template.instance();
         setTimeout(async function(){
 
         swal({
@@ -7991,6 +7969,7 @@ Template.billcard.events({
           };
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
