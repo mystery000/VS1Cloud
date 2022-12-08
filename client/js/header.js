@@ -181,12 +181,7 @@ Template.header.onRendered(function () {
 
 
         if (searchName.length <= 2) {
-<<<<<<< HEAD
             productService.getGlobalSearchReport(searchName).then(function (data) {
-=======
-            productService.getGlobalSearchReport(searchName).then(function(data) {
-                
->>>>>>> b520f9f8c049c272843aae99b6094e86bc6207c8
                 let dataSelectID = '';
                 let isProcessed = '';
                 var splashArrayList = new Array();
@@ -1031,14 +1026,8 @@ Template.header.onRendered(function () {
                 }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-<<<<<<< HEAD
             } else if (segs[0] === Barcode_Prefix_Appointment) {
                 productService.getGlobalSearchAppointment(segs[1]).then(function (data) {//Done Vladyslav
-=======
-            }else if(segs[0] === Barcode_Prefix_Appointment){
-                productService.getGlobalSearchAppointment(segs[1]).then(function(data) {
-
->>>>>>> b520f9f8c049c272843aae99b6094e86bc6207c8
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
                     dataSelectID = segs[1] || '';
@@ -1052,14 +1041,8 @@ Template.header.onRendered(function () {
                 }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-<<<<<<< HEAD
             } else if (segs[0] === Barcode_Prefix_Credit) {//Done Vladyslav
                 productService.getGlobalSearchCredit(segs[1]).then(function (data) {
-=======
-            }else if(segs[0] === Barcode_Prefix_Credit){
-                productService.getGlobalSearchCredit(segs[1]).then(function(data) {
-   
->>>>>>> b520f9f8c049c272843aae99b6094e86bc6207c8
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
                     dataSelectID = segs[1] || '';
@@ -1073,14 +1056,8 @@ Template.header.onRendered(function () {
                 }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-<<<<<<< HEAD
             } else if (segs[0] === Barcode_Prefix_CRM) {
                 productService.getGlobalSearchCRM(segs[1]).then(function (data) {//
-=======
-            }else if(segs[0] === Barcode_Prefix_CRM){
-                productService.getGlobalSearchCredit(segs[1]).then(function(data) {
-     
->>>>>>> b520f9f8c049c272843aae99b6094e86bc6207c8
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
                     dataSelectID = segs[1] || '';
