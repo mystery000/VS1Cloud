@@ -128,7 +128,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
                 { index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
               ];
-          }else if(currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
+          }else if(currenttablename == "tblAccountOverview") {
                let bsbname = "Branch Code";
                if (Session.get("ERPLoggedCountry") === "Australia") {
                    bsbname = "BSB";
@@ -154,6 +154,10 @@ Template.non_transactional_list.onRendered(function() {
                   { index: 17, label: 'Use Receipt Claim', class: 'colUseReceiptClaim', active: false, display: true, width: "60" },
                   { index: 18, label: 'Category', class: 'colExpenseCategory', active: false, display: true, width: "80" },
                   { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+                  { index: 20, label: 'Level1', class:'colLevel1', active: false, display: true, width: "80" },
+                  { index: 21, label: 'Level2', class:'colLevel2', active: false, display: true, width: "80" },
+                  { index: 22, label: 'Level3', class:'colLevel3', active: false, display: true, width: "80" },
+
                   // { index: 1, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "" },
                   // { index: 2, label: 'Description', class:'colAccountName', active: true, display: true, width: "" },
                   // { index: 3, label: 'Account Tree', class:'colAccountName', active: true, display: true, width: "" },
@@ -170,16 +174,62 @@ Template.non_transactional_list.onRendered(function() {
                   // { index: 13, label: 'Account No', class:'colAccountName', active: true, display: true, width: "" },
                   // { index: 14, label: 'Account Group', class:'colAccountName', active: false, display: true, width: "" },
                   // { index: 15, label: 'Bank Number', class:'colAccountName', active: false, display: true, width: "" },
-                  // { index: 16, label: 'Level1', class:'colAccountName', active: false, display: true, width: "" },
-                  // { index: 17, label: 'Level2', class:'colAccountName', active: false, display: true, width: "" },
-                  // { index: 18, label: 'Level3', class:'colAccountName', active: false, display: true, width: "" },
                   // { index: 19, label: 'Level4', class:'colAccountName', active: false, display: true, width: "" },
                   // { index: 20, label: 'Budget Accountno', class:'colAccountName', active: false, display: true, width: "" },
                   // { index: 21, label: 'Full Account Name', class:'colAccountName', active: false, display: true, width: "" },
                   // { index: 22, label: 'Sort Order', class:'colAccountName', active: false, display: true, width: "" },
                   // { index: 23, label: 'Allow Expense Claim?', class:'colAccountName', active: false, display: true, width: "" },
                 ];
-            }else if(currenttablename == "tblClienttypeList") { //Do Something Here
+            } else if (currenttablename == "tblDashboardAccountChartList") {
+                let bsbname = "Branch Code";
+                if (Session.get("ERPLoggedCountry") === "Australia") {
+                    bsbname = "BSB";
+                }
+                reset_data = [
+                  { index: 0, label: '#ID', class: 'AccountId', active: false, display: true, width: "10" },
+                  { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
+                  { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+                  { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "90" },
+                  { index: 4, label: 'Type', class: 'colType', active: true, display: true, width: "60" },
+                  { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+                  { index: 6, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "80" },
+                  { index: 7, label: 'Bank Name', class: 'colBankName', active: false, display: true, width: "120" },
+                  { index: 8, label: 'Bank Acc Name', class: 'colBankAccountName', active: true, display: true, width: "120" },
+                  { index: 9, label: bsbname, class: 'colBSB', active: true, display: true, width: "95" },
+                  { index: 10, label: 'Bank Acc No', class: 'colBankAccountNo', active: true, display: true, width: "120" },
+                  { index: 11, label: 'Card Number', class: 'colCardNumber', active: false, display: true, width: "120" },
+                  { index: 12, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "60" },
+                  { index: 13, label: 'CVC', class: 'colCVC', active: false, display: true, width: "60" },
+                  { index: 14, label: 'Swift Code', class: 'colExtra', active: false, display: true, width: "80" },
+                  { index: 15, label: 'Routing Number', class: 'colAPCANumber', active: false, display: true, width: "120" },
+                  { index: 16, label: 'Header', class: 'colIsHeader', active: false, display: true, width: "60" },
+                  { index: 17, label: 'Use Receipt Claim', class: 'colUseReceiptClaim', active: false, display: true, width: "60" },
+                  { index: 18, label: 'Category', class: 'colExpenseCategory', active: false, display: true, width: "80" },
+                  { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+
+                  // { index: 1, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "" },
+                  // { index: 2, label: 'Description', class:'colAccountName', active: true, display: true, width: "" },
+                  // { index: 3, label: 'Account Tree', class:'colAccountName', active: true, display: true, width: "" },
+                  // { index: 4, label: 'Balance', class:'colAccountName', active: true, display: true, width: "" },
+                  // { index: 5, label: 'Total Balance', class:'colAccountName', active: true, display: true, width: "" },
+                  // { index: 6, label: 'Type', class:'colAccountName', active: true, display: true, width: "" },
+                  // { index: 7, label: 'Bank Account Name', class:'colAccountName', active: true, display: true, width: "" },
+                  // { index: 8, label: 'BSB', class:'colAccountName', active: true, display: true, width: "" },
+                  // { index: 9, label: 'Bank Acc No', class:'colAccountName', active: false, display: true, width: "" },
+                  // { index: 10, label: 'Tax Code', class:'colAccountName', active: true, display: true, width: "" },
+                  // { index: 11, label: 'Tax Code Description', class:'colAccountName', active: false, display: true, width: "" },
+                  // { index: 12, label: 'Active', class:'colAccountName', active: false, display: true, width: "" },
+
+                  // { index: 13, label: 'Account No', class:'colAccountName', active: true, display: true, width: "" },
+                  // { index: 14, label: 'Account Group', class:'colAccountName', active: false, display: true, width: "" },
+                  // { index: 15, label: 'Bank Number', class:'colAccountName', active: false, display: true, width: "" },
+                  // { index: 19, label: 'Level4', class:'colAccountName', active: false, display: true, width: "" },
+                  // { index: 20, label: 'Budget Accountno', class:'colAccountName', active: false, display: true, width: "" },
+                  // { index: 21, label: 'Full Account Name', class:'colAccountName', active: false, display: true, width: "" },
+                  // { index: 22, label: 'Sort Order', class:'colAccountName', active: false, display: true, width: "" },
+                  // { index: 23, label: 'Allow Expense Claim?', class:'colAccountName', active: false, display: true, width: "" },
+                ];
+            } else if(currenttablename == "tblClienttypeList") { //Do Something Here
                   reset_data = [
                     { index: 0, label: '#ID', class: 'colClientTypeID', active: false, display: true, width: "10" },
                     { index: 1, label: 'Type Name', class: 'colTypeName', active: true, display: true, width: "200" },
@@ -379,7 +429,7 @@ Template.non_transactional_list.onRendered(function() {
           let data = JSON.parse(dataObject[0].data);
           if(data.ProcessLog.Obj.CustomLayout.length > 0){
            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType && listType != "tblAccountOverview"){
                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
                templateObject.showCustomFieldDisplaySettings(reset_data);
              }
@@ -1292,6 +1342,9 @@ Template.non_transactional_list.onRendered(function() {
         data.taccountvs1list[i].AllowExpenseClaim || false,
         data.taccountvs1list[i].ReceiptCategory || "",
         linestatus,
+        data.taccountvs1list[i].Level1 || "",
+        data.taccountvs1list[i].Level2 || "",
+        data.taccountvs1list[i].Level3 || "",
       ];
 
         splashArrayAccountsOverview.push(dataList);
@@ -1410,6 +1463,21 @@ Template.non_transactional_list.onRendered(function() {
                   targets: 19,
                   className: "colStatus",
                   width: "100px",
+                },
+                {
+                  targets: 20,
+                  className: "colLevel1 hiddenColumn",
+                  width: "60px",
+                },
+                {
+                  targets: 21,
+                  className: "colLevel2 hiddenColumn",
+                  width: "60px",
+                },
+                {
+                  targets: 22,
+                  className: "colLevel3 hiddenColumn",
+                  width: "60px",
                 }
             ],
             buttons: [
