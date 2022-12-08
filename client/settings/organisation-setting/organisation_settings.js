@@ -1412,7 +1412,11 @@ Template.organisationsettings.events({
             $(".chkusregiontax-col").show();
         } else {
             $("#chkusregiontax").prop("checked", false);
-            $(".chkusregiontax-col").hide();
+            swal('Ooops...', 'Can\'t alter country as the entire VS1 Database are set to this region.', 'error');
+            $(event.target).val("United States");
+            event.preventDefault();
+            return false;
+            // $(".chkusregiontax-col").hide();
         }
     },
 });

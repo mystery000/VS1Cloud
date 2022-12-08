@@ -3068,6 +3068,7 @@ Template.paymentcard.onRendered(() => {
                         $('#sltPaymentMethod').val(data.fields.PaymentMethodName);
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                         $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                        FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                         $('#edtCustomerName').attr('readonly', true);
                         $('#edtCustomerName').css('background-color', '#eaecf4');
@@ -3222,7 +3223,7 @@ Template.paymentcard.onRendered(() => {
                             $('#sltPaymentMethod').val(useData[d].fields.PaymentMethodName);
                             $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode)
                             $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate)
-
+                            FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                             $('#edtCustomerName').attr('readonly', true);
                             $('#edtCustomerName').css('background-color', '#eaecf4');

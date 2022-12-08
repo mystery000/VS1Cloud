@@ -2617,6 +2617,7 @@ Template.new_salesorder.onRendered(function () {
                             $('#sltStatus').val(data.fields.SalesStatus);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(data.fields.SaleClassName);
+                            FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -2953,6 +2954,7 @@ Template.new_salesorder.onRendered(function () {
                                 $('#sltStatus').val(useData[d].fields.SalesStatus);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(useData[d].fields.SaleClassName);
+                                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -3227,6 +3229,7 @@ Template.new_salesorder.onRendered(function () {
                                     $('#sltStatus').val(data.fields.SalesStatus);
                                     $('#sltTerms').val(data.fields.TermsName);
                                     $('#sltDept').val(data.fields.SaleClassName);
+                                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                                     templateObject.attachmentCount.set(0);
                                     if (data.fields.Attachments) {
@@ -3509,6 +3512,7 @@ Template.new_salesorder.onRendered(function () {
                         $('#sltStatus').val(data.fields.SalesStatus);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(data.fields.SaleClassName);
+                        FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -3960,7 +3964,7 @@ Template.new_salesorder.onRendered(function () {
                     $('#sltStatus').val(data.fields.SalesStatus);
                     $('#sltTerms').val(data.fields.TermsName);
                     $('#sltDept').val(data.fields.SaleClassName);
-
+                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                     templateObject.attachmentCount.set(0);
                     if (data.fields.Attachments) {
@@ -4256,6 +4260,7 @@ Template.new_salesorder.onRendered(function () {
                             $('#sltStatus').val(data.fields.SalesStatus);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(data.fields.SaleClassName);
+                            FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                             /* START attachment */
                             templateObject.attachmentCount.set(0);
@@ -4543,6 +4548,7 @@ Template.new_salesorder.onRendered(function () {
                                 $('#sltStatus').val(useData[d].fields.SalesStatus);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(useData[d].fields.SaleClassName);
+                                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                                 /* START attachment */
                                 templateObject.attachmentCount.set(0);
@@ -4814,6 +4820,7 @@ Template.new_salesorder.onRendered(function () {
                         $('#sltStatus').val(data.fields.SalesStatus);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(data.fields.SaleClassName);
+                        FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {

@@ -14,7 +14,7 @@ let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
 let defaultCurrencyCode = CountryAbbr;
 
-Template.suppliersummary.onCreated(() => {
+Template.supplierreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.records = new ReactiveVar([]);
@@ -23,7 +23,7 @@ Template.suppliersummary.onCreated(() => {
   FxGlobalFunctions.initVars(templateObject);
 });
 
-Template.suppliersummary.onRendered(() => {
+Template.supplierreport.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
 
@@ -57,7 +57,7 @@ Template.suppliersummary.onRendered(() => {
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getSupplierSummaryReportData();
+    await templateObject.getSupplierReportData();
 
     // await templateObject.loadReport(
     //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
@@ -70,7 +70,7 @@ Template.suppliersummary.onRendered(() => {
   /**
    * @deprecated since 23 septemeber 2022
    */
-  templateObject.getSupplierSummaryReportData = async function () {
+  templateObject.getSupplierReportData = async function () {
     let data = [];
     if (!localStorage.getItem('VS1SupplierSummary_Report')) {
       const options = await templateObject.reportOptions.get();
@@ -242,7 +242,7 @@ Template.suppliersummary.onRendered(() => {
 
 });
 
-Template.suppliersummary.events({
+Template.supplierreport.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1SupplierSummary_Report", "");
@@ -511,7 +511,7 @@ Template.suppliersummary.events({
   ...Datehandler.getDateRangeEvents()
 });
 
-Template.suppliersummary.helpers({
+Template.supplierreport.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },

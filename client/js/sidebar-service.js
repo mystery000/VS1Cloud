@@ -909,13 +909,13 @@ export class SideBarService extends BaseService {
         options = {
           IgnoreDates:true,
           orderby: '"name asc"',
-          search: 'ID='+ dataSearchName+ ' OR name="' + dataSearchName + '"',
+          search: 'ID='+ dataSearchName+ ' OR name="' + dataSearchName +  '" OR email="' +  dataSearchName + '"',
         };
       }else{
         options = {
           IgnoreDates:true,
           orderby: '"name asc"',
-          search: 'name="' + dataSearchName + '"',
+          search: 'name="' + dataSearchName + '" OR email="' +  dataSearchName + '"',
           //search: 'name="' + dataSearchName + '" OR street="' + dataSearchName + '" OR suburb="' + dataSearchName + '" OR state="' + dataSearchName + '" OR postcode="' + dataSearchName + '"',
         };
       }
