@@ -172,6 +172,7 @@ Template.header.onRendered(function() {
 
         if (searchName.length <= 2) {
             productService.getGlobalSearchReport(searchName).then(function(data) {
+                console.log(data)
                 let dataSelectID = '';
                 let isProcessed = '';
                 var splashArrayList = new Array();
