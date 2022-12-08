@@ -2374,21 +2374,6 @@ Template.appointments.onRendered(function() {
                     title.style.color = "#ffffff";
                 } else {
                     title.innerHTML = event.timeText + " " + event.event.title;
-                    // let leaveemployeerecords = templateObject.leaveemployeerecords.get(); 
-                    // console.log(leaveemployeerecords, "----------leaveemployeerecords");
-                    // let empID = $(event.draggedEl.childNodes[1]).attr('id').split("_")[1];
-                    // templateObject.empID.set(empID);
-                    // leaveemployeerecords.forEach((item) => {
-                    //     if (item.EmployeeID == empID && new Date(event.dateStr) >= new Date(item.StartDate) && new Date(event.dateStr) <= new Date(item.EndDate)) {
-                    //         swal(
-                    //             "Employee is unavailable due to being on Leave",
-                    //             "",
-                    //             "warning"
-                    //         );
-                    //         leaveFlag = true;
-                    //     }
-                    // });
-                    title.innerHTML = "Annual Leave : Status: Waiting";
                 }
 
                 let arrayOfDomNodes = [title];
