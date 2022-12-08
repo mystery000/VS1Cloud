@@ -1006,6 +1006,14 @@ authenticatedRoutes.route('/suppliersummary', {
         });
     }
 });
+authenticatedRoutes.route('/supplierreport', {
+    name: 'supplierreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'supplierreport'
+        });
+    }
+});
 
 authenticatedRoutes.route('/reconciliation', {
     name: 'reconciliation',
