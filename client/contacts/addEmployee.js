@@ -180,62 +180,6 @@ Template.employeescard.onRendered(function() {
     let totAmount = 0;
     let totAmountOverDue = 0;
 
-    setTimeout(() => {
-      $("#edtBankName").editableSelect();
-      $("#edtBankName")
-        .editableSelect()
-        .on("click.editable-select", function (e, li) {
-          var $earch = $(this);
-          var offset = $earch.offset();
-          var bankName = e.target.value || "";
-
-          if (e.pageX > offset.left + $earch.width() - 8) {
-            $("#bankNameModal").modal();
-            $(".fullScreenSpin").css("display", "none");
-
-          } else {
-            if (bankName.replace(/\s/g, "") != "") {
-              $("#bankNameModal").modal("toggle");
-            } else {
-              $("#bankNameModal").modal();
-            }
-          }
-        });
-      
-    }, 2500);
-
-    $(document).on("click", "#tblBankName tbody tr", function (e) {
-      var table = $(this);
-      let BankName = table.find(".bankName").text();
-      $('#bankNameModal').modal('toggle');
-      $('#edtBankName').val(BankName);
-    }); 
-
-    templateObject.fillBankInfoFromUrl = function () {
-      var queryParams = FlowRouter.current().queryParams;
-      if(queryParams.bank) {
-        let edtBankName = queryParams.edtBankName;
-        let edtBankAccountName = queryParams.edtBankAccountName;
-        let edtBSB = queryParams.edtBSB;
-        let edtBankAccountNo = queryParams.edtBankAccountNo;
-        let swiftCode = queryParams.swiftCode;
-        let apcaNo = queryParams.apcaNo;
-        let routingNo = queryParams.routingNo;
-        let sltBankCodes = queryParams.sltBankCodes;
-        $('.payrollTab').click();
-          $('.bank-account-tab').click();
-          $('#edtBankName').val(edtBankName)
-          $('#bankAccountName').val(edtBankAccountName)
-          $('#bankAccountBSB').val(edtBSB)
-          $('#bankAccountNo').val(edtBankAccountNo)
-          $('#edtSwiftCode').val(swiftCode)
-          $('#edtRoutingNumber').val(routingNo)
-          // $('#sltCurrency').val()
-      }
-    }
-    setTimeout(() => {
-      templateObject.fillBankInfoFromUrl();
-    }, 3500);
     // setTimeout(function() {
     //     $('#tblLeaveRequests').DataTable({
     //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -491,6 +435,8 @@ Template.employeescard.onRendered(function() {
             changeYear: true,
             yearRange: "-90:+10",
         });
+
+        $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", new Date().getDay+7); 
 
     }, 500);
 
@@ -2672,7 +2618,6 @@ Template.employeescard.onRendered(function() {
                 });
 
             $('#edtDashboardOptions').editableSelect().on('click.editable-select', function(e, li) {
-            // $('#edtDashboardOptions').click(function(e) {
                 const $earch = $(this);
                 const offset = $earch.offset();
                 const dashboardoptions = e.target.value || '';
@@ -3862,31 +3807,7 @@ Template.employeescard.onRendered(function() {
         return '';
     };
 
-    templateObject.getEmployeePaySettings = async(refresh = false) => {
-
-        // let data = await CachedHttp.get(erpObject.TEmployeepaysettings, async () => {
-        //     return await contactService.getOneEmployeeDataEx(employeeID);
-        // }, {
-        //     refresh: refresh,
-        //     validate: (cachedResponse) => {
-        //         return true;
-        //     }
-        // });
-
-        // data = data.response;
-
-        // let employeesPaySettings = data.temployeepaysettings.map(e => e.fields);
-        // let employeePaySettings = employeesPaySettings.find(e => e.Employeeid == employeeID);
-
-        // await templateObject.employeePaySettings.set(employeePaySettings);
-
-        // await templateObject.employeePayInfos.set(employeePaySettings);
-
-
-        // $(`#edtTfnExemption option[value='${employeePaySettings.Employee.fields.CgtExempt}']`).attr('selected', 'selected');
-        // $(`#edtEmploymentBasis option[value='${employeePaySettings.Employee.fields.BasisOfPayment}']`).attr('selected', 'selected');
-        // $(`#edtResidencyStatus option[value='${employeePaySettings.Employee.fields.Resident}']`).attr('selected', 'selected');
-
+    templateObject.getEmployeePaySettings = async(refresh = false) => {  
 
         try {
             // EmployeePayrollApi fetch data from indexDB
@@ -3975,6 +3896,7 @@ Template.employeescard.onRendered(function() {
 
                 $(`#edtTfnExemption option[value='${objEmployeePaySettings.TFNExemption}']`).attr('selected', 'selected');
                 $(`#edtPayPeriod`).val(objEmployeePaySettings.Payperiod);
+                $(`#edtLeavePayPeriod`).val(objEmployeePaySettings.Payperiod);
                 $(`#edtEmploymentBasis option[value='${objEmployeePaySettings.EmploymentBasis}']`).attr('selected', 'selected');
                 $(`#edtResidencyStatus option[value='${objEmployeePaySettings.ResidencyStatus}']`).attr('selected', 'selected');
             }
@@ -7073,17 +6995,24 @@ Template.employeescard.events({
         }
     },
     // NEXT TASK HERE
-    'click .btnLeaveRequestBtn': function() {
+    'click .btnLeaveRequestBtn': async function() {
+        let templateObject = Template.instance();
+
         $('#newLeaveRequestLabel').text('New Leave Request');
         let today = new Date();
         const dd = String(today.getDate()).padStart(2, '0');
         const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         const yyyy = today.getFullYear();
-        today = dd + '/' + mm + '/' + yyyy;
+        today = dd + '/' + mm + '/' + yyyy; 
+
+         let nextWeek = new Date() 
         $('#leaveRequestForm')[0].reset();
-        $('#edtLeaveStartDate').val(today);
-        $('#edtLeaveEndDate').val(today);
+        $('#edtLeavePayStatus').val('Awaiting'); 
+        $('#edtLeaveStartDate').val(today); 
+        $('#edtLeaveEndDate').val(new Date(nextWeek.setDate( new Date().getDate() + 7)).toLocaleDateString());
         $('#removeLeaveRequestBtn').hide();
+        $(`#edtLeavePayPeriod`).val();
+        await templateObject.getEmployeePaySettings(true); 
     },
     'change #taxes :input, #taxes :select': async function() {
         $('.statusSaved').hide();
@@ -7511,28 +7440,6 @@ Template.employeescard.events({
                 break;
         }
     },
-    // Pay Template Earning Line Drop Down
-    // 'click #earningRateSelect': function(){
-    //     let earningRate = $('#earningRateSelect').val();
-    //     $('.calculationType').removeAttr("checked");
-    //     switch( earningRate ){
-    //         case 'JobKeeper Payment top up':
-    //             $('#CalculationType1').attr('disabled', true)
-    //             $('#CalculationType2').attr('disabled', false)
-    //             $('#CalculationType3').attr('disabled', true)
-    //         break;
-    //         case 'Overtime Hours (exempt from super)':
-    //             $('#CalculationType1').attr('disabled', false)
-    //             $('#CalculationType2').attr('disabled', true)
-    //             $('#CalculationType3').attr('disabled', true)
-    //         break;
-    //         default:
-    //             $('#CalculationType1').attr('disabled', true)
-    //             $('#CalculationType2').attr('disabled', false)
-    //             $('#CalculationType3').attr('disabled', false)
-    //         break;
-    //     }
-    // },
     'click .removePayTempEarning': (e, ui) => {
         let deleteID = $(e.currentTarget).attr('earning-id');
         // ui.removeEarning(deleteID);
@@ -8543,9 +8450,11 @@ Template.employeescard.events({
             $('.fullScreenSpin').css('display', 'none');
 
             return false;
+
             addVS1Data('TEmployeepaysettings', JSON.stringify(currentInfo));
             $('.fullScreenSpin').css('display', 'none');
             return;
+            
             employeePayrollService.saveTEmployeepaysettings(objDetails).then(function(objDetails) {
                 employeePayrollService.getAllEmployeePaySettings('All', 0).then(function(data) {
                     addVS1Data('TEmployeepaysettings', newDataObj);
@@ -11008,6 +10917,7 @@ Template.employeescard.events({
         let ID = $(e.target).parent().find('.colLRID').text();
         $('#newLeaveRequestLabel').text('Edit Leave Request');
         let dataObject = await getVS1Data('TLeavRequest');
+
         if (dataObject.length > 0) {
             data = JSON.parse(dataObject[0].data);
             if (data.tleavrequest.length > 0) {
@@ -11025,12 +10935,13 @@ Template.employeescard.events({
                     $('#edtLeaveDescription').val(useData[0].fields.Description);
                     $('#edtLeaveStartDate').val(moment(useData[0].fields.StartDate).format('DD/MM/YYYY'));
                     $('#edtLeaveEndDate').val(moment(useData[0].fields.EndDate).format('DD/MM/YYYY'));
-                    $('#edtLeavePayPeriod').val(useData[0].fields.PayPeriod);
+                    $('#edtLeavePayPeriod').val(useData[0].fields.PayPeriod);   
                     $('#edtLeaveHours').val(useData[0].fields.Hours);
-                    $('#edtLeavePayStatus').val(useData[0].fields.Status);
+                    $('#edtLeavePayStatus').val(useData[0].fields.Status); 
                 }
             }
-        }
+        } 
+
         $('#newLeaveRequestModal').modal('show');
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -11141,7 +11052,6 @@ Template.employeescard.helpers({
         return Template.instance().isCloudUserPass.get();
     },
     record: () => {
-
         let temp = Template.instance().records.get();
         let phoneCodes = Template.instance().phoneCodeData.get();
         if (temp && temp.mobile && temp.country) {
