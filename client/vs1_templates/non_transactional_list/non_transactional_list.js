@@ -5,12 +5,14 @@ import {UtilityService} from "../../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../../js/sidebar-service';
 import {ProductService} from '../../product/product-service';
+import { ManufacturingService } from "../../manufacture/manufacturing-service";
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
 let productService = new ProductService();
+let manufacturingService = new ManufacturingService();
 Template.non_transactional_list.inheritsHooksFrom('export_import_print_display_button');
 
 Template.non_transactional_list.onCreated(function(){
@@ -331,6 +333,21 @@ Template.non_transactional_list.onRendered(function() {
               { index: 9, label: 'Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250"},
               { index: 9, label: 'Country ID', class: 'colCountryID', active: false, display: true, width: "100"},
           ];
+          }else if(currenttablename == 'tblProcessList') {
+            reset_data = [
+              { index: 0, label: '#ID', class:'colProcessId', active: false, display: true, width: "10" },
+              { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "100" },
+              { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "200" },
+              { index: 3, label: 'Daily Hours', class: 'colDailyHours', active: true, display: true, width: "100" },
+              { index: 4, label: 'Hourly Labour Cost', class: 'colHourlyLabourCost', active: true, display:true, width: "100" },
+              { index: 5, label: 'Cost of Goods Sold', class: 'colCOGS', active: true, display: true, width: "200" },
+              { index: 6, label: 'Expense Account', class: 'colExpense', active: true, display: true, width: "200" },
+              { index: 7, label: 'Hourly Overhead Cost', class: 'colHourlyOverheadCost', active: true, display: true, width: "100" },
+              { index: 8, label: 'Cost of Goods Sold(Overhead)', class: 'colOverGOGS', active: true, display: true, width: "200" },
+              { index: 9, label: 'Expense Account(Overhead)', class: 'colOverExpense', active: true, display: true, width: "120" },
+              { index: 10, label: 'Total Hourly Costs', class: 'colTotalHourlyCosts', active: true, display: true, width: "100" },
+              { index: 11, label: 'Inventory Asset Wastage', class: 'colWastage', active: true, display: true, width: "200" }
+            ];
           }
         templateObject.reset_data.set(reset_data);
       }
@@ -4688,7 +4705,273 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
           }
-
+      
+        templateObject.getProcessListData = async function () {
+          getVS1Data('TProcessStep').then(function(dataObject){
+            if(dataObject.length == 0) {
+              manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then (async function(data) {
+                await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                  templateObject.displayProcessListData(data)
+                })
+              })
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              templateObject.displayProcessListData(data)
+            }
+          }).catch(function(e) {
+            manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then (async function(data) {
+              await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                templateObject.displayProcessListData(data)
+              })
+            })
+          })
+        }
+    
+    
+        templateObject.displayProcessListData = async function (data) {
+          var splashArrayProcessList = new Array();
+          for (let i = 0; i < data.tprocessstep.length; i++) {
+            var dataList = [
+              data.tprocessstep[i].fields.ID || "",
+              data.tprocessstep[i].fields.KeyValue || "",
+              data.tprocessstep[i].fields.Description || "",
+              data.tprocessstep[i].fields.DailyHours || "",
+              data.tprocessstep[i].fields.HourlyLabourCost || 0,
+              data.tprocessstep[i].fields.COGS || "",
+              data.tprocessstep[i].fields.ExpenseAccount || "",
+              data.tprocessstep[i].fields.OHourlyCost || 0,
+              data.tprocessstep[i].fields.OCOGS || "",
+              data.tprocessstep[i].fields.OExpense || "",
+              data.tprocessstep[i].fields.TotalHourlyCost || 0,
+              data.tprocessstep[i].fields.Wastage || ""
+            ]
+            splashArrayProcessList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayProcessList)
+          }
+  
+          if(templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
+          }
+  
+          setTimeout(function () {
+            //$('#'+currenttablename).removeClass('hiddenColumn');
+            $('#'+currenttablename).DataTable({
+                data: splashArrayProcessList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                      targets: 0,
+                      className: "colProcessId hiddenColumn",
+                      width: "10px"
+                    },
+                    {
+                      targets: 1,
+                      className: "colName",
+                      width: "100px",
+                    },
+                    {
+                      targets: 2,
+                      className: "colDescription",
+                      width: "200px",
+                    },
+                    {
+                      targets: 3,
+                      className: "colDailyHours",
+                      width: "100px",
+                    },
+                    {
+                      targets: 4,
+                      className: "colHourlyLabourCost",
+                      width: "100px",
+                    },
+                    {
+                      targets: 5,
+                      className: "colCOGS",
+                      width: "200px",
+                    },
+                    {
+                      targets: 6,
+                      className: "colExpense",
+                      width: "200px",
+                    },
+                    {
+                      targets: 7,
+                      className: "colHourlyOverheadCost",
+                      width: "100px",
+                    },
+                    {
+                      targets: 8,
+                      className: "colOverCOGS",
+                      width: "200px",
+                    },
+                    {
+                      targets: 9,
+                      className: "colOverExpense",
+                      width: "200px",
+                    },
+                    {
+                      targets: 10,
+                      className: "colTotalHourlyCosts",
+                      width: "100px",
+                    },
+                    {
+                      targets: 11,
+                      className: "colWastage",
+                      width: "200px",
+                    }
+                ],
+                buttons: [
+                    {
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Process List",
+                        orientation:'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },{
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Process List',
+                        filename: "Process List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Process List",
+                        orientation:'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+  
+                }],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[1, "asc"]],
+                // "autoWidth": false,
+                action: function () {
+                    $('#'+currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#'+currenttablename+'_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+  
+                        }
+                    } else {
+  
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+  
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                      $('.fullScreenSpin').css('display', 'inline-block');
+                      //var splashArrayCustomerListDupp = new Array();
+                      let dataLenght = oSettings._iDisplayLength;
+                      let customerSearch = $('#'+currenttablename+'_filter input').val();
+  
+                      manufacturingService.getAllProcessData(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
+  
+                      for (let j = 0; j < dataObjectnew.tprocessstep.length; j++) {
+                          var dataListProcessDupp = [
+                            dataObjectnew.tprocessstep[i].fields.ID || "",
+                            dataObjectnew.tprocessstep[i].fields.KeyValue || "",
+                            dataObjectnew.tprocessstep[i].fields.Description || "",
+                            dataObjectnew.tprocessstep[i].fields.DailyHours || "",
+                            dataObjectnew.tprocessstep[i].fields.HourlyLabourCost || 0,
+                            dataObjectnew.tprocessstep[i].fields.COGS || "",
+                            dataObjectnew.tprocessstep[i].fields.ExpenseAccount || "",
+                            dataObjectnew.tprocessstep[i].fields.OHourlyCost || 0,
+                            dataObjectnew.tprocessstep[i].fields.OCOGS || "",
+                            dataObjectnew.tprocessstep[i].fields.OExpense || "",
+                            dataObjectnew.tprocessstep[i].fields.TotalHourlyCost || 0,
+                            dataObjectnew.tprocessstep[i].fields.Wastage || ""
+                          ];
+  
+                          splashArrayProcessList.push(dataListProcessDupp);
+                          //}
+                      }
+                      let uniqueChars = [...new Set(splashArrayProcessList)];
+                      templateObject.transactiondatatablerecords.set(uniqueChars);
+                      var datatable = $('#'+currenttablename).DataTable();
+                      datatable.clear();
+                      datatable.rows.add(uniqueChars);
+                      datatable.draw(false);
+                      setTimeout(function () {
+                        $('#'+currenttablename).dataTable().fnPageChange('last');
+                      }, 400);
+  
+                      $('.fullScreenSpin').css('display', 'none');
+  
+                      }).catch(function (err) {
+                          $('.fullScreenSpin').css('display', 'none');
+                      });
+  
+                    });
+                  setTimeout(function () {
+                      MakeNegative();
+                  }, 100);
+                },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function (oSettings) {
+                      
+                      $("<button class='btn btn-primary btnRefreshProcessList' type='button' id='btnRefreshProcessList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.tprocessstep.length || 0; //get count from API data
+  
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+  
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function () {
+  
+            }).on('length.dt', function (e, settings, len) {
+  
+              $(".fullScreenSpin").css("display", "inline-block");
+              let dataLenght = settings._iDisplayLength;
+              if (dataLenght == -1) {
+                if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                  $(".fullScreenSpin").css("display", "none");
+                } else {
+                  $(".fullScreenSpin").css("display", "none");
+                }
+              } else {
+                $(".fullScreenSpin").css("display", "none");
+              }
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+          }, 0);
+  
+          $('div.dataTables_filter input').addClass('form-control form-control-sm');
+  
+  
+        }  
         //Check URL to make right call.
         if(currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist"){
             templateObject.getContactOverviewData();
@@ -4716,6 +4999,8 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             templateObject.getLeadListData();
         }else if(currenttablename == "tblCurrencyList") {
             templateObject.getCurrencyListData();
+        }else if(currenttablename == 'tblProcessList' ){
+          templateObject.getProcessListData();
         }
       tableResize();
     });
@@ -4765,6 +5050,9 @@ Template.non_transactional_list.events({
     }else if(currenttablename == "tblCurrencyList"){
       await clearData('TCurrency');
       templateObject.getCurrencyListData(true);
+    }else if(currenttablename == 'tblProcessList' ) {
+      await clearData('TProcessStep');
+      templateObject.getProcessListData(true);
     }
 
     },

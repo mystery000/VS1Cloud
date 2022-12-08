@@ -1424,7 +1424,8 @@ Template.customerscard.onRendered(function () {
             $('#edtCustomerCompany').attr('readonly', true);
             $('#sltPreferredPayment').val(lineItemObj.preferedpayment);
             $('#sltTerms').val(lineItemObj.terms);
-            $('#sltCustomerType').val(lineItemObj.custometype);
+            $("#sltCurrency").val(lineItemObj.ForeignExchangeCode);
+            $('#sltCustomerType').val(lineItemObj.clienttype);
             $('#sltTaxCode').val(lineItemObj.taxcode);
             $('#sltJobPreferredPayment').val(lineItemObj.jobpreferedpayment);
             $('#sltJobTerms').val(lineItemObj.jobterms);
@@ -1482,7 +1483,8 @@ Template.customerscard.onRendered(function () {
             $('#edtCustomerCompany').attr('readonly', false);
             $('#sltPreferredPayment').val(lineItemObj.preferedpayment);
             $('#sltTerms').val(lineItemObj.terms);
-            $('#sltCustomerType').val(lineItemObj.custometype);
+            $("#sltCurrency").val(lineItemObj.ForeignExchangeCode);
+            $('#sltCustomerType').val(lineItemObj.clienttype);
             $('#sltTaxCode').val(lineItemObj.taxcode);
             $('#sltJobPreferredPayment').val(lineItemObj.jobpreferedpayment);
             $('#sltJobTerms').val(lineItemObj.terms);
@@ -1599,6 +1601,7 @@ Template.customerscard.onRendered(function () {
     $(document).ready(function () {
         setTimeout(function () {
             $('#sltTerms').editableSelect();
+            $("#sltCurrency").editableSelect();
             $('#sltTerms').editableSelect().on('click.editable-select', function (e, li) {
                 $('#selectLineID').val('sltTerms');
                 let $each = $(this);
@@ -1944,6 +1947,7 @@ Template.customerscard.onRendered(function () {
         $('#'+selectedTermsDropdownID+'').val($(this).find(".colTermName").text());
         $('#termsListModal').modal('toggle');
     });
+
     $(document).on("click", "#paymentmethodList tbody tr", function(e) {
         let selectedDropdownID = $('#selectPaymentMethodLineID').val() || 'sltPreferredPayment';
         $('#'+selectedDropdownID+'').val($(this).find(".colName").text());
@@ -2836,7 +2840,7 @@ Template.customerscard.events({
                 CUSTFLD1: custField1,
                 CUSTFLD2: custField2,
                 CUSTFLD3: custField3,
-                // CUSTFLD4: custField4,
+                CUSTFLD4: custField4,
                 Discount: parseFloat(permanentDiscount) || 0,
                 Status: status,
                 SourceName: sourceName,
@@ -3562,6 +3566,9 @@ Template.customerscard.events({
     // add to custom field
     "click #edtSaleCustField3": function (e) {
       $("#clickedControl").val("three");
+    },
+    "click #edtSaleCustField4": function (e) {
+        $("#clickedControl").val("four");
     },
     'click .btnOpenSettings': function (event) {
     },
