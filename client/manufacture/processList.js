@@ -947,7 +947,7 @@ Template.processList.events({
 
 
     'click #tblProcessList tbody tr': function (e) {
-        var listData = $(e.target).closest('tr').attr('id');
+        var listData = $(e.target).closest('tr').find('.colProcessId').text();
         FlowRouter.go('/processcard?id=' + listData)
     }
 

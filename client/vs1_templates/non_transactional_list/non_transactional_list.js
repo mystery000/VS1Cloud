@@ -4706,10 +4706,10 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
           }
       
-        templateObject.getProcessListData = async function (deleteFilter = false) {
+        templateObject.getProcessListData = async function () {
           getVS1Data('TProcessStep').then(function(dataObject){
             if(dataObject.length == 0) {
-              manufacturingService.getAllProcessData(initialBaseDataLoad, 0, deleteFilter).then (async function(data) {
+              manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then (async function(data) {
                 await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
                   templateObject.displayProcessListData(data)
                 })
@@ -4719,7 +4719,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
               templateObject.displayProcessListData(data)
             }
           }).catch(function(e) {
-            manufacturingService.getAllProcessData(initialBaseDataLoad, 0, deleteFilter).then (async function(data) {
+            manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then (async function(data) {
               await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
                 templateObject.displayProcessListData(data)
               })
