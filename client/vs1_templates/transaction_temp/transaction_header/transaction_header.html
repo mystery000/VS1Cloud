@@ -8,7 +8,7 @@
   showUploadAttachment
   showTransactionButtons
  -->
-<template name="invoice_header">
+<template name="transaction_header">
   <style>
     @media (min-width: 1200px) {
       .row-middle .col-xl-2 {
@@ -45,9 +45,7 @@
   {{> customfieldpop}}
 
   {{#if showUploadAttachment}}
-  {{> upload_attachment_modal 
-    isMobileDevices=isMobileDevices
-  }}
+  {{> files_viewer_modal }}
   {{/if}}
 
   {{#if showTemplateModals}}
