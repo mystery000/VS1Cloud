@@ -198,34 +198,6 @@ Template.chequecard.onRendered(() => {
         $("#formCheck-january").prop('checked', true);
     }
   }
-  templateObject.hasFollowings = async function() {
-    var currentDate = new Date();
-    let purchaseService = new PurchaseBoardService();
-    var url = FlowRouter.current().path;
-    var getso_id = url.split("?id=");
-    var currentInvoice = getso_id[getso_id.length - 1];
-    var objDetails = "";
-    if (getso_id[1]) {
-      currentInvoice = parseInt(currentInvoice);
-      var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
-      var orderDate = chequeData.fields.OrderDate;
-      var fromDate = orderDate.substring(0, 10);
-      var toDate = (currentDate.getFullYear() + 10) + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-      var followingCheques = await sideBarService.getAllChequeListData(
-        fromDate,
-        toDate,
-        false,
-        initialReportLoad,
-        0
-      );
-      var chequeList = followingCheques.tchequelist;
-      if (chequeList.length > 1) {
-        $("#btn_follow2").css("display", "inline-block");
-      } else {
-        $("#btn_follow2").css("display", "none");
-      }
-    }    
-  }
 
   $(window).on("load", function () {
     var win = $(this); //this = window
@@ -6606,7 +6578,6 @@ Template.chequecard.events({
   "click .btnDeleteCheque": async function (event) {
     playDeleteAudio();
     let templateObject = Template.instance();
-    await templateObject.hasFollowings();
     let purchaseService = new PurchaseBoardService();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
