@@ -7199,110 +7199,136 @@ Template.refundcard.events({
             event.preventDefault();
         }
     },
-    'click .btnRemove': function(event) {
+    'click .btnRemove':async function(event) {
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
         var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
+        var currentDate = new Date();
+        let salesService = new SalesBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var refundList = [];
+        
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var refundData = await salesService.getRefundSales(currentInvoice);
+            var saleDate = refundData.fields.SaleDate;
+            var fromDate = saleDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingRefunds = await sideBarService.getAllTRefundSaleListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            refundList = followingRefunds.trefundsalelist;
+        }
+        if(targetID != undefined){
+            times++;
+            if (times == 1) {
+                $('#deleteLineModal').modal('toggle');
+            } else {
+                if ($('#tblInvoiceLine tbody>tr').length > 1) {
+                    this.click;
+                    $(event.target).closest('tr').remove();
+                    event.preventDefault();
+                    let $tblrows = $("#tblInvoiceLine tbody tr");
 
-        times++;
-        if (times == 1) {
-            $('#deleteLineModal').modal('toggle');
-        } else {
-            if ($('#tblInvoiceLine tbody>tr').length > 1) {
-                this.click;
-                $(event.target).closest('tr').remove();
-                event.preventDefault();
-                let $tblrows = $("#tblInvoiceLine tbody tr");
+                    let lineAmount = 0;
+                    let subGrandTotal = 0;
+                    let taxGrandTotal = 0;
+                    let subDiscountTotal = 0; // New Discount
+                    let taxGrandTotalPrint = 0;
 
-                let lineAmount = 0;
-                let subGrandTotal = 0;
-                let taxGrandTotal = 0;
-                let subDiscountTotal = 0; // New Discount
-                let taxGrandTotalPrint = 0;
+                    let subGrandTotalNet = 0;
+                    let taxGrandTotalNet = 0;
+                    $tblrows.each(function(index) {
+                        var $tblrow = $(this);
+                        var qty = $tblrow.find(".lineQty").val() || 0;
+                        var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+                        var taxRate = $tblrow.find(".lineTaxCode").val();
 
-                let subGrandTotalNet = 0;
-                let taxGrandTotalNet = 0;
-                $tblrows.each(function(index) {
-                    var $tblrow = $(this);
-                    var qty = $tblrow.find(".lineQty").val() || 0;
-                    var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-                    var taxRate = $tblrow.find(".lineTaxCode").val();
-
-                    var taxrateamount = 0;
-                    if (taxcodeList) {
-                        for (var i = 0; i < taxcodeList.length; i++) {
-                            if (taxcodeList[i].codename == taxRate) {
-                                taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+                        var taxrateamount = 0;
+                        if (taxcodeList) {
+                            for (var i = 0; i < taxcodeList.length; i++) {
+                                if (taxcodeList[i].codename == taxRate) {
+                                    taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+                                }
                             }
                         }
-                    }
 
-                    var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                    var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                    var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
-                    let lineTotalAmount = subTotal + taxTotal;
+                        var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+                        var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+                        var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+                        let lineTotalAmount = subTotal + taxTotal;
 
-                    let lineDiscountTotal = lineDiscountPerc / 100;
+                        let lineDiscountTotal = lineDiscountPerc / 100;
 
-                    var discountTotal = lineTotalAmount * lineDiscountTotal;
-                    var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-                    var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
-                    var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-                    var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-                    if (!isNaN(discountTotal)) {
-                        subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+                        var discountTotal = lineTotalAmount * lineDiscountTotal;
+                        var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+                        var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+                        var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+                        var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+                        if (!isNaN(discountTotal)) {
+                            subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
 
-                        document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-                    }
-                    $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
+                            document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+                        }
+                        $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
 
-                    let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
-                    let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
-                    let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
-                    $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
-                    $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
+                        let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
+                        let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
+                        let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
+                        $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+                        $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
 
-                    if (!isNaN(subTotal)) {
-                      $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                      $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
-                        subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
-                        subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-                        document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-                    }
+                        if (!isNaN(subTotal)) {
+                        $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                        $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+                            subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
+                            subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+                            document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+                        }
 
-                    if (!isNaN(taxTotal)) {
-                        taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
-                        taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-                        document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-                    }
-
+                        if (!isNaN(taxTotal)) {
+                            taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
+                            taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+                            document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+                        }
 
 
-                    if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                        let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                        let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
-                        document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-                        document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
 
-                    }
-                });
-                return false;
+                        if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+                            let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+                            let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
+                            document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+                            document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                            document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                            document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
 
-            } else {
-                $('#deleteLineModal').modal('toggle');
+                        }
+                    });
+                    return false;
+
+                } else {
+                    $('#deleteLineModal').modal('toggle');
+                }
             }
+        } else {
+            if(refundList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            else $("#footerDeleteModal1").modal("toggle");
         }
     },
     'click .btnDeleteFollowingRefunds': async function(event) {
         playDeleteAudio();
         var currentDate = new Date();
-        let templateObject = Template.instance();
         let salesService = new SalesBoardService();
+        let templateObject = Template.instance();
         setTimeout(async function(){
 
         swal({
@@ -7317,7 +7343,6 @@ Template.refundcard.events({
                 var getso_id = url.split('?id=');
                 var currentInvoice = getso_id[getso_id.length - 1];
                 var objDetails = '';
-                LoadingOverlay.show();
                 if (getso_id[1]) {
                     currentInvoice = parseInt(currentInvoice);
                     var refundData = await salesService.getRefundSales(currentInvoice);

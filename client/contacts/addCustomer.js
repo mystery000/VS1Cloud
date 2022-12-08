@@ -44,6 +44,38 @@ Template.customerscard.onCreated(function () {
     templateObject.isSameAddress.set(false);
     templateObject.isJobSameAddress = new ReactiveVar();
     templateObject.isJobSameAddress.set(false);
+
+    templateObject.transactionTableHeaderItems = new ReactiveVar([
+        {classString:"th colSortDate hiddenColumn", itemLabel:"id",itemStyle:""},
+        {classString:"th colSaleDate", itemLabel:"Sale Date",itemStyle:"width:80px;"},
+        {classString:"th colSalesNo", itemLabel:"Sales No.",itemStyle:"width:80px;"},
+        {classString:"th colCustomer", itemLabel:"Customer",itemStyle:"width:200px;"},
+        {classString:"th colAmountEx", itemLabel:"Amount (Ex)",itemStyle:"width:80px;"},
+        {classString:"th colAmount", itemLabel:"Amount",itemStyle:"width:80px;"},
+        {classString:"th colPaid", itemLabel:"Paid",itemStyle:"width:80px;"},
+        {classString:"th colBalanceOutstanding", itemLabel:"Balance Outstanding",itemStyle:"width:80px;"},
+        {classString:"th colType", itemLabel:"Type",itemStyle:""},
+        {classString:"th colSaleCustField1 hiddenColumn", itemLabel:"Custom Field 1",itemStyle:""},
+        {classString:"th colSaleCustField2 hiddenColumn", itemLabel:"Custom Field 2",itemStyle:""},
+        {classString:"th colEmployee hiddenColumn", itemLabel:"Employee",itemStyle:""},
+        {classString:"th colComments", itemLabel:"Comments",itemStyle:""}
+    ])
+    templateObject.jobDetailTableHeaderItems = new ReactiveVar([
+        {classString:"th colCompany", itemLabel:"Company",itemStyle:"width:200px;"},
+        {classString:"th colPhone", itemLabel:"Phone",itemStyle:"width:95px;"},
+        {classString:"th colARBalance", itemLabel:"AR Balance",itemStyle:"width:80px;"},
+        {classString:"th colCreditBalance", itemLabel:"Credit Balance",itemStyle:"width:80px;"},
+        {classString:"th colBalance", itemLabel:"Balance",itemStyle:"width:80px;"},
+        {classString:"th colCreditLimit", itemLabel:"Credit Limit",itemStyle:"width:80px;"},
+        {classString:"th colSalesOrderBalance", itemLabel:"Order Balance",itemStyle:"width:80px;"},
+        {classString:"th colCountry", itemLabel:"Country",itemStyle:"width:100px;"},
+        {classString:"th colEmail hiddenColumn", itemLabel:"Email",itemStyle:""},
+        {classString:"th colAccountNo hiddenColumn", itemLabel:"Account No",itemStyle:""},
+        {classString:"th colSaleCustField1 hiddenColumn", itemLabel:"Custom Field 1",itemStyle:""},
+        {classString:"th colSaleCustField2 hiddenColumn", itemLabel:"Custom Field 2",itemStyle:""},
+        {classString:"th colNotes", itemLabel:"Notes",itemStyle:""},
+    ])
+
     /* Attachments */
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
@@ -4062,6 +4094,14 @@ Template.customerscard.helpers({
             return (a.saledate.toUpperCase() > b.saledate.toUpperCase()) ? 1 : -1;
         });
     },
+
+    transactionTableHeaderItems:() => {
+        return Template.instance().transactionTableHeaderItems.get();
+    },
+    jobDetailTableHeaderItems:() => {
+        return Template.instance().jobDetailTableHeaderItems.get();
+    },
+
     datatablerecordsjob: () => {
         return Template.instance().datatablerecordsjob.get().sort(function (a, b) {
             if (a.company == 'NA') {
