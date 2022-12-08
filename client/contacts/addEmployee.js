@@ -2599,6 +2599,7 @@ Template.employeescard.onRendered(function() {
                 });
 
             $('#edtDashboardOptions').editableSelect().on('click.editable-select', function(e, li) {
+            // $('#edtDashboardOptions').click(function(e) {
                 const $earch = $(this);
                 const offset = $earch.offset();
                 const dashboardoptions = e.target.value || '';
@@ -11067,6 +11068,7 @@ Template.employeescard.helpers({
         return Template.instance().isCloudUserPass.get();
     },
     record: () => {
+
         let temp = Template.instance().records.get();
         let phoneCodes = Template.instance().phoneCodeData.get();
         if (temp && temp.mobile && temp.country) {

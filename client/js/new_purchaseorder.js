@@ -8087,6 +8087,7 @@ Template.purchaseordercard.events({
         }, delayTimeAfterSound);
     },
     'click .btnSave': async (event, templateObject) => {
+          console.log(templateObject, "event");
         playSaveAudio();
         let tempObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -9252,6 +9253,7 @@ Template.purchaseordercard.events({
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
               addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
           });
+
             swal({
               title: 'SUCCESS',
               text: "Display settings is updated!",
