@@ -4476,7 +4476,7 @@ Template.new_quote.onRendered(() => {
     }
 
     $('#edtCustomerName').editableSelect().on('click.editable-select', function(e, li) {
-        console.log('Opening Edit Customer Modal...')
+
         const $each = $(this);
         const offset = $each.offset();
         $('#edtCustomerPOPID').val('');
@@ -7571,6 +7571,7 @@ Template.new_quote.events({
           }
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {

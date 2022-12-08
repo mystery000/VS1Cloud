@@ -7948,6 +7948,7 @@ Template.purchaseordercard.events({
           };
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
@@ -8117,7 +8118,7 @@ Template.purchaseordercard.events({
         }, delayTimeAfterSound);
     },
     'click .btnSave': async (event, templateObject) => {
-          console.log(templateObject, "event");
+
         playSaveAudio();
         let tempObject = Template.instance();
         let purchaseService = new PurchaseBoardService();

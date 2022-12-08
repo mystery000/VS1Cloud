@@ -182,6 +182,7 @@ Template.header.onRendered(function() {
 
         if (searchName.length <= 2) {
             productService.getGlobalSearchReport(searchName).then(function(data) {
+                
                 let dataSelectID = '';
                 let isProcessed = '';
                 var splashArrayList = new Array();
@@ -1028,7 +1029,7 @@ Template.header.onRendered(function() {
                 });
             }else if(segs[0] === Barcode_Prefix_Appointment){
                 productService.getGlobalSearchAppointment(segs[1]).then(function(data) {
-                    console.log('data:',data)
+
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
                     dataSelectID = segs[1] || '';
@@ -1044,7 +1045,7 @@ Template.header.onRendered(function() {
                 });
             }else if(segs[0] === Barcode_Prefix_Credit){
                 productService.getGlobalSearchCredit(segs[1]).then(function(data) {
-                    console.log('data:',data)
+   
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
                     dataSelectID = segs[1] || '';
@@ -1060,7 +1061,7 @@ Template.header.onRendered(function() {
                 });
             }else if(segs[0] === Barcode_Prefix_CRM){
                 productService.getGlobalSearchCredit(segs[1]).then(function(data) {
-                    console.log('data:',data)
+     
                     let dataSelectID = '';
                     $('.fullScreenSpin').css('display', 'none');
                     dataSelectID = segs[1] || '';

@@ -7417,6 +7417,7 @@ Template.refundcard.events({
             window.open('/refundlist', '_self');
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {

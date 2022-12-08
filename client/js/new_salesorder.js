@@ -9876,6 +9876,7 @@ Template.new_salesorder.events({
             FlowRouter.go('/salesorderslist?success=true');
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {

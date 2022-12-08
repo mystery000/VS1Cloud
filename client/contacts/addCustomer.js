@@ -4068,7 +4068,6 @@ Template.customerscard.helpers({
             })
             temp.mobile = temp.mobile.replace(thisCountry.dial_code, '0')
         }
-        console.log(temp);
         return temp;
     },
     phoneCodeList: ()=> {
