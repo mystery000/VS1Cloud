@@ -5,89 +5,155 @@
         </div>
 
         <style>
+		@media screen and (max-width: 387px) {
+	        .btnSettings {
+	          padding: 0px !important;
+	          font-size: 16px !important;
+	        }
+	        h2 {
+	          font-size: 24px;
+	        }
+	      }
 
-            .templateItem {
-                display: inline-flex !important;
+      @media screen and (max-height: 450px) and (max-width: 950px) {
+        .colPaid {
+          display: block !important;
+        }
+        #colBalanceDue {
+          /* display: none !important; */
+        }
+      }
 
-            }
+      @media screen and (max-width: 450px) {
+        .btnTransaction {
+          width: 80% !important;
+        }
 
-            .btnPreviewTemplate {
-                padding: 6px;
-                cursor: pointer;
-            }
+        .payNow {
+          margin-right: 8px !important;
+        }
 
-            .btnPreviewTemplate:hover {
-                background-color: #f8f9fc;
-            }
+        .btnMakePayment {
+          margin-left: 8px !important;
+        }
 
-            #tblInvoiceLine_length, #tblInvoiceLine_filter {
-              display: none;
-            }
-            .colUnitPriceEx, .colUnitPriceInc, .colAmountEx, .colAmountInc {
-              cursor: pointer;
-            }
-        </style>
-        {{#if invoicerecord}}
-            <form>
-                <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-                    <h2 style="margin: 16px;margin-bottom: 0px;">{{invoicerecord.lid}} {{> helpbutton}} <a
-                            class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
-                        <!--<button class="btn float-right" type="button" id="btnCustomFileds" name="btnCustomFileds"><i class="icon ion-android-more-horizontal"></i></button>-->
-                    </h2>
-                </header>
+        .colBtn {
+          padding: 0px;
+        }
 
-                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                    <div class="modal-dialog modal-sm" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="padding-bottom: 8px;">
-                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                                <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=64" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                {{> helpadvisor}}
-                                {{> helpgotoforum}}
-                            </div>
-                            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal4"> -->
-                {{> customfieldDroppop}}
-                {{> customfieldpop}}
-                <!-- </div> -->
-                <!-- Start {{> optionCustomFiled}} -->
-                <!-- <div class="modal fade" role="dialog" tabindex="-1" id="newCustomFieldPop">
-                    {{> customfieldformpop}}
+        .colPaid {
+          display: block !important;
+        }
+
+        #colBalanceDue {
+          /* display: none !important; */
+        }
+      }
+
+      .templateItem {
+        display: inline-flex !important;
+
+      }
+
+      .btnPreviewTemplate {
+        padding: 6px;
+        cursor: pointer;
+      }
+
+      .btnPreviewTemplate:hover {
+        background-color: #f8f9fc;
+      }
+
+      #tblInvoiceLine_length,
+      #tblInvoiceLine_filter {
+        display: none;
+      }
+
+      .colUnitPriceEx,
+      .colUnitPriceInc,
+      .colAmountEx,
+      .colAmountInc {
+        cursor: pointer;
+      }
+      .lead {
+          font-size: 25px;
+          font-weight: 500;
+          margin: 0px;
+          color: #696969;
+          float: right;
+        }
+
+        .leadTotal {
+          font-weight: 800 !important;
+        }
+
+        .leadHidden {
+          visibility: hidden;
+          height: 0px !important;
+        }
+
+        @media screen and (min-width: 1366px) {
+          .colComments {
+            padding-right: 2.5rem;
+          }
+        }
+
+        @media screen and (max-width: 450px) {
+          .desktopButtons {
+            display: none;
+          }
+
+          .mobileButtons {
+            display: flex !important;
+          }
+        }
+
+        .paidIcon {
+          animation: blink 2s ease-in infinite;
+          -webkit-animation: blink 2s ease-in infinite;
+        }
+    </style>
+
+    {{#if invoicerecord}}
+    <form>
+      <header
+        style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
+        <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
+          {{invoicerecord.lid}}
+          {{> helpbutton}}
+          <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i
+              class="icon ion-android-more-horizontal"></i></a>
+        </h2>
+      </header>
+
+      <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+        <div class="modal-dialog modal-sm" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="padding-bottom: 8px;">
+              <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                  aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
+                  class="btn btn-primary helpModal">View Help Video</a></p>
+              <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=60" target="_blank"
+                  class="btn btn-primary">Download Help File</a></p>
+              {{> helpadvisor}}
+              {{> helpgotoforum}}
+            </div>
+            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal"
+                type="button">Close</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start {{> optionCustomFiled}} -->
+      <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal4">
+                    {{> customfieldpop}}
                 </div> -->
-                <!-- <div class="modal fade" role="dialog" tabindex="-1" id="customFieldList">
-                    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4>Customer Field Values</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                            <style>
-                                .colCustField{
-                                width:3%!important;
-                                }
-                            </style>
-                                <table id="custListType" style="width:100%" class="dataTable table table-hover table-striped table-bordered custListType">
-                                    <thead>
-                                        <tr class="dnd-moved">
-                                            <th class="th colCustField" style="width:3%!important">ID</th>
-                                            <th class="th colFieldName">Custom Field Value</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- END  -->
+      {{> customfieldDroppop}}
+      {{> customfieldpop}}
+      <!-- END  -->
 
                 <!-- Start Attachemt -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
