@@ -129,8 +129,14 @@ Template.supplierpaymentcard.onRendered(() => {
         let useData = JSON.parse( supplierPaymentData[0].data );
 
         if(paymentID > 0) {
-            $("#sltCurrency").val(Session.get("tempCurrencyState"));
-            $("#exchange_rate").val(Session.get("tempExchangeRateState"));
+            curcode = Session.get("tempCurrencyState");
+            currate = Session.get("tempExchangeRateState");
+            $("#sltCurrency").val(curcode);
+            $("#exchange_rate").val(currate);
+
+            curcode = convertToForeignAmount($("#edtPaymentAmount").val(), currate, Currency);
+            $("#edtForeignAmount").val(curcode);
+            $("#sltCurrency").trigger("change");
             //FxGlobalFunctions.handleChangedCurrency(Session.get("tempCurrencyState"), defaultCurrencyCode);
         }
 
@@ -8461,7 +8467,6 @@ Template.supplierpaymentcard.events({
     // $("#edtForeignAmount").val("$" + foreignAmount);
 
     // calulateApplied();
-
     setTimeout(() => {
       calculateApplied();
     }, 300);
@@ -13048,6 +13053,10 @@ Template.supplierpaymentcard.events({
     onExchangeRateChange(e);
   },
   "change #exchange_rate": (e) => {
+      let srcamount = $(".dynamic-converter-js input.linePaymentamount.convert-from").val();
+      let dstamount = convertToForeignAmount(srcamount, $("#exchange_rate").val(), getCurrentCurrencySymbol());
+      console.log(srcamount, dstamount);
+      $(".linePaymentamount.convert-to").text(dstamount);
     onExchangeRateChange(e);
   },
   "change #edtForeignAmount": (e) => {
@@ -13107,6 +13116,7 @@ Template.supplierpaymentcard.events({
 
 
   },
+
   // "change #tblSupplierPaymentcard input.linePaymentamount.foreign.convert-to": (e, ui) => {
   //  setTimeout(() => {
   //   const calculatedAppliedAmount = onForeignTableInputChange();
