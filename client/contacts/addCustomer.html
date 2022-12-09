@@ -2363,7 +2363,7 @@
                                                             opacity: 1;
                                                         }
                                                     </style>
-                                                    {{> vs1_filtered_data_table  datatablerecords=datatablerecordsjob headers=jobDetailTableHeaderItems displayItems=tableHeaderDisplayItems}} 
+                                                    {{> non_transactional_list tablename="tblCustomerJobDetailsList"}} 
                                                     <!-- <table id="tblJoblist" name="tblJoblist" style="width:100%"
                                                         class="dataTable table table-striped table-bordered tblJoblist">
                                                         <thead>
@@ -3646,8 +3646,8 @@
                                                             opacity: 1;
                                                         }
                                                     </style>
-                                                        <!-- {{> vs1_filtered_data_table  datatablerecords=datatablerecordsjob headers=transactionTableHeaderItems}}    -->
-                                                        <table id="tblJoblist" name="tblJoblist" style="width:100%"
+                                                        {{> non_transactional_list tablename="tblCustomerTransactionList"}}
+                                                        <!-- <table id="tblJoblist" name="tblJoblist" style="width:100%"
                                                         class="dataTable table table-striped table-bordered tblJoblist">
                                                         <thead>
                                                             <tr class="dnd-moved">
@@ -3723,7 +3723,7 @@
                                                             {{/each}}
                                                             {{/if}}
                                                         </tbody>
-                                                    </table>
+                                                    </table> -->
                                                 </div>
                                             </div>
                                         </div>
