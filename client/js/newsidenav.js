@@ -247,7 +247,7 @@ Template.newsidenav.onRendered(function() {
           this.hidePopper();
         }, 1500);
       });
-      
+
       this.arrow = $('<div class="popper-arrow"></div>').appendTo(this.popper);
     }
     MyPopper.prototype.createInstance = function () {
@@ -1670,6 +1670,12 @@ Template.newsidenav.onRendered(function() {
             addVS1Data('TTaxcodeVS1', JSON.stringify(data));
             $("<span class='process'>Tax Codes Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
         }).catch(function(err) {
+
+        });
+
+        sideBarService.getSubTaxCode().then(function (dataReload) {
+          addVS1Data('TSubTaxVS1', JSON.stringify(dataReload));
+        }).catch(function (err) {
 
         });
     }
@@ -9431,4 +9437,3 @@ Template.newsidenav.helpers({
       return Template.instance().isAppointmentSMS.get();
     }
 });
-

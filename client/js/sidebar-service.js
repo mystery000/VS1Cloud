@@ -4094,6 +4094,14 @@ export class SideBarService extends BaseService {
       return false
     }
   }
+  getSubTaxCode() {
+     let options = {
+         PropertyList: "ID,Code,Description,Category,Active,GlobalRef,ISEmpty,RegionName",
+         select: "[Active]=true",
+     };
+     return this.getList(this.ERPObjects.TSubTaxCode, options);
+ }
+ 
   changeDialFormat (mobile, country) {
 
 
@@ -4126,8 +4134,8 @@ export class SideBarService extends BaseService {
 
   updateVS1MenuConfig (menuType) {
     const prefValue = '{"Location": \"' + menuType + '\", "AccessLevel": 1, "AccessLevelName": \"Full Access\"}'
-    return this.POST( 
-      this.erpGet.TPreference, 
+    return this.POST(
+      this.erpGet.TPreference,
       {
           "type": "TPreference",
           "fields": {
