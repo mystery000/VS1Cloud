@@ -279,17 +279,23 @@ Template.newLeaveRequestModal.onRendered(() => {
             changeMonth: true,
             changeYear: true,
             yearRange: "-90:+10",
-        });
+        });  
+        $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", new Date().getDay+7); 
+ 
+
         $('#edtLeavePayPeriod').editableSelect('add', 'Weekly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Fortnightly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Twice Monthly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Four Weekly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Monthly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Quarterly');
+
         $('#edtLeavePayStatus').editableSelect('add', 'Awaiting');
         $('#edtLeavePayStatus').editableSelect('add', 'Approved');
         $('#edtLeavePayStatus').editableSelect('add', 'Denied');
         $('#edtLeavePayStatus').editableSelect('add', 'Deleted');
+
+        
 
         $('#period').editableSelect('add', 'Weekly');
         $('#period').editableSelect('add', 'Fortnightly');

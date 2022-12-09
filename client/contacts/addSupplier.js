@@ -748,7 +748,7 @@ Template.supplierscard.onRendered(function() {
             // taxcode:data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
         };
 
-        console.log("In addSupplier.js ===", data);
+
         $('#sltCurrency').val(data.fields.ForeignExchangeCode || CountryAbbr);
 
         if ((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2) &&
@@ -2782,7 +2782,7 @@ Template.supplierscard.helpers({
         if (temp && temp.mobile) {
             temp.mobile = temp.mobile.replace('+61', '0')
         }
-        //console.log(temp);
+
         return temp;
     },
     countryList: () => {

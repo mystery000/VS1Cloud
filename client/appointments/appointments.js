@@ -1054,6 +1054,7 @@ Template.appointments.onRendered(function() {
                 }
             },
             eventClick: function(info) {
+
                 $("#frmAppointment")[0].reset();
                 $("#btnHold").prop("disabled", false);
                 $("#btnStartAppointment").prop("disabled", false);
@@ -1775,6 +1776,7 @@ Template.appointments.onRendered(function() {
                 }
             },
             eventClick: function(info) {
+
                 $("#frmAppointment")[0].reset();
                 $("#btnHold").prop("disabled", false);
                 $("#btnStartAppointment").prop("disabled", false);
@@ -2364,6 +2366,7 @@ Template.appointments.onRendered(function() {
                 }
             },
             eventContent: function(event) {
+
                 let title = document.createElement("p");
                 if (event.event.title) {
                     title.innerHTML = event.timeText + " " + event.event.title;
@@ -2506,7 +2509,9 @@ Template.appointments.onRendered(function() {
                 // }
             }
         });
+
         calendar.render();
+        
         $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:170px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="off" checked="checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
         $('.fc-today-button').prop('disabled', false);
         let draggableEl = document.getElementById("external-events-list");

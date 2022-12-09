@@ -17,11 +17,11 @@
                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                     <button id="btnNewBOM" name="btnNewBOM" class="btn btn-primary" type="button" style="margin: 12px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New BOM</button>
                 </div>
-                {{#if equals isSetupFinished false}}
+                <!-- {{#if equals isSetupFinished false}} -->
                     <div class="col-2 setupIncompleatedMsg text-danger">
-                        <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
+                        <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Wizard Incomplete</a></h2>
                     </div>
-                {{/if}}
+                <!-- {{/if}} -->
                 <div class="col-5 col-md-4 d-xl-flex justify-content-xl-end align-items-xl-start">
                     {{> export_import_print_display_button tablename="tblBOMList"}}
                 </div>

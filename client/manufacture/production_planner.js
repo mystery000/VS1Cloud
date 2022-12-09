@@ -38,7 +38,7 @@ Template.production_planner.onRendered(async function() {
         return new Promise(async(resolve, reject) => {
             getVS1Data('TProcessStep').then(function(dataObject) {
                 if (dataObject.length == 0) {
-                    manufacturingService.getAllProcessData().then(function(data) {
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(function(data) {
                         addVS1Data('TProcessStep', JSON.stringify(data))
                         let useData = data.tprocessstep;
                         let temp = []
@@ -80,13 +80,34 @@ Template.production_planner.onRendered(async function() {
     await templateObject.resources.set(resources);
     let workorders = localStorage.getItem('TWorkorders') ? JSON.parse(localStorage.getItem('TWorkorders')) : []
         // templateObject.workorders.set(workorders);
+    async function getPlanData() {
+        return new Promise(async(resolve, reject)=> {
+            let returnVal = [];
+            getVS1Data('TProductionPlanData').then(function(dataObject) {
+                if(dataObject.length == 0) {
+                    resolve(returnVal)
+                } else {
+                    returnVal = JSON.parse(dataObject[0].data.tproductionplandata[0].fields.events)
+                    if(returnVal == undefined) {
+                        returnVal = [];
+                    }
+                    resolve(returnVal)
+                }
+            }).catch(function(e) {
+                returnVal = [];
+                resolve(returnVal)
+            })
+        })
+    }
     async function getEvents() {
         return new Promise(async function(resolve, reject) {
-            let events = [];
-            let eventsData = localStorage.getItem('TProductionPlan') ? JSON.parse(localStorage.getItem('TProductionPlan')) : [];
+            // let events = [];
+            let planData = await getPlanData();
+            
+            let eventsData = planData;
             if (eventsData.length == 0) {
 
-                let events = [];
+                let tempEvents = [];
                 for (let i = 0; i < workorders.length; i++) {
                     let processName = workorders[i].BOM.process;
                     let productName = workorders[i].BOM.productName;
@@ -127,14 +148,14 @@ Template.production_planner.onRendered(async function() {
                             "fromStocks": stockRaws
                         }
                     }
-                    events.push(event);
+                    tempEvents.push(event);
                 }
-                templateObject.events.set(events)
-                resolve(events);
+                templateObject.events.set(tempEvents)
+                resolve(tempEvents);
             } else {
-                events = eventsData;
-                templateObject.events.set(events)
-                resolve(events)
+                // events = eventsData;
+                templateObject.events.set(eventsData)
+                resolve(eventsData)
             }
         })
     }
@@ -448,17 +469,24 @@ Template.production_planner.events({
         $('.fullScreenSpin').css('display', 'inline-block')
         let templateObject = Template.instance();
         let events = templateObject.events.get();
-        localStorage.setItem('TProductionPlan', JSON.stringify(events));
-        $('.fullScreenSpin').css('display', 'none');
-        swal({
-            title: 'Success',
-            text: 'Production planner has been saved successfully',
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'Continue',
-        }).then((result) => {
-            window.location.reload();
-        });
+        let objectDetail = {
+            type: 'TProductionPlanData',
+            fields: {
+                events: events
+            }
+        }
+        addVS1Data('TProductionPlanData', JSON.stringify(objectDetail)).then(function() {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Success',
+                text: 'Production planner has been saved successfully',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Continue',
+            }).then((result) => {
+                window.location.reload();
+            });
+        })
     },
 
     'click .btn-print-event': function(event) {
@@ -486,36 +514,38 @@ Template.production_planner.events({
             filteredEvents.sort((a, b) => {
                 return new Date(a.start) - new Date(b.start);
             }); 
+            if(filteredEvents.length > 0) {
 
-            if(new Date(filteredEvents[0].start).getTime() > new Date().getTime()) {
-                let firstDuration = new Date(filteredEvents[0].end).getTime() - new Date(filteredEvents[0].start).getTime()
-                filteredEvents[0].start = new Date();
-                filteredEvents[0].end  = new Date(new Date().getTime() + firstDuration); 
-            }
-            let firstIndex = cloneEvents.findIndex(event => {
-                return event.resourceId == filteredEvents[0].resourceId && event.extendedProps.orderId == filteredEvents[0].extendedProps.orderId
-            })
-            if(firstIndex > -1) {
-                cloneEvents[firstIndex] = filteredEvents[0];
-            }
-
-            if(filteredEvents.length >=1) {
-                for (let j = 1; j<filteredEvents.length; j++) {
-                    async function updateEvent() {
-                        return new Promise(async(resolve, reject) => {
-                            let eventDuration = new Date(filteredEvents[j].end).getTime() - new Date(filteredEvents[j].start).getTime();
-                            let index = cloneEvents.findIndex(event => {
-                                return event.resourceId == filteredEvents[j].resourceId && event.title == filteredEvents[j].title;
-                            })
-                            cloneEvents[index].start =  new Date(filteredEvents[j-1].end);
-                            let endTime = new Date()
-                            endTime.setTime(new Date(filteredEvents[j - 1].end).getTime() + eventDuration)
-                            cloneEvents[index].end = endTime;
-                            resolve()
-                        })
-                    }
-                    updateEvent()
+                if(new Date(filteredEvents[0].start).getTime() > new Date().getTime()) {
+                    let firstDuration = new Date(filteredEvents[0].end).getTime() - new Date(filteredEvents[0].start).getTime()
+                    filteredEvents[0].start = new Date();
+                    filteredEvents[0].end  = new Date(new Date().getTime() + firstDuration); 
                 }
+                let firstIndex = cloneEvents.findIndex(event => {
+                    return event.resourceId == filteredEvents[0].resourceId && event.extendedProps.orderId == filteredEvents[0].extendedProps.orderId
+                })
+                if(firstIndex > -1) {
+                    cloneEvents[firstIndex] = filteredEvents[0];
+                }
+                if(filteredEvents.length > 1) {
+                    for (let j = 1; j<filteredEvents.length; j++) {
+                        async function updateEvent() {
+                            return new Promise(async(resolve, reject) => {
+                                let eventDuration = new Date(filteredEvents[j].end).getTime() - new Date(filteredEvents[j].start).getTime();
+                                let index = cloneEvents.findIndex(event => {
+                                    return event.resourceId == filteredEvents[j].resourceId && event.title == filteredEvents[j].title;
+                                })
+                                cloneEvents[index].start =  new Date(filteredEvents[j-1].end);
+                                let endTime = new Date()
+                                endTime.setTime(new Date(filteredEvents[j - 1].end).getTime() + eventDuration)
+                                cloneEvents[index].end = endTime;
+                                resolve()
+                            })
+                        }
+                        updateEvent()
+                    }
+                }
+
             }else {
 
             }

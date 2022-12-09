@@ -16,7 +16,7 @@ export class ManufacturingService extends BaseService {
             LimitFrom: parseInt(limitfrom)
           }
         }
-      
+        return this.getList(this.ERPObjects.TProcessStep, options);
     }  
     
       

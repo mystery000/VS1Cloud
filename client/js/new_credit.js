@@ -72,7 +72,7 @@ Template.creditcard.onCreated(() => {
     templateObject.accountID = new ReactiveVar();
     templateObject.stripe_fee_method = new ReactiveVar();
     templateObject.subtaxcodes = new ReactiveVar([]);
-
+    templateObject.hasFollow = new ReactiveVar(false);
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
 });
@@ -113,6 +113,37 @@ Template.creditcard.onRendered(() => {
         $('.uploadedImage').attr('src', imageData);
     }
     const templateObject = Template.instance();
+    templateObject.hasFollowings = async function() {
+
+        var currentDate = new Date();
+        let purchaseService = new PurchaseBoardService();
+
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var creditData = await purchaseService.getOneCreditData(currentInvoice);
+            var orderDate = creditData.fields.OrderDate;
+            var fromDate = orderDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingCredits = await sideBarService.getTCreditListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var creditList = followingCredits.tcreditlist;
+            if (creditList.length > 1) {
+                templateObject.hasFollow.set(true);
+            } else {
+                templateObject.hasFollow.set(false);
+            }
+        }
+    }
+    templateObject.hasFollowings();
+
     const purchaseService = new PurchaseBoardService();
     const clientsService = new PurchaseBoardService();
     const contactService = new ContactService();
@@ -6438,30 +6469,9 @@ Template.creditcard.events({
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
-        var currentDate = new Date();
-        let purchaseService = new PurchaseBoardService();
-        var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var creditList = [];
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var creditData = await purchaseService.getOneCreditData(currentInvoice);
-            var orderDate = creditData.fields.OrderDate;
-            var fromDate = orderDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingCredits = await sideBarService.getTCreditListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            creditList = followingCredits.tcreditlist;
-        }
+        
         if(targetID != undefined) {
             times++;
             if (times == 1) {
@@ -6561,7 +6571,7 @@ Template.creditcard.events({
                 }
             }
         } else {
-            if(creditList.length > 1) $("#footerDeleteModal2").modal("toggle");
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
         }
     },
@@ -6674,6 +6684,7 @@ Template.creditcard.events({
           };
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
