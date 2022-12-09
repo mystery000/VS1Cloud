@@ -191,8 +191,31 @@ const authenticatedRoutes = FlowRouter.group({
 
 FlowRouter.triggers.exit([
     function (context, redirect) {
-        if (!confirm("Changes you made may not be saved.")) {
-            redirect(context.path);
+        if (JSON.parse(localStorage.getItem("isFormUpdated"))) {
+            // console.log("-------------------------------", context.path, window.location.href);
+            // redirect(context.path);
+            // swal({
+            //     title: 'WARNING!',
+            //     text: 'Do you wish to save your changes?',
+            //     type: 'question',
+            //     showCancelButton: true,
+            //     confirmButtonText: 'Yes',
+            //     cancelButtonText: 'No'
+            // }).then((result) => {
+            //     console.log("-------------------------------", result);
+            //     if (result.value) {
+            //     //
+            //     } else if (result.dismiss === 'cancel') {
+            //         window.location.reload();
+            //         // redirect(window.location.href);
+            //         localStorage.setItem("isFormUpdated", false);
+            //     }
+            // });
+            if (confirm("Changes you made may not be saved.")) {
+                localStorage.setItem("isFormUpdated", false);
+            } else {
+                redirect(context.path);
+            }
         }
     }
 ], {only: ["basreturn", "depositcard", "chequecard", "newbankrule", "customerscard", "workordercard",
