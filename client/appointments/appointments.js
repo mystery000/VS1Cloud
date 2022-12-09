@@ -2382,7 +2382,7 @@ Template.appointments.onRendered(function() {
                     title.style.color = "#ffffff";
                 } else {
                     var empid = event.event._def.publicId.split(':')[1];
-                    $(title).append( "<div><p>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
+                    $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
 
                     title.style.color = "#dddddd";
                 }
