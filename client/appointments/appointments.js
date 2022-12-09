@@ -2353,7 +2353,7 @@ Template.appointments.onRendered(function() {
                     )
                 ) {
                     $(".fc-event-main p").css({
-                        "font-size": "8px",
+                        "font-size": "12px",
                     });
                     //     $(info.el).tooltip({
                     //         title: info.event.title.replaceAll('<br>', "\n"),
