@@ -374,12 +374,12 @@ Template.non_transactional_list.onRendered(function() {
               { index: 6, label: 'Country', class: 'colCountry', active: true, display: true, width: "200"},
               { index: 7, label: 'Rate Last Modified', class: 'colRateLastModified', active: false, display: true, width: "200"},
               { index: 8, label: 'Description', class: 'colDescription', active: true, display: true, width: ""},
-              { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
-              { index: 9, label: 'Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100"},
-              { index: 9, label: 'Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150"},
-              { index: 9, label: 'Lower Variation', class: 'colLowerVariation', active: false, display: true, width: "150"},
-              { index: 9, label: 'Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250"},
-              { index: 9, label: 'Country ID', class: 'colCountryID', active: false, display: true, width: "100"},
+              { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
+              { index: 11, label: 'Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100"},
+              { index: 12, label: 'Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150"},
+              { index: 13, label: 'Lower Variation', class: 'colLowerVariation', active: false, display: true, width: "150"},
+              { index: 14, label: 'Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250"},
+              { index: 15, label: 'Country ID', class: 'colCountryID', active: false, display: true, width: "100"},
           ];
           }else if(currenttablename === "tblTitleList"){
             reset_data = [
@@ -4490,7 +4490,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
         });
       }
 
-    
+
 
       templateObject.displayCurrencyListData = async function (data) {
             var splashArrayCurrencyList = new Array();
@@ -4853,7 +4853,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                             exportOptions: {
                                 columns: ':visible'
                             }
-    
+
                         }],
                     select: true,
                     destroy: true,
@@ -4871,15 +4871,15 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                         $('#'+currenttablename+'_ellipsis').addClass('disabled');
                         if (oSettings._iDisplayLength == -1) {
                             if (oSettings.fnRecordsDisplay() > 150) {
-    
+
                             }
                         } else {
-    
+
                         }
                         if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                             $('.paginate_button.page-item.next').addClass('disabled');
                         }
-    
+
                         $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
                       $('.fullScreenSpin').css('display', 'inline-block');
                       });
@@ -4901,15 +4901,15 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                         //
                         // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                     }
-    
+
                 }).on('page', function () {
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
                 }).on('column-reorder', function () {
-    
+
                 }).on('length.dt', function (e, settings, len) {
-    
+
                   $(".fullScreenSpin").css("display", "inline-block");
                   let dataLenght = settings._iDisplayLength;
                   if (dataLenght == -1) {
@@ -4927,11 +4927,11 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 });
                 $(".fullScreenSpin").css("display", "none");
             }, 0);
-    
+
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
           }
 
-      
+
         templateObject.getProcessListData = async function () {
           getVS1Data('TProcessStep').then(function(dataObject){
             if(dataObject.length == 0) {
@@ -4952,8 +4952,8 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             })
           })
         }
-    
-    
+
+
         templateObject.displayProcessListData = async function (data) {
           var splashArrayProcessList = new Array();
           for (let i = 0; i < data.tprocessstep.length; i++) {
@@ -4974,13 +4974,13 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             splashArrayProcessList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayProcessList)
           }
-  
+
           if(templateObject.transactiondatatablerecords.get()) {
             setTimeout(function () {
                 MakeNegative();
             }, 100);
           }
-  
+
           setTimeout(function () {
             //$('#'+currenttablename).removeClass('hiddenColumn');
             $('#'+currenttablename).DataTable({
@@ -5081,7 +5081,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                         exportOptions: {
                             columns: ':visible'
                         }
-  
+
                 }],
                 select: true,
                 destroy: true,
@@ -5100,23 +5100,23 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     $('#'+currenttablename+'_ellipsis').addClass('disabled');
                     if (oSettings._iDisplayLength == -1) {
                         if (oSettings.fnRecordsDisplay() > 150) {
-  
+
                         }
                     } else {
-  
+
                     }
                     if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                         $('.paginate_button.page-item.next').addClass('disabled');
                     }
-  
+
                     $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
                       $('.fullScreenSpin').css('display', 'inline-block');
                       //var splashArrayCustomerListDupp = new Array();
                       let dataLenght = oSettings._iDisplayLength;
                       let customerSearch = $('#'+currenttablename+'_filter input').val();
-  
+
                       manufacturingService.getAllProcessData(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
-  
+
                       for (let j = 0; j < dataObjectnew.tprocessstep.length; j++) {
                           var dataListProcessDupp = [
                             dataObjectnew.tprocessstep[i].fields.ID || "",
@@ -5132,7 +5132,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                             dataObjectnew.tprocessstep[i].fields.TotalHourlyCost || 0,
                             dataObjectnew.tprocessstep[i].fields.Wastage || ""
                           ];
-  
+
                           splashArrayProcessList.push(dataListProcessDupp);
                           //}
                       }
@@ -5145,13 +5145,13 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                       setTimeout(function () {
                         $('#'+currenttablename).dataTable().fnPageChange('last');
                       }, 400);
-  
+
                       $('.fullScreenSpin').css('display', 'none');
-  
+
                       }).catch(function (err) {
                           $('.fullScreenSpin').css('display', 'none');
                       });
-  
+
                     });
                   setTimeout(function () {
                       MakeNegative();
@@ -5159,23 +5159,23 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 },
                 language: { search: "",searchPlaceholder: "Search List..." },
                 "fnInitComplete": function (oSettings) {
-                      
+
                       $("<button class='btn btn-primary btnRefreshProcessList' type='button' id='btnRefreshProcessList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = data.tprocessstep.length || 0; //get count from API data
-  
+
                     return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
-  
+
             }).on('page', function () {
                 setTimeout(function () {
                     MakeNegative();
                 }, 100);
             }).on('column-reorder', function () {
-  
+
             }).on('length.dt', function (e, settings, len) {
-  
+
               $(".fullScreenSpin").css("display", "inline-block");
               let dataLenght = settings._iDisplayLength;
               if (dataLenght == -1) {
@@ -5193,11 +5193,11 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             });
             $(".fullScreenSpin").css("display", "none");
           }, 0);
-  
+
           $('div.dataTables_filter input').addClass('form-control form-control-sm');
-  
-  
-        }  
+
+
+        }
         //Check URL to make right call.
         if(currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist"){
             templateObject.getContactOverviewData();
@@ -5276,7 +5276,7 @@ Template.non_transactional_list.events({
       await clearData('TProspectList');
       templateObject.getLeadListData(true);
     }else if(currenttablename == "tblCurrencyList"){
-      await clearData('TCurrency');
+      await clearData('TCurrencyList');
       templateObject.getCurrencyListData(true);
     }else if(currenttablename === "tblTitleList"){
       templateObject.getTitleListData(true);
@@ -5332,7 +5332,7 @@ Template.non_transactional_list.events({
       await clearData('TProspectList');
       templateObject.getLeadListData(false);
     }else if(currenttablename == "tblCurrencyList"){
-      await clearData('TCurrency');
+      await clearData('TCurrencyList');
       templateObject.getCurrencyListData(false);
     }else if(currenttablename === "tblTitleList"){
       templateObject.getTitleListData(false);
