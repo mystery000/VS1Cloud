@@ -3977,7 +3977,6 @@ function openEditTaskModal(id, type) {
         $(".fullScreenSpin").css("display", "none");
         if (data.fields.ID == id) {
             let selected_record = data.fields;
-            console.log("selected_record======", selected_record);
 
             $("#txtCrmTaskID").val(selected_record.ID);
             $("#txtCrmProjectID").val(selected_record.ProjectID);
