@@ -2366,14 +2366,14 @@ Template.appointments.onRendered(function() {
             },
             eventContent: function(event) {
 
-                // let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-                // let eventLeave  = [];
-                // let eventStatus = [];
+                let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                let eventLeave  = [];
+                let eventStatus = [];
 
-                // leaveemployeerecords.forEach((item) => {
-                //     eventLeave[item.EmployeeID]  = item.LeaveMethod;
-                //     eventStatus[item.EmployeeID] = item.Status;
-                // });
+                leaveemployeerecords.forEach((item) => {
+                    eventLeave[item.EmployeeID]  = item.LeaveMethod;
+                    eventStatus[item.EmployeeID] = item.Status;
+                });
 
                 let title = document.createElement("p"); 
                 if (event.timeText != '') {
@@ -2381,10 +2381,10 @@ Template.appointments.onRendered(function() {
                     title.style.backgroundColor = event.backgroundColor;
                     title.style.color = "#ffffff";
                 } else {
-                    // var empid = event.event._def.publicId.split(':')[1];
-                    // $(title).append( "<div><p>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
+                    var empid = event.event._def.publicId.split(':')[1];
+                    $(title).append( "<div><p>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
 
-                    // title.style.color = "#dddddd";
+                    title.style.color = "#dddddd";
                 }
 
                 let arrayOfDomNodes = [title];
