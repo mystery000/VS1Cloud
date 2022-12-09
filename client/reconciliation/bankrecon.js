@@ -187,7 +187,7 @@ Template.bankrecon.onRendered(function() {
                             data.ttobereconcileddeposit[r].DepositLineID +
                             '"><input type="checkbox" class="custom-control-input reconchkboxdep" id="formCheckDep_' +
                             data.ttobereconcileddeposit[r].DepositID +
-                            '" /><label class="custom-control-label" for="formCheck_' +
+                            '" style="margin:0 !important"/><label class="custom-control-label" for="formCheck_' +
                             data.ttobereconcileddeposit[r].DepositID +
                             '"></label></div>',
                             data.ttobereconcileddeposit[r].DepositDate != '' ? moment(data.ttobereconcileddeposit[r].DepositDate).format("DD/MM/YYYY") : data.ttobereconcileddeposit[r].DepositDate,
@@ -391,7 +391,7 @@ Template.bankrecon.onRendered(function() {
                             data.ttobereconciledwithdrawal[j].DepositLineID +
                             '"><input type="checkbox" class="custom-control-input reconchkboxwith" id="formCheckWith_' +
                             data.ttobereconciledwithdrawal[j].DepositID +
-                            '" /><label class="custom-control-label" for="formCheck_' +
+                            '" style="margin:0 !important" /><label class="custom-control-label" for="formCheck_' +
                             data.ttobereconciledwithdrawal[j].DepositID +
                             '"></label></div>',
                             data.ttobereconciledwithdrawal[j].DepositDate != '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("DD/MM/YYYY") : data.ttobereconciledwithdrawal[j].DepositDate,
@@ -778,7 +778,7 @@ Template.bankrecon.onRendered(function() {
                                         data.fields.DepositLines[i].fields.DepositLineID +
                                         '"><input type="checkbox" class="custom-control-input reconchkboxdep" id="formCheckDep_' +
                                         reconepID +
-                                        '" /><label class="custom-control-label" for="formCheck_' +
+                                        '" style="margin:0 !important" /><label class="custom-control-label" for="formCheck_' +
                                         reconepID +
                                         '"></label></div>',
                                         data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
@@ -1040,7 +1040,7 @@ Template.bankrecon.onRendered(function() {
                                         data.fields.WithdrawalLines[j].fields.DepositLineID +
                                         '"><input type="checkbox" class="custom-control-input reconchkboxwith" id="formCheckWith_' +
                                         reconepWidID +
-                                        '" /><label class="custom-control-label" for="formCheck_' +
+                                        '" style="margin:0 !important" /><label class="custom-control-label" for="formCheck_' +
                                         reconepWidID +
                                         '"></label></div>',
                                         data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
