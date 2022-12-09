@@ -12,7 +12,7 @@
     }
 
     #nav-subtasks .dataTables_wrapper {
-      min-height: 32vh !important;
+      min-height: 22vh !important;
       padding: 0 10px;
     }
   </style>
@@ -26,7 +26,7 @@
               <div class="row">
                 <div class="col-6">
                   <h4>
-                    <div id="add-account-title" name="add-account-title" style="float: left;">Task to do is</div>
+                    <div id="add-account-title" name="add-account-title" style="float: left; font-size: xx-large;">Task to do is</div>
                   </h4>
                 </div>
                 <div class="col-6" style="display: inline-flex; justify-content: end;">
@@ -116,7 +116,7 @@
           <div class="row">
             <div class="col-12">
               <div class="form-group" style="margin: 4px;">
-                <input type="text" class="form-control editTaskNameDescription editTaskDetailName" id="edtAccountName" name="edtAccountName">
+                <input type="text" class="form-control editTaskNameDescription editTaskDetailName" id="edtAccountName" name="edtAccountName" style="font-size: larger;">
               </div>
             </div>
           </div>
@@ -138,12 +138,12 @@
             </div>
             <div class="col-6 col-md-4">
                 <div class="form-group" style="margin: 4px;"><label>Contact Email</label>
-                    <input type="text" class="form-control disableBg" id="contactEmailClient" name="contactEmailClient" disabled>
+                    <input type="text" class="form-control disableBg" id="contactEmailClient" name="contactEmailClient">
                 </div>
             </div>
             <div class="col-6 col-md-4">
               <div class="form-group" style="margin: 4px;"><label>Contact Phone</label>
-                  <input type="text" class="form-control disableBg" id="contactPhoneClient" name="contactPhoneClient" disabled>
+                  <input type="text" class="form-control disableBg" id="contactPhoneClient" name="contactPhoneClient">
               </div>
             </div>
           </div>
@@ -156,12 +156,12 @@
             </div>
             <div class="col-6 col-md-4">
                 <div class="form-group" style="margin: 4px;"><label>Contact Email</label>
-                    <input type="text" class="form-control disableBg" id="contactEmailUser" name="contactEmailUser" disabled>
+                    <input type="text" class="form-control disableBg" id="contactEmailUser" name="contactEmailUser">
                 </div>
             </div>
             <div class="col-6 col-md-4">
               <div class="form-group" style="margin: 4px;"><label>Contact Phone</label>
-                  <input type="text" class="form-control disableBg" id="contactPhoneUser" name="contactPhoneUser" disabled>
+                  <input type="text" class="form-control disableBg" id="contactPhoneUser" name="contactPhoneUser">
               </div>
             </div>
           </div>
@@ -205,11 +205,13 @@
           <div class="row">
             <div class="col-12">
               <label>Activity</label>
-              <div class="row">
-                <span class="activityAdded"></span>
-                <hr style="width: 100%; margin: 0px 32px;" />
+              <div class="row" style="border: 1px solid #a1a1a1; margin: 0 5px;">
+                <div class="row">
+                  <span class="activityAdded"></span>
+                  <hr style="width: 100%; margin: 0px 32px;" />
+                </div>
+                <div class="col-12 task-activity-row">
               </div>
-              <div class="col-12 task-activity-row">
                 <!-- <div class="row" style="padding: 16px;">
                   <div class="col-12">
                     <span class="activityDate">9999-99-99</span>
@@ -239,11 +241,11 @@
               <div class="row">
                 <div class="col-12">
                   <label>Sub-Tasks</label>
-                  <button type="button" class="btn btn-link btnAddSubTask" style="margin: -8px 16px 0px 16px; float: right;"><i
-                      class="fas fa-plus" style="margin-right: 8px;"></i> Add Sub-Task</button>
+                  <button type="button" class="btn btn-link btnAddSubTask btnNav btn-primary" style="margin: -8px 16px 0px 16px; float: right; color: white;"><i
+                      class="fas fa-plus" style="margin-right: 8px; color: white;"></i> Sub-Task</button>
                 </div>
               </div>
-              <div class="tab-pane fade show active" id="nav-subtasks" style="min-height: 40vh;" role="tabpanel"
+              <div class="tab-pane fade show active" id="nav-subtasks" role="tabpanel"
                   aria-labelledby="nav-subtasks-tab">
                   <div class="row no-gutters">
                     <div class="subtask-row col-12">
@@ -830,7 +832,8 @@
     }
 
     .disableBg {
-      background-color: #e3e3e3 !important;
+      /* background-color: #e3e3e3 !important; */
+      background-color: #ffffff !important;
     }
 
     .modal-content::before {

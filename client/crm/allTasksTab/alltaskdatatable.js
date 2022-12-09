@@ -3977,6 +3977,7 @@ function openEditTaskModal(id, type) {
         $(".fullScreenSpin").css("display", "none");
         if (data.fields.ID == id) {
             let selected_record = data.fields;
+            console.log("selected_record======", selected_record);
 
             $("#txtCrmTaskID").val(selected_record.ID);
             $("#txtCrmProjectID").val(selected_record.ProjectID);
@@ -4006,12 +4007,34 @@ function openEditTaskModal(id, type) {
             if (selected_record.CustomerID) {
                 $('#contactID').val(selected_record.CustomerID)
                 $('#contactType').val('Customer')
+
+                contactService.getOneEmployeeDataEx(selected_record.CustomerID).then(function(empDetailInfo) {
+                    $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                    $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                }).catch(function(err) {
+    
+                });
             } else if (selected_record.LeadID) {
                 $('#contactID').val(selected_record.LeadID)
                 $('#contactType').val('Lead')
+
+                contactService.getOneLeadDataEx(selected_record.LeadID).then(function(empDetailInfo) {
+                    $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                    $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                }).catch(function(err) {
+    
+                });
             } else {
                 $('#contactID').val(selected_record.SupplierID)
                 $('#contactType').val('Supplier')
+                if (selected_record.SupplierID) {
+                    contactService.getOneSupplierDataEx(selected_record.SupplierID).then(function(empDetailInfo) {
+                        $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                        $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                    }).catch(function(err) {
+        
+                    });
+                }
             }
 
             let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
