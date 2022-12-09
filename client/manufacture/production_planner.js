@@ -514,36 +514,38 @@ Template.production_planner.events({
             filteredEvents.sort((a, b) => {
                 return new Date(a.start) - new Date(b.start);
             }); 
+            if(filteredEvents.length > 0) {
 
-            if(new Date(filteredEvents[0].start).getTime() > new Date().getTime()) {
-                let firstDuration = new Date(filteredEvents[0].end).getTime() - new Date(filteredEvents[0].start).getTime()
-                filteredEvents[0].start = new Date();
-                filteredEvents[0].end  = new Date(new Date().getTime() + firstDuration); 
-            }
-            let firstIndex = cloneEvents.findIndex(event => {
-                return event.resourceId == filteredEvents[0].resourceId && event.extendedProps.orderId == filteredEvents[0].extendedProps.orderId
-            })
-            if(firstIndex > -1) {
-                cloneEvents[firstIndex] = filteredEvents[0];
-            }
-
-            if(filteredEvents.length >=1) {
-                for (let j = 1; j<filteredEvents.length; j++) {
-                    async function updateEvent() {
-                        return new Promise(async(resolve, reject) => {
-                            let eventDuration = new Date(filteredEvents[j].end).getTime() - new Date(filteredEvents[j].start).getTime();
-                            let index = cloneEvents.findIndex(event => {
-                                return event.resourceId == filteredEvents[j].resourceId && event.title == filteredEvents[j].title;
-                            })
-                            cloneEvents[index].start =  new Date(filteredEvents[j-1].end);
-                            let endTime = new Date()
-                            endTime.setTime(new Date(filteredEvents[j - 1].end).getTime() + eventDuration)
-                            cloneEvents[index].end = endTime;
-                            resolve()
-                        })
-                    }
-                    updateEvent()
+                if(new Date(filteredEvents[0].start).getTime() > new Date().getTime()) {
+                    let firstDuration = new Date(filteredEvents[0].end).getTime() - new Date(filteredEvents[0].start).getTime()
+                    filteredEvents[0].start = new Date();
+                    filteredEvents[0].end  = new Date(new Date().getTime() + firstDuration); 
                 }
+                let firstIndex = cloneEvents.findIndex(event => {
+                    return event.resourceId == filteredEvents[0].resourceId && event.extendedProps.orderId == filteredEvents[0].extendedProps.orderId
+                })
+                if(firstIndex > -1) {
+                    cloneEvents[firstIndex] = filteredEvents[0];
+                }
+                if(filteredEvents.length > 1) {
+                    for (let j = 1; j<filteredEvents.length; j++) {
+                        async function updateEvent() {
+                            return new Promise(async(resolve, reject) => {
+                                let eventDuration = new Date(filteredEvents[j].end).getTime() - new Date(filteredEvents[j].start).getTime();
+                                let index = cloneEvents.findIndex(event => {
+                                    return event.resourceId == filteredEvents[j].resourceId && event.title == filteredEvents[j].title;
+                                })
+                                cloneEvents[index].start =  new Date(filteredEvents[j-1].end);
+                                let endTime = new Date()
+                                endTime.setTime(new Date(filteredEvents[j - 1].end).getTime() + eventDuration)
+                                cloneEvents[index].end = endTime;
+                                resolve()
+                            })
+                        }
+                        updateEvent()
+                    }
+                }
+
             }else {
 
             }
