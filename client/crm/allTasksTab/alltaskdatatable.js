@@ -4006,7 +4006,7 @@ function openEditTaskModal(id, type) {
             if (selected_record.CustomerID) {
                 $('#contactID').val(selected_record.CustomerID)
                 $('#contactType').val('Customer')
-
+                
                 contactService.getOneEmployeeDataEx(selected_record.CustomerID).then(function(empDetailInfo) {
                     $('#contactEmailClient').val(empDetailInfo.fields.Email);
                     $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
@@ -4014,7 +4014,7 @@ function openEditTaskModal(id, type) {
     
                 });
             } else if (selected_record.LeadID) {
-                $('#contactID').val(selected_record.LeadID)
+                $('#contactID').val(selected_record.LeadID) 
                 $('#contactType').val('Lead')
 
                 contactService.getOneLeadDataEx(selected_record.LeadID).then(function(empDetailInfo) {

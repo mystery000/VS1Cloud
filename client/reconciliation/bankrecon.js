@@ -158,10 +158,15 @@ Template.bankrecon.onRendered(function() {
         let notrecondep = [];
         let okrecondep = [];
         let splashArrayReconcileDepositList = [];
-        let selectedTransactionsDep = JSON.parse(localStorage.getItem("SelectedTransactionsDep"));
         $('.fullScreenSpin').css('display', 'inline-block');
         reconService.getToBeReconciledDeposit(accountTypeId, statementDate, ignoreDate).then(function(data) {
             if (data.ttobereconcileddeposit.length > 0) {
+                let selectedTransactionsDep = [];
+                if (localStorage.getItem("SelectedTransactionsDep") != undefined &&
+                    localStorage.getItem("SelectedTransactionsDep") != null &&
+                    localStorage.getItem("SelectedTransactionsDep") != "") {
+                    selectedTransactionsDep = JSON.parse(localStorage.getItem("SelectedTransactionsDep"));
+                }
                 // for (let r = 0; r < data.ttobereconcileddeposit; r++ ) {
                 let notRecDepTotalAmount = 0;
                 for (let r in data.ttobereconcileddeposit) {
@@ -367,7 +372,12 @@ Template.bankrecon.onRendered(function() {
         reconService.getToBeReconciledWithdrawal(accountTypeId, statementDate, ignoreDate).then(function(data) {
             let notRecWithTotalAmount = 0;
             if (data.ttobereconciledwithdrawal.length > 0) {
-                let selectedTransactionsWith = JSON.parse(localStorage.getItem("SelectedTransactionsWith"));
+                let selectedTransactionsWith = [];
+                if (localStorage.getItem("SelectedTransactionsWith") != undefined &&
+                    localStorage.getItem("SelectedTransactionsWith") != null &&
+                    localStorage.getItem("SelectedTransactionsWith") != "") {
+                    selectedTransactionsWith = JSON.parse(localStorage.getItem("SelectedTransactionsWith"));
+                }
                 for (let j in data.ttobereconciledwithdrawal) {
                     if (data.ttobereconciledwithdrawal.hasOwnProperty(j)) {
                         let withdrawalamount = utilityService.modifynegativeCurrencyFormat(data.ttobereconciledwithdrawal[j].Amount) || 0.00;
@@ -582,10 +592,14 @@ Template.bankrecon.onRendered(function() {
                             };
 
                             dataArray.push(objData);
-                            if (FlowRouter.current().queryParams.id) {} else {
+                            if (FlowRouter.current().queryParams.id) {
+                                localStorage.setItem("reconHoldState", "false");
+                            } else {
+                                localStorage.setItem("reconHoldState", "true");
                                 if (data.treconciliation[k].OnHold == true) {
                                     Session.setPersistent('bankaccountid', data.treconciliation[k].AccountID);
                                     Session.setPersistent('bankaccountname', data.treconciliation[k].AccountName);
+                                    localStorage.setItem("reconHoldState", "false");
                                     window.open('/bankrecon?id=' + data.treconciliation[k].Id, '_self');
                                 }
                             }
@@ -1513,29 +1527,45 @@ Template.bankrecon.events({
         const templateObject = Template.instance();
         const selectedTransdep = [];
         const selectedtransactionsdep = [];
+        if (localStorage.getItem("SelectedTransactionsDep") != undefined &&
+            localStorage.getItem("SelectedTransactionsDep") != null &&
+            localStorage.getItem("SelectedTransactionsDep") != "") {
+            selectedtransactionsdep = JSON.parse(localStorage.getItem("SelectedTransactionsDep"));
+        }
 
         $('.reconchkboxdep:checkbox:checked').each(function() {
             var chkbiddepLine = $(this).attr('id');
             var checkboxIDdepLine = chkbiddepLine.split("_").pop();
             var depositLineIDDep = $('#checkboxdeptable_' + checkboxIDdepLine).attr('depositLineID');
-            let transactionObj = {
-                reconid: checkboxIDdepLine,
-                recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
-                reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
-                recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
-                reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
-                reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
-                reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
-                depositLineID: depositLineIDDep || 0
-            };
-            var reconamounttrimdep = ($(this).closest('tr').find('td:nth-child(7)').text()).replace(/[^0-9.-]+/g, "") || 0;
-            //(($('#vs1reconamount_' + checkboxIDdepLine).text()).substring(1)).replace(',', '');
-            selectedTransAmountdep = selectedTransAmountdep + parseFloat(reconamounttrimdep);
-            selectedtransactionsdep.push(transactionObj);
+            const existRecord = !!selectedtransactionsdep.find(item => {
+                return item.reconid === checkboxIDdepLine
+            })
+            if (!existRecord) {
+                let transactionObj = {
+                    reconid: checkboxIDdepLine,
+                    recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
+                    reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
+                    recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
+                    reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                    reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
+                    reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
+                    depositLineID: depositLineIDDep || 0
+                };
+                var reconamounttrimdep = ($(this).closest('tr').find('td:nth-child(7)').text()).replace(/[^0-9.-]+/g, "") || 0;
+                //(($('#vs1reconamount_' + checkboxIDdepLine).text()).substring(1)).replace(',', '');
+                selectedTransAmountdep = selectedTransAmountdep + parseFloat(reconamounttrimdep);
+                selectedtransactionsdep.push(transactionObj);
+            }
         });
+        console.log("------", selectedtransactionsdep);
         templateObject.selectedTransdep.set(selectedtransactionsdep);
-        localStorage.setItem("SelectedTransactionsDep", JSON.stringify(selectedtransactionsdep));
-        localStorage.setItem("reconHoldState", "true");
+        // if (localStorage.getItem("reconHoldState") != undefined && localStorage.getItem("reconHoldState") != null && localStorage.getItem("reconHoldState") != "") {
+        //     localStorage.setItem("SelectedTransactionsDep", "");
+        //     localStorage.setItem("SelectedTransactionsWith", "");
+        //     localStorage.setItem("reconHoldState", "false");
+        // }asdasd
+        // localStorage.setItem("SelectedTransactionsDep", JSON.stringify(selectedtransactionsdep));
+        // localStorage.setItem("reconHoldState", "true");
 
         let reconVS1dep = templateObject.reconVS1dep.get();
         let notrecondep = [];
@@ -1584,30 +1614,40 @@ Template.bankrecon.events({
         const templateObject = Template.instance();
         const selectedTranswith = [];
         const selectedtransactionswith = [];
+        if (localStorage.getItem("SelectedTransactionsWith") != undefined &&
+            localStorage.getItem("SelectedTransactionsWith") != null &&
+            localStorage.getItem("SelectedTransactionsWith") != "") {
+            selectedtransactionswith = JSON.parse(localStorage.getItem("SelectedTransactionsWith"));
+        }
 
         $('.reconchkboxwith:checkbox:checked').each(function() {
             var chkbidwithLine = $(this).attr('id');
             var checkboxIDwithLine = chkbidwithLine.split("_").pop();
 
             var depositLineIDWith = $('#checkboxwithtable_' + checkboxIDwithLine).attr('depositLineID');
-            let transactionObj = {
-                reconid: checkboxIDwithLine,
-                recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
-                reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
-                recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
-                reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
-                reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
-                reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
-                depositLineID: depositLineIDWith || 0
-            };
-            var reconamounttrim = ($(this).closest('tr').find('td:nth-child(7)').text()).replace(/[^0-9.-]+/g, "") || 0;
-            //(($('#vs1reconamountwith_' + checkboxIDwithLine).text()).substring(1)).replace(',', '');
-            selectedTransAmountwidth = selectedTransAmountwidth + parseFloat(reconamounttrim);
-            selectedtransactionswith.push(transactionObj);
+            const existRecord = !!selectedtransactionswith.find(item => {
+                return item.reconid === checkboxIDwithLine
+            })
+            if (!existRecord) {
+                let transactionObj = {
+                    reconid: checkboxIDwithLine,
+                    recondate: $(this).closest('tr').find('td:nth-child(2)').text(),
+                    reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
+                    recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
+                    reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                    reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
+                    reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
+                    depositLineID: depositLineIDWith || 0
+                };
+                var reconamounttrim = ($(this).closest('tr').find('td:nth-child(7)').text()).replace(/[^0-9.-]+/g, "") || 0;
+                //(($('#vs1reconamountwith_' + checkboxIDwithLine).text()).substring(1)).replace(',', '');
+                selectedTransAmountwidth = selectedTransAmountwidth + parseFloat(reconamounttrim);
+                selectedtransactionswith.push(transactionObj);
+            }
         });
         templateObject.selectedTranswith.set(selectedtransactionswith);
-        localStorage.setItem("SelectedTransactionsWith", JSON.stringify(selectedtransactionswith));
-        localStorage.setItem("reconHoldState", "true");
+        // localStorage.setItem("SelectedTransactionsWith", JSON.stringify(selectedtransactionswith));
+        // localStorage.setItem("reconHoldState", "true");
 
         let reconVS1with = templateObject.reconVS1with.get();
         let notreconwith = [];
@@ -1860,7 +1900,7 @@ Template.bankrecon.events({
     // },
     'click .reconbtn': function(e) {
         $('.fullScreenSpin').css('display', 'inline-block');
-
+        const templateObject = Template.instance();
         let reconService = new ReconService();
 
         let lineItemsDep = [];
@@ -2028,7 +2068,11 @@ Template.bankrecon.events({
         }
         reconService.saveReconciliation(objDetails).then(function(data) {
             FlowRouter.go('/reconciliationlist?success=true');
-            localStorage.setItem("reconHoldState", "false");
+            if (localStorage.getItem("reconHoldState") != undefined && localStorage.getItem("reconHoldState") != null && localStorage.getItem("reconHoldState") == "false") {
+                localStorage.setItem("SelectedTransactionsDep", "");
+                localStorage.setItem("SelectedTransactionsWith", "");
+                localStorage.setItem("reconHoldState", "true");
+            }
         }).catch(function(err) {
             swal({
                 title: 'Oooops...',
@@ -2044,7 +2088,7 @@ Template.bankrecon.events({
     },
     'click .btnHold': function(e) {
         $('.fullScreenSpin').css('display', 'inline-block');
-
+        const templateObject = Template.instance();
         let reconService = new ReconService();
 
         let lineItemsDep = [];
@@ -2212,6 +2256,8 @@ Template.bankrecon.events({
         }
 
         reconService.saveReconciliation(objDetails).then(function(data) {
+            localStorage.setItem("SelectedTransactionsDep", JSON.stringify(templateObject.selectedTransdep.get()));
+            localStorage.setItem("SelectedTransactionsWith", JSON.stringify(templateObject.selectedTranswith.get()));
             FlowRouter.go('/reconciliationlist?success=true');
             localStorage.setItem("reconHoldState", "false");
         }).catch(function(err) {
@@ -2238,9 +2284,9 @@ Template.bankrecon.events({
                     showCancelButton: false,
                     confirmButtonText: 'OK'
                 }).then((result) => {
-                    //if (result.value) {
-                    FlowRouter.go('/reconciliationlist?success=true');
-                    //}
+                    if (result.value) {
+                        FlowRouter.go('/reconciliationlist?success=true');
+                    }
 
                 });
                 // swal('Delete all Reconciliations for this account, dated after this.', 'This will enable the deletion of this Reconciliation', 'warning');
@@ -2251,6 +2297,7 @@ Template.bankrecon.events({
     'click .btnDeleteRecon': function(e) {
         playDeleteAudio();
         let reconService = new ReconService();
+        const templateObject = Template.instance();
         setTimeout(function() {
             swal({
                 title: 'Delete Bank Reconciliation',
@@ -2275,6 +2322,11 @@ Template.bankrecon.events({
                         };
 
                         reconService.saveReconciliation(objDetails).then(function(objDetails) {
+                            if (localStorage.getItem("reconHoldState") != undefined && localStorage.getItem("reconHoldState") != null && localStorage.getItem("reconHoldState") == "false") {
+                                localStorage.setItem("SelectedTransactionsDep", "");
+                                localStorage.setItem("SelectedTransactionsWith", "");
+                                localStorage.setItem("reconHoldState", "true");
+                            }
                             FlowRouter.go('/reconciliationlist?success=true');
                         }).catch(function(err) {
                             swal({
