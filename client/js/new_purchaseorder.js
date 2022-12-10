@@ -76,116 +76,11 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.accountID = new ReactiveVar();
     templateObject.stripe_fee_method = new ReactiveVar();
     templateObject.subtaxcodes = new ReactiveVar([]);
-    templateObject.displayfields = new ReactiveVar([]);
-    templateObject.reset_data = new ReactiveVar([]);
-
     templateObject.isbackorderredirect = new ReactiveVar();
     templateObject.isbackorderredirect.set(false);
-
-    templateObject.monthArr = new ReactiveVar();
-    templateObject.plusArr = new ReactiveVar();
     templateObject.hasFollow = new ReactiveVar(false);
 });
 Template.purchaseordercard.onRendered(() => {
-  const plusArr = [];
-  const monthArr = [];
-  let isGreenTrack = Session.get('isGreenTrack');
-  let regionData = Session.get('ERPLoggedCountry');
-  let recordObj = null;
-  if(isGreenTrack) {
-    $.get("/GreentrackModules.json").success(function (data) {
-        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
-
-            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
-                recordObj = {
-                    type: data.tvs1licenselevelsnmodules[i].TYPE,
-                    region: data.tvs1licenselevelsnmodules[i].Region,
-                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
-                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
-                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
-                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
-                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
-                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
-                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
-                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
-                    pricenocurrency: data.tvs1licenselevelsnmodules[i].Price || 0,
-                    price: utilityService.modifynegativeCurrencyFormat(data.tvs1licenselevelsnmodules[i].Price) || 0,
-                    discount: data.tvs1licenselevelsnmodules[i].discount,
-                };
-                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "Xero") {
-                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
-                        plusArr.push(recordObj);
-                    }
-                }
-               
-            }
-
-        };
-        templateObject.plusArr.set(plusArr);
-    });
-  } else { 
-    $.get("MasterVS1Pricing.json").success(async function (data) {
-        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
-
-            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
-                recordObj = {
-                    type: data.tvs1licenselevelsnmodules[i].TYPE,
-                    region: data.tvs1licenselevelsnmodules[i].Region,
-                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
-                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
-                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
-                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
-                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
-                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
-                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
-                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
-                    discount: data.tvs1licenselevelsnmodules[i].discount,
-                };
-                if ((data.tvs1licenselevelsnmodules[i].ModuleName != "") && (data.tvs1licenselevelsnmodules[i].IsExtra == true) && (data.tvs1licenselevelsnmodules[i].IsMonthly == true)) {
-                    monthArr.push(recordObj);
-                }
-
-                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "PLUS") {
-                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
-                        plusArr.push(recordObj);
-                    }
-                }
-            }
-        };
-        let purchaedAdModuleList = [];
-            let additionModuleSettings = await getVS1Data('vscloudlogininfo');
-            if( additionModuleSettings.length > 0 ){
-                let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
-                if( additionModules.length > 0 ){
-                    let adModulesList = additionModules.filter((item) => {
-                        if( item.ExtraModules == true && item.ModuleActive == true ){
-                            return item;
-                        }
-                    });
-                    if( adModulesList.length > 0 ){
-                        for (const item of adModulesList) {
-                            purchaedAdModuleList.push(item.ModuleName)
-                        }
-                    }
-                }
-            }
-        templateObject.plusArr.set(plusArr);
-        var monthResult = [];
-        $.each(monthArr, function (i, e) {
-            var matchingItemsMonth = $.grep(monthResult, function (itemMonth) {
-                return itemMonth.moduleName === e.moduleName;
-            });
-            e.isPurchased = false
-            if (matchingItemsMonth.length === 0) {
-                if( purchaedAdModuleList.includes(monthArr[i].moduleName) == true ){
-                    e.isPurchased = true
-                }
-                monthResult.push(e);
-            }
-        });
-        templateObject.monthArr.set(monthResult);
-    });
-  };
     let templateObject = Template.instance();
     $('#edtFrequencyDetail').css('display', 'none');
     // $('#onEventSettings').css('display', 'none');
@@ -347,127 +242,8 @@ Template.purchaseordercard.onRendered(() => {
         $('.uploadedImage').attr('src', imageData);
     }
 
-    // set initial table rest_data
-    function init_reset_data() {
-      let reset_data = [
-        { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
-        { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
-        { index: 2, label: "Qty", class: "Qty", width: "50", active: true, display: true },
-        { index: 3, label: "Ordered", class: "Ordered", width: "75", active: true, display: true },
-        { index: 4, label: "Received", class: "Shipped", width: "75", active: true, display: true },
-        { index: 5, label: "BO", class: "BackOrder", width: "75", active: true, display: true },
-        { index: 6, label: "Price (Ex)", class: "UnitPriceEx", width: "122", active: true, display: true },
-        { index: 7, label: "Price (Inc)", class: "UnitPriceInc", width: "122", active: false, display: true },
-        { index: 8, label: "Customer/Job", class: "CustomerJob", width: "110", active: true, display: true },
-        { index: 9, label: "CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
-        { index: 10, label: "Tax Rate", class: "TaxRate", width: "91", active: false, display: false },
-        { index: 11, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-        { index: 12, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
-        { index: 13, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
-        { index: 14, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
-        { index: 15, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
-        { index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: true, display: true },
-      ];
-
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      let isBOnShippedQty = Session.get("CloudPurchaseQtyOnly") || false;
-      if (isBOnShippedQty) { // false
-        reset_data[2].display = true;
-        reset_data[3].display = false;
-        reset_data[4].display = false;
-        reset_data[5].display = false;
-      } else {
-        reset_data[2].display = false;
-        reset_data[3].display = true;
-        reset_data[4].display = true;
-        reset_data[5].display = true;
-      }
-      if(isBatchSerialNoTracking) {
-        reset_data[13].display = true;
-      } else {
-        reset_data[13].display = false;
-      }
-
-      let templateObject = Template.instance();
-      templateObject.reset_data.set(reset_data);
-    }
-    init_reset_data();
-    templateObject.insertItemWithLabel = (x, a, b) => {
-        var data = [...x];
-        var aPos = data.findIndex((x) => x.label === a);
-        var bPos = data.findIndex(x => x.label === b);
-        if(aPos === -1 || bPos === -1) return data;
-        data[bPos] = {...data[bPos], index: aPos + 1};
-        for(var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index:data[i].index + 1}
-        return data.sort((a,b) => a.index - b.index);
-    }
-    // set initial table rest_data
-    // custom field displaysettings
-     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
-      reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
-      reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
-      showCustomFieldDisplaySettings(reset_data);
     
-      try {
-        getVS1Data("VS1_Customize").then(function (dataObject) {
-          if (dataObject.length == 0) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              if(!reset_data[16]) reset_data.push({ index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: false, display: false })
-              reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
-              reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
-              reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
-              showCustomFieldDisplaySettings(reset_data);
-            }).catch(function (err) {
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            if(data.ProcessLog.Obj.CustomLayout.length > 0){
-             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-               if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                 if(!reset_data[16]) reset_data.push({ index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: false, display: false })
-                 reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
-                 reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
-                 reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
-                 showCustomFieldDisplaySettings(reset_data);
-               }
-             }
-           };
-            // handle process here
-          }
-        });
-      } catch (error) {
-      }
-      return;
-    }
-    
-    function showCustomFieldDisplaySettings(reset_data) {
-
-      let custFields = [];
-      let customData = {};
-      let customFieldCount = reset_data.length;
-
-      for (let r = 0; r < customFieldCount; r++) {
-        customData = {
-          active: reset_data[r].active,
-          id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label,
-          class: reset_data[r].class,
-          display: reset_data[r].display,
-          width: reset_data[r].width ? reset_data[r].width : '',
-          // colspan: ["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(reset_data[r].label) == true ? (templateObject.isForeignEnabled.get() == true ? 2 : 1) : 1
-        };
-        custFields.push(customData);
-      }
-      templateObject.displayfields.set(custFields);
-    }
-
-    templateObject.initCustomFieldDisplaySettings("", "tblPurchaseOrderLine");
-    // custom field displaysettings
+  
 
     const purchaseService = new PurchaseBoardService();
     const clientsService = new PurchaseBoardService();
@@ -5794,18 +5570,6 @@ Template.purchaseordercard.helpers({
     },
     isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
     // custom field displaysettings
-    displayfields: () => {
-        let data = Template.instance().displayfields.get();
-        let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-        if (!isBatchSerialNoTracking) {
-          data.find((x) => x.class === 'SerialNo').display = false;
-          data.find((x) => x.class === 'SerialNo').active = false;
-        }
-        let monthArr = Template.instance().monthArr.get();  
-        data.find((x) => x.class === 'FixedAsset').display = monthArr.find((x) => x.moduleName === 'Fixed Assets').isPurchased;
-        data.find((x) => x.class === 'FixedAsset').active = monthArr.find((x) => x.moduleName === 'Fixed Assets').isPurchased;
-      return data;
-    },
 
     isForeignEnabled: () => {
         return Template.instance().isForeignEnabled.get();
@@ -5813,28 +5577,7 @@ Template.purchaseordercard.helpers({
     getDefaultCurrency: () => {
         return defaultCurrencyCode;
     },
-    convertToForeignAmount: (amount) => {
-        // return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-    },
 
-    displayFieldColspan: (displayfield) => {
-        if(["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(displayfield.custfieldlabel))
-        {
-            if(Template.instance().isForeignEnabled.get() == true) {
-                return 2
-            }
-            return 1;
-        }
-        return 1;
-    },
-
-    subHeaderForeign: (displayfield) => {
-
-        if(["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(displayfield.custfieldlabel)) {
-            return true;
-        }
-        return false;
-    },
 });
 
 Template.purchaseordercard.events({
