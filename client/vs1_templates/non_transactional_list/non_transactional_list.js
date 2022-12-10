@@ -405,7 +405,7 @@ Template.non_transactional_list.onRendered(function() {
           }else if(currenttablename == "tblSupplierTransactionList"){
             reset_data = [
               { index: 0, label: '#ID', class: 'colSortDate', active: false, display: true,  width: "10"},
-              { index: 1, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "50"},
+              { index: 1, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "100"},
               { index: 2, label: 'P/O No.', class: 'colPurchaseNo', active: true, display: true, width: "100"},
               { index: 3, label: 'Supplier', class: 'colSupplier', active: true, display: true, width: "100"},
               { index: 4, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "100"},
