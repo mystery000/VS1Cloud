@@ -132,7 +132,7 @@ Template.transaction_line.onRendered(function() {
   templateObject.init_reset_data = function() {
       let reset_data = [
           { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
-          { index: 1, label: "Description", class: "Description", width: "300", active: true, display: true },
+          { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
           { index: 2, label: "Qty", class: "Qty", width: "50", active: true, display: true },
           { index: 3, label: "Ordered", class: "Ordered", width: "75", active: true, display: true },
           { index: 4, label: "Shipped", class: "Shipped", width: "75", active: true, display: true },
@@ -141,7 +141,7 @@ Template.transaction_line.onRendered(function() {
           { index: 7, label: "Fixed Asset", class: "FixedAsset", width: "100", active: true, display: true },
           { index: 8, label: "Customer/Job", class: "CustomerJob", width: "110", active: true, display: true },
           { index: 9, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "125", active: true, display: true },
-          { index: 10, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "130", active: false, display: true },
+          { index: 10, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "125", active: false, display: true },
           { index: 11, label: "Cost Price", class: "CostPrice", width: "110", active: true, display: true },
           { index: 12, label: "Disc %", class: "Discount", width: "75", active: true, display: true },
           { index: 13, label: "CustField1", class: "SalesLinesCustField1", width: "110", active: true, display: true },
@@ -156,20 +156,20 @@ Template.transaction_line.onRendered(function() {
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       let isBOnShippedQty = Session.get("CloudSalesQtyOnly");
       if (isBOnShippedQty) {
-          reset_data[2].display = true;
-          reset_data[3].display = false;
-          reset_data[4].display = false;
-          reset_data[5].display = false;
+         reset_data.find(x => x.class === 'Qty').display = true;
+         reset_data.find(x => x.class === 'Ordered').display = false;
+         reset_data.find(x => x.class === 'Shipped').display = false;
+         reset_data.find(x => x.class === 'BackOrder').display = false;
       } else {
-          reset_data[2].display = false;
-          reset_data[3].display = true;
-          reset_data[4].display = true;
-          reset_data[5].display = true;
+        reset_data.find(x => x.class === 'Qty').display = false;
+        reset_data.find(x => x.class === 'Ordered').display = true;
+        reset_data.find(x => x.class === 'Shipped').display = true;
+        reset_data.find(x => x.class === 'BackOrder').display = true;
       }
       if (isBatchSerialNoTracking) {
-          reset_data[6].display = true;
+        reset_data.find(x => x.class === 'SerialNo').display = true;
       } else {
-          reset_data[6].display = false;
+        reset_data.find(x => x.class === 'SerialNo').display = false;
       }
       let templateObject = Template.instance();
       templateObject.reset_data.set(reset_data);
@@ -189,10 +189,14 @@ Template.transaction_line.onRendered(function() {
                       reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
                       reset_data = templateObject.reset_data.get().map( data => {
                         x = reset_data.find( x => x.class === data.class);
-                        if(x != undefined) {x.index = data.index; return x;}
-                        data.active = false;
-                        data.display = false;
-                        return data;
+                        if(x != undefined) {
+                            x.index = data.index; 
+                            return x;
+                        } else {
+                            data.active = false;
+                            data.display = false;
+                            return data;
+                        }   
                       })
                       templateObject.showCustomFieldDisplaySettings(reset_data);
                   }).catch(function(err) {});
@@ -204,11 +208,16 @@ Template.transaction_line.onRendered(function() {
                               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
                               reset_data = templateObject.reset_data.get().map( data => {
                                 x = reset_data.find( x => x.class === data.class);
-                                if(x != undefined) {x.index = data.index; return x;}
-                                data.active = false;
-                                data.display = false;
-                                return data;
+                                if(x != undefined) {
+                                    x.index = data.index; 
+                                    return x;
+                                } else {
+                                    data.active = false;
+                                    data.display = false;
+                                    return data;
+                                }               
                               })
+                              
                               templateObject.showCustomFieldDisplaySettings(reset_data);
                           }
                       }
@@ -261,9 +270,9 @@ Template.transaction_line.events({
       let reset_data = templateObject.reset_data.get();
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if (isBatchSerialNoTracking) {
-        reset_data.find((x) => x.class === 'SerialNo').display = true;
+        reset_data.find((x) => x.class === 'TaxRate').display = true;
       } else {
-        reset_data.find((x) => x.class === 'SerialNo').display = false;
+        reset_data.find((x) => x.class === 'TaxRate').display = false;
       }
       reset_data = reset_data.filter(redata => redata.display);
       $(".displaySettings").each(function(index) {
