@@ -2147,6 +2147,8 @@ templateObject.getLastPOData = async function() {
 
     const url = FlowRouter.current().path;
     if (url.indexOf('?id=') > 0) {
+
+        templateObject.isbackorderredirect.set(false);
         getso_id = url.split('?id=');
         currentPurchaseOrder = getso_id[getso_id.length - 1];
         if (getso_id[1]) {
@@ -7812,6 +7814,7 @@ Template.purchaseordercard.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let isBORedirect = await templateObject.isbackorderredirect.get() || false;
+
         let purchaseService = new PurchaseBoardService();
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
@@ -7832,6 +7835,7 @@ Template.purchaseordercard.events({
                 if(FlowRouter.current().queryParams.trans){
                   FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                 }else{
+                    isBORedirect = tempObject.isbackorderredirect.get() || false;
                   if(isBORedirect == true){
                     FlowRouter.go('/purchaseorderlistBO?success=true');
                   }else{
@@ -7857,6 +7861,7 @@ Template.purchaseordercard.events({
           if(FlowRouter.current().queryParams.trans){
             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
           }else{
+              isBORedirect = tempObject.isbackorderredirect.get() || false;
             if(isBORedirect == true){
               FlowRouter.go('/purchaseorderlistBO?success=true');
             }else{
@@ -8095,7 +8100,6 @@ Template.purchaseordercard.events({
         }, delayTimeAfterSound);
     },
     'click .btnSave': async (event, templateObject) => {
-
         playSaveAudio();
         let tempObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -8499,6 +8503,7 @@ Template.purchaseordercard.events({
                                 attachments: attachment
                             }, function(error, result) {
                                 if (error && error.error === "error") {
+                                    isBORedirect = tempObject.isbackorderredirect.get() || false;
                                   if(isBORedirect == true){
                                     FlowRouter.go('/purchaseorderlistBO?success=true');
                                   }else{
@@ -8524,6 +8529,7 @@ Template.purchaseordercard.events({
                                 attachments: attachment
                             }, function(error, result) {
                                 if (error && error.error === "error") {
+                                    isBORedirect = tempObject.isbackorderredirect.get() || false;
                                   if(isBORedirect == true){
                                     FlowRouter.go('/purchaseorderlistBO?success=true');
                                   }else{
@@ -8542,6 +8548,7 @@ Template.purchaseordercard.events({
                                           if(FlowRouter.current().queryParams.trans){
                                             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                                           }else{
+                                              isBORedirect = tempObject.isbackorderredirect.get() || false;
                                             if(isBORedirect == true){
                                               FlowRouter.go('/purchaseorderlistBO?success=true');
                                             }else{
@@ -8598,6 +8605,7 @@ Template.purchaseordercard.events({
                                 attachments: attachment
                             }, function(error, result) {
                                 if (error && error.error === "error") {
+                                    isBORedirect = tempObject.isbackorderredirect.get() || false;
                                   if(isBORedirect == true){
                                     FlowRouter.go('/purchaseorderlistBO?success=true');
                                   }else{
@@ -8884,6 +8892,13 @@ Template.purchaseordercard.events({
                         }
                     }
                 } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                    isBORedirect = tempObject.isbackorderredirect.get() || false;
+                    if(isBORedirect == true){
+                        FlowRouter.go('/purchaseorderlistBO?success=true');
+                    }else{
+                        FlowRouter.go('/purchaseorderlist?success=true');
+                    };
 
                 }
 
@@ -8901,7 +8916,9 @@ Template.purchaseordercard.events({
                     }
                 });
                 $('.fullScreenSpin').css('display', 'none');
+
             });
+
         }
         }, delayTimeAfterSound);
     },
