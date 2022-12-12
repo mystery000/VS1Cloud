@@ -7,6 +7,7 @@
   showTemplateModals
   showUploadAttachment
   showTransactionButtons
+  salesCloudPreferenceRec
  -->
 <template name="transaction_header">
   <style>
@@ -22,6 +23,115 @@
         flex: 0 0 16.66667%;
         max-width: 16.66667%;
       }
+    }
+  </style>
+   <style>
+    @media screen and (max-width: 387px) {
+      .btnSettings {
+        padding: 0px !important;
+        font-size: 16px !important;
+      }
+      h2 {
+        font-size: 24px;
+      }
+    }
+
+    @media screen and (max-height: 450px) and (max-width: 950px) {
+      .colPaid {
+        display: block !important;
+      }
+      #colBalanceDue {
+        /* display: none !important; */
+      }
+    }
+
+    @media screen and (max-width: 450px) {
+      .btnTransaction {
+        width: 80% !important;
+      }
+
+      .payNow {
+        margin-right: 8px !important;
+      }
+
+      .btnMakePayment {
+        margin-left: 8px !important;
+      }
+
+      .colBtn {
+        padding: 0px;
+      }
+
+      .colPaid {
+        display: block !important;
+      }
+
+      #colBalanceDue {
+        /* display: none !important; */
+      }
+    }
+
+    .templateItem {
+      display: inline-flex !important;
+
+    }
+
+    .btnPreviewTemplate {
+      padding: 6px;
+      cursor: pointer;
+    }
+
+    .btnPreviewTemplate:hover {
+      background-color: #f8f9fc;
+    }
+
+    #tblInvoiceLine_length,
+    #tblInvoiceLine_filter {
+      display: none;
+    }
+
+    .colUnitPriceEx,
+    .colUnitPriceInc,
+    .colAmountEx,
+    .colAmountInc {
+      cursor: pointer;
+    }
+    .lead {
+        font-size: 25px;
+        font-weight: 500;
+        margin: 0px;
+        color: #696969;
+        float: right;
+      }
+
+    .leadTotal {
+      font-weight: 800 !important;
+    }
+
+    .leadHidden {
+      visibility: hidden;
+      height: 0px !important;
+    }
+
+    @media screen and (min-width: 1366px) {
+      .colComments {
+        padding-right: 2.5rem;
+      }
+    }
+
+    @media screen and (max-width: 450px) {
+      .desktopButtons {
+        display: none;
+      }
+
+      .mobileButtons {
+        display: flex !important;
+      }
+    }
+
+    .paidIcon {
+      animation: blink 2s ease-in infinite;
+      -webkit-animation: blink 2s ease-in infinite;
     }
   </style>
   <header
@@ -48,9 +158,11 @@
   {{#if showUploadAttachment}}
   {{> files_viewer_modal }}
   {{/if}}
-
+<!-- It should be move to footer later -->
   {{#if showTemplateModals}}
-  {{> template_selection_modal}}
+  {{> template_selection_modal
+    templateTitle=cardType
+  }}
   <div 
     class="modal fade" 
     id="templatePreviewModal" 
@@ -76,9 +188,22 @@
     <div class="col-12 col-xl-10">
       <div class="row" style="margin: 8px 16px 0px 16px;">
         <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-        {{> customer_selector
-          label=getUserLabel
-        }}
+          {{# if equals cardType 'Invoice'}}
+            {{> customer_selector
+              label=getUserLabel
+            }}
+          {{else}}
+          {{# if equals cardType 'Sales Order'}}
+            {{> customer_selector
+              label=getUserLabel
+            }}
+          {{else}}
+          {{> customer_selector
+            label=getUserLabel
+            id='edtSupplierName'
+          }}
+          {{/if}}
+          {{/if}}
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-3">
           {{> customer_email_input
@@ -101,13 +226,41 @@
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
             {{> sale_date_selector
               label=getDateInputLabel
-              SODdate=data.saledate
+              SODate=data.saledate
               DueDate=data.duedate
             }}
             </div>
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{> po_number_input}}
+              {{#if equals cardType 'Invoice'}}
+              {{> po_number_input
+                value=invoicerecord.custPONumber
+                firstname=invoicerecord.firstname
+                lastname=invoicerecord.lastname
+              }}
+              {{else}}
+              {{#if equals cardType 'Sales Order'}}
+              {{> po_number_input
+                value=invoicerecord.custPONumber
+                firstname=invoicerecord.firstname
+                lastname=invoicerecord.lastname
+              }}
+              {{else}}
+              {{> invoice_number_input
+                value=data.invoicenumber
+              }}
+              {{/if}}
+              {{/if}}
             </div>
+            {{#unless equals cardType 'Invoice'}}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+              {{> default_select
+                label="Via"
+                id="shipvia"
+                type="search"
+                name="shipvia"
+              }}
+            </div>
+            {{/unless}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
               {{> default_select
                 label="Terms"
@@ -143,7 +296,15 @@
               }}
             </div>
             {{#if isCurrencyEnable}}
-            {{> CurrencyWidget rate="sell" trans="true"}}
+              {{#if equals cardType 'Invoice'}}
+              {{> CurrencyWidget rate="sell" trans="true"}}
+              {{else}}
+              {{#if equals cardType 'Sales Order'}}
+              {{> CurrencyWidget rate="sell" trans="true"}}
+              {{else}}
+              {{> CurrencyWidget rate="buy" row="true"}}
+              {{/if}}
+              {{/if}}
             {{/if}}
 
             {{> custom_fields
@@ -180,6 +341,9 @@
           recorddeleted=data.deleted
           recordispaid=data.ispaid
           recordbalanceDue=data.balanceDue
+          recordtype=cardType
+          isConverted=data.isConverted
+          abletomakeworkorder=abletomakeworkorder
         }}
       </div>
     </div>
