@@ -12,7 +12,7 @@
     }
 
     #nav-subtasks .dataTables_wrapper {
-      min-height: 32vh !important;
+      min-height: 22vh !important;
       padding: 0 10px;
     }
   </style>
@@ -24,7 +24,12 @@
           <div style="display: grid; width: 100%;">
             <div style="justify-content: space-between;">
               <div class="row">
-                <div class="col-12" style="display: inline-flex; justify-content: end;">
+                <div class="col-6">
+                  <h4>
+                    <div id="add-account-title" name="add-account-title" style="float: left; font-size: xx-large;">Task to do is</div>
+                  </h4>
+                </div>
+                <div class="col-6" style="display: inline-flex; justify-content: end;">
                   <div class="dropdown">
                     <i class="fas fa-list-ul taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
                       aria-haspopup="true" aria-expanded="false" title="Select a project..."></i>
@@ -99,93 +104,9 @@
                     </div>
                   </div>
                 </div>
-                <div class="form-group col-12" style="margin: 4px;">
-                  <h4>
-                    <div id="add-account-title" name="add-account-title" style="float: left;">Task to do is</div>
-                  </h4>
-                  <input type="text" class="form-control editTaskNameDescription editTaskDetailName" id="edtAccountName" name="edtAccountName">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <div class="form-group" style="margin: 4px;">
-                  <label>Description</label>
-                  <div id="taskmodalDescription" class="displayTaskNameDescription"></div>
-                  <textarea class="form-control editTaskNameDescription editTaskDetailDescription" rows="3" id="txaAccountDescription" name="txaAccountDescription"></textarea>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6 col-md-4">
-                <div class="form-group" style="margin: 4px;"><label>Who is task for</label>
-                    <select type="search" class="form-control pointer crmSelectLeadList selectBg" id="crmEditSelectLeadList" name="userForTask" style="height: 38px;">
-                    </select>
-                </div>
-              </div>
-              <div class="col-6 col-md-4">
-                  <div class="form-group" style="margin: 4px;"><label>Contact Email</label>
-                      <input type="text" class="form-control disableBg" id="contactEmailClient" name="contactEmailClient" disabled>
-                  </div>
-              </div>
-              <div class="col-6 col-md-4">
-                <div class="form-group" style="margin: 4px;"><label>Contact Phone</label>
-                    <input type="text" class="form-control disableBg" id="contactPhoneClient" name="contactPhoneClient" disabled>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6 col-md-4">
-                <div class="form-group" style="margin: 4px;"><label>Assigned to</label>
-                    <select type="search" class="form-control pointer crmSelectEmployeeList selectBg" id="crmEditSelectEmployeeList" name="userForTask" style="height: 38px;">
-                    </select>
-                </div>
-              </div>
-              <div class="col-6 col-md-4">
-                  <div class="form-group" style="margin: 4px;"><label>Contact Email</label>
-                      <input type="text" class="form-control disableBg" id="contactEmailUser" name="contactEmailUser" disabled>
-                  </div>
-              </div>
-              <div class="col-6 col-md-4">
-                <div class="form-group" style="margin: 4px;"><label>Contact Phone</label>
-                    <input type="text" class="form-control disableBg" id="contactPhoneUser" name="contactPhoneUser" disabled>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6 col-md-4">
-                <div class="flex taskDetailProjectName">
-                  <label class="detail-label">For Project:</label>
-                  <span class="taskLocation" style="margin-right: 0;"><a class="taganchor" href=""
-                      id="taskDetailModalCategoryLabel"><i class="fas fa-inbox text-primary"
-                        style="margin-right: 5px;"></i>All Tasks</a></span>
-                </div>
-              </div>
-              <div class="col-6 col-md-4">
-                <div class="flex">
-                  <label class="detail-label" style="width: 147px;">Completed by:</label>
-                  <div style="display: flex;">
-                    <span class="taskDueDate">
-                      <span id="taskmodalDuedate"></span>
-                    </span>
-                    <div id="taskmodalLabels" style="margin-top:4px;">
-                      <span class="taskTag"><i class="fas fa-tag"></i></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-6 col-md-4">
-                <div class="custom-control custom-switch" style="cursor: pointer;padding-right: 85px; margin-top: 5px; float:right;">
-                  <input class="custom-control-input additionalModule chkComplete pointer" type="checkbox"
-                    id="chkComplete_taskEdit" name="Additional" style="cursor: pointer;" additionalqty="1"
-                    autocomplete="off" data-id="edit">
-                  <label class="custom-control-label" for="chkComplete_taskEdit"
-                    style="cursor: pointer; max-width: 200px;" data-id="edit">Completed</label>
-                </div>
               </div>
             </div>
           </div>
-
           <button type="button" class="close" style="position: absolute; right: 14px; top: 14px" data-dismiss="modal"
             aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -194,28 +115,137 @@
         <div class="modal-body" style="background-color: #EDEDED;">
           <div class="row">
             <div class="col-12">
-              <label>Activity</label>
-              <div class="tab-pane fade" id="nav-activity" style="height: 36vh;" role="tabpanel"
-                  aria-labelledby="nav-activity-tab">
-                  <div class="row">
-                    <span class="activityAdded"></span>
-                    <hr style="width: 100%; margin: 0px 32px;" />
-                  </div>
-                  <div class="col-12 task-activity-row">
-                  </div>
+              <div class="form-group" style="margin: 4px;">
+                <input type="text" class="form-control editTaskNameDescription editTaskDetailName" id="edtAccountName" name="edtAccountName" style="font-size: larger;">
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-12">
+              <div class="form-group" style="margin: 4px;">
+                <label>Description</label>
+                <div id="taskmodalDescription" class="displayTaskNameDescription"></div>
+                <textarea class="form-control editTaskNameDescription editTaskDetailDescription" rows="3" id="txaAccountDescription" name="txaAccountDescription"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Who is task for</label>
+                  <select type="search" class="form-control pointer crmSelectLeadList selectBg" id="crmEditSelectLeadList" name="userForTask" style="height: 38px;">
+                  </select>
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="form-group" style="margin: 4px;"><label>Contact Email</label>
+                    <input type="text" class="form-control disableBg" id="contactEmailClient" name="contactEmailClient">
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Contact Phone</label>
+                  <input type="text" class="form-control disableBg" id="contactPhoneClient" name="contactPhoneClient">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Assigned to</label>
+                  <select type="search" class="form-control pointer crmSelectEmployeeList selectBg" id="crmEditSelectEmployeeList" name="userForTask" style="height: 38px;">
+                  </select>
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="form-group" style="margin: 4px;"><label>Contact Email</label>
+                    <input type="text" class="form-control disableBg" id="contactEmailUser" name="contactEmailUser">
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;"><label>Contact Phone</label>
+                  <input type="text" class="form-control disableBg" id="contactPhoneUser" name="contactPhoneUser">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;">
+                <label>For Project:</label>
+                <select type="search" class="form-control pointer taskDetailModalCategoryLabel selectBg" id="taskDetailModalCategoryLabel" name="userForTask" style="height: 38px;">
+                </select>
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="form-group" style="margin: 4px;">
+                <label>Completed by:</label>
+                <div class="input-group date" style="cursor: pointer;">
+                    <input type="text" class="form-control formClassDate taskmodalDuedate" id="taskmodalDuedate" name="taskmodalDuedate">
+                    <div class="input-group-addon" style="">
+                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                    </div>
+                </div>
+                <!-- <div style="display: flex;">
+                  <span class="taskDueDate">
+                    <span id="taskmodalDuedate"></span>
+                  </span>
+                  <div id="taskmodalLabels" style="margin-top:4px;">
+                    <span class="taskTag"><i class="fas fa-tag"></i></span>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="custom-control custom-switch" style="cursor: pointer; margin-top: 42px;">
+                <input class="custom-control-input additionalModule chkComplete pointer" type="checkbox"
+                  id="chkComplete_taskEdit" name="Additional" style="cursor: pointer;" additionalqty="1"
+                  autocomplete="off" data-id="edit">
+                <label class="custom-control-label" for="chkComplete_taskEdit"
+                  style="cursor: pointer; max-width: 200px;" data-id="edit">Completed</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Activity</label>
+              <div class="row" style="border: 1px solid #e3e3e3; margin: 0 5px;">
+                <div class="row">
+                  <span class="activityAdded"></span>
+                  <!-- <hr style="width: 100%; margin: 0px 32px;" /> -->
+                </div>
+                <div class="col-12 task-activity-row">
+              </div>
+                <!-- <div class="row" style="padding: 16px;">
+                  <div class="col-12">
+                    <span class="activityDate">9999-99-99</span>
+                  </div>
+                  <hr style="width: 100%; margin: 8px 16px;" />
+                  <div class="col-1">
+                    <div class="commentUser">test</div>
+                  </div>
+                  <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
+                    <div class="row">
+                      <span class="activityName">test</span> <span class="activityAction">test</span>
+                    </div>
+                    <div class="row">
+                      <span class="activityComment">adasdasdasd}</span>
+                    </div>
+                    <div class="row">
+                      <span class="activityTime">6:6sdfsd</span>
+                    </div>
+                  </div>
+                  <hr style="width: 100%; margin: 16px;" />
+                </div> -->
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12" style="padding-top:10px">
               <div class="row">
                 <div class="col-12">
                   <label>Sub-Tasks</label>
-                  <button type="button" class="btn btn-link btnAddSubTask" style="margin: 16px; float: right;"><i
-                      class="fas fa-plus" style="margin-right: 8px;"></i> Add Sub-Task</button>
+                  <button type="button" class="btn btn-link btnAddSubTask btnNav btn-primary" style="margin: -8px 16px 0px 16px; float: right; color: white;"><i
+                      class="fas fa-plus" style="margin-right: 8px; color: white;"></i> Sub-Task</button>
                 </div>
               </div>
-              <div class="tab-pane fade show active" id="nav-subtasks" style="min-height: 40vh;" role="tabpanel"
+              <div class="tab-pane fade show active" id="nav-subtasks" role="tabpanel"
                   aria-labelledby="nav-subtasks-tab">
                   <div class="row no-gutters">
                     <div class="subtask-row col-12">
@@ -406,6 +436,9 @@
               </div>
             </div>
           </div> -->
+          <input type="hidden" id="txtCrmTaskID" value="" />
+          <input type="hidden" id="txtCrmProjectID" value="" />
+          <input type="hidden" id="txtCrmSubTaskID" value="" />
         </div>
         <!-- <div class="modal-body">
           <div class="row">
@@ -799,17 +832,9 @@
     }
 
     .disableBg {
-      background-color: #e3e3e3 !important;
+      /* background-color: #e3e3e3 !important; */
+      background-color: #ffffff !important;
     }
 
-    .modal-content::before {
-      background: #ededed !important;
-    }
-    .modal-content::after {
-      background: #ededed !important;
-    }
-    .modal-dialog {
-      background: #ededed !important;
-    }
   </style>
 </template>

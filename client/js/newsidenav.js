@@ -247,7 +247,7 @@ Template.newsidenav.onRendered(function() {
           this.hidePopper();
         }, 1500);
       });
-      
+
       this.arrow = $('<div class="popper-arrow"></div>').appendTo(this.popper);
     }
     MyPopper.prototype.createInstance = function () {
@@ -1670,6 +1670,12 @@ Template.newsidenav.onRendered(function() {
             addVS1Data('TTaxcodeVS1', JSON.stringify(data));
             $("<span class='process'>Tax Codes Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
         }).catch(function(err) {
+
+        });
+
+        sideBarService.getSubTaxCode().then(function (dataReload) {
+          addVS1Data('TSubTaxVS1', JSON.stringify(dataReload));
+        }).catch(function (err) {
 
         });
     }
@@ -8399,6 +8405,39 @@ Template.newsidenav.events({
     'click #sidenavcompanyappsettings': function(event) {
         window.open('/companyappsettings', '_self');
     },
+    'click #organisationsettings': function(event) {
+      window.open('/organisationsettings', '_self');
+    },
+    'click #backuprestore': function(event) {
+      window.open('/backuprestore', '_self');
+    },
+    'click #clienttypesettings': function(event) {
+      window.open('/clienttypesettings', '_self');
+    },
+    'click #leadstatussettings': function(event) {
+      window.open('/leadstatussettings', '_self');
+    },
+    'click #edIntegrations': function(event) {
+      window.open('/edi-integrations', '_self');
+    },
+    'click #emailsettings': function(event) {
+      window.open('/emailsettings', '_self');
+    },
+    'click #payrollrules': function(event) {
+      window.open('/payrollrules', '_self');
+    },
+    'click #templatesettings': function(event) {
+      window.open('/templatesettings', '_self');
+    },
+    'click #setup': function(event) {
+      window.open('/setup', '_self');
+    },
+    'click #subscriptionSettings': function(event) {
+      window.open('/subscriptionSettings', '_self');
+    },
+    'click #uomSettings': function(event) {
+      window.open('/uomSettings', '_self');
+    },
     'click #sidenavcurrenciesSettings': function(event) {
         event.preventDefault();
         FlowRouter.go('/currenciessettings');
@@ -9431,4 +9470,3 @@ Template.newsidenav.helpers({
       return Template.instance().isAppointmentSMS.get();
     }
 });
-
