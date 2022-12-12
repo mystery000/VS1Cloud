@@ -189,33 +189,37 @@ const authenticatedRoutes = FlowRouter.group({
     triggersEnter: [authenticatedRedirect]
 });
 
+let previous_url = "";
+
+FlowRouter.triggers.enter([
+    function (context, redirect, stop) {
+        if (previous_url !== "" && previous_url !== context.path && JSON.parse(localStorage.getItem("isFormUpdated"))) {
+            stop();
+            swal({
+                title: 'WARNING!',
+                text: 'Do you wish to save your changes?',
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    FlowRouter.go(previous_url);
+                } else if (result.dismiss === 'cancel') {
+                    FlowRouter.go(context.path);
+                    //TODO need to url async
+                    previous_url = "";
+                    localStorage.setItem("isFormUpdated", false);
+                }
+            });
+        }
+    }
+]);
+
 FlowRouter.triggers.exit([
     function (context, redirect) {
         if (JSON.parse(localStorage.getItem("isFormUpdated"))) {
-            // console.log("-------------------------------", context.path, window.location.href);
-            // redirect(context.path);
-            // swal({
-            //     title: 'WARNING!',
-            //     text: 'Do you wish to save your changes?',
-            //     type: 'question',
-            //     showCancelButton: true,
-            //     confirmButtonText: 'Yes',
-            //     cancelButtonText: 'No'
-            // }).then((result) => {
-            //     console.log("-------------------------------", result);
-            //     if (result.value) {
-            //     //
-            //     } else if (result.dismiss === 'cancel') {
-            //         window.location.reload();
-            //         // redirect(window.location.href);
-            //         localStorage.setItem("isFormUpdated", false);
-            //     }
-            // });
-            if (confirm("Changes you made may not be saved.")) {
-                localStorage.setItem("isFormUpdated", false);
-            } else {
-                redirect(context.path);
-            }
+            previous_url = context.path;
         }
     }
 ], {only: ["basreturn", "depositcard", "chequecard", "newbankrule", "customerscard", "workordercard",
