@@ -2498,7 +2498,6 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
         // }else{
         //   deleteFilter = false;
         // };
-        console.log('data:',data.tclienttype)
         for (let i = 0; i < data.tclienttype.length; i++) {
           let mobile = "";
           //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
@@ -2515,7 +2514,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             data.tclienttype[i].fields.CreditLimit || 0.0,
             data.tclienttype[i].fields.DefaultPostAccount || "",
             data.tclienttype[i].fields.GracePeriod || "",
-            data.tclienttype[i].fields.DefaultPostAccount || "",//need to be replaced with Default Discount
+            data.tclienttype[i].fields.TermsName || "",//need to be replaced with Default Discount
             data.tclienttype[i].fields.TermsName || "",
             data.tclienttype[i].fields.TermsName || "", // need to be replaced with prefered payment method
             linestatus,
