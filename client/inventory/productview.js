@@ -6303,12 +6303,320 @@ Template.productview.events({
         NewUOMRow.find('#sltsalesacount').editableSelect();
         NewUOMRow.find('#sltsalesacount').val('Sales');
         NewUOMRow.find('#slttaxcodesales').editableSelect();
+        NewUOMRow.find('#sltsalesacount').editableSelect().on('click.editable-select', function(e, li) {
+            accSelected = "sales";
+            $('#accSelected').val(accSelected);
+            var $earch = $(this);
+            var offset = $earch.offset();
+            var salesAccountDataName = e.target.value || '';
+            var accountType = "INC";
+            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                templateObject.getAccountsByCategory(accountType);
+
+            } else {
+                if (salesAccountDataName.replace(/\s/g, '') != '') {
+                    if (salesAccountDataName.replace(/\s/g, '') != '') {
+                        $('#add-account-title').text('Edit Account Details');
+                        getVS1Data('TAccountVS1').then(function(dataObject) {
+                            if (dataObject.length == 0) {
+                                productService.getAccountName().then(function(data) {
+                                    let lineItems = [];
+                                    let lineItemObj = {};
+                                    for (let i = 0; i < data.taccountvs1.length; i++) {
+                                        if ((data.taccountvs1[i].AccountName) === salesAccountDataName) {
+                                            $('#edtAccountName').attr('readonly', true);
+                                            let taxCode = data.taccountvs1[i].TaxCode;
+                                            var accountID = data.taccountvs1[i].ID || '';
+                                            var acountName = data.taccountvs1[i].AccountName || '';
+                                            var accountNo = data.taccountvs1[i].AccountNumber || '';
+                                            var accountType = data.taccountvs1[i].AccountTypeName || '';
+                                            var accountDesc = data.taccountvs1[i].Description || '';
+                                            $('#edtAccountID').val(accountID);
+                                            $('#sltAccountType').val(accountType);
+                                            $('#edtAccountName').val(acountName);
+                                            $('#edtAccountNo').val(accountNo);
+                                            $('#sltTaxCode').val(taxCode);
+                                            $('#txaAccountDescription').val(accountDesc);
+                                            setTimeout(function() {
+                                                $('#addAccountModal').modal('toggle');
+                                            }, 100);
+                                        }
+                                    }
+
+                                }).catch(function(err) {
+                                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                    $('.fullScreenSpin').css('display', 'none');
+                                    // Meteor._reload.reload();
+                                });
+                            } else {
+                                let data = JSON.parse(dataObject[0].data);
+                                let useData = data.taccountvs1;
+                                let lineItems = [];
+                                let lineItemObj = {};
+                                $('#add-account-title').text('Edit Account Details');;
+                                for (let i = 0; i < useData.length; i++) {
+                                    if ((useData[i].fields.AccountName) === salesAccountDataName) {
+                                        $('#edtAccountName').attr('readonly', true);
+                                        let taxCode = useData[i].fields.TaxCode;
+                                        var accountID = useData[i].fields.ID || '';
+                                        var acountName = useData[i].fields.AccountName || '';
+                                        var accountNo = useData[i].fields.AccountNumber || '';
+                                        var accountType = useData[i].fields.AccountTypeName || '';
+                                        var accountDesc = useData[i].fields.Description || '';
+                                        $('#edtAccountID').val(accountID);
+                                        $('#sltAccountType').val(accountType);
+                                        $('#edtAccountName').val(acountName);
+                                        $('#edtAccountNo').val(accountNo);
+                                        $('#sltTaxCode').val(taxCode);
+                                        $('#txaAccountDescription').val(accountDesc);
+                                        $('#addAccountModal').modal('toggle');
+                                        //}, 500);
+                                    }
+                                }
+                            }
+                        }).catch(function(err) {
+                            productService.getAccountName().then(function(data) {
+                                let lineItems = [];
+                                let lineItemObj = {};
+                                for (let i = 0; i < data.taccountvs1.length; i++) {
+                                    if ((data.taccountvs1[i].AccountName) === salesAccountDataName) {
+                                        $('#add-account-title').text('Edit Account Details');
+                                        let taxCode = data.taccountvs1[i].TaxCode;
+                                        var accountID = data.taccountvs1[i].ID || '';
+                                        var acountName = data.taccountvs1[i].AccountName || '';
+                                        var accountNo = data.taccountvs1[i].AccountNumber || '';
+                                        var accountType = data.taccountvs1[i].AccountTypeName || '';
+                                        var accountDesc = data.taccountvs1[i].Description || '';
+                                        $('#edtAccountID').val(accountID);
+                                        $('#sltAccountType').val(accountType);
+                                        $('#edtAccountName').val(acountName);
+                                        $('#edtAccountNo').val(accountNo);
+                                        $('#sltTaxCode').val(taxCode);
+                                        $('#txaAccountDescription').val(accountDesc);
+                                        setTimeout(function() {
+                                            $('#addAccountModal').modal('toggle');
+                                        }, 100);
+
+                                    }
+                                }
+
+                            }).catch(function(err) {
+                                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                $('.fullScreenSpin').css('display', 'none');
+                                // Meteor._reload.reload();
+                            });
+                        });
+                    } else {
+                        templateObject.getAccountsByCategory(accountType);
+                    }
+                } else {
+                    templateObject.getAccountsByCategory(accountType);
+                }
+
+            }
+        });
         NewUOMRow.find('#slttaxcodesales').val(loggedTaxCodeSalesInc);
+        NewUOMRow.find('#slttaxcodesales').editableSelect()
+                   .on('click.editable-select', function(e, li) {
+                       var $earch = $(this);
+                       taxSelected = "sales";
+                       $("#taxSelected").val(taxSelected);
+                       var offset = $earch.offset();
+                       var taxRateDataName = e.target.value || '';
+                       var taxCodePurchaseDataName = e.target.value || '';
+                       if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                           $('#taxRateListModal').modal('toggle');
+                       } else {
+                           if (taxRateDataName.replace(/\s/g, '') != '') {
+                               $('.taxcodepopheader').text('Edit Tax Rate');
+                               getVS1Data('TTaxcodeVS1').then(function(dataObject) {
+                                   if (dataObject.length == 0) {
+                                       purchaseService.getTaxCodesVS1().then(function(data) {
+                                           let lineItems = [];
+                                           let lineItemObj = {};
+                                           for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                                               if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+                                                   $('#edtTaxNamePop').attr('readonly', true);
+                                                   let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                                   var taxRateID = data.ttaxcodevs1[i].Id || '';
+                                                   var taxRateName = data.ttaxcodevs1[i].CodeName || '';
+                                                   var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+                                                   $('#edtTaxID').val(taxRateID);
+                                                   $('#edtTaxNamePop').val(taxRateName);
+                                                   $('#edtTaxRatePop').val(taxRate);
+                                                   $('#edtTaxDescPop').val(taxRateDesc);
+                                                   setTimeout(function() {
+                                                       $('#newTaxRateModal').modal('toggle');
+                                                   }, 100);
+                                               }
+                                           }
+
+                                       }).catch(function(err) {
+                                           // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                           $('.fullScreenSpin').css('display', 'none');
+                                           // Meteor._reload.reload();
+                                       });
+                                   } else {
+                                       let data = JSON.parse(dataObject[0].data);
+                                       let useData = data.ttaxcodevs1;
+                                       let lineItems = [];
+                                       let lineItemObj = {};
+                                       $('.taxcodepopheader').text('Edit Tax Rate');
+                                       for (let i = 0; i < useData.length; i++) {
+
+                                           if ((useData[i].CodeName) === taxRateDataName) {
+                                               $('#edtTaxNamePop').attr('readonly', true);
+                                               let taxRate = (useData[i].Rate * 100).toFixed(2);
+                                               var taxRateID = useData[i].Id || '';
+                                               var taxRateName = useData[i].CodeName || '';
+                                               var taxRateDesc = useData[i].Description || '';
+                                               $('#edtTaxID').val(taxRateID);
+                                               $('#edtTaxNamePop').val(taxRateName);
+                                               $('#edtTaxRatePop').val(taxRate);
+                                               $('#edtTaxDescPop').val(taxRateDesc);
+                                               //setTimeout(function() {
+                                               $('#newTaxRateModal').modal('toggle');
+                                               //}, 500);
+                                           }
+                                       }
+                                   }
+                               }).catch(function(err) {
+                                   purchaseService.getTaxCodesVS1().then(function(data) {
+                                       let lineItems = [];
+                                       let lineItemObj = {};
+                                       for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                                           if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+                                               $('#edtTaxNamePop').attr('readonly', true);
+                                               let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                               var taxRateID = data.ttaxcodevs1[i].Id || '';
+                                               var taxRateName = data.ttaxcodevs1[i].CodeName || '';
+                                               var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+                                               $('#edtTaxID').val(taxRateID);
+                                               $('#edtTaxNamePop').val(taxRateName);
+                                               $('#edtTaxRatePop').val(taxRate);
+                                               $('#edtTaxDescPop').val(taxRateDesc);
+                                               setTimeout(function() {
+                                                   $('#newTaxRateModal').modal('toggle');
+                                               }, 100);
+
+                                           }
+                                       }
+
+                                   }).catch(function(err) {
+                                       // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                       $('.fullScreenSpin').css('display', 'none');
+                                       // Meteor._reload.reload();
+                                   });
+                               });
+                           } else {
+                               $('#taxRateListModal').modal('toggle');
+                           }
+
+                       }
+                   });
         NewUOMRow.insertAfter(".uomRow:last");
         var COGSRowClone = $('.COGSRow:first');
         var NewCOGSRow = COGSRowClone.clone().prop('id', 'COGS' + tokenid);
         NewCOGSRow[0].style.display = 'flex';
         NewCOGSRow.find('#slttaxcodesales').editableSelect();
+        NewCOGSRow.find('#slttaxcodesales').editableSelect()
+                   .on('click.editable-select', function(e, li) {
+                       var $earch = $(this);
+                       taxSelected = "sales";
+                       $("#taxSelected").val(taxSelected);
+                       var offset = $earch.offset();
+                       var taxRateDataName = e.target.value || '';
+                       var taxCodePurchaseDataName = e.target.value || '';
+                       if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                           $('#taxRateListModal').modal('toggle');
+                       } else {
+                           if (taxRateDataName.replace(/\s/g, '') != '') {
+                               $('.taxcodepopheader').text('Edit Tax Rate');
+                               getVS1Data('TTaxcodeVS1').then(function(dataObject) {
+                                   if (dataObject.length == 0) {
+                                       purchaseService.getTaxCodesVS1().then(function(data) {
+                                           let lineItems = [];
+                                           let lineItemObj = {};
+                                           for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                                               if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+                                                   $('#edtTaxNamePop').attr('readonly', true);
+                                                   let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                                   var taxRateID = data.ttaxcodevs1[i].Id || '';
+                                                   var taxRateName = data.ttaxcodevs1[i].CodeName || '';
+                                                   var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+                                                   $('#edtTaxID').val(taxRateID);
+                                                   $('#edtTaxNamePop').val(taxRateName);
+                                                   $('#edtTaxRatePop').val(taxRate);
+                                                   $('#edtTaxDescPop').val(taxRateDesc);
+                                                   setTimeout(function() {
+                                                       $('#newTaxRateModal').modal('toggle');
+                                                   }, 100);
+                                               }
+                                           }
+
+                                       }).catch(function(err) {
+                                           // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                           $('.fullScreenSpin').css('display', 'none');
+                                           // Meteor._reload.reload();
+                                       });
+                                   } else {
+                                       let data = JSON.parse(dataObject[0].data);
+                                       let useData = data.ttaxcodevs1;
+                                       let lineItems = [];
+                                       let lineItemObj = {};
+                                       $('.taxcodepopheader').text('Edit Tax Rate');
+                                       for (let i = 0; i < useData.length; i++) {
+
+                                           if ((useData[i].CodeName) === taxRateDataName) {
+                                               $('#edtTaxNamePop').attr('readonly', true);
+                                               let taxRate = (useData[i].Rate * 100).toFixed(2);
+                                               var taxRateID = useData[i].Id || '';
+                                               var taxRateName = useData[i].CodeName || '';
+                                               var taxRateDesc = useData[i].Description || '';
+                                               $('#edtTaxID').val(taxRateID);
+                                               $('#edtTaxNamePop').val(taxRateName);
+                                               $('#edtTaxRatePop').val(taxRate);
+                                               $('#edtTaxDescPop').val(taxRateDesc);
+                                               //setTimeout(function() {
+                                               $('#newTaxRateModal').modal('toggle');
+                                               //}, 500);
+                                           }
+                                       }
+                                   }
+                               }).catch(function(err) {
+                                   purchaseService.getTaxCodesVS1().then(function(data) {
+                                       let lineItems = [];
+                                       let lineItemObj = {};
+                                       for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                                           if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+                                               $('#edtTaxNamePop').attr('readonly', true);
+                                               let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                               var taxRateID = data.ttaxcodevs1[i].Id || '';
+                                               var taxRateName = data.ttaxcodevs1[i].CodeName || '';
+                                               var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+                                               $('#edtTaxID').val(taxRateID);
+                                               $('#edtTaxNamePop').val(taxRateName);
+                                               $('#edtTaxRatePop').val(taxRate);
+                                               $('#edtTaxDescPop').val(taxRateDesc);
+                                               setTimeout(function() {
+                                                   $('#newTaxRateModal').modal('toggle');
+                                               }, 100);
+
+                                           }
+                                       }
+
+                                   }).catch(function(err) {
+                                       // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                       $('.fullScreenSpin').css('display', 'none');
+                                       // Meteor._reload.reload();
+                                   });
+                               });
+                           } else {
+                               $('#taxRateListModal').modal('toggle');
+                           }
+
+                       }
+                   });
         NewCOGSRow.find('#slttaxcodesales').val(loggedTaxCodeSalesInc);
         NewCOGSRow.insertAfter(".COGSRow:last");
         // itemClineID.find('input[type="text"]').val('');
