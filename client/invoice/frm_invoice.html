@@ -116,7 +116,7 @@
     {{#if invoicerecord}}
     <form>
       {{> transaction_header
-        cardType="invoice"
+        cardType="Invoice"
         data=invoicerecord
         uploadedFile=uploadedFile
         isCurrencyEnable=isCurrencyEnable
@@ -124,6 +124,7 @@
         showTemplateModals=true
         showUploadAttachment=true
         showTransactionButtons=true
+        salesCloudPreferenceRec=salesCloudPreferenceRec
       }}
 
       {{> transaction_line

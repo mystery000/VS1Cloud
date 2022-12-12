@@ -1021,7 +1021,8 @@
                                                                 text-decoration: none;
                                                             }
                                                         </style>
-                                                        <table id="tblCrmList" style="width:100%" class="dataTable table table-striped table-bordered tblCrmList">
+                                                        {{> non_transactional_list tablename="tblLeadCrmList"}} 
+                                                        <!-- <table id="tblCrmList" style="width:100%" class="dataTable table table-striped table-bordered tblCrmList">
                                                             <thead>
                                                                 <tr class="dnd-moved">
                                                                     <th class="th colTaskId hiddenColumn"></th>
@@ -1060,7 +1061,7 @@
                                                                     {{/each}}
                                                                 {{/if}}
                                                             </tbody>
-                                                        </table>
+                                                        </table> -->
                                                     </div>
                                                 </div>
                                             </div>

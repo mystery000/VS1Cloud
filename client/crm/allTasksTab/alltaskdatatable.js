@@ -719,8 +719,11 @@ Template.alltaskdatatable.onRendered(function() {
                     "</span></button>"
                 ).insertAfter("#tblTodayTaskDatatable_filter");
                 //Open Detail Modal
-                const id = FlowRouter.current().queryParams.id;
-                openEditTaskModal(id, "")
+                const id = FlowRouter.current().queryParams.id||'';
+                if(id != ""){
+                  openEditTaskModal(id, "");
+                };
+
             },
         });
         $("#tblTodayTaskDatatable_filter input").val(search);
@@ -2343,8 +2346,12 @@ Template.alltaskdatatable.events({
 
                 let assignId = $('#assignedID').val();
                 let assignName = $('#crmEditSelectEmployeeList').val();
+                let assignPhone = $('#contactPhoneUser').val();
+                let assignEmail = $('#contactEmailUser').val();
                 let contactID = $('#contactID').val();
                 let contactName = $('#crmEditSelectLeadList').val();
+                let contactPhone = $('#contactPhoneClient').val();
+                let contactEmail = $('#contactEmailClient').val();
 
                 let contactType = $('#contactType').val();
                 let customerID = 0;
@@ -2378,7 +2385,11 @@ Template.alltaskdatatable.events({
                         SupplierID: supplierID,
                         AssignID: assignId,
                         AssignName: assignName,
+                        AssignEmail: assignEmail,
+                        AssignPhone: assignPhone,
                         ContactName: contactName,
+                        ContactPhone: contactPhone,
+                        ContactEmail: contactEmail,
                         ProjectID: projectID,
                         ProjectName: projectName,
                         Completed: completed,
@@ -3968,7 +3979,6 @@ function openEditTaskModal(id, type) {
     // let catg = e.target.dataset.catg;
     let templateObject = Template.instance();
     // $("#editProjectID").val("");
-
     $("#txtCrmSubTaskID").val(id);
 
     $(".fullScreenSpin").css("display", "inline-block");
@@ -4001,38 +4011,49 @@ function openEditTaskModal(id, type) {
             // $('#contactEmailClient').val(selected_record.ClientEmail);
             // $('#contactPhoneClient').val(selected_record.ClientPhone);
 
+            $("#contactEmailClient").val(selected_record.ContactEmail);
+            $("#contactPhoneClient").val(selected_record.ContactPhone);
+            $("#contactEmailUser").val(selected_record.AssignEmail);
+            $("#contactPhoneUser").val(selected_record.AssignPhone);
+
             let colClientName = selected_record.ContactName;
             $('#crmEditSelectLeadList').val(colClientName);
             if (selected_record.CustomerID) {
                 $('#contactID').val(selected_record.CustomerID)
                 $('#contactType').val('Customer')
 
-                contactService.getOneEmployeeDataEx(selected_record.CustomerID).then(function(empDetailInfo) {
-                    $('#contactEmailClient').val(empDetailInfo.fields.Email);
-                    $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
-                }).catch(function(err) {
-    
-                });
+                if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
+                    contactService.getOneEmployeeDataEx(selected_record.CustomerID).then(function(empDetailInfo) {
+                        $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                        $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                    }).catch(function(err) {
+
+                    });
+                }
             } else if (selected_record.LeadID) {
                 $('#contactID').val(selected_record.LeadID)
                 $('#contactType').val('Lead')
 
-                contactService.getOneLeadDataEx(selected_record.LeadID).then(function(empDetailInfo) {
-                    $('#contactEmailClient').val(empDetailInfo.fields.Email);
-                    $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
-                }).catch(function(err) {
-    
-                });
+                if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
+                    contactService.getOneLeadDataEx(selected_record.LeadID).then(function(empDetailInfo) {
+                        $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                        $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                    }).catch(function(err) {
+
+                    });
+                }
             } else {
                 $('#contactID').val(selected_record.SupplierID)
                 $('#contactType').val('Supplier')
                 if (selected_record.SupplierID) {
-                    contactService.getOneSupplierDataEx(selected_record.SupplierID).then(function(empDetailInfo) {
-                        $('#contactEmailClient').val(empDetailInfo.fields.Email);
-                        $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
-                    }).catch(function(err) {
-        
-                    });
+                    if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
+                        contactService.getOneSupplierDataEx(selected_record.SupplierID).then(function(empDetailInfo) {
+                            $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                            $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                        }).catch(function(err) {
+
+                        });
+                    }
                 }
             }
 
