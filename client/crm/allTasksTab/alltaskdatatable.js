@@ -719,8 +719,11 @@ Template.alltaskdatatable.onRendered(function() {
                     "</span></button>"
                 ).insertAfter("#tblTodayTaskDatatable_filter");
                 //Open Detail Modal
-                const id = FlowRouter.current().queryParams.id;
-                openEditTaskModal(id, "")
+                const id = FlowRouter.current().queryParams.id||'';
+                if(id != ""){
+                  openEditTaskModal(id, "");
+                };
+
             },
         });
         $("#tblTodayTaskDatatable_filter input").val(search);
@@ -3976,7 +3979,6 @@ function openEditTaskModal(id, type) {
     // let catg = e.target.dataset.catg;
     let templateObject = Template.instance();
     // $("#editProjectID").val("");
-
     $("#txtCrmSubTaskID").val(id);
 
     $(".fullScreenSpin").css("display", "inline-block");
