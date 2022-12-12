@@ -17,7 +17,7 @@
           <div class="row justify-content-center mb-3">
             <div class="row add_dy">
               {{#each title in getTemplateList}}
-              <div class="col-12  coltr {{title}}" id="id_{{title}}">
+              <div class="col-12  coltr {{title}} {{#unless equals getTemplateNumber.length 1}} col-md-6 {{/unless}}" id="id_{{title}}">
                 <div class="card shadow mb-3">
                   <div class="card-header py-3">
                     <span id="{{title}}_title" class="text-primary m-0 font-weight-bold">
@@ -118,6 +118,35 @@
                             value="Template {{index}}" />
                         </div>
                         {{/if}}
+                        {{#if equals templateTitle 'Sales Order'}}
+                        <div class="custom-control custom-switch">
+                          {{#if equals index '1'}}
+                            {{#if equals title 'Sales Order'}}
+                            <input type="hidden" name="{{title}}"/>
+                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Sales_Orders_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                            {{/if}}
+                            {{#if equals title 'Delivery Docket'}}
+                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Delivery_Docket_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                            {{/if}}
+                          {{else}}
+                            {{#if equals title 'Sales Order'}}
+                            <input type="hidden" name="{{title}}"/>
+                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Sales_Orders_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                            {{/if}}
+                            {{#if equals title 'Delivery Docket'}}
+                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Delivery_Docket_{{index}}" value="{{index}}"  style="cursor: pointer;">
+                            {{/if}}
+                          {{/if}}
+                          {{#if equals title 'Sales Order'}}
+                          <label class="custom-control-label" for="Sales_Orders_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                          {{/if}}
+
+                          {{#if equals title 'Delivery Docket'}}
+                          <label class="custom-control-label" for="Delivery_Docket_{{index}}" style="cursor: pointer; color: transparent;"></label>
+                          {{/if}}
+                          <input type="text" name="{{title}}_{{index}}" style="border: 1px solid rgb(209 211 226 / 0%);" value="Template {{index}}" />
+                      </div>
+                        {{/if}}
                         {{#if equals templateTitle 'Credit'}}
                         <div class="custom-control custom-switch">
                           {{#if equals index '1'}}
@@ -183,6 +212,7 @@
                             style="border: 1px solid rgb(209 211 226 / 0%);" value="Template {{index}}" />
                         </div>
                         {{/if}}
+                       
                         <i 
                           id="btnPreviewTemplate" 
                           data-id="{{title}}" 
@@ -270,6 +300,14 @@
                   </div>
                 </div>
                 {{/if}}
+                {{#if equals title 'Sales Order'}}
+                <div class="col-12 ">
+                  <div class="custom-control custom-switch">
+                    <input class="custom-control-input chkGlobalSettings" name="print_sales_order" checked type="checkbox" id="print_sales_order" autocomplete="off">
+                    <label style="cursor: pointer;" class="custom-control-label" for="print_sales_order">Print Sales Order</label>
+                  </div>
+                </div>
+              {{/if}}
               </div>
               {{/each}}
             </div>

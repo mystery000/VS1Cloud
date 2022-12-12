@@ -193,10 +193,16 @@
               label=getUserLabel
             }}
           {{else}}
+          {{# if equals cardType 'Sales Order'}}
+            {{> customer_selector
+              label=getUserLabel
+            }}
+          {{else}}
           {{> customer_selector
             label=getUserLabel
             id='edtSupplierName'
           }}
+          {{/if}}
           {{/if}}
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-3">
@@ -232,9 +238,17 @@
                 lastname=invoicerecord.lastname
               }}
               {{else}}
+              {{#if equals cardType 'Sales Order'}}
+              {{> po_number_input
+                value=invoicerecord.custPONumber
+                firstname=invoicerecord.firstname
+                lastname=invoicerecord.lastname
+              }}
+              {{else}}
               {{> invoice_number_input
                 value=data.invoicenumber
               }}
+              {{/if}}
               {{/if}}
             </div>
             {{#unless equals cardType 'Invoice'}}
@@ -285,7 +299,11 @@
               {{#if equals cardType 'Invoice'}}
               {{> CurrencyWidget rate="sell" trans="true"}}
               {{else}}
+              {{#if equals cardType 'Sales Order'}}
+              {{> CurrencyWidget rate="sell" trans="true"}}
+              {{else}}
               {{> CurrencyWidget rate="buy" row="true"}}
+              {{/if}}
               {{/if}}
             {{/if}}
 
@@ -324,6 +342,8 @@
           recordispaid=data.ispaid
           recordbalanceDue=data.balanceDue
           recordtype=cardType
+          isConverted=data.isConverted
+          abletomakeworkorder=abletomakeworkorder
         }}
       </div>
     </div>

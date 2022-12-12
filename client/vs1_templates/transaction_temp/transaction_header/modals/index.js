@@ -11,7 +11,9 @@ Template.template_selection_modal.helpers({
       return ["Credits"];
     } else if (templateTitle === "PO") {
       return ["Purchase Orders"];
-    }  else {
+    } else if (templateTitle === "Sales Order") {
+      return ["Sales Order", "Delivery Docket"]
+    } else {
       return [];
     }
   },
