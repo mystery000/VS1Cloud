@@ -91,8 +91,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
-        /*
-      getVS1Data("VS1_Customize").then(function (dataObject) {
+        getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
@@ -110,7 +109,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
            }
          };
         }
-    });*/
+    });
 
     } catch (error) {
 
@@ -148,7 +147,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
           location.reload();
         };
 
-      //Products Data
+      //Products list
       templateObject.getProductsData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
         getVS1Data('TProductVS1').then(function (dataObject) {
@@ -232,7 +231,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         setTimeout(function () {
             //$('#'+currenttablename).removeClass('hiddenColumn');
             $('#'+currenttablename).DataTable({
-                data: splashArrayProductList,
+                data: templateObject.transactiondatatablerecords.get(),
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                       targets: 0,
@@ -340,7 +339,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                 info: true,
                 responsive: true,
-                "order": [[1, "asc"]],
+                // "order": [[1, "asc"]],
+                order: false,
                 action: function () {
                     $('#'+currenttablename).DataTable().ajax.reload();
                 },
@@ -361,7 +361,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
 
                     $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
                   $('.fullScreenSpin').css('display', 'inline-block');
-                  //var splashArrayCustomerListDupp = new Array();
                   let dataLenght = oSettings._iDisplayLength;
                   let customerSearch = $('#'+currenttablename+'_filter input').val();
 
@@ -491,41 +490,62 @@ Template.internal_transaction_list_with_switchbox.events({
             $(".chkBox").prop("checked", false);
             $(`.${currenttablename} .colChkBox`).closest('tr').removeClass('checkRowSelected');
         }
-
     },
-    'click .chkBox': async function (event) {
+    //On switchbox change, place row on 1st row and change color
+    'change .chkBox': async function (event) {
+        event.preventDefault();
+        event.stopPropagation();
         const templateObject = Template.instance();
         let currenttablename = await templateObject.tablename.get()||'';
         if($(event.target).is(':checked')){
-            $(event.target).closest('tr').addClass('checkRowSelected');
-            var chkID = $('.chkBox').prop("checked") ? 1 : 0;
-              dataTableList = dataTableList.filter((value, index) => {
-                if (chkID == 1) {
-                  return true;
-                }
-                return false;
-              });
+          let currentTableData = templateObject.transactiondatatablerecords.get();
+          let itemID = $(event.target).closest('tr').find('.colID').text();
+          let index = currentTableData.findIndex(item => item[1] == itemID);
+          let targetRow = currentTableData[index];
+          let chk = targetRow[0];
+          chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" checked');
+          targetRow.splice(0, 1, chk);
 
-            // Sort by created at
-            dataTableList = dataTableList.sort(chkID);
-            dataTableList.reverse();
+          if (index > -1) {
+            currentTableData.splice(index, 1);
+          }
+          let newTableData = [targetRow, ...currentTableData];
+          templateObject.transactiondatatablerecords.set(newTableData);
+          $('#'+currenttablename).DataTable().clear();
+          $('#'+currenttablename).DataTable().rows.add(newTableData).draw();
+          let rows = $('#'+currenttablename).find('tbody tr');
+          for(let i = 0; i < rows.length; i ++) {
+           if( $(rows[i]).find('input.chkBox').prop('checked') == true ){
+            if($(rows[i]).hasClass('checkRowSelected') == false) {
+              $(rows[i]).addClass('checkRowSelected');
+            }
+            }
+          }
 
-            await templateInstance.datatablerecords.set(dataTableList);
         } else {
             $(event.target).closest('tr').removeClass('checkRowSelected');
-            var chkID = $('.chkBox').prop("checked") ? 0 : 1;
-            dataTableList = dataTableList.filter((value, index) => {
-              if (chkID == 1) {
-                return true;
-              }
-              return false;
-            });
-
-          // Sort by created at
-          dataTableList = dataTableList.sort(chkID);
-          dataTableList.reverse();
-
-          await templateInstance.datatablerecords.set(dataTableList);
+            let currentTableData = templateObject.transactiondatatablerecords.get();
+            let itemID = $(event.target).closest('tr').find('.colID').text();
+            let checkedRowIndex = currentTableData.findIndex(row=>{
+              return row[1] == itemID;
+            })
+            let targetRow = currentTableData[checkedRowIndex];
+            let chk = targetRow[0];
+            chk = chk.replace('type="checkbox" checked', 'type="checkbox"');
+            targetRow.splice(0, 1, chk);
+            currentTableData.splice(checkedRowIndex, 1);
+            let newTableData = [...currentTableData, targetRow];
+            templateObject.transactiondatatablerecords.set(newTableData);
+            $('#'+currenttablename).DataTable().clear();
+            $('#'+currenttablename).DataTable().rows.add(newTableData).draw();
+            let rows = $('#'+currenttablename).find('tbody tr');
+            for(let i = 0; i < rows.length; i ++) {
+                if( $(rows[i]).find('input.chkBox').prop('checked') == true ){
+                    if($(rows[i]).hasClass('checkRowSelected') == false) {
+                      $(rows[i]).addClass('checkRowSelected');
+                    }
+                }
+            }
         }
     },
     "click .btnViewDeleted": async function (e) {
@@ -548,9 +568,6 @@ Template.internal_transaction_list_with_switchbox.events({
       let templateObject = Template.instance();
       let currenttablename = await templateObject.tablename.get()||'';
 
-      // var datatable = $(`#${currenttablename}`).DataTable();
-      // datatable.clear();
-      // datatable.draw(false);
       $('.btnHideDeleted').css('display','none');
       $('.btnViewDeleted').css('display','inline-block');
 

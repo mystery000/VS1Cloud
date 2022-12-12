@@ -1443,7 +1443,6 @@ Template.basreturn.onRendered(function() {
         }).catch(function(err) {
             let taxRateList = templateObject.taxRateList.get();
             let accountsList = templateObject.accountsList.get();
-            let deptrecords = templateObject.deptrecords.get();
 
             reportService.getAllBASReturn().then(function(data) {
                 for (let i = 0; i < data.tbasreturn.length; i++) {

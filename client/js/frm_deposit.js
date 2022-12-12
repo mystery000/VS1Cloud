@@ -1472,10 +1472,23 @@ Template.depositcard.onRendered(()=>{
 
 
     $(document).on("click", "#tblAccount tbody tr", function(e) {
-      $(".colAccount").removeClass('boldtablealertsborder');
+        var table = $(this);
+        let isHeader = table.find(".isHeader").text() == "true";
+        if (isHeader) {
+            swal({
+                title: 'This account is header',
+                text: "You can't do anything on this account",
+                type: 'info',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+                }).then((result) => {
+                    return;
+                });
+            return; 
+        }
+        $(".colAccount").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
         let taxcodeList = templateObject.taxraterecords.get();
-        var table = $(this);
         let utilityService = new UtilityService();
         let $tblrows = $("#tblDepositEntryLine tbody tr");
 
