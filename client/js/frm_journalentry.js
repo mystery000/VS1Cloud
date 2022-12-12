@@ -4024,7 +4024,7 @@ Template.journalentrycard.events({
         }
     },
     'click .btnRemove': async function(event) {
-
+        var templateObject = Template.instance();
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
        
