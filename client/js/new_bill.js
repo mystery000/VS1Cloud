@@ -85,6 +85,9 @@ Template.billcard.onCreated(() => {
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.hasFollow = new ReactiveVar(false);
+
+    templateObject.supplierRecord = new ReactiveVar();
+
 });
 Template.billcard.onRendered(() => {
     let templateObject = Template.instance();
@@ -4078,6 +4081,54 @@ Template.billcard.onRendered(() => {
                             }
 
                             setTimeout(function() {
+                                let supplierRecord = {
+                                    id: popSupplierID,
+                                    company: popSupplierName,
+                                    email: popSupplierEmail,
+                                    title: popSupplierTitle,
+                                    firstname: popSupplierFirstName,
+                                    middlename: popSupplierMiddleName,
+                                    lastname: popSupplierLastName,
+                                    tfn: '' || '',
+                                    phone: popSupplierPhone,
+                                    mobile: popSupplierMobile,
+                                    fax: popSupplierFaxnumber,
+                                    skype: popSupplierSkypeName,
+                                    website: popSupplierURL,
+                                    shippingaddress: popSupplierStreet,
+                                    scity: popSupplierStreet2,
+                                    sstate: popSupplierState,
+                                    spostalcode: popSupplierPostcode,
+                                    scountry: popSupplierCountry,
+                                    billingaddress: popSupplierbillingaddress,
+                                    bcity: popSupplierbcity,
+                                    bstate: popSupplierbstate,
+                                    bpostalcode: popSupplierbpostalcode,
+                                    bcountry: popSupplierbcountry,
+                                    custfield1: popSuppliercustfield1,
+                                    custfield2: popSuppliercustfield2,
+                                    custfield3: popSuppliercustfield3,
+                                    custfield4: popSuppliercustfield4,
+                                    notes: popSuppliernotes,
+                                    preferedpayment: popSupplierpreferedpayment,
+                                    terms: popSupplierterms,
+                                    deliverymethod: popSupplierdeliverymethod,
+                                    accountnumber: popSupplieraccountnumber,
+                                    isContractor: popSupplierisContractor,
+                                    issupplier: popSupplierissupplier,
+                                    iscustomer: popSupplieriscustomer,
+                                    bankName: data.tsuppliervs1[0].fields.BankName || '',
+                                    swiftCode: data.tsuppliervs1[0].fields.SwiftCode || '',
+                                    routingNumber: data.tsuppliervs1[0].fields.RoutingNumber || '',
+                                    bankAccountName: data.tsuppliervs1[0].fields.BankAccountName || '',
+                                    bankAccountBSB: data.tsuppliervs1[0].fields.BankAccountBSB || '',
+                                    bankAccountNo: data.tsuppliervs1[0].fields.BankAccountNo || '',
+                                    foreignExchangeCode:data.tsuppliervs1[0].fields.ForeignExchangeCode || CountryAbbr,
+                                    // openingbalancedate: data.tsuppliervs1[0].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[0].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                                    // taxcode:data.tsuppliervs1[0].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                                };
+                                templateObject.supplierRecord.set(supplierRecord);
+
                                 $('#addSupplierModal').modal('show');
                             }, 200);
 
@@ -4173,6 +4224,53 @@ Template.billcard.onRendered(() => {
                                 }
 
                                 setTimeout(function() {
+                                    let supplierRecord = {
+                                        id: popSupplierID,
+                                        company: popSupplierName,
+                                        email: popSupplierEmail,
+                                        title: popSupplierTitle,
+                                        firstname: popSupplierFirstName,
+                                        middlename: popSupplierMiddleName,
+                                        lastname: popSupplierLastName,
+                                        tfn: '' || '',
+                                        phone: popSupplierPhone,
+                                        mobile: popSupplierMobile,
+                                        fax: popSupplierFaxnumber,
+                                        skype: popSupplierSkypeName,
+                                        website: popSupplierURL,
+                                        shippingaddress: popSupplierStreet,
+                                        scity: popSupplierStreet2,
+                                        sstate: popSupplierState,
+                                        spostalcode: popSupplierPostcode,
+                                        scountry: popSupplierCountry,
+                                        billingaddress: popSupplierbillingaddress,
+                                        bcity: popSupplierbcity,
+                                        bstate: popSupplierbstate,
+                                        bpostalcode: popSupplierbpostalcode,
+                                        bcountry: popSupplierbcountry,
+                                        custfield1: popSuppliercustfield1,
+                                        custfield2: popSuppliercustfield2,
+                                        custfield3: popSuppliercustfield3,
+                                        custfield4: popSuppliercustfield4,
+                                        notes: popSuppliernotes,
+                                        preferedpayment: popSupplierpreferedpayment,
+                                        terms: popSupplierterms,
+                                        deliverymethod: popSupplierdeliverymethod,
+                                        accountnumber: popSupplieraccountnumber,
+                                        isContractor: popSupplierisContractor,
+                                        issupplier: popSupplierissupplier,
+                                        iscustomer: popSupplieriscustomer,
+                                        bankName: data.tsuppliervs1[i].fields.BankName || '',
+                                        swiftCode: data.tsuppliervs1[i].fields.SwiftCode || '',
+                                        routingNumber: data.tsuppliervs1[i].fields.RoutingNumber || '',
+                                        bankAccountName: data.tsuppliervs1[i].fields.BankAccountName || '',
+                                        bankAccountBSB: data.tsuppliervs1[i].fields.BankAccountBSB || '',
+                                        bankAccountNo: data.tsuppliervs1[i].fields.BankAccountNo || '',
+                                        foreignExchangeCode:data.tsuppliervs1[i].fields.ForeignExchangeCode || CountryAbbr,
+                                        // openingbalancedate: data.tsuppliervs1[i].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[i].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                                        // taxcode:data.tsuppliervs1[i].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                                    };
+                                    templateObject.supplierRecord.set(supplierRecord);
                                     $('#addSupplierModal').modal('show');
                                 }, 200);
                             }
@@ -5310,6 +5408,11 @@ Template.billcard.helpers({
     billrecord: () => {
         return Template.instance().billrecord.get();
     },
+
+    supplierRecord: () => {
+        return Template.instance().supplierRecord.get();
+    },
+
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b) {
             if (a.department == 'NA') {

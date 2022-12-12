@@ -4331,7 +4331,7 @@ templateObject.getLastPOData = async function() {
                             setTimeout(function() {
 
                                 let supplierRecord = {
-                                    id: data.tsuppliervs1[i].fields.ID,
+                                    id: popSupplierID,
                                     company: popSupplierName,
                                     email: popSupplierEmail,
                                     title: popSupplierTitle,
@@ -4366,15 +4366,15 @@ templateObject.getLastPOData = async function() {
                                     isContractor: popSupplierisContractor,
                                     issupplier: popSupplierissupplier,
                                     iscustomer: popSupplieriscustomer,
-                                    bankName: data.tsuppliervs1[i].fields.BankName || '',
-                                    swiftCode: data.tsuppliervs1[i].fields.SwiftCode || '',
-                                    routingNumber: data.tsuppliervs1[i].fields.RoutingNumber || '',
-                                    bankAccountName: data.tsuppliervs1[i].fields.BankAccountName || '',
-                                    bankAccountBSB: data.tsuppliervs1[i].fields.BankAccountBSB || '',
-                                    bankAccountNo: data.tsuppliervs1[i].fields.BankAccountNo || '',
-                                    foreignExchangeCode:data.tsuppliervs1[i].fields.ForeignExchangeCode || CountryAbbr,
-                                    // openingbalancedate: data.tsuppliervs1[i].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[i].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
-                                    // taxcode:data.tsuppliervs1[i].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                                    bankName: data.tsuppliervs1[0].fields.BankName || '',
+                                    swiftCode: data.tsuppliervs1[0].fields.SwiftCode || '',
+                                    routingNumber: data.tsuppliervs1[0].fields.RoutingNumber || '',
+                                    bankAccountName: data.tsuppliervs1[0].fields.BankAccountName || '',
+                                    bankAccountBSB: data.tsuppliervs1[0].fields.BankAccountBSB || '',
+                                    bankAccountNo: data.tsuppliervs1[0].fields.BankAccountNo || '',
+                                    foreignExchangeCode:data.tsuppliervs1[0].fields.ForeignExchangeCode || CountryAbbr,
+                                    // openingbalancedate: data.tsuppliervs1[0].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[0].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                                    // taxcode:data.tsuppliervs1[0].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
                                 };
                                 templateObject.supplierRecord.set(supplierRecord);
                                 $('#addSupplierModal').modal('show');
@@ -4474,7 +4474,7 @@ templateObject.getLastPOData = async function() {
                                 setTimeout(function() {
                                     
                                     let supplierRecord = {
-                                        id: data.tsuppliervs1[i].fields.ID,
+                                        id: popSupplierID,
                                         company: popSupplierName,
                                         email: popSupplierEmail,
                                         title: popSupplierTitle,
