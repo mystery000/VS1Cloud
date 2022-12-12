@@ -90,7 +90,9 @@
                         }
                     }
                 </style>
+                {{#if isModal}}
 
+                {{else}}
                 <div class="d-sm-flex justify-content-between align-items-center mb-4" style="margin-left: 8px;">
                     <h3 class="text-dark mb-0">Supplier Overview Dashboard {{> helpbutton}}</h3>
                 </div>
@@ -111,8 +113,11 @@
                         </div>
                     </div>
                 </div>
-
+                {{/if}}
                 <div class="row">
+                    {{#if isModal}}
+
+                    {{else}}
                     <div class="col-2 displayList" id="displayList">
                         <div class="card shadow mb-4 supplierCardParent" style="margin: 8px;">
                             <div class="card-header d-flex justify-content-between align-items-center">
@@ -156,11 +161,14 @@
                             </div>
                         </div>
                     </div>
+                    {{/if}}
                     <div class="col-10 displayInfo" id="displayInfo">
+                        {{#if isModal}}
 
+                        {{else}}
                         <!-- All Cards List -->
                         {{> allCardsLists tabGroupID="8" chartGroup="PaymentOverviewSupplier"}}
-
+                        {{/if}}
                         <div class="card shadow mb-4 cardSizing">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 {{> vs1_contact_card_header isJob=isJob record=record id="supplierInfo"}}
