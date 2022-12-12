@@ -2673,7 +2673,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                           dataObjectnew.tclienttype[j].fields.CreditLimit || 0.0,
                           dataObjectnew.tclienttype[j].fields.DefaultPostAccount || "",
                           dataObjectnew.tclienttype[j].fields.GracePeriod || "",
-                          dataObjectnew.tclienttype[j].fields.DefaultPostAccount || "",//Need to be replaced with Default Discount
+                          dataObjectnew.tclienttype[j].fields.TermsName || "",//Need to be replaced with Default Discount
                           dataObjectnew.tclienttype[j].fields.TermsName || "",
                           dataObjectnew.tclienttype[j].fields.TermsName || "", // Need to be replaced with Prefered payment method.
                           linestatus
