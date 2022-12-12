@@ -75,6 +75,9 @@ Template.creditcard.onCreated(() => {
     templateObject.hasFollow = new ReactiveVar(false);
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+
+    templateObject.customerRecord = new ReactiveVar();
+
 });
 
 Template.creditcard.onRendered(() => {
@@ -5038,6 +5041,11 @@ Template.creditcard.helpers({
     creditrecord: () => {
         return Template.instance().creditrecord.get();
     },
+
+    customerRecord: () => {
+        return Template.instance().customerRecord.get();
+    },
+
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b) {
             if (a.department == 'NA') {
