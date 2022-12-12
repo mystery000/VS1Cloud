@@ -23,6 +23,20 @@ let reportService = new ReportService();
 let organisationService = new OrganisationService();
 var times = 0;
 
+const months = [];
+months["January"] = "01";
+months["February"] = "02";
+months["March"] = "03";
+months["April"] = "04";
+months["May"] = "05";
+months["June"] = "06";
+months["July"] = "07";
+months["August"] = "08";
+months["September"] = "09";
+months["October"] = "10";
+months["November"] = "11";
+months["December"] = "12";
+
 Template.vatreturn.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
@@ -71,8 +85,6 @@ Template.vatreturn.onCreated(() => {
     templateObject.totalDebitInc.set(Currency + '0.00');
     templateObject.currencyList = new ReactiveVar([]);
 
-
-
     templateObject.taxRateList = new ReactiveVar([]);
     templateObject.accountsSummaryListT2 = new ReactiveVar([]);
     templateObject.accountsSummaryListT2_2 = new ReactiveVar([]);
@@ -101,7 +113,6 @@ Template.vatreturn.onRendered(function() {
     let usedCategories = [];
     const accountTypeList = [];
     const dataTableList = [];
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     let reasonT4 = [
         { val: "T4-1", title: "Mergers, acquisitions and takeovers" },
@@ -142,7 +153,302 @@ Template.vatreturn.onRendered(function() {
     //         // Meteor._reload.reload();
     //     });
 
-    templateObject.getAllBasReturnData = function() {
+    templateObject.getTaxrateList = function() {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        getVS1Data("TTaxcodeVS1").then(function(dataObject) {
+                if (dataObject.length === 0) {
+                    productService.getTaxCodesVS1().then(function(data) {
+                        for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                            if (data.ttaxcodevs1[i].RegionName == "South Africa") {
+                                let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                var dataList = {
+                                    Id: data.ttaxcodevs1[i].Id || '',
+                                    CodeName: data.ttaxcodevs1[i].CodeName || '',
+                                    Description: data.ttaxcodevs1[i].Description || '-',
+                                    TaxRate: taxRate || 0,
+                                };
+                                taxRateList.push(dataList);
+                            }
+                        }
+                        templateObject.taxRateList.set(taxRateList);
+
+                        setTimeout(function() {
+                            if (taxRateList.length > 0) {
+                                $(".tblTaxRate").DataTable({
+                                        // data: splashArrayTaxRateList,
+                                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                        columnDefs: [{
+                                                orderable: false,
+                                                targets: 0
+                                            },
+                                            {
+                                                className: "colCodeName",
+                                                "targets": [1]
+                                            },
+                                            {
+                                                className: "colDescription",
+                                                "targets": [2]
+                                            },
+                                            {
+                                                className: "colTaxRate text-right",
+                                                "targets": [3]
+                                            }
+                                        ],
+                                        select: true,
+                                        destroy: true,
+                                        colReorder: true,
+                                        pageLength: initialDatatableLoad,
+                                        lengthMenu: [
+                                            [initialDatatableLoad, -1],
+                                            [initialDatatableLoad, "All"],
+                                        ],
+                                        info: true,
+                                        responsive: true,
+                                        order: [
+                                            [0, "asc"]
+                                        ],
+                                        action: function() {
+                                            $(".tblTaxRate").DataTable().ajax.reload();
+                                        },
+                                        fnDrawCallback: function(oSettings) {
+                                            // $('.dataTables_paginate').css('display', 'none');
+                                        },
+                                        language: { search: "", searchPlaceholder: "Search List..." },
+                                        fnInitComplete: function() {},
+                                    })
+                                    .on("page", function() {
+                                        // setTimeout(function() {
+                                        //     MakeNegative();
+                                        // }, 100);
+                                        let draftRecord = templateObject.taxRateList.get();
+                                        templateObject.taxRateList.set(draftRecord);
+                                    })
+                                    .on("column-reorder", function() {})
+                                    .on("length.dt", function(e, settings, len) {
+                                        // setTimeout(function() {
+                                        //     MakeNegative();
+                                        // }, 100);
+                                    });;
+                                $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
+                            }
+                        }, 10);
+                        $('.fullScreenSpin').css('display', 'none');
+                    }).catch(function(err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                } else {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.ttaxcodevs1;
+                    for (let i = 0; i < useData.length; i++) {
+                        if (useData[i].RegionName == "South Africa") {
+                            let taxRate = (useData[i].Rate * 100).toFixed(2);
+                            var dataList = {
+                                Id: useData[i].Id || '',
+                                CodeName: useData[i].CodeName || '',
+                                Description: useData[i].Description || '-',
+                                TaxRate: taxRate || 0,
+                            };
+
+                            taxRateList.push(dataList);
+                        }
+                    }
+                    templateObject.taxRateList.set(taxRateList);
+
+                    setTimeout(function() {
+                        if (taxRateList.length > 0) {
+                            $(".tblTaxRate").DataTable({
+                                    // data: splashArrayTaxRateList,
+                                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                    columnDefs: [{
+                                            orderable: false,
+                                            targets: 0
+                                        },
+                                        {
+                                            className: "colCodeName",
+                                            "targets": [1]
+                                        },
+                                        {
+                                            className: "colDescription",
+                                            "targets": [2]
+                                        },
+                                        {
+                                            className: "colTaxRate text-right",
+                                            "targets": [3]
+                                        }
+                                    ],
+                                    select: true,
+                                    destroy: true,
+                                    colReorder: true,
+                                    pageLength: initialDatatableLoad,
+                                    lengthMenu: [
+                                        [initialDatatableLoad, -1],
+                                        [initialDatatableLoad, "All"],
+                                    ],
+                                    info: true,
+                                    responsive: true,
+                                    order: [
+                                        [0, "asc"]
+                                    ],
+                                    action: function() {
+                                        $(".tblTaxRate").DataTable().ajax.reload();
+                                    },
+                                    fnDrawCallback: function(oSettings) {
+                                        // $('.dataTables_paginate').css('display', 'none');
+                                    },
+                                    language: { search: "", searchPlaceholder: "Search List..." },
+                                    fnInitComplete: function() {},
+                                })
+                                .on("page", function() {
+                                    // setTimeout(function() {
+                                    //     MakeNegative();
+                                    // }, 100);
+                                    let draftRecord = templateObject.taxRateList.get();
+                                    templateObject.taxRateList.set(draftRecord);
+                                })
+                                .on("column-reorder", function() {})
+                                .on("length.dt", function(e, settings, len) {
+                                    // setTimeout(function() {
+                                    //     MakeNegative();
+                                    // }, 100);
+                                });;
+                            $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
+                        }
+                    }, 10);
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            })
+            .catch(function(err) {
+                productService.getTaxCodesVS1().then(function(data) {
+                    for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                        if (data.ttaxcodevs1[i].RegionName == "South Africa") {
+                            let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                            var dataList = {
+                                Id: data.ttaxcodevs1[i].Id || '',
+                                CodeName: data.ttaxcodevs1[i].CodeName || '',
+                                Description: data.ttaxcodevs1[i].Description || '-',
+                                TaxRate: taxRate || 0,
+                            };
+
+                            taxRateList.push(dataList);
+                        }
+                    }
+                    templateObject.taxRateList.set(taxRateList);
+
+                    setTimeout(function() {
+                        if (taxRateList.length > 0) {
+                            $(".tblTaxRate").DataTable({
+                                    // data: splashArrayTaxRateList,
+                                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                    columnDefs: [{
+                                            orderable: false,
+                                            targets: 0
+                                        },
+                                        {
+                                            className: "colCodeName",
+                                            "targets": [1]
+                                        },
+                                        {
+                                            className: "colDescription",
+                                            "targets": [2]
+                                        },
+                                        {
+                                            className: "colTaxRate text-right",
+                                            "targets": [3]
+                                        }
+                                    ],
+                                    select: true,
+                                    destroy: true,
+                                    colReorder: true,
+                                    pageLength: initialDatatableLoad,
+                                    lengthMenu: [
+                                        [initialDatatableLoad, -1],
+                                        [initialDatatableLoad, "All"],
+                                    ],
+                                    info: true,
+                                    responsive: true,
+                                    order: [
+                                        [0, "asc"]
+                                    ],
+                                    action: function() {
+                                        $(".tblTaxRate").DataTable().ajax.reload();
+                                    },
+                                    fnDrawCallback: function(oSettings) {
+                                        // $('.dataTables_paginate').css('display', 'none');
+                                    },
+                                    language: { search: "", searchPlaceholder: "Search List..." },
+                                    fnInitComplete: function() {},
+                                })
+                                .on("page", function() {
+                                    // setTimeout(function() {
+                                    //     MakeNegative();
+                                    // }, 100);
+                                    let draftRecord = templateObject.taxRateList.get();
+                                    templateObject.taxRateList.set(draftRecord);
+                                })
+                                .on("column-reorder", function() {})
+                                .on("length.dt", function(e, settings, len) {
+                                    // setTimeout(function() {
+                                    //     MakeNegative();
+                                    // }, 100);
+                                });;
+                            $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
+                        }
+                    }, 10);
+                });
+            });
+    }
+
+    templateObject.getTaxrateList();
+
+    templateObject.getDepartments = function() {
+        getVS1Data("TDeptClass")
+            .then(function(dataObject) {
+                if (dataObject.length == 0) {
+                    sideBarService.getDepartment().then(function(data) {
+                        //let deptArr = [];
+                        for (let i in data.tdeptclass) {
+                            let deptrecordObj = {
+                                id: data.tdeptclass[i].Id || " ",
+                                department: data.tdeptclass[i].DeptClassName || " ",
+                            };
+                            //deptArr.push(data.tdeptclass[i].DeptClassName);
+                            deptrecords.push(deptrecordObj);
+                            templateObject.deptrecords.set(deptrecords);
+                        }
+                    });
+                } else {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tdeptclass;
+                    for (let i in useData) {
+                        let deptrecordObj = {
+                            id: useData[i].Id || " ",
+                            department: useData[i].DeptClassName || " ",
+                        };
+                        //deptArr.push(data.tdeptclass[i].DeptClassName);
+                        deptrecords.push(deptrecordObj);
+                        templateObject.deptrecords.set(deptrecords);
+                    }
+                }
+            })
+            .catch(function(err) {
+                productService.getDepartment().then(function(data) {
+                    //let deptArr = [];
+                    for (let i in data.tdeptclass) {
+                        let deptrecordObj = {
+                            id: data.tdeptclass[i].Id || " ",
+                            department: data.tdeptclass[i].DeptClassName || " ",
+                        };
+                        //deptArr.push(data.tdeptclass[i].DeptClassName);
+                        deptrecords.push(deptrecordObj);
+                        templateObject.deptrecords.set(deptrecords);
+                    }
+                });
+            });
+    };
+
+    templateObject.getDepartments();
+
+    templateObject.getAllVatReturnData = function() {
 
         var url = FlowRouter.current().path;
         var getid = "";
@@ -156,293 +462,928 @@ Template.vatreturn.onRendered(function() {
         }
 
         getVS1Data('TVATReturn').then(function(dataObject) {
+            let taxRateList = templateObject.taxRateList.get();
             if (dataObject.length == 0) {
-                // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
-                //     let lineItems = [];
-                //     let lineItemObj = {};
-                //     addVS1Data('TJournalEntryList', JSON.stringify(data));
-                //     if (data.Params.IgnoreDates == true) {
-                //         $('#dateFrom').attr('readonly', true);
-                //         $('#dateTo').attr('readonly', true);
-                //         //FlowRouter.go('/journalentrylist?ignoredate=true');
-                //     } else {
-                //         $('#dateFrom').attr('readonly', false);
-                //         $('#dateTo').attr('readonly', false);
-                //         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
-                //         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
-                //     }
-                //     for (let i = 0; i < data.tjournalentrylist.length; i++) {
-                //         let totalDebitAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].DebitAmount) || 0.00;
-                //         let totalCreditAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].CreditAmount) || 0.00;
-                //         // Currency+''+data.tjournalentry[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                //         let totalTaxAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].TaxAmount) || 0.00;
-                //         let orderstatus = data.tjournalentrylist[i].Deleted || '';
-                //         if (data.tjournalentrylist[i].Deleted == true) {
-                //             orderstatus = "Deleted";
-                //         } else if (data.tjournalentrylist[i].IsOnHOLD == true) {
-                //             orderstatus = "On Hold";
-                //         } else if (data.tjournalentrylist[i].Reconciled == true) {
-                //             orderstatus = "Rec";
-                //         }
+                reportService.getAllVATReturn().then(function(data) {
+                    for (let i = 0; i < data.tvatreturn.length; i++) {
+                        if (getid == "") {
+                            if (i == 0) {
+                                if (data.tvatreturn[i].fields.AccMethod == "Accrual") {
+                                    $("#accountingmethod1").prop('checked', true);
+                                    $("#accountingmethod2").prop('checked', false);
+                                } else {
+                                    $("#accountingmethod1").prop('checked', false);
+                                    $("#accountingmethod2").prop('checked', true);
+                                }
 
-                //         var dataList = {
-                //             id: data.tjournalentrylist[i].GJID || '',
-                //             employee: data.tjournalentrylist[i].EmployeeName || '',
-                //             sortdate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("YYYY/MM/DD") : data.tjournalentrylist[i].TransactionDate,
-                //             transactiondate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("DD/MM/YYYY") : data.tjournalentrylist[i].TransactionDate,
-                //             accountname: data.tjournalentrylist[i].AccountName || '',
-                //             department: data.tjournalentrylist[i].ClassName || '',
-                //             entryno: data.tjournalentrylist[i].GJID || '',
-                //             debitamount: totalDebitAmount || 0.00,
-                //             creditamount: totalCreditAmount || 0.00,
-                //             taxamount: totalTaxAmount || 0.00,
-                //             orderstatus: orderstatus || '',
-                //             accountno: data.tjournalentrylist[i].AccountNumber || '',
-                //             employeename: data.tjournalentrylist[i].EmployeeName || '',
+                                if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
+                                    $("#datemethod1").prop('checked', true);
+                                    $("#datemethod2").prop('checked', false);
+                                } else {
+                                    $("#datemethod1").prop('checked', false);
+                                    $("#datemethod2").prop('checked', true);
+                                }
 
-                //             memo: data.tjournalentrylist[i].Memo || '',
-                //         };
-                //         dataTableList.push(dataList);
-                //         templateObject.basreturnData.set(dataTableList);
-                //     }
+                                if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
+                                    $("#datemethod1-t2").prop('checked', true);
+                                    $("#datemethod2-t2").prop('checked', false);
+                                } else {
+                                    $("#datemethod1-t2").prop('checked', false);
+                                    $("#datemethod2-t2").prop('checked', true);
+                                }
 
-                //     $('.fullScreenSpin').css('display', 'none');
-                // }).catch(function(err) {
-                $('.fullScreenSpin').css('display', 'none');
-                // });
+                                if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
+                                    $("#datemethod1-t3").prop('checked', true);
+                                    $("#datemethod2-t3").prop('checked', false);
+                                } else {
+                                    $("#datemethod1-t3").prop('checked', false);
+                                    $("#datemethod2-t3").prop('checked', true);
+                                }
+
+                                let _1Selected = data.tvatreturn[i].fields._1Selected.split(",");
+                                let _1ASelected = data.tvatreturn[i].fields._1ASelected.split(",");
+                                let _2Selected = data.tvatreturn[i].fields._2Selected.split(",");
+                                let _2ASelected = data.tvatreturn[i].fields._2ASelected.split(",");
+                                let _3Selected = data.tvatreturn[i].fields._3Selected.split(",");
+                                let _5Selected = data.tvatreturn[i].fields._5Selected.split(",");
+                                let _7Selected = data.tvatreturn[i].fields._7Selected.split(",");
+                                let _10Selected = data.tvatreturn[i].fields._10Selected.split(",");
+                                let _12Selected = data.tvatreturn[i].fields._12Selected.split(",");
+                                let _14Selected = data.tvatreturn[i].fields._14Selected.split(",");
+                                let _14ASelected = data.tvatreturn[i].fields._14ASelected.split(",");
+                                let _15Selected = data.tvatreturn[i].fields._15Selected.split(",");
+                                let _15ASelected = data.tvatreturn[i].fields._15ASelected.split(",");
+                                let _16Selected = data.tvatreturn[i].fields._16Selected.split(",");
+                                let _17Selected = data.tvatreturn[i].fields._17Selected.split(",");
+                                let _18Selected = data.tvatreturn[i].fields._18Selected.split(",");
+                                let _21Selected = data.tvatreturn[i].fields._21Selected.split(",");
+                                let _22Selected = data.tvatreturn[i].fields._22Selected.split(",");
+                                let _26Selected = data.tvatreturn[i].fields._26Selected.split(",");
+                                let _27Selected = data.tvatreturn[i].fields._27Selected.split(",");
+                                let _30Selected = data.tvatreturn[i].fields._30Selected.split(",");
+                                let _31Selected = data.tvatreturn[i].fields._31Selected.split(",");
+                                let _34Selected = data.tvatreturn[i].fields._34Selected.split(",");
+                                let _35Selected = data.tvatreturn[i].fields._35Selected.split(",");
+
+                                for (var j = 0; j < taxRateList.length; j++) {
+                                    _1Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-1-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _1ASelected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-1a-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _2Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-2-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _2ASelected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-2a-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _3Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-3-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _5Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-5-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _7Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-7-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _10Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-10-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _12Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-12-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _14Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-14-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _14ASelected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-14a-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _15Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-15-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _15ASelected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-15a-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _16Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-16-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _17Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-17-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _18Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-18-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _21Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-21-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _22Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-22-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _26Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-26-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _27Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-27-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _30Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-30-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _31Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-31-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _34Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-34-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                    _35Selected.forEach((item, k) => {
+                                        if (taxRateList[j].CodeName == item) {
+                                            $("#t-35-" + taxRateList[j].Id).prop('checked', true);
+                                        }
+                                    });
+                                }
+                            }
+                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                                let previousEndDate = "";
+                                var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
+                                previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                $("#previousStartDate").val(previousStartDate);
+                                $("#previousEndDate").val(previousEndDate);
+                                var fromDate = new Date(data.tvatreturn[i].fields.Tab1_Year, parseInt(endMonth), 1);
+                                fromDate = moment(fromDate).format("YYYY-MM-DD");
+                                for (var key in months) {
+                                    if (months[key] == fromDate.split("-")[1]) {
+                                        $("#beginmonthlydate").val(key);
+                                    }
+                                }
+                                $("#currentyear").val(fromDate.split("-")[0]);
+                                if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
+                                    endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                    var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    $("#endDate").val(toDate);
+                                } else {
+                                    endMonth = parseInt(fromDate.split("-")[1]);
+                                    var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    $("#endDate").val(toDate);
+                                }
+                            }
+                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                                let previousEndDate = "";
+                                var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
+                                previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                $("#previousStartDate-t2").val(previousStartDate);
+                                $("#previousEndDate-t2").val(previousEndDate);
+                                var fromDate = new Date(data.tvatreturn[i].fields.Tab2_Year, parseInt(endMonth), 1);
+                                fromDate = moment(fromDate).format("YYYY-MM-DD");
+                                for (var key in months) {
+                                    if (months[key] == fromDate.split("-")[1]) {
+                                        $("#beginmonthlydate-t2").val(key);
+                                    }
+                                }
+                                $("#currentyear-t2").val(fromDate.split("-")[0]);
+                                if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
+                                    endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                    var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    $("#endDate-t2").val(toDate);
+                                } else {
+                                    endMonth = parseInt(fromDate.split("-")[1]);
+                                    var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    $("#endDate-t2").val(toDate);
+                                }
+                            }
+                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                let previousStartDate = data.tvatreturn[i].fields.Tab4_Year + "-" + months[data.tvatreturn[i].fields.Tab4_Month] + "-01";
+                                let previousEndDate = "";
+                                var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
+                                previousEndDate = new Date(data.tvatreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
+                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                $("#previousStartDate-t3").val(previousStartDate);
+                                $("#previousEndDate-t3").val(previousEndDate);
+                                var fromDate = new Date(data.tvatreturn[i].fields.Tab3_Year, parseInt(endMonth), 1);
+                                fromDate = moment(fromDate).format("YYYY-MM-DD");
+                                for (var key in months) {
+                                    if (months[key] == fromDate.split("-")[1]) {
+                                        $("#beginmonthlydate-t3").val(key);
+                                    }
+                                }
+                                $("#currentyear-t3").val(fromDate.split("-")[0]);
+                                if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
+                                    endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                    var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    $("#endDate-t3").val(toDate);
+                                } else {
+                                    endMonth = parseInt(fromDate.split("-")[1]);
+                                    var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    $("#endDate-t3").val(toDate);
+                                }
+                            }
+                        } else {
+                            if (getid > data.tvatreturn[i].fields.ID) {
+                                if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                    let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                                    let previousEndDate = "";
+                                    var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
+                                    previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                                    previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                    $("#previousStartDate").val(previousStartDate);
+                                    $("#previousEndDate").val(previousEndDate);
+                                }
+                                if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                    let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                                    let previousEndDate = "";
+                                    var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
+                                    previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                                    previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                    $("#previousStartDate-t2").val(previousStartDate);
+                                    $("#previousEndDate-t2").val(previousEndDate);
+                                }
+                                if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                    let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                                    let previousEndDate = "";
+                                    var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
+                                    previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                                    previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                    $("#previousStartDate-t3").val(previousStartDate);
+                                    $("#previousEndDate-t3").val(previousEndDate);
+                                }
+                            }
+                        }
+                    }
+                    $('.fullScreenSpin').css('display', 'none');
+                }).catch(function(err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                for (let i = 0; i < data.length; i++) {
-                    var dataList = {
-                        basnumber: data[i].basNumber || '',
-                        description: data[i].description || '',
-                        accountingMethod: data[i].accountingMethod,
-                        tab1datemethod: (data[i].basReturnTab1.datemethod == "q") ? "Quarterly" : "Monthly",
-                        tab1startDate: (data[i].basReturnTab1.startDate == "0000-00-00") ? "" : data[i].basReturnTab1.startDate,
-                        tab1endDate: (data[i].basReturnTab1.startDate == "0000-00-00") ? "" : data[i].basReturnTab1.endDate,
-                        tab2datemethod: (data[i].basReturnTab2.datemethod == "q") ? "Quarterly" : "Monthly",
-                        tab2startDate: (data[i].basReturnTab2.startDate == "0000-00-00") ? "" : data[i].basReturnTab2.startDate,
-                        tab2endDate: (data[i].basReturnTab2.startDate == "0000-00-00") ? "" : data[i].basReturnTab2.endDate,
-                        tab2datemethod2: (data[i].basReturnTab2.datemethod_2 == "q") ? "Quarterly" : "Monthly",
-                        tab2startDate2: (data[i].basReturnTab2.startDate_2 == "0000-00-00") ? "" : data[i].basReturnTab2.startDate_2,
-                        tab2endDate2: (data[i].basReturnTab2.startDate_2 == "0000-00-00") ? "" : data[i].basReturnTab2.endDate_2,
-                        tab3datemethod: (data[i].basReturnTab3.datemethod == "q") ? "Quarterly" : "Monthly",
-                        tab3startDate: (data[i].basReturnTab3.startDate == "0000-00-00") ? "" : data[i].basReturnTab3.startDate,
-                        tab3endDate: (data[i].basReturnTab3.startDate == "0000-00-00") ? "" : data[i].basReturnTab3.endDate,
-                    };
-                    dataTableList.push(dataList);
-
+                for (let i = 0; i < data.tvatreturn.length; i++) {
                     if (getid == "") {
                         if (i == 0) {
-                            if (dataList.accountingMethod == "Accrual") {
+                            if (data.tvatreturn[i].fields.AccMethod == "Accrual") {
                                 $("#accountingmethod1").prop('checked', true);
                                 $("#accountingmethod2").prop('checked', false);
                             } else {
                                 $("#accountingmethod1").prop('checked', false);
                                 $("#accountingmethod2").prop('checked', true);
                             }
-                        }
-                        if ($("#previousStartDate").val() == "" && dataList.tab1startDate != "" && dataList.tab1endDate != "") {
-                            $("#previousStartDate").val(dataList.tab1startDate);
-                            $("#previousEndDate").val(dataList.tab1endDate);
 
-                            var fromDate = new Date(dataList.tab1endDate.split("-")[0], parseInt(dataList.tab1endDate.split("-")[1]), 1);
+                            if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
+                                $("#datemethod1").prop('checked', true);
+                                $("#datemethod2").prop('checked', false);
+                            } else {
+                                $("#datemethod1").prop('checked', false);
+                                $("#datemethod2").prop('checked', true);
+                            }
+
+                            if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
+                                $("#datemethod1-t2").prop('checked', true);
+                                $("#datemethod2-t2").prop('checked', false);
+                            } else {
+                                $("#datemethod1-t2").prop('checked', false);
+                                $("#datemethod2-t2").prop('checked', true);
+                            }
+
+                            if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
+                                $("#datemethod1-t3").prop('checked', true);
+                                $("#datemethod2-t3").prop('checked', false);
+                            } else {
+                                $("#datemethod1-t3").prop('checked', false);
+                                $("#datemethod2-t3").prop('checked', true);
+                            }
+
+                            let _1Selected = data.tvatreturn[i].fields._1Selected.split(",");
+                            let _1ASelected = data.tvatreturn[i].fields._1ASelected.split(",");
+                            let _2Selected = data.tvatreturn[i].fields._2Selected.split(",");
+                            let _2ASelected = data.tvatreturn[i].fields._2ASelected.split(",");
+                            let _3Selected = data.tvatreturn[i].fields._3Selected.split(",");
+                            let _5Selected = data.tvatreturn[i].fields._5Selected.split(",");
+                            let _7Selected = data.tvatreturn[i].fields._7Selected.split(",");
+                            let _10Selected = data.tvatreturn[i].fields._10Selected.split(",");
+                            let _12Selected = data.tvatreturn[i].fields._12Selected.split(",");
+                            let _14Selected = data.tvatreturn[i].fields._14Selected.split(",");
+                            let _14ASelected = data.tvatreturn[i].fields._14ASelected.split(",");
+                            let _15Selected = data.tvatreturn[i].fields._15Selected.split(",");
+                            let _15ASelected = data.tvatreturn[i].fields._15ASelected.split(",");
+                            let _16Selected = data.tvatreturn[i].fields._16Selected.split(",");
+                            let _17Selected = data.tvatreturn[i].fields._17Selected.split(",");
+                            let _18Selected = data.tvatreturn[i].fields._18Selected.split(",");
+                            let _21Selected = data.tvatreturn[i].fields._21Selected.split(",");
+                            let _22Selected = data.tvatreturn[i].fields._22Selected.split(",");
+                            let _26Selected = data.tvatreturn[i].fields._26Selected.split(",");
+                            let _27Selected = data.tvatreturn[i].fields._27Selected.split(",");
+                            let _30Selected = data.tvatreturn[i].fields._30Selected.split(",");
+                            let _31Selected = data.tvatreturn[i].fields._31Selected.split(",");
+                            let _34Selected = data.tvatreturn[i].fields._34Selected.split(",");
+                            let _35Selected = data.tvatreturn[i].fields._35Selected.split(",");
+
+                            for (var j = 0; j < taxRateList.length; j++) {
+                                _1Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-1-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _1ASelected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-1a-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _2Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-2-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _2ASelected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-2a-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _3Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-3-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _5Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-5-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _7Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-7-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _10Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-10-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _12Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-12-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _14Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-14-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _14ASelected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-14a-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _15Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-15-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _15ASelected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-15a-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _16Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-16-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _17Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-17-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _18Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-18-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _21Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-21-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _22Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-22-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _26Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-26-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _27Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-27-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _30Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-30-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _31Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-31-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _34Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-34-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _35Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-35-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                            }
+                        }
+                        if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                            let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                            let previousEndDate = "";
+                            var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
+                            previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            $("#previousStartDate").val(previousStartDate);
+                            $("#previousEndDate").val(previousEndDate);
+                            var fromDate = new Date(data.tvatreturn[i].fields.Tab1_Year, parseInt(endMonth), 1);
                             fromDate = moment(fromDate).format("YYYY-MM-DD");
-                            $("#beginmonthlydate").val(fromDate.split("-")[1] + "-01");
+                            for (var key in months) {
+                                if (months[key] == fromDate.split("-")[1]) {
+                                    $("#beginmonthlydate").val(key);
+                                }
+                            }
                             $("#currentyear").val(fromDate.split("-")[0]);
-                            if ($("#datemethod1").prop('checked') == true) {
-                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
-                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                            if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
+                                endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
                                 toDate = moment(toDate).format("YYYY-MM-DD");
                                 $("#endDate").val(toDate);
                             } else {
-                                var endMonth = parseInt(fromDate.split("-")[1]);
-                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                endMonth = parseInt(fromDate.split("-")[1]);
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
                                 toDate = moment(toDate).format("YYYY-MM-DD");
                                 $("#endDate").val(toDate);
                             }
                         }
-                        if ($("#previousStartDate-t2").val() == "" && dataList.tab2startDate != "" && dataList.tab2endDate != "") {
-                            $("#previousStartDate-t2").val(dataList.tab2startDate);
-                            $("#previousEndDate-t2").val(dataList.tab2endDate);
-
-                            var fromDate = new Date(dataList.tab2endDate.split("-")[0], parseInt(dataList.tab2endDate.split("-")[1]), 1);
+                        if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                            let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                            let previousEndDate = "";
+                            var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
+                            previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            $("#previousStartDate-t2").val(previousStartDate);
+                            $("#previousEndDate-t2").val(previousEndDate);
+                            var fromDate = new Date(data.tvatreturn[i].fields.Tab2_Year, parseInt(endMonth), 1);
                             fromDate = moment(fromDate).format("YYYY-MM-DD");
-                            $("#beginmonthlydate-t2").val(fromDate.split("-")[1] + "-01");
+                            for (var key in months) {
+                                if (months[key] == fromDate.split("-")[1]) {
+                                    $("#beginmonthlydate-t2").val(key);
+                                }
+                            }
                             $("#currentyear-t2").val(fromDate.split("-")[0]);
-                            if ($("#datemethod1-t2").prop('checked') == true) {
-                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
-                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                            if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
+                                endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
                                 toDate = moment(toDate).format("YYYY-MM-DD");
                                 $("#endDate-t2").val(toDate);
                             } else {
-                                var endMonth = parseInt(fromDate.split("-")[1]);
-                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                endMonth = parseInt(fromDate.split("-")[1]);
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
                                 toDate = moment(toDate).format("YYYY-MM-DD");
                                 $("#endDate-t2").val(toDate);
                             }
                         }
-                        if ($("#previousStartDate-t2-2").val() == "" && dataList.tab2startDate2 != "" && dataList.tab2endDate2 != "") {
-                            $("#previousStartDate-t2-2").val(dataList.tab2startDate2);
-                            $("#previousEndDate-t2-2").val(dataList.tab2endDate2);
-
-                            var fromDate = new Date(dataList.tab2endDate2.split("-")[0], parseInt(dataList.tab2endDate2.split("-")[1]), 1);
+                        if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                            let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                            let previousEndDate = "";
+                            var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
+                            previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            $("#previousStartDate-t3").val(previousStartDate);
+                            $("#previousEndDate-t3").val(previousEndDate);
+                            var fromDate = new Date(data.tvatreturn[i].fields.Tab3_Year, parseInt(endMonth), 1);
                             fromDate = moment(fromDate).format("YYYY-MM-DD");
-                            $("#beginmonthlydate-t2-2").val(fromDate.split("-")[1] + "-01");
-                            $("#currentyear-t2-2").val(fromDate.split("-")[0]);
-                            if ($("#datemethod1-t2-2").prop('checked') == true) {
-                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
-                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
-                                $("#endDate-t2-2").val(toDate);
-                            } else {
-                                var endMonth = parseInt(fromDate.split("-")[1]);
-                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
-                                $("#endDate-t2-2").val(toDate);
+                            for (var key in months) {
+                                if (months[key] == fromDate.split("-")[1]) {
+                                    $("#beginmonthlydate-t3").val(key);
+                                }
                             }
-                        }
-                        if ($("#previousStartDate-t3").val() == "" && dataList.tab3startDate != "" && dataList.tab3endDate != "") {
-                            $("#previousStartDate-t3").val(dataList.tab3startDate);
-                            $("#previousEndDate-t3").val(dataList.tab3endDate);
-
-                            var fromDate = new Date(dataList.tab3endDate.split("-")[0], parseInt(dataList.tab3endDate.split("-")[1]), 1);
-                            fromDate = moment(fromDate).format("YYYY-MM-DD");
-                            $("#beginmonthlydate-t3").val(fromDate.split("-")[1] + "-01");
                             $("#currentyear-t3").val(fromDate.split("-")[0]);
-                            if ($("#datemethod1-t3").prop('checked') == true) {
-                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
-                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                            if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
+                                endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
                                 toDate = moment(toDate).format("YYYY-MM-DD");
                                 $("#endDate-t3").val(toDate);
                             } else {
-                                var endMonth = parseInt(fromDate.split("-")[1]);
-                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                endMonth = parseInt(fromDate.split("-")[1]);
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
                                 toDate = moment(toDate).format("YYYY-MM-DD");
                                 $("#endDate-t3").val(toDate);
                             }
                         }
                     } else {
-                        if (getid > dataList.basnumber) {
-                            if ($("#previousStartDate").val() == "" && dataList.tab1startDate != "" && dataList.tab1endDate != "") {
-                                $("#previousStartDate").val(dataList.tab1startDate);
-                                $("#previousEndDate").val(dataList.tab1endDate);
+                        if (getid > data.tvatreturn[i].fields.ID) {
+                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                                let previousEndDate = "";
+                                var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
+                                previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                $("#previousStartDate").val(previousStartDate);
+                                $("#previousEndDate").val(previousEndDate);
                             }
-                            if ($("#previousStartDate-t2").val() == "" && dataList.tab2startDate != "" && dataList.tab2endDate != "") {
-                                $("#previousStartDate-t2").val(dataList.tab2startDate);
-                                $("#previousEndDate-t2").val(dataList.tab2endDate);
+                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                                let previousEndDate = "";
+                                var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
+                                previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                $("#previousStartDate-t2").val(previousStartDate);
+                                $("#previousEndDate-t2").val(previousEndDate);
                             }
-                            if ($("#previousStartDate-t2-2").val() == "" && dataList.tab2startDate2 != "" && dataList.tab2endDate2 != "") {
-                                $("#previousStartDate-t2-2").val(dataList.tab2startDate2);
-                                $("#previousEndDate-t2-2").val(dataList.tab2endDate2);
-                            }
-                            if ($("#previousStartDate-t3").val() == "" && dataList.tab3startDate != "" && dataList.tab3endDate != "") {
-                                $("#previousStartDate-t3").val(dataList.tab3startDate);
-                                $("#previousEndDate-t3").val(dataList.tab3endDate);
+                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                                let previousEndDate = "";
+                                var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
+                                previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                $("#previousStartDate-t3").val(previousStartDate);
+                                $("#previousEndDate-t3").val(previousEndDate);
                             }
                         }
                     }
                 }
-                templateObject.basreturnData.set(dataTableList);
-
                 $('.fullScreenSpin').css('display', 'none');
             }
         }).catch(function(err) {
-            // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
-            //     let lineItems = [];
-            //     let lineItemObj = {};
-            //     addVS1Data('TJournalEntryList', JSON.stringify(data));
-            //     if (data.Params.IgnoreDates == true) {
-            //         $('#dateFrom').attr('readonly', true);
-            //         $('#dateTo').attr('readonly', true);
-            //         //FlowRouter.go('/journalentrylist?ignoredate=true');
-            //     } else {
-            //         $('#dateFrom').attr('readonly', false);
-            //         $('#dateTo').attr('readonly', false);
-            //         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
-            //         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
-            //     }
-            //     for (let i = 0; i < data.tjournalentrylist.length; i++) {
-            //         let totalDebitAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].DebitAmount) || 0.00;
-            //         let totalCreditAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].CreditAmount) || 0.00;
-            //         // Currency+''+data.tjournalentry[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-            //         let totalTaxAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].TaxAmount) || 0.00;
-            //         let orderstatus = data.tjournalentrylist[i].Deleted || '';
-            //         if (data.tjournalentrylist[i].Deleted == true) {
-            //             orderstatus = "Deleted";
-            //         } else if (data.tjournalentrylist[i].IsOnHOLD == true) {
-            //             orderstatus = "On Hold";
-            //         } else if (data.tjournalentrylist[i].Reconciled == true) {
-            //             orderstatus = "Rec";
-            //         }
+            let taxRateList = templateObject.taxRateList.get();
+            let accountsList = templateObject.accountsList.get();
 
-            //         var dataList = {
-            //             id: data.tjournalentrylist[i].GJID || '',
-            //             employee: data.tjournalentrylist[i].EmployeeName || '',
-            //             sortdate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("YYYY/MM/DD") : data.tjournalentrylist[i].TransactionDate,
-            //             transactiondate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("DD/MM/YYYY") : data.tjournalentrylist[i].TransactionDate,
-            //             accountname: data.tjournalentrylist[i].AccountName || '',
-            //             department: data.tjournalentrylist[i].ClassName || '',
-            //             entryno: data.tjournalentrylist[i].GJID || '',
-            //             debitamount: totalDebitAmount || 0.00,
-            //             creditamount: totalCreditAmount || 0.00,
-            //             taxamount: totalTaxAmount || 0.00,
-            //             orderstatus: orderstatus || '',
-            //             accountno: data.tjournalentrylist[i].AccountNumber || '',
-            //             employeename: data.tjournalentrylist[i].EmployeeName || '',
+            reportService.getAllBASReturn().then(function(data) {
+                for (let i = 0; i < data.tbasreturn.length; i++) {
+                    if (getid == "") {
+                        if (i == 0) {
+                            if (data.tvatreturn[i].fields.AccMethod == "Accrual") {
+                                $("#accountingmethod1").prop('checked', true);
+                                $("#accountingmethod2").prop('checked', false);
+                            } else {
+                                $("#accountingmethod1").prop('checked', false);
+                                $("#accountingmethod2").prop('checked', true);
+                            }
 
-            //             memo: data.tjournalentrylist[i].Memo || '',
-            //         };
-            //         dataTableList.push(dataList);
-            //         templateObject.datatablerecords.set(dataTableList);
-            //     }
+                            if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
+                                $("#datemethod1").prop('checked', true);
+                                $("#datemethod2").prop('checked', false);
+                            } else {
+                                $("#datemethod1").prop('checked', false);
+                                $("#datemethod2").prop('checked', true);
+                            }
 
-            //     if (templateObject.datatablerecords.get()) {
-            //         setTimeout(function() {
-            //             MakeNegative();
-            //         }, 100);
-            //     }
+                            if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
+                                $("#datemethod1-t2").prop('checked', true);
+                                $("#datemethod2-t2").prop('checked', false);
+                            } else {
+                                $("#datemethod1-t2").prop('checked', false);
+                                $("#datemethod2-t2").prop('checked', true);
+                            }
 
-            //     $('.fullScreenSpin').css('display', 'none');
-            // }).catch(function(err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $('.fullScreenSpin').css('display', 'none');
-            // Meteor._reload.reload();
-            // });
-        });
-    }
-    templateObject.getAllBasReturnData();
+                            if (data.tvatreturn[i].fields.Tab4_Type == "Quarterly") {
+                                $("#datemethod1-t3").prop('checked', true);
+                                $("#datemethod2-t3").prop('checked', false);
+                            } else {
+                                $("#datemethod1-t3").prop('checked', false);
+                                $("#datemethod2-t3").prop('checked', true);
+                            }
 
-    templateObject.getReceiptCategoryList = function() {
-        getVS1Data('TReceiptCategory').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                sideBarService.getReceiptCategory().then(function(data) {
-                    setReceiptCategory(data);
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                setReceiptCategory(data);
-            }
-        }).catch(function(err) {
-            sideBarService.getReceiptCategory().then(function(data) {
-                setReceiptCategory(data);
+                            let _1Selected = data.tvatreturn[i].fields._1Selected.split(",");
+                            let _1ASelected = data.tvatreturn[i].fields._1ASelected.split(",");
+                            let _2Selected = data.tvatreturn[i].fields._2Selected.split(",");
+                            let _2ASelected = data.tvatreturn[i].fields._2ASelected.split(",");
+                            let _3Selected = data.tvatreturn[i].fields._3Selected.split(",");
+                            let _5Selected = data.tvatreturn[i].fields._5Selected.split(",");
+                            let _7Selected = data.tvatreturn[i].fields._7Selected.split(",");
+                            let _10Selected = data.tvatreturn[i].fields._10Selected.split(",");
+                            let _12Selected = data.tvatreturn[i].fields._12Selected.split(",");
+                            let _14Selected = data.tvatreturn[i].fields._14Selected.split(",");
+                            let _14ASelected = data.tvatreturn[i].fields._14ASelected.split(",");
+                            let _15Selected = data.tvatreturn[i].fields._15Selected.split(",");
+                            let _15ASelected = data.tvatreturn[i].fields._15ASelected.split(",");
+                            let _16Selected = data.tvatreturn[i].fields._16Selected.split(",");
+                            let _17Selected = data.tvatreturn[i].fields._17Selected.split(",");
+                            let _18Selected = data.tvatreturn[i].fields._18Selected.split(",");
+                            let _21Selected = data.tvatreturn[i].fields._21Selected.split(",");
+                            let _22Selected = data.tvatreturn[i].fields._22Selected.split(",");
+                            let _26Selected = data.tvatreturn[i].fields._26Selected.split(",");
+                            let _27Selected = data.tvatreturn[i].fields._27Selected.split(",");
+                            let _30Selected = data.tvatreturn[i].fields._30Selected.split(",");
+                            let _31Selected = data.tvatreturn[i].fields._31Selected.split(",");
+                            let _34Selected = data.tvatreturn[i].fields._34Selected.split(",");
+                            let _35Selected = data.tvatreturn[i].fields._35Selected.split(",");
+
+                            for (var j = 0; j < taxRateList.length; j++) {
+                                _1Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-1-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _1ASelected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-1a-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _2Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-2-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _2ASelected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-2a-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _3Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-3-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _5Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-5-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _7Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-7-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _10Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-10-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _12Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-12-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _14Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-14-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _14ASelected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-14a-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _15Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-15-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _15ASelected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-15a-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _16Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-16-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _17Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-17-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _18Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-18-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _21Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-21-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _22Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-22-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _26Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-26-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _27Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-27-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _30Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-30-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _31Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-31-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _34Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-34-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                                _35Selected.forEach((item, k) => {
+                                    if (taxRateList[j].CodeName == item) {
+                                        $("#t-35-" + taxRateList[j].Id).prop('checked', true);
+                                    }
+                                });
+                            }
+                        }
+                        if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                            let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                            let previousEndDate = "";
+                            var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
+                            previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            $("#previousStartDate").val(previousStartDate);
+                            $("#previousEndDate").val(previousEndDate);
+                            var fromDate = new Date(data.tvatreturn[i].fields.Tab1_Year, parseInt(endMonth), 1);
+                            fromDate = moment(fromDate).format("YYYY-MM-DD");
+                            for (var key in months) {
+                                if (months[key] == fromDate.split("-")[1]) {
+                                    $("#beginmonthlydate").val(key);
+                                }
+                            }
+                            $("#currentyear").val(fromDate.split("-")[0]);
+                            if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
+                                endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate").val(toDate);
+                            } else {
+                                endMonth = parseInt(fromDate.split("-")[1]);
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate").val(toDate);
+                            }
+                        }
+                        if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                            let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                            let previousEndDate = "";
+                            var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
+                            previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            $("#previousStartDate-t2").val(previousStartDate);
+                            $("#previousEndDate-t2").val(previousEndDate);
+                            var fromDate = new Date(data.tvatreturn[i].fields.Tab2_Year, parseInt(endMonth), 1);
+                            fromDate = moment(fromDate).format("YYYY-MM-DD");
+                            for (var key in months) {
+                                if (months[key] == fromDate.split("-")[1]) {
+                                    $("#beginmonthlydate-t2").val(key);
+                                }
+                            }
+                            $("#currentyear-t2").val(fromDate.split("-")[0]);
+                            if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
+                                endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t2").val(toDate);
+                            } else {
+                                endMonth = parseInt(fromDate.split("-")[1]);
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t2").val(toDate);
+                            }
+                        }
+                        if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                            let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                            let previousEndDate = "";
+                            var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
+                            previousEndDate = new Date(data.tvatreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
+                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            $("#previousStartDate-t3").val(previousStartDate);
+                            $("#previousEndDate-t3").val(previousEndDate);
+                            var fromDate = new Date(data.tvatreturn[i].fields.Tab3_Year, parseInt(endMonth), 1);
+                            fromDate = moment(fromDate).format("YYYY-MM-DD");
+                            for (var key in months) {
+                                if (months[key] == fromDate.split("-")[1]) {
+                                    $("#beginmonthlydate-t3").val(key);
+                                }
+                            }
+                            $("#currentyear-t3").val(fromDate.split("-")[0]);
+                            if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
+                                endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t3").val(toDate);
+                            } else {
+                                endMonth = parseInt(fromDate.split("-")[1]);
+                                var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t3").val(toDate);
+                            }
+                        }
+                    } else {
+                        if (getid > data.tvatreturn[i].fields.ID) {
+                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                                let previousEndDate = "";
+                                var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
+                                previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                $("#previousStartDate").val(previousStartDate);
+                                $("#previousEndDate").val(previousEndDate);
+                            }
+                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                                let previousEndDate = "";
+                                var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
+                                previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                $("#previousStartDate-t2").val(previousStartDate);
+                                $("#previousEndDate-t2").val(previousEndDate);
+                            }
+                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                                let previousEndDate = "";
+                                var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
+                                previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                $("#previousStartDate-t3").val(previousStartDate);
+                                $("#previousEndDate-t3").val(previousEndDate);
+                            }
+                        }
+                    }
+                }
+                $('.fullScreenSpin').css('display', 'none');
+            }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'none');
             });
         });
-    };
-
-    function setReceiptCategory(data) {
-        for (let i in data.treceiptcategory) {
-            if (data.treceiptcategory.hasOwnProperty(i)) {
-                if (data.treceiptcategory[i].CategoryName != "") {
-                    categories.push(data.treceiptcategory[i].CategoryName);
-                }
-            }
-        }
-
-        $('.fullScreenSpin').css('display', 'none');
-        // templateObject.getAccountLists();
     }
-    templateObject.getReceiptCategoryList();
+    setTimeout(function() {
+        templateObject.getAllVatReturnData();
+    }, 1000);
 
     function MakeNegative() {
         var TDs = document.getElementsByTagName("td");
@@ -712,533 +1653,286 @@ Template.vatreturn.onRendered(function() {
         });
     };
 
-    templateObject.getTaxrateList = function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        getVS1Data("TTaxcodeVS1").then(function(dataObject) {
-                if (dataObject.length === 0) {
-                    productService.getTaxCodesVS1().then(function(data) {
-                        for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                            if (data.ttaxcodevs1[i].RegionName == "South Africa") {
-                                let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                                var dataList = {
-                                    Id: data.ttaxcodevs1[i].Id || '',
-                                    CodeName: data.ttaxcodevs1[i].CodeName || '',
-                                    Description: data.ttaxcodevs1[i].Description || '-',
-                                    TaxRate: taxRate || 0,
-                                };
-                                taxRateList.push(dataList);
-                            }
-                        }
-                        templateObject.taxRateList.set(taxRateList);
+    // templateObject.getAccountLists = function() {
+    //     getVS1Data("TAccountVS1")
+    //         .then(function(dataObject) {
+    //             if (dataObject.length == 0) {
+    //                 accountService
+    //                     .getAccountListVS1()
+    //                     .then(function(data) {
+    //                         setAccountListVS1(data);
+    //                     })
+    //                     .catch(function(err) {
+    //                         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //                         $(".fullScreenSpin").css("display", "none");
+    //                         // Meteor._reload.reload();
+    //                     });
+    //             } else {
+    //                 let data = JSON.parse(dataObject[0].data);
+    //                 setAccountListVS1(data, true);
+    //             }
+    //         })
+    //         .catch(function(err) {
+    //             accountService
+    //                 .getAccountListVS1()
+    //                 .then(function(data) {
+    //                     setAccountListVS1(data);
+    //                 })
+    //                 .catch(function(err) {
+    //                     // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //                     $(".fullScreenSpin").css("display", "none");
+    //                     // Meteor._reload.reload();
+    //                 });
+    //         });
+    // };
 
-                        setTimeout(function() {
-                            if (taxRateList.length > 0) {
-                                $(".tblTaxRate").DataTable({
-                                        // data: splashArrayTaxRateList,
-                                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                        columnDefs: [{
-                                                orderable: false,
-                                                targets: 0
-                                            },
-                                            {
-                                                className: "colCodeName",
-                                                "targets": [1]
-                                            },
-                                            {
-                                                className: "colDescription",
-                                                "targets": [2]
-                                            },
-                                            {
-                                                className: "colTaxRate text-right",
-                                                "targets": [3]
-                                            }
-                                        ],
-                                        select: true,
-                                        destroy: true,
-                                        colReorder: true,
-                                        pageLength: initialDatatableLoad,
-                                        lengthMenu: [
-                                            [initialDatatableLoad, -1],
-                                            [initialDatatableLoad, "All"],
-                                        ],
-                                        info: true,
-                                        responsive: true,
-                                        order: [
-                                            [0, "asc"]
-                                        ],
-                                        action: function() {
-                                            $(".tblTaxRate").DataTable().ajax.reload();
-                                        },
-                                        fnDrawCallback: function(oSettings) {
-                                            // $('.dataTables_paginate').css('display', 'none');
-                                        },
-                                        language: { search: "", searchPlaceholder: "Search List..." },
-                                        fnInitComplete: function() {},
-                                    })
-                                    .on("page", function() {
-                                        // setTimeout(function() {
-                                        //     MakeNegative();
-                                        // }, 100);
-                                        let draftRecord = templateObject.taxRateList.get();
-                                        templateObject.taxRateList.set(draftRecord);
-                                    })
-                                    .on("column-reorder", function() {})
-                                    .on("length.dt", function(e, settings, len) {
-                                        // setTimeout(function() {
-                                        //     MakeNegative();
-                                        // }, 100);
-                                    });;
-                                $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
-                            }
-                        }, 10);
-                        $('.fullScreenSpin').css('display', 'none');
-                    }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'none');
-                    });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    let useData = data.ttaxcodevs1;
-                    for (let i = 0; i < useData.length; i++) {
-                        if (useData[i].RegionName == "South Africa") {
-                            let taxRate = (useData[i].Rate * 100).toFixed(2);
-                            var dataList = {
-                                Id: useData[i].Id || '',
-                                CodeName: useData[i].CodeName || '',
-                                Description: useData[i].Description || '-',
-                                TaxRate: taxRate || 0,
-                            };
+    // function setAccountListVS1(data, isField = false) {
 
-                            taxRateList.push(dataList);
-                        }
-                    }
-                    templateObject.taxRateList.set(taxRateList);
+    //     //addVS1Data('TAccountVS1', JSON.stringify(data));
+    //     let lineItems = [];
+    //     let lineItemObj = {};
+    //     let fullAccountTypeName = "";
+    //     let accBalance = "";
+    //     dataTableList = [];
 
-                    setTimeout(function() {
-                        if (taxRateList.length > 0) {
-                            $(".tblTaxRate").DataTable({
-                                    // data: splashArrayTaxRateList,
-                                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                    columnDefs: [{
-                                            orderable: false,
-                                            targets: 0
-                                        },
-                                        {
-                                            className: "colCodeName",
-                                            "targets": [1]
-                                        },
-                                        {
-                                            className: "colDescription",
-                                            "targets": [2]
-                                        },
-                                        {
-                                            className: "colTaxRate text-right",
-                                            "targets": [3]
-                                        }
-                                    ],
-                                    select: true,
-                                    destroy: true,
-                                    colReorder: true,
-                                    pageLength: initialDatatableLoad,
-                                    lengthMenu: [
-                                        [initialDatatableLoad, -1],
-                                        [initialDatatableLoad, "All"],
-                                    ],
-                                    info: true,
-                                    responsive: true,
-                                    order: [
-                                        [0, "asc"]
-                                    ],
-                                    action: function() {
-                                        $(".tblTaxRate").DataTable().ajax.reload();
-                                    },
-                                    fnDrawCallback: function(oSettings) {
-                                        // $('.dataTables_paginate').css('display', 'none');
-                                    },
-                                    language: { search: "", searchPlaceholder: "Search List..." },
-                                    fnInitComplete: function() {},
-                                })
-                                .on("page", function() {
-                                    // setTimeout(function() {
-                                    //     MakeNegative();
-                                    // }, 100);
-                                    let draftRecord = templateObject.taxRateList.get();
-                                    templateObject.taxRateList.set(draftRecord);
-                                })
-                                .on("column-reorder", function() {})
-                                .on("length.dt", function(e, settings, len) {
-                                    // setTimeout(function() {
-                                    //     MakeNegative();
-                                    // }, 100);
-                                });;
-                            $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
-                        }
-                    }, 10);
-                    $('.fullScreenSpin').css('display', 'none');
-                }
-            })
-            .catch(function(err) {
-                productService.getTaxCodesVS1().then(function(data) {
-                    for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                        if (data.ttaxcodevs1[i].RegionName == "South Africa") {
-                            let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                            var dataList = {
-                                Id: data.ttaxcodevs1[i].Id || '',
-                                CodeName: data.ttaxcodevs1[i].CodeName || '',
-                                Description: data.ttaxcodevs1[i].Description || '-',
-                                TaxRate: taxRate || 0,
-                            };
+    //     for (let i = 0; i < data.taccountvs1.length; i++) {
+    //         let lineData = data.taccountvs1[i];
+    //         if (isField) {
+    //             lineData = data.taccountvs1[i].fields;
+    //         }
+    //         if (accountTypeList) {
+    //             for (var j = 0; j < accountTypeList.length; j++) {
+    //                 if (
+    //                     lineData.AccountTypeName ===
+    //                     accountTypeList[j].accounttypename
+    //                 ) {
+    //                     fullAccountTypeName = accountTypeList[j].description || "";
+    //                 }
+    //             }
+    //         }
 
-                            taxRateList.push(dataList);
-                        }
-                    }
-                    templateObject.taxRateList.set(taxRateList);
+    //         if (!isNaN(lineData.Balance)) {
+    //             accBalance = utilityService.modifynegativeCurrencyFormat(lineData.Balance) || 0.0;
+    //         } else {
+    //             accBalance = Currency + "0.00";
+    //         }
+    //         if (data.taccountvs1[i].fields.ReceiptCategory && data.taccountvs1[i].fields.ReceiptCategory != '') {
+    //             usedCategories.push(data.taccountvs1[i].fields);
+    //         }
 
-                    setTimeout(function() {
-                        if (taxRateList.length > 0) {
-                            $(".tblTaxRate").DataTable({
-                                    // data: splashArrayTaxRateList,
-                                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                    columnDefs: [{
-                                            orderable: false,
-                                            targets: 0
-                                        },
-                                        {
-                                            className: "colCodeName",
-                                            "targets": [1]
-                                        },
-                                        {
-                                            className: "colDescription",
-                                            "targets": [2]
-                                        },
-                                        {
-                                            className: "colTaxRate text-right",
-                                            "targets": [3]
-                                        }
-                                    ],
-                                    select: true,
-                                    destroy: true,
-                                    colReorder: true,
-                                    pageLength: initialDatatableLoad,
-                                    lengthMenu: [
-                                        [initialDatatableLoad, -1],
-                                        [initialDatatableLoad, "All"],
-                                    ],
-                                    info: true,
-                                    responsive: true,
-                                    order: [
-                                        [0, "asc"]
-                                    ],
-                                    action: function() {
-                                        $(".tblTaxRate").DataTable().ajax.reload();
-                                    },
-                                    fnDrawCallback: function(oSettings) {
-                                        // $('.dataTables_paginate').css('display', 'none');
-                                    },
-                                    language: { search: "", searchPlaceholder: "Search List..." },
-                                    fnInitComplete: function() {},
-                                })
-                                .on("page", function() {
-                                    // setTimeout(function() {
-                                    //     MakeNegative();
-                                    // }, 100);
-                                    let draftRecord = templateObject.taxRateList.get();
-                                    templateObject.taxRateList.set(draftRecord);
-                                })
-                                .on("column-reorder", function() {})
-                                .on("length.dt", function(e, settings, len) {
-                                    // setTimeout(function() {
-                                    //     MakeNegative();
-                                    // }, 100);
-                                });;
-                            $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
-                        }
-                    }, 10);
-                });
-            });
-    }
+    //         var dataList = {
+    //             id: lineData.ID || lineData.Id || "",
+    //             accountname: lineData.AccountName || "",
+    //             description: lineData.Description || "",
+    //             accountnumber: lineData.AccountNumber || "",
+    //             accounttypename: fullAccountTypeName || lineData.AccountTypeName,
+    //             accounttypeshort: lineData.AccountTypeName || "",
+    //             taxcode: lineData.TaxCode || "",
+    //             bankaccountname: lineData.BankAccountName || "",
+    //             bankname: lineData.BankName || "",
+    //             bsb: lineData.BSB || "",
+    //             bankaccountnumber: lineData.BankAccountNumber || "",
+    //             swiftcode: lineData.Extra || "",
+    //             routingNo: lineData.BankCode || "",
+    //             apcanumber: lineData.BankNumber || "",
+    //             balanceNumber: lineData.Balance || 0.0,
+    //             balance: accBalance || 0.0,
+    //             isheader: lineData.IsHeader || false,
+    //             cardnumber: lineData.CarNumber || "",
+    //             expirydate: lineData.ExpiryDate || "",
+    //             cvc: lineData.CVC || "",
+    //             useReceiptClaim: lineData.AllowExpenseClaim || false,
+    //             expenseCategory: lineData.AccountGroup || ""
+    //         };
+    //         dataTableList.push(dataList);
+    //     }
 
-    templateObject.getTaxrateList();
+    //     usedCategories = [...new Set(usedCategories)];
+    //     let availableCategories = categories.filter((item) => !usedCategories.includes(item));
+    //     templateObject.availableCategories.set(availableCategories);
+    //     templateObject.accountsList.set(dataTableList);
 
-    templateObject.getAccountLists = function() {
-        getVS1Data("TAccountVS1")
-            .then(function(dataObject) {
-                if (dataObject.length == 0) {
-                    accountService
-                        .getAccountListVS1()
-                        .then(function(data) {
-                            setAccountListVS1(data);
-                        })
-                        .catch(function(err) {
-                            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                            $(".fullScreenSpin").css("display", "none");
-                            // Meteor._reload.reload();
-                        });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    setAccountListVS1(data, true);
-                }
-            })
-            .catch(function(err) {
-                accountService
-                    .getAccountListVS1()
-                    .then(function(data) {
-                        setAccountListVS1(data);
-                    })
-                    .catch(function(err) {
-                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $(".fullScreenSpin").css("display", "none");
-                        // Meteor._reload.reload();
-                    });
-            });
-    };
+    //     categories.forEach((citem, j) => {
+    //         let cdataList = null;
+    //         let match = usedCategories.filter((item) => (item.ReceiptCategory == citem));
+    //         if (match.length > 0) {
+    //             let temp = match[0];
+    //             cdataList = [
+    //                 citem,
+    //                 temp.AccountName || '',
+    //                 temp.Description || '',
+    //                 temp.AccountNumber || '',
+    //                 temp.TaxCode || '',
+    //                 temp.ID || ''
+    //             ];
+    //         } else {
+    //             cdataList = [
+    //                 citem,
+    //                 '',
+    //                 '',
+    //                 '',
+    //                 '',
+    //                 ''
+    //             ];
+    //         }
+    //         categoryAccountList.push(cdataList);
+    //     });
 
-    function setAccountListVS1(data, isField = false) {
+    //     if (templateObject.accountsList.get()) {
+    //         setTimeout(function() {
+    //             MakeNegative();
+    //         }, 100);
+    //     }
 
-        //addVS1Data('TAccountVS1', JSON.stringify(data));
-        let lineItems = [];
-        let lineItemObj = {};
-        let fullAccountTypeName = "";
-        let accBalance = "";
-        dataTableList = [];
+    //     $(".fullScreenSpin").css("display", "none");
+    //     setTimeout(function() {
+    //         if (categoryAccountList.length > 0) {
+    //             $('#tblCategory').dataTable({
+    //                 data: categoryAccountList,
+    //                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                 paging: true,
+    //                 "aaSorting": [],
+    //                 "orderMulti": true,
+    //                 columnDefs: [
+    //                     { className: "colReceiptCategory", "targets": [0] },
+    //                     { className: "colAccountName", "targets": [1] },
+    //                     { className: "colAccountDesc", "targets": [2] },
+    //                     { className: "colAccountNumber", "targets": [3] },
+    //                     { className: "colTaxCode", "targets": [4] },
+    //                     { className: "colAccountID hiddenColumn", "targets": [5] }
+    //                 ],
+    //                 // select: true,
+    //                 // destroy: true,
+    //                 colReorder: true,
+    //                 "order": [
+    //                     [0, "asc"]
+    //                 ],
+    //                 pageLength: initialDatatableLoad,
+    //                 lengthMenu: [
+    //                     [initialDatatableLoad, -1],
+    //                     [initialDatatableLoad, "All"]
+    //                 ],
+    //                 info: true,
+    //                 responsive: true,
+    //                 "fnInitComplete": function() {
+    //                     $("<button class='btn btn-primary btnAddNewReceiptCategory' data-dismiss='modal' data-toggle='modal' data-target='#addReceiptCategoryModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCategory_filter");
+    //                     $("<button class='btn btn-primary btnRefreshCategoryAccount' type='button' id='btnRefreshCategoryAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCategory_filter");
+    //                 }
+    //             });
+    //         }
 
-        for (let i = 0; i < data.taccountvs1.length; i++) {
-            let lineData = data.taccountvs1[i];
-            if (isField) {
-                lineData = data.taccountvs1[i].fields;
-            }
-            if (accountTypeList) {
-                for (var j = 0; j < accountTypeList.length; j++) {
-                    if (
-                        lineData.AccountTypeName ===
-                        accountTypeList[j].accounttypename
-                    ) {
-                        fullAccountTypeName = accountTypeList[j].description || "";
-                    }
-                }
-            }
+    //         $(".tblAccountOverview")
+    //             .DataTable({
+    //                 columnDefs: [
+    //                     // { type: 'currency', targets: 4 }
+    //                 ],
+    //                 select: true,
+    //                 destroy: true,
+    //                 colReorder: true,
+    //                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                 buttons: [{
+    //                         extend: "csvHtml5",
+    //                         text: "",
+    //                         download: "open",
+    //                         className: "btntabletocsv hiddenColumn",
+    //                         filename: "accountoverview_" + moment().format(),
+    //                         orientation: "portrait",
+    //                         exportOptions: {
+    //                             columns: ":visible",
+    //                         },
+    //                     },
+    //                     {
+    //                         extend: "print",
+    //                         download: "open",
+    //                         className: "btntabletopdf hiddenColumn",
+    //                         text: "",
+    //                         title: "Accounts Overview",
+    //                         filename: "Accounts Overview_" + moment().format(),
+    //                         exportOptions: {
+    //                             columns: ":visible",
+    //                         },
+    //                     },
+    //                     {
+    //                         extend: "excelHtml5",
+    //                         title: "",
+    //                         download: "open",
+    //                         className: "btntabletoexcel hiddenColumn",
+    //                         filename: "accountoverview_" + moment().format(),
+    //                         orientation: "portrait",
+    //                         exportOptions: {
+    //                             columns: ":visible",
+    //                         },
+    //                     },
+    //                 ],
+    //                 pageLength: initialDatatableLoad,
+    //                 lengthMenu: [
+    //                     [initialDatatableLoad, -1],
+    //                     [initialDatatableLoad, "All"],
+    //                 ],
+    //                 info: true,
+    //                 responsive: true,
+    //                 order: [
+    //                     [0, "asc"]
+    //                 ],
+    //                 action: function() {
+    //                     $(".tblAccountOverview").DataTable().ajax.reload();
+    //                 },
+    //                 fnDrawCallback: function(oSettings) {
+    //                     // setTimeout(function() {
+    //                     //     MakeNegative();
+    //                     // }, 100);
+    //                 },
+    //                 fnInitComplete: function() {},
+    //             })
+    //             .on("page", function() {
+    //                 // setTimeout(function() {
+    //                 //     MakeNegative();
+    //                 // }, 100);
+    //                 let draftRecord = templateObject.datatablerecords.get();
+    //                 templateObject.datatablerecords.set(draftRecord);
+    //             })
+    //             .on("column-reorder", function() {})
+    //             .on("length.dt", function(e, settings, len) {
+    //                 // setTimeout(function() {
+    //                 //     MakeNegative();
+    //                 // }, 100);
+    //             });
 
-            if (!isNaN(lineData.Balance)) {
-                accBalance = utilityService.modifynegativeCurrencyFormat(lineData.Balance) || 0.0;
-            } else {
-                accBalance = Currency + "0.00";
-            }
-            if (data.taccountvs1[i].fields.ReceiptCategory && data.taccountvs1[i].fields.ReceiptCategory != '') {
-                usedCategories.push(data.taccountvs1[i].fields);
-            }
+    //         $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccountOverview_wrapper .dataTables_filter");
+    //     }, 50);
 
-            var dataList = {
-                id: lineData.ID || lineData.Id || "",
-                accountname: lineData.AccountName || "",
-                description: lineData.Description || "",
-                accountnumber: lineData.AccountNumber || "",
-                accounttypename: fullAccountTypeName || lineData.AccountTypeName,
-                accounttypeshort: lineData.AccountTypeName || "",
-                taxcode: lineData.TaxCode || "",
-                bankaccountname: lineData.BankAccountName || "",
-                bankname: lineData.BankName || "",
-                bsb: lineData.BSB || "",
-                bankaccountnumber: lineData.BankAccountNumber || "",
-                swiftcode: lineData.Extra || "",
-                routingNo: lineData.BankCode || "",
-                apcanumber: lineData.BankNumber || "",
-                balanceNumber: lineData.Balance || 0.0,
-                balance: accBalance || 0.0,
-                isheader: lineData.IsHeader || false,
-                cardnumber: lineData.CarNumber || "",
-                expirydate: lineData.ExpiryDate || "",
-                cvc: lineData.CVC || "",
-                useReceiptClaim: lineData.AllowExpenseClaim || false,
-                expenseCategory: lineData.AccountGroup || ""
-            };
-            dataTableList.push(dataList);
-        }
+    //     var columns = $("#tblAccountOverview th");
+    //     let sTible = "";
+    //     let sWidth = "";
+    //     let sIndex = "";
+    //     let sVisible = "";
+    //     let columVisible = false;
+    //     let sClass = "";
+    //     $.each(columns, function(i, v) {
+    //         if (v.hidden === false) {
+    //             columVisible = true;
+    //         }
+    //         if (v.className.includes("hiddenColumn")) {
+    //             columVisible = false;
+    //         }
+    //         sWidth = v.style.width.replace("px", "");
 
-        usedCategories = [...new Set(usedCategories)];
-        let availableCategories = categories.filter((item) => !usedCategories.includes(item));
-        templateObject.availableCategories.set(availableCategories);
-        templateObject.accountsList.set(dataTableList);
+    //         let datatablerecordObj = {
+    //             sTitle: v.innerText || "",
+    //             sWidth: sWidth || "",
+    //             sIndex: v.cellIndex || "",
+    //             sVisible: columVisible || false,
+    //             sClass: v.className || "",
+    //         };
+    //         tableHeaderList.push(datatablerecordObj);
+    //     });
+    //     templateObject.tableheaderrecords.set(tableHeaderList);
+    //     $("div.dataTables_filter input").addClass(
+    //         "form-control form-control-sm"
+    //     );
+    // }
 
-        categories.forEach((citem, j) => {
-            let cdataList = null;
-            let match = usedCategories.filter((item) => (item.ReceiptCategory == citem));
-            if (match.length > 0) {
-                let temp = match[0];
-                cdataList = [
-                    citem,
-                    temp.AccountName || '',
-                    temp.Description || '',
-                    temp.AccountNumber || '',
-                    temp.TaxCode || '',
-                    temp.ID || ''
-                ];
-            } else {
-                cdataList = [
-                    citem,
-                    '',
-                    '',
-                    '',
-                    '',
-                    ''
-                ];
-            }
-            categoryAccountList.push(cdataList);
-        });
-
-        if (templateObject.accountsList.get()) {
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-        }
-
-        $(".fullScreenSpin").css("display", "none");
-        setTimeout(function() {
-            if (categoryAccountList.length > 0) {
-                $('#tblCategory').dataTable({
-                    data: categoryAccountList,
-                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    paging: true,
-                    "aaSorting": [],
-                    "orderMulti": true,
-                    columnDefs: [
-                        { className: "colReceiptCategory", "targets": [0] },
-                        { className: "colAccountName", "targets": [1] },
-                        { className: "colAccountDesc", "targets": [2] },
-                        { className: "colAccountNumber", "targets": [3] },
-                        { className: "colTaxCode", "targets": [4] },
-                        { className: "colAccountID hiddenColumn", "targets": [5] }
-                    ],
-                    // select: true,
-                    // destroy: true,
-                    colReorder: true,
-                    "order": [
-                        [0, "asc"]
-                    ],
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [
-                        [initialDatatableLoad, -1],
-                        [initialDatatableLoad, "All"]
-                    ],
-                    info: true,
-                    responsive: true,
-                    "fnInitComplete": function() {
-                        $("<button class='btn btn-primary btnAddNewReceiptCategory' data-dismiss='modal' data-toggle='modal' data-target='#addReceiptCategoryModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCategory_filter");
-                        $("<button class='btn btn-primary btnRefreshCategoryAccount' type='button' id='btnRefreshCategoryAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCategory_filter");
-                    }
-                });
-            }
-
-            $(".tblAccountOverview")
-                .DataTable({
-                    columnDefs: [
-                        // { type: 'currency', targets: 4 }
-                    ],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    buttons: [{
-                            extend: "csvHtml5",
-                            text: "",
-                            download: "open",
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "accountoverview_" + moment().format(),
-                            orientation: "portrait",
-                            exportOptions: {
-                                columns: ":visible",
-                            },
-                        },
-                        {
-                            extend: "print",
-                            download: "open",
-                            className: "btntabletopdf hiddenColumn",
-                            text: "",
-                            title: "Accounts Overview",
-                            filename: "Accounts Overview_" + moment().format(),
-                            exportOptions: {
-                                columns: ":visible",
-                            },
-                        },
-                        {
-                            extend: "excelHtml5",
-                            title: "",
-                            download: "open",
-                            className: "btntabletoexcel hiddenColumn",
-                            filename: "accountoverview_" + moment().format(),
-                            orientation: "portrait",
-                            exportOptions: {
-                                columns: ":visible",
-                            },
-                        },
-                    ],
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [
-                        [initialDatatableLoad, -1],
-                        [initialDatatableLoad, "All"],
-                    ],
-                    info: true,
-                    responsive: true,
-                    order: [
-                        [0, "asc"]
-                    ],
-                    action: function() {
-                        $(".tblAccountOverview").DataTable().ajax.reload();
-                    },
-                    fnDrawCallback: function(oSettings) {
-                        // setTimeout(function() {
-                        //     MakeNegative();
-                        // }, 100);
-                    },
-                    fnInitComplete: function() {},
-                })
-                .on("page", function() {
-                    // setTimeout(function() {
-                    //     MakeNegative();
-                    // }, 100);
-                    let draftRecord = templateObject.datatablerecords.get();
-                    templateObject.datatablerecords.set(draftRecord);
-                })
-                .on("column-reorder", function() {})
-                .on("length.dt", function(e, settings, len) {
-                    // setTimeout(function() {
-                    //     MakeNegative();
-                    // }, 100);
-                });
-
-            $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccountOverview_wrapper .dataTables_filter");
-        }, 50);
-
-        var columns = $("#tblAccountOverview th");
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i, v) {
-            if (v.hidden === false) {
-                columVisible = true;
-            }
-            if (v.className.includes("hiddenColumn")) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace("px", "");
-
-            let datatablerecordObj = {
-                sTitle: v.innerText || "",
-                sWidth: sWidth || "",
-                sIndex: v.cellIndex || "",
-                sVisible: columVisible || false,
-                sClass: v.className || "",
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-        $("div.dataTables_filter input").addClass(
-            "form-control form-control-sm"
-        );
-    }
-
-    templateObject.getAccountLists();
+    // templateObject.getAccountLists();
 
     templateObject.selTaxList = function(pan) {
         let taxRateList = templateObject.taxRateList.get();
@@ -1266,77 +1960,77 @@ Template.vatreturn.onRendered(function() {
         // $(".prt_gst" + pan + "cost").html("$" + total_tax.toFixed(2));
     };
 
-    templateObject.selAccountant = function(pan) {
-        let accountsList = templateObject.accountsList.get();
-        let accountsSummaryList = templateObject.accountsSummaryListT2.get();
+    // templateObject.selAccountant = function(pan) {
+    //     let accountsList = templateObject.accountsList.get();
+    //     let accountsSummaryList = templateObject.accountsSummaryListT2.get();
 
-        var total_amounts = 0;
-        for (var i = 0; i < accountsList.length; i++) {
-            if ($("#f-" + pan + "-" + accountsList[i].id).prop('checked') == true) {
-                for (var j = 0; j < accountsSummaryList.length; j++) {
-                    if (accountsList[i].accountname == accountsSummaryList[j].AccountName) {
-                        total_amounts += parseFloat(accountsSummaryList[j].balance);
-                    }
-                }
-            }
-        }
+    //     var total_amounts = 0;
+    //     for (var i = 0; i < accountsList.length; i++) {
+    //         if ($("#f-" + pan + "-" + accountsList[i].id).prop('checked') == true) {
+    //             for (var j = 0; j < accountsSummaryList.length; j++) {
+    //                 if (accountsList[i].accountname == accountsSummaryList[j].AccountName) {
+    //                     total_amounts += parseFloat(accountsSummaryList[j].balance);
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        $("#accounts" + pan + "cost").val(total_amounts.toFixed(2));
-        $("#prt_accounts" + pan + "cost").html("$" + total_amounts.toFixed(2));
+    //     $("#accounts" + pan + "cost").val(total_amounts.toFixed(2));
+    //     $("#prt_accounts" + pan + "cost").html("$" + total_amounts.toFixed(2));
 
-        if (pan == 2 || pan == 3 || pan == 4) {
-            let debits4 = parseFloat($("#accounts2cost").val()) + parseFloat($("#accounts3cost").val()) + parseFloat($("#accounts4cost").val());
-            $("#debits6cost").val(debits4.toFixed(2));
-            $("#prt_accounts2+3+4cost").html("$" + debits4.toFixed(2));
-            $("#prt_debits6cost").html("$" + debits4.toFixed(2));
-            let debits8A = parseFloat($("#debits1cost").val()) + parseFloat($("#debits6cost").val()) + parseFloat($("#debits7cost").val()) + parseFloat($("#debits9cost").val());
-            $("#debits10cost").val(debits8A.toFixed(2));
-            $("#prt_debits10cost").html("$" + debits8A.toFixed(2));
-            let debits9 = debits8A - parseFloat($("#credits9cost").val());
-            $("#debits11cost").val(debits9.toFixed(2));
-            $("#prt_debits11cost").html("$" + debits9.toFixed(2));
-        }
+    //     if (pan == 2 || pan == 3 || pan == 4) {
+    //         let debits4 = parseFloat($("#accounts2cost").val()) + parseFloat($("#accounts3cost").val()) + parseFloat($("#accounts4cost").val());
+    //         $("#debits6cost").val(debits4.toFixed(2));
+    //         $("#prt_accounts2+3+4cost").html("$" + debits4.toFixed(2));
+    //         $("#prt_debits6cost").html("$" + debits4.toFixed(2));
+    //         let debits8A = parseFloat($("#debits1cost").val()) + parseFloat($("#debits6cost").val()) + parseFloat($("#debits7cost").val()) + parseFloat($("#debits9cost").val());
+    //         $("#debits10cost").val(debits8A.toFixed(2));
+    //         $("#prt_debits10cost").html("$" + debits8A.toFixed(2));
+    //         let debits9 = debits8A - parseFloat($("#credits9cost").val());
+    //         $("#debits11cost").val(debits9.toFixed(2));
+    //         $("#prt_debits11cost").html("$" + debits9.toFixed(2));
+    //     }
 
-        // if (pan == 5) {
-        //     $("#debits7cost").val(total_amounts.toFixed(2));
-        //     $("#prt_debits7cost").html("$" + total_amounts.toFixed(2));
-        //     let debits8A = parseFloat($("#debits1cost").val()) + parseFloat($("#debits6cost").val()) + parseFloat($("#debits7cost").val()) + parseFloat($("#debits9cost").val());
-        //     $("#debits10cost").val(debits8A.toFixed(2));
-        //     $("#prt_debits10cost").html("$" + debits8A.toFixed(2));
-        //     let debits9 = debits8A - parseFloat($("#credits9cost").val());
-        //     $("#debits11cost").val(debits9.toFixed(2));
-        //     $("#prt_debits11cost").html("$" + debits9.toFixed(2));
-        // }
-    };
+    //     // if (pan == 5) {
+    //     //     $("#debits7cost").val(total_amounts.toFixed(2));
+    //     //     $("#prt_debits7cost").html("$" + total_amounts.toFixed(2));
+    //     //     let debits8A = parseFloat($("#debits1cost").val()) + parseFloat($("#debits6cost").val()) + parseFloat($("#debits7cost").val()) + parseFloat($("#debits9cost").val());
+    //     //     $("#debits10cost").val(debits8A.toFixed(2));
+    //     //     $("#prt_debits10cost").html("$" + debits8A.toFixed(2));
+    //     //     let debits9 = debits8A - parseFloat($("#credits9cost").val());
+    //     //     $("#debits11cost").val(debits9.toFixed(2));
+    //     //     $("#prt_debits11cost").html("$" + debits9.toFixed(2));
+    //     // }
+    // };
 
-    templateObject.selAccountant_2 = function(pan) {
-        let accountsList = templateObject.accountsList.get();
-        let accountsSummaryList = templateObject.accountsSummaryListT2_2.get();
-        var total_amounts = 0;
-        for (var i = 0; i < accountsList.length; i++) {
-            if ($("#f-" + pan + "-" + accountsList[i].id).prop('checked') == true) {
-                for (var j = 0; j < accountsSummaryList.length; j++) {
-                    if (accountsList[i].accountname == accountsSummaryList[j].AccountName) {
-                        total_amounts += parseFloat(accountsSummaryList[j].balance);
-                    }
-                }
-            }
-        }
+    // templateObject.selAccountant_2 = function(pan) {
+    //     let accountsList = templateObject.accountsList.get();
+    //     let accountsSummaryList = templateObject.accountsSummaryListT2_2.get();
+    //     var total_amounts = 0;
+    //     for (var i = 0; i < accountsList.length; i++) {
+    //         if ($("#f-" + pan + "-" + accountsList[i].id).prop('checked') == true) {
+    //             for (var j = 0; j < accountsSummaryList.length; j++) {
+    //                 if (accountsList[i].accountname == accountsSummaryList[j].AccountName) {
+    //                     total_amounts += parseFloat(accountsSummaryList[j].balance);
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        $("#accounts" + pan + "cost").val(total_amounts.toFixed(2));
-        $("#prt_accounts" + pan + "cost").html("$" + total_amounts.toFixed(2));
+    //     $("#accounts" + pan + "cost").val(total_amounts.toFixed(2));
+    //     $("#prt_accounts" + pan + "cost").html("$" + total_amounts.toFixed(2));
 
-        $("#debits7cost").val(total_amounts.toFixed(2));
-        $("#prt_accountsT7cost").html("$" + total_amounts.toFixed(2));
-        $("#prt_accountsT11cost").html("$" + total_amounts.toFixed(2));
-        $("#prt_debits7cost").html("$" + total_amounts.toFixed(2));
-        let debits8A = parseFloat($("#debits1cost").val()) + parseFloat($("#debits6cost").val()) + parseFloat($("#debits7cost").val()) + parseFloat($("#debits9cost").val());
-        $("#debits10cost").val(debits8A.toFixed(2));
-        $("#prt_debits10cost").html("$" + debits8A.toFixed(2));
-        let debits9 = debits8A - parseFloat($("#credits9cost").val());
-        $("#debits11cost").val(debits9.toFixed(2));
-        $("#prt_debits11cost").html("$" + debits9.toFixed(2));
-    };
+    //     $("#debits7cost").val(total_amounts.toFixed(2));
+    //     $("#prt_accountsT7cost").html("$" + total_amounts.toFixed(2));
+    //     $("#prt_accountsT11cost").html("$" + total_amounts.toFixed(2));
+    //     $("#prt_debits7cost").html("$" + total_amounts.toFixed(2));
+    //     let debits8A = parseFloat($("#debits1cost").val()) + parseFloat($("#debits6cost").val()) + parseFloat($("#debits7cost").val()) + parseFloat($("#debits9cost").val());
+    //     $("#debits10cost").val(debits8A.toFixed(2));
+    //     $("#prt_debits10cost").html("$" + debits8A.toFixed(2));
+    //     let debits9 = debits8A - parseFloat($("#credits9cost").val());
+    //     $("#debits11cost").val(debits9.toFixed(2));
+    //     $("#prt_debits11cost").html("$" + debits9.toFixed(2));
+    // };
 
     templateObject.sel3TaxList = function(pan) {
         let taxRateList = templateObject.taxRateList.get();
@@ -1411,27 +2105,27 @@ Template.vatreturn.onRendered(function() {
         }
     };
 
-    templateObject.sel3Accountant = function(pan) {
-        let accountsList = templateObject.accountsList.get();
-        let accountsSummaryList = templateObject.accountsSummaryListT3.get();
+    // templateObject.sel3Accountant = function(pan) {
+    //     let accountsList = templateObject.accountsList.get();
+    //     let accountsSummaryList = templateObject.accountsSummaryListT3.get();
 
-        var total_amounts = 0;
-        for (var i = 0; i < accountsList.length; i++) {
-            if ($("#f3-" + pan + "-" + accountsList[i].id).prop('checked') == true) {
-                for (var j = 0; j < accountsSummaryList.length; j++) {
-                    if (accountsList[i].accountname == accountsSummaryList[j].AccountName) {
-                        total_amounts += parseFloat(accountsSummaryList[j].balance);
-                    }
-                }
-            }
-        }
+    //     var total_amounts = 0;
+    //     for (var i = 0; i < accountsList.length; i++) {
+    //         if ($("#f3-" + pan + "-" + accountsList[i].id).prop('checked') == true) {
+    //             for (var j = 0; j < accountsSummaryList.length; j++) {
+    //                 if (accountsList[i].accountname == accountsSummaryList[j].AccountName) {
+    //                     total_amounts += parseFloat(accountsSummaryList[j].balance);
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        $("#t3accounts" + pan + "cost").val(total_amounts.toFixed(2));
-        $("#prt_t3accounts" + pan + "cost").html("$" + total_amounts.toFixed(2));
+    //     $("#t3accounts" + pan + "cost").val(total_amounts.toFixed(2));
+    //     $("#prt_t3accounts" + pan + "cost").html("$" + total_amounts.toFixed(2));
 
-        $("#credits8cost").val(total_amounts.toFixed(2));
-        $("#prt_credits8cost").html("$" + total_amounts.toFixed(2));
-    };
+    //     $("#credits8cost").val(total_amounts.toFixed(2));
+    //     $("#prt_credits8cost").html("$" + total_amounts.toFixed(2));
+    // };
 
     $('#sltDepartment').editableSelect();
 
