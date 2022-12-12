@@ -5437,6 +5437,211 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
         });
     }
 
+    templateObject.getCustomerTransactionListData = function(){
+    
+    }
+
+    templateObject.displayCustomerTransactionListData = function(){
+    }
+
+    templateObject.getCustomerJobDetailsListData = function(){
+      let customerName = $('#edtCustomerCompany').val();
+      console.log('customerName:',customerName)
+      getVS1Data('TJobVS1').then(function (dataObject) {
+        console.log('dataObject:',dataObject)
+        if (dataObject.length == 0) {
+            contactService.getAllJobListByCustomer(customerName).then(function (data) {
+                templateObject.displayCustomerJobDetailsListData(data, customerName);
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+            let data = JSON.parse(dataObject[0].data);
+            console.log('data:',data)
+            templateObject.displayCustomerJobDetailsListData(data, customerName);
+        }
+    }).catch(function (err) {
+        contactService.getAllJobListByCustomer(customerName).then(function (data) {
+            templateObject.displayCustomerJobDetailsListData(data, customerName);
+        }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    });
+    }
+
+    templateObject.displayCustomerJobDetailsListData = function(data, customerName){
+      let lineItemsJob = [];
+      let lineItemObjJob = {};
+      for (let i = 0; i < data.tjob.length; i++) {
+          let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].ARBalance) || 0.00;
+          let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditBalance) || 0.00;
+          let balance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].Balance) || 0.00;
+          let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditLimit) || 0.00;
+          let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].SalesOrderBalance) || 0.00;
+          const dataListJob = {
+              id: data.tjob[i].Id || '',
+              company: data.tjob[i].ClientName || '',
+              contactname: data.tjob[i].ContactName || '',
+              phone: data.tjob[i].Phone || '',
+              arbalance: arBalance || 0.00,
+              creditbalance: creditBalance || 0.00,
+              balance: balance || 0.00,
+              creditlimit: creditLimit || 0.00,
+              salesorderbalance: salesOrderBalance || 0.00,
+              email: data.tjob[i].Email || '',
+              accountno: data.tjob[i].AccountNo || '',
+              clientno: data.tjob[i].ClientNo || '',
+              jobtitle: data.tjob[i].JobTitle || '',
+              notes: data.tjob[i].Notes || '',
+              country: data.tjob[i].Country || LoggedCountry
+          };
+          if (customerName == data.tjob[i].ParentCustomerName) {
+              dataTableListJob.push(dataListJob);
+          }
+      }
+      templateObject.datatablerecordsjob.set(dataTableListJob);
+
+      if (templateObject.datatablerecordsjob.get()) {
+          Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJoblist', function (error, result) {
+              if (error) {
+
+              } else {
+                  if (result) {
+                      for (let i = 0; i < result.customFields.length; i++) {
+                          let customcolumn = result.customFields;
+                          let columData = customcolumn[i].label;
+                          let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                          let hiddenColumn = customcolumn[i].hidden;
+                          let columnClass = columHeaderUpdate.split('.')[1];
+                          let columnWidth = customcolumn[i].width;
+                          let columnindex = customcolumn[i].index + 1;
+
+                          if (hiddenColumn == true) {
+                              $("." + columnClass + "").addClass('hiddenColumn');
+                              $("." + columnClass + "").removeClass('showColumn');
+                          } else if (hiddenColumn == false) {
+                              $("." + columnClass + "").removeClass('hiddenColumn');
+                              $("." + columnClass + "").addClass('showColumn');
+                          }
+
+                      }
+                  }
+
+              }
+          });
+          setTimeout(function () {
+              MakeNegative();
+              $("#dtAsOf").datepicker({
+                  showOn: 'button',
+                  buttonText: 'Show Date',
+                  buttonImageOnly: true,
+                  buttonImage: '/img/imgCal2.png',
+                  dateFormat: 'dd/mm/yy',
+                  showOtherMonths: true,
+                  selectOtherMonths: true,
+                  changeMonth: true,
+                  changeYear: true,
+                  yearRange: "-90:+10",
+              });
+          }, 100);
+      }
+
+      $('.fullScreenSpin').css('display', 'none');
+      setTimeout(function () {
+          //$.fn.dataTable.moment('DD/MM/YY');
+          $('#tblJoblist').DataTable({
+              // dom: 'lBfrtip',
+              columnDefs: [
+                  { type: 'date', targets: 0 }
+              ],
+              "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              buttons: [
+                  {
+                      extend: 'excelHtml5',
+                      text: '',
+                      download: 'open',
+                      className: "btntabletocsv hiddenColumn",
+                      filename: "Job Transaction List - " + moment().format(),
+                      orientation: 'portrait',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  }, {
+                      extend: 'print',
+                      download: 'open',
+                      className: "btntabletopdf hiddenColumn",
+                      text: '',
+                      title: 'Job Transaction',
+                      filename: "Job Transaction List - " + moment().format(),
+                      exportOptions: {
+                          columns: ':visible',
+                          stripHtml: false
+                      }
+                  }],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              pageLength: initialDatatableLoad,
+              lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
+              info: true,
+              responsive: true,
+              "order": [[0, "asc"]],
+              action: function () {
+                  $('#tblJoblist').DataTable().ajax.reload();
+              },
+              "fnDrawCallback": function (oSettings) {
+                  setTimeout(function () {
+                      MakeNegative();
+                  }, 100);
+              },
+
+          }).on('page', function () {
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+
+          }).on('column-reorder', function () {
+
+          });
+
+          $('.fullScreenSpin').css('display', 'none');
+      }, 0);
+
+      const columns = $('#tblJoblist th');
+      let sTible = "";
+      let sWidth = "";
+      let sIndex = "";
+      let sVisible = "";
+      let columVisible = false;
+      let sClass = "";
+      $.each(columns, function (i, v) {
+          if (v.hidden == false) {
+              columVisible = true;
+          }
+          if ((v.className.includes("hiddenColumn"))) {
+              columVisible = false;
+          }
+          sWidth = v.style.width.replace('px', "");
+
+          let datatablerecordObj = {
+              sTitle: v.innerText || '',
+              sWidth: sWidth || '',
+              sIndex: v.cellIndex || 0,
+              sVisible: columVisible || false,
+              sClass: v.className || ''
+          };
+          tableHeaderListJob.push(datatablerecordObj);
+      });
+      templateObject.tableheaderrecordsjob.set(tableHeaderListJob);
+      $('div.dataTables_filter input').addClass('form-control form-control-sm');
+      $('#tblJoblist tbody').on('click', 'tr', function () {
+          const listData = $(this).closest('tr').attr('id');
+          if (listData) {
+              //window.open('/invoicecard?id=' + listData,'_self');
+          }
+      });
+    }
+
     templateObject.getEmployeeTransactionListData = function(){
     
     }
@@ -5449,201 +5654,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
     templateObject.displayLeadCrmListData = function(){
     }
 
-    templateObject.getCustomerJobDetailsListData = function(){
-      getVS1Data('TJobVS1').then(function (dataObject) {
-        if (dataObject.length == 0) {
-            contactService.getAllJobListByCustomer(customerName).then(function (data) {
-                templateObject.displayCustomerJobDetailsListData(data, customerName);
-            }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-            let data = JSON.parse(dataObject[0].data);
-            templateObject.displayCustomerJobDetailsListData(data, customerName);
-        }
-    }).catch(function (err) {
-        contactService.getAllJobListByCustomer(customerName).then(function (data) {
-            templateObject.displayCustomerJobDetailsListData(data, customerName);
-        }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
-        });
-    });
-    }
-
-    templateObject.displayCustomerJobDetailsListData = function(data, customerName) {
-      let lineItemsJob = [];
-        let lineItemObjJob = {};
-        for (let i = 0; i < data.tjob.length; i++) {
-            let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].ARBalance) || 0.00;
-            let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditBalance) || 0.00;
-            let balance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].Balance) || 0.00;
-            let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditLimit) || 0.00;
-            let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].SalesOrderBalance) || 0.00;
-            const dataListJob = {
-                id: data.tjob[i].Id || '',
-                company: data.tjob[i].ClientName || '',
-                contactname: data.tjob[i].ContactName || '',
-                phone: data.tjob[i].Phone || '',
-                arbalance: arBalance || 0.00,
-                creditbalance: creditBalance || 0.00,
-                balance: balance || 0.00,
-                creditlimit: creditLimit || 0.00,
-                salesorderbalance: salesOrderBalance || 0.00,
-                email: data.tjob[i].Email || '',
-                accountno: data.tjob[i].AccountNo || '',
-                clientno: data.tjob[i].ClientNo || '',
-                jobtitle: data.tjob[i].JobTitle || '',
-                notes: data.tjob[i].Notes || '',
-                country: data.tjob[i].Country || LoggedCountry
-            };
-            if (customerName == data.tjob[i].ParentCustomerName) {
-                dataTableListJob.push(dataListJob);
-            }
-        }
-        templateObject.transactiondatatablerecords.set(dataTableListJob);
-
-        if (templateObject.transactiondatatablerecords.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJoblist', function (error, result) {
-                if (error) {
-
-                } else {
-                    if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                            let customcolumn = result.customFields;
-                            let columData = customcolumn[i].label;
-                            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                            let hiddenColumn = customcolumn[i].hidden;
-                            let columnClass = columHeaderUpdate.split('.')[1];
-                            let columnWidth = customcolumn[i].width;
-                            let columnindex = customcolumn[i].index + 1;
-
-                            if (hiddenColumn == true) {
-                                $("." + columnClass + "").addClass('hiddenColumn');
-                                $("." + columnClass + "").removeClass('showColumn');
-                            } else if (hiddenColumn == false) {
-                                $("." + columnClass + "").removeClass('hiddenColumn');
-                                $("." + columnClass + "").addClass('showColumn');
-                            }
-
-                        }
-                    }
-
-                }
-            });
-            setTimeout(function () {
-                MakeNegative();
-                $("#dtAsOf").datepicker({
-                    showOn: 'button',
-                    buttonText: 'Show Date',
-                    buttonImageOnly: true,
-                    buttonImage: '/img/imgCal2.png',
-                    dateFormat: 'dd/mm/yy',
-                    showOtherMonths: true,
-                    selectOtherMonths: true,
-                    changeMonth: true,
-                    changeYear: true,
-                    yearRange: "-90:+10",
-                });
-            }, 100);
-        }
-
-        $('.fullScreenSpin').css('display', 'none');
-        setTimeout(function () {
-            //$.fn.dataTable.moment('DD/MM/YY');
-            $('#tblJoblist').DataTable({
-                // dom: 'lBfrtip',
-                columnDefs: [
-                    { type: 'date', targets: 0 }
-                ],
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                buttons: [
-                    {
-                        extend: 'excelHtml5',
-                        text: '',
-                        download: 'open',
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "Job Transaction List - " + moment().format(),
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    }, {
-                        extend: 'print',
-                        download: 'open',
-                        className: "btntabletopdf hiddenColumn",
-                        text: '',
-                        title: 'Job Transaction',
-                        filename: "Job Transaction List - " + moment().format(),
-                        exportOptions: {
-                            columns: ':visible',
-                            stripHtml: false
-                        }
-                    }],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
-                info: true,
-                responsive: true,
-                "order": [[0, "asc"]],
-                action: function () {
-                    $('#tblJoblist').DataTable().ajax.reload();
-                },
-                "fnDrawCallback": function (oSettings) {
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                },
-
-            }).on('page', function () {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-
-            }).on('column-reorder', function () {
-
-            });
-
-            $('.fullScreenSpin').css('display', 'none');
-        }, 0);
-
-        const columns = $('#tblJoblist th');
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function (i, v) {
-            if (v.hidden == false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderListJob.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecordsjob.set(tableHeaderListJob);
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
-        $('#tblJoblist tbody').on('click', 'tr', function () {
-            const listData = $(this).closest('tr').attr('id');
-            if (listData) {
-                //window.open('/invoicecard?id=' + listData,'_self');
-            }
-        });
-    }
-
-        //Check URL to make right call.
+    //Check URL to make right call.
         if(currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist"){
             templateObject.getContactOverviewData();
         }else if(currenttablename == "tblEmployeelist"){
