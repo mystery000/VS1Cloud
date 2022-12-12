@@ -235,10 +235,10 @@ Template.non_transactional_list.onRendered(function() {
                     { index: 3, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "200" },
                     { index: 4, label: 'Default Accounts', class: 'colDefaultAccount', active: false, display: true, width: "200" },
                     { index: 5, label: 'Grace Period', class: 'colGracePeriodtus', active: false, display: true, width: "100" },
-                    { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-                    { index: 7, label: 'Default Discount', class: 'colStatus', active: true, display: true, width: "100" },
-                    { index: 8, label: 'Terms', class: 'colStatus', active: true, display: true, width: "100" },
-                    { index: 9, label: 'Preferred Payment Method', class: 'colStatus', active: true, display: true, width: "100" },
+                    { index: 6, label: 'Default Discount', class: 'colDefaultDiscount', active: true, display: true, width: "200" },
+                    { index: 7, label: 'Terms', class: 'colTerms', active: true, display: true, width: "200" },
+                    { index: 8, label: 'Preferred Payment Method', class: 'colPreferedPaymentMethod', active: true, display: true, width: "300" },
+                    { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
                   ];
           }
           else if(currenttablename == "tblLeadStatusList") { //Done Something Here
@@ -2498,7 +2498,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
         // }else{
         //   deleteFilter = false;
         // };
-        consoel.log('data.tclienttype:',data.tclienttype)
+        console.log('data:',data.tclienttype)
         for (let i = 0; i < data.tclienttype.length; i++) {
           let mobile = "";
           //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
@@ -2515,7 +2515,10 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             data.tclienttype[i].fields.CreditLimit || 0.0,
             data.tclienttype[i].fields.DefaultPostAccount || "",
             data.tclienttype[i].fields.GracePeriod || "",
-            linestatus
+            data.tclienttype[i].fields.DefaultPostAccount || "",//need to be replaced with Default Discount
+            data.tclienttype[i].fields.TermsName || "",
+            data.tclienttype[i].fields.TermsName || "", // need to be replaced with prefered payment method
+            linestatus,
           ];
 
             splashArrayClientTypeList.push(dataList);
@@ -2568,6 +2571,21 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     },
                     {
                       targets: 6,
+                      className: "colDefaultDiscount",
+                      width: "200px",
+                    },
+                    {
+                      targets: 7,
+                      className: "colTerms",
+                      width: "200px",
+                    },
+                    {
+                      targets: 8,
+                      className: "colPreferedPaymentMethod",
+                      width: "300px",
+                    },
+                    {
+                      targets: 9,
                       className: "colStatus",
                       width: "100px",
                     }
@@ -2656,6 +2674,9 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                           dataObjectnew.tclienttype[j].fields.CreditLimit || 0.0,
                           dataObjectnew.tclienttype[j].fields.DefaultPostAccount || "",
                           dataObjectnew.tclienttype[j].fields.GracePeriod || "",
+                          dataObjectnew.tclienttype[j].fields.DefaultPostAccount || "",//Need to be replaced with Default Discount
+                          dataObjectnew.tclienttype[j].fields.TermsName || "",
+                          dataObjectnew.tclienttype[j].fields.TermsName || "", // Need to be replaced with Prefered payment method.
                           linestatus
                         ];
 
@@ -5449,9 +5470,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
     templateObject.getCustomerJobDetailsListData = function(){
       let customerName = $('#edtCustomerCompany').val();
-      console.log('customerName:',customerName)
       getVS1Data('TJobVS1').then(function (dataObject) {
-        console.log('dataObject:',dataObject)
         if (dataObject.length == 0) {
             contactService.getAllJobListByCustomer(customerName).then(function (data) {
                 templateObject.displayCustomerJobDetailsListData(data, customerName);
@@ -5460,7 +5479,6 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             });
         } else {
             let data = JSON.parse(dataObject[0].data);
-            console.log('data:',data)
             templateObject.displayCustomerJobDetailsListData(data, customerName);
         }
     }).catch(function (err) {
