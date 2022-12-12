@@ -99,6 +99,9 @@ Template.new_invoice.onCreated(function() {
     templateObject.hasFollow = new ReactiveVar(false);
     this.customers = new ReactiveVar([]);
     this.customer = new ReactiveVar();
+
+    templateObject.customerRecord = new ReactiveVar();
+
 });
 
 Template.new_invoice.onRendered(function() {
@@ -9696,7 +9699,7 @@ Template.new_invoice.onRendered(function() {
             //$('#edtCustomerCompany').attr('readonly', false);
             var customerDataName = e.target.value || "";
             var customerDataID =
-                $("#edtCustomerName").attr("custid").replace(/\s/g, "") || "";
+            $("#edtCustomerName").attr("custid").replace(/\s/g, "") || "";
             if (e.pageX > offset.left + $earch.width() - 8) {
                 // X button 16px wide?
                 $("#customerListModal").modal();
@@ -9716,7 +9719,7 @@ Template.new_invoice.onRendered(function() {
                     //FlowRouter.go('/customerscard?name=' + e.target.value);
                     $("#edtCustomerPOPID").val("");
                     getVS1Data("TCustomerVS1")
-                        .then(function(dataObject) {
+                    .then(function(dataObject) {
                             if (dataObject.length == 0) {
                                 $(".fullScreenSpin").css("display", "inline-block");
                                 sideBarService
@@ -9846,6 +9849,36 @@ Template.new_invoice.onRendered(function() {
                                         }
 
                                         setTimeout(function() {
+                                            let customerRecord = {
+                                                id:popCustomerID,
+                                                phone:popCustomerPhone,
+                                                firstname:popCustomerFirstName,
+                                                middlename: popCustomerMiddleName,
+                                                lastname:popCustomerLastName,
+                                                company:data.tcustomer[0].fields.Companyname || '',
+                                                email: popCustomerEmail,
+                                                title: popCustomerTitle,
+                                                tfn: popCustomertfn,
+                                                mobile: popCustomerMobile,
+                                                fax: popCustomerFaxnumber,
+                                                shippingaddress: popCustomerStreet,
+                                                scity: popCustomerStreet2,
+                                                sstate: popCustomerCountry,
+                                                terms: '',
+                                                spostalcode: popCustomerPostcode,
+                                                scountry: popCustomerState,
+                                                billingaddress: popCustomerbillingaddress,
+                                                bcity: popCustomerbcity,
+                                                bstate: popCustomerbstate,
+                                                bpostalcode: popCustomerbpostalcode,
+                                                bcountry: popCustomerCountry,
+                                                custFld1: popCustomercustfield1,
+                                                custFld2: popCustomercustfield2,
+                                                jobbcountry: '',
+                                                jobscountry: '',
+                                                discount:0
+                                            }
+                                            templateObject.customerRecord.set(customerRecord);
                                             $("#addCustomerModal").modal("show");
                                         }, 200);
                                     })
@@ -9991,6 +10024,36 @@ Template.new_invoice.onRendered(function() {
                                         }
 
                                         setTimeout(function() {
+                                            let customerRecord = {
+                                                id:popCustomerID,
+                                                phone:popCustomerPhone,
+                                                firstname:popCustomerFirstName,
+                                                middlename: popCustomerMiddleName,
+                                                lastname:popCustomerLastName,
+                                                company:data.tcustomervs1[i].fields.Companyname || '',
+                                                email: popCustomerEmail,
+                                                title: popCustomerTitle,
+                                                tfn: popCustomertfn,
+                                                mobile: popCustomerMobile,
+                                                fax: popCustomerFaxnumber,
+                                                shippingaddress: popCustomerStreet,
+                                                scity: popCustomerStreet2,
+                                                sstate: popCustomerCountry,
+                                                terms: '',
+                                                spostalcode: popCustomerPostcode,
+                                                scountry: popCustomerState,
+                                                billingaddress: popCustomerbillingaddress,
+                                                bcity: popCustomerbcity,
+                                                bstate: popCustomerbstate,
+                                                bpostalcode: popCustomerbpostalcode,
+                                                bcountry: popCustomerCountry,
+                                                custFld1: popCustomercustfield1,
+                                                custFld2: popCustomercustfield2,
+                                                jobbcountry: '',
+                                                jobscountry: '',
+                                                discount:0
+                                            }
+                                            templateObject.customerRecord.set(customerRecord);
                                             $("#addCustomerModal").modal("show");
                                         }, 200);
                                     }
@@ -13844,6 +13907,11 @@ Template.new_invoice.helpers({
     record: () => {
         return Template.instance().record.get();
     },
+
+    customerRecord: () => {
+        return Template.instance().customerRecord.get();
+    },
+
     productqtyrecords: () => {
         return Template.instance()
             .productqtyrecords.get()
