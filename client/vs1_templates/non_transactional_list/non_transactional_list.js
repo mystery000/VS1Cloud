@@ -236,6 +236,9 @@ Template.non_transactional_list.onRendered(function() {
                     { index: 4, label: 'Default Accounts', class: 'colDefaultAccount', active: false, display: true, width: "200" },
                     { index: 5, label: 'Grace Period', class: 'colGracePeriodtus', active: false, display: true, width: "100" },
                     { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+                    { index: 7, label: 'Default Discount', class: 'colStatus', active: true, display: true, width: "100" },
+                    { index: 8, label: 'Terms', class: 'colStatus', active: true, display: true, width: "100" },
+                    { index: 9, label: 'Preferred Payment Method', class: 'colStatus', active: true, display: true, width: "100" },
                   ];
           }
           else if(currenttablename == "tblLeadStatusList") { //Done Something Here
@@ -2495,7 +2498,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
         // }else{
         //   deleteFilter = false;
         // };
-
+        consoel.log('data.tclienttype:',data.tclienttype)
         for (let i = 0; i < data.tclienttype.length; i++) {
           let mobile = "";
           //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
