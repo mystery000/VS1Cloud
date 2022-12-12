@@ -1581,6 +1581,7 @@ Template.customerscard.onRendered(function () {
                 const termsDataName = e.target.value || '';
                 editableTerms(e, $each, offset, termsDataName);
             });
+            $('#editCustomerTitle').editableSelect();
             function setTermsVS1(data, termsDataName) {
                 for (let i in data.ttermsvs1) {
                     if (data.ttermsvs1.hasOwnProperty(i)) {
@@ -1914,6 +1915,17 @@ Template.customerscard.onRendered(function () {
             });
         }, 1200);
     });
+
+    $(document).on('click', '#editCustomerTitle', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#customerTitlePopModal').modal('toggle');
+        } else {
+            $('#customerTitlePopModal').modal();
+        }
+    });
+
     $(document).on("click", "#termsList tbody tr", function (e) {
         let selectedTermsDropdownID = $('#selectLineID').val() || 'sltTerms';
         $('#' + selectedTermsDropdownID + '').val($(this).find(".colTermName").text());
