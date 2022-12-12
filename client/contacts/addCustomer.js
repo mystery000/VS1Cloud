@@ -80,6 +80,9 @@ Template.customerscard.onRendered(function () {
     const taxCodesList = [];
 
     let currentId = FlowRouter.current().queryParams;
+    if(FlowRouter.current().route.name!= "customerscard"){
+      currentId = "";
+    }
     let customerID = '';
     let totAmount = 0;
     let totAmountOverDue = 0;
