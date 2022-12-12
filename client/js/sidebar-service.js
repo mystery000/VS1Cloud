@@ -4101,7 +4101,7 @@ export class SideBarService extends BaseService {
      };
      return this.getList(this.ERPObjects.TSubTaxCode, options);
  }
- 
+
   changeDialFormat (mobile, country) {
 
 
@@ -4127,7 +4127,6 @@ export class SideBarService extends BaseService {
   }
 
   getVS1MenuConfig() {
-    console.log('this.erpGet.TPreference: ', this.erpGet.TPreference);
     const data = this.GET(this.erpGet.TPreference);
     return data;
   }

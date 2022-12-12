@@ -402,6 +402,81 @@ Template.non_transactional_list.onRendered(function() {
               { index: 10, label: 'Total Hourly Costs', class: 'colTotalHourlyCosts', active: true, display: true, width: "100" },
               { index: 11, label: 'Inventory Asset Wastage', class: 'colWastage', active: true, display: true, width: "200" }
             ];
+          }else if(currenttablename == "tblSupplierTransactionList"){
+            reset_data = [
+              { index: 0, label: '#ID', class: 'colSortDate', active: false, display: true,  width: "10"},
+              { index: 1, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "100"},
+              { index: 2, label: 'P/O No.', class: 'colPurchaseNo', active: true, display: true, width: "100"},
+              { index: 3, label: 'Supplier', class: 'colSupplier', active: true, display: true, width: "100"},
+              { index: 4, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "100"},
+              { index: 5, label: 'Tax', class: 'colTax', active: true, display: true, width: "100"},
+              { index: 6, label: 'Amount', class: 'colAmount', active: true, display: true, width: "200"},
+              { index: 7, label: 'Paid', class: 'colPaid', active: false, display: true, width: "200"},
+              { index: 8, label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true, display: true, width: ""},
+              { index: 9, label: 'Type', class: 'colStatus', active: true, display: true, width: "100"},
+              { index: 9, label: 'Custom Field 1', class: 'colPurchaseCustField1', active: false, display: true, width: "100"},
+              { index: 9, label: 'Custom Field 2', class: 'colPurchaseCustField2', active: false, display: true, width: "150"},
+              { index: 9, label: 'Employee', class: 'colEmployee', active: false, display: true, width: "150"},
+              { index: 9, label: 'Comments', class: 'colComments', active: false, display: true, width: "100"},
+          ];
+          }else if(currenttablename === "tblCustomerTransactionList"){
+            reset_data = [
+              { index: 0, label: 'Company', class: 'colCompany', active: true, display: true,  width: "200"},
+              { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
+              { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "80"},
+              { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "80"},
+              { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80"},
+              { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "80"},
+              { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "80"},
+              { index: 7, label: 'Country', class: 'colCountry', active: true, display: true, width: "100"},
+              { index: 8, label: 'Email', class: 'colEmail', active: false, display: true, width: ""},
+              { index: 9, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "100"},
+              { index: 9, label: 'Custom Field 1', class: 'colPurchaseCustField1', active: false, display: true, width: ""},
+              { index: 9, label: 'Custom Field 2', class: 'colPurchaseCustField2', active: false, display: true, width: ""},
+              { index: 9, label: 'Notes', class: 'colNotes', active: true, display: true, width: "100"},
+          ];
+          }else if(currenttablename === "tblCustomerJobDetailsList"){
+            reset_data = [
+              { index: 0, label: 'Company', class: 'colCompany', active: true, display: true,  width: "200"},
+              { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
+              { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "80"},
+              { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "80"},
+              { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80"},
+              { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "80"},
+              { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "80"},
+              { index: 7, label: 'Country', class: 'colCountry', active: true, display: true, width: "100"},
+              { index: 8, label: 'Email', class: 'colEmail', active: false, display: true, width: ""},
+              { index: 9, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "100"},
+              { index: 9, label: 'Custom Field 1', class: 'colPurchaseCustField1', active: false, display: true, width: ""},
+              { index: 9, label: 'Custom Field 2', class: 'colPurchaseCustField2', active: false, display: true, width: ""},
+              { index: 9, label: 'Notes', class: 'colNotes', active: true, display: true, width: "100"},
+          ];
+          }else if(currenttablename === "tblEmployeeTransactionList"){
+            reset_data = [
+              { index: 0, label: '#ID', class: 'colSortDate', active: false, display: true,  width: "10"},
+              { index: 1, label: 'Sale Date', class: 'colSaleDate', active: true, display: true, width: "80"},
+              { index: 2, label: 'Sales No.', class: 'colSalesNo', active: true, display: true, width: "80"},
+              { index: 3, label: 'Customer', class: 'colCustomer', active: true, display: true, width: "200"},
+              { index: 4, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "100"},
+              { index: 5, label: 'Tax', class: 'colTax', active: true, display: true, width: "100"},
+              { index: 6, label: 'Amount', class: 'colAmount', active: true, display: true, width: "200"},
+              { index: 7, label: 'Paid', class: 'colPaid', active: false, display: true, width: "200"},
+              { index: 8, label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true, display: true, width: ""},
+              { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
+              { index: 9, label: 'Custom Field 1', class: 'colPurchaseCustField1', active: false, display: true, width: "100"},
+              { index: 9, label: 'Custom Field 2', class: 'colPurchaseCustField2', active: false, display: true, width: "150"},
+              { index: 9, label: 'Employee', class: 'colEmployee', active: false, display: true, width: "150"},
+              { index: 9, label: 'Comments', class: 'colComments', active: false, display: true, width: "100"},
+          ];
+          }else if(currenttablename === "tblLeadCrmList"){
+            reset_data = [
+              { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true,  width: ""},
+              { index: 1, label: '', class: 'colCompleteTask', active: true, display: true, width: "10"},
+              { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "100"},
+              { index: 3, label: 'Task', class: 'colTaskName', active: true, display: true, width: "150"},
+              { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300"},
+              { index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "200"},
+          ];
           }
 
         templateObject.reset_data.set(reset_data);
@@ -5198,7 +5273,388 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
   
   
         }  
-        //Check URL to make right call.
+
+        templateObject.getSupplierTransactionListData = function() {
+          let supplierName = $('#edtSupplierCompany').val();
+          getVS1Data('TbillReport').then(function(dataObject) {
+              if (dataObject.length === 0) {
+                  contactService.getAllTransListBySupplier(supplierName).then(function(data) {
+                    templateObject.displaySupplierTransactionListData(data, supplierName);
+                  }).catch(function(err) {
+                      $('.fullScreenSpin').css('display', 'none');
+                  });
+              } else {
+                  let data = JSON.parse(dataObject[0].data);
+                  templateObject.displaySupplierTransactionListData(data, supplierName);
+              }
+          }).catch(function(err) {
+              contactService.getAllTransListBySupplier(supplierName).then(function(data) {
+                templateObject.displaySupplierTransactionListData(data, supplierName);
+              }).catch(function(err) {
+                  $('.fullScreenSpin').css('display', 'none');
+              });
+          });
+  
+      };
+      templateObject.displaySupplierTransactionListData = function(data, supplierName) {
+        for (let i = 0; i < data.tbillreport.length; i++) {
+            let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Ex)']) || 0.00;
+            let totalTax = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Tax']) || 0.00;
+            let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
+            let amountPaidCalc = data.tbillreport[i]['Total Amount (Inc)'] - data.tbillreport[i].Balance;
+            let totalPaid = utilityService.modifynegativeCurrencyFormat(amountPaidCalc) || 0.00;
+            let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i].Balance) || 0.00;
+            const dataList = {
+                id: data.tbillreport[i].PurchaseOrderID || '',
+                employee: data.tbillreport[i].Contact || '',
+                sortdate: data.tbillreport[i].OrderDate !== '' ? moment(data.tbillreport[i].OrderDate).format("YYYY/MM/DD") : data.tbillreport[i].OrderDate,
+                orderdate: data.tbillreport[i].OrderDate !== '' ? moment(data.tbillreport[i].OrderDate).format("DD/MM/YYYY") : data.tbillreport[i].OrderDate,
+                suppliername: data.tbillreport[i].Company || '',
+                totalamountex: totalAmountEx || 0.00,
+                totaltax: totalTax || 0.00,
+                totalamount: totalAmount || 0.00,
+                totalpaid: totalPaid || 0.00,
+                totaloustanding: totalOutstanding || 0.00,
+                orderstatus: '',
+                type: data.tbillreport[i].Type || '',
+                custfield1: data.tbillreport[i].Phone || '',
+                custfield2: data.tbillreport[i].InvoiceNumber || '',
+                comments: data.tbillreport[i].Comments || '',
+            };
+            if (data.tbillreport[i].Company === supplierName) {
+                dataTableList.push(dataList);
+            }
+        }
+        templateObject.transactiondatatablerecords.set(dataTableList);
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        // $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
+        // $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            //$.fn.dataTable.moment('DD/MM/YY');
+            $('#tblTransactionlist').DataTable({
+                // dom: 'lBfrtip',
+                columnDefs: [
+                    { type: 'date', targets: 0 }
+                ],
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "Supplier Purchase Transactions - " + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'Purchase Transaction',
+                    filename: "Supplier Purchase Transactions - " + moment().format(),
+                    exportOptions: {
+                        columns: ':visible',
+                        stripHtml: false
+                    }
+                }],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [0, "asc"]
+                ],
+                action: function() {
+                    $('#tblTransactionlist').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+                let draftRecord = templateObject.transactiondatatablerecords.get();
+                templateObject.transactiondatatablerecords.set(draftRecord);
+            }).on('column-reorder', function() {
+
+            });
+            $('.fullScreenSpin').css('display', 'none');
+        }, 0);
+
+        const columns = $('#tblTransactionlist th');
+        let sWidth = "";
+        let columVisible = false;
+        $.each(columns, function(i, v) {
+            if (v.hidden === false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+        $('#tblTransactionlist tbody').on('click', 'tr', function() {
+            const listData = $(this).closest('tr').attr('id');
+            const transactiontype = $(event.target).closest("tr").find(".colStatus").text();
+            if ((listData) && (transactiontype)) {
+                if (transactiontype === 'Purchase Order') {
+                    window.open('/purchaseordercard?id=' + listData, '_self');
+                } else if (transactiontype === 'Bill') {
+                    window.open('/billcard?id=' + listData, '_self');
+                } else if (transactiontype === 'Credit') {
+                    window.open('/creditcard?id=' + listData, '_self');
+                } else {
+                    //window.open('/purchaseordercard?id=' + listData,'_self');
+                }
+            }
+        });
+    }
+
+    templateObject.getCustomerTransactionListData = function(){
+    
+    }
+
+    templateObject.displayCustomerTransactionListData = function(){
+    }
+
+    templateObject.getCustomerJobDetailsListData = function(){
+      let customerName = $('#edtCustomerCompany').val();
+      console.log('customerName:',customerName)
+      getVS1Data('TJobVS1').then(function (dataObject) {
+        console.log('dataObject:',dataObject)
+        if (dataObject.length == 0) {
+            contactService.getAllJobListByCustomer(customerName).then(function (data) {
+                templateObject.displayCustomerJobDetailsListData(data, customerName);
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+            let data = JSON.parse(dataObject[0].data);
+            console.log('data:',data)
+            templateObject.displayCustomerJobDetailsListData(data, customerName);
+        }
+    }).catch(function (err) {
+        contactService.getAllJobListByCustomer(customerName).then(function (data) {
+            templateObject.displayCustomerJobDetailsListData(data, customerName);
+        }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    });
+    }
+
+    templateObject.displayCustomerJobDetailsListData = function(data, customerName){
+      let lineItemsJob = [];
+      let lineItemObjJob = {};
+      for (let i = 0; i < data.tjob.length; i++) {
+          let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].ARBalance) || 0.00;
+          let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditBalance) || 0.00;
+          let balance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].Balance) || 0.00;
+          let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditLimit) || 0.00;
+          let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].SalesOrderBalance) || 0.00;
+          const dataListJob = {
+              id: data.tjob[i].Id || '',
+              company: data.tjob[i].ClientName || '',
+              contactname: data.tjob[i].ContactName || '',
+              phone: data.tjob[i].Phone || '',
+              arbalance: arBalance || 0.00,
+              creditbalance: creditBalance || 0.00,
+              balance: balance || 0.00,
+              creditlimit: creditLimit || 0.00,
+              salesorderbalance: salesOrderBalance || 0.00,
+              email: data.tjob[i].Email || '',
+              accountno: data.tjob[i].AccountNo || '',
+              clientno: data.tjob[i].ClientNo || '',
+              jobtitle: data.tjob[i].JobTitle || '',
+              notes: data.tjob[i].Notes || '',
+              country: data.tjob[i].Country || LoggedCountry
+          };
+          if (customerName == data.tjob[i].ParentCustomerName) {
+              dataTableListJob.push(dataListJob);
+          }
+      }
+      templateObject.datatablerecordsjob.set(dataTableListJob);
+
+      if (templateObject.datatablerecordsjob.get()) {
+          Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJoblist', function (error, result) {
+              if (error) {
+
+              } else {
+                  if (result) {
+                      for (let i = 0; i < result.customFields.length; i++) {
+                          let customcolumn = result.customFields;
+                          let columData = customcolumn[i].label;
+                          let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                          let hiddenColumn = customcolumn[i].hidden;
+                          let columnClass = columHeaderUpdate.split('.')[1];
+                          let columnWidth = customcolumn[i].width;
+                          let columnindex = customcolumn[i].index + 1;
+
+                          if (hiddenColumn == true) {
+                              $("." + columnClass + "").addClass('hiddenColumn');
+                              $("." + columnClass + "").removeClass('showColumn');
+                          } else if (hiddenColumn == false) {
+                              $("." + columnClass + "").removeClass('hiddenColumn');
+                              $("." + columnClass + "").addClass('showColumn');
+                          }
+
+                      }
+                  }
+
+              }
+          });
+          setTimeout(function () {
+              MakeNegative();
+              $("#dtAsOf").datepicker({
+                  showOn: 'button',
+                  buttonText: 'Show Date',
+                  buttonImageOnly: true,
+                  buttonImage: '/img/imgCal2.png',
+                  dateFormat: 'dd/mm/yy',
+                  showOtherMonths: true,
+                  selectOtherMonths: true,
+                  changeMonth: true,
+                  changeYear: true,
+                  yearRange: "-90:+10",
+              });
+          }, 100);
+      }
+
+      $('.fullScreenSpin').css('display', 'none');
+      setTimeout(function () {
+          //$.fn.dataTable.moment('DD/MM/YY');
+          $('#tblJoblist').DataTable({
+              // dom: 'lBfrtip',
+              columnDefs: [
+                  { type: 'date', targets: 0 }
+              ],
+              "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              buttons: [
+                  {
+                      extend: 'excelHtml5',
+                      text: '',
+                      download: 'open',
+                      className: "btntabletocsv hiddenColumn",
+                      filename: "Job Transaction List - " + moment().format(),
+                      orientation: 'portrait',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  }, {
+                      extend: 'print',
+                      download: 'open',
+                      className: "btntabletopdf hiddenColumn",
+                      text: '',
+                      title: 'Job Transaction',
+                      filename: "Job Transaction List - " + moment().format(),
+                      exportOptions: {
+                          columns: ':visible',
+                          stripHtml: false
+                      }
+                  }],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              pageLength: initialDatatableLoad,
+              lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
+              info: true,
+              responsive: true,
+              "order": [[0, "asc"]],
+              action: function () {
+                  $('#tblJoblist').DataTable().ajax.reload();
+              },
+              "fnDrawCallback": function (oSettings) {
+                  setTimeout(function () {
+                      MakeNegative();
+                  }, 100);
+              },
+
+          }).on('page', function () {
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+
+          }).on('column-reorder', function () {
+
+          });
+
+          $('.fullScreenSpin').css('display', 'none');
+      }, 0);
+
+      const columns = $('#tblJoblist th');
+      let sTible = "";
+      let sWidth = "";
+      let sIndex = "";
+      let sVisible = "";
+      let columVisible = false;
+      let sClass = "";
+      $.each(columns, function (i, v) {
+          if (v.hidden == false) {
+              columVisible = true;
+          }
+          if ((v.className.includes("hiddenColumn"))) {
+              columVisible = false;
+          }
+          sWidth = v.style.width.replace('px', "");
+
+          let datatablerecordObj = {
+              sTitle: v.innerText || '',
+              sWidth: sWidth || '',
+              sIndex: v.cellIndex || 0,
+              sVisible: columVisible || false,
+              sClass: v.className || ''
+          };
+          tableHeaderListJob.push(datatablerecordObj);
+      });
+      templateObject.tableheaderrecordsjob.set(tableHeaderListJob);
+      $('div.dataTables_filter input').addClass('form-control form-control-sm');
+      $('#tblJoblist tbody').on('click', 'tr', function () {
+          const listData = $(this).closest('tr').attr('id');
+          if (listData) {
+              //window.open('/invoicecard?id=' + listData,'_self');
+          }
+      });
+    }
+
+    templateObject.getEmployeeTransactionListData = function(){
+    
+    }
+    templateObject.displayEmployeeTransactionListData = function(){
+    
+    }
+    templateObject.getLeadCrmListData = function(){
+    }
+
+    templateObject.displayLeadCrmListData = function(){
+    }
+
+    //Check URL to make right call.
         if(currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist"){
             templateObject.getContactOverviewData();
         }else if(currenttablename == "tblEmployeelist"){
@@ -5229,6 +5685,16 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
           templateObject.getTitleListData();
         }else if(currenttablename == 'tblProcessList' ){
           templateObject.getProcessListData();
+        }else if(currenttablename == "tblSupplierTransactionList"){
+          templateObject.getSupplierTransactionListData();
+        }else if(currenttablename == "tblCustomerTransactionList"){
+          templateObject.getCustomerTransactionListData();
+        }else if (currenttablename === "tblCustomerJobDetailsList"){
+          templateObject.getCustomerJobDetailsListData();
+        }else if (currenttablename === "tblEmployeeTransactionList"){
+          templateObject.getEmployeeTransactionListData();
+        }else if (currenttablename === "tblLeadCrmList"){
+          templateObject.getLeadCrmListData();
         }
       tableResize();
     });
@@ -5283,6 +5749,17 @@ Template.non_transactional_list.events({
     }else if(currenttablename == 'tblProcessList' ) {
       await clearData('TProcessStep');
       templateObject.getProcessListData(true);
+    }else if(currenttablename == "tblSupplierTransactionList"){
+      // await clearData('T')
+      templateObject.getSupplierTransactionListData(true);
+    }else if(currenttablename == "tblCustomerTransactionList"){
+      templateObject.getCustomerTransactionListData(true);
+    }else if (currenttablename === "tblCustomerJobDetailsList"){
+      templateObject.getCustomerJobDetailsListData(true);
+    }else if (currenttablename === "tblEmployeeTransactionList"){
+      templateObject.getEmployeeTransactionListData(true);
+    }else if (currenttablename === "tblLeadCrmList"){
+      templateObject.getLeadCrmListData(true);
     }
 
     },
@@ -5336,6 +5813,16 @@ Template.non_transactional_list.events({
       templateObject.getCurrencyListData(false);
     }else if(currenttablename === "tblTitleList"){
       templateObject.getTitleListData(false);
+    }else if(currenttablename === "tblSupplierTransactionList"){
+      templateObject.getSupplierTransactionListData(false);
+    }else if (currenttablename === "tblCustomerTransactionList"){
+      templateObject.getCustomerTransactionListData(false);
+    }else if (currenttablename === "tblCustomerJobDetailsList"){
+      templateObject.getCustomerJobDetailsListData(false);
+    }else if (currenttablename === "tblEmployeeTransactionList"){
+      templateObject.getEmployeeTransactionListData(false);
+    }else if (currenttablename === "tblLeadCrmList"){
+      templateObject.getLeadCrmListData(false);
     }
 
     },

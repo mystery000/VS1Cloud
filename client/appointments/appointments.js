@@ -1776,7 +1776,6 @@ Template.appointments.onRendered(function() {
                 }
             },
             eventClick: function(info) {
-
                 $("#frmAppointment")[0].reset();
                 $("#btnHold").prop("disabled", false);
                 $("#btnStartAppointment").prop("disabled", false);
@@ -2354,7 +2353,7 @@ Template.appointments.onRendered(function() {
                     )
                 ) {
                     $(".fc-event-main p").css({
-                        "font-size": "8px",
+                        "font-size": "12px",
                     });
                     //     $(info.el).tooltip({
                     //         title: info.event.title.replaceAll('<br>', "\n"),
@@ -2367,13 +2366,25 @@ Template.appointments.onRendered(function() {
             },
             eventContent: function(event) {
 
-                let title = document.createElement("p");
-                if (event.event.title) {
+                let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                let eventLeave  = [];
+                let eventStatus = [];
+
+                leaveemployeerecords.forEach((item) => {
+                    eventLeave[item.EmployeeID]  = item.LeaveMethod;
+                    eventStatus[item.EmployeeID] = item.Status;
+                });
+
+                let title = document.createElement("p"); 
+                if (event.timeText != '') {
                     title.innerHTML = event.timeText + " " + event.event.title;
                     title.style.backgroundColor = event.backgroundColor;
                     title.style.color = "#ffffff";
                 } else {
-                    title.innerHTML = event.timeText + " " + event.event.title;
+                    var empid = event.event._def.publicId.split(':')[1];
+                    $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
+
+                    title.style.color = "#dddddd";
                 }
 
                 let arrayOfDomNodes = [title];
