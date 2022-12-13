@@ -31,8 +31,6 @@ Template.employeeAbsentDays.onRendered(() => {
 
 		let empName = [];
 		let empClockedCount = [];
-
-		console.log(data, "=====================clocked on data");
 		for (let t = 0; t < data.ttimesheet.length; t++) {
 			if (data.ttimesheet[t].fields.Logs != null) {
 				if (

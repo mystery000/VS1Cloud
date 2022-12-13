@@ -89,7 +89,7 @@ async function saveCharts() {
             }
         });
     }
-    console.log("chart list ============>", chartList);
+
     Array.prototype.forEach.call(charts, (chart) => {
         chartList.push(
             new Tvs1ChartDashboardPreference({
@@ -111,7 +111,6 @@ async function saveCharts() {
             })
         );
     });
-    console.log("chart list ============>", chartList);
     // for (const _chart of chartList) {
     let chartJSON = {
         type: "Tvs1dashboardpreferences",
@@ -187,8 +186,6 @@ Template.allChartLists.onRendered(function() {
                 }
             });
         }
-
-        console.log("chart list ============>", chartList);
 
         if (chartList.length == 0) {
             chartList = await ChartHandler.getTvs1charts();
@@ -411,7 +408,6 @@ Template.allChartLists.onRendered(function() {
         }
 
         if (chartList.length > 0) {
-            console.log("chart list ============>", chartList);
             templateObject.chartList.set(chartList);
             // Hide all charts
             $('.sortable-chart-widget-js').addClass("hideelement");

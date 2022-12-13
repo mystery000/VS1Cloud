@@ -32,12 +32,10 @@ Template.employeePresentDays.onRendered(() => {
 		let empName = [];
 		let empClockedCount = [];
 
-		console.log(data, "=====================clocked on data");
 		for (let t = 0; t < data.ttimesheet.length; t++) {
 			if (data.ttimesheet[t].fields.Logs != null) {
 				if (
-					data.ttimesheet[t].fields.InvoiceNotes == "Clocked Off" ||
-					data.ttimesheet[t].fields.InvoiceNotes == "paused"
+					data.ttimesheet[t].fields.InvoiceNotes == "Clocked Off"
 				) {
 					clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName]++;
 				}else{
