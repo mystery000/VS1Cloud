@@ -462,7 +462,7 @@ Template.emailsettings.onRendered(function () {
 
 
                                     //TODO: Getting BasedOnType from localstorage
-                                    let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
+                                    let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`);
                                     let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
                                     let basedOnTypeText = '';
                                     if (basedOnType.split(',').includes('P')) basedOnTypeText += 'On Print, ';
@@ -574,7 +574,6 @@ Template.emailsettings.onRendered(function () {
 
                 $('.fullScreenSpin').css('display', 'none');
                 templateObject.employeescheduledrecord.set(employeeScheduledRecord);
-
                 if (templateObject.employeescheduledrecord.get()) {
                     setTimeout(function () {
                         $('#tblAutomatedEmails').DataTable({
@@ -742,7 +741,7 @@ Template.emailsettings.onRendered(function () {
 
 
                                         //TODO: Getting BasedOnType from localstorage
-                                        let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
+                                        let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`);
                                         let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
                                         let basedOnTypeText = '';
                                         if (basedOnType.split(',').includes('P')) basedOnTypeText += 'On Print, ';
@@ -1037,9 +1036,8 @@ Template.emailsettings.onRendered(function () {
                                     if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
                                     const startDate = empData[i].fields.StartDate.split(' ')[0];
                                     const startTime = empData[i].fields.StartDate.split(' ')[1];
-
                                     //TODO: Getting BasedOnType from localstorage
-                                    let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
+                                    let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`);
                                     let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
                                     let basedOnTypeText = '';
                                     if (basedOnType.split(',').includes('P')) basedOnTypeText += 'On Print, ';
@@ -1486,7 +1484,49 @@ Template.emailsettings.onRendered(function () {
                     let recipients = $(setting).find('input.edtRecipients').val();
                     // Check if this setting has got recipients
                     let basedOnType = frequencyEl.attr('data-basedontype');
+                    async function getScheduleID (employeeId) {
+                        return new Promise(async(resolve, reject)=> {
+                            getVS1Data('TReportSchedules').then(dataObject => {
+                                if(dataObject.length == 0) {
+                                    taxRateService.getScheduleSettings().then(function(data) {
+                                        let useData = data.treportschedules;
+                                        for(let i = 0; i < useData.length; i++) {
+                                            if(useData[i].fields.FormID == formID && useData[i].fields.EmployeeID == employeeId) {
+                                                resolve(useData[i].fields.ID)
+                                            }
+    
+                                            if(i==useData.length -1) {resolve(-1)}
+                                        }
+                                    }).catch(function(err) {
+                                        resolve(-1)
+                                    })
+                                }else {
+                                    let data = JSON.parse(dataObject[0].data);
+                                    let useData = data.treportschedules
+                                    for(let i = 0; i < useData.length; i++) {
+                                        if(useData[i].fields.FormID == formID && useData[i].fields.EmployeeID == employeeId) {
+                                            resolve(useData[i].fields.ID)
+                                        }
+
+                                        if(i==useData.length -1) {resolve(-1)}
+                                    }
+                                }
+                            }).catch(function (err) {
+                                taxRateService.getScheduleSettings().then(function(data) {
+                                    let useData = data.treportschedules;
+                                    for(let i = 0; i < useData.length; i++) {
+                                        if(useData[i].fields.FormID == formID && useData[i].fields.EmployeeID == employeeId) {
+                                            resolve(useData[i].fields.ID)
+                                        }
+
+                                        if(i==useData.length -1) {resolve(-1)}
+                                    }
+                                }).catch(function(error) {resolve(-1)})
+                            })
+                        })
+                    }
                     if (!!recipients) {
+                       
                         let attachments = [];
                         let e = jQuery.Event('click');
                         let targetElement = [];
@@ -1709,6 +1749,7 @@ Template.emailsettings.onRendered(function () {
                         }
 
                         let saveSettingPromises = recipientIds.map(async (recipientId, index) => {
+                            let scheduleID = await getScheduleID(recipientId)
                             const starttime = frequencyEl.attr('data-starttime');
 
                             const startdate = frequencyEl.attr('data-startdate');
@@ -1730,6 +1771,7 @@ Template.emailsettings.onRendered(function () {
                             let objDetail = {
                                 type: "TReportSchedules",
                                 fields: {
+                                    ID:scheduleID != 1? scheduleID : "",
                                     Active: true,
                                     BeginFromOption: "",
                                     ContinueIndefinitely: true,
@@ -1924,7 +1966,8 @@ Template.emailsettings.onRendered(function () {
                                     });
                                 });
                                 objDetail.fields.NextDueDate = nextDueDate;
-
+                                console.log("{{{{{{{", objDetail.fields)
+                                console.log(";;;;;;;;;;;;;;", JSON.stringify(objDetail.fields))
                                 let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
                                 cloneObjDetailFields.attachments = documents;
 
@@ -1937,7 +1980,7 @@ Template.emailsettings.onRendered(function () {
                                             connectionInfo: connectionDetails
                                         } }
                                         let tempIndex = temp.findIndex(item => {
-                                            return item.key == `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`
+                                            return item.key == `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`
                                         })
                                         if (tempIndex > -1) {
                                             temp.splice(tempIndex, 1, objectDetail)
@@ -1965,9 +2008,11 @@ Template.emailsettings.onRendered(function () {
                                     // Save email settings
                                     await taxRateService.saveScheduleSettings(objDetail).then(dataReturn=>{
                                         taxRateService.getScheduleSettings().then(dataUpdate => {
-                                            addVS1Data('TReportSchedules', JSON.stringify(dataUpdate)).then(()=>{})
+                                            addVS1Data('TReportSchedules', JSON.stringify(dataUpdate)).then(()=>{
+                                            })
                                         }).catch(function(error){})
                                     }).catch(function(err){
+                                        console.log('error while saving email settings', err)
                                     });
                                 } catch (e) {
                                 }
@@ -2035,49 +2080,76 @@ Template.emailsettings.onRendered(function () {
                             }
                         });
                         await Promise.all(saveSettingPromises);
+                    }else {
+                        let activedSettings = oldSettings.filter((oldSetting)=>{return oldSetting.fields.FormID == formID && oldSetting.fields.Active == true})
+                        for (let  i = 0; i < activedSettings.length; i ++ ) {
+                            let activedsetting = activedSettings[i];
+                            activedsetting.fields.Active = false;
+                            taxRateService.saveScheduleSettings({
+                                type: "TReportSchedules",
+                                fields: {
+                                    Active: false,
+                                    ID: activedsetting.fields.ID
+                                }
+                            }).then(function() {
+                                localStorage.removeItem(`BasedOnType_${activedsetting.fields.FormID}_${activedsetting.fields.EmployeeId}`);
+                                getVS1Data('TBasedOnType').then(function(dataObject){
+                                    if(dataObject.length != 0) {
+                                        let temp = JSON.parse(dataObject[0].data);
+                                        let tempIndex = temp.findIndex(item => {
+                                            return  item.key == `BasedOnType_${activedsetting.fields.FormID}_${activedsetting.fields.EmployeeID}`;
+                                        })
+                                        if(tempIndex > -1) {
+                                            temp.splice(tempIndex , 1)
+                                        }
+                                        addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){})
+                                    }
+                                })
+                            })
+                        }
                     }
                 });
                 await Promise.all(promise);
-                let promise1 = oldSettings.map(async setting => {
-                    if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 1 ||setting.fields.FormID == 54
-                        || setting.fields.FormID == 177 || setting.fields.FormID == 129)) || (!isEssential
-                            && setting.fields.BeginFromOption != "S" && setting.fields.FormID != 54
-                            && setting.fields.FormID != 177 && setting.fields.FormID != 129)) {
-                        // Remove all
-                        setting.fields.Active = false;
-                        let temp = JSON.parse(JSON.stringify(setting.fields));
-                        temp = {...temp, connectionInfo: connectionDetails}
-                        Meteor.call('addTask', temp);
-                        const saveResult = await taxRateService.saveScheduleSettings({
-                            type: "TReportSchedules",
-                            fields: {
-                                Active: false,
-                                ID: setting.fields.ID
-                            }
-                        }).then(dataReturn=>{
-                            taxRateService.getScheduleSettings().then(dataUpdate => {
-                                addVS1Data('TReportSchedules', JSON.stringify(dataUpdate))
-                            })
-                        });
-                        //TODO: Set basedon type here
+                // let promise1 = oldSettings.map(async setting => {
+                //     if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 1 ||setting.fields.FormID == 54
+                //         || setting.fields.FormID == 177 || setting.fields.FormID == 129)) || (!isEssential
+                //             && setting.fields.BeginFromOption != "S" && setting.fields.FormID != 54
+                //             && setting.fields.FormID != 177 && setting.fields.FormID != 129)) {
+                //         // Remove all
+                //         setting.fields.Active = false;
+                //         let temp = JSON.parse(JSON.stringify(setting.fields));
+                //         temp = {...temp, connectionInfo: connectionDetails}
+                //         Meteor.call('addTask', temp);
+                //         const saveResult = await taxRateService.saveScheduleSettings({
+                //             type: "TReportSchedules",
+                //             fields: {
+                //                 Active: false,
+                //                 ID: setting.fields.ID
+                //             }
+                //         }).then(dataReturn=>{
+                //             taxRateService.getScheduleSettings().then(dataUpdate => {
+                //                 addVS1Data('TReportSchedules', JSON.stringify(dataUpdate))
+                //             })
+                //         });
+                //         //TODO: Set basedon type here
 
-                        localStorage.removeItem(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`);
-                        // ldb.delete(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`, function(){})
-                        getVS1Data('TBasedOnType').then(function(dataObject){
-                            if(dataObject.length != 0) {
-                                let temp = JSON.parse(dataObject[0].data);
-                                let tempIndex = temp.findIndex(item => {
-                                   return  item.key == `BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`;
-                                })
-                                if(tempIndex > -1) {
-                                    temp.splice(tempIndex , 1)
-                                }
-                                addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){})
-                            }
-                        })
-                    }
-                });
-                await Promise.all(promise1);
+                //         localStorage.removeItem(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`);
+                //         // ldb.delete(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`, function(){})
+                //         getVS1Data('TBasedOnType').then(function(dataObject){
+                //             if(dataObject.length != 0) {
+                //                 let temp = JSON.parse(dataObject[0].data);
+                //                 let tempIndex = temp.findIndex(item => {
+                //                    return  item.key == `BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`;
+                //                 })
+                //                 if(tempIndex > -1) {
+                //                     temp.splice(tempIndex , 1)
+                //                 }
+                //                 addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){})
+                //             }
+                //         })
+                //     }
+                // });
+                // await Promise.all(promise1);
                 resolve({ success: true, message: '' });
             } catch (error) {
                 resolve({ success: false, message: 'Something went wrong. Please try again later.' });
@@ -2507,7 +2579,7 @@ Template.emailsettings.events({
     },
     'click #emailsetting-normal': async function () {
         const templateObject = Template.instance();
-        const normalSettings = $('#tblAutomatedEmails tbody tr').map(function () { return $(this) }).get();
+        const normalSettings = $('#tblAutomatedEmails tbody tr.dnd-moved').map(function () { return $(this) }).get();
         $('.fullScreenSpin').css('display', 'inline-block');
 
         const saveResult = await templateObject.saveSchedules(normalSettings, false);
