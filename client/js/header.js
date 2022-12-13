@@ -922,6 +922,9 @@ Template.header.onRendered(function() {
             } else if (segs[0] == Barcode_Prefix_Supplier) {
                 productService.getGlobalSearchSupplier(segs[1]).then(function(data) {
                     let dataSelectID = '';
+                    let isProcessed = '';
+                    var splashArrayList = new Array();
+                    var splashArrayListDupp = new Array();
                     $('.fullScreenSpin').css('display', 'none');
                     let dataTableList = [];
                     let dataTableListDupp = [];
@@ -1016,65 +1019,7 @@ Template.header.onRendered(function() {
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if(segs[0] === Barcode_Prefix_Appointment){
-                productService.getGlobalSearchAppointment(segs[1]).then(function(data) {
-                    console.log('data:',data)
-                    let dataSelectID = '';
-                    $('.fullScreenSpin').css('display', 'none');
-                    dataSelectID = segs[1] || '';
-                    if (data.tappointmentex.length > 0) {
-                        window.open('/appointmentlist?id='+dataSelectID, '_self');
-                    } else {
-                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                        $('.fullScreenSpin').css('display', 'none');
-                    }
-
-                }).catch(function(err) {
-                    $('.fullScreenSpin').css('display', 'none');
-                });
-            }else if(segs[0] === Barcode_Prefix_Credit){
-                productService.getGlobalSearchCredit(segs[1]).then(function(data) {
-                    console.log('data:',data)
-                    let dataSelectID = '';
-                    $('.fullScreenSpin').css('display', 'none');
-                    dataSelectID = segs[1] || '';
-                    if (data.tappointmentex.length > 0) {
-                        // window.open('/creditcard?id='+dataSelectID, '_self');
-                    } else {
-                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                        $('.fullScreenSpin').css('display', 'none');
-                    }
-
-                }).catch(function(err) {
-                    $('.fullScreenSpin').css('display', 'none');
-                });
-            }else if(segs[0] === Barcode_Prefix_CRM){
-                productService.getGlobalSearchCredit(segs[1]).then(function(data) {
-                    console.log('data:',data)
-                    let dataSelectID = '';
-                    $('.fullScreenSpin').css('display', 'none');
-                    dataSelectID = segs[1] || '';
-                    if (data.tappointmentex.length > 0) {
-                        // window.open('/creditcard?id='+dataSelectID, '_self');
-                    } else {
-                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                        $('.fullScreenSpin').css('display', 'none');
-                    }
-
-                }).catch(function(err) {
-                    $('.fullScreenSpin').css('display', 'none');
-                });
-            }else if(segs[0] === Barcode_Prefix_Deposit){
-            
-            }else if(segs[0] === Barcode_Prefix_FixedAsset){
-            
-            }else if(segs[0] === Barcode_Prefix_ReceiptClaim){
-            
-            }else if(segs[0] === Barcode_Prefix_Task){
-            
-            }else if(segs[0] === Barcode_Prefix_WorkOrder){
-            
-            }else {
+            } else {
                 productService.getGlobalSearchReport(searchName).then(function(data) {
                     let dataSelectID = '';
                     let isProcessed = '';

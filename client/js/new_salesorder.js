@@ -353,36 +353,36 @@ Template.new_salesorder.onRendered(function () {
 
                     }
 
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
-                    {
-                            if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
-                                    $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                        $('#Delivery_Docket_1').attr('checked','checked');
-                                    }
+                    // if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
+                    // {
+                    //         if(data.ttemplatesettings[i].fields.Template == 1)
+                    //         {
+                    //                 $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
+                    //                 if(data.ttemplatesettings[i].fields.Active == true)
+                    //                 {
+                    //                     $('#Delivery_Docket_1').attr('checked','checked');
+                    //                 }
 
-                            }
-                            if(data.ttemplatesettings[i].fields.Template == 2)
-                            {
-                                    $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                    $('#Delivery_Docket_2').attr('checked','checked');
-                                    }
-                            }
+                    //         }
+                    //         if(data.ttemplatesettings[i].fields.Template == 2)
+                    //         {
+                    //                 $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
+                    //                 if(data.ttemplatesettings[i].fields.Active == true)
+                    //                 {
+                    //                 $('#Delivery_Docket_2').attr('checked','checked');
+                    //                 }
+                    //         }
 
-                            if(data.ttemplatesettings[i].fields.Template == 3)
-                            {
-                                    $('input[name="Delivery Docket_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                    $('#Delivery_Docket_3').attr('checked','checked');
-                                    }
-                            }
+                    //         if(data.ttemplatesettings[i].fields.Template == 3)
+                    //         {
+                    //                 $('input[name="Delivery Docket_3"]').val(data.ttemplatesettings[i].fields.Description);
+                    //                 if(data.ttemplatesettings[i].fields.Active == true)
+                    //                 {
+                    //                 $('#Delivery_Docket_3').attr('checked','checked');
+                    //                 }
+                    //         }
 
-                    }
+                    // }
 
 
                  }
@@ -433,36 +433,36 @@ Template.new_salesorder.onRendered(function () {
 
 
 
-                        if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
-                        {
-                                if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
-                                        $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                        if(data.ttemplatesettings[i].fields.Active == true)
-                                        {
-                                            $('#Delivery_Docket_1').attr('checked','checked');
-                                        }
+                        // if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
+                        // {
+                        //         if(data.ttemplatesettings[i].fields.Template == 1)
+                        //         {
+                        //                 $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
+                        //                 if(data.ttemplatesettings[i].fields.Active == true)
+                        //                 {
+                        //                     $('#Delivery_Docket_1').attr('checked','checked');
+                        //                 }
 
-                                }
-                                if(data.ttemplatesettings[i].fields.Template == 2)
-                                {
-                                        $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                        if(data.ttemplatesettings[i].fields.Active == true)
-                                        {
-                                        $('#Delivery_Docket_2').attr('checked','checked');
-                                        }
-                                }
+                        //         }
+                        //         if(data.ttemplatesettings[i].fields.Template == 2)
+                        //         {
+                        //                 $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
+                        //                 if(data.ttemplatesettings[i].fields.Active == true)
+                        //                 {
+                        //                 $('#Delivery_Docket_2').attr('checked','checked');
+                        //                 }
+                        //         }
 
-                                if(data.ttemplatesettings[i].fields.Template == 3)
-                                {
-                                        $('input[name="Delivery Docket_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                        if(data.ttemplatesettings[i].fields.Active == true)
-                                        {
-                                        $('#Delivery_Docket_3').attr('checked','checked');
-                                        }
-                                }
+                        //         if(data.ttemplatesettings[i].fields.Template == 3)
+                        //         {
+                        //                 $('input[name="Delivery Docket_3"]').val(data.ttemplatesettings[i].fields.Description);
+                        //                 if(data.ttemplatesettings[i].fields.Active == true)
+                        //                 {
+                        //                 $('#Delivery_Docket_3').attr('checked','checked');
+                        //                 }
+                        //         }
 
-                        }
+                        // }
 
 
                   }
@@ -510,29 +510,29 @@ Template.new_salesorder.onRendered(function () {
 
 
 
-                     if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
-                     {
-                                if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
-                                        $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                        if(data.ttemplatesettings[i].fields.Active == true)
-                                        {
-                                          $('#Delivery_Docket_1').attr('checked','checked');
-                                        }
+//                      if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
+//                      {
+//                                 if(data.ttemplatesettings[i].fields.Template == 1)
+//                                 {
+//                                         $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
+//                                         if(data.ttemplatesettings[i].fields.Active == true)
+//                                         {
+//                                           $('#Delivery_Docket_1').attr('checked','checked');
+//                                         }
 
-                                }
-                                if(data.ttemplatesettings[i].fields.Template == 2)
-                                {
-                                      $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                      if(data.ttemplatesettings[i].fields.Active == true)
-                                      {
-                                        $('#Delivery_Docket_2').attr('checked','checked');
-                                      }
-                                }
+//                                 }
+//                                 if(data.ttemplatesettings[i].fields.Template == 2)
+//                                 {
+//                                       $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
+//                                       if(data.ttemplatesettings[i].fields.Active == true)
+//                                       {
+//                                         $('#Delivery_Docket_2').attr('checked','checked');
+//                                       }
+//                                 }
 
-   templateObject.getTemplateInfo();
+//    templateObject.getTemplateInfo();
 
-                     }
+//                      }
 
 
 
@@ -8051,29 +8051,29 @@ Template.new_salesorder.events({
       },
         'click  #open_print_confirm':function(event)
         {
-            playPrintAudio();
-            setTimeout(async function(){
-            if($('#choosetemplate').is(':checked'))
-            {
-                $('#templateselection').modal('show');
-            }
-            else
-            {
-                LoadingOverlay.show();
-                // $('#html-2-pdfwrapper').css('display', 'block');
-                let result = await exportSalesToPdf(template_list[0], 1);
-                // if ($('.edtCustomerEmail').val() != "") {
-                //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-                //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-                //     var ponumber = $('#ponumber').val() || '.';
-                //     $('.po').text(ponumber);
-                //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-                //     exportSalesToPdf1();
-                // }
-                // $('#confirmprint').modal('hide');                
-            }
-        }, delayTimeAfterSound);
+            // playPrintAudio();
+            // setTimeout(async function(){
+            //     if($('#choosetemplate').is(':checked'))
+            //     {
+            //         $('#templateselection').modal('show');
+            //     }
+            //     else
+            //     {
+            //         LoadingOverlay.show();
+            //         // $('#html-2-pdfwrapper').css('display', 'block');
+            //         let result = await exportSalesToPdf(template_list[0], 1);
+            //         // if ($('.edtCustomerEmail').val() != "") {
+            //         //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+            //         //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+            //         //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+            //         //     var ponumber = $('#ponumber').val() || '.';
+            //         //     $('.po').text(ponumber);
+            //         //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+            //         //     exportSalesToPdf1();
+            //         // }
+            //         // $('#confirmprint').modal('hide');
+            //     }
+            // }, delayTimeAfterSound);
         },
 
         'click #choosetemplate':function(event)

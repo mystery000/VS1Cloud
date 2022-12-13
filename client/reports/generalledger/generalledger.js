@@ -966,6 +966,7 @@ Template.generalledger.events({
               } else {
                 if (reportData.FormID == 225) {
                   reportData.attachments = await getAttachments();
+                  console.log("@@@@@@@@@", reportData.attachments)
                   Meteor.call("sendNormalEmail", reportData);
                   resolve()
                 }

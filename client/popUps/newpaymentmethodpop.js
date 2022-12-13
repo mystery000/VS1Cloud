@@ -30,6 +30,7 @@ Template.newpaymentmethodpop.onCreated(function() {
 });
 
 Template.newpaymentmethodpop.onRendered(function() {
+    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     const dataTableList = [];

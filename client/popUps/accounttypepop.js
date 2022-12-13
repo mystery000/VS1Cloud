@@ -22,6 +22,7 @@ Template.accounttypepop.onCreated(function () {
 });
 
 Template.accounttypepop.onRendered(function () {
+    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let accountService = new AccountService();
     let organisationService = new OrganisationService();

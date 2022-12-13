@@ -35,6 +35,7 @@ Template.fixedassettypepopup.onCreated(function() {
 });
 
 Template.fixedassettypepopup.onRendered(function() {
+    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     const dataTableList = [];
@@ -736,7 +737,7 @@ Template.fixedassettypepopup.events({
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-
+        
         let termsID = $('#edtTermsID').val();
         let termsName = $('#edtName').val();
         let description = $('#edtDesc').val();

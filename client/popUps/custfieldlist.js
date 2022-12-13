@@ -35,6 +35,7 @@ Template.custfieldlist.onCreated(function() {
 });
 
 Template.custfieldlist.onRendered(function() {
+    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     const dataTableList = [];
@@ -869,7 +870,7 @@ Template.custfieldlist.events({
         playDeleteAudio();
         let taxRateService = new TaxRateService();
         setTimeout(function(){
-
+        
         let termsId = $('#selectDeleteLineID').val();
         let objDetails = {
             type: "TTerms",

@@ -41,13 +41,13 @@ Template.purchasesummaryreport.onRendered(() => {
     templateObject.initDate = () => {
         Datehandler.initOneMonth();
       };
-
+    
       templateObject.initDate();
-
+    
       templateObject.setDateAs = ( dateFrom = null ) => {
         templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
       };
-
+    
     templateObject.getPurchasesReports = function(dateFrom, dateTo, ignoreDate) {
         LoadingOverlay.show();
         templateObject.setDateAs(dateFrom);
@@ -613,9 +613,9 @@ Template.purchasesummaryreport.onRendered(() => {
         GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
         false
     );
-
+      
     templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
-
+    
     var getLoadDate = moment().format("YYYY-MM-DD");
     let getDateFrom =  moment().subtract(1, "months").format("YYYY-MM-DD");
     $("#dateFrom").val(moment(getDateFrom).format('DD/MM/YYYY'));
@@ -744,10 +744,10 @@ Template.purchasesummaryreport.events({
             for (let j = 0; j< targetThs.length; j++) {
                 $(targetThs[j]).attr('style', 'min-width: 0px !important')
             }
-
+  
             let docTitle = "Purchase Summary Report.pdf";
-
-
+  
+  
             var opt = {
                 margin: 0,
                 filename: docTitle,
@@ -765,12 +765,13 @@ Template.purchasesummaryreport.events({
                 }
             };
             let source = targetElement;
-
+  
             async function getAttachments () {
               return new Promise(async(resolve, reject)=> {
                 html2pdf().set(opt).from(source).toPdf().output('datauristring').then(function(dataObject){
                   let pdfObject = "";
                   let base64data = dataObject.split(',')[1];
+                  console.log(base64data)
                   pdfObject = {
                     filename: docTitle,
                     content: base64data,
@@ -823,7 +824,7 @@ Template.purchasesummaryreport.events({
                         if(j == values.length -1) {resolve()}
                     }
 
-
+                    
                 })
             }
             await checkBasedOnType();
@@ -1000,8 +1001,8 @@ Template.purchasesummaryreport.events({
     "click #ignoreDate":  (e, templateObject) => {
         localStorage.setItem("VS1PurchaseSummary_Report", "");
         templateObject.getPurchasesReports(
-          null,
-          null,
+          null, 
+          null, 
           true
         )
       },
@@ -1009,8 +1010,8 @@ Template.purchasesummaryreport.events({
         let templateObject = Template.instance();
         localStorage.setItem("VS1PurchaseSummary_Report", "");
         templateObject.getPurchasesReports(
-          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-          GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+          GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
           false
         )
       },
@@ -1326,3 +1327,4 @@ Template.registerHelper('notEquals', function(a, b) {
 Template.registerHelper('containsequals', function(a, b) {
     return (a.indexOf(b) >= 0);
 });
+

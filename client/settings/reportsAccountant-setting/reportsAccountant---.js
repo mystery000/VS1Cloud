@@ -518,7 +518,6 @@ Template.reportsAccountantSettings123.onRendered(function() {
         // }
       })
       .catch(function (err) {
-        /* Rasheed Remove Incorrect Code
         taxRateService.getAccountantCategory().then(function (data) {
             let lineItems = [];
             let lineItemObj = {};
@@ -692,7 +691,6 @@ Template.reportsAccountantSettings123.onRendered(function() {
             $('.fullScreenSpin').css('display','none');
             // Meteor._reload.reload();
         });
-        */
       });
 
     }
@@ -708,7 +706,7 @@ Template.reportsAccountantSettings123.onRendered(function() {
 
     $('#accountantList tbody').on( 'click', 'tr .colFirstName, tr .colLastName, tr .colCompanyName, tr .colAddress, tr .colDocName, tr .colTownCity, tr .colPostalZip, tr .colStateRegion, tr .colCountry', function () {
         var listData = $(this).closest('tr').attr('id');
-
+        
         if(listData){
             $('#add-accountant-title').text('Edit Accountant');
             if (listData !== '') {
@@ -724,7 +722,7 @@ Template.reportsAccountantSettings123.onRendered(function() {
                 var postalZip = $(event.target).closest("tr").find(".colPostalZip").text() || '';
                 var stateRegion = $(event.target).closest("tr").find(".colStateRegion").text() || '';
                 var country = $(event.target).closest("tr").find(".colCountry").text() || '';
-
+         
                 $('#edtAccountantID').val(accountantID);
                 $('#edtFirstName').val(firstName);
                 $('#edtLastName').val(lastName);
@@ -914,8 +912,6 @@ Template.reportsAccountantSettings123.events({
     },
     'click .btnRefresh': function () {
       $('.fullScreenSpin').css('display','inline-block');
-      location.reload(true);
-      /* Rasheed Remove Incorrect Code
       sideBarService.getAccountantCategory().then(function(dataReload) {
           addVS1Data('TReportsAccountantsCategory',JSON.stringify(dataReload)).then(function (datareturn) {
             location.reload(true);
@@ -925,14 +921,13 @@ Template.reportsAccountantSettings123.events({
       }).catch(function(err) {
           location.reload(true);
       });
-      */
     },
     'click .btnDeleteAccountant': function () {
         playDeleteAudio();
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-
+        
         let accountantId = $('#selectDeleteLineID').val();
 
         let objDetails = {
@@ -942,7 +937,7 @@ Template.reportsAccountantSettings123.events({
                 Active: false
             }
         };
-        /* Rasheed Remove Incorrect Code
+
         taxRateService.saveAccountantCategory(objDetails).then(function (objDetails) {
           sideBarService.getAccountantCategory().then(function(dataReload) {
               addVS1Data('TReportsAccountantsCategory',JSON.stringify(dataReload)).then(function (datareturn) {
@@ -969,8 +964,6 @@ Template.reportsAccountantSettings123.events({
             });
             $('.fullScreenSpin').css('display','none');
         });
-        */
-          $('.fullScreenSpin').css('display','none');
     }, delayTimeAfterSound);
     },
     'click .btnSaveAccountant': function () {
@@ -978,7 +971,7 @@ Template.reportsAccountantSettings123.events({
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
-
+        
         let accountantID = $('#edtAccountantID').val();
         let firstName = $('#edtFirstName').val();
         let lastName = $('#edtLastName').val();
@@ -989,7 +982,7 @@ Template.reportsAccountantSettings123.events({
         let postalZip = $('#edtPostalZip').val();
         let stateRegion = $('#edtStateRegion').val();
         let country = $('#edtCountry').val();
-
+        
         if (firstName === ''){
             swal('First name cannot be blank!', '', 'warning');
             $('.fullScreenSpin').css('display','none');
@@ -1258,7 +1251,7 @@ Template.reportsAccountantSettings123.events({
     'click .btnAddAccountant': function () {
         $('#add-accountant-title').text('Add New Accountant');
         $('#edtAccountantID').val('');
-
+        
         $('#edtFirstName').val('');
         $('#edtLastName').val('');
         $('#edtCompanyName').val('');

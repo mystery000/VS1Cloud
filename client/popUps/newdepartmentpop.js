@@ -21,6 +21,7 @@ Template.newdepartmentpop.onCreated(function() {
 });
 
 Template.newdepartmentpop.onRendered(function() {
+    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     const dataTableList = [];
@@ -1053,7 +1054,7 @@ Template.newdepartmentpop.events({
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-
+        
         let deptId = $('#selectDeleteLineID').val();
 
         let objDetails = {
@@ -1097,7 +1098,7 @@ Template.newdepartmentpop.events({
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-
+        
         let deptID = $('#edtDepartmentID').val();
         let deptName = $('#edtNewDeptName').val();
         // if (deptName === '') {
@@ -1325,7 +1326,7 @@ Template.newdepartmentpop.events({
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-
+        
         var parentdept = $('#sltDepartmentList').val();
         var newroomname = $('#newRoomName').val();
         var newroomnum = $('#newRoomNum').val();

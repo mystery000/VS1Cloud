@@ -35,6 +35,7 @@ Template.shipviapop.onCreated(function() {
 });
 
 Template.shipviapop.onRendered(function() {
+    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     var splashArrayShipViaList = new Array();
@@ -644,7 +645,7 @@ Template.shipviapop.events({
         playDeleteAudio();
         let taxRateService = new TaxRateService();
         setTimeout(function(){
-
+        
         let termsId = $('#selectDeleteLineID').val();
 
         let objDetails = {
@@ -688,7 +689,7 @@ Template.shipviapop.events({
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-
+        
         let termsID = $('#edtTermsID').val();
         let termsName = $('#edtName').val();
         let description = $('#edtDesc').val();

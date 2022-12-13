@@ -160,9 +160,7 @@ Template.bankrecon.onRendered(function() {
         let splashArrayReconcileDepositList = [];
         let selectedTransactionsDep = JSON.parse(localStorage.getItem("SelectedTransactionsDep"));
         $('.fullScreenSpin').css('display', 'inline-block');
-        console.log("accountTypeId-", accountTypeId);
         reconService.getToBeReconciledDeposit(accountTypeId, statementDate, ignoreDate).then(function(data) {
-            console.log("-------------", data);
             if (data.ttobereconcileddeposit.length > 0) {
                 // for (let r = 0; r < data.ttobereconcileddeposit; r++ ) {
                 let notRecDepTotalAmount = 0;
@@ -2601,7 +2599,7 @@ Template.bankrecon.helpers({
 
 function openBankAccountListModal() {
     $('#selectLineID').val('');
-    $('#bankAccountListModal').modal("toggle");
+    $('#bankAccountListModal').modal();
     setTimeout(function() {
         $('#tblAccount_filter .form-control-sm').focus();
         $('#tblAccount_filter .form-control-sm').val('');

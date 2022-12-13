@@ -36,14 +36,14 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-          Search: "PublishOnVS1 == true",
+        //select: "[Active]=true",
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
         ListType: "Detail",
-        Search: "PublishOnVS1 = true",
+        //select: "[Active]=true",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
@@ -2677,13 +2677,13 @@ export class SideBarService extends BaseService {
         options = {
             ListType: "Detail",
             //orderby: '"UOMName asc"',
-            Search: "Active = true",
+            select: "[Active]=true",
         };
       } else {
         options = {
           //orderby: '"UOMName asc"',
           ListType: "Detail",
-          Search: "Active = true",
+          select: "[Active]=true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -2704,7 +2704,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TUnitOfMeasureList, options);
+    return this.getList(this.ERPObjects.TUnitOfMeasure, options);
   }
 
   getTaxRateVS1() {
@@ -2872,13 +2872,13 @@ export class SideBarService extends BaseService {
         options = {
             ListType: "Detail",
             orderby: '"Description asc"',
-            Search: "Active = true",
+            select: "[Active]=true",
         };
       } else {
         options = {
           orderby: '"Description asc"',
           ListType: "Detail",
-          Search: "Active = true",
+          select: "[Active]=true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -2899,7 +2899,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TTermsVS1List, options);
+    return this.getList(this.ERPObjects.TTermsVS1, options);
   }
 
   getDefaultCustomerTerms() {
