@@ -3826,8 +3826,9 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-crm"
-                                        style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                                        {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}}
+                                        style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
+                                        <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                        {{> non_transactional_list tablename="tblCustomerCrmList"}}
                                     </div>
                                 </div>
                             </div>

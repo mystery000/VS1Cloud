@@ -743,7 +743,6 @@ Template.customerscard.onRendered(function() {
             employeeID = url.searchParams.get("id");
         }
         let dataTableList = [];
-
         // async function getTask() {
         crmService.getAllTasksByContactName(customerName).then(async function(data) {
             if (data.tprojecttasks.length > 0) {
