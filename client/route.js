@@ -206,10 +206,9 @@ FlowRouter.triggers.enter([
                 if (result.value) {
                     FlowRouter.go(previous_url);
                 } else if (result.dismiss === 'cancel') {
-                    FlowRouter.go(context.path);
-                    //TODO need to url async
                     previous_url = "";
                     localStorage.setItem("isFormUpdated", false);
+                    FlowRouter.reload();
                 }
             });
         }
