@@ -126,8 +126,8 @@ Template.alltaskdatatable.onRendered(function() {
                     //   targets: 0,
                     //   className: "colCompleteTask colSubComplete",
                     //   createdCell: function (td, cellData, rowData, row, col) {
-                    //     $(td).closest("tr").attr("data-id", rowData[9]);
-                    //     $(td).attr("data-id", rowData[9]);
+                    //     $(td).closest("tr").attr("data-id", rowData[8]);
+                    //     $(td).attr("data-id", rowData[8]);
                     //     $(td).addClass("task_priority_" + rowData[10]);
                     //     if (rowData[12]) {
                     //       $(td).addClass("taskCompleted");
@@ -140,8 +140,8 @@ Template.alltaskdatatable.onRendered(function() {
                         targets: 0,
                         className: "colPriority openEditSubTaskModal hiddenColumn",
                         createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).closest("tr").attr("data-id", rowData[9]);
-                            $(td).attr("data-id", rowData[9]);
+                            $(td).closest("tr").attr("data-id", rowData[8]);
+                            $(td).attr("data-id", rowData[8]);
                         },
                         width: "100px",
                     },
@@ -150,7 +150,7 @@ Template.alltaskdatatable.onRendered(function() {
                         targets: 1,
                         className: "colContact openEditSubTaskModal hiddenColumn",
                         createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).attr("data-id", rowData[9]);
+                            $(td).attr("data-id", rowData[8]);
                         },
                         width: "100px",
                     },
@@ -158,7 +158,7 @@ Template.alltaskdatatable.onRendered(function() {
                         targets: 2,
                         className: "colSubDate openEditSubTaskModal",
                         createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).attr("data-id", rowData[9]);
+                            $(td).attr("data-id", rowData[8]);
                         },
                         width: "120px",
                     },
@@ -173,21 +173,21 @@ Template.alltaskdatatable.onRendered(function() {
                         targets: 4,
                         className: "colTaskDesc openEditSubTaskModal hiddenColumn",
                         createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).attr("data-id", rowData[9]);
+                            $(td).attr("data-id", rowData[8]);
                         },
                     },
                     {
                         targets: 5,
                         className: "colTaskLabels openEditSubTaskModal hiddenColumn",
                         createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).attr("data-id", rowData[9]);
+                            $(td).attr("data-id", rowData[8]);
                         },
                     },
                     {
                         targets: 6,
                         className: "colTaskProjects openEditSubTaskModal hiddenColumn",
                         createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).attr("data-id", rowData[9]);
+                            $(td).attr("data-id", rowData[8]);
                         },
                     },
                     {
@@ -195,7 +195,7 @@ Template.alltaskdatatable.onRendered(function() {
                         targets: 7,
                         className: "colStatus openEditSubTaskModal",
                         createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).attr("data-id", rowData[9]);
+                            $(td).attr("data-id", rowData[8]);
                         },
                     },
                     // {
@@ -203,7 +203,7 @@ Template.alltaskdatatable.onRendered(function() {
                     //   targets: 8,
                     //   className: "colTaskActions",
                     //   createdCell: function (td, cellData, rowData, row, col) {
-                    //     $(td).attr("data-id", rowData[9]);
+                    //     $(td).attr("data-id", rowData[8]);
                     //   },
                     //   width: "150px",
                     // },
@@ -247,8 +247,8 @@ Template.alltaskdatatable.onRendered(function() {
                 //   targets: 0,
                 //   className: "colCompleteTask",
                 //   createdCell: function (td, cellData, rowData, row, col) {
-                //     $(td).closest("tr").attr("data-id", rowData[9]);
-                //     $(td).attr("data-id", rowData[9]);
+                //     $(td).closest("tr").attr("data-id", rowData[8]);
+                //     $(td).attr("data-id", rowData[8]);
                 //     $(td).addClass("task_priority_" + rowData[10]);
                 //     if (rowData[12]) {
                 //       $(td).addClass("taskCompleted");
@@ -261,8 +261,8 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 0,
                     className: "colPriority openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).closest("tr").attr("data-id", rowData[9]);
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).closest("tr").attr("data-id", rowData[8]);
+                        $(td).attr("data-id", rowData[8]);
                         $(td).css('background-color', rowData[13]);
                         // if (rowData[13] != 'transparent') {
                         //   $(td).css('background-color', rowData[13]);
@@ -277,7 +277,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 1,
                     className: "colContact openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                         $(td).css('background-color', rowData[13]);
                         // if (rowData[13] != 'transparent') {
                         //   $(td).css('background-color', rowData[13]);
@@ -291,7 +291,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 2,
                     className: "colDate openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                         $(td).css('background-color', rowData[13]);
                         // if (rowData[13] != 'transparent') {
                         //   $(td).css('background-color', rowData[13]);
@@ -305,7 +305,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 3,
                     className: "colTaskName openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                         $(td).css('background-color', rowData[13]);
                         // if (rowData[13] != 'transparent') {
                         //   $(td).css('background-color', rowData[13]);
@@ -318,7 +318,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 4,
                     className: "colTaskDesc openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                         $(td).css('background-color', rowData[13]);
                         // if (rowData[13] != 'transparent') {
                         //   $(td).css('background-color', rowData[13]);
@@ -331,7 +331,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 5,
                     className: "colTaskLabels openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                         $(td).css('background-color', rowData[13]);
                         // if (rowData[13] != 'transparent') {
                         //   $(td).css('background-color', rowData[13]);
@@ -344,7 +344,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 6,
                     className: "colTaskProjects openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                         $(td).css('background', rowData[13]);
                         // $(td).css('color', '#ffffff');
                         // if (rowData[13] != 'transparent') {
@@ -359,7 +359,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 7,
                     className: "colStatus openEditSubTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 // {
@@ -367,7 +367,7 @@ Template.alltaskdatatable.onRendered(function() {
                 // targets: 8,
                 // className: "colTaskActions",
                 // createdCell: function (td, cellData, rowData, row, col) {
-                //   $(td).attr("data-id", rowData[9]);
+                //   $(td).attr("data-id", rowData[8]);
                 //   $(td).css('background-color', rowData[13]);
                 // if (rowData[13] != 'transparent') {
                 //   $(td).css('background-color', rowData[13]);
@@ -538,8 +538,8 @@ Template.alltaskdatatable.onRendered(function() {
                 //   targets: 0,
                 //   className: "colCompleteTask",
                 //   createdCell: function (td, cellData, rowData, row, col) {
-                //     $(td).closest("tr").attr("data-id", rowData[9]);
-                //     $(td).attr("data-id", rowData[9]);
+                //     $(td).closest("tr").attr("data-id", rowData[8]);
+                //     $(td).attr("data-id", rowData[8]);
                 //     $(td).addClass("task_priority_" + rowData[10]);
                 //     if (rowData[12]) {
                 //       $(td).addClass("taskCompleted");
@@ -552,8 +552,8 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 0,
                     className: "colPriority openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).closest("tr").attr("data-id", rowData[9]);
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).closest("tr").attr("data-id", rowData[8]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                     width: "100px",
                 },
@@ -562,7 +562,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 1,
                     className: "colContact openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                     width: "100px",
                 },
@@ -570,7 +570,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 2,
                     className: "colDate openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                     width: "120px",
                 },
@@ -578,28 +578,28 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 3,
                     className: "colTaskName openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
                     targets: 4,
                     className: "colTaskDesc openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
                     targets: 5,
                     className: "colTaskLabels openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
                     targets: 6,
                     className: "colTaskProjects openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
@@ -607,7 +607,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 7,
                     className: "colStatus openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 // {
@@ -615,7 +615,7 @@ Template.alltaskdatatable.onRendered(function() {
                 //   targets: 7,
                 //   className: "colTaskActions",
                 //   createdCell: function (td, cellData, rowData, row, col) {
-                //     $(td).attr("data-id", rowData[9]);
+                //     $(td).attr("data-id", rowData[8]);
                 //   },
                 //   width: "150px",
                 // },
@@ -719,8 +719,11 @@ Template.alltaskdatatable.onRendered(function() {
                     "</span></button>"
                 ).insertAfter("#tblTodayTaskDatatable_filter");
                 //Open Detail Modal
-                const id = FlowRouter.current().queryParams.id;
-                openEditTaskModal(id, "")
+                const id = FlowRouter.current().queryParams.id || '';
+                if (id != "") {
+                    openEditTaskModal(id, "");
+                };
+
             },
         });
         $("#tblTodayTaskDatatable_filter input").val(search);
@@ -739,8 +742,8 @@ Template.alltaskdatatable.onRendered(function() {
                 //   targets: 0,
                 //   className: "colCompleteTask",
                 //   createdCell: function (td, cellData, rowData, row, col) {
-                //     $(td).closest("tr").attr("data-id", rowData[9]);
-                //     $(td).attr("data-id", rowData[9]);
+                //     $(td).closest("tr").attr("data-id", rowData[8]);
+                //     $(td).attr("data-id", rowData[8]);
                 //     $(td).addClass("task_priority_" + rowData[10]);
                 //     if (rowData[12]) {
                 //       $(td).addClass("taskCompleted");
@@ -754,7 +757,7 @@ Template.alltaskdatatable.onRendered(function() {
                     className: "colPriority openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
                         $(td).closest("tr").attr("data-id", rowData[9]);
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                     width: "100px",
                 },
@@ -763,7 +766,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 1,
                     className: "colContact openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                     width: "100px",
                 },
@@ -771,7 +774,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 2,
                     className: "colDate openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                     width: "120px",
                 },
@@ -779,28 +782,28 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 3,
                     className: "colTaskName openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
                     targets: 4,
                     className: "colTaskDesc openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
                     targets: 5,
                     className: "colTaskLabels openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
                     targets: 6,
                     className: "colTaskProjects openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
@@ -808,7 +811,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 7,
                     className: "colStatus openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 // {
@@ -1090,7 +1093,7 @@ Template.alltaskdatatable.onRendered(function() {
             tcontact = "";
         let projectName = "";
         let labelsForExcel = "";
-        let color_num = '100'
+        let color_num = '100';
 
         let todayDate = moment().format("ddd");
         let tomorrowDay = moment().add(1, "day").format("ddd");
@@ -1843,7 +1846,7 @@ Template.alltaskdatatable.onRendered(function() {
                     className: "colCompleteTask",
                     createdCell: function(td, cellData, rowData, row, col) {
                         $(td).closest("tr").attr("data-id", rowData[9]);
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                         $(td).addClass("task_priority_" + rowData[10]);
                         if (rowData[12]) {
                             $(td).addClass("taskCompleted");
@@ -1856,7 +1859,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 1,
                     className: "colPriority openEditTaskModal hiddenColumn",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                     width: "100px",
                 },
@@ -1865,7 +1868,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 2,
                     className: "colContact openEditTaskModal hiddenColumn",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                     width: "200px",
                 },
@@ -1873,7 +1876,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 3,
                     className: "colTaskDate openEditTaskModal hiddenColumn",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                     width: "120px",
                 },
@@ -1881,28 +1884,28 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 4,
                     className: "colTaskName openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
                     targets: 5,
                     className: "colProjectTaskDesc openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
                     targets: 6,
                     className: "colProjectTaskLabels openEditTaskModal",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
                     targets: 7,
                     className: "colTaskProjects openEditTaskModal hiddenColumn",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                 },
                 {
@@ -1910,7 +1913,7 @@ Template.alltaskdatatable.onRendered(function() {
                     targets: 8,
                     className: "colTaskActions hiddenColumn",
                     createdCell: function(td, cellData, rowData, row, col) {
-                        $(td).attr("data-id", rowData[9]);
+                        $(td).attr("data-id", rowData[8]);
                     },
                     width: "150px",
                 },
@@ -2072,8 +2075,8 @@ Template.alltaskdatatable.events({
     "click .openEditTaskModal": function(e) {
 
         if (!e.target.classList.contains("no-modal")) {
-
             let id = e.target.dataset.id;
+            // let id = $(e.target).closest("tr").find(".fa-flag").attr("data-id");
             let type = e.target.dataset.ttype;
             openEditTaskModal(id, type);
         }
@@ -3976,7 +3979,6 @@ function openEditTaskModal(id, type) {
     // let catg = e.target.dataset.catg;
     let templateObject = Template.instance();
     // $("#editProjectID").val("");
-
     $("#txtCrmSubTaskID").val(id);
 
     $(".fullScreenSpin").css("display", "inline-block");
