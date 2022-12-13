@@ -693,8 +693,8 @@ Template.new_workorder.events({
                                     DueDate: record.duedate,
                                     BOM: subs,
                                     SalesOrderID: templateObject.salesOrderId.get(),
-                                    OrderDate: new Date().toLocaleString(),
-                                    StartTime: subStart.toLocaleString(),
+                                    OrderDate: new Date(),
+                                    StartTime: subStart,
                                     InProgress: record.isStarted,
                                     Quantity: record.line.fields.Qty? record.line.fields.Qty* parseFloat(subs.qty) : subs.qty
                                 }
@@ -797,8 +797,8 @@ Template.new_workorder.events({
                 Line: record.line,
                 BOM: templateObject.bomStructure.get(),
                 SalesOrderID: templateObject.salesOrderId.get(),
-                OrderDate: new Date().toLocaleString(),
-                StartTime: mainOrderStart.toLocaleString(),
+                OrderDate: new Date(),
+                StartTime: mainOrderStart,
                 Quantity: record.line.fields.Qty || 1,
                 InProgress: record.isStarted,
             }

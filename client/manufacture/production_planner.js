@@ -116,7 +116,6 @@ Template.production_planner.onRendered(async function() {
                     })
                     let resourceId = resources[index].id;
                     let startTime = new Date(workorders[i].StartTime);
-                    console.log("~~~~~~~~~~", workorders[i].StartTime, startTime)
                     let filteredEvents = tempEvents.filter(itemEvent => itemEvent.resourceName == processName && new Date(itemEvent.end).getTime() > startTime.getTime() && new Date(itemEvent.start).getTime() < startTime.getTime())
                     if(filteredEvents.length > 1) {
                         filteredEvents.sort((a,b)=> a.end.getTime() - b.end.getTime())
@@ -234,7 +233,13 @@ Template.production_planner.onRendered(async function() {
                     // let subEvents = events.filter(e=>e.title == buildSubs[i] && e.start <= event.start && new Date(e.end).getTime() > new Date().getTime());
                     let subQuantity = 0; 
                     let needQty = 0;
-                    let filteredMainEvents = events.filter(e => new Date(e.start).getTime() <= new Date(event.start).getTime() && new Date(e.end).getTime() > new Date().getTime() && e.extendedProps.builds.includes(buildSubs[i]) )
+                 
+                    function getSeconds (time) {
+                        let mSeconds = new Date(time).getTime();
+                        let seconds = Math.floor(mSeconds / 1000);
+                        return seconds
+                    }
+                    let filteredMainEvents = events.filter(e => getSeconds(e.start) <= getSeconds(event.start) && getSeconds(e.end) > getSeconds(new Date()) && e.extendedProps.builds.includes(buildSubs[i]) )
                     for (let k = 0; k< filteredMainEvents.length; k++) {
                         let filteredOrder = workorders.findIndex(order => {
                             return order.ID == filteredMainEvents[k].extendedProps.orderId
@@ -251,12 +256,13 @@ Template.production_planner.onRendered(async function() {
 
                     }
                     for(let j = 0; j< subEvents.length; j++) {
-                        if(new Date(subEvents[j].end).getTime() <= new Date(event.start).getTime()) {
+                        if(getSeconds(subEvents[j].end) <= getSeconds(event.start)) {
                             subQuantity += subEvents[j].extendedProps.quantity
                         }
                        
                         
                     }
+
                     if(needQty > subQuantity) {
                         retResult = false
                     }
@@ -372,7 +378,7 @@ Template.production_planner.onRendered(async function() {
             )
 
             tempEvents.sort((a, b)=>{
-                new Date(a.start) - new Date(b.start)
+                return new Date(a.start) - new Date(b.start)
             })
 
 
@@ -515,6 +521,7 @@ Template.production_planner.events({
             filteredEvents.sort((a, b) => {
                 return new Date(a.start) - new Date(b.start);
             }); 
+            
             if(filteredEvents.length > 0) {
 
                 if(new Date(filteredEvents[0].start).getTime() > new Date().getTime()) {
@@ -534,7 +541,7 @@ Template.production_planner.events({
                             return new Promise(async(resolve, reject) => {
                                 let eventDuration = new Date(filteredEvents[j].end).getTime() - new Date(filteredEvents[j].start).getTime();
                                 let index = cloneEvents.findIndex(event => {
-                                    return event.resourceId == filteredEvents[j].resourceId && event.title == filteredEvents[j].title;
+                                    return event.resourceId == filteredEvents[j].resourceId && event.title == filteredEvents[j].title && event.extendedProps.orderId == filteredEvents[j].extendedProps.orderId;
                                 })
                                 cloneEvents[index].start =  new Date(filteredEvents[j-1].end);
                                 let endTime = new Date()
@@ -577,21 +584,25 @@ Template.production_planner.events({
                 let buildSubNames = event.extendedProps.builds;
                 let buildSubs = []
                 for(let k = 0; k < buildSubNames.length; k++) {
-                    let index = events.findIndex(e=>{
-                        return e.title == buildSubNames[k]
-                    })
-                    buildSubs.push(events[index])
+                    // let index = events.findIndex(e=>{
+                    //     return e.title == buildSubNames[k]
+                    // })
+
+                    for(let n = 0; n < events.length; n++) {
+                        if(events[n].title == buildSubNames[k] && events[n].extendedProps.orderId.split('_')[0] == event.extendedProps.orderId.split('_')[0]) {
+                            buildSubs.push(events[n])
+                        }
+                    }
                 }
                 buildSubs.sort((a, b)=>{
-                    new Date(a.end) - new Date(b.end)
-                })
+                    return new Date(a.end) - new Date(b.end)
+                });
                 let newStart = new Date(buildSubs[buildSubs.length-1].end)
                 let duration = new Date(event.end).getTime() - new Date(event.start).getTime();
                 let newEnd = new Date(newStart.getTime() + duration)
                 let eventIndex = events.findIndex(e=>{
                     return e.extendedProps.orderId == event.extendedProps.orderId
                 })
-
                 let tempEvent = (JSON.parse(JSON.stringify(events)) )[eventIndex] 
                 tempEvent.start = newStart;
                 tempEvent.end = newEnd;
