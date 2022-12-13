@@ -4203,7 +4203,7 @@ function openEditTaskModal(id, type) {
             // </div>`;
 
             // $("#taskmodalDuedate").html(due_date);
-            $("#taskmodalDuedate").html(date_component);
+            $("#taskmodalDuedate").val(date_component);
             $("#taskmodalDescription").html(selected_record.TaskDescription);
 
             $("#chkComplete_taskEditLabel").removeClass("task_priority_0");

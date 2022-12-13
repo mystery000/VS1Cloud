@@ -325,7 +325,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6 col-md-2" style="padding: 0px 4px;">
-                                                    <div class="form-group"><label class="text-nowrap">Title</label><input type="text" class="form-control" id="edtTitle" name="edtTitle" value="{{record.title}}"></div>
+                                                    <div class="form-group">
+                                                        <label for="editLeadTitle">Title</label>
+                                                        <select type="search" class="form-control" id="editLeadTitle" name="editLeadTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
+                                                        </select>
+                                                        <!-- <input type="text" class="form-control" id="edtTitle" name="edtTitle" value="{{record.title}}">-->
+                                                    </div> 
                                                 </div>
                                                 <div class="col-6 col-md-4" style="padding: 0px 8px;">
                                                     <div class="form-group"><label class="text-nowrap">First Name</label><input type="text" class="form-control" id="edtFirstName" name="edtFirstName" value="{{record.firstname}}">
@@ -1004,6 +1009,13 @@
         </div>
     </div>
     <!-- End Help Video Modal -->
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="leadTitlePopModal">
+        {{> title_list_pop}}
+     </div>
+
+     {{> frmappointmentpop}}
+
     <script>
         modalDraggable();
     </script>

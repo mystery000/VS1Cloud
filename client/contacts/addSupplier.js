@@ -50,6 +50,9 @@ Template.supplierscard.onRendered(function() {
     let deliveryMethods = [];
     let taxCodes = [];
     let currentId = FlowRouter.current().queryParams;
+    if (FlowRouter.current().route.name != "supplierscard") {
+        currentId = "";
+    }
     let supplierID = '';
     let totAmount = 0;
     let totAmountOverDue = 0;
@@ -60,59 +63,59 @@ Template.supplierscard.onRendered(function() {
     templateObject.defaultpurchasetaxcode.set(loggedTaxCodeSalesInc);
 
     setTimeout(() => {
-      $("#edtBankName").editableSelect();
-      $("#edtBankName")
-        .editableSelect()
-        .on("click.editable-select", function (e, li) {
-          var $earch = $(this);
-          var offset = $earch.offset();
-          var bankName = e.target.value || "";
+        $("#edtBankName").editableSelect();
+        $("#edtBankName")
+            .editableSelect()
+            .on("click.editable-select", function(e, li) {
+                var $earch = $(this);
+                var offset = $earch.offset();
+                var bankName = e.target.value || "";
 
-          if (e.pageX > offset.left + $earch.width() - 8) {
-            $("#bankNameModal").modal();
-            $(".fullScreenSpin").css("display", "none");
+                if (e.pageX > offset.left + $earch.width() - 8) {
+                    $("#bankNameModal").modal();
+                    $(".fullScreenSpin").css("display", "none");
 
-          } else {
-            if (bankName.replace(/\s/g, "") != "") {
-              $("#bankNameModal").modal("toggle");
-            } else {
-              $("#bankNameModal").modal();
-            }
-          }
-        });
-      
+                } else {
+                    if (bankName.replace(/\s/g, "") != "") {
+                        $("#bankNameModal").modal("toggle");
+                    } else {
+                        $("#bankNameModal").modal();
+                    }
+                }
+            });
+
     }, 2500);
 
-    $(document).on("click", "#tblBankName tbody tr", function (e) {
-      var table = $(this);
-      let BankName = table.find(".bankName").text();
-      $('#bankNameModal').modal('toggle');
-      $('#edtBankName').val(BankName);
-    }); 
-    
-    templateObject.fillBankInfoFromUrl = function () {
-      var queryParams = FlowRouter.current().queryParams;
-      if(queryParams.bank) {
-        let edtBankName = queryParams.edtBankName;
-        let edtBankAccountName = queryParams.edtBankAccountName;
-        let edtBSB = queryParams.edtBSB;
-        let edtBankAccountNo = queryParams.edtBankAccountNo;
-        let swiftCode = queryParams.swiftCode;
-        let apcaNo = queryParams.apcaNo;
-        let routingNo = queryParams.routingNo;
-        let sltBankCodes = queryParams.sltBankCodes;
-        $('.bilingTab').click();
-        $('#edtBankName').val(edtBankName)
-        $('#edtBankAccountName').val(edtBankAccountName)
-        $('#edtBsb').val(edtBSB)
-        $('#edtBankAccountNumber').val(edtBankAccountNo)
-        $('#edtSwiftCode').val(swiftCode)
-        $('#edtRoutingNumber').val(routingNo)
-        // $('#sltCurrency').val()
-      }
+    $(document).on("click", "#tblBankName tbody tr", function(e) {
+        var table = $(this);
+        let BankName = table.find(".bankName").text();
+        $('#bankNameModal').modal('toggle');
+        $('#edtBankName').val(BankName);
+    });
+
+    templateObject.fillBankInfoFromUrl = function() {
+        var queryParams = FlowRouter.current().queryParams;
+        if (queryParams.bank) {
+            let edtBankName = queryParams.edtBankName;
+            let edtBankAccountName = queryParams.edtBankAccountName;
+            let edtBSB = queryParams.edtBSB;
+            let edtBankAccountNo = queryParams.edtBankAccountNo;
+            let swiftCode = queryParams.swiftCode;
+            let apcaNo = queryParams.apcaNo;
+            let routingNo = queryParams.routingNo;
+            let sltBankCodes = queryParams.sltBankCodes;
+            $('.bilingTab').click();
+            $('#edtBankName').val(edtBankName)
+            $('#edtBankAccountName').val(edtBankAccountName)
+            $('#edtBsb').val(edtBSB)
+            $('#edtBankAccountNumber').val(edtBankAccountNo)
+            $('#edtSwiftCode').val(swiftCode)
+            $('#edtRoutingNumber').val(routingNo)
+                // $('#sltCurrency').val()
+        }
     }
     setTimeout(() => {
-      templateObject.fillBankInfoFromUrl();
+        templateObject.fillBankInfoFromUrl();
     }, 3500);
 
     // $(document).ready(function () {
@@ -726,7 +729,7 @@ Template.supplierscard.onRendered(function() {
             bankAccountName: data.fields.BankAccountName || '',
             bankAccountBSB: data.fields.BankAccountBSB || '',
             bankAccountNo: data.fields.BankAccountNo || '',
-            foreignExchangeCode:data.fields.ForeignExchangeCode || CountryAbbr,
+            foreignExchangeCode: data.fields.ForeignExchangeCode || CountryAbbr,
             // openingbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
             // taxcode:data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
         };
@@ -802,7 +805,9 @@ Template.supplierscard.onRendered(function() {
                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
                         description: taskDescription,
                         labels: taskLabelArray,
-                        category: 'task'
+                        category: 'task',
+                        completed: data.tprojecttasks[i].fields.Completed,
+                        completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                     };
                     dataTableList.push(dataList);
                 }
@@ -825,8 +830,9 @@ Template.supplierscard.onRendered(function() {
                             projectName: '',
                             description: '',
                             labels: '',
-                            category: 'appointment'
-
+                            category: 'appointment',
+                            completed: data.fields.Actual_EndTime ? true : false,
+                            completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                         }
 
                         dataTableList.push(obj);
@@ -857,7 +863,9 @@ Template.supplierscard.onRendered(function() {
                                 projectName: '',
                                 description: '',
                                 labels: '',
-                                category: 'email'
+                                category: 'email',
+                                completed: false,
+                                completedby: "",
                             }
                             dataTableList.push(obj)
                         })
@@ -2213,8 +2221,9 @@ Template.supplierscard.events({
             if (taskCategory == 'task') {
                 FlowRouter.go('/crmoverview?taskid=' + taskID);
             } else if (taskCategory == 'appointment') {
-                FlowRouter.go('/appointments?id=' + taskID);
-
+                // FlowRouter.go('/appointments?id=' + taskID);
+                document.getElementById("updateID").value = taskID || 0;
+                $("#event-modal").modal("toggle");
             }
         }
     },
@@ -2761,12 +2770,16 @@ Template.supplierscard.events({
 
 Template.supplierscard.helpers({
     record: () => {
-        let temp = Template.instance().records.get();
-        if (temp && temp.mobile) {
-            temp.mobile = temp.mobile.replace('+61', '0')
+        let parentRecord = Template.parentData(0).record;
+        if (parentRecord) {
+            return parentRecord;
+        } else {
+            let temp = Template.instance().records.get();
+            if (temp && temp.mobile) {
+                temp.mobile = temp.mobile.replace('+61', '0')
+            }
+            return temp;
         }
-
-        return temp;
     },
     countryList: () => {
         return Template.instance().countryData.get();

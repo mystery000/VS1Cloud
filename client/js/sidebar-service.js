@@ -2594,7 +2594,7 @@ export class SideBarService extends BaseService {
 
       options = {
         ListType: "Detail",
-        select: "[Active]=true",
+        select: "pt.Active=true",
         // LimitCount: initialReportLoad
       };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
@@ -3997,7 +3997,7 @@ export class SideBarService extends BaseService {
     let options = "";
       options = {
        ListType: "Detail",
-       select: "[Active]=true"
+       select: "pt.Active=true"
      };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
