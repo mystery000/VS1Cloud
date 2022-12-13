@@ -1688,6 +1688,11 @@ Template.supplierscard.onRendered(function() {
                 $('#termsListModal').modal('toggle');
             });
 
+            $(document).on("click", "#tblTitleList tbody tr", function (e) {
+                $('#edtSupplierTitle').val($(this).find(".colTypeName").text());
+                $('#supplierTitlePopModal').modal('toggle');
+            });
+
         }, 1000);
     });
 });

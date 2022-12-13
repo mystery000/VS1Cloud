@@ -1613,7 +1613,7 @@ Template.customerscard.onRendered(function() {
                 const termsDataName = e.target.value || '';
                 editableTerms(e, $each, offset, termsDataName);
             });
-            $('#editCustomerTitle').editableSelect();
+            $('#edtTitle').editableSelect();
 
             function setTermsVS1(data, termsDataName) {
                 for (let i in data.ttermsvs1) {
@@ -1956,7 +1956,7 @@ Template.customerscard.onRendered(function() {
         }, 1200);
     });
 
-    $(document).on('click', '#editCustomerTitle', function(e, li) {
+    $(document).on('click', '#edtTitle', function(e, li) {
         const $earch = $(this);
         const offset = $earch.offset();
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
@@ -2309,6 +2309,12 @@ Template.customerscard.onRendered(function() {
     $(document).on('click', '#leadRep', function(e, li) {
         $('#employeeListPOPModal').modal('show');
     })
+
+    $(document).on("click", "#tblTitleList tbody tr", function (e) {
+        $('#edtTitle').val($(this).find(".colTypeName").text());
+        $('#customerTitlePopModal').modal('toggle');
+    });
+
 });
 
 Template.customerscard.events({

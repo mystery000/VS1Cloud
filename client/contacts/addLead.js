@@ -1131,6 +1131,11 @@ Template.leadscard.onRendered(function() {
         $('#employeeListPOPModal').modal('show');
     })
 
+    $(document).on("click", "#tblTitleList tbody tr", function (e) {
+        $('#editLeadTitle').val($(this).find(".colTypeName").text());
+        $('#leadTitlePopModal').modal('toggle');
+    });
+
     setTimeout(() => $('#leadStatus').editableSelect(), 500);
     setTimeout(() => $('#leadSource').editableSelect(), 500);
 });
@@ -1207,7 +1212,7 @@ Template.leadscard.events({
 
             let employeeName = $('#edtLeadEmployeeName').val();
             let email = $('#edtLeadEmail').val();
-            let title = $('#edtTitle').val();
+            let title = $('#editLeadTitle').val();
             let firstname = $('#edtFirstName').val();
             let middlename = $('#edtMiddleName').val();
             let lastname = $('#edtLastName').val();
