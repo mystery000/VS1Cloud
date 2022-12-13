@@ -484,7 +484,7 @@ Template.emailsettings.onRendered(function () {
                                                 if(dataObject.length !=  0)  {
                                                     let temp = JSON.parse(dataObject[0].data)
                                                     let tempIndex = temp.findIndex(item => {
-                                                        return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`
+                                                        return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
                                                     })
                                                     if (tempIndex > -1) {
                                                         basedOnType = temp[tempIndex].value.BasedOnType || ''
@@ -764,7 +764,7 @@ Template.emailsettings.onRendered(function () {
                                                     if(dataObject.length !=  0)  {
                                                         let temp = JSON.parse(dataObject[0].data)
                                                         let tempIndex = temp.findIndex(item => {
-                                                            return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`
+                                                            return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
                                                         })
                                                         if (tempIndex > -1) {
                                                             basedOnType = temp[tempIndex].value.BasedOnType || ''
@@ -1060,7 +1060,7 @@ Template.emailsettings.onRendered(function () {
                                                 if(dataObject.length !=  0)  {
                                                     let temp = JSON.parse(dataObject[0].data)
                                                     let tempIndex = temp.findIndex(item => {
-                                                        return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`
+                                                        return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
                                                     })
                                                     if (tempIndex > -1) {
                                                         basedOnType = temp[tempIndex].value.BasedOnType || ''
@@ -1937,7 +1937,7 @@ Template.emailsettings.onRendered(function () {
                                     formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
                                     oldSettings = oldSettings.filter(oldSetting => {
                                         return oldSetting.fields.FormID != parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''))
-                                            || oldSetting.fields.EmployeeId != parseInt(recipientId);
+                                            || oldSetting.fields.EmployeeID != parseInt(recipientId);
                                     });
                                 });
 
@@ -1948,7 +1948,6 @@ Template.emailsettings.onRendered(function () {
                                 objDetail.fields.FormName = formName;
                                 // objDetail.fields.Recipients = recipients[index];
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
-                                objDetail.fields.attachments = [];
 
 
                                 //TODO: Set basedon type here
@@ -1966,11 +1965,9 @@ Template.emailsettings.onRendered(function () {
                                     });
                                 });
                                 objDetail.fields.NextDueDate = nextDueDate;
-                                console.log("{{{{{{{", objDetail.fields)
-                                console.log(";;;;;;;;;;;;;;", JSON.stringify(objDetail.fields))
                                 let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
+                                // JSON.parse(JSON.stringify(objDetail.fields))
                                 cloneObjDetailFields.attachments = documents;
-
                                 if(basedOnType.includes('EN') == true || basedOnType.includes('EU' == true)) {
                                     getVS1Data('TBasedOnType').then(function(dataObject) {
                                         let temp = dataObject.length > 0 ? JSON.parse(dataObject) : [];
@@ -1998,11 +1995,12 @@ Template.emailsettings.onRendered(function () {
                                 }
 
                                 cloneObjDetailFields = {...cloneObjDetailFields, connectionInfo: connectionDetails, EID: recipientId}
+
                                 // objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                Meteor.call('addTask', cloneObjDetailFields);
+                                // Meteor.call('addTask', cloneObjDetailFields);
                             } else {
-                                const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
-                                oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeId != recipientId);
+                                const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeID == parseInt(recipientId));
+                                oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeID != recipientId);
                                 if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
                                 try {
                                     // Save email settings
@@ -2056,13 +2054,13 @@ Template.emailsettings.onRendered(function () {
 
                                     getVS1Data('TBasedOnType').then(function(dataObject) {
                                         let temp = dataObject.length > 0 ? JSON.parse(dataObject[0].data) : [];
-                                        let objectDetail = {key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, value: {
+                                        let objectDetail = {key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`, value: {
                                             ...cloneObjDetailFields,
                                             BasedOnType: basedOnType,
                                             connectionInfo: connectionDetails
                                         } }
                                         let tempIndex = temp.findIndex(item => {
-                                            return item.key == `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`
+                                            return item.key == `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`
                                         })
                                         if (tempIndex > -1) {
                                             temp.splice(tempIndex, 1, objectDetail)
@@ -2076,7 +2074,7 @@ Template.emailsettings.onRendered(function () {
                                 // objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
 
                                 cloneObjDetailFields = {...cloneObjDetailFields, connectionInfo :connectionDetails, EID: recipientId}
-                                Meteor.call('addTask', cloneObjDetailFields);
+                                // Meteor.call('addTask', cloneObjDetailFields);
                             }
                         });
                         await Promise.all(saveSettingPromises);
@@ -2084,28 +2082,30 @@ Template.emailsettings.onRendered(function () {
                         let activedSettings = oldSettings.filter((oldSetting)=>{return oldSetting.fields.FormID == formID && oldSetting.fields.Active == true})
                         for (let  i = 0; i < activedSettings.length; i ++ ) {
                             let activedsetting = activedSettings[i];
-                            activedsetting.fields.Active = false;
-                            taxRateService.saveScheduleSettings({
-                                type: "TReportSchedules",
-                                fields: {
-                                    Active: false,
-                                    ID: activedsetting.fields.ID
-                                }
-                            }).then(function() {
-                                localStorage.removeItem(`BasedOnType_${activedsetting.fields.FormID}_${activedsetting.fields.EmployeeId}`);
-                                getVS1Data('TBasedOnType').then(function(dataObject){
-                                    if(dataObject.length != 0) {
-                                        let temp = JSON.parse(dataObject[0].data);
-                                        let tempIndex = temp.findIndex(item => {
-                                            return  item.key == `BasedOnType_${activedsetting.fields.FormID}_${activedsetting.fields.EmployeeID}`;
-                                        })
-                                        if(tempIndex > -1) {
-                                            temp.splice(tempIndex , 1)
-                                        }
-                                        addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){})
+                            if(activedsetting) {
+                                activedsetting.fields.Active = false;
+                                taxRateService.saveScheduleSettings({
+                                    type: "TReportSchedules",
+                                    fields: {
+                                        Active: false,
+                                        ID: activedsetting.fields.ID
                                     }
+                                }).then(function() {
+                                    localStorage.removeItem(`BasedOnType_${activedsetting.fields.FormID}_${activedsetting.fields.EmployeeID}`);
+                                    getVS1Data('TBasedOnType').then(function(dataObject){
+                                        if(dataObject.length != 0) {
+                                            let temp = JSON.parse(dataObject[0].data);
+                                            let tempIndex = temp.findIndex(item => {
+                                                return  item.key == `BasedOnType_${activedsetting.fields.FormID}_${activedsetting.fields.EmployeeID}`;
+                                            })
+                                            if(tempIndex > -1) {
+                                                temp.splice(tempIndex , 1)
+                                            }
+                                            addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){})
+                                        }
+                                    })
                                 })
-                            })
+                            }
                         }
                     }
                 });
@@ -2153,7 +2153,7 @@ Template.emailsettings.onRendered(function () {
                 resolve({ success: true, message: '' });
             } catch (error) {
                 resolve({ success: false, message: 'Something went wrong. Please try again later.' });
-                if (typeof error !== 'string') error = error.message;
+                if (typeof error !== 'string') {error = error.message;}
 
             }
         });
