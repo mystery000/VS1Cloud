@@ -765,6 +765,23 @@ Template.leadscard.onRendered(function() {
         });
     };
 
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('#editLeadTitle').editableSelect();
+        },1000)
+    
+    })
+
+    $(document).on('click', '#editLeadTitle', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#leadTitlePopModal').modal('toggle');
+        } else {
+            $('#leadTitlePopModal').modal();
+        }
+    });
+
     $(document).on("click", "#referenceLetterModal .btnSaveLetterTemp", function(e) {
         if ($("input[name='refTemp']:checked").attr('value') == undefined || $("input[name='refTemp']:checked").attr('value') == null) {
             swal({

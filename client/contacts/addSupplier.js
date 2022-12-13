@@ -2761,12 +2761,16 @@ Template.supplierscard.events({
 
 Template.supplierscard.helpers({
     record: () => {
-        let temp = Template.instance().records.get();
-        if (temp && temp.mobile) {
-            temp.mobile = temp.mobile.replace('+61', '0')
+        let parentRecord = Template.parentData(0).record;
+        if (parentRecord) {
+            return parentRecord;
+        } else {
+            let temp = Template.instance().records.get();
+            if (temp && temp.mobile) {
+                temp.mobile = temp.mobile.replace('+61', '0')
+            }
+            return temp;
         }
-
-        return temp;
     },
     countryList: () => {
         return Template.instance().countryData.get();
