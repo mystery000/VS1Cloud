@@ -1623,7 +1623,7 @@ Template.new_salesorder.onRendered(function () {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1692,7 +1692,7 @@ Template.new_salesorder.onRendered(function () {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1764,7 +1764,7 @@ Template.new_salesorder.onRendered(function () {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -2109,7 +2109,7 @@ Template.new_salesorder.onRendered(function () {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            
+
             }
 
         // table content
@@ -7012,10 +7012,9 @@ Template.new_salesorder.onRendered(function() {
                                 className: "taxrate",
                                 "targets": [5]
                             }],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-
-                            bStateSave: true,
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -7098,10 +7097,9 @@ Template.new_salesorder.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-                        bStateSave: true,
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7167,10 +7165,9 @@ Template.new_salesorder.onRendered(function() {
                             className: "taxrate",
                             "targets": [5]
                         }],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-                        bStateSave: true,
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7248,12 +7245,6 @@ Template.new_salesorder.onRendered(function() {
                             select: true,
                             destroy: true,
                             colReorder: true,
-                            // colReorder: {
-                            //   fixedColumnsLeft: 1
-                            // },
-                            bStateSave: true,
-                            //scrollX: 1000,
-                            //rowId: 0,
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -7329,12 +7320,6 @@ Template.new_salesorder.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-                        // colReorder: {
-                        //   fixedColumnsLeft: 1
-                        // },
-                        bStateSave: true,
-                        //scrollX: 1000,
-                        //rowId: 0,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7409,12 +7394,6 @@ Template.new_salesorder.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-                        // colReorder: {
-                        //   fixedColumnsLeft: 1
-                        // },
-                        bStateSave: true,
-                        //scrollX: 1000,
-                        //rowId: 0,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7710,7 +7689,7 @@ Template.new_salesorder.helpers({
         return localStorage.getItem('vs1companyBankRoutingNo') || '';
     },
 
- 
+
 
     custfield1: () => {
         return localStorage.getItem('custfield1salesorder') || 'Custom Field 1';
@@ -7966,7 +7945,7 @@ Template.new_salesorder.events({
                 //     var rowCount = $('.tblInvoiceLine tbody tr').length;
                 //     exportSalesToPdf1();
                 // }
-                // $('#confirmprint').modal('hide');                
+                // $('#confirmprint').modal('hide');
             }
         }, delayTimeAfterSound);
         },
@@ -8863,6 +8842,8 @@ Template.new_salesorder.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -9467,7 +9448,7 @@ Template.new_salesorder.events({
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
-        if(targetID != undefined) {            
+        if(targetID != undefined) {
             times++;
             if (times == 1) {
                 $('#deleteLineModal').modal('toggle');
@@ -9663,7 +9644,7 @@ Template.new_salesorder.events({
         let salesService = new SalesBoardService();
         setTimeout(function(){
         LoadingOverlay.show();
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -12561,7 +12542,7 @@ Template.new_salesorder.events({
         let basedOnTypeAttr = 'F,';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -12628,7 +12609,7 @@ Template.new_salesorder.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -12681,7 +12662,7 @@ Template.new_salesorder.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -12762,17 +12743,17 @@ Template.new_salesorder.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -12849,21 +12830,21 @@ Template.new_salesorder.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             window.open("/invoicecard", "_self");

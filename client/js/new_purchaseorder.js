@@ -244,8 +244,8 @@ Template.purchaseordercard.onRendered(() => {
         $('.uploadedImage').attr('src', imageData);
     }
 
-    
-  
+
+
 
     const purchaseService = new PurchaseBoardService();
     const clientsService = new PurchaseBoardService();
@@ -1058,7 +1058,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1126,7 +1126,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1197,7 +1197,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1542,7 +1542,7 @@ templateObject.getLastPOData = async function() {
                         $("#html-2-pdfwrapper_new #tax_list_print").remove();
                     }
                 }
-                
+
         }
 
          // table content
@@ -1592,7 +1592,7 @@ templateObject.getLastPOData = async function() {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            
+
 
             }
 
@@ -4248,7 +4248,7 @@ templateObject.getLastPOData = async function() {
                                 }
 
                                 setTimeout(function() {
-                                    
+
                                     let supplierRecord = {
                                         id: popSupplierID,
                                         company: popSupplierName,
@@ -4997,8 +4997,9 @@ Template.purchaseordercard.onRendered(function() {
                                     "targets": [5]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-                            bStateSave: true,
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5073,10 +5074,9 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-                        bStateSave: true,
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5153,13 +5153,9 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5246,12 +5242,6 @@ Template.purchaseordercard.onRendered(function() {
                             select: true,
                             destroy: true,
                             colReorder: true,
-
-
-
-                            bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5330,12 +5320,6 @@ Template.purchaseordercard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5415,12 +5399,6 @@ Template.purchaseordercard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -6602,6 +6580,8 @@ Template.purchaseordercard.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -7400,7 +7380,7 @@ Template.purchaseordercard.events({
 
           });
 
-        
+
         if($('#print_purchase_order').is(':checked') || $('#print_purchase_order_second').is(':checked')) {
             printTemplate.push('Purchase Orders');
         }
@@ -7482,7 +7462,7 @@ Template.purchaseordercard.events({
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        
+
         if(targetID != undefined) {
             times++;
 
@@ -10283,7 +10263,7 @@ Template.purchaseordercard.events({
         let basedOnTypeAttr = '';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -10350,7 +10330,7 @@ Template.purchaseordercard.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -10403,7 +10383,7 @@ Template.purchaseordercard.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -10484,17 +10464,17 @@ Template.purchaseordercard.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -10571,21 +10551,21 @@ Template.purchaseordercard.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             // window.open("/invoicecard", "_self");

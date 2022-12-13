@@ -155,7 +155,7 @@ Template.refundcard.onRendered(() => {
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentInvoice = getso_id[getso_id.length - 1];
-            
+
             if (getso_id[1]) {
                 currentInvoice = parseInt(currentInvoice);
                 var refundData = await salesService.getRefundSales(currentInvoice);
@@ -960,7 +960,7 @@ Template.refundcard.onRendered(() => {
                     $("#templatePreviewModal #tax_list_print").remove();
                 }
             }
-            
+
 
             // table content
              var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1026,7 +1026,7 @@ Template.refundcard.onRendered(() => {
                     $("#templatePreviewModal #tax_list_print").remove();
                 }
             }
-            
+
 
             // table content
              var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1095,7 +1095,7 @@ Template.refundcard.onRendered(() => {
                     $("#templatePreviewModal #tax_list_print").remove();
                 }
             }
-            
+
 
             // table content
              var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1435,7 +1435,7 @@ Template.refundcard.onRendered(() => {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            
+
             }
 
             // table content
@@ -5043,7 +5043,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                     //$(".btnSave").trigger("click");
                 } else {
-                    
+
                 }
                 $('#html-2-pdfwrapper_new').css('display', 'none');
                 $('#html-2-pdfwrapper').css('display', 'none');
@@ -5129,13 +5129,9 @@ Template.refundcard.onRendered(function() {
                                     "targets": [5]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-
-
-
-                            bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5229,13 +5225,9 @@ Template.refundcard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5316,13 +5308,9 @@ Template.refundcard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5409,12 +5397,6 @@ Template.refundcard.onRendered(function() {
                             select: true,
                             destroy: true,
                             colReorder: true,
-
-
-
-                            bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5494,12 +5476,6 @@ Template.refundcard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5578,12 +5554,6 @@ Template.refundcard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5913,7 +5883,7 @@ Template.refundcard.events({
         {
             LoadingOverlay.show();
             // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);            
+            let result = await exportSalesToPdf(template_list[0], 1);
             // if ($('.edtCustomerEmail').val() != "") {
             //     $('.pdfCustomerName').html($('#edtCustomerName').val());
             //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
@@ -6776,6 +6746,8 @@ Template.refundcard.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -7131,7 +7103,7 @@ Template.refundcard.events({
                 }
               }
         }
-        
+
         // if ($('.edtCustomerEmail').val() != "") {
         //     $('.pdfCustomerName').html($('#edtCustomerName').val());
         //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
@@ -7189,7 +7161,7 @@ Template.refundcard.events({
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        
+
         if(targetID != undefined){
             times++;
             if (times == 1) {
