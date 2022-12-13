@@ -183,7 +183,7 @@ Template.transaction_line.onRendered(function() {
      
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
-      if(listType == "tblSalesOrderLine") {
+      if(listType == "tblSalesOrderLine" || listType == "tblQuoteLine") {
         let reset_data_salesorder = [
             { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
             { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
@@ -440,7 +440,7 @@ Template.transaction_line.helpers({
     if(fixedAsset != undefined && month != undefined){
         fixedAsset.display = month.isPurchased;
         fixedAsset.active = fixedAsset.display;
-        if(currenttranstablename == 'tblSalesOrderLine'){
+        if(currenttranstablename == 'tblSalesOrderLine' || currenttranstablename == "tblQuoteLine"){
             fixedAsset.display = false;
             fixedAsset.active = false;
         }
