@@ -2916,7 +2916,12 @@ Template.frmappointmentpop.onRendered(function() {
             }
         });
 
-    $(document).on("click", "#tblEmployeelist tbody tr", function(e) {
+    $(document).on("click", "#employeeListModal #tblEmployeelist tbody tr", function(e) {
+
+        // for taskDetailModal
+            
+        // end
+
         let employeeName = $(this).find(".colEmployeeName").text() || '';
         let employeeID = $(this).find(".colID").text() || '';
         templateObject.empID.set(employeeID);
