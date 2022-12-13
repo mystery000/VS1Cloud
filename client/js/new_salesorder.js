@@ -91,6 +91,9 @@ Template.new_salesorder.onCreated(function() {
     this.saleOrder = new ReactiveVar();
     this.products = new ReactiveVar([]);
     this.hasFollow = new ReactiveVar(false);
+
+    this.customerRecord = new ReactiveVar();
+
 });
 
 Template.new_salesorder.onRendered(function () {
@@ -2696,6 +2699,9 @@ Template.new_salesorder.onRendered(function () {
 
                             templateObject.salesorderrecord.set(salesorderrecord);
                             templateObject.lineitems.set(lineItems);
+                            setTimeout(() => {
+                                templateObject.checkAbleToMakeWorkOrder();
+                            }, 100);
 
                             templateObject.selectedCurrency.set(salesorderrecord.currency);
                             templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
@@ -3035,6 +3041,10 @@ Template.new_salesorder.onRendered(function () {
 
                                 templateObject.selectedCurrency.set(salesorderrecord.currency);
                                 templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                                setTimeout(() => {
+                                    templateObject.checkAbleToMakeWorkOrder();
+                                }, 100);
+    
                                 if (templateObject.salesorderrecord.get()) {
 
 
@@ -3256,6 +3266,10 @@ Template.new_salesorder.onRendered(function () {
 
                                     templateObject.selectedCurrency.set(salesorderrecord.currency);
                                     templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                                    setTimeout(() => {
+                                        templateObject.checkAbleToMakeWorkOrder();
+                                    }, 100);
+        
                                     if (templateObject.salesorderrecord.get()) {
 
 
@@ -3593,6 +3607,10 @@ Template.new_salesorder.onRendered(function () {
 
                         templateObject.selectedCurrency.set(salesorderrecord.currency);
                         templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                        setTimeout(() => {
+                            templateObject.checkAbleToMakeWorkOrder();
+                        }, 100);
+
                         if (templateObject.salesorderrecord.get()) {
 
 
@@ -4045,6 +4063,10 @@ Template.new_salesorder.onRendered(function () {
                     templateObject.salesorderrecord.set(salesorderrecord);
                     templateObject.selectedCurrency.set(salesorderrecord.currency);
                     templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                    setTimeout(() => {
+                        templateObject.checkAbleToMakeWorkOrder();
+                    }, 100);
+
                     if (templateObject.salesorderrecord.get()) {
 
 
@@ -4342,6 +4364,10 @@ Template.new_salesorder.onRendered(function () {
                             templateObject.salesorderrecord.set(salesorderrecord);
                             templateObject.selectedCurrency.set(salesorderrecord.currency);
                             templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                            setTimeout(() => {
+                                templateObject.checkAbleToMakeWorkOrder();
+                            }, 100);
+
                             if (templateObject.salesorderrecord.get()) {
 
                                 Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
@@ -4630,6 +4656,10 @@ Template.new_salesorder.onRendered(function () {
                                 templateObject.salesorderrecord.set(salesorderrecord);
                                 templateObject.selectedCurrency.set(salesorderrecord.currency);
                                 templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                                setTimeout(() => {
+                                    templateObject.checkAbleToMakeWorkOrder();
+                                }, 100);
+    
                                 if (templateObject.salesorderrecord.get()) {
 
                                     Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
@@ -4845,6 +4875,10 @@ Template.new_salesorder.onRendered(function () {
                         templateObject.salesorderrecord.set(salesorderrecord);
                         templateObject.selectedCurrency.set(salesorderrecord.currency);
                         templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                        setTimeout(() => {
+                            templateObject.checkAbleToMakeWorkOrder();
+                        }, 100);
+
                         if (templateObject.salesorderrecord.get()) {
 
 
@@ -4988,6 +5022,10 @@ Template.new_salesorder.onRendered(function () {
         }, 200);
 
         templateObject.salesorderrecord.set(salesorderrecord);
+        setTimeout(() => {
+            templateObject.checkAbleToMakeWorkOrder();
+        }, 100);
+
         if (templateObject.salesorderrecord.get()) {
             Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                 if (error) {} else {
@@ -5018,10 +5056,8 @@ Template.new_salesorder.onRendered(function () {
             });
         }
     }
-
-    setTimeout(()=>{
-        templateObject.checkAbleToMakeWorkOrder();
-    }, 1500)
+    
+    
 
     templateObject.getDepartments = function() {
         getVS1Data('TDeptClass').then(function(dataObject) {
@@ -6300,6 +6336,36 @@ Template.new_salesorder.onRendered(function () {
                                 }
 
                                 setTimeout(function() {
+                                    let customerRecord = {
+                                        id:popCustomerID,
+                                        phone:popCustomerPhone,
+                                        firstname:popCustomerFirstName,
+                                        middlename: popCustomerMiddleName,
+                                        lastname:popCustomerLastName,
+                                        company:data.tcustomer[0].fields.Companyname || '',
+                                        email: popCustomerEmail,
+                                        title: popCustomerTitle,
+                                        tfn: popCustomertfn,
+                                        mobile: popCustomerMobile,
+                                        fax: popCustomerFaxnumber,
+                                        shippingaddress: popCustomerStreet,
+                                        scity: popCustomerStreet2,
+                                        sstate: popCustomerCountry,
+                                        terms: '',
+                                        spostalcode: popCustomerPostcode,
+                                        scountry: popCustomerState,
+                                        billingaddress: popCustomerbillingaddress,
+                                        bcity: popCustomerbcity,
+                                        bstate: popCustomerbstate,
+                                        bpostalcode: popCustomerbpostalcode,
+                                        bcountry: popCustomerCountry,
+                                        custFld1: popCustomercustfield1,
+                                        custFld2: popCustomercustfield2,
+                                        jobbcountry: '',
+                                        jobscountry: '',
+                                        discount:0
+                                    }
+                                    templateObject.customerRecord.set(customerRecord);
                                     $('#addCustomerModal').modal('show');
                                 }, 200);
                             }).catch(function(err) {
@@ -6397,6 +6463,36 @@ Template.new_salesorder.onRendered(function () {
                                     }
 
                                     setTimeout(function() {
+                                        let customerRecord = {
+                                            id:popCustomerID,
+                                            phone:popCustomerPhone,
+                                            firstname:popCustomerFirstName,
+                                            middlename: popCustomerMiddleName,
+                                            lastname:popCustomerLastName,
+                                            company:data.tcustomervs1[i].fields.Companyname || '',
+                                            email: popCustomerEmail,
+                                            title: popCustomerTitle,
+                                            tfn: popCustomertfn,
+                                            mobile: popCustomerMobile,
+                                            fax: popCustomerFaxnumber,
+                                            shippingaddress: popCustomerStreet,
+                                            scity: popCustomerStreet2,
+                                            sstate: popCustomerCountry,
+                                            terms: '',
+                                            spostalcode: popCustomerPostcode,
+                                            scountry: popCustomerState,
+                                            billingaddress: popCustomerbillingaddress,
+                                            bcity: popCustomerbcity,
+                                            bstate: popCustomerbstate,
+                                            bpostalcode: popCustomerbpostalcode,
+                                            bcountry: popCustomerCountry,
+                                            custFld1: popCustomercustfield1,
+                                            custFld2: popCustomercustfield2,
+                                            jobbcountry: '',
+                                            jobscountry: '',
+                                            discount:0
+                                        }
+                                        templateObject.customerRecord.set(customerRecord);
                                         $('#addCustomerModal').modal('show');
                                     }, 200);
 
@@ -7589,11 +7685,9 @@ Template.new_salesorder.onRendered(function() {
     tempObj.checkAbleToMakeWorkOrder = function() {
         let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')): [];
         let workorderList = [];
-
         //await function to get all work order list data
         let temp = localStorage.getItem('TWorkorders');
         workorderList = temp?JSON.parse(temp): [];
-
         let returnvalue = false;
         let lineTable  = $('#tblSalesOrderLine');
         setTimeout(function() {
@@ -7603,11 +7697,9 @@ Template.new_salesorder.onRendered(function() {
                 let line =  orderlines[i];
                 let productName = $(line).find('.lineProductName').val();
                 let existBOM = false;
-
                 let index = bomProducts.findIndex(product => {
                     return product.fields.productName == productName
                 })
-
                 if(index > -1) {
                     existBOM = true;
                 }
@@ -7615,18 +7707,18 @@ Template.new_salesorder.onRendered(function() {
                 if(existBOM == true) {
                     //check if the workorder is already exists
                     let workOrderIndex = workorderList.findIndex(order=>{
-                        return order.SalesOrderID == tempObj.salesOrderId.get() && order.line.fields.ProductName == productName;
+                        return order.SalesOrderID == tempObj.salesorderrecord.get().id && order.line.fields.ProductName == productName;
                     })
                     if(workOrderIndex == -1) {
                         returnvalue = true
                     }
                 }
             }
-        }, 1000)
+        }, 500)
 
         setTimeout(()=>{
             tempObj.abletomakeworkorder.set(returnvalue);
-        },1000)
+        },500)
     }
 
 
@@ -7878,6 +7970,11 @@ Template.new_salesorder.helpers({
     record: () => {
         return Template.instance().record.get();
     },
+
+    customerRecord: () => {
+        return Template.instance().customerRecord.get();
+    },
+
     companyaddress1: () => {
         return Session.get('vs1companyaddress1');
     },
