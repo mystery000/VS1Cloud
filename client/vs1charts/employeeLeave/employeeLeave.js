@@ -4,7 +4,7 @@ import {SideBarService} from "../../js/sidebar-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 
-Template.employeeAbsentDays.onCreated(() => {
+Template.employeeLeave.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
   templateObject.dateAsAt = new ReactiveVar();
@@ -17,7 +17,7 @@ Template.employeeAbsentDays.onCreated(() => {
   templateObject.topTenData = new ReactiveVar([]);
 });
 
-Template.employeeAbsentDays.onRendered(() => {
+Template.employeeLeave.onRendered(() => {
   const templateObject = Template.instance();
 
 	function setFullScreenSpin(){
@@ -72,7 +72,7 @@ Template.employeeAbsentDays.onRendered(() => {
 		empName.reverse();
 		empClockedCount.reverse(); 
 
-		var ctx = document.getElementById("employeeAbsentDayschart").getContext("2d");
+		var ctx = document.getElementById("employeeLeavechart").getContext("2d");
 		var myChart = new Chart(ctx, {
 			type: "horizontalBar",
 			data: {
@@ -199,7 +199,7 @@ Template.employeeAbsentDays.onRendered(() => {
 	templateObject.getAllTimeSheetDataClock();
 });
 
-Template.employeeAbsentDays.helpers({
+Template.employeeLeave.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
