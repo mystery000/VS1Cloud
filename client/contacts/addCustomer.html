@@ -347,8 +347,7 @@
                                     {{/if}}
                                     <li class="nav-item" style="cursor: pointer;"><a class="nav-link transactionTab"
                                             role="tab" data-toggle="tab" data-target="#tab-1">Transaction List</a></li>
-                                    <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab" role="tab"
-                                            data-toggle="tab" data-target="#tab-crm">CRM</a></li>
+                                    
                                 </ul>
                                 <div class="tab-content">
                                     <style>
@@ -586,7 +585,8 @@
                                             <div class="col" style="padding: 4px;margin-top: 16px;">
                                                 <div>
                                                     <ul class="nav nav-tabs nav-justified">
-                                                        <li class="nav-item"><a class="nav-link active" role="tab"
+                                                        
+                                                        <li class="nav-item"><a class="nav-link" role="tab"
                                                                 data-toggle="tab" data-target="#tab-Job4">Address</a>
                                                         </li>
                                                         <li class="nav-item"><a class="nav-link" role="tab"
@@ -606,7 +606,8 @@
                                                     </ul>
 
                                                     <div class="tab-content">
-                                                        <div class="tab-pane active border rounded-0 tab-Job4"
+                                                        
+                                                        <div class="tab-pane border rounded-0 tab-Job4"
                                                             role="tabpanel" id="tab-Job4"
                                                             style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;overflow: auto;">
                                                             <div class="row" style="margin: 4px 12px;">
@@ -1385,8 +1386,10 @@
                                             <div class="col" style="padding: 4px;margin-top: 16px;">
                                                 <div>
                                                     <ul class="nav nav-tabs nav-justified">
+                                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab active" role="tab"
+                                                            data-toggle="tab" data-target="#tab-crm">CRM</a></li>
                                                         <li class="nav-item" style="cursor: pointer;"><a
-                                                                class="nav-link active" role="tab" data-toggle="tab"
+                                                                class="nav-link" role="tab" data-toggle="tab"
                                                                 data-target="#tab-4">Address</a></li>
                                                         <li class="nav-item" style="cursor: pointer;"><a
                                                                 class="nav-link" role="tab" data-toggle="tab"
@@ -1446,7 +1449,11 @@
                                                         }
                                                     </style>
                                                     <div class="tab-content">
-                                                        <div class="tab-pane active border rounded-0" role="tabpanel"
+                                                        <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm"
+                                                            style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                                            {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}}
+                                                        </div>
+                                                        <div class="tab-pane border rounded-0" role="tabpanel"
                                                             id="tab-4"
                                                             style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                             <div class="row no-gutters flex-column"
@@ -3736,10 +3743,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-crm"
-                                        style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                                        {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}}
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -3896,7 +3900,58 @@
             </div>
         </div>
     </div>
+    
+    {{> taskDetailModal}}
     {{> frmappointmentpop}}
+    {{> newTaskModal}}
+    
+
+    <div class="modal fade customerListCrmModal" role="dialog" tabindex="-1" id="customerListCrmModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
+          style="max-width: 90vw;">
+          <div class="modal-content customerListContent">
+            <div class="modal-header">
+              <h4>Contact List</h4><button type="button" class="close checkclose" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+              <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID"
+                name="customerSelectLineID" readonly>
+              <div class="row">
+                <div class="col-12 contactlistcol">
+                  {{> contactlistpop}}
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="employeeListCRMModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
+            style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+            <div class="modal-header">
+                <h4>Employee List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
+                {{> employeelistpop}}
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    {{> projectListPop}}
+    <input type="hidden" id="assignedID" />
+    <input type="hidden" id="contactID" />
+    <input type="hidden" id="contactType" />
     <script>
         modalDraggable();
     </script>
