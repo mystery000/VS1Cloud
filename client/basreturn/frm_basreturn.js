@@ -2320,7 +2320,7 @@ Template.basreturn.onRendered(function() {
                 var getid = url.split('?id=');
                 if (getid[1]) {
                     templateObject.getId.set(getid[1]);
-                    templateObject.pageTitle.set("Edit BAS Return");
+                    templateObject.pageTitle.set("Edit VAT Return");
 
                     getVS1Data('TBASReturn').then(function(dataObject) {
                         if (dataObject.length == 0) {
