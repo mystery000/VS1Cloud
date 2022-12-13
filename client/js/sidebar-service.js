@@ -17,18 +17,18 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-        select: "[Active]=true",
+        Search: "Active = true",
       };
     } else {
       options = {
         orderby: '"PARTSID desc"',
         ListType: "Detail",
-        select: "[Active]=true",
+        Search: "Active = true",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
     }
-    return this.getList(this.ERPObjects.TProductVS1, options);
+    return this.getList(this.ERPObjects.TProductList, options);
   }
 
   getProductListVS1(limitcount, limitfrom) {
@@ -36,14 +36,14 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-          Search: "PublishOnVS1 == true",
+        Search: "Active == true",
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
         ListType: "Detail",
-        Search: "PublishOnVS1 = true",
+        Search: "Active = true",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
