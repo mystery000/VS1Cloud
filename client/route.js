@@ -200,8 +200,8 @@ FlowRouter.triggers.enter([
                 text: 'Do you wish to save your changes?',
                 type: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
+                confirmButtonText: 'Save',
+                cancelButtonText: 'Leave'
             }).then((result) => {
                 if (result.value) {
                     FlowRouter.go(previous_url);
