@@ -50,6 +50,9 @@ Template.supplierscard.onRendered(function() {
     let deliveryMethods = [];
     let taxCodes = [];
     let currentId = FlowRouter.current().queryParams;
+    if (FlowRouter.current().route.name != "supplierscard") {
+        currentId = "";
+    }
     let supplierID = '';
     let totAmount = 0;
     let totAmountOverDue = 0;
