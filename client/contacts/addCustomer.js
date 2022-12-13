@@ -1613,7 +1613,7 @@ Template.customerscard.onRendered(function() {
                 const termsDataName = e.target.value || '';
                 editableTerms(e, $each, offset, termsDataName);
             });
-            $('#edtTitle').editableSelect();
+            $('#editCustomerTitle').editableSelect();
 
             function setTermsVS1(data, termsDataName) {
                 for (let i in data.ttermsvs1) {
@@ -1956,7 +1956,7 @@ Template.customerscard.onRendered(function() {
         }, 1200);
     });
 
-    $(document).on('click', '#edtTitle', function(e, li) {
+    $(document).on('click', '#editCustomerTitle', function(e, li) {
         const $earch = $(this);
         const offset = $earch.offset();
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
@@ -2311,7 +2311,7 @@ Template.customerscard.onRendered(function() {
     })
 
     $(document).on("click", "#tblTitleList tbody tr", function (e) {
-        $('#edtTitle').val($(this).find(".colTypeName").text());
+        $('#editCustomerTitle').val($(this).find(".colTypeName").text());
         $('#customerTitlePopModal').modal('toggle');
     });
 
@@ -2658,7 +2658,7 @@ Template.customerscard.events({
             $('.fullScreenSpin').css('display', 'inline-block');
             let company = $('#edtCustomerCompany').val() || '';
             let email = $('#edtCustomerEmail').val() || '';
-            let title = $('#edtTitle').val() || '';
+            let title = $('#editCustomerTitle').val() || '';
             let firstname = $('#edtFirstName').val() || '';
             let middlename = $('#edtMiddleName').val() || '';
             let lastname = $('#edtLastName').val() || '';
