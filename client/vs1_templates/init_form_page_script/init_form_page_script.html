@@ -2,17 +2,23 @@
     <script>
         $(document).ready(function () {
             localStorage.setItem("isFormUpdated", false);
+            // sessionStorage.setItem("pageLoaded", true);
 
             setTimeout(() => {
-                $("#form").on("change", "input, select, textarea", function () {
+                $(document).on("change", "form input, form select, form textarea, #form input, #form select, #form textarea", function() {
                     localStorage.setItem("isFormUpdated", true);
                 });
 
-                $(".btnSave").click(function () {
-                    console.log("here");
-                    localStorage.setItem("isFormUpdated", false);
+                $(document).on("keyup", "form input, form textarea, #form input, #form textarea", function() {
+                    localStorage.setItem("isFormUpdated", true);
                 });
             }, 3000);
+
+            $(".btnSave").click(function () {
+                if ($(this).innerHTML.includes("Save")) {
+                    localStorage.setItem("isFormUpdated", false);
+                }
+            });
         });
     </script>
 </template>
