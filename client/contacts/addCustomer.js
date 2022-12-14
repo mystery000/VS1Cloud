@@ -2724,37 +2724,39 @@ Template.customerscard.events({
             }
             if (sltTermsName == '') {
                 $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: "Terms has not been selected!",
-                    text: '',
-                    type: 'warning',
-                }).then((result) => {
-                    if (result.value) {
-                        $('.bilingTab').trigger('click');
-                        $('#sltTerms').focus();
-                    } else if (result.dismiss == 'cancel') {
-
-                    }
-                });
-                e.preventDefault();
-                return false;
+                $('#termsListModal').modal('toggle');
+                // swal({
+                //     title: "Terms has not been selected!",
+                //     text: '',
+                //     type: 'warning',
+                // }).then((result) => {
+                //     if (result.value) {
+                //         $('.bilingTab').trigger('click');
+                //         $('#sltTerms').focus();
+                //     } else if (result.dismiss == 'cancel') {
+                //
+                //     }
+                // });
+                // e.preventDefault();
+                // return false;
             }
             if (sltTaxCodeName == '') {
                 $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: "Tax Code has not been selected!",
-                    text: '',
-                    type: 'warning',
-                }).then((result) => {
-                    if (result.value) {
-                        $('.taxTab').trigger('click');
-                        $('#sltTaxCode').focus();
-                    } else if (result.dismiss == 'cancel') {
-
-                    }
-                });
-                e.preventDefault();
-                return false;
+                $('#taxRateListModal').modal('toggle');
+                // swal({
+                //     title: "Tax Code has not been selected!",
+                //     text: '',
+                //     type: 'warning',
+                // }).then((result) => {
+                //     if (result.value) {
+                //         $('.taxTab').trigger('click');
+                //         $('#sltTaxCode').focus();
+                //     } else if (result.dismiss == 'cancel') {
+                //
+                //     }
+                // });
+                // e.preventDefault();
+                // return false;
             }
 
             const url = FlowRouter.current().path;
@@ -2817,7 +2819,7 @@ Template.customerscard.events({
                     CUSTFLD1: custField1,
                     CUSTFLD2: custField2,
                     CUSTFLD3: custField3,
-                    // CUSTFLD4: custField4,
+                    CUSTFLD4: custField4,
                     Discount: parseFloat(permanentDiscount) || 0,
                     Status: status,
                     SourceName: sourceName,
@@ -2826,6 +2828,7 @@ Template.customerscard.events({
                     ForeignExchangeCode: $("#sltCurrency").val(),
                 }
             };
+            console.log(objDetails);
             contactService.saveCustomerEx(objDetails).then(function (objDetails) {
                 let customerSaveID = objDetails.fields.ID;
                 if (customerSaveID) {
@@ -2840,6 +2843,7 @@ Template.customerscard.events({
                     });
                 }
             }).catch(function (err) {
+                console.log("-----------cache error", err);
                 swal({
                     title: 'Oooops...',
                     text: err,
@@ -3533,20 +3537,20 @@ Template.customerscard.events({
     //     $('.lblCustomField4').text(inputValue4);
     // },
     // add to custom field
-    "click #edtSaleCustField1": function (e) {
-        $("#clickedControl").val("one");
-    },
+    // "click #edtSaleCustField1": function (e) {
+    //     $("#clickedControl").val("one");
+    // },
     // add to custom field
-    "click #edtSaleCustField2": function (e) {
-        $("#clickedControl").val("two");
-    },
-    // add to custom field
-    "click #edtSaleCustField3": function (e) {
-        $("#clickedControl").val("three");
-    },
-    "click #edtSaleCustField4": function (e) {
-        $("#clickedControl").val("four");
-    },
+    // "click #edtSaleCustField2": function (e) {
+    //     $("#clickedControl").val("two");
+    // },
+    // // add to custom field
+    // "click #edtSaleCustField3": function (e) {
+    //     $("#clickedControl").val("three");
+    // },
+    // "click #edtSaleCustField4": function (e) {
+    //     $("#clickedControl").val("four");
+    // },
     'click .btnOpenSettings': function (event) {
     },
     'click .btnSaveSettings': function (event) {

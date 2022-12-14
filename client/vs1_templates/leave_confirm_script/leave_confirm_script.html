@@ -1,6 +1,7 @@
 <template name="leave_confirm_script">
     <script>
         window.addEventListener("beforeunload", function (e) {
+            console.log("here");
             if (!JSON.parse(localStorage.getItem("isFormUpdated"))) {
                 window.removeEventListener("beforeunload");
             } else {
