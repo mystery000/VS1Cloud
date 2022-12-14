@@ -7353,13 +7353,16 @@ Template.non_transactional_list.events({
       await clearData('TProcessStep');
       templateObject.getProcessListData(true);
     }else if(currenttablename == "tblSupplierTransactionList"){
-      // await clearData('T')
+      await clearData('TbillReport')
       templateObject.getSupplierTransactionListData(true);
     }else if(currenttablename == "tblCustomerTransactionList"){
+      await clearData('TJobVS1');
       templateObject.getCustomerTransactionListData(true);
     }else if (currenttablename === "tblCustomerJobDetailsList"){
+      await clearData('TJobVS1');
       templateObject.getCustomerJobDetailsListData(true);
     }else if (currenttablename === "tblEmployeeTransactionList"){
+      await clearData('TInvoiceEx');
       templateObject.getEmployeeTransactionListData(true);
     }else if (currenttablename === "tblLeadCrmList"){
       templateObject.getLeadCrmListData(true);
