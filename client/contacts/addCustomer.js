@@ -2725,6 +2725,7 @@ Template.customerscard.events({
             if (sltTermsName == '') {
                 $('.fullScreenSpin').css('display', 'none');
                 $('#termsListModal').modal('toggle');
+                return;
                 // swal({
                 //     title: "Terms has not been selected!",
                 //     text: '',
@@ -2739,10 +2740,10 @@ Template.customerscard.events({
                 // });
                 // e.preventDefault();
                 // return false;
-            }
-            if (sltTaxCodeName == '') {
+            } else if (sltTaxCodeName == '') {
                 $('.fullScreenSpin').css('display', 'none');
                 $('#taxRateListModal').modal('toggle');
+                return;
                 // swal({
                 //     title: "Tax Code has not been selected!",
                 //     text: '',

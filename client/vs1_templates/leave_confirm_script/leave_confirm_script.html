@@ -1,7 +1,15 @@
 <template name="leave_confirm_script">
     <script>
+        $(document).ready(function() {
+            if(!sessionStorage.getItem("pageLoaded")){
+                // localStorage.clear();
+                window.open('/','_self');
+            }
+        })
         window.addEventListener("beforeunload", function (e) {
-            console.log("here");
+            if(!sessionStorage.getItem("pageLoaded")){
+                localStorage.clear();
+            }
             if (!JSON.parse(localStorage.getItem("isFormUpdated"))) {
                 window.removeEventListener("beforeunload");
             } else {

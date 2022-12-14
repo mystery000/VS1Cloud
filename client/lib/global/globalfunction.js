@@ -379,7 +379,7 @@ batchUpdateCall = function (url) {
                   localStorage.setItem('VS1ReportsDateFrom_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ReportsDateFrom||"");
                   localStorage.setItem('VS1ReportsDateTo_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ReportsDateTo||"");
                   localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated);
-
+                  sessionStorage.setItem("pageLoaded", true);
                   if(dataReturnRes.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401){
                     localStorage.setItem('vs1LoggedEmployeeImages_dash','');
                   }else{
