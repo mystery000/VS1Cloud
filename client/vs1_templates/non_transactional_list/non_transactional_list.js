@@ -6,6 +6,7 @@ import XLSX from 'xlsx';
 import { SideBarService } from '../../js/sidebar-service';
 import {ProductService} from '../../product/product-service';
 import { ManufacturingService } from "../../manufacture/manufacturing-service";
+import { CRMService } from "../../crm/crm-service";
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
 let sideBarService = new SideBarService();
@@ -13,6 +14,9 @@ let utilityService = new UtilityService();
 let contactService = new ContactService();
 let productService = new ProductService();
 let manufacturingService = new ManufacturingService();
+
+let crmService = new CRMService();
+
 Template.non_transactional_list.inheritsHooksFrom('export_import_print_display_button');
 
 Template.non_transactional_list.onCreated(function(){
@@ -480,6 +484,15 @@ Template.non_transactional_list.onRendered(function() {
               { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300"},
               { index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "200"},
           ];
+          }else if (currenttablename === "tblCustomerCrmList"){
+            reset_data = [
+              { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true,  width: ""},
+              { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100"},
+              { index: 2, label: 'Task', class: 'colTaskName', active: true, display: true, width: "150"},
+              { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250"},
+              { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100"},
+              { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100"},
+            ]
           }
 
         templateObject.reset_data.set(reset_data);
@@ -5461,10 +5474,55 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
     templateObject.getCustomerTransactionListData = function(){
-
+      let customerName = $('#edtCustomerCompany').val() || $('#edtJobCustomerCompany').val() || '';
+      getVS1Data('TJobVS1').then(function(dataObject) {
+        if (dataObject.length == 0) {
+            contactService.getAllJobListByCustomer(customerName).then(function(data) {
+              templateObject.displayCustomerTransactionListData(data, customerName);
+            }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+            let data = JSON.parse(dataObject[0].data);
+            templateObject.displayCustomerTransactionListData(data, customerName);
+        }
+    }).catch(function(err) {
+        contactService.getAllJobListByCustomer(customerName).then(function(data) {
+          templateObject.displayCustomerTransactionListData(data, customerName);
+        }).catch(function(err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    });
     }
 
-    templateObject.displayCustomerTransactionListData = function(){
+    templateObject.displayCustomerTransactionListData = function(data, customerName){
+      for (let i = 0; i < data.tjob.length; i++) {
+        let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].ARBalance) || 0.00;
+        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditBalance) || 0.00;
+        let balance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].Balance) || 0.00;
+        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditLimit) || 0.00;
+        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].SalesOrderBalance) || 0.00;
+        const dataListJob = {
+            id: data.tjob[i].Id || '',
+            company: data.tjob[i].ClientName || '',
+            contactname: data.tjob[i].ContactName || '',
+            phone: data.tjob[i].Phone || '',
+            arbalance: arBalance || 0.00,
+            creditbalance: creditBalance || 0.00,
+            balance: balance || 0.00,
+            creditlimit: creditLimit || 0.00,
+            salesorderbalance: salesOrderBalance || 0.00,
+            email: data.tjob[i].Email || '',
+            accountno: data.tjob[i].AccountNo || '',
+            clientno: data.tjob[i].ClientNo || '',
+            jobtitle: data.tjob[i].JobTitle || '',
+            notes: data.tjob[i].Notes || '',
+            country: data.tjob[i].Country || LoggedCountry
+        };
+        if (customerName == data.tjob[i].ParentCustomerName) {
+            // dataTableListJob.push(dataListJob);
+        }
+    }
     }
 
     templateObject.getCustomerJobDetailsListData = function(){
@@ -5674,6 +5732,337 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
     templateObject.displayLeadCrmListData = function(){
     }
 
+
+    templateObject.getCustomerCrmListData = function(){
+      let dataTableList = [];
+      let customerName = $('#edtCustomerCompany').val();
+      crmService.getAllTasksByContactName(customerName).then(async function(data) {
+        if (data.tprojecttasks.length > 0) {
+            for (let i = 0; i < data.tprojecttasks.length; i++) {
+                let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
+                let taskLabelArray = [];
+                if (taskLabel !== null) {
+                    if (taskLabel.length === undefined || taskLabel.length === 0) {
+                        taskLabelArray.push(taskLabel.fields);
+                    } else {
+                        for (let j = 0; j < taskLabel.length; j++) {
+                            taskLabelArray.push(taskLabel[j].fields);
+                        }
+                    }
+                }
+                let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
+                taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+                const dataList = {
+                    id: data.tprojecttasks[i].fields.ID || 0,
+                    priority: data.tprojecttasks[i].fields.priority || 0,
+                    date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                    taskName: 'Task',
+                    projectID: data.tprojecttasks[i].fields.ProjectID || '',
+                    projectName: data.tprojecttasks[i].fields.ProjectName || '',
+                    description: taskDescription,
+                    labels: taskLabelArray,
+                    category: 'task',
+                    completed: data.tprojecttasks[i].fields.Completed,
+                    completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
+                };
+                dataTableList.push(dataList);
+            }
+        }
+        await getAppointments();
+    }).catch(function(err) {
+        getAppointments();
+    })
+
+    async function getAppointments() {
+      crmService.getAllAppointments(customerName).then(async function(dataObj) {
+          if (dataObj.tappointmentex.length > 0) {
+              dataObj.tappointmentex.map(data => {
+                  let obj = {
+                      id: data.fields.ID,
+                      priority: 0,
+                      date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                      taskName: 'Appointment',
+                      projectID: data.fields.ProjectID || '',
+                      projectName: '',
+                      description: '',
+                      labels: '',
+                      category: 'appointment',
+                      completed: data.fields.Actual_EndTime ? true : false,
+                      completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                    }
+                  dataTableList.push(obj);
+              })
+          }
+          await getEmails();
+      }).catch(function(error) {
+          getEmails();
+      })
+  }
+    async function getEmails() {
+      sideBarService.getCorrespondences().then(dataReturn => {
+        let totalCorrespondences = dataReturn.tcorrespondence;
+        totalCorrespondences = totalCorrespondences.filter(item => {
+            return item.fields.MessageTo == $('#edtCustomerEmail').val()
+        })
+        if (totalCorrespondences.length > 0 && $('#edtCustomerEmail').val() != '') {
+            totalCorrespondences.map(item => {
+                let labels = [];
+                labels.push(item.fields.Ref_Type)
+                let obj = {
+                    id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
+                    priority: 0,
+                    date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
+                    taskName: 'Email',
+                    projectID: '',
+                    projectName: '',
+                    description: '',
+                    labels: '',
+                    category: 'email',
+                    completed: false,
+                    completedby: "",
+                }
+                dataTableList.push(obj)
+            })
+        }
+        try {
+            dataTableList.sort((a, b) => {
+                new Date(a.date) - new Date(b.date)
+            })
+        } catch (error) {}
+        templateObject.displayCustomerCrmListData(dataTableList)
+    })
+    .catch((err) => {
+        $('.fullScreenSpin').css('display', 'none');
+    })
+    }
+    }
+
+    templateObject.displayCustomerCrmListData = function(data){
+      var splashArrayClientTypeList = new Array();
+      let deleteFilter = false;
+      for (let i = 0; i < data.length; i++) {
+        var dataList = [
+          data[i].id || "",
+          data[i].date || "",
+          data[i].taskName || "",
+          data[i].description || "",
+          data[i].completedby || "",
+          data[i].completed?"<div class='custom-control custom-switch' style='cursor: pointer;'><input class='custom-control-input additionalModule chkComplete pointer' type='checkbox' id=chkCompleted_"+data[i].id+"name='Additional' style='cursor: pointer;' additionalqty='1' autocomplete='off' data-id='edit' checked='checked'><label class='custom-control-label' for='chkCompleted_"+data[i].id+"style='cursor: pointer; max-width: 200px;' data-id='edit'>Completed</label></div>":
+          "<div class='custom-control custom-switch' style='cursor: pointer;'><input class='custom-control-input additionalModule chkComplete pointer' type='checkbox' id=chkCompleted_"+data[i].id+"name='Additional' style='cursor: pointer;' additionalqty='1' autocomplete='off' data-id='edit'><label class='custom-control-label' for='chkCompleted_"+data[i].id+"style='cursor: pointer; max-width: 200px;' data-id='edit'>Completed</label></div>"
+        ];
+          splashArrayClientTypeList.push(dataList);
+          templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
+      }
+
+      if (templateObject.transactiondatatablerecords.get()) {
+          setTimeout(function () {
+              MakeNegative();
+          }, 100);
+      }
+      setTimeout(function () {
+          $('#'+currenttablename).DataTable({
+              data: splashArrayClientTypeList,
+              "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              columnDefs: [
+                  {
+                  targets: 0,
+                  className: "colTaskId hiddenColumn",
+                  width: "10px",
+                  createdCell: function (td, cellData, rowData, row, col) {
+                    $(td).closest("tr").attr("id", rowData[0]);
+                  }},
+                  {
+                    targets: 1,
+                    className: "colDate",
+                    width: "100px",
+                  },
+                  {
+                    targets: 2,
+                    className: "colTaskName",
+                    width: "150px",
+                  },
+                  {
+                    targets: 3,
+                    className: "colTaskDesc",
+                    width: "250px",
+                  },
+                  {
+                    targets: 4,
+                    className: "colCompletedBy",
+                    width: "100px",
+                  },
+                  {
+                    targets: 5,
+                    className: "colCompleteTask",
+                    width: "100px",
+                  },
+              ],
+              buttons: [
+                  {
+                      extend: 'csvHtml5',
+                      text: '',
+                      download: 'open',
+                      className: "btntabletocsv hiddenColumn",
+                      filename: "Customer Type Settings",
+                      orientation:'portrait',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  },{
+                      extend: 'print',
+                      download: 'open',
+                      className: "btntabletopdf hiddenColumn",
+                      text: '',
+                      title: 'Customer Type Settings',
+                      filename: "Customer Type Settings",
+                      exportOptions: {
+                          columns: ':visible',
+                          stripHtml: false
+                      }
+                  },
+                  {
+                      extend: 'excelHtml5',
+                      title: '',
+                      download: 'open',
+                      className: "btntabletoexcel hiddenColumn",
+                      filename: "Customer Type Settings",
+                      orientation:'portrait',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+
+                  }],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              pageLength: initialDatatableLoad,
+              lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+              info: true,
+              responsive: true,
+              "order": [[1, "asc"]],
+              action: function () {
+                  $('#'+currenttablename).DataTable().ajax.reload();
+              },
+              "fnDrawCallback": function (oSettings) {
+                  $('.paginate_button.page-item').removeClass('disabled');
+                  $('#'+currenttablename+'_ellipsis').addClass('disabled');
+                  if (oSettings._iDisplayLength == -1) {
+                      if (oSettings.fnRecordsDisplay() > 150) {
+
+                      }
+                  } else {
+
+                  }
+                  if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                      $('.paginate_button.page-item.next').addClass('disabled');
+                  }
+
+                  $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                let dataTableList = [];
+                sideBarService.getCorrespondences().then(dataReturn => {
+                  let totalCorrespondences = dataReturn.tcorrespondence;
+                  totalCorrespondences = totalCorrespondences.filter(item => {
+                      return item.fields.MessageTo == $('#edtCustomerEmail').val()
+                  })
+                  if (totalCorrespondences.length > 0 && $('#edtCustomerEmail').val() != '') {
+                      totalCorrespondences.map(item => {
+                          let labels = [];
+                          labels.push(item.fields.Ref_Type)
+                          let obj = {
+                              id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
+                              priority: 0,
+                              date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
+                              taskName: 'Email',
+                              projectID: '',
+                              projectName: '',
+                              description: '',
+                              labels: '',
+                              category: 'email',
+                              completed: false,
+                              completedby: "",
+                          }
+                          dataTableList.push(obj)
+                      })
+                  }
+                  try {
+                      dataTableList.sort((a, b) => {
+                          new Date(a.date) - new Date(b.date)
+                      })
+                  } catch (error) {}
+                  for (let j = 0; j < dataTableList.length; j++) {
+                    var dataListDupp = [
+                      data.id || "",
+                      data.date || "",
+                      data.taskName || "",
+                      data.completedby || "",
+                      data.completed || false,
+                      ""
+                    ];
+
+                    splashArrayClientTypeList.push(dataListDupp);
+                  }
+                  let uniqueChars = [...new Set(splashArrayClientTypeList)];
+                  templateObject.transactiondatatablerecords.set(uniqueChars);
+                  var datatable = $('#'+currenttablename).DataTable();
+                  datatable.clear();
+                  datatable.rows.add(uniqueChars);
+                  datatable.draw(false);
+                  setTimeout(function () {
+                    $('#'+currenttablename).dataTable().fnPageChange('last');
+                  }, 400);
+
+                  $('.fullScreenSpin').css('display', 'none');
+              })
+              .catch((err) => {
+                  $('.fullScreenSpin').css('display', 'none');
+              })
+            });
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+              },
+              language: { search: "",searchPlaceholder: "Search List..." },
+              "fnInitComplete": function (oSettings) {
+                  $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
+                    if(deleteFilter){
+                      $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                    }else{
+                      $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+              },
+              "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+              }
+          }).on('page', function () {
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+          }).on('column-reorder', function () {
+
+          }).on('length.dt', function (e, settings, len) {
+
+            $(".fullScreenSpin").css("display", "inline-block");
+            let dataLenght = settings._iDisplayLength;
+            if (dataLenght == -1) {
+              if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                $(".fullScreenSpin").css("display", "none");
+              } else {
+                $(".fullScreenSpin").css("display", "none");
+              }
+            } else {
+              $(".fullScreenSpin").css("display", "none");
+            }
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+          });
+          $(".fullScreenSpin").css("display", "none");
+      }, 0);
+
+      $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
     //Check URL to make right call.
         if(currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist"){
             templateObject.getContactOverviewData();
@@ -5715,6 +6104,8 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
           templateObject.getEmployeeTransactionListData();
         }else if (currenttablename === "tblLeadCrmList"){
           templateObject.getLeadCrmListData();
+        }else if (currenttablename === "tblCustomerCrmList"){
+          templateObject.getCustomerCrmListData();
         }
       tableResize();
     });
@@ -5780,6 +6171,8 @@ Template.non_transactional_list.events({
       templateObject.getEmployeeTransactionListData(true);
     }else if (currenttablename === "tblLeadCrmList"){
       templateObject.getLeadCrmListData(true);
+    }else if (currenttablename === "tblCustomerCrmList"){
+      templateObject.getCustomerCrmListData(true);
     }
 
     },
@@ -5843,6 +6236,8 @@ Template.non_transactional_list.events({
       templateObject.getEmployeeTransactionListData(false);
     }else if (currenttablename === "tblLeadCrmList"){
       templateObject.getLeadCrmListData(false);
+    }else if (currenttablename === "tblCustomerCrmList"){
+      templateObject.getCustomerCrmListData(false);
     }
 
     },

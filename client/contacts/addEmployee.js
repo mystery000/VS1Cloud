@@ -2649,6 +2649,10 @@ Template.employeescard.onRendered(function() {
             $('#edtDashboardOptions').attr("defaultlogin", isDefaultLogin);
             $('#dashboardOptionListModal').modal('toggle');
         });
+        $(document).on("click", "#tblTitleList tbody tr", function (e) {
+            $('#editEmployeeTitle').val($(this).find(".colTypeName").text());
+            $('#employeeTitlePopModal').modal('toggle');
+        });
     });
 
     $(document).on('click', '#editEmployeeTitle', function(e, li) {
@@ -5572,7 +5576,7 @@ Template.employeescard.events({
         let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(async function() {
             LoadingOverlay.show();
-            let title = $('#edtTitle').val();
+            let title = $('#editEmployeeTitle').val();
             let firstname = $('#edtFirstName').val();
             if (firstname === '') {
                 $('.fullScreenSpin').css('display', 'none');

@@ -1555,32 +1555,32 @@ Template.supplierscard.onRendered(function() {
         $('#paymentMethodModal').modal('toggle');
     });
 
-    $(document).on('click', '#edtSupplierTitle', function(e, li) {
+    $(document).on('click', '#editSupplierTitle', function(e, li) {
         const $earch = $(this);
         const offset = $earch.offset();
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
             $('#supplierTitlePopModal').modal('toggle');
         } else {
             $('#supplierTitlePopModal').modal();
-            setTimeout(function() {
-                $('#tblSupplierTitlePopList_filter .form-control-sm').focus();
-                $('#tblSupplierTitlePopList_filter .form-control-sm').val('');
-                $('#tblSupplierTitlePopList_filter .form-control-sm').trigger("input");
-                const datatable = $('#tblSupplierTitlePopList').DataTable();
-                datatable.draw();
-                $('#tblSupplierTitlePopList_filter .form-control-sm').trigger("input");
-            }, 500);
+            // setTimeout(function() {
+            //     $('#tblSupplierTitlePopList_filter .form-control-sm').focus();
+            //     $('#tblSupplierTitlePopList_filter .form-control-sm').val('');
+            //     $('#tblSupplierTitlePopList_filter .form-control-sm').trigger("input");
+            //     const datatable = $('#tblSupplierTitlePopList').DataTable();
+            //     datatable.draw();
+            //     $('#tblSupplierTitlePopList_filter .form-control-sm').trigger("input");
+            // }, 500);
         }
     });
 
-    $(document).on("click", "#tblSupplierTitlePopList tbody tr", function(e) {
-        $('#edtSupplierTitle').val($(this).find(".colTitleName").text());
-        $('#supplierTitlePopModal').modal('toggle');
-        $('#tblSupplierTitlePopList_filter .form-control-sm').val('');
-        setTimeout(function() {
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
+    // $(document).on("click", "#tblSupplierTitlePopList tbody tr", function(e) {
+    //     $('#editSupplierTitle').val($(this).find(".colTitleName").text());
+    //     $('#supplierTitlePopModal').modal('toggle');
+    //     $('#tblSupplierTitlePopList_filter .form-control-sm').val('');
+    //     setTimeout(function() {
+    //         $('.fullScreenSpin').css('display', 'none');
+    //     }, 1000);
+    // });
 
     function setTab() {
         if (currentId.crmTab === 'active') {
@@ -1599,7 +1599,7 @@ Template.supplierscard.onRendered(function() {
         setTimeout(function() {
             $('#sltTerms').editableSelect();
             $('#sltPreferredPayment').editableSelect();
-            $('#edtSupplierTitle').editableSelect();
+            $('#editSupplierTitle').editableSelect();
             $('#sltTerms').editableSelect()
                 .on('click.editable-select', function(e, li) {
                     var $earch = $(this);
@@ -2089,6 +2089,11 @@ Template.supplierscard.onRendered(function() {
                 $('#termsListModal').modal('toggle');
             });
 
+            $(document).on("click", "#tblTitleList tbody tr", function (e) {
+                $('#editSupplierTitle').val($(this).find(".colTypeName").text());
+                $('#supplierTitlePopModal').modal('toggle');
+            });
+
         }, 1000);
     });
 });
@@ -2104,10 +2109,7 @@ Template.supplierscard.events({
             $(".btnRefreshSuppliers").trigger("click");
         }
     },
-    // 'click #edtSupplierTitle': function(event) {
-    //     $('#edtSupplierTitle').select();
-    //     $('#edtSupplierTitle').editableSelect();
-    // },
+  
     'click .btnRefreshSuppliers': async function(event) {
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
@@ -2239,7 +2241,7 @@ Template.supplierscard.events({
 
             let company = $('#edtSupplierCompany').val() || '';
             let email = $('#edtSupplierCompanyEmail').val() || '';
-            let title = $('#edtSupplierTitle').val() || '';
+            let title = $('#editSupplierTitle').val() || '';
             let firstname = $('#edtSupplierFirstName').val() || '';
             let middlename = $('#edtSupplierMiddleName').val() || '';
             let lastname = $('#edtSupplierLastName').val() || '';

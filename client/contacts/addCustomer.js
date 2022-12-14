@@ -1211,7 +1211,6 @@ Template.customerscard.onRendered(function() {
             employeeID = url.searchParams.get("id");
         }
         let dataTableList = [];
-
         // async function getTask() {
         crmService.getAllTasksByContactName(customerName).then(async function(data) {
             if (data.tprojecttasks.length > 0) {
@@ -2781,6 +2780,12 @@ Template.customerscard.onRendered(function() {
             $('#employeeListCRMModal').modal('show');
         }
     })
+
+    $(document).on("click", "#tblTitleList tbody tr", function (e) {
+        $('#editCustomerTitle').val($(this).find(".colTypeName").text());
+        $('#customerTitlePopModal').modal('toggle');
+    });
+
 });
 
 Template.customerscard.events({
@@ -3126,7 +3131,7 @@ Template.customerscard.events({
             $('.fullScreenSpin').css('display', 'inline-block');
             let company = $('#edtCustomerCompany').val() || '';
             let email = $('#edtCustomerEmail').val() || '';
-            let title = $('#edtTitle').val() || '';
+            let title = $('#editCustomerTitle').val() || '';
             let firstname = $('#edtFirstName').val() || '';
             let middlename = $('#edtMiddleName').val() || '';
             let lastname = $('#edtLastName').val() || '';
