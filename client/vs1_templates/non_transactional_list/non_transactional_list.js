@@ -445,36 +445,37 @@ Template.non_transactional_list.onRendered(function() {
           ];
           }else if(currenttablename === "tblCustomerJobDetailsList"){
             reset_data = [
-              { index: 0, label: 'Company', class: 'colCompany', active: true, display: true,  width: "200"},
-              { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
-              { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "80"},
-              { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "80"},
-              { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80"},
-              { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "80"},
-              { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "80"},
-              { index: 7, label: 'Country', class: 'colCountry', active: true, display: true, width: "100"},
-              { index: 8, label: 'Email', class: 'colEmail', active: false, display: true, width: ""},
-              { index: 9, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "100"},
-              { index: 9, label: 'Custom Field 1', class: 'colPurchaseCustField1', active: false, display: true, width: ""},
-              { index: 9, label: 'Custom Field 2', class: 'colPurchaseCustField2', active: false, display: true, width: ""},
-              { index: 9, label: 'Notes', class: 'colNotes', active: true, display: true, width: "100"},
+              { index: 0, label: '#ID', class: 'colSortDate', active: false, display: true,  width: "10"},
+              { index: 1, label: 'Company', class: 'colCompany', active: true, display: true,  width: "200"},
+              { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
+              { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "80"},
+              { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "80"},
+              { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80"},
+              { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "80"},
+              { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "80"},
+              { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "100"},
+              { index: 9, label: 'Email', class: 'colEmail', active: false, display: true, width: ""},
+              { index: 10, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "100"},
+              { index: 11, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: ""},
+              { index: 12, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: ""},
+              { index: 13, label: 'Notes', class: 'colNotes', active: true, display: true, width: "100"},
           ];
           }else if(currenttablename === "tblEmployeeTransactionList"){
             reset_data = [
               { index: 0, label: '#ID', class: 'colSortDate', active: false, display: true,  width: "10"},
-              { index: 1, label: 'Sale Date', class: 'colSaleDate', active: true, display: true, width: "80"},
-              { index: 2, label: 'Sales No.', class: 'colSalesNo', active: true, display: true, width: "80"},
-              { index: 3, label: 'Customer', class: 'colCustomer', active: true, display: true, width: "200"},
-              { index: 4, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "100"},
-              { index: 5, label: 'Tax', class: 'colTax', active: true, display: true, width: "100"},
-              { index: 6, label: 'Amount', class: 'colAmount', active: true, display: true, width: "200"},
-              { index: 7, label: 'Paid', class: 'colPaid', active: false, display: true, width: "200"},
-              { index: 8, label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true, display: true, width: ""},
-              { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
-              { index: 9, label: 'Custom Field 1', class: 'colPurchaseCustField1', active: false, display: true, width: "100"},
-              { index: 9, label: 'Custom Field 2', class: 'colPurchaseCustField2', active: false, display: true, width: "150"},
-              { index: 9, label: 'Employee', class: 'colEmployee', active: false, display: true, width: "150"},
-              { index: 9, label: 'Comments', class: 'colComments', active: false, display: true, width: "100"},
+              { index: 1, label: 'Sale Date', class: 'colSaleDate', active: true, display: true, width: "40"},
+              { index: 2, label: 'Sales No.', class: 'colSalesNo', active: true, display: true, width: "40"},
+              { index: 3, label: 'Customer', class: 'colCustomer', active: true, display: true, width: "100"},
+              { index: 4, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "40"},
+              { index: 5, label: 'Tax', class: 'colTax', active: true, display: true, width: "40"},
+              { index: 6, label: 'Amount', class: 'colAmount', active: true, display: true, width: "40"},
+              { index: 7, label: 'Paid', class: 'colPaid', active: true, display: true, width: "40"},
+              { index: 8, label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true, display: true, width: "40"},
+              { index: 9, label: 'Status', class: 'colStatus', active: false, display: true, width: ""},
+              { index: 10, label: 'Custom Field 1', class: 'colSaleCustField1', active: false, display: true, width: ""},
+              { index: 11, label: 'Custom Field 2', class: 'colSaleCustField2', active: false, display: true, width: ""},
+              { index: 12, label: 'Employee', class: 'colEmployee', active: false, display: true, width: ""},
+              { index: 13, label: 'Comments', class: 'colComments', active: false, display: true, width: ""},
           ];
           }else if(currenttablename === "tblLeadCrmList"){
             reset_data = [
@@ -5475,30 +5476,28 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
     templateObject.getCustomerTransactionListData = function(){
       let customerName = $('#edtCustomerCompany').val() || $('#edtJobCustomerCompany').val() || '';
-      getVS1Data('TJobVS1').then(function(dataObject) {
-        if (dataObject.length == 0) {
-            contactService.getAllJobListByCustomer(customerName).then(function(data) {
+        getVS1Data('TJobVS1').then(function(dataObject) {
+          if (dataObject.length == 0) {
+              contactService.getAllJobListByCustomer(customerName).then(function(data) {
+                templateObject.displayCustomerTransactionListData(data, customerName);
+              }).catch(function(err) {
+                  $('.fullScreenSpin').css('display', 'none');
+              });
+          } else {
+              let data = JSON.parse(dataObject[0].data);
               templateObject.displayCustomerTransactionListData(data, customerName);
-            }).catch(function(err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-            let data = JSON.parse(dataObject[0].data);
+          }
+      }).catch(function(err) {
+          contactService.getAllJobListByCustomer(customerName).then(function(data) {
             templateObject.displayCustomerTransactionListData(data, customerName);
-        }
-    }).catch(function(err) {
-        contactService.getAllJobListByCustomer(customerName).then(function(data) {
-          templateObject.displayCustomerTransactionListData(data, customerName);
-        }).catch(function(err) {
-            $('.fullScreenSpin').css('display', 'none');
-        });
-    });
+          }).catch(function(err) {
+              $('.fullScreenSpin').css('display', 'none');
+          });
+      });
     }
 
     templateObject.displayCustomerTransactionListData = function(data, customerName){
       let dataTableListJob = [];
-      console.log('customerName:',customerName)
-      console.log('data:',data)
       for (let i = 0; i < data.tjob.length; i++) {
         let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].ARBalance) || 0.00;
         let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditBalance) || 0.00;
@@ -5523,424 +5522,802 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             country: data.tjob[i].Country || LoggedCountry
         };
         if (customerName == data.tjob[i].ParentCustomerName) {
-            dataTableListJob.push(dataListJob);
+          dataTableListJob.push(dataListJob);
         }
-        var splashArrayClientTypeList = new Array();
-        let deleteFilter = false;
-        for (let i = 0; i < data.length; i++) {
-          var dataList = [
-            data[i].id,
-            data[i].company,
-            data[i].phone,
-            data[i].arbalance,
-            data[i].creditbalance,
-            data[i].balance,
-            data[i].creditlimit,
-            data[i].salesorderbalance,
-            data[i].country,
-            data[i].email,
-            data[i].accountno,
-            data[i].clientno,
-            data[i].jobtitle,
-            data[i].notes,
-           ];
-            splashArrayClientTypeList.push(dataList);
-            templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
-        }
-  
-        if (templateObject.transactiondatatablerecords.get()) {
-            setTimeout(function () {
-                MakeNegative();
-            }, 100);
-        }
-        setTimeout(function () {
-            $('#'+currenttablename).DataTable({
-                data: splashArrayClientTypeList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: [
-                    {
-                    targets: 0,
-                    className: "colTaskId hiddenColumn",
-                    width: "10px",
-                    createdCell: function (td, cellData, rowData, row, col) {
-                      $(td).closest("tr").attr("id", rowData[0]);
-                    }},
-                    {
-                      targets: 1,
-                      className: "colCompany",
-                      width: "200px",
-                    },
-                    {
-                      targets: 2,
-                      className: "colPhone",
-                      width: "95px",
-                    },
-                    {
-                      targets: 3,
-                      className: "colARBalance",
-                      width: "80px",
-                    },
-                    {
-                      targets: 4,
-                      className: "colCreditBalance",
-                      width: "80px",
-                    },
-                    {
-                      targets: 5,
-                      className: "colBalance",
-                      width: "80px",
-                    },
-                    {
-                      targets: 6,
-                      className: "colCreditLimit",
-                      width: "80px",
-                    },
-                    {
-                      targets: 7,
-                      className: "colSalesOrderBalance",
-                      width: "80px",
-                    },
-                    {
-                      targets: 8,
-                      className: "colCountry",
-                      width: "100px",
-                    },
-                    {
-                      targets: 9,
-                      className: "colEmail hiddenColumn",
-                      width: "",
-                    },
-                    {
-                      targets: 10,
-                      className: "colAccountNo hiddenColumn",
-                      width: "",
-                    },
-                    {
-                      targets: 11,
-                      className: "colClientNo hiddenColumn",
-                      width: "",
-                    },
-                    {
-                      targets: 12,
-                      className: "colJobTitle hiddenColumn",
-                      width: "100px",
-                    },
-                    {
-                      targets: 13,
-                      className: "colNotes",
-                      width: "",
-                    },
-                ],
-                buttons: [
-                    {
-                        extend: 'csvHtml5',
-                        text: '',
-                        download: 'open',
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "Customer Type Settings",
-                        orientation:'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },{
-                        extend: 'print',
-                        download: 'open',
-                        className: "btntabletopdf hiddenColumn",
-                        text: '',
-                        title: 'Customer Type Settings',
-                        filename: "Customer Type Settings",
-                        exportOptions: {
-                            columns: ':visible',
-                            stripHtml: false
-                        }
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        title: '',
-                        download: 'open',
-                        className: "btntabletoexcel hiddenColumn",
-                        filename: "Customer Type Settings",
-                        orientation:'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-  
-                    }],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                info: true,
-                responsive: true,
-                "order": [[1, "asc"]],
-                action: function () {
-                    $('#'+currenttablename).DataTable().ajax.reload();
-                },
-                "fnDrawCallback": function (oSettings) {
-                    $('.paginate_button.page-item').removeClass('disabled');
-                    $('#'+currenttablename+'_ellipsis').addClass('disabled');
-                    if (oSettings._iDisplayLength == -1) {
-                        if (oSettings.fnRecordsDisplay() > 150) {
-  
-                        }
-                    } else {
-  
-                    }
-                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                        $('.paginate_button.page-item.next').addClass('disabled');
-                    }
-  
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
-                  $('.fullScreenSpin').css('display', 'inline-block');
-                  let dataTableList = [];
-              });
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-                },
-                language: { search: "",searchPlaceholder: "Search List..." },
-                "fnInitComplete": function (oSettings) {
-                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
-                      if(deleteFilter){
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
-                      }else{
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
-                      }
-                      $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
-                },
-                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                }
-            }).on('page', function () {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-            }).on('column-reorder', function () {
-  
-            }).on('length.dt', function (e, settings, len) {
-  
-              $(".fullScreenSpin").css("display", "inline-block");
-              let dataLenght = settings._iDisplayLength;
-              if (dataLenght == -1) {
-                if (settings.fnRecordsDisplay() > initialDatatableLoad) {
-                  $(".fullScreenSpin").css("display", "none");
-                } else {
-                  $(".fullScreenSpin").css("display", "none");
-                }
-              } else {
-                $(".fullScreenSpin").css("display", "none");
-              }
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-            });
-            $(".fullScreenSpin").css("display", "none");
-        }, 0);
-  
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
       }
-    }
-
-    templateObject.getCustomerJobDetailsListData = function(){
-      let customerName = $('#edtCustomerCompany').val();
-      getVS1Data('TJobVS1').then(function (dataObject) {
-        if (dataObject.length == 0) {
-            contactService.getAllJobListByCustomer(customerName).then(function (data) {
-                templateObject.displayCustomerJobDetailsListData(data, customerName);
-            }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-            let data = JSON.parse(dataObject[0].data);
-            templateObject.displayCustomerJobDetailsListData(data, customerName);
-        }
-    }).catch(function (err) {
-        contactService.getAllJobListByCustomer(customerName).then(function (data) {
-            templateObject.displayCustomerJobDetailsListData(data, customerName);
-        }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
-        });
-    });
-    }
-
-    templateObject.displayCustomerJobDetailsListData = function(data, customerName){
-      let lineItemsJob = [];
-      let lineItemObjJob = {};
-      for (let i = 0; i < data.tjob.length; i++) {
-          let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].ARBalance) || 0.00;
-          let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditBalance) || 0.00;
-          let balance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].Balance) || 0.00;
-          let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditLimit) || 0.00;
-          let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].SalesOrderBalance) || 0.00;
-          const dataListJob = {
-              id: data.tjob[i].Id || '',
-              company: data.tjob[i].ClientName || '',
-              contactname: data.tjob[i].ContactName || '',
-              phone: data.tjob[i].Phone || '',
-              arbalance: arBalance || 0.00,
-              creditbalance: creditBalance || 0.00,
-              balance: balance || 0.00,
-              creditlimit: creditLimit || 0.00,
-              salesorderbalance: salesOrderBalance || 0.00,
-              email: data.tjob[i].Email || '',
-              accountno: data.tjob[i].AccountNo || '',
-              clientno: data.tjob[i].ClientNo || '',
-              jobtitle: data.tjob[i].JobTitle || '',
-              notes: data.tjob[i].Notes || '',
-              country: data.tjob[i].Country || LoggedCountry
-          };
-          if (customerName == data.tjob[i].ParentCustomerName) {
-              dataTableListJob.push(dataListJob);
-          }
+      var splashArrayClientTypeList = new Array();
+      let deleteFilter = false;
+      for (let i = 0; i < dataTableListJob.length; i++) {
+        var dataList = [
+          data[i].id,
+          data[i].company,
+          data[i].phone,
+          data[i].arbalance,
+          data[i].creditbalance,
+          data[i].balance,
+          data[i].creditlimit,
+          data[i].salesorderbalance,
+          data[i].country,
+          data[i].email,
+          data[i].accountno,
+          data[i].clientno,
+          data[i].jobtitle,
+          data[i].notes,
+         ];
+          splashArrayClientTypeList.push(dataList);
+          templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
       }
-      templateObject.datatablerecordsjob.set(dataTableListJob);
 
-      if (templateObject.datatablerecordsjob.get()) {
-          Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJoblist', function (error, result) {
-              if (error) {
-
-              } else {
-                  if (result) {
-                      for (let i = 0; i < result.customFields.length; i++) {
-                          let customcolumn = result.customFields;
-                          let columData = customcolumn[i].label;
-                          let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                          let hiddenColumn = customcolumn[i].hidden;
-                          let columnClass = columHeaderUpdate.split('.')[1];
-                          let columnWidth = customcolumn[i].width;
-                          let columnindex = customcolumn[i].index + 1;
-
-                          if (hiddenColumn == true) {
-                              $("." + columnClass + "").addClass('hiddenColumn');
-                              $("." + columnClass + "").removeClass('showColumn');
-                          } else if (hiddenColumn == false) {
-                              $("." + columnClass + "").removeClass('hiddenColumn');
-                              $("." + columnClass + "").addClass('showColumn');
-                          }
-
-                      }
-                  }
-
-              }
-          });
+      if (templateObject.transactiondatatablerecords.get()) {
           setTimeout(function () {
               MakeNegative();
-              $("#dtAsOf").datepicker({
-                  showOn: 'button',
-                  buttonText: 'Show Date',
-                  buttonImageOnly: true,
-                  buttonImage: '/img/imgCal2.png',
-                  dateFormat: 'dd/mm/yy',
-                  showOtherMonths: true,
-                  selectOtherMonths: true,
-                  changeMonth: true,
-                  changeYear: true,
-                  yearRange: "-90:+10",
-              });
           }, 100);
       }
-
-      $('.fullScreenSpin').css('display', 'none');
+      // splashArrayClientTypeList =[[1,'company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1',]]
       setTimeout(function () {
-          //$.fn.dataTable.moment('DD/MM/YY');
-          $('#tblJoblist').DataTable({
-              // dom: 'lBfrtip',
-              columnDefs: [
-                  { type: 'date', targets: 0 }
-              ],
+          $('#'+currenttablename).DataTable({
+              data: splashArrayClientTypeList,
               "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              columnDefs: [
+                  {
+                  targets: 0,
+                  className: "colTaskId hiddenColumn",
+                  width: "10px",
+                  createdCell: function (td, cellData, rowData, row, col) {
+                    $(td).closest("tr").attr("id", rowData[0]);
+                  }},
+                  {
+                    targets: 1,
+                    className: "colCompany",
+                    width: "100px",
+                  },
+                  {
+                    targets: 2,
+                    className: "colPhone",
+                    width: "50px",
+                  },
+                  {
+                    targets: 3,
+                    className: "colARBalance",
+                    width: "40px",
+                  },
+                  {
+                    targets: 4,
+                    className: "colCreditBalance",
+                    width: "40px",
+                  },
+                  {
+                    targets: 5,
+                    className: "colBalance",
+                    width: "40px",
+                  },
+                  {
+                    targets: 6,
+                    className: "colCreditLimit",
+                    width: "40px",
+                  },
+                  {
+                    targets: 7,
+                    className: "colSalesOrderBalance",
+                    width: "40px",
+                  },
+                  {
+                    targets: 8,
+                    className: "colCountry",
+                    width: "50px",
+                  },
+                  {
+                    targets: 9,
+                    className: "colEmail hiddenColumn",
+                    width: "",
+                  },
+                  {
+                    targets: 10,
+                    className: "colAccountNo hiddenColumn",
+                    width: "",
+                  },
+                  {
+                    targets: 11,
+                    className: "colClientNo hiddenColumn",
+                    width: "",
+                  },
+                  {
+                    targets: 12,
+                    className: "colJobTitle hiddenColumn",
+                    width: "50px",
+                  },
+                  {
+                    targets: 13,
+                    className: "colNotes",
+                    width: "",
+                  },
+              ],
               buttons: [
                   {
-                      extend: 'excelHtml5',
+                      extend: 'csvHtml5',
                       text: '',
                       download: 'open',
                       className: "btntabletocsv hiddenColumn",
-                      filename: "Job Transaction List - " + moment().format(),
-                      orientation: 'portrait',
+                      filename: "Customer Type Settings",
+                      orientation:'portrait',
                       exportOptions: {
                           columns: ':visible'
                       }
-                  }, {
+                  },{
                       extend: 'print',
                       download: 'open',
                       className: "btntabletopdf hiddenColumn",
                       text: '',
-                      title: 'Job Transaction',
-                      filename: "Job Transaction List - " + moment().format(),
+                      title: 'Customer Type Settings',
+                      filename: "Customer Type Settings",
                       exportOptions: {
                           columns: ':visible',
                           stripHtml: false
                       }
+                  },
+                  {
+                      extend: 'excelHtml5',
+                      title: '',
+                      download: 'open',
+                      className: "btntabletoexcel hiddenColumn",
+                      filename: "Customer Type Settings",
+                      orientation:'portrait',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+
                   }],
               select: true,
               destroy: true,
               colReorder: true,
               pageLength: initialDatatableLoad,
-              lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
+              lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
               info: true,
               responsive: true,
-              "order": [[0, "asc"]],
+              "order": [[1, "asc"]],
               action: function () {
-                  $('#tblJoblist').DataTable().ajax.reload();
+                  $('#'+currenttablename).DataTable().ajax.reload();
               },
               "fnDrawCallback": function (oSettings) {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              },
+                  $('.paginate_button.page-item').removeClass('disabled');
+                  $('#'+currenttablename+'_ellipsis').addClass('disabled');
+                  if (oSettings._iDisplayLength == -1) {
+                      if (oSettings.fnRecordsDisplay() > 150) {
 
+                      }
+                  } else {
+
+                  }
+                  if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                      $('.paginate_button.page-item.next').addClass('disabled');
+                  }
+
+                  $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                let dataTableList = [];
+            });
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+              },
+              language: { search: "",searchPlaceholder: "Search List..." },
+              "fnInitComplete": function (oSettings) {
+                  $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
+                    if(deleteFilter){
+                      $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                    }else{
+                      $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+              },
+              "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+              }
           }).on('page', function () {
               setTimeout(function () {
                   MakeNegative();
               }, 100);
-
           }).on('column-reorder', function () {
 
-          });
+          }).on('length.dt', function (e, settings, len) {
 
-          $('.fullScreenSpin').css('display', 'none');
+            $(".fullScreenSpin").css("display", "inline-block");
+            let dataLenght = settings._iDisplayLength;
+            if (dataLenght == -1) {
+              if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                $(".fullScreenSpin").css("display", "none");
+              } else {
+                $(".fullScreenSpin").css("display", "none");
+              }
+            } else {
+              $(".fullScreenSpin").css("display", "none");
+            }
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+          });
+          $(".fullScreenSpin").css("display", "none");
       }, 0);
 
-      const columns = $('#tblJoblist th');
-      let sTible = "";
-      let sWidth = "";
-      let sIndex = "";
-      let sVisible = "";
-      let columVisible = false;
-      let sClass = "";
-      $.each(columns, function (i, v) {
-          if (v.hidden == false) {
-              columVisible = true;
-          }
-          if ((v.className.includes("hiddenColumn"))) {
-              columVisible = false;
-          }
-          sWidth = v.style.width.replace('px', "");
-
-          let datatablerecordObj = {
-              sTitle: v.innerText || '',
-              sWidth: sWidth || '',
-              sIndex: v.cellIndex || 0,
-              sVisible: columVisible || false,
-              sClass: v.className || ''
-          };
-          tableHeaderListJob.push(datatablerecordObj);
-      });
-      templateObject.tableheaderrecordsjob.set(tableHeaderListJob);
       $('div.dataTables_filter input').addClass('form-control form-control-sm');
-      $('#tblJoblist tbody').on('click', 'tr', function () {
-          const listData = $(this).closest('tr').attr('id');
-          if (listData) {
-              //window.open('/invoicecard?id=' + listData,'_self');
+    }
+
+    templateObject.getCustomerJobDetailsListData = function(){
+      let customerName = $('#edtCustomerCompany').val() || $('#edtJobCustomerCompany').val() || '';
+        getVS1Data('TJobVS1').then(function(dataObject) {
+          if (dataObject.length == 0) {
+              contactService.getAllJobListByCustomer(customerName).then(function(data) {
+                templateObject.displayCustomerJobDetailsListData(data, customerName);
+              }).catch(function(err) {
+                  $('.fullScreenSpin').css('display', 'none');
+              });
+          } else {
+              let data = JSON.parse(dataObject[0].data);
+              templateObject.displayCustomerJobDetailsListData(data, customerName);
           }
+      }).catch(function(err) {
+          contactService.getAllJobListByCustomer(customerName).then(function(data) {
+            templateObject.displayCustomerJobDetailsListData(data, customerName);
+          }).catch(function(err) {
+              $('.fullScreenSpin').css('display', 'none');
+          });
       });
+    }
+
+    templateObject.displayCustomerJobDetailsListData = function(data, customerName){
+      let dataTableListJob = [];
+      for (let i = 0; i < data.tjob.length; i++) {
+        let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].ARBalance) || 0.00;
+        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditBalance) || 0.00;
+        let balance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].Balance) || 0.00;
+        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditLimit) || 0.00;
+        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].SalesOrderBalance) || 0.00;
+        const dataListJob = {
+            id: data.tjob[i].Id || '',
+            company: data.tjob[i].ClientName || '',
+            contactname: data.tjob[i].ContactName || '',
+            phone: data.tjob[i].Phone || '',
+            arbalance: arBalance || 0.00,
+            creditbalance: creditBalance || 0.00,
+            balance: balance || 0.00,
+            creditlimit: creditLimit || 0.00,
+            salesorderbalance: salesOrderBalance || 0.00,
+            email: data.tjob[i].Email || '',
+            accountno: data.tjob[i].AccountNo || '',
+            clientno: data.tjob[i].ClientNo || '',
+            jobtitle: data.tjob[i].JobTitle || '',
+            notes: data.tjob[i].Notes || '',
+            country: data.tjob[i].Country || LoggedCountry
+        };
+        if (customerName == data.tjob[i].ParentCustomerName) {
+          dataTableListJob.push(dataListJob);
+        }
+      }
+      var splashArrayClientTypeList = new Array();
+      let deleteFilter = false;
+      for (let i = 0; i < dataTableListJob.length; i++) {
+        var dataList = [
+          data[i].id,
+          data[i].company,
+          data[i].phone,
+          data[i].arbalance,
+          data[i].creditbalance,
+          data[i].balance,
+          data[i].creditlimit,
+          data[i].salesorderbalance,
+          data[i].country,
+          data[i].email,
+          data[i].accountno,
+          data[i].clientno,
+          data[i].jobtitle,
+          data[i].notes,
+         ];
+          splashArrayClientTypeList.push(dataList);
+          templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
+      }
+
+      if (templateObject.transactiondatatablerecords.get()) {
+          setTimeout(function () {
+              MakeNegative();
+          }, 100);
+      }
+      // splashArrayClientTypeList =[[1,'company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1',]]
+      setTimeout(function () {
+          $('#'+currenttablename).DataTable({
+              data: splashArrayClientTypeList,
+              "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              columnDefs: [
+                  {
+                  targets: 0,
+                  className: "colTaskId hiddenColumn",
+                  width: "10px",
+                  createdCell: function (td, cellData, rowData, row, col) {
+                    $(td).closest("tr").attr("id", rowData[0]);
+                  }},
+                  {
+                    targets: 1,
+                    className: "colCompany",
+                    width: "100px",
+                  },
+                  {
+                    targets: 2,
+                    className: "colPhone",
+                    width: "50px",
+                  },
+                  {
+                    targets: 3,
+                    className: "colARBalance",
+                    width: "40px",
+                  },
+                  {
+                    targets: 4,
+                    className: "colCreditBalance",
+                    width: "40px",
+                  },
+                  {
+                    targets: 5,
+                    className: "colBalance",
+                    width: "40px",
+                  },
+                  {
+                    targets: 6,
+                    className: "colCreditLimit",
+                    width: "40px",
+                  },
+                  {
+                    targets: 7,
+                    className: "colSalesOrderBalance",
+                    width: "40px",
+                  },
+                  {
+                    targets: 8,
+                    className: "colCountry",
+                    width: "50px",
+                  },
+                  {
+                    targets: 9,
+                    className: "colEmail hiddenColumn",
+                    width: "",
+                  },
+                  {
+                    targets: 10,
+                    className: "colAccountNo hiddenColumn",
+                    width: "",
+                  },
+                  {
+                    targets: 11,
+                    className: "colClientNo hiddenColumn",
+                    width: "",
+                  },
+                  {
+                    targets: 12,
+                    className: "colJobTitle hiddenColumn",
+                    width: "50px",
+                  },
+                  {
+                    targets: 13,
+                    className: "colNotes",
+                    width: "",
+                  },
+              ],
+              buttons: [
+                  {
+                      extend: 'csvHtml5',
+                      text: '',
+                      download: 'open',
+                      className: "btntabletocsv hiddenColumn",
+                      filename: "Customer Type Settings",
+                      orientation:'portrait',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  },{
+                      extend: 'print',
+                      download: 'open',
+                      className: "btntabletopdf hiddenColumn",
+                      text: '',
+                      title: 'Customer Type Settings',
+                      filename: "Customer Type Settings",
+                      exportOptions: {
+                          columns: ':visible',
+                          stripHtml: false
+                      }
+                  },
+                  {
+                      extend: 'excelHtml5',
+                      title: '',
+                      download: 'open',
+                      className: "btntabletoexcel hiddenColumn",
+                      filename: "Customer Type Settings",
+                      orientation:'portrait',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+
+                  }],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              pageLength: initialDatatableLoad,
+              lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+              info: true,
+              responsive: true,
+              "order": [[1, "asc"]],
+              action: function () {
+                  $('#'+currenttablename).DataTable().ajax.reload();
+              },
+              "fnDrawCallback": function (oSettings) {
+                  $('.paginate_button.page-item').removeClass('disabled');
+                  $('#'+currenttablename+'_ellipsis').addClass('disabled');
+                  if (oSettings._iDisplayLength == -1) {
+                      if (oSettings.fnRecordsDisplay() > 150) {
+
+                      }
+                  } else {
+
+                  }
+                  if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                      $('.paginate_button.page-item.next').addClass('disabled');
+                  }
+
+                  $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                let dataTableList = [];
+            });
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+              },
+              language: { search: "",searchPlaceholder: "Search List..." },
+              "fnInitComplete": function (oSettings) {
+                  $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
+                    if(deleteFilter){
+                      $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                    }else{
+                      $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+              },
+              "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+              }
+          }).on('page', function () {
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+          }).on('column-reorder', function () {
+
+          }).on('length.dt', function (e, settings, len) {
+
+            $(".fullScreenSpin").css("display", "inline-block");
+            let dataLenght = settings._iDisplayLength;
+            if (dataLenght == -1) {
+              if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                $(".fullScreenSpin").css("display", "none");
+              } else {
+                $(".fullScreenSpin").css("display", "none");
+              }
+            } else {
+              $(".fullScreenSpin").css("display", "none");
+            }
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+          });
+          $(".fullScreenSpin").css("display", "none");
+      }, 0);
+      $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
     templateObject.getEmployeeTransactionListData = function(){
-
+      let employeeName = $('#edtCustomerCompany').val();
+      let dataTableList = [];
+      getVS1Data('TInvoiceEx').then(function(dataObject) {
+        if (dataObject.length == 0) {
+            contactService.getAllInvoiceListByEmployee(employeeName).then(function(data) {
+                for (let i = 0; i < data.tinvoice.length; i++) {
+                    let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalAmount) || 0.00;
+                    let totalTax = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalTax) || 0.00;
+                    let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalAmountInc) || 0.00;
+                    let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalPaid) || 0.00;
+                    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalBalance) || 0.00;
+                    var dataList = {
+                        id: data.tinvoice[i].Id || '',
+                        employee: data.tinvoice[i].EmployeeName || '',
+                        sortdate: data.tinvoice[i].SaleDate != '' ? moment(data.tinvoice[i].SaleDate).format("YYYY/MM/DD") : data.tinvoice[i].SaleDate,
+                        saledate: data.tinvoice[i].SaleDate != '' ? moment(data.tinvoice[i].SaleDate).format("DD/MM/YYYY") : data.tinvoice[i].SaleDate,
+                        customername: data.tinvoice[i].CustomerName || '',
+                        totalamountex: totalAmountEx || 0.00,
+                        totaltax: totalTax || 0.00,
+                        totalamount: totalAmount || 0.00,
+                        totalpaid: totalPaid || 0.00,
+                        totaloustanding: totalOutstanding || 0.00,
+                        salestatus: data.tinvoice[i].SalesStatus || '',
+                        custfield1: data.tinvoice[i].SaleCustField1 || '',
+                        custfield2: data.tinvoice[i].SaleCustField2 || '',
+                        comments: data.tinvoice[i].Comments || '',
+                    };
+                    dataTableList.push(dataList);
+                }
+                templateObject.displayEmployeeTransactionListData(dataTableList);
+            }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } 
+        else {
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data.tinvoiceex;
+            for (let i = 0; i < useData.length; i++) {
+                let totalAmountEx = utilityService.modifynegativeCurrencyFormat(useData[i].fields.TotalAmount) || 0.00;
+                let totalTax = utilityService.modifynegativeCurrencyFormat(useData[i].fields.TotalTax) || 0.00;
+                let totalAmount = utilityService.modifynegativeCurrencyFormat(useData[i].fields.TotalAmountInc) || 0.00;
+                let totalPaid = utilityService.modifynegativeCurrencyFormat(useData[i].fields.TotalPaid) || 0.00;
+                let totalOutstanding = utilityService.modifynegativeCurrencyFormat(useData[i].fields.TotalBalance) || 0.00;
+                var dataList = {
+                    id: useData[i].fields.ID || '',
+                    employee: useData[i].fields.EmployeeName || '',
+                    sortdate: useData[i].fields.SaleDate != '' ? moment(useData[i].fields.SaleDate).format("YYYY/MM/DD") : useData[i].fields.SaleDate,
+                    saledate: useData[i].fields.SaleDate != '' ? moment(useData[i].fields.SaleDate).format("DD/MM/YYYY") : useData[i].fields.SaleDate,
+                    customername: useData[i].fields.CustomerName || '',
+                    totalamountex: totalAmountEx || 0.00,
+                    totaltax: totalTax || 0.00,
+                    totalamount: totalAmount || 0.00,
+                    totalpaid: totalPaid || 0.00,
+                    totaloustanding: totalOutstanding || 0.00,
+                    salestatus: useData[i].fields.SalesStatus || '',
+                    custfield1: useData[i].fields.SaleCustField1 || '',
+                    custfield2: useData[i].fields.SaleCustField2 || '',
+                    comments: useData[i].fields.Comments || '',
+                };
+                dataTableList.push(dataList);
+            }
+            templateObject.displayEmployeeTransactionListData(dataTableList);
+          }
+    }).catch(function(err) {
+        contactService.getAllInvoiceListByEmployee(employeeName).then(function(data) {
+            for (let i = 0; i < data.tinvoice.length; i++) {
+                let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalAmount) || 0.00;
+                let totalTax = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalTax) || 0.00;
+                let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalAmountInc) || 0.00;
+                let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalPaid) || 0.00;
+                let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalBalance) || 0.00;
+                const dataList = {
+                    id: data.tinvoice[i].Id || '',
+                    employee: data.tinvoice[i].EmployeeName || '',
+                    sortdate: data.tinvoice[i].SaleDate != '' ? moment(data.tinvoice[i].SaleDate).format("YYYY/MM/DD") : data.tinvoice[i].SaleDate,
+                    saledate: data.tinvoice[i].SaleDate != '' ? moment(data.tinvoice[i].SaleDate).format("DD/MM/YYYY") : data.tinvoice[i].SaleDate,
+                    customername: data.tinvoice[i].CustomerName || '',
+                    totalamountex: totalAmountEx || 0.00,
+                    totaltax: totalTax || 0.00,
+                    totalamount: totalAmount || 0.00,
+                    totalpaid: totalPaid || 0.00,
+                    totaloustanding: totalOutstanding || 0.00,
+                    salestatus: data.tinvoice[i].SalesStatus || '',
+                    custfield1: data.tinvoice[i].SaleCustField1 || '',
+                    custfield2: data.tinvoice[i].SaleCustField2 || '',
+                    comments: data.tinvoice[i].Comments || '',
+                };
+                dataTableList.push(dataList);
+            }
+            templateObject.displayEmployeeTransactionListData(dataTableList);
+        }).catch(function(err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    });
     }
-    templateObject.displayEmployeeTransactionListData = function(){
+    templateObject.displayEmployeeTransactionListData = function(data){
+      var splashArrayClientTypeList = new Array();
+      let deleteFilter = false;
+      for (let i = 0; i < data.length; i++) {
+        var dataList = [
+          data[i].id || "",
+          data[i].sortdate || "",
+          data[i].saledate || "",
+          data[i].id || "",
+          data[i].customername || "",
+          data[i].totalamountex || "",
+          data[i].totaltax || "",
+          data[i].totalamount || "",
+          data[i].totalpaid || "",
+          data[i].totaloustanding || "",
+          data[i].salestatus || "",
+          data[i].custfield1 || "",
+          data[i].custfield2 || "",
+          data[i].employee || "",
+          data[i].comments || "",
+          ];
+          splashArrayClientTypeList.push(dataList);
+          templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
+      }
 
+      if (templateObject.transactiondatatablerecords.get()) {
+          setTimeout(function () {
+              MakeNegative();
+          }, 100);
+      }
+      setTimeout(function () {
+          $('#'+currenttablename).DataTable({
+              data: splashArrayClientTypeList,
+              "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              columnDefs: [
+                  {
+                  targets: 0,
+                  className: "hiddenColumn",
+                  width: "10px",
+                  createdCell: function (td, cellData, rowData, row, col) {
+                    $(td).closest("tr").attr("id", rowData[0]);
+                  }},
+                  {
+                    targets: 1,
+                    className: "colSaleDate",
+                    width: "40px",
+                  },
+                  {
+                    targets: 2,
+                    className: "colSalesNo",
+                    width: "40px",
+                  },
+                  {
+                    targets: 3,
+                    className: "colCustomer",
+                    width: "100px",
+                  },
+                  {
+                    targets: 4,
+                    className: "colAmountEx",
+                    width: "40px",
+                  },
+                  {
+                    targets: 5,
+                    className: "colTax",
+                    width: "40px",
+                  },
+                  {
+                    targets: 6,
+                    className: "colAmount",
+                    width: "40px",
+                  },
+                  {
+                    targets: 7,
+                    className: "colPaid",
+                    width: "40px",
+                  },
+                  {
+                    targets: 8,
+                    className: "colBalanceOutstanding",
+                    width: "40px",
+                  },
+                  {
+                    targets: 9,
+                    className: "colStatus hiddenColumn",
+                    width: "",
+                  },
+                  {
+                    targets: 10,
+                    className: "colSaleCustField1 hiddenColumn",
+                    width: "",
+                  },
+                  {
+                    targets: 11,
+                    className: "colSaleCustField2 hiddenColumn",
+                    width: "",
+                  },
+                  {
+                    targets: 12,
+                    className: "colEmployee hiddenColumn",
+                    width: "",
+                  },
+                  {
+                    targets: 13,
+                    className: "colComments hiddenColumn",
+                    width: "",
+                  },
+              ],
+              buttons: [
+                  {
+                      extend: 'csvHtml5',
+                      text: '',
+                      download: 'open',
+                      className: "btntabletocsv hiddenColumn",
+                      filename: "Customer Type Settings",
+                      orientation:'portrait',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  },{
+                      extend: 'print',
+                      download: 'open',
+                      className: "btntabletopdf hiddenColumn",
+                      text: '',
+                      title: 'Customer Type Settings',
+                      filename: "Customer Type Settings",
+                      exportOptions: {
+                          columns: ':visible',
+                          stripHtml: false
+                      }
+                  },
+                  {
+                      extend: 'excelHtml5',
+                      title: '',
+                      download: 'open',
+                      className: "btntabletoexcel hiddenColumn",
+                      filename: "Customer Type Settings",
+                      orientation:'portrait',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+
+                  }],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              pageLength: initialDatatableLoad,
+              lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+              info: true,
+              responsive: true,
+              "order": [[1, "asc"]],
+              action: function () {
+                  $('#'+currenttablename).DataTable().ajax.reload();
+              },
+              "fnDrawCallback": function (oSettings) {
+                  $('.paginate_button.page-item').removeClass('disabled');
+                  $('#'+currenttablename+'_ellipsis').addClass('disabled');
+                  if (oSettings._iDisplayLength == -1) {
+                      if (oSettings.fnRecordsDisplay() > 150) {
+
+                      }
+                  } else {
+
+                  }
+                  if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                      $('.paginate_button.page-item.next').addClass('disabled');
+                  }
+
+                  $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                let dataTableList = [];
+            });
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+              },
+              language: { search: "",searchPlaceholder: "Search List..." },
+              "fnInitComplete": function (oSettings) {
+                  $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
+                    if(deleteFilter){
+                      $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                    }else{
+                      $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+              },
+              "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+              }
+          }).on('page', function () {
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+          }).on('column-reorder', function () {
+
+          }).on('length.dt', function (e, settings, len) {
+
+            $(".fullScreenSpin").css("display", "inline-block");
+            let dataLenght = settings._iDisplayLength;
+            if (dataLenght == -1) {
+              if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                $(".fullScreenSpin").css("display", "none");
+              } else {
+                $(".fullScreenSpin").css("display", "none");
+              }
+            } else {
+              $(".fullScreenSpin").css("display", "none");
+            }
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+          });
+          $(".fullScreenSpin").css("display", "none");
+      }, 0);
+
+      $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
     templateObject.getLeadCrmListData = function(){
     }
@@ -6082,7 +6459,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
               columnDefs: [
                   {
                   targets: 0,
-                  className: "colTaskId hiddenColumn",
+                  className: "hiddenColumn",
                   width: "10px",
                   createdCell: function (td, cellData, rowData, row, col) {
                     $(td).closest("tr").attr("id", rowData[0]);
@@ -6176,63 +6553,6 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                   $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
                 $('.fullScreenSpin').css('display', 'inline-block');
                 let dataTableList = [];
-                sideBarService.getCorrespondences().then(dataReturn => {
-                  let totalCorrespondences = dataReturn.tcorrespondence;
-                  totalCorrespondences = totalCorrespondences.filter(item => {
-                      return item.fields.MessageTo == $('#edtCustomerEmail').val()
-                  })
-                  if (totalCorrespondences.length > 0 && $('#edtCustomerEmail').val() != '') {
-                      totalCorrespondences.map(item => {
-                          let labels = [];
-                          labels.push(item.fields.Ref_Type)
-                          let obj = {
-                              id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
-                              priority: 0,
-                              date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
-                              taskName: 'Email',
-                              projectID: '',
-                              projectName: '',
-                              description: '',
-                              labels: '',
-                              category: 'email',
-                              completed: false,
-                              completedby: "",
-                          }
-                          dataTableList.push(obj)
-                      })
-                  }
-                  try {
-                      dataTableList.sort((a, b) => {
-                          new Date(a.date) - new Date(b.date)
-                      })
-                  } catch (error) {}
-                  for (let j = 0; j < dataTableList.length; j++) {
-                    var dataListDupp = [
-                      data.id || "",
-                      data.date || "",
-                      data.taskName || "",
-                      data.completedby || "",
-                      data.completed || false,
-                      ""
-                    ];
-
-                    splashArrayClientTypeList.push(dataListDupp);
-                  }
-                  let uniqueChars = [...new Set(splashArrayClientTypeList)];
-                  templateObject.transactiondatatablerecords.set(uniqueChars);
-                  var datatable = $('#'+currenttablename).DataTable();
-                  datatable.clear();
-                  datatable.rows.add(uniqueChars);
-                  datatable.draw(false);
-                  setTimeout(function () {
-                    $('#'+currenttablename).dataTable().fnPageChange('last');
-                  }, 400);
-
-                  $('.fullScreenSpin').css('display', 'none');
-              })
-              .catch((err) => {
-                  $('.fullScreenSpin').css('display', 'none');
-              })
             });
               setTimeout(function () {
                   MakeNegative();
