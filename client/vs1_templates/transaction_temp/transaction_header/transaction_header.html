@@ -25,6 +25,7 @@
   showCopyTransaction
   showCopyToInvoice
   showCopyToOrder
+  showBalanceDue
  -->
  <template name="transaction_header">
   <style>
@@ -156,6 +157,7 @@
     <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
       {{data.lid}}
       {{> helpbutton}}
+      {{#if showCustomFields}}
       <a 
         class="btn btnSettings"
         role="button"
@@ -164,6 +166,10 @@
         style="float: right;">
         <i class="icon ion-android-more-horizontal"></i>
       </a>
+      {{/if}}
+      {{#if equals data.isReconciled true}}
+      <h3 style="float: right; color: #e02d1b; font-weight: 600;">Reconciled</h3>
+      {{/if}}
     </h2>
     <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
   </header>
@@ -203,6 +209,19 @@
     {{/if}}
 
     <div class="col-12 col-xl-10">
+      {{#if equals cardType 'Cheque'}}
+      {{> transaction_cheque_header
+        data=data
+      }}
+      {{#if showCustomFields}}
+        {{> custom_fields
+          containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
+          salesCloudPreferenceRec=salesCloudPreferenceRec
+          custfields=custfields
+          data=data
+        }}
+      {{/if}}
+      {{else}}
       <div class="row" style="margin: 8px 16px 0px 16px;">
         {{#if showCustomer}}
         <div class="col-12 col-md-6 col-lg-6 col-xl-3">
@@ -230,6 +249,7 @@
         </div>
         {{/if}}
       </div>
+      {{/if}}
       
       <div class="row" style="margin: 16px 16px 0px 16px;">
         {{#if showBilingAddress}}
@@ -336,6 +356,7 @@
               containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
               salesCloudPreferenceRec=salesCloudPreferenceRec
               custfields=custfields
+              data=data
             }}
             {{/if}}
           </div>
@@ -362,7 +383,7 @@
     <div class="col-12 col-xl-2">
       <div class="row justify-content-end">
         {{> transaction_buttons_top 
-          showBalanceDue=true
+          hideBalanceDue=hideBalanceDue
           showButtons=showTransactionButtons
           recorddeleted=data.deleted
           recordispaid=data.ispaid

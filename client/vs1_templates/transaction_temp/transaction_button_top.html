@@ -9,9 +9,10 @@
     showCopyToInvoice
     showCopyToOrder
     abletomakeworkorder
+    hideBalanceDue
  -->
  <template name="transaction_buttons_top">
-  {{#if showBalanceDue}}
+  {{#unless hideBalanceDue}}
     <div class="col-12 col-md-3 col-xl-12" id="colBalanceDue">
       <div class="text-right" style="font-size: 14px; margin: 16px 24px;">
         {{#if equals isConverted true}}
@@ -31,7 +32,7 @@
         {{/if}}
       </div>
     </div>
-  {{/if}}
+  {{/unless}}
   {{#if showButtons}}
     {{#if recordispaid}}
     <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
