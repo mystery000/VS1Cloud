@@ -162,7 +162,7 @@
                         </div>
                     </div>
                     {{/if}}
-                    <div class="col-10 displayInfo" id="displayInfo">
+                    <div class="{{#if isModal}}{{else}}col-10{{/if}} displayInfo" id="displayInfo" style="width: 100%;">
                         {{#if isModal}}
 
                         {{else}}
@@ -365,8 +365,8 @@
                                                 </div>
                                                 <div class="col-6 col-md-1" style="padding: 0px 8px;">
                                                     <div class="form-group">
-                                                        <label for="edtSupplierTitle">Title</label>
-                                                        <select type="search" class="form-control" id="edtSupplierTitle" name="edtSupplierTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
+                                                        <label for="editSupplierTitle">Title</label>
+                                                        <select type="search" class="form-control" id="editSupplierTitle" name="editSupplierTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -473,8 +473,9 @@
                                                             <!-- <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-10">Tax</a></li> -->
                                                         </ul>
                                                         <div class="tab-content">
-                                                            <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                                                                {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}}
+                                                            <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
+                                                                <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                                                {{> non_transactional_list tablename="tblSupplierCrmList"}}
                                                             </div>
                                                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-4" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                                 <div class="row no-gutters flex-column" style="margin: 12px;">

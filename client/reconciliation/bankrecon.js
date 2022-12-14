@@ -701,7 +701,6 @@ Template.bankrecon.onRendered(function() {
     }
 
     async function setOneReconData(data) {
-        console.log("--------------", data);
         let recondep = [];
         let splashArrayReconcileDepositList = [];
         let reconwith = [];

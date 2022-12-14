@@ -1494,7 +1494,7 @@ Template.emailsettings.onRendered(function () {
                                             if(useData[i].fields.FormID == formID && useData[i].fields.EmployeeID == employeeId) {
                                                 resolve(useData[i].fields.ID)
                                             }
-    
+
                                             if(i==useData.length -1) {resolve(-1)}
                                         }
                                     }).catch(function(err) {
@@ -1526,7 +1526,7 @@ Template.emailsettings.onRendered(function () {
                         })
                     }
                     if (!!recipients) {
-                       
+
                         let attachments = [];
                         let e = jQuery.Event('click');
                         let targetElement = [];
@@ -2010,7 +2010,7 @@ Template.emailsettings.onRendered(function () {
                                             })
                                         }).catch(function(error){})
                                     }).catch(function(err){
-                                        console.log('error while saving email settings', err)
+
                                     });
                                 } catch (e) {
                                 }
@@ -2031,7 +2031,7 @@ Template.emailsettings.onRendered(function () {
 
                                 // Add synced cron job here
                                 objDetail.fields.FormName = formName;
-                                
+
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
                                 //TODO: Set basedon type here
                                 async function setBasedOnType() {
@@ -2196,7 +2196,7 @@ Template.emailsettings.onRendered(function () {
                             BeginFromOption: "",
                             ContinueIndefinitely: true,
                             EmployeeID: parseInt(recipientId),
-                            // EmployeeEmailID: recipients[index], 
+                            // EmployeeEmailID: recipients[index],
                             Every: 1,
                             EndDate: fDate,
                             FormID: parseInt(formID),

@@ -184,7 +184,7 @@
                 </div>
                 {{/if}}
                 <div class="{{#if isModal}}{{else}}col-12 col-md-8 col-lg-10 displayInfo{{/if}}" id="displayInfo"
-                    style="padding-top: 8px; {{#if isModal}}{{else}}width:100%;{{/if}}">
+                    style="padding-top: 8px; width: 100%;">
                     <!-- All Cards List -->
                     {{#if isModal}}
 
@@ -1397,6 +1397,11 @@
                                                         <li class="nav-item" style="cursor: pointer;"><a
                                                                 class="nav-link bilingTab" role="tab" data-toggle="tab"
                                                                 data-target="#tab-6">Invoicing</a></li>
+                                                        {{#if record.issupplier}}
+                                                        <li class="nav-item" style="cursor: pointer;"><a
+                                                            class="nav-link bilingTab" role="tab" data-toggle="tab"
+                                                            data-target="#tab-7">Billing</a></li>
+                                                        {{/if}}
                                                         <li class="nav-item attachmentTab" style="cursor: pointer;"><a
                                                                 class="nav-link" role="tab" data-toggle="tab"
                                                                 data-target="#tab-8">{{#if attachmentCount}}<span
@@ -1450,8 +1455,9 @@
                                                     </style>
                                                     <div class="tab-content">
                                                         <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm"
-                                                            style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                                                            {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}}
+                                                            style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
+                                                            <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                                            {{> non_transactional_list tablename="tblCustomerCrmList"}}
                                                         </div>
                                                         <div class="tab-pane border rounded-0" role="tabpanel"
                                                             id="tab-4"
@@ -1774,6 +1780,90 @@
 
                                                             </div>
                                                         </div>
+
+                                                        <div class="tab-pane border rounded-0" role="tabpanel" id="tab-7" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+
+                                                            <div class="row" style="margin: 6px;">
+                                                                <div class="col-12 col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Terms</label>
+                                                                                <select type="search" class="form-control" id="sltTerms" name="sltTerms" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Payment Method</label>
+                                                                                <select type="search" class="form-control" id="sltPreferredPayment" name="sltPreferredPayment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group" style="margin: 4px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">Account No</label>
+                                                                                <input type="text" class="form-control" id="suppAccountNo" name="suppAccountNo" value="{{record.accountnumber}}">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="row justify-content-left desktopButtons" style=" margin-left:0px;">
+                                                                                {{#if equals record.scountry "Unite States"}}
+                                                                                    {{> toggle_button className="chkGlobalSettings" id="contactor-1099" width="131px" for="choosetemplate" displayName="Contractor 1099"}}
+                                                                                {{else}}
+                                                                                {{/if}}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-4" style="margin: 6px;">
+                                                                <div class="col-12 mt-2">
+                                                                    <h4 style="margin-left: 4px;">Banking Details</h4>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>Bank Name</label>
+                                                                        <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName" value="{{record.bankName}}">
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>Bank Account Name</label>
+                                                                        <input type="text" class="form-control" id="edtBankAccountName" name="edtBankAccountName" value="{{record.bankAccountName}}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>BSB</label>
+                                                                        <input type="text" class="form-control" id="edtBsb" name="edtBsb" value="{{record.bankAccountBSB}}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>Bank Account Number</label>
+                                                                        <input type="text" class="form-control" id="edtBankAccountNumber" name="edtBankAccountNumber" value="{{record.bankAccountNo}}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>Swift Code</label>
+                                                                        <input type="text" class="form-control" id="edtSwiftCode" name="edtSwiftCode" value="{{record.bankAccountNo}}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>Routing Number</label>
+                                                                        <input type="text" class="form-control" id="edtRoutingNumber" name="edtRoutingNumber" value="{{record.routingNumber}}">
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="col-6 col-md-3">
+                                                                    {{> CurrencyWidget onlyCurrencyField="true" CurrentForeignExchangeCode = record.foreignExchangeCode}}
+                                                                </div>
+                                                               
+                                                            </div>
+                                                        </div>
+
                                                         <div class="tab-pane border rounded-0" role="tabpanel"
                                                             id="tab-8"
                                                             style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
@@ -3484,11 +3574,19 @@
                                                         style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                                             </div>
                                         </div>
-                                        <div class="row" style="justify-content:space-around;">
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_appointments_toggle" width="131px" for="customer_transctionList_appointments_toggle" displayName="Appointments"}}
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_quotes_toggle" width="131px" for="customer_transctionList_quotes_toggle" displayName="Quotes"}}
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_sales_orders_toggle" width="131px" for="customer_transctionList_sales_orders_toggle" displayName="Sales Orders"}}
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_invoices_toggle" width="131px" for="customer_transctionList_invoices_toggle" displayName="Invoices"}}
+                                        <div class="d-flex justify-content-left">
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_appointments_toggle" width="131px" for="customer_transctionList_appointments_toggle" displayName="Appointments"}}
+                                            </div>
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_quotes_toggle" width="131px" for="customer_transctionList_quotes_toggle" displayName="Quotes"}}
+                                            </div>
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_sales_orders_toggle" width="131px" for="customer_transctionList_sales_orders_toggle" displayName="Sales Orders"}}
+                                            </div>
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_invoices_toggle" width="131px" for="customer_transctionList_invoices_toggle" displayName="Invoices"}}
+                                            </div>
                                         </div>
                                         <div class="row rowB" style="margin: 14px; margin-top: 0">
                                             <div class="card-body rounded" style="padding: 0;">
@@ -3743,7 +3841,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+                                    <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-crm"
+                                        style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
+                                        <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                        {{> non_transactional_list tablename="tblCustomerCrmList"}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
