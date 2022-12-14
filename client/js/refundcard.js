@@ -74,10 +74,8 @@ Template.refundcard.onCreated(() => {
     templateObject.statusrecords = new ReactiveVar([]);
     templateObject.productextrasellrecords = new ReactiveVar([]);
     templateObject.defaultsaleterm = new ReactiveVar();
-    templateObject.displayfields = new ReactiveVar([]);
-    templateObject.reset_data = new ReactiveVar([]);
     templateObject.subtaxcodes = new ReactiveVar([]);
-
+    templateObject.hasFollow = new ReactiveVar(false);
     setTimeout(function() {
         const x = window.matchMedia("(max-width: 1024px)");
         function mediaQuery(x) {
@@ -124,6 +122,10 @@ Template.refundcard.onCreated(() => {
         mediaQuery(x);
         x.addListener(mediaQuery)
     }, 10);
+
+
+    templateObject.customerRecord = new ReactiveVar();
+
 });
 
 Template.refundcard.onRendered(() => {
@@ -147,6 +149,35 @@ Template.refundcard.onRendered(() => {
         }
 
         const templateObject = Template.instance();
+        templateObject.hasFollowings = async function() {
+            var currentDate = new Date();
+            let salesService = new SalesBoardService();
+            var url = FlowRouter.current().path;
+            var getso_id = url.split('?id=');
+            var currentInvoice = getso_id[getso_id.length - 1];
+
+            if (getso_id[1]) {
+                currentInvoice = parseInt(currentInvoice);
+                var refundData = await salesService.getRefundSales(currentInvoice);
+                var saleDate = refundData.fields.SaleDate;
+                var fromDate = saleDate.substring(0, 10);
+                var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+                var followingRefunds = await sideBarService.getAllTRefundSaleListData(
+                    fromDate,
+                    toDate,
+                    false,
+                    initialReportLoad,
+                    0
+                );
+                var refundList = followingRefunds.trefundsalelist;
+                if (refundList.length > 1) {
+                    templateObject.hasFollow.set(true);
+                } else {
+                    templateObject.hasFollow.set(false);
+                }
+            }
+        }
+        templateObject.hasFollowings();
         const salesService = new SalesBoardService();
         const clientsService = new SalesBoardService();
         const accountService = new SalesBoardService();
@@ -177,41 +208,6 @@ Template.refundcard.onRendered(() => {
         changeYear: true,
         yearRange: "-90:+10",
     });
-
-
-
-    // set initial table rest_data
-    function init_reset_data() {
-
-      let reset_data = [
-        { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
-        { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
-        { index: 2, label: "Qty", class: "Qty", width: "55", active: true, display: true },
-        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
-        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
-        { index: 5, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
-        { index: 6, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
-        { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
-        { index: 8, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
-        { index: 9, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-        { index: 10, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
-        { index: 11, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
-        { index: 12, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
-        { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
-      ];
-
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      if(isBatchSerialNoTracking) {
-        reset_data[11].display = true;
-      } else {
-        reset_data[11].display = false;
-      }
-
-      let templateObject = Template.instance();
-      templateObject.reset_data.set(reset_data);
-    }
-    init_reset_data();
-    // set initial table rest_data
 
         templateObject.getTemplateInfoNew = function(){
             LoadingOverlay.show();
@@ -964,7 +960,7 @@ Template.refundcard.onRendered(() => {
                     $("#templatePreviewModal #tax_list_print").remove();
                 }
             }
-            
+
 
             // table content
              var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1030,7 +1026,7 @@ Template.refundcard.onRendered(() => {
                     $("#templatePreviewModal #tax_list_print").remove();
                 }
             }
-            
+
 
             // table content
              var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1099,7 +1095,7 @@ Template.refundcard.onRendered(() => {
                     $("#templatePreviewModal #tax_list_print").remove();
                 }
             }
-            
+
 
             // table content
              var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1439,7 +1435,7 @@ Template.refundcard.onRendered(() => {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            
+
             }
 
             // table content
@@ -1974,7 +1970,7 @@ Template.refundcard.onRendered(() => {
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                     $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $('#sltPaymentMethod').val(data.fields.PayMethod);
-
+                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
                     // tempcode
                     // setTimeout(function () {
                     //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
@@ -2298,7 +2294,7 @@ Template.refundcard.onRendered(() => {
                                     templateObject.CleintName.set(useData[d].fields.CustomerName);
                                     $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
                                     $('#sltPaymentMethod').val(useData[d].fields.PayMethod);
-
+                                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
                     // tempcode
                                     // setTimeout(function () {
                                     //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
@@ -2598,7 +2594,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                     $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $('#sltPaymentMethod').val(data.fields.PayMethod);
-
+                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
                     // tempcode
                     // setTimeout(function () {
                     //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
@@ -2918,7 +2914,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                     $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $('#sltPaymentMethod').val(data.fields.PayMethod);
-
+                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
                     // tempcode
                     // setTimeout(function () {
                     //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
@@ -4368,6 +4364,36 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 }
 
                                 setTimeout(function() {
+                                    let customerRecord = {
+                                        id:popCustomerID,
+                                        phone:popCustomerPhone,
+                                        firstname:popCustomerFirstName,
+                                        middlename: popCustomerMiddleName,
+                                        lastname:popCustomerLastName,
+                                        company:data.tcustomer[0].fields.Companyname || '',
+                                        email: popCustomerEmail,
+                                        title: popCustomerTitle,
+                                        tfn: popCustomertfn,
+                                        mobile: popCustomerMobile,
+                                        fax: popCustomerFaxnumber,
+                                        shippingaddress: popCustomerStreet,
+                                        scity: popCustomerStreet2,
+                                        sstate: popCustomerCountry,
+                                        terms: '',
+                                        spostalcode: popCustomerPostcode,
+                                        scountry: popCustomerState,
+                                        billingaddress: popCustomerbillingaddress,
+                                        bcity: popCustomerbcity,
+                                        bstate: popCustomerbstate,
+                                        bpostalcode: popCustomerbpostalcode,
+                                        bcountry: popCustomerCountry,
+                                        custFld1: popCustomercustfield1,
+                                        custFld2: popCustomercustfield2,
+                                        jobbcountry: '',
+                                        jobscountry: '',
+                                        discount:0
+                                    }
+                                    templateObject.customerRecord.set(customerRecord);
                                     $('#addCustomerModal').modal('show');
                                 }, 200);
                             }).catch(function(err) {
@@ -4465,6 +4491,36 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                     }
 
                                     setTimeout(function() {
+                                        let customerRecord = {
+                                            id:popCustomerID,
+                                            phone:popCustomerPhone,
+                                            firstname:popCustomerFirstName,
+                                            middlename: popCustomerMiddleName,
+                                            lastname:popCustomerLastName,
+                                            company:data.tcustomervs1[i].fields.Companyname || '',
+                                            email: popCustomerEmail,
+                                            title: popCustomerTitle,
+                                            tfn: popCustomertfn,
+                                            mobile: popCustomerMobile,
+                                            fax: popCustomerFaxnumber,
+                                            shippingaddress: popCustomerStreet,
+                                            scity: popCustomerStreet2,
+                                            sstate: popCustomerCountry,
+                                            terms: '',
+                                            spostalcode: popCustomerPostcode,
+                                            scountry: popCustomerState,
+                                            billingaddress: popCustomerbillingaddress,
+                                            bcity: popCustomerbcity,
+                                            bstate: popCustomerbstate,
+                                            bpostalcode: popCustomerbpostalcode,
+                                            bcountry: popCustomerCountry,
+                                            custFld1: popCustomercustfield1,
+                                            custFld2: popCustomercustfield2,
+                                            jobbcountry: '',
+                                            jobscountry: '',
+                                            discount:0
+                                        }
+                                        templateObject.customerRecord.set(customerRecord);
                                         $('#addCustomerModal').modal('show');
                                     }, 200);
 
@@ -4987,7 +5043,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                     //$(".btnSave").trigger("click");
                 } else {
-                    
+
                 }
                 $('#html-2-pdfwrapper_new').css('display', 'none');
                 $('#html-2-pdfwrapper').css('display', 'none');
@@ -5073,13 +5129,9 @@ Template.refundcard.onRendered(function() {
                                     "targets": [5]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-
-
-
-                            bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5173,13 +5225,9 @@ Template.refundcard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5260,13 +5308,9 @@ Template.refundcard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5353,12 +5397,6 @@ Template.refundcard.onRendered(function() {
                             select: true,
                             destroy: true,
                             colReorder: true,
-
-
-
-                            bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5438,12 +5476,6 @@ Template.refundcard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5522,12 +5554,6 @@ Template.refundcard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5611,59 +5637,6 @@ Template.refundcard.onRendered(function() {
 
     tempObj.getSubTaxCodes();
 
-    // custom field displaysettings
-    tempObj.initCustomFieldDisplaySettings = function(data, listType) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      showCustomFieldDisplaySettings(reset_data);
-
-      try {
-        getVS1Data("VS1_Customize").then(function (dataObject) {
-          if (dataObject.length == 0) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              showCustomFieldDisplaySettings(reset_data);
-            }).catch(function (err) {
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            if(data.ProcessLog.Obj.CustomLayout.length > 0){
-             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-               if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                 showCustomFieldDisplaySettings(reset_data);
-               }
-             }
-           };
-            // handle process here
-          }
-        });
-      } catch (error) {
-      }
-      return;
-    }
-
-    function showCustomFieldDisplaySettings(reset_data) {
-
-      let custFields = [];
-      let customData = {};
-      let customFieldCount = reset_data.length;
-
-      for (let r = 0; r < customFieldCount; r++) {
-        customData = {
-          active: reset_data[r].active,
-          id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label,
-          class: reset_data[r].class,
-          display: reset_data[r].display,
-          width: reset_data[r].width ? reset_data[r].width : ''
-        };
-        custFields.push(customData);
-      }
-      tempObj.displayfields.set(custFields);
-    }
-
-    tempObj.initCustomFieldDisplaySettings("", "tblRefundLine");
 
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 
@@ -5701,9 +5674,7 @@ Template.refundcard.onRendered(function() {
 Template.refundcard.helpers({
     isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
     // custom field displaysettings
-    displayfields: () => {
-      return Template.instance().displayfields.get();
-    },
+
 
         getTemplateList: function () {
             return template_list;
@@ -5725,6 +5696,11 @@ Template.refundcard.helpers({
         invoicerecord: () => {
             return Template.instance().invoicerecord.get();
         },
+
+        customerRecord: () => {
+            return Template.instance().customerRecord.get();
+        },
+
         deptrecords: () => {
             return Template.instance().deptrecords.get().sort(function(a, b) {
                 if (a.department == 'NA') {
@@ -5876,28 +5852,6 @@ Template.refundcard.helpers({
         getDefaultCurrency: () => {
             return defaultCurrencyCode;
         },
-        convertToForeignAmount: (amount) => {
-            return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-        },
-
-        displayFieldColspan: (displayfield) => {
-            if(["Amount (Ex)", "Amount (Inc)", "Tax Amt", "Unit Price (Ex)", "Unit Price (Inc)"].includes(displayfield.custfieldlabel))
-            {
-                if(Template.instance().isForeignEnabled.get() == true) {
-                    return 2
-                }
-                return 1;
-            }
-            return 1;
-        },
-
-        subHeaderForeign: (displayfield) => {
-
-            if(["Amount (Ex)", "Amount (Inc)", "Tax Amt", "Unit Price (Ex)", "Unit Price (Inc)"].includes(displayfield.custfieldlabel)) {
-                return true;
-            }
-            return false;
-        },
 });
 
 Template.refundcard.events({
@@ -5929,7 +5883,7 @@ Template.refundcard.events({
         {
             LoadingOverlay.show();
             // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);            
+            let result = await exportSalesToPdf(template_list[0], 1);
             // if ($('.edtCustomerEmail').val() != "") {
             //     $('.pdfCustomerName').html($('#edtCustomerName').val());
             //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
@@ -6792,6 +6746,8 @@ Template.refundcard.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -7147,7 +7103,7 @@ Template.refundcard.events({
                 }
               }
         }
-        
+
         // if ($('.edtCustomerEmail').val() != "") {
         //     $('.pdfCustomerName').html($('#edtCustomerName').val());
         //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
@@ -7199,110 +7155,114 @@ Template.refundcard.events({
             event.preventDefault();
         }
     },
-    'click .btnRemove': function(event) {
+    'click .btnRemove':async function(event) {
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
-        var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
 
-        times++;
-        if (times == 1) {
-            $('#deleteLineModal').modal('toggle');
-        } else {
-            if ($('#tblInvoiceLine tbody>tr').length > 1) {
-                this.click;
-                $(event.target).closest('tr').remove();
-                event.preventDefault();
-                let $tblrows = $("#tblInvoiceLine tbody tr");
+        if(targetID != undefined){
+            times++;
+            if (times == 1) {
+                $('#deleteLineModal').modal('toggle');
+            } else {
+                if ($('#tblInvoiceLine tbody>tr').length > 1) {
+                    this.click;
+                    $(event.target).closest('tr').remove();
+                    event.preventDefault();
+                    let $tblrows = $("#tblInvoiceLine tbody tr");
 
-                let lineAmount = 0;
-                let subGrandTotal = 0;
-                let taxGrandTotal = 0;
-                let subDiscountTotal = 0; // New Discount
-                let taxGrandTotalPrint = 0;
+                    let lineAmount = 0;
+                    let subGrandTotal = 0;
+                    let taxGrandTotal = 0;
+                    let subDiscountTotal = 0; // New Discount
+                    let taxGrandTotalPrint = 0;
 
-                let subGrandTotalNet = 0;
-                let taxGrandTotalNet = 0;
-                $tblrows.each(function(index) {
-                    var $tblrow = $(this);
-                    var qty = $tblrow.find(".lineQty").val() || 0;
-                    var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-                    var taxRate = $tblrow.find(".lineTaxCode").val();
+                    let subGrandTotalNet = 0;
+                    let taxGrandTotalNet = 0;
+                    $tblrows.each(function(index) {
+                        var $tblrow = $(this);
+                        var qty = $tblrow.find(".lineQty").val() || 0;
+                        var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+                        var taxRate = $tblrow.find(".lineTaxCode").val();
 
-                    var taxrateamount = 0;
-                    if (taxcodeList) {
-                        for (var i = 0; i < taxcodeList.length; i++) {
-                            if (taxcodeList[i].codename == taxRate) {
-                                taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+                        var taxrateamount = 0;
+                        if (taxcodeList) {
+                            for (var i = 0; i < taxcodeList.length; i++) {
+                                if (taxcodeList[i].codename == taxRate) {
+                                    taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+                                }
                             }
                         }
-                    }
 
-                    var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                    var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                    var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
-                    let lineTotalAmount = subTotal + taxTotal;
+                        var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+                        var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+                        var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+                        let lineTotalAmount = subTotal + taxTotal;
 
-                    let lineDiscountTotal = lineDiscountPerc / 100;
+                        let lineDiscountTotal = lineDiscountPerc / 100;
 
-                    var discountTotal = lineTotalAmount * lineDiscountTotal;
-                    var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-                    var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
-                    var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-                    var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-                    if (!isNaN(discountTotal)) {
-                        subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+                        var discountTotal = lineTotalAmount * lineDiscountTotal;
+                        var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+                        var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+                        var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+                        var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+                        if (!isNaN(discountTotal)) {
+                            subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
 
-                        document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-                    }
-                    $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
+                            document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+                        }
+                        $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
 
-                    let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
-                    let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
-                    let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
-                    $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
-                    $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
+                        let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
+                        let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
+                        let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
+                        $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+                        $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
 
-                    if (!isNaN(subTotal)) {
-                      $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                      $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
-                        subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
-                        subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-                        document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-                    }
+                        if (!isNaN(subTotal)) {
+                        $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                        $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+                            subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
+                            subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+                            document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+                        }
 
-                    if (!isNaN(taxTotal)) {
-                        taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
-                        taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-                        document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-                    }
-
+                        if (!isNaN(taxTotal)) {
+                            taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
+                            taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+                            document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+                        }
 
 
-                    if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                        let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                        let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
-                        document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-                        document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
 
-                    }
-                });
-                return false;
+                        if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+                            let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+                            let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
+                            document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+                            document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                            document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                            document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
 
-            } else {
-                $('#deleteLineModal').modal('toggle');
+                        }
+                    });
+                    return false;
+
+                } else {
+                    $('#deleteLineModal').modal('toggle');
+                }
             }
+        } else {
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
+            else $("#footerDeleteModal1").modal("toggle");
         }
     },
     'click .btnDeleteFollowingRefunds': async function(event) {
         playDeleteAudio();
         var currentDate = new Date();
-        let templateObject = Template.instance();
         let salesService = new SalesBoardService();
+        let templateObject = Template.instance();
         setTimeout(async function(){
 
         swal({
@@ -7317,7 +7277,6 @@ Template.refundcard.events({
                 var getso_id = url.split('?id=');
                 var currentInvoice = getso_id[getso_id.length - 1];
                 var objDetails = '';
-                LoadingOverlay.show();
                 if (getso_id[1]) {
                     currentInvoice = parseInt(currentInvoice);
                     var refundData = await salesService.getRefundSales(currentInvoice);
@@ -7392,6 +7351,7 @@ Template.refundcard.events({
             window.open('/refundlist', '_self');
         }
         $('#deleteLineModal').modal('toggle');
+        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
@@ -8467,115 +8427,6 @@ Template.refundcard.events({
         $("th.col" + columHeaderUpdate + "").html(columData);
 
      },
-
-    // custom field displaysettings
-    'click .btnSaveGridSettings': async function(event) {
-        playSaveAudio();
-        let templateObject = Template.instance();
-        setTimeout(async function(){
-      let lineItems = [];
-      $(".fullScreenSpin").css("display", "inline-block");
-
-      $(".displaySettings").each(function (index) {
-        var $tblrow = $(this);
-        var fieldID = $tblrow.attr("custid") || 0;
-        var colTitle = $tblrow.find(".divcolumn").text() || "";
-        var colWidth = $tblrow.find(".custom-range").val() || 0;
-        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-        var colHidden = false;
-        if ($tblrow.find(".custom-control-input").is(":checked")) {
-          colHidden = true;
-        } else {
-          colHidden = false;
-        }
-        let lineItemObj = {
-          index: parseInt(fieldID),
-          label: colTitle,
-          active: colHidden,
-          width: parseInt(colWidth),
-          class: colthClass,
-          display: true
-        };
-
-        lineItems.push(lineItemObj);
-      });
-
-
-      let reset_data = templateObject.reset_data.get();
-      reset_data = reset_data.filter(redata => redata.display == false);
-      lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index);
-
-      try {
-        let erpGet = erpDb();
-        let tableName = "tblRefundLine";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-        $(".fullScreenSpin").css("display", "none");
-        if(added) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-              addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-          });
-          swal({
-            title: 'SUCCESS',
-            text: "Display settings is updated!",
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'OK'
-          }).then((result) => {
-              if (result.value) {
-                 $('#myModal2').modal('hide');
-              }
-          });
-        } else {
-          swal("Something went wrong!", "", "error");
-        }
-      } catch (error) {
-        $(".fullScreenSpin").css("display", "none");
-        swal("Something went wrong!", "", "error");
-      }
-    }, delayTimeAfterSound);
-    },
-
-    // custom field displaysettings
-    'click .btnResetGridSettings': function(event) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      if(isBatchSerialNoTracking) {
-        reset_data[11].display = true;
-      } else {
-        reset_data[11].display = false;
-      }
-      reset_data = reset_data.filter(redata => redata.display);
-
-      $(".displaySettings").each(function (index) {
-        let $tblrow = $(this);
-        $tblrow.find(".divcolumn").text(reset_data[index].label);
-        $tblrow
-          .find(".custom-control-input")
-          .prop("checked", reset_data[index].active);
-
-        let title = $("#tblInvoiceLine").find("th").eq(index);
-        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
-        } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
-        } else {
-          $(title).html(reset_data[index].label);
-        }
-
-
-        if (reset_data[index].active) {
-          $('.col' + reset_data[index].class).addClass('showColumn');
-          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
-        } else {
-          $('.col' + reset_data[index].class).addClass('hiddenColumn');
-          $('.col' + reset_data[index].class).removeClass('showColumn');
-        }
-        $(".rngRange" + reset_data[index].class).val('');
-      });
-    },
 
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({

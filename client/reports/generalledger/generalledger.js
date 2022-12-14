@@ -1196,8 +1196,8 @@ Template.generalledger.helpers({
 
     let convertedAmount =
       isMinus == true
-        ? `- ${currencyData.symbol} ${amount}`
-        : `${currencyData.symbol} ${amount}`;
+        ? `- ${currencyData.symbol}${amount}`
+        : `${currencyData.symbol}${amount}`;
 
 
     return convertedAmount;
@@ -1211,6 +1211,11 @@ Template.generalledger.helpers({
     }
     let activeArray = array.filter((c) => c.active == true);
     return activeArray.length;
+  },
+  currencyColumnSize : (count) => {
+    let siz = count > 0 ? count * 130 : 90;
+    //alert(siz);
+    return siz;          //column size auto per 85px
   },
   currencyList: () => {
     return Template.instance().currencyList.get();

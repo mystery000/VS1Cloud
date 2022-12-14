@@ -51,6 +51,7 @@ Template.supplierpaymentcard.onCreated(() => {
   templateObject.isInvoiceNo.set(true);
   templateObject.accountID = new ReactiveVar();
   templateObject.stripe_fee_method = new ReactiveVar();
+  templateObject.hasFollow = new ReactiveVar(false);
 });
 
 
@@ -71,6 +72,34 @@ export const _getTmpAppliedAmount = () => {
 Template.supplierpaymentcard.onRendered(() => {
   _setTmpAppliedAmount();
   const templateObject = Template.instance();
+  templateObject.hasFollowings = async function() {
+    var currentDate = new Date();
+    let paymentService = new PaymentsService();
+    var url = FlowRouter.current().path;
+    var getso_id = url.split('?id=');
+    var currentInvoice = getso_id[getso_id.length - 1];
+    if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        var paymentData = await paymentService.getOneSupplierPayment(currentInvoice);
+        var paymentDate = paymentData.fields.PaymentDate;
+        var fromDate = paymentDate.substring(0, 10);
+        var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+        var followingPayments = await sideBarService.getAllTSupplierPaymentListData(
+            fromDate,
+            toDate,
+            false,
+            initialReportLoad,
+            0
+        );
+        var paymentList = followingPayments.tsupplierpaymentlist;
+        if (paymentList.length > 1) {
+          templateObject.hasFollow.set(true);
+        } else {
+            templateObject.hasFollow.set(false);
+        }
+    }
+  }
+  templateObject.hasFollowings();
   const dataTableList = [];
   const tableHeaderList = [];
   LoadingOverlay.show();
@@ -184,6 +213,30 @@ Template.supplierpaymentcard.onRendered(() => {
     .catch(function (err) {
     });
   }
+
+  templateObject.fillBankInfoFromUrl = function () {
+    var queryParams = FlowRouter.current().queryParams;
+    if(queryParams.bank) {
+      let edtBankName = queryParams.edtBankName;
+      let edtBankAccountName = queryParams.edtBankAccountName;
+      let edtBSB = queryParams.edtBSB;
+      let edtBankAccountNo = queryParams.edtBankAccountNo;
+      let swiftCode = queryParams.swiftCode;
+      let apcaNo = queryParams.apcaNo;
+      let routingNo = queryParams.routingNo;
+      let sltBankCodes = queryParams.sltBankCodes;
+      $('#tab-6').click();
+      $('#edtBankName').val(edtBankName)
+      $('#edtBankAccountName').val(edtBankAccountName)
+      $('#edtBsb').val(edtBSB)
+      $('#edtBankAccountNumber').val(edtBankAccountNo)
+      $('#edtSwiftCode').val(swiftCode)
+      $('#edtRoutingNumber').val(routingNo)
+      // $('#sltCurrency').val()
+    }
+  }
+  templateObject.fillBankInfoFromUrl();
+
   // /**
   //  * Lets load the default currency
   //  */
@@ -208,10 +261,24 @@ Template.supplierpaymentcard.onRendered(() => {
   templateObject.fetchSupplierPayment = async function () {
       let supplierPaymentData = await getVS1Data('TSupplierPayment');
       if( supplierPaymentData.length > 0 ){
-        var getsale_id = url.split("?id=");
+
+        var getsale_id = url.split("?billid=");
         var currentSalesID = getsale_id[getsale_id.length - 1];
         let paymentID = parseInt(currentSalesID);
         let useData = JSON.parse( supplierPaymentData[0].data );
+
+        if(paymentID > 0) {
+            curcode = Session.get("tempCurrencyState");
+            currate = Session.get("tempExchangeRateState");
+            $("#sltCurrency").val(curcode);
+            $("#exchange_rate").val(currate);
+
+            curcode = convertToForeignAmount($("#edtPaymentAmount").val(), currate, Currency);
+            $("#edtForeignAmount").val(curcode);
+            $("#sltCurrency").trigger("change");
+            //FxGlobalFunctions.handleChangedCurrency(Session.get("tempCurrencyState"), defaultCurrencyCode);
+        }
+
         if( useData.tsupplierpayment.length > 0 ){
           let suppPayment =  useData.tsupplierpayment.filter(function( item ){
               if( item.fields.ID == paymentID ){
@@ -220,7 +287,6 @@ Template.supplierpaymentcard.onRendered(() => {
           });
           if( suppPayment.length > 0 ){
             $('#sltCurrency').val(suppPayment[0].fields.ForeignExchangeCode);
-
             $('#exchange_rate').val(suppPayment[0].fields.ForeignExchangeRate);
           }
         }
@@ -8534,7 +8600,6 @@ Template.supplierpaymentcard.events({
     // $("#edtForeignAmount").val("$" + foreignAmount);
 
     // calulateApplied();
-
     setTimeout(() => {
       calculateApplied();
     }, 300);
@@ -12590,51 +12655,54 @@ Template.supplierpaymentcard.events({
     }
     }, delayTimeAfterSound);
   },
-  "click .btnRemove": function (event) {
+  "click .btnRemove": async function (event) {
     $(".btnDeleteLine").show();
-    let templateObject = Template.instance();
     let utilityService = new UtilityService();
-    var clicktimes = 0;
     var targetID = $(event.target).closest("tr").attr("id") || 0; // table row ID
     $("#selectDeleteLineID").val(targetID);
-
-    times++;
-    if (times == 1) {
-      if (targetID == 0) {
-        $(event.target).closest("tr").remove();
-      } else {
-        $("#deleteLineModal").modal("toggle");
-      }
-    } else {
-      if ($("#tblSupplierPaymentcard tbody>tr").length > 1) {
-        this.click;
-        let total = 0;
-        $(event.target).closest("tr").remove();
-        event.preventDefault();
-        let $tblrows = $("#tblSupplierPaymentcard tbody tr");
-        $tblrows.each(function (index) {
-          var $tblrow = $(this);
-          total +=
-            parseFloat(
-              $tblrow
-                .find(".linePaymentamount ")
-                .val()
-                .replace(/[^0-9.-]+/g, "")
-            ) || 0;
-        });
-        $(".appliedAmount").text(
-          utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
-        );
-      localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
-
-        return false;
-      } else {
+    
+    if(targetID != undefined){
+      times++;
+      if (times == 1) {
         if (targetID == 0) {
           $(event.target).closest("tr").remove();
         } else {
           $("#deleteLineModal").modal("toggle");
         }
+      } else {
+        if ($("#tblSupplierPaymentcard tbody>tr").length > 1) {
+          this.click;
+          let total = 0;
+          $(event.target).closest("tr").remove();
+          event.preventDefault();
+          let $tblrows = $("#tblSupplierPaymentcard tbody tr");
+          $tblrows.each(function (index) {
+            var $tblrow = $(this);
+            total +=
+              parseFloat(
+                $tblrow
+                  .find(".linePaymentamount ")
+                  .val()
+                  .replace(/[^0-9.-]+/g, "")
+              ) || 0;
+          });
+          $(".appliedAmount").text(
+            utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
+          );
+        localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
+
+          return false;
+        } else {
+          if (targetID == 0) {
+            $(event.target).closest("tr").remove();
+          } else {
+            $("#deleteLineModal").modal("toggle");
+          }
+        }
       }
+    } else {
+      if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
+      else $("#footerDeleteModal1").modal("toggle");
     }
   },
   "click .btnRecoverPayment": function (event) {
@@ -12708,8 +12776,8 @@ Template.supplierpaymentcard.events({
   "click .btnDeleteFollowingPayments": async function (event) {
     playDeleteAudio();
     var currentDate = new Date();
-    let templateObject = Template.instance();
     let paymentService = new PaymentsService();
+    let templateObject = Template.instance();
     setTimeout(async function(){
 
     swal({
@@ -13128,6 +13196,10 @@ Template.supplierpaymentcard.events({
     onExchangeRateChange(e);
   },
   "change #exchange_rate": (e) => {
+      let srcamount = $(".dynamic-converter-js input.linePaymentamount.convert-from").val();
+      let dstamount = convertToForeignAmount(srcamount, $("#exchange_rate").val(), getCurrentCurrencySymbol());
+
+      $(".linePaymentamount.convert-to").text(dstamount);
     onExchangeRateChange(e);
   },
   "change #edtForeignAmount": (e) => {
@@ -13187,6 +13259,7 @@ Template.supplierpaymentcard.events({
 
 
   },
+
   // "change #tblSupplierPaymentcard input.linePaymentamount.foreign.convert-to": (e, ui) => {
   //  setTimeout(() => {
   //   const calculatedAppliedAmount = onForeignTableInputChange();

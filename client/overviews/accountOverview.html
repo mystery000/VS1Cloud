@@ -177,6 +177,14 @@
                     </div>
                 </div>
 
+                <div class="btn-group btnNav vs1ButtonMargin" >
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input showAsChart" name="showAsChart" id="showAsChart" />
+                        <label class="custom-control-label" for="showAsChart">Chart</label>
+                    </div>
+                </div>
+
+
                 <div class="btn-group btnNav vs1ButtonMargin btnBasReturnGroup" style="display:none">
                     <button type="button" class="btn btn-primary btnBasReturn" id="btnBasReturn"><i class="fas fa-user" style="margin-right: 5px;"></i>BAS Return</button>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
@@ -195,11 +203,11 @@
                 </div>
                 <button class="btn btnNav btn-primary vs1ButtonMargin btnTaxSummary" type="button" style="display:none"><i class="fas fa-user" style="padding-right: 5px;"></i>Tax Summary</button>
             </div>
-            {{#if equals isSetupFinished false}}
+            <!-- {{#if equals isSetupFinished false}} -->
                 <div class="col-2 setupIncompleatedMsg text-danger">
-                    <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
+                    <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Wizard Incomplete</a></h2>
                 </div>
-            {{/if}}
+            <!-- {{/if}} -->
             <div class="col-5 col-md-5">
                 <a class="btn btnOpenSettings btnNavMore float-right vs1LastButtonMargin" role="button" data-toggle="modal" href="#tblAccountOverview_Modal" ><i class="icon ion-android-more-horizontal"></i></a>
                 <button class="btn btnNav btn-primary float-right printConfirm vs1ButtonMargin" type="button" ><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
@@ -293,7 +301,15 @@
                 <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myAccountModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
         </div>
+        <style>
+        .isNotBankAccount {
+            display: none !important;
+        }
 
+        .isNotCreditAccount {
+            display: none !important;
+        }
+        </style>
         <div class="card-body p-0 rounded">
             <!-- Start {{> optionNavSalesOverview}} -->
             <!-- End -->
@@ -333,13 +349,7 @@
                         opacity: 1;
                     }
 
-                    .isNotBankAccount {
-                        display: none !important;
-                    }
 
-                    .isNotCreditAccount {
-                        display: none !important;
-                    }
                     .th.Balance,
                     .th.colBalance {
                         text-align: right !important;

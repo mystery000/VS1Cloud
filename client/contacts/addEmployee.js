@@ -108,23 +108,6 @@ Template.employeescard.onCreated(function() {
     templateObject.taxCodeList = new ReactiveVar();
     templateObject.defaultsaletaxcode = new ReactiveVar();
 
-    templateObject.tableHeaderItems = new ReactiveVar([
-        {classString:"th colSortDate hiddenColumn", itemLabel:"id",itemStyle:""},
-        {classString:"th colSaleDate", itemLabel:"Sale Date",itemStyle:"width:80px;"},
-        {classString:"th colSalesNo", itemLabel:"Sales No.",itemStyle:"width:80px;"},
-        {classString:"th colCustomer", itemLabel:"Customer",itemStyle:"width:200px;"},
-        {classString:"th colAmountEx", itemLabel:"Amount (Ex)",itemStyle:"width:80px;"},
-        {classString:"th colTax", itemLabel:"Tax",itemStyle:"width:80px;"},
-        {classString:"th colAmount", itemLabel:"Amount",itemStyle:"width:80px;"},
-        {classString:"th colPaid", itemLabel:"Paid",itemStyle:"width:80px;"},
-        {classString:"th colBalanceOutstanding", itemLabel:"Balance Outstanding",itemStyle:"width:80px;"},
-        {classString:"th colStatus hiddenColumn", itemLabel:"Status",itemStyle:""},
-        {classString:"th colSaleCustField1 hiddenColumn", itemLabel:"Custom Field 1",itemStyle:""},
-        {classString:"th colSaleCustField2 hiddenColumn", itemLabel:"Custom Field 2",itemStyle:""},
-        {classString:"th colEmployee hiddenColumn", itemLabel:"Employee",itemStyle:""},
-        {classString:"th colComments", itemLabel:"Comments",itemStyle:""}
-    ])
-
     /* Attachments */
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
@@ -435,6 +418,8 @@ Template.employeescard.onRendered(function() {
             changeYear: true,
             yearRange: "-90:+10",
         });
+
+        $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", new Date().getDay+7); 
 
     }, 500);
 
@@ -1716,7 +1701,8 @@ Template.employeescard.onRendered(function() {
             custFld2: '',
             dashboardOptions: '',
             salesQuota: 5000,
-            website: ''
+            website: '',
+            isEmployee:true
         }
 
         templateObject.records.set(lineItemObj);
@@ -1808,7 +1794,8 @@ Template.employeescard.onRendered(function() {
                 custFld2: '',
                 website: '',
                 dashboardOptions: '',
-                salesQuota: 5000
+                salesQuota: 5000,
+                isEmployee:true
             }
 
             templateObject.records.set(lineItemObj);
@@ -1993,7 +1980,8 @@ Template.employeescard.onRendered(function() {
             website: '',
             notes: data.fields.Notes || '',
             dashboardOptions: data.fields.CustFld11 || '',
-            salesQuota: data.fields.CustFld12 || ''
+            salesQuota: data.fields.CustFld12 || '',
+            isEmployee:true,
         };
         templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
 
@@ -2324,6 +2312,7 @@ Template.employeescard.onRendered(function() {
             $('#product-list').editableSelect();
             $('#edtDashboardOptions').editableSelect();
             $('#product-list').editableSelect()
+            $('#editEmployeeTitle').editableSelect()
                 .on('click.editable-select', function(e, li) {
                     const $earch = $(this);
                     const offset = $earch.offset();
@@ -2663,7 +2652,22 @@ Template.employeescard.onRendered(function() {
             $('#edtDashboardOptions').attr("defaultlogin", isDefaultLogin);
             $('#dashboardOptionListModal').modal('toggle');
         });
+        $(document).on("click", "#tblTitleList tbody tr", function (e) {
+            $('#editEmployeeTitle').val($(this).find(".colTypeName").text());
+            $('#employeeTitlePopModal').modal('toggle');
+        });
     });
+
+    $(document).on('click', '#editEmployeeTitle', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#employeeTitlePopModal').modal('toggle');
+        } else {
+            $('#employeeTitlePopModal').modal();
+        }
+    });
+
     let prefObject = "";
     if (currentId.id != undefined) {
         setTimeout(function() {
@@ -3805,31 +3809,7 @@ Template.employeescard.onRendered(function() {
         return '';
     };
 
-    templateObject.getEmployeePaySettings = async(refresh = false) => {
-
-        // let data = await CachedHttp.get(erpObject.TEmployeepaysettings, async () => {
-        //     return await contactService.getOneEmployeeDataEx(employeeID);
-        // }, {
-        //     refresh: refresh,
-        //     validate: (cachedResponse) => {
-        //         return true;
-        //     }
-        // });
-
-        // data = data.response;
-
-        // let employeesPaySettings = data.temployeepaysettings.map(e => e.fields);
-        // let employeePaySettings = employeesPaySettings.find(e => e.Employeeid == employeeID);
-
-        // await templateObject.employeePaySettings.set(employeePaySettings);
-
-        // await templateObject.employeePayInfos.set(employeePaySettings);
-
-
-        // $(`#edtTfnExemption option[value='${employeePaySettings.Employee.fields.CgtExempt}']`).attr('selected', 'selected');
-        // $(`#edtEmploymentBasis option[value='${employeePaySettings.Employee.fields.BasisOfPayment}']`).attr('selected', 'selected');
-        // $(`#edtResidencyStatus option[value='${employeePaySettings.Employee.fields.Resident}']`).attr('selected', 'selected');
-
+    templateObject.getEmployeePaySettings = async(refresh = false) => {  
 
         try {
             // EmployeePayrollApi fetch data from indexDB
@@ -3918,6 +3898,7 @@ Template.employeescard.onRendered(function() {
 
                 $(`#edtTfnExemption option[value='${objEmployeePaySettings.TFNExemption}']`).attr('selected', 'selected');
                 $(`#edtPayPeriod`).val(objEmployeePaySettings.Payperiod);
+                $(`#edtLeavePayPeriod`).val(objEmployeePaySettings.Payperiod);
                 $(`#edtEmploymentBasis option[value='${objEmployeePaySettings.EmploymentBasis}']`).attr('selected', 'selected');
                 $(`#edtResidencyStatus option[value='${objEmployeePaySettings.ResidencyStatus}']`).attr('selected', 'selected');
             }
@@ -5598,7 +5579,7 @@ Template.employeescard.events({
         let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(async function() {
             LoadingOverlay.show();
-            let title = $('#edtTitle').val();
+            let title = $('#editEmployeeTitle').val();
             let firstname = $('#edtFirstName').val();
             if (firstname === '') {
                 $('.fullScreenSpin').css('display', 'none');
@@ -7016,17 +6997,24 @@ Template.employeescard.events({
         }
     },
     // NEXT TASK HERE
-    'click .btnLeaveRequestBtn': function() {
+    'click .btnLeaveRequestBtn': async function() {
+        let templateObject = Template.instance();
+
         $('#newLeaveRequestLabel').text('New Leave Request');
         let today = new Date();
         const dd = String(today.getDate()).padStart(2, '0');
         const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         const yyyy = today.getFullYear();
-        today = dd + '/' + mm + '/' + yyyy;
+        today = dd + '/' + mm + '/' + yyyy; 
+
+         let nextWeek = new Date() 
         $('#leaveRequestForm')[0].reset();
-        $('#edtLeaveStartDate').val(today);
-        $('#edtLeaveEndDate').val(today);
+        $('#edtLeavePayStatus').val('Awaiting'); 
+        $('#edtLeaveStartDate').val(today); 
+        $('#edtLeaveEndDate').val(new Date(nextWeek.setDate( new Date().getDate() + 7)).toLocaleDateString());
         $('#removeLeaveRequestBtn').hide();
+        $(`#edtLeavePayPeriod`).val();
+        await templateObject.getEmployeePaySettings(true); 
     },
     'change #taxes :input, #taxes :select': async function() {
         $('.statusSaved').hide();
@@ -7454,28 +7442,6 @@ Template.employeescard.events({
                 break;
         }
     },
-    // Pay Template Earning Line Drop Down
-    // 'click #earningRateSelect': function(){
-    //     let earningRate = $('#earningRateSelect').val();
-    //     $('.calculationType').removeAttr("checked");
-    //     switch( earningRate ){
-    //         case 'JobKeeper Payment top up':
-    //             $('#CalculationType1').attr('disabled', true)
-    //             $('#CalculationType2').attr('disabled', false)
-    //             $('#CalculationType3').attr('disabled', true)
-    //         break;
-    //         case 'Overtime Hours (exempt from super)':
-    //             $('#CalculationType1').attr('disabled', false)
-    //             $('#CalculationType2').attr('disabled', true)
-    //             $('#CalculationType3').attr('disabled', true)
-    //         break;
-    //         default:
-    //             $('#CalculationType1').attr('disabled', true)
-    //             $('#CalculationType2').attr('disabled', false)
-    //             $('#CalculationType3').attr('disabled', false)
-    //         break;
-    //     }
-    // },
     'click .removePayTempEarning': (e, ui) => {
         let deleteID = $(e.currentTarget).attr('earning-id');
         // ui.removeEarning(deleteID);
@@ -8486,9 +8452,11 @@ Template.employeescard.events({
             $('.fullScreenSpin').css('display', 'none');
 
             return false;
+
             addVS1Data('TEmployeepaysettings', JSON.stringify(currentInfo));
             $('.fullScreenSpin').css('display', 'none');
             return;
+            
             employeePayrollService.saveTEmployeepaysettings(objDetails).then(function(objDetails) {
                 employeePayrollService.getAllEmployeePaySettings('All', 0).then(function(data) {
                     addVS1Data('TEmployeepaysettings', newDataObj);
@@ -10951,6 +10919,7 @@ Template.employeescard.events({
         let ID = $(e.target).parent().find('.colLRID').text();
         $('#newLeaveRequestLabel').text('Edit Leave Request');
         let dataObject = await getVS1Data('TLeavRequest');
+
         if (dataObject.length > 0) {
             data = JSON.parse(dataObject[0].data);
             if (data.tleavrequest.length > 0) {
@@ -10968,12 +10937,13 @@ Template.employeescard.events({
                     $('#edtLeaveDescription').val(useData[0].fields.Description);
                     $('#edtLeaveStartDate').val(moment(useData[0].fields.StartDate).format('DD/MM/YYYY'));
                     $('#edtLeaveEndDate').val(moment(useData[0].fields.EndDate).format('DD/MM/YYYY'));
-                    $('#edtLeavePayPeriod').val(useData[0].fields.PayPeriod);
+                    $('#edtLeavePayPeriod').val(useData[0].fields.PayPeriod);   
                     $('#edtLeaveHours').val(useData[0].fields.Hours);
-                    $('#edtLeavePayStatus').val(useData[0].fields.Status);
+                    $('#edtLeavePayStatus').val(useData[0].fields.Status); 
                 }
             }
-        }
+        } 
+
         $('#newLeaveRequestModal').modal('show');
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -11304,7 +11274,4 @@ Template.employeescard.helpers({
         return Template.instance().earningLines.get();
     },
     formatPrice: (price) => GlobalFunctions.formatPrice(price),
-    tableHeaderItems:() => {
-        return Template.instance().tableHeaderItems.get();
-    },
 });

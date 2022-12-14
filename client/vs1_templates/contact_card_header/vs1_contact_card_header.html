@@ -1,9 +1,19 @@
 <template name="vs1_contact_card_header">
-    <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 customerInfo" id="{{id}}" style="color: #00A3D3;">
+    <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 customerInfo" id="{{id}}" style="color: #00A3D3; font-size: 28px;">
     {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}} {{record.joblastname}}-{{record.phone}}
     {{else}}
         {{#if notEquals record.id ''}}
-            CUS-{{record.id}} - 
+            {{#if equals record.issupplier true}}
+                SUP-{{record.id}} - 
+            {{else if equals record.isLead true}}
+                LED-{{record.id}} - 
+            {{else if equals record.isjob true}}
+                JOB-{{record.id}} - 
+            {{else if equals record.isEmployee true}}
+                EMP-{{record.id}} - 
+            {{else}}
+                CUS-{{record.id}} - 
+            {{/if}}
         {{/if}}
     {{record.company}}
     {{/if}}

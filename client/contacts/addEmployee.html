@@ -384,7 +384,7 @@
                                                         <div class="col-12 col-md-3" style="padding: 0px;">
                                                             <div class="form-group" style="margin: 4px; padding-left:4px;">
                                                                 <label>Dashboard Options</label>
-                                                                <select type="search" class="form-control" id="edtDashboardOptions" name="edtDashboardOptions" defaultlogin="All" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                <select class="form-control" id="edtDashboardOptions" value="{{record.dashboardOptions}}" name="edtDashboardOptions" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                 </select>
                                                                 <!-- <select class="form-control" id="edtDashboardOptions" name="edtDashboardOptions" style="cursor: pointer;">
                                                                   {{#each item in dashboardOptionsList}}
@@ -408,7 +408,10 @@
                                                     <div class="row">
                                                         <div class="col-6 col-md-1" style="padding: 0px;">
                                                             <div class="form-group" style="margin: 4px;padding-right :4px;">
-                                                                <label class="text-nowrap">Title</label><input type="text" class="form-control" id="edtTitle" name="edtTitle" value="{{record.title}}">
+                                                                <label for="editEmployeeTitle">Title</label>
+                                                                <select type="search" class="form-control" id="editEmployeeTitle" name="editEmployeeTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
+                                                                </select>
+                                                                <!-- <input type="text" class="form-control" id="edtTitle" name="edtTitle" value="{{record.title}}"> -->
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-md-3" style="padding: 0px;">
@@ -1411,7 +1414,7 @@
                                                                 <a class="nav-link hideSaveButton" id="contact-tab" data-toggle="tab" href="#leave" role="tab" aria-controls="contact" aria-selected="false">Leave</a>
                                                             </li>
                                                             <li class="nav-item">
-                                                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#bankaccounts" role="tab" aria-controls="contact" aria-selected="false">Bank Accounts</a>
+                                                                <a class="nav-link bank-account-tab" id="contact-tab" data-toggle="tab" href="#bankaccounts" role="tab" aria-controls="contact" aria-selected="false">Bank Accounts</a>
                                                             </li>
                                                             <li class="nav-item">
                                                                 <a class="nav-link hideSaveButton" id="contact-tab" data-toggle="tab" href="#payslips" role="tab" aria-controls="contact" aria-selected="false">Payslips</a>
@@ -2135,6 +2138,13 @@
                                                                                 <input type="text" class="form-control primaryStatementText" id="bankAccountStatement" value="{{employeePaySetting.StatementText}}">
                                                                             </div>
                                                                         </div>
+                                                                        <!-- <div class="col-6 col-md-3">
+                                                                          <div class="form-group" style="margin: 4px;">
+                                                                              <label>Bank Name</label> 
+                                                                              <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName" value="{{record.bankName}}">
+                                                                              </select>
+                                                                          </div>
+                                                                      </div> -->
                                                                         <div class="col-6 col-md-3">
                                                                             <div class="form-group">
                                                                                 <label>Account Name</label>
@@ -2151,6 +2161,18 @@
                                                                             <div class="form-group">
                                                                                 <label>Account Number</label>
                                                                                 <input type="text" class="form-control primaryAccNumber" id="bankAccountNo" value="{{employeePaySetting.BankAccountNo}}">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-6 col-md-3">
+                                                                            <div class="form-group" style="margin: 4px;">
+                                                                                <label>Swift Code</label>
+                                                                                <input type="text" class="form-control" id="edtSwiftCode" name="edtSwiftCode" value="{{record.bankAccountNo}}">
+                                                                            </div>
+                                                                        </div> 
+                                                                        <div class="col-6 col-md-3">
+                                                                            <div class="form-group" style="margin: 4px;">
+                                                                                <label>Routing Number</label>
+                                                                                <input type="text" class="form-control" id="edtRoutingNumber" name="edtRoutingNumber" value="{{record.routingNumber}}">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -3612,8 +3634,8 @@
                                                                 width: 100% !important;
                                                             } */
                                                         </style>
-                                                        <!-- {{> vs1_filtered_data_table  datatablerecords=datatablerecords headers=tableHeaderItems}}    -->
-                                                        <table id="tblTransactionlist" style="width:100%" class="dataTable table table-striped table-bordered tblTransactionlist">
+                                                        {{> non_transactional_list tablename="tblEmployeeTransactionList"}}   
+                                                        <!-- <table id="tblTransactionlist" style="width:100%" class="dataTable table table-striped table-bordered tblTransactionlist">
                                                             <thead>
                                                                 <tr class="dnd-moved">
                                                                     <th class="th colSortDate hiddenColumn">id</th>
@@ -3655,7 +3677,7 @@
                                                                     {{/each}}
                                                                 {{/if}}
                                                             </tbody>
-                                                        </table>
+                                                        </table> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -3691,6 +3713,10 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="AppTableModal" style="z-index: 99999999 !important;">
         {{> AppTableModal AppTableModalData=AppTableModalData}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal" style="z-index: 99999999 !important;">
+      {{> bankNameModal}}
     </div>
 
     <!-- Start Help Video Modal -->
@@ -3813,6 +3839,9 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="employeeTitlePopModal">
+        {{> title_list_pop}}
+     </div>
 
     {{> SelectPayCalendar }}
     <script>

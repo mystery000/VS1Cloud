@@ -204,7 +204,7 @@ Template.new_process.events({
 
 
         manufacturingService.saveProcessData(objDetail).then(function(){
-            manufacturingService.getAllProcessData().then(function(datareturn) {
+            manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(function(datareturn) {
                 addVS1Data('TProcessStep', JSON.stringify(datareturn)).then(function(){
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
@@ -286,7 +286,8 @@ Template.new_process.events({
     'click #edtWastage': function(e){
         $('#assetAccountListModal').modal();
     },
-    'click #accountListModal table tr': function(e) {
+    
+    'click #accountListModal table tbody tr': function(e) {
         let templateObject = Template.instance();
         let columnDataValue = $(e.target).closest('tr').find('.productName').text();
         switch(templateObject.selectedAccount.get()) {

@@ -1,9 +1,19 @@
+<!-- Params
+label
+value
+SODate
+DueDate
+-->
 <template name="sale_date_selector">
   <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY">
-    <label>Sale Date</label>
+    <label>{{label}}</label>
     <div class="input-group date" style="cursor: pointer;">
-      <input type="text" class="form-control" id="dtSODate" name="dtSODate"
-        value="{{invoicerecord.saledate}}">
+      <input 
+        type="text" 
+        class="form-control" 
+        id="dtSODate" 
+        name="dtSODate"
+        value="{{SODate}}">
       <div class="input-group-addon" style="">
         <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
       </div>

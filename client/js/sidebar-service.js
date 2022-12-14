@@ -28,7 +28,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
-    return this.getList(this.ERPObjects.TProductVS1, options);
+        return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
   getProductListVS1(limitcount, limitfrom) {
@@ -36,14 +36,14 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-          Search: "PublishOnVS1 == true",
+        Search: "Active == true",
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
         ListType: "Detail",
-        Search: "PublishOnVS1 = true",
+        Search: "Active = true",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
@@ -916,6 +916,8 @@ export class SideBarService extends BaseService {
           IgnoreDates:true,
           orderby: '"name asc"',
           search: 'name="' + dataSearchName + '"',
+          // search: 'name='+ dataSearchName+ ' OR email=' + dataSearchName + '',
+          // search: 'name="' + dataSearchName + '" OR email="' +  dataSearchName + '"',
           //search: 'name="' + dataSearchName + '" OR street="' + dataSearchName + '" OR suburb="' + dataSearchName + '" OR state="' + dataSearchName + '" OR postcode="' + dataSearchName + '"',
         };
       }
@@ -2592,7 +2594,7 @@ export class SideBarService extends BaseService {
 
       options = {
         ListType: "Detail",
-        select: "[Active]=true",
+        select: "pt.Active=true",
         // LimitCount: initialReportLoad
       };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
@@ -3019,7 +3021,7 @@ export class SideBarService extends BaseService {
 
   getAllLeadStatus() {
     let options = {
-      PropertyList: "ID,TypeCode,Name,Description,IsDefault,EQPM",
+      PropertyList: "ID,TypeCode,TypeName,Name,Description,IsDefault,EQPM",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TLeadStatusType, options);
@@ -3089,7 +3091,7 @@ export class SideBarService extends BaseService {
   getCurrencies() {
     let options = {
       ListType: "Detail",
-      select: "[Active]=true",
+      Search: "Active = true",
     };
     return this.getList(this.ERPObjects.TCurrency, options);
   }
@@ -3128,7 +3130,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TCurrency, options);
+    return this.getList(this.ERPObjects.TCurrencyList, options);
   }
 
   getAccountTypesToAddNew() {
@@ -3518,14 +3520,14 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"Description asc"',
-            select: "[Active]=true",
+            orderby: '"Name asc"',
+            Search: "Active = true",
         };
       } else {
         options = {
-          orderby: '"Description asc"',
+          orderby: '"Name asc"',
           ListType: "Detail",
-          select: "[Active]=true",
+          Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -3534,11 +3536,11 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"Description asc"',
+            orderby: '"Name asc"',
         };
       } else {
         options = {
-            orderby: '"Description asc"',
+            orderby: '"Name asc"',
             ListType: "Detail",
             LimitCount: parseInt(limitcount),
             LimitFrom: parseInt(limitfrom),
@@ -3546,7 +3548,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TPaymentMethodVS1, options);
+    return this.getList(this.ERPObjects.TPaymentMethodList, options);
   }
 
   getPaymentMethodVS1() {
@@ -3995,7 +3997,7 @@ export class SideBarService extends BaseService {
     let options = "";
       options = {
        ListType: "Detail",
-       select: "[Active]=true"
+       select: "pt.Active=true"
      };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
@@ -4092,6 +4094,14 @@ export class SideBarService extends BaseService {
       return false
     }
   }
+  getSubTaxCode() {
+     let options = {
+         PropertyList: "ID,Code,Description,Category,Active,GlobalRef,ISEmpty,RegionName",
+         select: "[Active]=true",
+     };
+     return this.getList(this.ERPObjects.TSubTaxCode, options);
+ }
+
   changeDialFormat (mobile, country) {
 
 
@@ -4114,5 +4124,30 @@ export class SideBarService extends BaseService {
         }
       }
       return mobileResult;
+  }
+
+  getVS1MenuConfig() {
+    const data = this.GET(this.erpGet.TPreference);
+    return data;
+  }
+
+  updateVS1MenuConfig (menuType) {
+    const prefValue = '{"Location": \"' + menuType + '\", "AccessLevel": 1, "AccessLevelName": \"Full Access\"}'
+    return this.POST(
+      this.erpGet.TPreference,
+      {
+          "type": "TPreference",
+          "fields": {
+            "Department": "",
+            "IndustryId": 1,
+            "PackageID": 0,
+            "PrefDesc": "",
+            "PrefGroup": "GuiPrefs",
+            "PrefName": "VS1Menu",
+            "PrefType": "",
+            "PrefValue": prefValue,
+        }
+      }
+    )
   }
 }

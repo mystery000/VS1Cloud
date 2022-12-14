@@ -145,25 +145,25 @@ Template.basreturn.onRendered(function() {
     templateObject.reasonT4.set(reasonT4);
     templateObject.reasonF4.set(reasonF4);
 
-    accountService
-        .getBASReturnDetail()
-        .then(function(data) {
-        })
-        .catch(function(err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
-            // Meteor._reload.reload();
-        });
+    // accountService
+    //     .getBASReturnDetail()
+    //     .then(function(data) {
+    //     })
+    //     .catch(function(err) {
+    //         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //         $(".fullScreenSpin").css("display", "none");
+    //         // Meteor._reload.reload();
+    //     });
 
-    accountService
-        .getBASReturnLines()
-        .then(function(data) {
-        })
-        .catch(function(err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
-            // Meteor._reload.reload();
-        });
+    // accountService
+    //     .getBASReturnLines()
+    //     .then(function(data) {
+    //     })
+    //     .catch(function(err) {
+    //         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //         $(".fullScreenSpin").css("display", "none");
+    //         // Meteor._reload.reload();
+    //     });
 
     templateObject.getTaxrateList = function() {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -585,11 +585,11 @@ Template.basreturn.onRendered(function() {
             categoryAccountList.push(cdataList);
         });
 
-        if (templateObject.accountsList.get()) {
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-        }
+        // if (templateObject.accountsList.get()) {
+        //     setTimeout(function() {
+        //         MakeNegative();
+        //     }, 100);
+        // }
 
         $(".fullScreenSpin").css("display", "none");
         setTimeout(function() {
@@ -1443,7 +1443,6 @@ Template.basreturn.onRendered(function() {
         }).catch(function(err) {
             let taxRateList = templateObject.taxRateList.get();
             let accountsList = templateObject.accountsList.get();
-            let deptrecords = templateObject.deptrecords.get();
 
             reportService.getAllBASReturn().then(function(data) {
                 for (let i = 0; i < data.tbasreturn.length; i++) {
@@ -2000,6 +1999,7 @@ Template.basreturn.onRendered(function() {
                         AccountType: accountsSummaryReport[i].AccountType || '',
                         clientname: accountsSummaryReport[i].clientname || '',
                         Type: accountsSummaryReport[i].Type || '',
+                        transDate: accountsSummaryReport[i].Date || "",
                         debit: accountsSummaryReport[i].TotalDebitEx || 0.00,
                         credit: accountsSummaryReport[i].TotalCreditEx || 0.00,
                         balance: accountsSummaryReport[i].Balance || 0.00,
@@ -2320,7 +2320,7 @@ Template.basreturn.onRendered(function() {
                 var getid = url.split('?id=');
                 if (getid[1]) {
                     templateObject.getId.set(getid[1]);
-                    templateObject.pageTitle.set("Edit BAS Return");
+                    templateObject.pageTitle.set("Edit VAT Return");
 
                     getVS1Data('TBASReturn').then(function(dataObject) {
                         if (dataObject.length == 0) {
@@ -4867,7 +4867,7 @@ Template.basreturn.events({
         let templateObject = Template.instance();
         playSaveAudio();
         setTimeout(function() {
-            // $('.fullScreenSpin').css('display', 'inline-block');
+            $('.fullScreenSpin').css('display', 'inline-block');
             let taxRateList = templateObject.taxRateList.get();
             let accountsList = templateObject.accountsList.get();
 
