@@ -21,8 +21,12 @@
   showCurrency
   showCustomFields
   showShippingInfo
+  showPayment
+  showCopyTransaction
+  showCopyToInvoice
+  showCopyToOrder
  -->
-<template name="transaction_header">
+ <template name="transaction_header">
   <style>
     @media (min-width: 1200px) {
       .row-middle .col-xl-2 {
@@ -191,7 +195,7 @@
   </div>
   {{/if}}
   <div class="row" style="background-color: #ededed;">
-    {{#if equals data.ispaid true}}
+    {{#if data.ispaid}}
     <div class="col-12 colPaid" style="display: none;">
       <p style="font-size: 25px;font-weight: 700 ;color: #e74a3b; margin: 16px 32px 0px 32px;">Paid</p>
       <input class="form-control form-control ispaidInv" type="hidden" value="true">
@@ -366,6 +370,10 @@
           recordtype=cardType
           isConverted=data.isConverted
           abletomakeworkorder=abletomakeworkorder
+          showPayment=showPayment
+          showCopyTransaction=showCopyTransaction
+          showCopyToInvoice=showCopyToInvoice
+          showCopyToOrder=showCopyToOrder
         }}
       </div>
     </div>
