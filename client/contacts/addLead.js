@@ -532,8 +532,8 @@ Template.leadscard.onRendered(function() {
                             description: '',
                             labels: '',
                             category: 'appointment',
-                            completed: data.fields.EndTime ? true : false,
-                            completedby: data.fields.EndTime ? moment(data.fields.EndTime).format("DD/MM/YYYY") : "",
+                            completed: data.fields.Actual_EndTime ? true : false,
+                            completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                         }
 
                         dataTableList.push(obj);

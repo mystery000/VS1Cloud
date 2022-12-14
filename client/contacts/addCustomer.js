@@ -785,6 +785,7 @@ Template.customerscard.onRendered(function() {
         async function getAppointments() {
             crmService.getAllAppointments(customerName).then(async function(dataObj) {
                 if (dataObj.tappointmentex.length > 0) {
+                    console.log("==========", dataObj.tappointmentex);
                     dataObj.tappointmentex.map(data => {
                         let obj = {
                             id: data.fields.ID,
@@ -796,8 +797,8 @@ Template.customerscard.onRendered(function() {
                             description: '',
                             labels: '',
                             category: 'appointment',
-                            completed: data.fields.EndTime ? true : false,
-                            completedby: data.fields.EndTime ? moment(data.fields.EndTime).format("DD/MM/YYYY") : "",
+                            completed: data.fields.Actual_EndTime ? true : false,
+                            completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                         }
 
                         dataTableList.push(obj);
