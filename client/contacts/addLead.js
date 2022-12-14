@@ -503,7 +503,9 @@ Template.leadscard.onRendered(function() {
                             projectName: data.tprojecttasks[i].fields.ProjectName || '',
                             description: taskDescription,
                             labels: taskLabelArray,
-                            category: 'task'
+                            category: 'task',
+                            completed: data.tprojecttasks[i].fields.Completed,
+                            completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                         };
                         // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
                         dataTableList.push(dataList);
@@ -529,8 +531,9 @@ Template.leadscard.onRendered(function() {
                             projectName: '',
                             description: '',
                             labels: '',
-                            category: 'appointment'
-
+                            category: 'appointment',
+                            completed: data.fields.EndTime ? true : false,
+                            completedby: data.fields.EndTime ? moment(data.fields.EndTime).format("DD/MM/YYYY") : "",
                         }
 
                         dataTableList.push(obj);
@@ -564,7 +567,9 @@ Template.leadscard.onRendered(function() {
                                 projectName: '',
                                 description: '',
                                 labels: '',
-                                category: 'email'
+                                category: 'email',
+                                completed: false,
+                                completedby: "",
                             }
                             dataTableList.push(obj)
                         })
@@ -768,8 +773,8 @@ Template.leadscard.onRendered(function() {
     $(document).ready(function() {
         setTimeout(function() {
             $('#editLeadTitle').editableSelect();
-        },1000)
-    
+        }, 1000)
+
     })
 
     $(document).on('click', '#editLeadTitle', function(e, li) {
@@ -1444,8 +1449,9 @@ Template.leadscard.events({
             if (taskCategory == 'task') {
                 FlowRouter.go('/crmoverview?taskid=' + taskID);
             } else if (taskCategory == 'appointment') {
-                FlowRouter.go('/appointments?id=' + taskID);
-
+                // FlowRouter.go('/appointments?id=' + taskID);
+                document.getElementById("updateID").value = taskID || 0;
+                $("#event-modal").modal("toggle");
             }
         }
     },
