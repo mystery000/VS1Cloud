@@ -1248,7 +1248,7 @@ Template.accountsoverview.onRendered(function() {
                     //accountService.getOneAccount(listData).then(function (data) {
 
                     var accountid = listData || "";
-                    var accounttype = $(event.target).closest("tr").find(".colType").attr("accounttype") || "";
+                    var accounttype = $(event.target).closest("tr").find(".colType").text() || "";
                     var accountname = $(event.target).closest("tr").find(".colAccountName").text() || "";
                     var accountno = $(event.target).closest("tr").find(".colAccountNo").text() || "";
                     var taxcode = $(event.target).closest("tr").find(".colTaxCode").text() || "";
@@ -1280,7 +1280,6 @@ Template.accountsoverview.onRendered(function() {
                         $(".isBankAccount").addClass("isNotBankAccount");
                         $(".isCreditAccount").addClass("isNotCreditAccount");
                     }
-
                     $("#edtAccountID").val(accountid);
                     $("#sltAccountType").val(accounttype);
                     $("#edtAccountName").val(accountname);

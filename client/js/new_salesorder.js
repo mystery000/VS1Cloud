@@ -90,6 +90,10 @@ Template.new_salesorder.onCreated(function() {
     this.saleOrders = new ReactiveVar([]);
     this.saleOrder = new ReactiveVar();
     this.products = new ReactiveVar([]);
+    this.hasFollow = new ReactiveVar(false);
+
+    this.customerRecord = new ReactiveVar();
+
 });
 
 Template.new_salesorder.onRendered(function () {
@@ -1658,7 +1662,7 @@ Template.new_salesorder.onRendered(function () {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1727,7 +1731,7 @@ Template.new_salesorder.onRendered(function () {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1799,7 +1803,7 @@ Template.new_salesorder.onRendered(function () {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -2144,7 +2148,7 @@ Template.new_salesorder.onRendered(function () {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            
+
             }
 
         // table content
@@ -6294,6 +6298,36 @@ Template.new_salesorder.onRendered(function () {
                                 }
 
                                 setTimeout(function() {
+                                    let customerRecord = {
+                                        id:popCustomerID,
+                                        phone:popCustomerPhone,
+                                        firstname:popCustomerFirstName,
+                                        middlename: popCustomerMiddleName,
+                                        lastname:popCustomerLastName,
+                                        company:data.tcustomervs1[0].fields.Companyname || '',
+                                        email: popCustomerEmail,
+                                        title: popCustomerTitle,
+                                        tfn: popCustomertfn,
+                                        mobile: popCustomerMobile,
+                                        fax: popCustomerFaxnumber,
+                                        shippingaddress: popCustomerStreet,
+                                        scity: popCustomerStreet2,
+                                        sstate: popCustomerCountry,
+                                        terms: '',
+                                        spostalcode: popCustomerPostcode,
+                                        scountry: popCustomerState,
+                                        billingaddress: popCustomerbillingaddress,
+                                        bcity: popCustomerbcity,
+                                        bstate: popCustomerbstate,
+                                        bpostalcode: popCustomerbpostalcode,
+                                        bcountry: popCustomerCountry,
+                                        custFld1: popCustomercustfield1,
+                                        custFld2: popCustomercustfield2,
+                                        jobbcountry: '',
+                                        jobscountry: '',
+                                        discount:0
+                                    }
+                                    templateObject.customerRecord.set(customerRecord);
                                     $('#addCustomerModal').modal('show');
                                 }, 200);
                             }).catch(function(err) {
@@ -6391,6 +6425,36 @@ Template.new_salesorder.onRendered(function () {
                                     }
 
                                     setTimeout(function() {
+                                        let customerRecord = {
+                                            id:popCustomerID,
+                                            phone:popCustomerPhone,
+                                            firstname:popCustomerFirstName,
+                                            middlename: popCustomerMiddleName,
+                                            lastname:popCustomerLastName,
+                                            company:data.tcustomervs1[i].fields.Companyname || '',
+                                            email: popCustomerEmail,
+                                            title: popCustomerTitle,
+                                            tfn: popCustomertfn,
+                                            mobile: popCustomerMobile,
+                                            fax: popCustomerFaxnumber,
+                                            shippingaddress: popCustomerStreet,
+                                            scity: popCustomerStreet2,
+                                            sstate: popCustomerCountry,
+                                            terms: '',
+                                            spostalcode: popCustomerPostcode,
+                                            scountry: popCustomerState,
+                                            billingaddress: popCustomerbillingaddress,
+                                            bcity: popCustomerbcity,
+                                            bstate: popCustomerbstate,
+                                            bpostalcode: popCustomerbpostalcode,
+                                            bcountry: popCustomerCountry,
+                                            custFld1: popCustomercustfield1,
+                                            custFld2: popCustomercustfield2,
+                                            jobbcountry: '',
+                                            jobscountry: '',
+                                            discount:0
+                                        }
+                                        templateObject.customerRecord.set(customerRecord);
                                         $('#addCustomerModal').modal('show');
                                     }, 200);
 
@@ -7040,10 +7104,9 @@ Template.new_salesorder.onRendered(function() {
                                 className: "taxrate",
                                 "targets": [5]
                             }],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-
-                            bStateSave: true,
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -7126,10 +7189,9 @@ Template.new_salesorder.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-                        bStateSave: true,
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7195,10 +7257,9 @@ Template.new_salesorder.onRendered(function() {
                             className: "taxrate",
                             "targets": [5]
                         }],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-                        bStateSave: true,
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7276,12 +7337,6 @@ Template.new_salesorder.onRendered(function() {
                             select: true,
                             destroy: true,
                             colReorder: true,
-                            // colReorder: {
-                            //   fixedColumnsLeft: 1
-                            // },
-                            bStateSave: true,
-                            //scrollX: 1000,
-                            //rowId: 0,
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -7357,12 +7412,6 @@ Template.new_salesorder.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-                        // colReorder: {
-                        //   fixedColumnsLeft: 1
-                        // },
-                        bStateSave: true,
-                        //scrollX: 1000,
-                        //rowId: 0,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7437,12 +7486,6 @@ Template.new_salesorder.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-                        // colReorder: {
-                        //   fixedColumnsLeft: 1
-                        // },
-                        bStateSave: true,
-                        //scrollX: 1000,
-                        //rowId: 0,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7791,10 +7834,14 @@ Template.new_salesorder.helpers({
         return localStorage.getItem('vs1companyBankRoutingNo') || '';
     },
 
+<<<<<<< HEAD
     // custom field displaysettings
     displayfields: () => {
       return Template.instance().displayfields.get();
     },
+=======
+
+>>>>>>> a7452cc701d7e5910c51525d72d3999fbfcd15a3
 
     custfield1: () => {
         return localStorage.getItem('custfield1salesorder') || 'Custom Field 1';
@@ -7872,6 +7919,11 @@ Template.new_salesorder.helpers({
     record: () => {
         return Template.instance().record.get();
     },
+
+    customerRecord: () => {
+        return Template.instance().customerRecord.get();
+    },
+
     companyaddress1: () => {
         return Session.get('vs1companyaddress1');
     },
@@ -8051,6 +8103,7 @@ Template.new_salesorder.events({
       },
         'click  #open_print_confirm':function(event)
         {
+<<<<<<< HEAD
             // playPrintAudio();
             // setTimeout(async function(){
             //     if($('#choosetemplate').is(':checked'))
@@ -8074,6 +8127,31 @@ Template.new_salesorder.events({
             //         // $('#confirmprint').modal('hide');
             //     }
             // }, delayTimeAfterSound);
+=======
+            playPrintAudio();
+            setTimeout(async function(){
+            if($('#choosetemplate').is(':checked'))
+            {
+                $('#templateselection').modal('show');
+            }
+            else
+            {
+                LoadingOverlay.show();
+                // $('#html-2-pdfwrapper').css('display', 'block');
+                let result = await exportSalesToPdf(template_list[0], 1);
+                // if ($('.edtCustomerEmail').val() != "") {
+                //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+                //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+                //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+                //     var ponumber = $('#ponumber').val() || '.';
+                //     $('.po').text(ponumber);
+                //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+                //     exportSalesToPdf1();
+                // }
+                // $('#confirmprint').modal('hide');
+            }
+        }, delayTimeAfterSound);
+>>>>>>> a7452cc701d7e5910c51525d72d3999fbfcd15a3
         },
 
         'click #choosetemplate':function(event)
@@ -8968,6 +9046,8 @@ Template.new_salesorder.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -9574,6 +9654,35 @@ Template.new_salesorder.events({
         var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
+<<<<<<< HEAD
+=======
+        if(targetID != undefined) {
+            times++;
+            if (times == 1) {
+                $('#deleteLineModal').modal('toggle');
+            } else {
+                if ($('#tblSalesOrderLine tbody>tr').length > 1) {
+                    this.click;
+                    $(event.target).closest('tr').remove();
+                    $(".sales_print #" + targetID).remove();
+                    event.preventDefault();
+                    let $tblrows = $("#tblSalesOrderLine tbody tr");
+                    let $printrows = $(".sales_print tbody tr");
+                    //if(selectLineID){
+                    let lineAmount = 0;
+                    let subGrandTotal = 0;
+                    let taxGrandTotal = 0;
+                    let subDiscountTotal = 0; // New Discount
+                    let taxGrandTotalPrint = 0;
+
+                    let subGrandTotalNet = 0;
+                    let taxGrandTotalNet = 0;
+                    $tblrows.each(function(index) {
+                        var $tblrow = $(this);
+                        var qty = $tblrow.find(".lineQty").val() || 0;
+                        var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+                        var taxRate = $tblrow.find(".lineTaxCode").val();
+>>>>>>> a7452cc701d7e5910c51525d72d3999fbfcd15a3
 
         times++;
 
@@ -9767,7 +9876,7 @@ Template.new_salesorder.events({
         let salesService = new SalesBoardService();
         setTimeout(function(){
         LoadingOverlay.show();
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -12793,7 +12902,7 @@ Template.new_salesorder.events({
         let basedOnTypeAttr = 'F,';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -12860,7 +12969,7 @@ Template.new_salesorder.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -12913,7 +13022,7 @@ Template.new_salesorder.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -12994,17 +13103,17 @@ Template.new_salesorder.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -13081,21 +13190,21 @@ Template.new_salesorder.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             window.open("/invoicecard", "_self");

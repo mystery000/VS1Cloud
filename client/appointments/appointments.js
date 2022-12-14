@@ -364,7 +364,7 @@ Template.appointments.onRendered(function() {
                 appointmentService
                     .getGlobalSettings()
                     .then(function(data) {
-                        templateObject.getAllAppointmentListData(false);
+                        templateObject.getAllAppointmentListData();
                         let appEndTimeDataToLoad = "19:00";
                         globalSet.defaultProduct = "";
                         globalSet.id = "";
@@ -524,7 +524,7 @@ Template.appointments.onRendered(function() {
                     .catch(function(err) {});
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.getAllAppointmentListData(false);
+                templateObject.getAllAppointmentListData();
                 let appEndTimeDataToLoad = "19:00";
                 globalSet.defaultProduct = "";
                 globalSet.id = "";
@@ -716,7 +716,7 @@ Template.appointments.onRendered(function() {
             appointmentService
                 .getGlobalSettings()
                 .then(function(data) {
-                    templateObject.getAllAppointmentListData(false);
+                    templateObject.getAllAppointmentListData();
                     let appEndTimeDataToLoad = "19:00";
                     globalSet.defaultProduct = "";
                     globalSet.id = "";

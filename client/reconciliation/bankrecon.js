@@ -820,7 +820,7 @@ Template.bankrecon.onRendered(function() {
                         selectedtransactionsdep.push(transactionObj);
                     }
 
-                    templateObject.selectedTransdep.set(selectedtransactionsdep);
+                    // templateObject.selectedTransdep.set(selectedtransactionsdep);
 
                     let reconVS1dep = templateObject.reconVS1dep.get();
                     let notrecondep = [];
@@ -1141,7 +1141,7 @@ Template.bankrecon.onRendered(function() {
                         selectedTransAmountwith = selectedTransAmountwith + parseFloat(reconamounttrimwith);
                         selectedtransactionswith.push(transactionObj);
 
-                        templateObject.selectedTranswith.set(selectedtransactionswith);
+                        // templateObject.selectedTranswith.set(selectedtransactionswith);
 
                         let reconVS1with = templateObject.reconVS1with.get();
                         let notreconwith = [];
@@ -1944,25 +1944,27 @@ Template.bankrecon.events({
         }
     },
     'blur .endingbalance': function(e) {
-        let dataValue = utilityService.convertSubstringParseFloat(event.target.value);
+        // let dataValue = event.target.value.replace(/[^0-9.-]+/g, "") || 0;
+        // if (dataValue != "") {
+        //     $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(dataValue));
+        // }
 
-        if (!isNaN(dataValue)) {
-            $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(dataValue));
-        } else {
-            let inputDebitEx = dataValue;
-
-            $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(inputDebitEx) || 0);
-        }
+        // let dataValue = utilityService.convertSubstringParseFloat(event.target.value);
+        // if (!isNaN(dataValue)) {
+        //     $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(dataValue));
+        // } else {
+        //     let inputDebitEx = dataValue;
+        //     $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(inputDebitEx) || 0);
+        // }
     },
     'keyup .endingbalance, change .endingbalance': function(e) {
 
         var displayEndBal2 = event.target.value.replace(/[^0-9.-]+/g, "") || 0;
-        $('.endingbalance2').val(event.target.value || 0);
-
+        $('#endingbalance2').val(event.target.value || 0);
         $('.endingBalanceCalc').text(utilityService.modifynegativeCurrencyFormat(displayEndBal2) || Currency + "0.00");
 
         // Calc Difference
-        var clearedBalCalc2 = $('.clearedBalance').html().replace(/[^0-9.-]+/g, "") || 0;
+        var clearedBalCalc2 = $('.clearedBalance').html().replace(/[^0-9.,-]+/g, "") || 0;
         var differenceAmount = parseFloat(clearedBalCalc2) - parseFloat(displayEndBal2);
         $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(Math.abs(differenceAmount)) || Currency + "0.00");
     },
