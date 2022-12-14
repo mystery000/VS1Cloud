@@ -428,6 +428,7 @@ Template.leadscard.onRendered(function() {
             status: data.fields.Status || '',
             rep: data.fields.RepName || '',
             source: data.fields.SourceName || '',
+            isLead:true,
         };
 
         if ((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2) &&
@@ -494,6 +495,7 @@ Template.leadscard.onRendered(function() {
             status: '',
             rep: '',
             source: '',
+            isLead:true
         };
         templateObject.isSameAddress.set(true);
         templateObject.records.set(lineItemObj);
