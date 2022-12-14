@@ -1,4 +1,4 @@
-const BankNameList = [
+export const BankNameList = [
     ['CBA', 'Commonwealth Bank'],
     ['NAB', 'National Australian Bank'],
     ['WBC', 'Westpac Bank'],
@@ -11,4 +11,9 @@ const BankNameList = [
     ['JDO', 'Judo Bank']
 ];
 
-export default BankNameList;
+let bankNameObjList = [];
+for (let i = 0; i < BankNameList.length; i++) {
+    bankNameObjList.push({name: BankNameList[i][0], description: BankNameList[i][1]});
+}
+
+export const bankNameList = bankNameObjList;

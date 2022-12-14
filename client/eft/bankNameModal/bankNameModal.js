@@ -1,5 +1,5 @@
 import { ReactiveVar } from "meteor/reactive-var";
-import BankNameList from "../../lib/global/bank-names"
+import { BankNameList } from "../../lib/global/bank-names"
 
 Template.bankNameModal.onCreated(function () {
   const templateObject = Template.instance();

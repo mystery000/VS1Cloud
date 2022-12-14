@@ -5,7 +5,7 @@ import { SideBarService } from "../../js/sidebar-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import { UtilityService } from "../../utility-service";
-import BankNameList from "../../lib/global/bank-names";
+import { bankNameList } from "../../lib/global/bank-names";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -41,10 +41,6 @@ Template.addAccountModal.onRendered(function () {
   const dataTableListTax = [];
   const tableHeaderListTax = [];
   let categories = [];
-  let bankNameList = [];
-  for (let i = 0; i < BankNameList.length; i++) {
-    bankNameList.push({name: BankNameList[i][0], description: BankNameList[i][1]});
-  }
   templateObject.bankNames.set(bankNameList);
   templateObject.loadAccountTypes = () => {
     let accountTypeList = [];
@@ -1519,6 +1515,5 @@ Template.addAccountModal.helpers({
       .sort(function (a, b) {
         return a.name > b.name ? 1 : -1;
       });
-    // return BankNameList;
   },
 });
