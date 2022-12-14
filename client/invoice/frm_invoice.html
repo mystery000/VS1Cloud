@@ -155,18 +155,12 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-12 col-md-1">
-              <div class="row justify-content-left desktopButtons" style=" margin-left:0px;">
-                {{> toggle_button className="chkGlobalSettings" id="choosetemplate" width="131px" for="choosetemplate"
-                displayName="Choose Template"}}
-              </div>
-            </div>
             <div class="col-12 col-md-12">
               <div class="row justify-content-center desktopButtons">
                 <!-- {{# transaction_buttons_bottom margin="14px" }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
                                     {{/transaction_buttons_bottom}} -->
                 <!-- {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }} -->
-                {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
+                {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount TransactionType="invoices" }}
               </div>
             </div>
           </div>
@@ -241,7 +235,7 @@
 
       </div>
       <div class="row justify-content-center mobileButtons" style="display: none;">
-        {{> transaction_buttons_bottom margin="12px" AttachmentCount=attachmentCount }}
+        {{> transaction_buttons_bottom margin="12px" AttachmentCount=attachmentCount TransactionType="invoices" }}
       </div>
       <div class="printID" style="display: none;"></div>
       <style>

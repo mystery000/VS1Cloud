@@ -16,119 +16,51 @@
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <!-- Delivery Docket -->
-            {{#if equals TransactionType "sales"}}
-            <div class="row mb-3">
-              <div class="col-10 d-flex justify-content-center">
-                <div class="card shadow w-75">
-                  <div class="card-header py-3">
-                    <span class="text-primary m-0 font-weight-bold"
-                      >Delivery Docket</span
-                    >
-                  </div>
-                  <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                      {{#each deliveryDocket in printTemplates.deliveryDocket}}
-                      <li
-                        class="list-group-item templateItem justify-content-between"
-                        data-id="{{deliveryDocket.fields.SettingName}}"
-                        data-template-id="{{deliveryDocket.fields.Template}}"
-                      >
-                        <div class="custom-control custom-switch">
-                          <input type="hidden" name="{{deliveryDocket.fields.SettingName}}"/>
-                          <input
-                            class="custom-control-input chkGlobalSettings"
-                            type="radio"
-                            name="{{deliveryDocket.fields.SettingName}}"
-                            id="Delivery_Docket_{{deliveryDocket.fields.Template}}"
-                            value="{{deliveryDocket.fields.Template}}"
-                            style="cursor: pointer;"
-                          />
-                          <label
-                            class="custom-control-label"
-                            for="Delivery_Docket_{{deliveryDocket.fields.Template}}"
-                            style="cursor: pointer; color: transparent;"
-                          ></label>
-                          <input
-                            type="text"
-                            name="{{deliveryDocket.fields.SettingName}}_{{deliveryDocket.fields.Template}}"
-                            style="border: none; width: 90%;"
-                            value="{{deliveryDocket.fields.Description}}"
-                          />
-                        </div>
-                        <i
-                          id="btnPreviewTemplate"
-                          data-id="{{deliveryDocket.fields.SettingName}}"
-                          class="far fa-eye btnPreviewTemplate"
-                          data-toggle="modal"
-                        ></i>
-                      </li>
-                      {{/each}}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="col-2 d-flex justify-content-center align-items-center"
-              >
-                <div class="custom-control custom-switch ml-1">
-                  <input
-                    class="custom-control-input chkGlobalSettings"
-                    name="print_delivery_docket"
-                    id="print_delivery_docket"
-                    type="checkbox"
-                    style="cursor: pointer;"
-                  />
-                  <label
-                    class="custom-control-label"
-                    style="cursor: pointer;"
-                    for="print_delivery_docket"
-                  ></label>
-                </div>
-              </div>
-            </div>
-            {{/if}}
             <!-- Choose Template -->
+            {{#each printTypeTemplate in printTypeTemplates}}
             <div class="row mb-3">
               <div class="col-10 d-flex justify-content-center">
                 <div class="card shadow w-75">
                   <div class="card-header py-3">
                     <span class="text-primary m-0 font-weight-bold"
-                      >Choose Template</span
+                      >{{getTemplateTitle TransactionType
+                      printTypeTemplate.templateName}}</span
                     >
                   </div>
                   <div class="card-body">
                     <ul class="list-group list-group-flush">
-                      {{#each template in printTemplates.templates}}
+                      {{#each template in printTypeTemplate.templateList}}
                       <li
                         class="list-group-item templateItem justify-content-between"
-                        data-id="{{template.fields.SettingName}}"
+                        data-id="{{getTemplateTitle TransactionType printTypeTemplate.templateName}}"
                         data-template-id="{{template.fields.Template}}"
                       >
                         <div class="custom-control custom-switch">
-                          <input type="hidden" name="{{template.fields.SettingName}}"/>
+                          <input
+                            type="hidden"
+                            name="{{getTemplateTitle TransactionType printTypeTemplate.templateName}}"
+                          />
                           <input
                             class="custom-control-input chkGlobalSettings"
                             type="radio"
-                            name="{{template.fields.SettingName}}"
-                            id="Template_{{template.fields.Template}}"
+                            name="{{getTemplateTitle TransactionType printTypeTemplate.templateName}}"
+                            id="{{getTemplateKey TransactionType printTypeTemplate.templateName}}_{{template.fields.Template}}"
                             value="{{template.fields.Template}}"
                             style="cursor: pointer;"
                           />
                           <label
                             class="custom-control-label"
-                            for="Template_{{template.fields.Template}}"
+                            for="{{getTemplateKey TransactionType printTypeTemplate.templateName}}_{{template.fields.Template}}"
                             style="cursor: pointer; color: transparent;"
                           ></label>
                           <input
                             type="text"
-                            name="{{template.fields.SettingName}}_{{template.fields.Template}}"
+                            name="{{getTemplateTitle TransactionType printTypeTemplate.templateName}}_{{template.fields.Template}}"
                             style="border: none; width: 90%;"
                             value="{{template.fields.Description}}"
                           />
                         </div>
                         <i
-                          id="btnPreviewTemplate"
                           data-id="{{template.fields.SettingName}}"
                           class="far fa-eye btnPreviewTemplate"
                           data-toggle="modal"
@@ -145,19 +77,21 @@
                 <div class="custom-control custom-switch ml-1">
                   <input
                     class="custom-control-input chkGlobalSettings"
-                    name="print_sales_order"
-                    id="print_sales_order"
+                    name="print_{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
+                    id="print_{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
                     type="checkbox"
                     style="cursor: pointer;"
                   />
                   <label
                     class="custom-control-label"
                     style="cursor: pointer;"
-                    for="print_sales_order"
+                    for="print_{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
                   ></label>
                 </div>
               </div>
             </div>
+            {{/each}}
+
             <!-- Email -->
             <div class="row mb-3">
               <div class="col-10 d-flex justify-content-center">
@@ -287,8 +221,9 @@
         </div>
         <!-- Footer Buttons -->
         <div class="modal-footer">
-          <button class="btn btn-primary" type="button">
-            Ok
+          <button class="btn btn-primary printConfirm btnFooter" type="button">
+            <i class="fa fa-print" style="margin-right: 5px;"></i>
+            Confirm Print
           </button>
           <button class="btn btn-light" data-dismiss="modal" type="button">
             Cancel

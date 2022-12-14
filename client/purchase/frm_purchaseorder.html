@@ -75,73 +75,6 @@
   
                 {{> customfieldDroppop}}
                 {{> customfieldpop}}
-                <div class="modal fade" role="dialog" tabindex="-1" id="templateselection">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="padding-bottom: 8px;">
-                                <h4>Select Template</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row justify-content-center mb-3">
-  
-  
-                                    <div class="row">
-                                        {{#each title in getTemplateList}}
-                                            <div class="col-12 ">
-                                                <div class="card shadow mb-3">
-                                                    <div class="card-header py-3">
-                                                        <span id="{{title}}_title" class="text-primary m-0 font-weight-bold">{{title}}</span>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <ul class="list-group list-group-flush">
-                                                            {{#each index in getTemplateNumber}}
-                                                                <li class="list-group-item templateItem justify-content-between" data-id="{{title}}" data-template-id="{{index}}">
-                                                                    <div class="custom-control custom-switch">
-  
-                                                                        {{#if equals index '1'}}
-                                                                                {{#if equals title 'Purchase Orders'}}
-                                                                                <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Purchase_Orders_{{index}}" value="{{index}}" checked style="cursor: pointer;">
-                                                                                {{/if}}
-                                                                        {{else}}
-                                                                                {{#if equals title 'Purchase Orders'}}
-                                                                                <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Purchase_Orders_{{index}}" value="{{index}}"  style="cursor: pointer;">
-                                                                                {{/if}}
-                                                                        {{/if}}
-  
-                                                                        {{#if equals title 'Purchase Orders'}}
-                                                                               <label class="custom-control-label" for="Purchase_Orders_{{index}}" style="cursor: pointer; color: transparent;"></label>
-                                                                        {{/if}}
-                                                                        <input type="text" name="{{title}}_{{index}}" style="border: 1px solid rgb(209 211 226 / 0%);" value="Template {{index}}" />
-  
-  
-                                                                    </div>
-  
-                                                                    <i id="btnPreviewTemplate" data-id="{{title}}" class="far fa-eye btnPreviewTemplate" data-toggle="modal"></i>
-                                                                </li>
-                                                            {{/each}}
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div class="custom-control custom-switch">
-                                                        <input class="custom-control-input chkGlobalSettings" name="print_purchase_order" checked type="checkbox" id="print_purchase_order" autocomplete="off">
-                                                        <label style="cursor: pointer;" class="custom-control-label" for="print_purchase_order">Print Purchase Order</label>
-                                                    </div>
-                                                </div>
-  
-                                            </div>
-                                        {{/each}}
-                                    </div>
-  
-                                </div>
-                            </div>
-                            <div class="modal-footer" style="padding: 6px;">
-                                <button class="btn btn-primary printConfirm btnFooter" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Confirm Print</button>
-                                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                        </div>
-                    </div>
-  
-                </div>
   
                 <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog" aria-labelledby="templatePreviewLabel" aria-hidden="true">
                       {{> custom_print_template modalId="templatePreviewModal" idPrefix="html-2-pdfwrapper_quotes" namePrefix="pdfwrapper_quotes" }}
@@ -721,21 +654,9 @@
                         </div>
   
                         <div class="row">
-                            <div class="col-12 col-md-1">
-                                <div class="row justify-content-left desktopButtons" style="margin-left:0px;">
-  
-                                    <div class="custom-control custom-switch">
-                                        <input class="custom-control-input chkGlobalSettings" id="choosetemplate" type="checkbox" style="cursor: pointer;">
-                                        <label class="custom-control-label" style="width:131px;cursor: pointer;" for="choosetemplate">Choose Template</label>
-                                    </div>
-  
-  
-                                </div>
-  
-                            </div>
                             <div class="col-12 col-md-11">
                                 <div class="row justify-content-center desktopButtons">
-                                    {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
+                                    {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount TransactionType="purchaseorders" }}
                                 </div>
   
                             </div>
@@ -813,7 +734,7 @@
                 </div>
   
                 <div class="row justify-content-center mobileButtons" style="display: none;">
-                    {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
+                    {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount TransactionType="purchaseorders" }}
                 </div>
   
                 <div class="printID" style="display: none;"></div>

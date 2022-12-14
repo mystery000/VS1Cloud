@@ -6431,12 +6431,7 @@ Template.chequecard.events({
       }
     }
   },
-  'click #open_print_confirm' : function(event) {
-    playPrintAudio();
-    setTimeout(function(){
-        $('#templateselection').modal('toggle');
-    }, delayTimeAfterSound);
-  },
+  'click #open_print_confirm' : function(event) {},
   "click .printConfirm": async function (event) {
     playPrintAudio();
     setTimeout(async function(){
@@ -6460,6 +6455,8 @@ Template.chequecard.events({
 
               }
           }
+      } else {
+        // LoadingOverlay.hide();
       }
     }, delayTimeAfterSound);
   },

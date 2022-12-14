@@ -572,10 +572,10 @@ Template.new_salesorder.onRendered(function () {
        });
    };
 
-    templateObject.generateInvoiceData = function (template_title,number) {
+    templateObject.generateInvoiceData = function (template_title, number) {
         object_invoce = [];
         switch (template_title) {
-            case "Sales Order":
+            case "Sales Orders":
                 showSealsOrder1(template_title, number, false);
             break;
             case "Delivery Docket":
@@ -9126,7 +9126,7 @@ Template.new_salesorder.events({
         setTimeout(async function(){
           var printTemplate = [];
           LoadingOverlay.show();
-          var sales_orders = $('input[name="Sales Order"]:checked').val();
+          var sales_orders = $('input[name="Sales Orders"]:checked').val();
           let emid = Session.get('mySessionEmployeeLoggedID');
           var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
           sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,1).then(function (data) {
@@ -9495,7 +9495,7 @@ Template.new_salesorder.events({
               {
                 if(printTemplate[i] == 'Sales Order')
                 {
-                    var template_number = $('input[name="Sales Order"]:checked').val();
+                    var template_number = $('input[name="Sales Orders"]:checked').val();
                 }
                 else if(printTemplate[i] == 'Delivery Docket')
                 {
@@ -13472,4 +13472,8 @@ Template.new_salesorder.events({
 
 Template.registerHelper('equals', function(a, b) {
     return a === b;
+});
+
+Template.registerHelper('temp', function() {
+    alert('test!');
 });
