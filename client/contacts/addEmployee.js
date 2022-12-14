@@ -1701,7 +1701,8 @@ Template.employeescard.onRendered(function() {
             custFld2: '',
             dashboardOptions: '',
             salesQuota: 5000,
-            website: ''
+            website: '',
+            isEmployee:true
         }
 
         templateObject.records.set(lineItemObj);
@@ -1793,7 +1794,8 @@ Template.employeescard.onRendered(function() {
                 custFld2: '',
                 website: '',
                 dashboardOptions: '',
-                salesQuota: 5000
+                salesQuota: 5000,
+                isEmployee:true
             }
 
             templateObject.records.set(lineItemObj);
@@ -1978,7 +1980,8 @@ Template.employeescard.onRendered(function() {
             website: '',
             notes: data.fields.Notes || '',
             dashboardOptions: data.fields.CustFld11 || '',
-            salesQuota: data.fields.CustFld12 || ''
+            salesQuota: data.fields.CustFld12 || '',
+            isEmployee:true,
         };
         templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
 

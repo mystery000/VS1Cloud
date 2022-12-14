@@ -2865,6 +2865,27 @@ Template.customerscard.events({
             window.open('/customerscard?jobid=' + listData, '_self');
         }
     },
+    'click #tblCustomerCrmList tbody tr': function(event) {
+        const taskID = $(event.target).parent().attr('id');
+        let crmRecords = Template.instance().crmRecords.get();
+        const currentRecordIndex = crmRecords.findIndex(item => item.id == taskID);
+        let taskCategory = "";
+        if (currentRecordIndex > -1) {
+            taskCategory = crmRecords[currentRecordIndex].category;
+        }
+        // const taskCategory = $(event.target).parent().attr('category');
+
+        if (taskID !== undefined) {
+            if (taskCategory == 'task') {
+                // FlowRouter.go('/crmoverview?taskid=' + taskID);
+                openEditTaskModals(taskID, "");
+            } else if (taskCategory == 'appointment') {
+                // FlowRouter.go('/appointments?id=' + taskID);
+                document.getElementById("updateID").value = taskID || 0;
+                $("#event-modal").modal("toggle");
+            }
+        }
+    },
     'click .tblCrmList tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
         let crmRecords = Template.instance().crmRecords.get();
