@@ -1,9 +1,9 @@
 <template name="creditcard">
   <div
     class="container-fluid purchasesmodule"
-    style="padding-right: 0px; padding-left: 0px;"
+    style="padding-right: 0px; padding-left: 0px"
   >
-    <div class="fullScreenSpin" style="display: none;">
+    <div class="fullScreenSpin" style="display: none">
       <div class="spinner"></div>
     </div>
 
@@ -31,45 +31,24 @@
 
     {{#if creditrecord}}
     <form>
-      {{> transaction_header
-        cardType="Credit"
-        data=creditrecord
-        uploadedFile=uploadedFile
-        isCurrencyEnable=isCurrencyEnable
-        custfields=custfields
-        showTemplateModals=true
-        showUploadAttachment=true
-        showTransactionButtons=false
-        salesCloudPreferenceRec=purchaseCloudPreferenceRec
-        showCustomer=true
-        showBilingAddress=true
-        showSalesDate=true
-        showPONumber=false
-        showInvoiceNumber=true
-        showVia=true
-        showTerms=true
-        showStatus=true
-        showReference=true
-        showDepartment=true
-        showCustomFields=true
-        showShippingInfo=true
-        showPayment=true
-        showCopyTransaction=true
-        showCopyToInvoice=false
-        showCopyToOrder=false
-      }}
+      {{> transaction_header cardType="Credit" data=creditrecord
+      uploadedFile=uploadedFile isCurrencyEnable=isCurrencyEnable
+      custfields=custfields showTemplateModals=true showUploadAttachment=true
+      showTransactionButtons=false
+      salesCloudPreferenceRec=purchaseCloudPreferenceRec showCustomer=true
+      showBilingAddress=true showSalesDate=true showPONumber=false
+      showInvoiceNumber=true showVia=true showTerms=true showStatus=true
+      showReference=true showDepartment=true showCustomFields=true
+      showShippingInfo=true showPayment=true showCopyTransaction=true
+      showCopyToInvoice=false showCopyToOrder=false }}
       <div>
-        {{> transaction_line
-          tablename="tblCreditLine"
-          recordLineItems=creditrecord.LineItems
-          isForeignEnabled=isForeignEnabled
-          canShowBackOrder=false
-          canShowUOM=false
-          includeBOnShippedQty=false
-          isBatchSerialNoTracking=isBatchSerialNoTracking
-          getDefaultCurrency=getDefaultCurrency
-          }}
-        {{> deletepop itemName1="Credit" itemName2="credit" itemName3="Credit" button1="btnDeleteCredit" button2="btnDeleteFollowingCredits"}}
+        {{> transaction_line tablename="tblCreditLine"
+        recordLineItems=creditrecord.LineItems isForeignEnabled=isForeignEnabled
+        canShowBackOrder=false canShowUOM=false includeBOnShippedQty=false
+        isBatchSerialNoTracking=isBatchSerialNoTracking
+        getDefaultCurrency=getDefaultCurrency }} {{> deletepop
+        itemName1="Credit" itemName2="credit" itemName3="Credit"
+        button1="btnDeleteCredit" button2="btnDeleteFollowingCredits"}}
       </div>
       <!-- <div class="d-xl-flex align-items-xl-start" style="padding-left: 16px; padding-right: 16px">
                     <div class="flex-grow-1">
@@ -167,14 +146,14 @@
         }
       </style>
 
-      <div class="row align-items-end" style="margin: 16px; margin-top: 0px;">
-        <div class="col-12 col-lg-8 col-xl-10" style="rpadding-right: 24px;">
+      <div class="row align-items-end" style="margin: 16px; margin-top: 0px">
+        <div class="col-12 col-lg-8 col-xl-10" style="rpadding-right: 24px">
           <div class="row">
             <button
               class="btn btn-primary"
               type="button"
               id="addRow"
-              style="margin: 16px; margin-top: 0px;"
+              style="margin: 16px; margin-top: 0px"
             >
               + Add New Entry
             </button>
@@ -272,7 +251,7 @@
                     autocomplete="off"
                   />
                   <label
-                    style="cursor: pointer;"
+                    style="cursor: pointer"
                     class="custom-control-label"
                     for="print_credit_second"
                     >Print Credit</label
@@ -285,7 +264,7 @@
                   class="btn btn-primary printConfirm btnFooter"
                   type="button"
                 >
-                  <i class="fa fa-print" style="margin-right: 5px;"></i>Confirm
+                  <i class="fa fa-print" style="margin-right: 5px"></i>Confirm
                   Print
                 </button>
                 <button
@@ -293,7 +272,7 @@
                   class="btn btn-secondary"
                   data-dismiss="modal"
                 >
-                  <i class="fas fa-times" style="margin-right: 5px;"></i>Close
+                  <i class="fas fa-times" style="margin-right: 5px"></i>Close
                 </button>
               </div>
             </div>
@@ -331,71 +310,67 @@
         id="html-2-pdfwrapper_new"
         name="html-2-pdfwrapper_new"
       >
-        <div style="display: flex; height: fit-content; min-height: 30mm;">
+        <div style="display: flex; height: fit-content; min-height: 30mm">
           <div
-            style="margin: 0px; padding: 16px; width: 130mm; max-width: 130mm;"
+            style="margin: 0px; padding: 16px; width: 130mm; max-width: 130mm"
           >
-            <div style="display: flex;">
-              <div style="max-width: 60mm; max-height: 30mm;">
+            <div style="display: flex">
+              <div style="max-width: 60mm; max-height: 30mm">
                 <img
                   src="assets/img/VS1.png"
                   class="uploadedImage"
-                  style="
-                    max-width: 200px;
-                    max-height: 30mm;
-                    margin-bottom: 8px;
-                  "
+                  style="max-width: 200px; max-height: 30mm; margin-bottom: 8px"
                 />
               </div>
-              <div style="width: 70mm;">
-                <div style="padding-left: 16px; font-weight: bold;">
+              <div style="width: 70mm">
+                <div style="padding-left: 16px; font-weight: bold">
                   <p
                     class="o_url"
-                    style="margin-bottom: 0px; color: rgb(0 0 0);"
+                    style="margin-bottom: 0px; color: rgb(0 0 0)"
                   ></p>
                   <p
                     class="o_name"
-                    style="margin-bottom: 0px; color: rgb(0 0 0);"
+                    style="margin-bottom: 0px; color: rgb(0 0 0)"
                   ></p>
                   <p
                     class="o_address1"
-                    style="margin-bottom: 0px; color: rgb(0 0 0);"
+                    style="margin-bottom: 0px; color: rgb(0 0 0)"
                   ></p>
                   <p
                     class="o_address2"
-                    style="margin-bottom: 0px; color: rgb(0 0 0);"
+                    style="margin-bottom: 0px; color: rgb(0 0 0)"
                   ></p>
                   <p
                     class="o_city"
-                    style="margin-bottom: 0px; color: rgb(0 0 0);"
+                    style="margin-bottom: 0px; color: rgb(0 0 0)"
                   ></p>
                   <p
                     class="o_state"
-                    style="margin-bottom: 0px; color: rgb(0 0 0);"
+                    style="margin-bottom: 0px; color: rgb(0 0 0)"
                   ></p>
                   <p
                     class="o_reg"
-                    style="margin-bottom: 0px; color: rgb(0 0 0);"
+                    style="margin-bottom: 0px; color: rgb(0 0 0)"
                   ></p>
                   <p
                     class="o_abn"
-                    style="margin-bottom: 0px; color: rgb(0 0 0);"
+                    style="margin-bottom: 0px; color: rgb(0 0 0)"
                   ></p>
                   <p
                     class="o_phone"
-                    style="margin-bottom: 0px; color: rgb(0 0 0);"
+                    style="margin-bottom: 0px; color: rgb(0 0 0)"
                   ></p>
                 </div>
               </div>
             </div>
-            <div style="font-size: 14px; width: 50%;">
+            <div style="font-size: 14px; width: 50%">
               <p
-                style="margin-bottom: 0px; color: rgb(0 0 0); font-weight: 600;"
+                style="margin-bottom: 0px; color: rgb(0 0 0); font-weight: 600"
               >
                 Supplier
               </p>
               <p
-                style="margin-bottom: 0px; color: rgb(0 0 0); display: none;"
+                style="margin-bottom: 0px; color: rgb(0 0 0); display: none"
                 class="pdfCustomerName"
               ></p>
               <div
@@ -411,81 +386,78 @@
           </div>
           <div
             class="col-5 col-md-5 col-sm-12"
-            style="margin: 0px; padding: 16px; border: none !important;"
+            style="margin: 0px; padding: 16px; border: none !important"
           >
             <h4
               class=""
-              style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);"
+              style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0)"
             >
               Credit &nbsp;&nbsp;&nbsp;<span class="print-header"></span>
             </h4>
-            <div style="display: flex; width: 100%;">
-              <div style="width: 50%; padding-right: 16px; font-weight: bold;">
+            <div style="display: flex; width: 100%">
+              <div style="width: 50%; padding-right: 16px; font-weight: bold">
                 <p
                   class="dateNumber"
-                  style="margin-bottom: 4px; color: rgb(0 0 0);"
+                  style="margin-bottom: 4px; color: rgb(0 0 0)"
                 >
                   Date:
                 </p>
                 <p
                   class="pdfPONumber"
-                  style="margin-bottom: 4px; color: rgb(0 0 0);"
+                  style="margin-bottom: 4px; color: rgb(0 0 0)"
                 >
                   P.O Number:
                 </p>
                 <p
                   class="invoiceNumber"
-                  style="margin-bottom: 4px; color: rgb(0 0 0);"
+                  style="margin-bottom: 4px; color: rgb(0 0 0)"
                 >
                   Invoice No:
                 </p>
                 <p
                   class="refNumber"
-                  style="margin-bottom: 4px; color: rgb(0 0 0);"
+                  style="margin-bottom: 4px; color: rgb(0 0 0)"
                 >
                   Ref No:
                 </p>
                 <p
                   class="pdfTerms"
-                  style="margin-bottom: 4px; color: rgb(0 0 0);"
+                  style="margin-bottom: 4px; color: rgb(0 0 0)"
                 >
                   Due Date:
                 </p>
 
-                <p
-                  class="showFx"
-                  style="margin-bottom: 4px; color: rgb(0 0 0);"
-                >
+                <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0)">
                   FX Currency:
                 </p>
 
-                <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
+                <p class="link" style="color: rgb(0 0 0)">Pay Link:</p>
 
                 <div class="mt-4" id="customfieldtablenew">
                   <p
                     class="customfield1"
-                    style="margin-bottom: 4px; color: rgb(0 0 0);"
+                    style="margin-bottom: 4px; color: rgb(0 0 0)"
                   >
                     Custom Field 1
                   </p>
                   <p
                     class="customfield2"
-                    style="margin-bottom: 4px; color: rgb(0 0 0);"
+                    style="margin-bottom: 4px; color: rgb(0 0 0)"
                   >
                     Custom Field 2
                   </p>
                   <p
                     class="customfield3"
-                    style="margin-bottom: 4px; color: rgb(0 0 0);"
+                    style="margin-bottom: 4px; color: rgb(0 0 0)"
                   >
                     Custom Field 3
                   </p>
                 </div>
               </div>
-              <div style="width: 50%; padding-left: 16px;">
+              <div style="width: 50%; padding-left: 16px">
                 <p
                   class="date"
-                  style="margin-bottom: 4px; color: rgb(0 0 0);"
+                  style="margin-bottom: 4px; color: rgb(0 0 0)"
                 ></p>
                 <p
                   class="po"
@@ -556,19 +528,19 @@
                 <div class="mt-4" id="customdatatablenew">
                   <p
                     class="customfield1data"
-                    style="margin-bottom: 4px; color: rgb(0 0 0);"
+                    style="margin-bottom: 4px; color: rgb(0 0 0)"
                   >
                     Custom Field 1
                   </p>
                   <p
                     class="customfield2data"
-                    style="margin-bottom: 4px; color: rgb(0 0 0);"
+                    style="margin-bottom: 4px; color: rgb(0 0 0)"
                   >
                     Custom Field 2
                   </p>
                   <p
                     class="customfield3data"
-                    style="margin-bottom: 4px; color: rgb(0 0 0);"
+                    style="margin-bottom: 4px; color: rgb(0 0 0)"
                   >
                     Custom Field 3
                   </p>
@@ -578,7 +550,7 @@
           </div>
         </div>
         <hr />
-        <div style="height: 130mm;">
+        <div style="height: 130mm">
           <div
             style="
               margin: 8px;
@@ -588,28 +560,26 @@
           >
             <table
               class="credit_print"
-              style="width: 200mm; max-width: 200mm; margin: auto;"
+              style="width: 200mm; max-width: 200mm; margin: auto"
             >
-              <thead style="color: rgb(251, 251, 251);">
+              <thead style="color: rgb(251, 251, 251)">
                 <tr
                   class="tbl_header"
-                  style="border-bottom: 1px solid rgba(0, 0, 0, 1);"
+                  style="border-bottom: 1px solid rgba(0, 0, 0, 1)"
                 ></tr>
               </thead>
-              <tbody class="tbl_content" style="color: rgb(0 0 0);"></tbody>
+              <tbody class="tbl_content" style="color: rgb(0 0 0)"></tbody>
             </table>
           </div>
         </div>
         <hr />
-        <div style="display: flex;">
-          <div style="margin: 8px; width: 100%;">
+        <div style="display: flex">
+          <div style="margin: 8px; width: 100%">
             <div class="row">
               <div class="col-6">
                 <div class="row">
                   <div class="col-12">
-                    <p style="font-weight: bold; color: rgb(0 0 0);">
-                      Comments
-                    </p>
+                    <p style="font-weight: bold; color: rgb(0 0 0)">Comments</p>
                     <div
                       id="printcomment"
                       style="
@@ -623,9 +593,9 @@
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <div class="row field_payment" style="border: 1px solid;">
+                    <div class="row field_payment" style="border: 1px solid">
                       <div class="col-12">
-                        <p style="font-weight: 600; color: rgb(0 0 0);">
+                        <p style="font-weight: 600; color: rgb(0 0 0)">
                           Payment Details
                         </p>
                       </div>
@@ -633,7 +603,7 @@
 
                                     </div> -->
                       <div class="col-12">
-                        <p style="font-weight: 600; color: rgb(0 0 0);"></p>
+                        <p style="font-weight: 600; color: rgb(0 0 0)"></p>
                       </div>
 
                       <div class="col-12">
@@ -702,9 +672,9 @@
               <div class="col-6">
                 <div class="row">
                   <div class="col-12 field_amount">
-                    <div style="margin: 8px; border: none !important;">
-                      <div style="width: 100%; display: flex;">
-                        <div style="padding-right: 16px; width: 50%;">
+                    <div style="margin: 8px; border: none !important">
+                      <div style="width: 100%; display: flex">
+                        <div style="padding-right: 16px; width: 50%">
                           <p
                             style="
                               font-weight: 600;
@@ -724,7 +694,7 @@
                             Total GST
                           </p>
                         </div>
-                        <div style="padding-left: 16px; width: 50%;">
+                        <div style="padding-left: 16px; width: 50%">
                           <p
                             id="subtotal_totalPrint"
                             style="
@@ -747,13 +717,13 @@
                       </div>
                       <div
                         id="tax_list_print"
-                        style="width: 100%; padding-left: 16px;"
+                        style="width: 100%; padding-left: 16px"
                       >
-                        <div style="width: 100%; display: flex;"></div>
+                        <div style="width: 100%; display: flex"></div>
                       </div>
                       <hr />
-                      <div style="width: 100%; display: flex;">
-                        <div style="padding-right: 16px; width: 50%;">
+                      <div style="width: 100%; display: flex">
+                        <div style="padding-right: 16px; width: 50%">
                           <p
                             style="
                               font-weight: 800;
@@ -764,7 +734,7 @@
                             TOTAL
                           </p>
                         </div>
-                        <div style="padding-left: 16px; width: 50%;">
+                        <div style="padding-left: 16px; width: 50%">
                           <p
                             id="grandTotalPrint"
                             style="
@@ -778,8 +748,8 @@
                         </div>
                       </div>
                       <hr />
-                      <div style="width: 100%; display: flex;">
-                        <div style="padding-right: 16px; width: 50%;">
+                      <div style="width: 100%; display: flex">
+                        <div style="padding-right: 16px; width: 50%">
                           <p
                             style="
                               font-weight: 600;
@@ -799,7 +769,7 @@
                             Balance Due
                           </p>
                         </div>
-                        <div style="padding-left: 16px; width: 50%;">
+                        <div style="padding-left: 16px; width: 50%">
                           <p
                             id="paid_amount"
                             style="
@@ -828,8 +798,8 @@
           </div>
         </div>
 
-        <div style="font-size: 10px; margin-right: 8px; float: right;">
-          <p class="applied font-weight-bold" style="font-size: 14px;">
+        <div style="font-size: 10px; margin-right: 8px; float: right">
+          <p class="applied font-weight-bold" style="font-size: 14px">
             Applied $50.00
           </p>
         </div>
@@ -849,12 +819,12 @@
       </div>
       <div
         class="row justify-content-center mobileButtons"
-        style="display: none;"
+        style="display: none"
       >
         {{> transaction_buttons_bottom margin="14px"
         AttachmentCount=attachmentCount TransactionType="credits" }}
       </div>
-      <div class="printID" style="display: none;"></div>
+      <div class="printID" style="display: none"></div>
       <style>
         @media screen and (max-width: 450px) {
           .btnFooter {
@@ -919,54 +889,52 @@
       id="html-2-pdfwrapper"
       name="html-2-pdfwrapper"
     >
-      <div style="display: flex; height: fit-content; min-height: 30mm;">
-        <div
-          style="margin: 0px; padding: 16px; width: 130mm; max-width: 130mm;"
-        >
-          <div style="display: flex;">
-            <div style="max-width: 60mm; max-height: 30mm;">
+      <div style="display: flex; height: fit-content; min-height: 30mm">
+        <div style="margin: 0px; padding: 16px; width: 130mm; max-width: 130mm">
+          <div style="display: flex">
+            <div style="max-width: 60mm; max-height: 30mm">
               <img
                 src="assets/img/VS1.png"
                 class="uploadedImage"
-                style="max-width: 200px; max-height: 30mm; margin-bottom: 8px;"
+                style="max-width: 200px; max-height: 30mm; margin-bottom: 8px"
               />
             </div>
-            <div style="width: 70mm;">
-              <div style="padding-left: 16px; font-weight: bold;">
+            <div style="width: 70mm">
+              <div style="padding-left: 16px; font-weight: bold">
                 <a href="{{organizationurl}}">{{organizationurl}}</a>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                   {{organizationname}}
                 </p>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                   {{companyaddress1}}
                 </p>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                   {{companyaddress2}}
                 </p>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{city}}</p>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">{{city}}</p>
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                   {{state}} {{poBox}}
                 </p>
                 {{#if equals companyReg ''}} {{else}}
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                   {{companyReg}}
                 </p>
                 {{/if}}
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                   {{companyabn}}
                 </p>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                   {{companyphone}}
                 </p>
               </div>
             </div>
           </div>
-          <div style="font-size: 14px;">
-            <p style="margin-bottom: 0px; color: rgb(0 0 0); font-weight: 600;">
+          <div style="font-size: 14px">
+            <p style="margin-bottom: 0px; color: rgb(0 0 0); font-weight: 600">
               Supplier
             </p>
             <p
-              style="margin-bottom: 0px; color: rgb(0 0 0); display: none;"
+              style="margin-bottom: 0px; color: rgb(0 0 0); display: none"
               class="pdfCustomerName"
             ></p>
             <div
@@ -989,24 +957,22 @@
             max-width: 60mm;
           "
         >
-          <h4
-            style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);"
-          >
+          <h4 style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0)">
             Credit&nbsp;&nbsp;&nbsp; {{creditrecord.id}}
           </h4>
-          <div style="display: flex; width: 100%;">
-            <div style="width: 50%; padding-right: 16px; font-weight: bold;">
-              <label style="margin-bottom: 4px; color: rgb(0 0 0); width: 100%;"
+          <div style="display: flex; width: 100%">
+            <div style="width: 50%; padding-right: 16px; font-weight: bold">
+              <label style="margin-bottom: 4px; color: rgb(0 0 0); width: 100%"
                 >Date:</label
               >
               <label
                 class="pdfPONumber"
-                style="margin-bottom: 4px; color: rgb(0 0 0);"
+                style="margin-bottom: 4px; color: rgb(0 0 0)"
                 >Invoice No.:</label
               >
             </div>
-            <div style="width: 50%; padding-left: 16px;">
-              <p style="margin-bottom: 4px; color: rgb(0 0 0);">
+            <div style="width: 50%; padding-left: 16px">
+              <p style="margin-bottom: 4px; color: rgb(0 0 0)">
                 {{creditrecord.saledate}}
               </p>
               <p
@@ -1024,7 +990,7 @@
         </div>
       </div>
       <hr />
-      <div style="height: 130mm;">
+      <div style="height: 130mm">
         <div
           style="
             margin: 8px;
@@ -1034,10 +1000,10 @@
         >
           <table
             class="credit_print"
-            style="width: 200mm; max-width: 200mm; margin: auto;"
+            style="width: 200mm; max-width: 200mm; margin: auto"
           >
-            <thead style="color: rgb(251, 251, 251);">
-              <tr style="border-bottom: 1px solid rgba(0, 0, 0, 1);">
+            <thead style="color: rgb(251, 251, 251)">
+              <tr style="border-bottom: 1px solid rgba(0, 0, 0, 1)">
                 <th
                   style="
                     width: 200px;
@@ -1089,25 +1055,25 @@
                 </th>
               </tr>
             </thead>
-            <tbody style="color: rgb(0 0 0);">
+            <tbody style="color: rgb(0 0 0)">
               {{#each item in creditrecord.LineItems}}
               <tr
                 id="{{item.lineID}}"
-                style="border-bottom: 1px solid rgba(0, 0, 0, 0.1);"
+                style="border-bottom: 1px solid rgba(0, 0, 0, 0.1)"
               >
                 <td id="lineAccountName">{{item.accountname}}</td>
                 <td id="lineMemo">{{item.description}}</td>
-                <td id="lineTaxAmount" style="text-align: right;">
+                <td id="lineTaxAmount" style="text-align: right">
                   {{item.taxRate}}
                 </td>
                 <td
                   id="lineTaxCode"
                   class="hiddenColumn"
-                  style="text-align: right;"
+                  style="text-align: right"
                 >
                   {{item.taxCode}}
                 </td>
-                <td id="lineAmount" style="text-align: right;">
+                <td id="lineAmount" style="text-align: right">
                   {{item.TotalAmt}}
                 </td>
               </tr>
@@ -1117,12 +1083,12 @@
         </div>
       </div>
       <hr />
-      <div style="display: flex;">
+      <div style="display: flex">
         <div
-          style="margin: 8px; min-width: 100mm; max-width: 100mm; width: 100mm;"
+          style="margin: 8px; min-width: 100mm; max-width: 100mm; width: 100mm"
         >
-          <p style="font-weight: 600; color: rgb(0 0 0);">Comments</p>
-          <div id="printcomment" style="color: rgb(0 0 0);">
+          <p style="font-weight: 600; color: rgb(0 0 0)">Comments</p>
+          <div id="printcomment" style="color: rgb(0 0 0)">
             {{creditrecord.comments}}
           </div>
         </div>
@@ -1135,20 +1101,20 @@
             width: 90mm;
           "
         >
-          <div style="width: 100%; display: flex;">
-            <div style="padding-right: 16px; width: 50%;">
+          <div style="width: 100%; display: flex">
+            <div style="padding-right: 16px; width: 50%">
               <p
-                style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);"
+                style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0)"
               >
                 Sub Total
               </p>
               <p
-                style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);"
+                style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0)"
               >
                 Total GST
               </p>
             </div>
-            <div style="padding-left: 16px; width: 50%;">
+            <div style="padding-left: 16px; width: 50%">
               <p
                 id="subtotal_totalPrint"
                 style="
@@ -1173,42 +1139,42 @@
               </p>
             </div>
           </div>
-          <div id="tax_list_print" style="width: 100%; padding-left: 16px;">
-            <div style="width: 100%; display: flex;"></div>
+          <div id="tax_list_print" style="width: 100%; padding-left: 16px">
+            <div style="width: 100%; display: flex"></div>
           </div>
           <hr />
-          <div style="width: 100%; display: flex;">
-            <div style="padding-right: 16px; width: 50%;">
+          <div style="width: 100%; display: flex">
+            <div style="padding-right: 16px; width: 50%">
               <p
-                style="font-weight: 800; margin-bottom: 8px; color: rgb(0 0 0);"
+                style="font-weight: 800; margin-bottom: 8px; color: rgb(0 0 0)"
               >
                 TOTAL
               </p>
             </div>
-            <div style="padding-left: 16px; width: 50%;">
+            <div style="padding-left: 16px; width: 50%">
               <p
                 id="grandTotalPrint"
-                style="text-align: right; margin-bottom: 8px; font-weight: 800;"
+                style="text-align: right; margin-bottom: 8px; font-weight: 800"
               >
                 {{creditrecord.Total}}<br />
               </p>
             </div>
           </div>
           <hr />
-          <div style="width: 100%; display: flex;">
-            <div style="padding-right: 16px; width: 50%;">
+          <div style="width: 100%; display: flex">
+            <div style="padding-right: 16px; width: 50%">
               <p
-                style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);"
+                style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0)"
               >
                 Paid Amount
               </p>
               <p
-                style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);"
+                style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0)"
               >
                 Balance Due
               </p>
             </div>
-            <div style="padding-left: 16px; width: 50%;">
+            <div style="padding-left: 16px; width: 50%">
               <p
                 style="
                   text-align: right;
@@ -1262,10 +1228,10 @@
       id="html-2-pdfwrapperLetter"
       name="html-2-pdfwrapperLetter"
     >
-      <div class="d-xl-flex align-items-xl-start" style="height: 100%;">
+      <div class="d-xl-flex align-items-xl-start" style="height: 100%">
         <div
           class="d-flex d-xl-flex flex-column flex-nowrap align-items-xl-center"
-          style="min-height: 100%; height: 100%; max-height: 100%;"
+          style="min-height: 100%; height: 100%; max-height: 100%"
         >
           <div
             class="d-lg-flex d-xl-flex align-items-lg-start align-items-xl-start"
@@ -1283,49 +1249,49 @@
               <div class="card-body">
                 <div
                   class="d-lg-flex justify-content-lg-start"
-                  style="margin-bottom: 16px;"
+                  style="margin-bottom: 16px"
                 >
                   <div class="d-lg-flex flex-column justify-content-lg-start">
                     <img
                       src="assets/img/VS1.png"
                       class="uploadedImage"
-                      style="width: 200px; margin-bottom: 8px;"
+                      style="width: 200px; margin-bottom: 8px"
                     /><a href="{{organizationurl}}">{{organizationurl}}</a>
                   </div>
                   <div
                     class="d-lg-flex d-xl-flex justify-content-lg-center align-items-xl-start card-text"
                   >
-                    <div style="padding-left: 16px; font-weight: bold;">
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                    <div style="padding-left: 16px; font-weight: bold">
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                         {{organizationname}}
                       </p>
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                         {{companyaddress1}}
                       </p>
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                         {{companyaddress2}}
                       </p>
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                         {{city}}
                       </p>
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                         {{state}} {{poBox}}
                       </p>
                       {{#if equals companyReg ''}} {{else}}
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                         {{companyReg}}
                       </p>
                       {{/if}}
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                         {{companyabn}}
                       </p>
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
                         Phone: {{companyphone}}
                       </p>
                     </div>
                   </div>
                 </div>
-                <div style="font-size: 14px;">
+                <div style="font-size: 14px">
                   <p
                     style="
                       margin-bottom: 0px;
@@ -1336,13 +1302,13 @@
                     Customer
                   </p>
                   <p
-                    style="margin-bottom: 0px; display: none;"
+                    style="margin-bottom: 0px; display: none"
                     class="pdfCustomerName"
                   >
                     Big Burtha
                   </p>
                   <p
-                    style="margin-bottom: 0px; color: rgb(0 0 0);"
+                    style="margin-bottom: 0px; color: rgb(0 0 0)"
                     class="pdfCustomerAddress"
                   >
                     12 Golf Drive
@@ -1365,39 +1331,39 @@
               <div class="card-body">
                 <h4
                   class="card-title"
-                  style="font-weight: bold; color: rgb(0 0 0);"
+                  style="font-weight: bold; color: rgb(0 0 0)"
                 >
                   Credit {{creditrecord.id}}
                 </h4>
                 <div class="d-lg-flex d-xl-flex align-items-xl-start card-text">
                   <div
                     class="d-lg-flex d-xl-flex flex-column align-items-lg-start align-items-xl-start"
-                    style="padding-right: 16px; font-weight: bold;"
+                    style="padding-right: 16px; font-weight: bold"
                   >
-                    <label class="text-nowrap" style="color: rgb(0 0 0);"
+                    <label class="text-nowrap" style="color: rgb(0 0 0)"
                       >No:</label
                     >
-                    <label class="text-nowrap" style="color: rgb(0 0 0);"
+                    <label class="text-nowrap" style="color: rgb(0 0 0)"
                       >Date:</label
                     >
-                    <label class="text-nowrap" style="color: rgb(0 0 0);"
+                    <label class="text-nowrap" style="color: rgb(0 0 0)"
                       >PO Number:</label
                     >
-                    <label class="text-nowrap" style="color: rgb(0 0 0);"
+                    <label class="text-nowrap" style="color: rgb(0 0 0)"
                       >Terms:</label
                     >
                   </div>
-                  <div style="padding-left: 16px;">
-                    <p style="margin-bottom: 8px; color: rgb(0 0 0);">
+                  <div style="padding-left: 16px">
+                    <p style="margin-bottom: 8px; color: rgb(0 0 0)">
                       {{creditrecord.id}}
                     </p>
-                    <p style="margin-bottom: 8px; color: rgb(0 0 0);">
+                    <p style="margin-bottom: 8px; color: rgb(0 0 0)">
                       {{creditrecord.saledate}}
                     </p>
-                    <p style="margin-bottom: 8px; color: rgb(0 0 0);">
+                    <p style="margin-bottom: 8px; color: rgb(0 0 0)">
                       {{creditrecord.custPONumber}}.
                     </p>
-                    <p style="margin-bottom: 8px; color: rgb(0 0 0);">
+                    <p style="margin-bottom: 8px; color: rgb(0 0 0)">
                       {{creditrecord.termsName}}
                     </p>
                   </div>
@@ -1416,11 +1382,11 @@
             >
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table" style="width: 200mm; max-width: 200mm;">
+                  <table class="table" style="width: 200mm; max-width: 200mm">
                     <!-- table-sm -->
                     <thead
                       class="text-secondary"
-                      style="color: rgb(251, 251, 251);"
+                      style="color: rgb(251, 251, 251)"
                     >
                       <tr>
                         <th
@@ -1435,7 +1401,7 @@
                         </th>
                         <th
                           class="text-nowrap"
-                          style="background-color: white; color: rgb(0 0 0);"
+                          style="background-color: white; color: rgb(0 0 0)"
                         >
                           Memo
                         </th>
@@ -1463,7 +1429,7 @@
                         </th>
                       </tr>
                     </thead>
-                    <tbody style="color: rgb(0 0 0);">
+                    <tbody style="color: rgb(0 0 0)">
                       {{#each item in creditrecord.LineItems}}
                       <tr>
                         <td>{{item.accountname}}</td>
@@ -1508,11 +1474,11 @@
                 <div class="card-body">
                   <p
                     class="card-title"
-                    style="font-weight: 600; color: rgb(0 0 0);"
+                    style="font-weight: 600; color: rgb(0 0 0)"
                   >
                     Comments
                   </p>
-                  <p style="color: rgb(0 0 0);">{{creditrecord.comments}}</p>
+                  <p style="color: rgb(0 0 0)">{{creditrecord.comments}}</p>
                 </div>
               </div>
               <div
@@ -1532,21 +1498,21 @@
                   >
                     <div
                       class="d-lg-flex d-xl-flex flex-column align-items-lg-start align-items-xl-start"
-                      style="padding-right: 16px;"
+                      style="padding-right: 16px"
                     >
                       <label
                         class="text-nowrap"
-                        style="font-weight: 600; color: rgb(0 0 0);"
+                        style="font-weight: 600; color: rgb(0 0 0)"
                         >Sub Total</label
                       ><label
                         class="text-nowrap"
-                        style="font-weight: 600; color: rgb(0 0 0);"
+                        style="font-weight: 600; color: rgb(0 0 0)"
                         >Total GST</label
                       >
                     </div>
                     <div
                       class="d-lg-flex flex-column flex-grow-1 justify-content-lg-end"
-                      style="padding-left: 16px;"
+                      style="padding-left: 16px"
                     >
                       <p
                         class="text-right"
@@ -1576,15 +1542,15 @@
                   >
                     <div
                       class="d-xl-flex flex-column flex-grow-1 align-items-xl-start"
-                      style="padding-right: 16px;"
+                      style="padding-right: 16px"
                     >
                       <label
                         class="text-nowrap"
-                        style="font-weight: 800; color: rgb(0 0 0);"
+                        style="font-weight: 800; color: rgb(0 0 0)"
                         >TOTAL&nbsp; (inc GST)</label
                       >
                     </div>
-                    <div class="flex-grow-1" style="padding-left: 16px;">
+                    <div class="flex-grow-1" style="padding-left: 16px">
                       <p
                         class="text-right flex-grow-1"
                         style="
@@ -1613,7 +1579,7 @@
             >
               <div class="card-body">
                 <h6 class="text-muted card-subtitle mb-2">Supplier Notice</h6>
-                <p class="card-text" style="font-size: 10px;">
+                <p class="card-text" style="font-size: 10px">
                   When paying on delivery or pick up, only cash and bank cheques
                   will be accepeted as final payment. Personal and Business
                   cheques require 7 days clearance before goods leave store.
@@ -1623,7 +1589,7 @@
             </div>
             <span
               class="d-lg-flex d-xl-flex justify-content-lg-end justify-content-xl-end"
-              style="font-size: 10px; margin-right: 8px;"
+              style="font-size: 10px; margin-right: 8px"
               >Page 1 of 1</span
             >
           </div>
@@ -1636,7 +1602,7 @@
       <div
         class="modal-dialog modal-sm modal-dialog-centered"
         role="document"
-        style="max-width: 400px;"
+        style="max-width: 400px"
       >
         <div class="modal-content">
           <form id="newstatus" name="newstatus">
@@ -1651,10 +1617,10 @@
                 <span aria-hidden="true">×</span>
               </button>
             </div>
-            <div class="modal-body" style="padding: 24px;">
+            <div class="modal-body" style="padding: 24px">
               <div class="row">
                 <div class="col-12">
-                  <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                  <div class="form-group flex-grow-1" style="margin: 8px 0px">
                     <label>Status</label>
                     <input
                       type="text"
@@ -1668,21 +1634,21 @@
             </div>
             <div class="modal-footer">
               <button class="btn btn-success btnSaveStatus" type="button">
-                <i class="fa fa-save" style="margin-right: 5px;"></i>Save
+                <i class="fa fa-save" style="margin-right: 5px"></i>Save
               </button>
               <button
                 class="btn btn-warning btnResetSettings"
                 data-dismiss="modal"
                 type="reset"
               >
-                <i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset
+                <i class="fa fa-repeat" style="margin-right: 5px"></i>Reset
               </button>
               <button
                 class="btn btn-secondary"
                 data-dismiss="modal"
                 type="button"
               >
-                <i class="fa fa-remove" style="margin-right: 5px;"></i>Close
+                <i class="fa fa-remove" style="margin-right: 5px"></i>Close
               </button>
             </div>
           </form>
@@ -1698,7 +1664,7 @@
     <div
       class="modal-dialog"
       role="document"
-      style="max-width: 670px !important;"
+      style="max-width: 670px !important"
     >
       <div class="modal-content">
         <div class="modal-header">
@@ -1722,7 +1688,7 @@
             height="360"
             controls=""
             name="media"
-            style="border: solid 5px #999999f0; height: auto; outline: none;"
+            style="border: solid 5px #999999f0; height: auto; outline: none"
           >
             <source
               src="https://erphelpes.com/vs1videos/newcredit.mp4"

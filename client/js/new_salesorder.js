@@ -7107,6 +7107,7 @@ Template.new_salesorder.onRendered(function() {
                             select: true,
                             destroy: true,
                             colReorder: true,
+                            bStateSave: true,
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -7192,6 +7193,7 @@ Template.new_salesorder.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
+                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7260,6 +7262,7 @@ Template.new_salesorder.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
+                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7337,6 +7340,7 @@ Template.new_salesorder.onRendered(function() {
                             select: true,
                             destroy: true,
                             colReorder: true,
+                            bStateSave: true,
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -7412,6 +7416,7 @@ Template.new_salesorder.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
+                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7486,6 +7491,7 @@ Template.new_salesorder.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
+                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7834,14 +7840,6 @@ Template.new_salesorder.helpers({
         return localStorage.getItem('vs1companyBankRoutingNo') || '';
     },
 
-<<<<<<< HEAD
-    // custom field displaysettings
-    displayfields: () => {
-      return Template.instance().displayfields.get();
-    },
-=======
-
->>>>>>> a7452cc701d7e5910c51525d72d3999fbfcd15a3
 
     custfield1: () => {
         return localStorage.getItem('custfield1salesorder') || 'Custom Field 1';
@@ -8102,57 +8100,7 @@ Template.new_salesorder.events({
           }
       },
         'click  #open_print_confirm':function(event)
-        {
-<<<<<<< HEAD
-            // playPrintAudio();
-            // setTimeout(async function(){
-            //     if($('#choosetemplate').is(':checked'))
-            //     {
-            //         $('#templateselection').modal('show');
-            //     }
-            //     else
-            //     {
-            //         LoadingOverlay.show();
-            //         // $('#html-2-pdfwrapper').css('display', 'block');
-            //         let result = await exportSalesToPdf(template_list[0], 1);
-            //         // if ($('.edtCustomerEmail').val() != "") {
-            //         //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //         //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //         //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //         //     var ponumber = $('#ponumber').val() || '.';
-            //         //     $('.po').text(ponumber);
-            //         //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //         //     exportSalesToPdf1();
-            //         // }
-            //         // $('#confirmprint').modal('hide');
-            //     }
-            // }, delayTimeAfterSound);
-=======
-            playPrintAudio();
-            setTimeout(async function(){
-            if($('#choosetemplate').is(':checked'))
-            {
-                $('#templateselection').modal('show');
-            }
-            else
-            {
-                LoadingOverlay.show();
-                // $('#html-2-pdfwrapper').css('display', 'block');
-                let result = await exportSalesToPdf(template_list[0], 1);
-                // if ($('.edtCustomerEmail').val() != "") {
-                //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-                //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-                //     var ponumber = $('#ponumber').val() || '.';
-                //     $('.po').text(ponumber);
-                //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-                //     exportSalesToPdf1();
-                // }
-                // $('#confirmprint').modal('hide');
-            }
-        }, delayTimeAfterSound);
->>>>>>> a7452cc701d7e5910c51525d72d3999fbfcd15a3
-        },
+        {},
 
         'click #choosetemplate':function(event)
         {
@@ -9654,8 +9602,6 @@ Template.new_salesorder.events({
         var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
-<<<<<<< HEAD
-=======
         if(targetID != undefined) {
             times++;
             if (times == 1) {
@@ -9682,7 +9628,6 @@ Template.new_salesorder.events({
                         var qty = $tblrow.find(".lineQty").val() || 0;
                         var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
                         var taxRate = $tblrow.find(".lineTaxCode").val();
->>>>>>> a7452cc701d7e5910c51525d72d3999fbfcd15a3
 
         times++;
 
@@ -9913,7 +9858,7 @@ Template.new_salesorder.events({
         }
     }, delayTimeAfterSound);
     },
-    'click .btnDeleteSO': function(event) {
+    "click .btnDeleteSO": function(event) {
         playDeleteAudio();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
