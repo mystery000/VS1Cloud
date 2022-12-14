@@ -286,6 +286,7 @@ Template.new_process.events({
     'click #edtWastage': function(e){
         $('#assetAccountListModal').modal();
     },
+    
     'click #accountListModal table tbody tr': function(e) {
         let templateObject = Template.instance();
         let columnDataValue = $(e.target).closest('tr').find('.productName').text();

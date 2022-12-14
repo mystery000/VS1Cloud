@@ -234,12 +234,12 @@ Template.production_planner.onRendered(async function() {
                     let subQuantity = 0; 
                     let needQty = 0;
                  
-                    function getSeconds (time) {
+                    function getSeconds(time) {
                         let mSeconds = new Date(time).getTime();
                         let seconds = Math.floor(mSeconds / 1000);
                         return seconds
                     }
-                    let filteredMainEvents = events.filter(e => getSeconds(e.start) <= getSeconds(event.start) && getSeconds(e.end) > getSeconds(new Date()) && e.extendedProps.builds.includes(buildSubs[i]) )
+                    let filteredMainEvents = events.filter(e => getSeconds(e.start) <= getSeconds(event.start) && getSeconds(e.end) > getSeconds(new Date()) && e.extendedProps.builds.includes(buildSubs[i]))
                     for (let k = 0; k< filteredMainEvents.length; k++) {
                         let filteredOrder = workorders.findIndex(order => {
                             return order.ID == filteredMainEvents[k].extendedProps.orderId
@@ -260,7 +260,6 @@ Template.production_planner.onRendered(async function() {
                             subQuantity += subEvents[j].extendedProps.quantity
                         }
                        
-                        
                     }
 
                     if(needQty > subQuantity) {
@@ -297,7 +296,6 @@ Template.production_planner.onRendered(async function() {
             }
             
             // customHtml += "<span class='r10 highlighted-badge font-xxs font-bold'>" + event.extendedProps.age + text + "</span>";
-                          
 
             return { html: customHtml }
         },

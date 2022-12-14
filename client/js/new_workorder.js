@@ -693,8 +693,8 @@ Template.new_workorder.events({
                                     DueDate: record.duedate,
                                     BOM: subs,
                                     SalesOrderID: templateObject.salesOrderId.get(),
-                                    OrderDate: new Date(),
                                     StartTime: subStart,
+                                    OrderDate: new Date(),
                                     InProgress: record.isStarted,
                                     Quantity: record.line.fields.Qty? record.line.fields.Qty* parseFloat(subs.qty) : subs.qty
                                 }

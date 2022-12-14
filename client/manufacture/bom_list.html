@@ -18,9 +18,9 @@
                     <button id="btnNewBOM" name="btnNewBOM" class="btn btn-primary" type="button" style="margin: 12px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New BOM</button>
                 </div>
                 <!-- {{#if equals isSetupFinished false}} -->
-                    <div class="col-2 col-md-2 setupIncompleatedMsg text-danger">
-                        <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Wizard Incomplete</a></h2>
-                    </div>
+                <div class="col-2 col-md-2 setupIncompleatedMsg text-danger">
+                    <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Wizard Incomplete</a></h2>
+                </div>
                 <!-- {{/if}} -->
                 <div class="col-5 col-md-4 d-xl-flex justify-content-xl-end align-items-xl-start">
                     {{> export_import_print_display_button tablename="tblBOMList"}}

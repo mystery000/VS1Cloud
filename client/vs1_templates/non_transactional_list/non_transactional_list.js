@@ -5090,7 +5090,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
               data.tprocessstep[i].fields.OCOGS || "",
               data.tprocessstep[i].fields.OExpense || "",
               Currency + data.tprocessstep[i].fields.TotalHourlyCost || 0,
-              data.tprocessstep[i].fields.Wastage || ""
+              data.tprocessstep[i].fields.Wastage || "",
             ]
             splashArrayProcessList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayProcessList)
@@ -5251,7 +5251,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                             dataObjectnew.tprocessstep[i].fields.OCOGS || "",
                             dataObjectnew.tprocessstep[i].fields.OExpense || "",
                             Currency + dataObjectnew.tprocessstep[i].fields.TotalHourlyCost || 0,
-                            dataObjectnew.tprocessstep[i].fields.Wastage || ""
+                            dataObjectnew.tprocessstep[i].fields.Wastage || "",
                           ];
 
                           splashArrayProcessList.push(dataListProcessDupp);
