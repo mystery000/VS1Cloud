@@ -3,13 +3,13 @@ export class CRMService extends BaseService {
     getAllTaskList(EnteredByID = '') {
         let options = {
             ListType: "Detail",
-            select: "[Active]=true"
+            select: "pt.Active=true"
         };
         if (EnteredByID) {
             options = {
                 ListType: "Detail",
                 // select: "[Active]=true and [EnteredByID]=" + EnteredByID
-                select: "[Active]=true and [EnteredBy]='" + EnteredByID + "'"
+                select: "pt.Active=true and [EnteredBy]='" + EnteredByID + "'"
             };
         }
         return this.getList(this.ERPObjects.Tprojecttasks, options);
@@ -20,12 +20,12 @@ export class CRMService extends BaseService {
     getAllTasksByTaskName(TaskName = '') {
         let options = {
             ListType: "Detail",
-            select: "[Active]=true"
+            select: "pt.Active=true"
         };
         if (TaskName) {
             options = {
                 ListType: "Detail",
-                select: "[Active]=true and [TaskName]='" + TaskName + "'"
+                select: "pt.Active=true and [TaskName]='" + TaskName + "'"
             };
         }
         return this.getList(this.ERPObjects.Tprojecttasks, options);
@@ -34,12 +34,12 @@ export class CRMService extends BaseService {
     getAllTasksByContactName(ContactName = '') {
         let options = {
             ListType: "Detail",
-            select: "[Active]=true"
+            select: "pt.Active=true"
         };
         if (ContactName) {
             options = {
                 ListType: "Detail",
-                select: "[Active]=true and [ContactName]='" + ContactName + "'"
+                select: "pt.Active=true and [ContactName]='" + ContactName + "'"
             };
         }
         return this.getList(this.ERPObjects.Tprojecttasks, options);
@@ -62,7 +62,7 @@ export class CRMService extends BaseService {
     getTasksByNameOrID(dataSearchName) {
         let options = {
             ListType: "Detail",
-            select: '[Active]=true and [TaskName] f7like "' + dataSearchName + '" OR [ID] f7like "' + dataSearchName + '"',
+            select: 'pt.Active=true and [TaskName] f7like "' + dataSearchName + '" OR [ID] f7like "' + dataSearchName + '"',
         };
         return this.getList(this.ERPObjects.Tprojecttasks, options);
     }

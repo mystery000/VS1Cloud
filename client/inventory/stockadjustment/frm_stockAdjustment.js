@@ -2142,6 +2142,7 @@ Template.stockadjustmentcard.events({
         }
     },
     'click .btnRemove': async function (event) {
+        let templateObject = Template.instance();
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
         if(targetID != undefined) {    

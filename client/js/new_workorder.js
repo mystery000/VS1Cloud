@@ -1452,7 +1452,7 @@ Template.new_workorder.events({
         event.preventDefault();
         let templateObject = Template.instance();
         let record = JSON.parse(JSON.stringify(templateObject.workorderrecord.get()))
-        record.line.fields.Qty = parseInt($(event.target).val())
+        record.line.fields.Qty = parseFloat($(event.target).val())
         templateObject.workorderrecord.set(record);
     },
 

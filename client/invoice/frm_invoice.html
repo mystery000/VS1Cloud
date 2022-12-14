@@ -116,7 +116,7 @@
     {{#if invoicerecord}}
     <form>
       {{> transaction_header
-        cardType="invoice"
+        cardType="Invoice"
         data=invoicerecord
         uploadedFile=uploadedFile
         isCurrencyEnable=isCurrencyEnable
@@ -124,6 +124,7 @@
         showTemplateModals=true
         showUploadAttachment=true
         showTransactionButtons=true
+        salesCloudPreferenceRec=salesCloudPreferenceRec
       }}
 
       {{> transaction_line
@@ -1119,7 +1120,7 @@
   <div id="elementH"></div>
 
   <!-- This a template with all VS1 POP Modal used for Transactions -->
-  {{> all_transaction_modals}}
+  {{> all_transaction_modals customerRecord=customerRecord}}
   {{> deletepop itemName1="Invoice" itemName2="invoice" itemName3="Invoice" button1="btnDeleteInvoice"
   button2="btnDeleteFollowingInvoices"}}
   <script>

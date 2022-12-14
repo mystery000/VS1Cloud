@@ -108,23 +108,6 @@ Template.employeescard.onCreated(function() {
     templateObject.taxCodeList = new ReactiveVar();
     templateObject.defaultsaletaxcode = new ReactiveVar();
 
-    templateObject.tableHeaderItems = new ReactiveVar([
-        {classString:"th colSortDate hiddenColumn", itemLabel:"id",itemStyle:""},
-        {classString:"th colSaleDate", itemLabel:"Sale Date",itemStyle:"width:80px;"},
-        {classString:"th colSalesNo", itemLabel:"Sales No.",itemStyle:"width:80px;"},
-        {classString:"th colCustomer", itemLabel:"Customer",itemStyle:"width:200px;"},
-        {classString:"th colAmountEx", itemLabel:"Amount (Ex)",itemStyle:"width:80px;"},
-        {classString:"th colTax", itemLabel:"Tax",itemStyle:"width:80px;"},
-        {classString:"th colAmount", itemLabel:"Amount",itemStyle:"width:80px;"},
-        {classString:"th colPaid", itemLabel:"Paid",itemStyle:"width:80px;"},
-        {classString:"th colBalanceOutstanding", itemLabel:"Balance Outstanding",itemStyle:"width:80px;"},
-        {classString:"th colStatus hiddenColumn", itemLabel:"Status",itemStyle:""},
-        {classString:"th colSaleCustField1 hiddenColumn", itemLabel:"Custom Field 1",itemStyle:""},
-        {classString:"th colSaleCustField2 hiddenColumn", itemLabel:"Custom Field 2",itemStyle:""},
-        {classString:"th colEmployee hiddenColumn", itemLabel:"Employee",itemStyle:""},
-        {classString:"th colComments", itemLabel:"Comments",itemStyle:""}
-    ])
-
     /* Attachments */
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
@@ -2326,6 +2309,7 @@ Template.employeescard.onRendered(function() {
             $('#product-list').editableSelect();
             $('#edtDashboardOptions').editableSelect();
             $('#product-list').editableSelect()
+            $('#editEmployeeTitle').editableSelect()
                 .on('click.editable-select', function(e, li) {
                     const $earch = $(this);
                     const offset = $earch.offset();
@@ -2666,6 +2650,17 @@ Template.employeescard.onRendered(function() {
             $('#dashboardOptionListModal').modal('toggle');
         });
     });
+
+    $(document).on('click', '#editEmployeeTitle', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#employeeTitlePopModal').modal('toggle');
+        } else {
+            $('#employeeTitlePopModal').modal();
+        }
+    });
+
     let prefObject = "";
     if (currentId.id != undefined) {
         setTimeout(function() {
@@ -11272,7 +11267,4 @@ Template.employeescard.helpers({
         return Template.instance().earningLines.get();
     },
     formatPrice: (price) => GlobalFunctions.formatPrice(price),
-    tableHeaderItems:() => {
-        return Template.instance().tableHeaderItems.get();
-    },
 });
