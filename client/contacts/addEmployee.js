@@ -2309,6 +2309,7 @@ Template.employeescard.onRendered(function() {
             $('#product-list').editableSelect();
             $('#edtDashboardOptions').editableSelect();
             $('#product-list').editableSelect()
+            $('#editEmployeeTitle').editableSelect()
                 .on('click.editable-select', function(e, li) {
                     const $earch = $(this);
                     const offset = $earch.offset();
@@ -2648,7 +2649,22 @@ Template.employeescard.onRendered(function() {
             $('#edtDashboardOptions').attr("defaultlogin", isDefaultLogin);
             $('#dashboardOptionListModal').modal('toggle');
         });
+        $(document).on("click", "#tblTitleList tbody tr", function (e) {
+            $('#editEmployeeTitle').val($(this).find(".colTypeName").text());
+            $('#employeeTitlePopModal').modal('toggle');
+        });
     });
+
+    $(document).on('click', '#editEmployeeTitle', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#employeeTitlePopModal').modal('toggle');
+        } else {
+            $('#employeeTitlePopModal').modal();
+        }
+    });
+
     let prefObject = "";
     if (currentId.id != undefined) {
         setTimeout(function() {
@@ -5560,7 +5576,7 @@ Template.employeescard.events({
         let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(async function() {
             LoadingOverlay.show();
-            let title = $('#edtTitle').val();
+            let title = $('#editEmployeeTitle').val();
             let firstname = $('#edtFirstName').val();
             if (firstname === '') {
                 $('.fullScreenSpin').css('display', 'none');

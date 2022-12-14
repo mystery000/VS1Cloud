@@ -575,7 +575,6 @@ Template.crmoverview.onRendered(function() {
         var table = $(this);
         let colProjectName = table.find(".colProjectName").text();
         let colID = parseInt(table.attr("data-id"));
-        alert(colProjectName);
 
         $('#projectListModal').modal('toggle');
 
