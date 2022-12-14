@@ -410,7 +410,6 @@ Template.purchaseordercard.onRendered(() => {
       reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
       reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
       showCustomFieldDisplaySettings(reset_data);
-    
       try {
         getVS1Data("VS1_Customize").then(function (dataObject) {
           if (dataObject.length == 0) {
@@ -678,9 +677,9 @@ templateObject.getLastPOData = async function() {
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         var erpGet = erpDb();
 
-        var customfield1 = $('#edtSaleCustField1').val() || '  ';
-        var customfield2 = $('#edtSaleCustField2').val() || '  ';
-        var customfield3 = $('#edtSaleCustField3').val() || '  ';
+        // var customfield1 = $('#edtSaleCustField1').val() || '  ';
+        // var customfield2 = $('#edtSaleCustField2').val() || '  ';
+        // var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
@@ -999,9 +998,9 @@ templateObject.getLastPOData = async function() {
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         var erpGet = erpDb();
 
-        var customfield1 = $('#edtSaleCustField1').val() || '  ';
-        var customfield2 = $('#edtSaleCustField2').val() || '  ';
-        var customfield3 = $('#edtSaleCustField3').val() || '  ';
+        // var customfield1 = $('#edtSaleCustField1').val() || '  ';
+        // var customfield2 = $('#edtSaleCustField2').val() || '  ';
+        // var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
@@ -1950,7 +1949,7 @@ templateObject.getLastPOData = async function() {
 
     });
     $('.fullScreenSpin').css('display', 'inline-block');
-
+    console.log("tempalte,  recordobj", templateObject, recordObj);
     templateObject.getAllClients = function() {
         getVS1Data('TSupplierVS1').then(function(dataObject) {
             if (dataObject.length === 0) {
@@ -8279,8 +8278,8 @@ Template.purchaseordercard.events({
             let comments = $('#txaComment').val();
             let pickingInfrmation = $('#txapickmemo').val();
 
-            let saleCustField1 = $('#edtSaleCustField1').val();
-            let saleCustField2 = $('#edtSaleCustField2').val();
+            // let saleCustField1 = $('#edtSaleCustField1').val();
+            // let saleCustField2 = $('#edtSaleCustField2').val();
             let orderStatus = $('#edtStatus').val();
 
             var url = FlowRouter.current().path;
@@ -9312,7 +9311,6 @@ Template.purchaseordercard.events({
       reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
       reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
       reset_data = reset_data.filter(redata => redata.display);
-
       $(".displaySettings").each(function (index) {
         let $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -9585,8 +9583,8 @@ Template.purchaseordercard.events({
             let comments = $('#txaComment').val();
             let pickingInfrmation = $('#txapickmemo').val();
 
-            let saleCustField1 = $('#edtSaleCustField1').val();
-            let saleCustField2 = $('#edtSaleCustField2').val();
+            // let saleCustField1 = $('#edtSaleCustField1').val();
+            // let saleCustField2 = $('#edtSaleCustField2').val();
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentPurchaseOrder = getso_id[getso_id.length - 1];
