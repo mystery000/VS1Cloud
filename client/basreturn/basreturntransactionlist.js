@@ -74,7 +74,7 @@ Template.basreturntransactionlist.onRendered(function() {
             endDate = new Date(data.Tab4_Year, (parseInt(endMonth)), 0);
             endDate = moment(endDate).format("YYYY-MM-DD");
         }
-        if (data.Lines != null){
+        if (data.Lines != null) {
             for (let i = 0; i < data.Lines.length; i++) {
                 if (data.Lines[i].fields.ReportCode == transactionitem) {
                     var dataList = {
@@ -88,7 +88,7 @@ Template.basreturntransactionlist.onRendered(function() {
                         transdate: moment(data.Lines[i].fields.TransDate).format("YYYY-MM-DD"),
                         amount: data.Lines[i].fields.Amount,
                     };
-    
+
                     dataTableList.push(dataList);
                 }
             }

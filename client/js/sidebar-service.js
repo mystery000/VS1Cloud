@@ -17,18 +17,18 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-        Search: "Active = true",
+        select: "[Active]=true",
       };
     } else {
       options = {
         orderby: '"PARTSID desc"',
         ListType: "Detail",
-        Search: "Active = true",
+        select: "[Active]=true",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
     }
-    return this.getList(this.ERPObjects.TProductList, options);
+        return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
   getProductListVS1(limitcount, limitfrom) {
