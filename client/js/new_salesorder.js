@@ -88,7 +88,7 @@ Template.new_salesorder.onCreated(function() {
     this.products = new ReactiveVar([]);
     this.hasFollow = new ReactiveVar(false);
 
-    templateObject.customerRecord = new ReactiveVar();
+    this.customerRecord = new ReactiveVar();
 
 });
 
@@ -6275,7 +6275,7 @@ Template.new_salesorder.onRendered(function () {
                                         firstname:popCustomerFirstName,
                                         middlename: popCustomerMiddleName,
                                         lastname:popCustomerLastName,
-                                        company:data.tcustomer[0].fields.Companyname || '',
+                                        company:data.tcustomervs1[0].fields.Companyname || '',
                                         email: popCustomerEmail,
                                         title: popCustomerTitle,
                                         tfn: popCustomertfn,
@@ -6402,7 +6402,7 @@ Template.new_salesorder.onRendered(function () {
                                             firstname:popCustomerFirstName,
                                             middlename: popCustomerMiddleName,
                                             lastname:popCustomerLastName,
-                                            company:data.tcustomer[0].fields.Companyname || '',
+                                            company:data.tcustomervs1[i].fields.Companyname || '',
                                             email: popCustomerEmail,
                                             title: popCustomerTitle,
                                             tfn: popCustomertfn,

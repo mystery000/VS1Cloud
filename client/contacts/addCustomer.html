@@ -1455,8 +1455,9 @@
                                                     </style>
                                                     <div class="tab-content">
                                                         <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm"
-                                                            style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                                                            {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}}
+                                                            style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
+                                                            <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                                            {{> non_transactional_list tablename="tblCustomerCrmList"}}
                                                         </div>
                                                         <div class="tab-pane border rounded-0" role="tabpanel"
                                                             id="tab-4"
@@ -3573,11 +3574,19 @@
                                                         style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                                             </div>
                                         </div>
-                                        <div class="row" style="justify-content:space-around;">
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_appointments_toggle" width="131px" for="customer_transctionList_appointments_toggle" displayName="Appointments"}}
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_quotes_toggle" width="131px" for="customer_transctionList_quotes_toggle" displayName="Quotes"}}
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_sales_orders_toggle" width="131px" for="customer_transctionList_sales_orders_toggle" displayName="Sales Orders"}}
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_invoices_toggle" width="131px" for="customer_transctionList_invoices_toggle" displayName="Invoices"}}
+                                        <div class="d-flex justify-content-left">
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_appointments_toggle" width="131px" for="customer_transctionList_appointments_toggle" displayName="Appointments"}}
+                                            </div>
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_quotes_toggle" width="131px" for="customer_transctionList_quotes_toggle" displayName="Quotes"}}
+                                            </div>
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_sales_orders_toggle" width="131px" for="customer_transctionList_sales_orders_toggle" displayName="Sales Orders"}}
+                                            </div>
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_invoices_toggle" width="131px" for="customer_transctionList_invoices_toggle" displayName="Invoices"}}
+                                            </div>
                                         </div>
                                         <div class="row rowB" style="margin: 14px; margin-top: 0">
                                             <div class="card-body rounded" style="padding: 0;">
