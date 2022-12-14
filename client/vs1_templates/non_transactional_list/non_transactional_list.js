@@ -5083,14 +5083,14 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
               data.tprocessstep[i].fields.KeyValue || "",
               data.tprocessstep[i].fields.Description || "",
               data.tprocessstep[i].fields.DailyHours || "",
-              data.tprocessstep[i].fields.HourlyLabourCost || 0,
+              Currency + data.tprocessstep[i].fields.HourlyLabourCost || 0,
               data.tprocessstep[i].fields.COGS || "",
               data.tprocessstep[i].fields.ExpenseAccount || "",
-              data.tprocessstep[i].fields.OHourlyCost || 0,
+              Currency + data.tprocessstep[i].fields.OHourlyCost || 0,
               data.tprocessstep[i].fields.OCOGS || "",
               data.tprocessstep[i].fields.OExpense || "",
-              data.tprocessstep[i].fields.TotalHourlyCost || 0,
-              data.tprocessstep[i].fields.Wastage || ""
+              Currency + data.tprocessstep[i].fields.TotalHourlyCost || 0,
+              data.tprocessstep[i].fields.Wastage || "",
             ]
             splashArrayProcessList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayProcessList)
@@ -5244,14 +5244,14 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                             dataObjectnew.tprocessstep[i].fields.KeyValue || "",
                             dataObjectnew.tprocessstep[i].fields.Description || "",
                             dataObjectnew.tprocessstep[i].fields.DailyHours || "",
-                            dataObjectnew.tprocessstep[i].fields.HourlyLabourCost || 0,
+                            Currency + dataObjectnew.tprocessstep[i].fields.HourlyLabourCost || 0,
                             dataObjectnew.tprocessstep[i].fields.COGS || "",
                             dataObjectnew.tprocessstep[i].fields.ExpenseAccount || "",
-                            dataObjectnew.tprocessstep[i].fields.OHourlyCost || 0,
+                            Currency + dataObjectnew.tprocessstep[i].fields.OHourlyCost || 0,
                             dataObjectnew.tprocessstep[i].fields.OCOGS || "",
                             dataObjectnew.tprocessstep[i].fields.OExpense || "",
-                            dataObjectnew.tprocessstep[i].fields.TotalHourlyCost || 0,
-                            dataObjectnew.tprocessstep[i].fields.Wastage || ""
+                            Currency + dataObjectnew.tprocessstep[i].fields.TotalHourlyCost || 0,
+                            dataObjectnew.tprocessstep[i].fields.Wastage || "",
                           ];
 
                           splashArrayProcessList.push(dataListProcessDupp);
