@@ -1411,7 +1411,7 @@ Template.templatesettings.onRendered(function () {
           else{
             $('.print-header-value').text(object_invoce[0]["value"]);
           }
-    
+        
           if(object_invoce[0]["bsb"]=="")
           { 
               $('#templatePreviewModal .field_payment').hide();
@@ -1574,11 +1574,11 @@ Template.templatesettings.onRendered(function () {
             break;
     
           case "Customer Payment":
-            left_idx = 2;
+            left_idx = 1;
             break;
     
           case "Customer Statement":
-            left_idx = 3;
+            left_idx = 1;
             break;  
     
           case "Invoice":
@@ -1606,11 +1606,11 @@ Template.templatesettings.onRendered(function () {
             break;
     
           case "Supplier Payment":
-            left_idx = 2;
+            left_idx = 1;
             break;
           
           case "Statement": 
-            left_idx = 2;
+            left_idx = 1;
             break;
           
           case "Delivery Docket":
@@ -1622,7 +1622,7 @@ Template.templatesettings.onRendered(function () {
             break;
     
           case "Deposits":
-            left_idx = 3;
+            left_idx = 1;
             break;
     
           case "Cheques":
