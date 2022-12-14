@@ -136,9 +136,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
           }else if(reset_data[r].active == false){
             $('#'+currenttablename+' .'+reset_data[r].class).addClass('hiddenColumn');
           };
-          custpush(customData);
+          // custpush(customData);
         }
-        await templateObject.int_trans_with_switchbox_displayset(custFields);
+        await templateObject.int_trans_with_switchbox_displayfields.set(custFields);
         $('.dataTable').resizable();
       }
         templateObject.initCustomFieldDisplaySettings("", currenttablename);
@@ -152,7 +152,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         var customerpage = 0;
         getVS1Data('TProductList').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getNewProductListVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+                sideBarService.getProductListVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
                     await addVS1Data('TProductList', JSON.stringify(data));
                     templateObject.displayProductsData(data); //Call this function to display data on the table
                 }).catch(function (err) {
@@ -163,7 +163,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 templateObject.displayProductsData(data); //Call this function to display data on the table
             }
         }).catch(function (err) {
-          sideBarService.getNewProductListVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
+          sideBarService.getProductListVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
               await addVS1Data('TProductList', JSON.stringify(data));
               templateObject.displayProductsData(data); //Call this function to display data on the table
           }).catch(function (err) {
@@ -189,7 +189,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         for (let i = 0; i < data.tproductlist.length; i++) {
           if (data.tproductlist[i].Active == true) {
               linestatus = "";
-          } else if (data.tproductvs1[i].Active == false) {
+          } else if (data.tproductlist[i].Active == false) {
               linestatus = "In-Active";
           };
           chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductlist[i].PARTSID + "x" + data.tproductlist[i].PARTNAM +
