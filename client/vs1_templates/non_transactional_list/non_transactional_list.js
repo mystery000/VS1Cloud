@@ -480,12 +480,12 @@ Template.non_transactional_list.onRendered(function() {
           }else if(currenttablename === "tblLeadCrmList"){
             reset_data = [
               { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true,  width: ""},
-              { index: 1, label: '', class: 'colCompleteTask', active: true, display: true, width: "10"},
-              { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "100"},
-              { index: 3, label: 'Task', class: 'colTaskName', active: true, display: true, width: "150"},
-              { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300"},
-              { index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "200"},
-          ];
+              { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100"},
+              { index: 2, label: 'Task', class: 'colTaskName', active: true, display: true, width: "150"},
+              { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250"},
+              { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100"},
+              { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100"},
+            ]
           }else if (currenttablename === "tblCustomerCrmList"){
             reset_data = [
               { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true,  width: ""},
