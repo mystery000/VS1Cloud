@@ -200,16 +200,15 @@ FlowRouter.triggers.enter([
                 text: 'Do you wish to save your changes?',
                 type: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
+                confirmButtonText: 'Save',
+                cancelButtonText: 'Leave'
             }).then((result) => {
                 if (result.value) {
                     FlowRouter.go(previous_url);
                 } else if (result.dismiss === 'cancel') {
-                    FlowRouter.go(context.path);
-                    //TODO need to url async
                     previous_url = "";
                     localStorage.setItem("isFormUpdated", false);
+                    FlowRouter.reload();
                 }
             });
         }
