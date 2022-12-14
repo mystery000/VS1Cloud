@@ -79,6 +79,8 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.isbackorderredirect = new ReactiveVar();
     templateObject.isbackorderredirect.set(false);
     templateObject.hasFollow = new ReactiveVar(false);
+
+    templateObject.supplierRecord = new ReactiveVar();
 });
 Template.purchaseordercard.onRendered(() => {
     let templateObject = Template.instance();
@@ -242,8 +244,8 @@ Template.purchaseordercard.onRendered(() => {
         $('.uploadedImage').attr('src', imageData);
     }
 
-    
-  
+
+
 
     const purchaseService = new PurchaseBoardService();
     const clientsService = new PurchaseBoardService();
@@ -1056,7 +1058,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1124,7 +1126,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1195,7 +1197,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1540,7 +1542,7 @@ templateObject.getLastPOData = async function() {
                         $("#html-2-pdfwrapper_new #tax_list_print").remove();
                     }
                 }
-                
+
         }
 
          // table content
@@ -1590,7 +1592,7 @@ templateObject.getLastPOData = async function() {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            
+
 
             }
 
@@ -4103,6 +4105,54 @@ templateObject.getLastPOData = async function() {
                             }
 
                             setTimeout(function() {
+
+                                let supplierRecord = {
+                                    id: popSupplierID,
+                                    company: popSupplierName,
+                                    email: popSupplierEmail,
+                                    title: popSupplierTitle,
+                                    firstname: popSupplierFirstName,
+                                    middlename: popSupplierMiddleName,
+                                    lastname: popSupplierLastName,
+                                    tfn: '' || '',
+                                    phone: popSupplierPhone,
+                                    mobile: popSupplierMobile,
+                                    fax: popSupplierFaxnumber,
+                                    skype: popSupplierSkypeName,
+                                    website: popSupplierURL,
+                                    shippingaddress: popSupplierStreet,
+                                    scity: popSupplierStreet2,
+                                    sstate: popSupplierState,
+                                    spostalcode: popSupplierPostcode,
+                                    scountry: popSupplierCountry,
+                                    billingaddress: popSupplierbillingaddress,
+                                    bcity: popSupplierbcity,
+                                    bstate: popSupplierbstate,
+                                    bpostalcode: popSupplierbpostalcode,
+                                    bcountry: popSupplierbcountry,
+                                    custfield1: popSuppliercustfield1,
+                                    custfield2: popSuppliercustfield2,
+                                    custfield3: popSuppliercustfield3,
+                                    custfield4: popSuppliercustfield4,
+                                    notes: popSuppliernotes,
+                                    preferedpayment: popSupplierpreferedpayment,
+                                    terms: popSupplierterms,
+                                    deliverymethod: popSupplierdeliverymethod,
+                                    accountnumber: popSupplieraccountnumber,
+                                    isContractor: popSupplierisContractor,
+                                    issupplier: popSupplierissupplier,
+                                    iscustomer: popSupplieriscustomer,
+                                    bankName: data.tsuppliervs1[0].fields.BankName || '',
+                                    swiftCode: data.tsuppliervs1[0].fields.SwiftCode || '',
+                                    routingNumber: data.tsuppliervs1[0].fields.RoutingNumber || '',
+                                    bankAccountName: data.tsuppliervs1[0].fields.BankAccountName || '',
+                                    bankAccountBSB: data.tsuppliervs1[0].fields.BankAccountBSB || '',
+                                    bankAccountNo: data.tsuppliervs1[0].fields.BankAccountNo || '',
+                                    foreignExchangeCode:data.tsuppliervs1[0].fields.ForeignExchangeCode || CountryAbbr,
+                                    // openingbalancedate: data.tsuppliervs1[0].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[0].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                                    // taxcode:data.tsuppliervs1[0].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                                };
+                                templateObject.supplierRecord.set(supplierRecord);
                                 $('#addSupplierModal').modal('show');
                             }, 200);
 
@@ -4198,6 +4248,54 @@ templateObject.getLastPOData = async function() {
                                 }
 
                                 setTimeout(function() {
+
+                                    let supplierRecord = {
+                                        id: popSupplierID,
+                                        company: popSupplierName,
+                                        email: popSupplierEmail,
+                                        title: popSupplierTitle,
+                                        firstname: popSupplierFirstName,
+                                        middlename: popSupplierMiddleName,
+                                        lastname: popSupplierLastName,
+                                        tfn: '' || '',
+                                        phone: popSupplierPhone,
+                                        mobile: popSupplierMobile,
+                                        fax: popSupplierFaxnumber,
+                                        skype: popSupplierSkypeName,
+                                        website: popSupplierURL,
+                                        shippingaddress: popSupplierStreet,
+                                        scity: popSupplierStreet2,
+                                        sstate: popSupplierState,
+                                        spostalcode: popSupplierPostcode,
+                                        scountry: popSupplierCountry,
+                                        billingaddress: popSupplierbillingaddress,
+                                        bcity: popSupplierbcity,
+                                        bstate: popSupplierbstate,
+                                        bpostalcode: popSupplierbpostalcode,
+                                        bcountry: popSupplierbcountry,
+                                        custfield1: popSuppliercustfield1,
+                                        custfield2: popSuppliercustfield2,
+                                        custfield3: popSuppliercustfield3,
+                                        custfield4: popSuppliercustfield4,
+                                        notes: popSuppliernotes,
+                                        preferedpayment: popSupplierpreferedpayment,
+                                        terms: popSupplierterms,
+                                        deliverymethod: popSupplierdeliverymethod,
+                                        accountnumber: popSupplieraccountnumber,
+                                        isContractor: popSupplierisContractor,
+                                        issupplier: popSupplierissupplier,
+                                        iscustomer: popSupplieriscustomer,
+                                        bankName: data.tsuppliervs1[i].fields.BankName || '',
+                                        swiftCode: data.tsuppliervs1[i].fields.SwiftCode || '',
+                                        routingNumber: data.tsuppliervs1[i].fields.RoutingNumber || '',
+                                        bankAccountName: data.tsuppliervs1[i].fields.BankAccountName || '',
+                                        bankAccountBSB: data.tsuppliervs1[i].fields.BankAccountBSB || '',
+                                        bankAccountNo: data.tsuppliervs1[i].fields.BankAccountNo || '',
+                                        foreignExchangeCode:data.tsuppliervs1[i].fields.ForeignExchangeCode || CountryAbbr,
+                                        // openingbalancedate: data.tsuppliervs1[i].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[i].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                                        // taxcode:data.tsuppliervs1[i].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                                    };
+                                    templateObject.supplierRecord.set(supplierRecord);
                                     $('#addSupplierModal').modal('show');
                                 }, 200);
                             }
@@ -4899,8 +4997,9 @@ Template.purchaseordercard.onRendered(function() {
                                     "targets": [5]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-                            bStateSave: true,
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -4975,10 +5074,9 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-                        bStateSave: true,
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5055,13 +5153,9 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5148,12 +5242,6 @@ Template.purchaseordercard.onRendered(function() {
                             select: true,
                             destroy: true,
                             colReorder: true,
-
-
-
-                            bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5232,12 +5320,6 @@ Template.purchaseordercard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5317,12 +5399,6 @@ Template.purchaseordercard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5417,6 +5493,7 @@ Template.purchaseordercard.onRendered(function() {
 
 });
 
+
 Template.purchaseordercard.helpers({
 
     getTemplateList: function () {
@@ -5433,6 +5510,11 @@ Template.purchaseordercard.helpers({
     purchaseorderrecord: () => {
         return Template.instance().purchaseorderrecord.get();
     },
+
+    supplierRecord: () => {
+        return Template.instance().supplierRecord.get();
+    },
+
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b) {
             if (a.department == 'NA') {
@@ -6498,6 +6580,8 @@ Template.purchaseordercard.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -7296,7 +7380,7 @@ Template.purchaseordercard.events({
 
           });
 
-        
+
         if($('#print_purchase_order').is(':checked') || $('#print_purchase_order_second').is(':checked')) {
             printTemplate.push('Purchase Orders');
         }
@@ -7378,7 +7462,7 @@ Template.purchaseordercard.events({
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        
+
         if(targetID != undefined) {
             times++;
 
@@ -10179,7 +10263,7 @@ Template.purchaseordercard.events({
         let basedOnTypeAttr = '';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -10246,7 +10330,7 @@ Template.purchaseordercard.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -10299,7 +10383,7 @@ Template.purchaseordercard.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -10380,17 +10464,17 @@ Template.purchaseordercard.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -10467,21 +10551,21 @@ Template.purchaseordercard.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             // window.open("/invoicecard", "_self");

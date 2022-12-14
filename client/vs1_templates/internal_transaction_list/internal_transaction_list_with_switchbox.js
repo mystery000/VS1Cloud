@@ -136,9 +136,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
           }else if(reset_data[r].active == false){
             $('#'+currenttablename+' .'+reset_data[r].class).addClass('hiddenColumn');
           };
-          custFields.push(customData);
+          custpush(customData);
         }
-        await templateObject.int_trans_with_switchbox_displayfields.set(custFields);
+        await templateObject.int_trans_with_switchbox_displayset(custFields);
         $('.dataTable').resizable();
       }
         templateObject.initCustomFieldDisplaySettings("", currenttablename);
@@ -148,12 +148,12 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         };
 
       //Products list
-      templateObject.getProductsData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
+      templateObject.getProductListVS1 = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
-        getVS1Data('TProductVS1').then(function (dataObject) {
+        getVS1Data('TProductList').then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getNewProductListVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-                    await addVS1Data('TProductVS1', JSON.stringify(data));
+                    await addVS1Data('TProductList', JSON.stringify(data));
                     templateObject.displayProductsData(data); //Call this function to display data on the table
                 }).catch(function (err) {
 
@@ -164,7 +164,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             }
         }).catch(function (err) {
           sideBarService.getNewProductListVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-              await addVS1Data('TProductVS1', JSON.stringify(data));
+              await addVS1Data('TProductList', JSON.stringify(data));
               templateObject.displayProductsData(data); //Call this function to display data on the table
           }).catch(function (err) {
 
@@ -180,40 +180,40 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let costprice = 0.00;
         let sellrate = 0.00;
         let linestatus = '';
-        // if(data.Params.Search.replace(/\s/g, "") == ""){
-        //   deleteFilter = true;
-        // }else{
-        //   deleteFilter = false;
-        // };
+        if(data.Params.Search.replace(/\s/g, "") == ""){
+          deleteFilter = true;
+        }else{
+          deleteFilter = false;
+        };
 
-        for (let i = 0; i < data.tproductvs1.length; i++) {
-          if (data.tproductvs1[i].fields.Active == true) {
+        for (let i = 0; i < data.tproductlist.length; i++) {
+          if (data.tproductlist[i].Active == true) {
               linestatus = "";
-          } else if (data.tproductvs1[i].fields.Active == false) {
+          } else if (data.tproductvs1[i].Active == false) {
               linestatus = "In-Active";
           };
-          chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductvs1[i].fields.ID + "x" + data.tproductvs1[i].fields.ProductName +
-          '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductvs1[i].fields.ID +
-          "x" + data.tproductvs1[i].fields.ProductName +
+          chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductlist[i].PARTSID + "x" + data.tproductlist[i].PARTNAM +
+          '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductlist[i].PARTSID +
+          "x" + data.tproductlist[i].PARTNAM +
           '"></label></div>'; //switchbox
 
           costprice = utilityService.modifynegativeCurrencyFormat(
-              Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100); //Cost Price
+              Math.floor(data.tproductlist[i].BuyQTY1 * 100) / 100); //Cost Price
           sellprice = utilityService.modifynegativeCurrencyFormat(
-              Math.floor(data.tproductvs1[i].fields.SellQty1Price* 100) / 100); //Sell Price
+              Math.floor(data.tproductlist[i].SellQTY1 * 100) / 100); //Sell Price
 
           var dataList = [
               chkBox,
-              data.tproductvs1[i].fields.ID || "",
-              data.tproductvs1[i].fields.ProductName || "",
-              data.tproductvs1[i].fields.SalesDescription || "",
-              data.tproductvs1[i].fields.BARCODE || "",
+              data.tproductlist[i].PARTSID || "",
+              data.tproductlist[i].PARTNAM || "",
+              data.tproductlist[i].PARTSDESCRIPTION || "",
+              data.tproductlist[i].BARCODE || "",
               costprice,
               sellprice,
-              data.tproductvs1[i].fields.TotalQtyInStock,
-              data.tproductvs1[i].fields.TaxCodePurchase || "",
-              data.tproductvs1[i].fields.ID || "",
-              data.tproductvs1[i].fields.ExtraSellPrice || null,
+              data.tproductlist[i].InstockQty,
+              data.tproductlist[i].PURCHTAXCODE || "",
+              data.tproductlist[i].PRODUCTCODE || "",
+              data.tproductlist[i].Ex_Works || null,
               linestatus,
           ];
 
@@ -365,39 +365,39 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                   let customerSearch = $('#'+currenttablename+'_filter input').val();
 
                     sideBarService.getNewProductListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay(),deleteFilter).then(function (dataObjectnew) {
-                    for (let j = 0; j < dataObjectnew.tproductvs1.length; j++) {
+                    for (let j = 0; j < dataObjectnew.tproductlist.length; j++) {
                         let chkBox;
                         let costprice = 0.00;
                         let sellrate = 0.00;
                         let linestatus = '';
-                        if (dataObjectnew.tproductvs1[j].fields.Active == true) {
+                        if (dataObjectnew.tproductlist[j].Active == true) {
                             linestatus = "";
-                        } else if (dataObjectnew.tproductvs1[j].fields.Active == false) {
+                        } else if (dataObjectnew.tproductlist[j].Active == false) {
                             linestatus = "In-Active";
                         };
-                        chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + dataObjectnew.tproductvs1[j].fields.ID + "x" + dataObjectnew.tproductvs1[j].fields.ProductName +
-                        '"><label class="custom-control-label chkBox pointer" for="formCheck-' + dataObjectnew.tproductvs1[j].fields.ID +
-                        "x" + dataObjectnew.tproductvs1[j].fields.ProductName +
+                        chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductlist[j].PARTSID + "x" + data.tproductlist[j].PARTNAM +
+                        '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductlist[j].PARTSID +
+                        "x" + data.tproductlist[j].PARTNAM +
                         '"></label></div>'; //switchbox
 
                         costprice = utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(dataObjectnew.tproductvs1[j].fields.BuyQty1Cost * 100) / 100); //Cost Price
+                            Math.floor(data.tproductlist[j].BuyQTY1 * 100) / 100); //Cost Price
                         sellprice = utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(dataObjectnew.tproductvs1[j].fields.SellQty1Price* 100) / 100); //Sell Price
+                            Math.floor(data.tproductlist[j].SellQTY1 * 100) / 100); //Sell Price
 
                         var dataListDupp = [
                             chkBox,
-                            dataObjectnew.tproductvs1[j].fields.ID || "",
-                            dataObjectnew.tproductvs1[j].fields.ProductName || "",
-                            dataObjectnew.tproductvs1[j].fields.SalesDescription || "",
-                            dataObjectnew.tproductvs1[j].fields.BARCODE || "",
+                            dataObjectnew.tproductlist[j].PARTSID || "",
+                            dataObjectnew.tproductlist[j].PARTNAM || "",
+                            dataObjectnew.tproductlist[j].PARTSDESCRIPTION || "",
+                            dataObjectnew.tproductlist[j].BARCODE || "",
                             costprice,
                             sellprice,
-                            dataObjectnew.tproductvs1[j].fields.TotalQtyInStock,
-                            dataObjectnew.tproductvs1[j].fields.TaxCodePurchase || "",
-                            dataObjectnew.tproductvs1[j].fields.ID || "",
-                            dataObjectnew.tproductvs1[j].fields.ExtraSellPrice || null,
-                            linestatus,
+                            dataObjectnew.tproductlist[j].InstockQty,
+                            dataObjectnew.tproductlist[j].PURCHTAXCODE || "",
+                            dataObjectnew.tproductlist[j].PRODUCTCODE || "",
+                            dataObjectnew.tproductlist[j].Ex_Works || null,
+                            linestatus
                         ];
 
                         splashArrayProductList.push(dataListDupp);
@@ -427,7 +427,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 "fnInitComplete": function (oSettings) {
                         $("<a class='btn btn-primary scanProdBarcodePOP' href='' id='scanProdBarcodePOP' role='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryCheckbox_filter");
                         $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryCheckbox_filter");
-                        if(deleteFilter){
+                        if(data.Params.Search.replace(/\s/g, "") == ""){
                           $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
 
                         }else{
@@ -436,9 +436,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    // let countTableData = data.Params.Count || 0; //get count from API data
-                    //
-                    // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                    let countTableData = data.Params.Count || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
 
             }).on('page', function () {
@@ -473,7 +473,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
 
         //Check URL to make right call.
         if(currenttablename == "tblInventoryCheckbox"){
-            templateObject.getProductsData();
+            templateObject.getProductListVS1();
         }
       tableResize();
     });
@@ -557,8 +557,8 @@ Template.internal_transaction_list_with_switchbox.events({
       $('.btnHideDeleted').css('display','inline-block');
 
       if(currenttablename == "tblInventoryCheckbox"){
-        await clearData('TProductVS1');
-        templateObject.getProductsData(true);
+        await clearData('TProductList');
+        templateObject.getProductListVS1(true);
       }
 
     },
@@ -572,8 +572,8 @@ Template.internal_transaction_list_with_switchbox.events({
       $('.btnViewDeleted').css('display','inline-block');
 
       if(currenttablename == "tblInventoryCheckbox"){
-        await clearData('TProductVS1');
-        templateObject.getProductsData(false);
+        await clearData('TProductList');
+        templateObject.getProductListVS1(false);
       }
 
     },
@@ -727,7 +727,7 @@ Template.internal_transaction_list_with_switchbox.helpers({
       }
   },
   int_trans_with_switchbox_displayfields: () => {
-    return Template.instance().int_trans_with_switchbox_displayfields.get();
+    return Template.instance().int_trans_with_switchbox_displayget();
   },
   tablename: () => {
       return Template.instance().tablename.get();
