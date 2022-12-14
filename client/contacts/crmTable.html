@@ -244,14 +244,11 @@
                     <thead>
                         <tr class="dnd-moved">
                             <th class="th colTaskId hiddenColumn"></th>
-                            <th class="th colCompleteTask" style="width: 2%;"></th>
-                            <th class="th colDate" style="width:100px;">Date</th>
-                            <th class="th colTaskName" style="width:150px;">Task
-                            </th>
-                            <th class="th colTaskDesc" style="width:300px;">
-                                Description</th>
-                            <th class="th colTaskLabels" style="width:200px;">Labels
-                            </th>
+                            <th class="th colDate" style="width:14% !important;">Date</th>
+                            <th class="th colTaskName" style="width: 22% !important;">Task</th>
+                            <th class="th colTaskDesc" style="width:32% !important;">Description</th>
+                            <th class="th colCompletedBy" style="width:14% !important;">Completed By</th>
+                            <th class="th colCompleteTask" style="width: 14% !important;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -261,21 +258,17 @@
                             id="{{item.id}}">
                             <td contenteditable="false"
                                 class="colTaskId hiddenColumn">{{item.id}}</td>
-                            <td contenteditable="false" class="th colCompleteTask"
-                                style="width: 2%;">
-                                <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_{{item.priority}}"
-                                    style="width:15px;">
-                                </div>
-                            </td>
                             <td contenteditable="false" class="colDate">
                                 {{item.date}}</td>
                             <td contenteditable="false" class="colTaskName">
                                 {{item.taskName}}</td>
-                            <td contenteditable="false" class="colTaskDesc"
-                                style="white-space:pre-wrap;">
+                            <td contenteditable="false" class="colTaskDesc">
                                 {{item.description}}
                             </td>
-                            <td contenteditable="false" class="colTaskLabels">
+                            <td contenteditable="false" class="colCompletedBy">
+                                {{item.completedby}}
+                            </td>
+                            <!-- <td contenteditable="false" class="colTaskLabels">
                                 {{#if item.labels}}
                                 {{#each label in item.labels}}
                                 <span class="taskTag">
@@ -286,6 +279,24 @@
                                 </span>
                                 {{/each}}
                                 {{/if}}
+                            </td> -->
+                            <td contenteditable="false" class="th colCompleteTask">
+                                <!-- <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_{{item.priority}}"
+                                    style="width:15px;">
+                                </div> -->
+                                <div class="custom-control custom-switch" style="cursor: pointer;">
+                                    {{#if item.completed}}
+                                        <input class="custom-control-input additionalModule chkComplete pointer" type="checkbox"
+                                        id="chkCompleted_{{item.id}}" name="Additional" style="cursor: pointer;" additionalqty="1"
+                                        autocomplete="off" data-id="edit" checked="checked">
+                                    {{else}}
+                                        <input class="custom-control-input additionalModule chkComplete pointer" type="checkbox"
+                                        id="chkCompleted_{{item.id}}" name="Additional" style="cursor: pointer;" additionalqty="1"
+                                        autocomplete="off" data-id="edit">
+                                    {{/if}}
+                                    <label class="custom-control-label" for="chkCompleted_{{item.id}}"
+                                      style="cursor: pointer; max-width: 200px;" data-id="edit">Completed</label>
+                                </div>
                             </td>
                         </tr>
                         {{/each}}
