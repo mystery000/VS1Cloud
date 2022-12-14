@@ -7,11 +7,16 @@
         <!-- {{#if workorderrecord}} -->
             <form>
                 <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;">
-                    <h2 style="margin: 16px;" class="heading">
-                        {{workorderrecord.lid}}
-                        {{> helpbutton}}
-                    </h2>
-                    <div class="printID" id="{{workorderrecord.id}}" style="display: none;">{{workorderrecord.salesorderid}}</div>
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            <h2 style="margin: 16px;" class="heading">
+                                {{workorderrecord.lid}}
+                                {{> helpbutton}}
+                            </h2>
+                            <div class="printID" id="{{workorderrecord.id}}" style="display: none;">{{workorderrecord.salesorderid}}</div>
+                        </div>
+                        <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+                    </div>
                 </header>
   
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -502,7 +507,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button class="btn btn-success btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                <button class="btn btn-success btnSave btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                 <button class="btn btn-warning btnResetGridSettings" type="button"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
                                                 <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                             </div>
@@ -972,4 +977,6 @@
         </div>
         <!-- END Attachments -->
     </div>
+
+    {{> init_form_page_script}}
 </template>

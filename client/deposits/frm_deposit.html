@@ -17,40 +17,43 @@
         </div>
         {{#if record}}
         <div class="row no-gutters" style="background-color: #ededed;">
-            <div class="col">
-                <header>
-                    <h1 style="margin: 32px;margin-bottom: 0;">{{record.lid}}
+            <div class="col-12 col-md-4">
+                <div class="col">
+                    <header>
+                        <h1 style="margin: 32px;margin-bottom: 0;">{{record.lid}}
 
-                        {{> helpbutton}}
+                            {{> helpbutton}}
 
-                        <!-- Start Help View Modal -->
-                        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                            <div class="modal-dialog modal-sm" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header" style="padding-bottom: 8px;">
-                                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                    <div class="modal-body">
-                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                                        <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                        {{> helpadvisor}}
-                                        {{> helpgotoforum}}
+                            <!-- Start Help View Modal -->
+                            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="padding-bottom: 8px;">
+                                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                        <div class="modal-body">
+                                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                            <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                            {{> helpadvisor}}
+                                            {{> helpgotoforum}}
+                                        </div>
+                                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                                     </div>
-                                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- End Help View Modal -->
+                            <!-- End Help View Modal -->
 
-                    </h1>
-                    <div class="printID" id="{{record.id}}" style="display: none;">{{record.id}}</div>
-                </header>
-            </div>
+                        </h1>
+                        <div class="printID" id="{{record.id}}" style="display: none;">{{record.id}}</div>
+                    </header>
+                </div>
 
-            {{#if equals record.isReconciled true}}
-            <div class="col-2 colProcessed" id="colProcessed" >
-                <h3 style="margin-left: -24px; margin-top: 36px; color: #e02d1b; font-weight: 600;">Reconciled</h3>
+                {{#if equals record.isReconciled true}}
+                    <div class="col-2 colProcessed" id="colProcessed" >
+                        <h3 style="margin-left: -24px; margin-top: 36px; color: #e02d1b; font-weight: 600;">Reconciled</h3>
+                    </div>
+                {{/if}}
             </div>
-            {{/if}}
+            <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
         </div>
 
         <script>
@@ -867,4 +870,5 @@
     <script>
         modalDraggable();
     </script>
+    {{> init_form_page_script}}
 </template>

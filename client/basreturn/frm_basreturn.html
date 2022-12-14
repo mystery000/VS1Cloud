@@ -6,31 +6,32 @@
         {{#if record}}
             <div class="row no-gutters" style="background-color: #ededed;">
                 <div class="col">
-                    <header>
-                        <h2 style="margin: 32px;margin-bottom: 0px;">{{pageTitle}}
-
-                            {{> helpbutton}}
-
-                            <!-- Start Help View Modal -->
-                            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                                <div class="modal-dialog modal-sm" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="padding-bottom: 8px;">
-                                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <header class="row">
+                        <div class="col-12 col-md-4">
+                            <h2>{{pageTitle}}
+                                {{> helpbutton}}
+                                <!-- Start Help View Modal -->
+                                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                                    <div class="modal-dialog modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="padding-bottom: 8px;">
+                                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                                <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                                {{> helpadvisor}}
+                                                {{> helpgotoforum}}
+                                            </div>
+                                            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                                         </div>
-                                        <div class="modal-body">
-                                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                                            <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                            {{> helpadvisor}}
-                                            {{> helpgotoforum}}
-                                        </div>
-                                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- End Help View Modal -->
+                                <!-- End Help View Modal -->
 
-                        </h2>
+                            </h2>
+                        </div>
+                        <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
                     </header>
                 </div>
             </div>
@@ -2605,4 +2606,5 @@
     <script>
         modalDraggable();
     </script>
+    {{> init_form_page_script}}
 </template>

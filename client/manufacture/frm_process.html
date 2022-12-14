@@ -8,11 +8,18 @@
         {{#if processrecord}}
             <form>
                 <header style="padding: 16px; padding-right: 0px; margin-top: -24px;">
-                    <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
-                        Edit Process - {{processrecord.id}}
-                        {{> helpbutton}}
-                        <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
-                    </h2>
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
+                                Edit Process - {{processrecord.id}}
+                                {{> helpbutton}}
+                            </h2>
+                        </div>
+                        <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+                        <div class="row">
+                            <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
+                        </div>
+                    </div>
                 </header>
                 <div class="row" style="padding-top: 30px">
                     <div class="col-12 col-md-10 col-xl-8 col-xxl-6 mx-auto">
@@ -111,7 +118,7 @@
                                         </div>
                                         <div class="col-5" style="margin-bottom: 1rem;">
                                             <div class="row align-items-end justify-content-end" style="gap: 20px">
-                                                <button class="btn btn-success btnSaveProcess" id="btnSaveProcess" type="button">
+                                                <button class="btn btn-success btnSave btnSaveProcess" id="btnSaveProcess" type="button">
                                                     <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                                                 </button>
                                                 <button class="btn btn-secondary" id="btnCancel" type="button">
@@ -138,4 +145,6 @@
             {{>inventorassetaccountspop}}
         </div>
     </div>
+
+    {{> init_form_page_script}}
 </template>

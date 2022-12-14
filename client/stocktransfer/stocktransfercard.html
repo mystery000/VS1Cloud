@@ -11,11 +11,16 @@
             }
         </style>
         <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-            <h2 class="shippingHeader" style="margin: 16px;margin-bottom: 0px;">Stock Transfer
-                {{> helpbutton}}
-                <!-- <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a> -->
-            </h2>
-            <input type="text" id="SalesId" name="SalesId" style="display: none;" readonly>
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <h2 class="shippingHeader" style="margin: 16px;margin-bottom: 0px;">Stock Transfer
+                        {{> helpbutton}}
+                        <!-- <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a> -->
+                    </h2>
+                    <input type="text" id="SalesId" name="SalesId" style="display: none;" readonly>
+                </div>
+                <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+            </div>
         </header>
 
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">

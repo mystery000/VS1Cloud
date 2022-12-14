@@ -16,11 +16,12 @@
                 // if you want to make leave or no leave
                 const current_link_splits = window.location.href.split("/");
                 const current_link = current_link_splits[current_link_splits.length - 1];
-                const allowed_links = ["basreturn", "depositcard", "chequecard", "newbankrule", "fixedassetcard",
+                const allowed_links = [
+                    "basreturn", "depositcard", "chequecard", "newbankrule", "fixedassetcard",
                     "customerscard", "employeescard", "leadscard", "supplierscard", "journalentrycard",
                     "bomsetupcard", "workordercard", "servicelogcard", "processcard", "stockadjustmentcard",
-                    "paymentcard", "supplierpaymentcard", "purchaseordercard", "billcard", "creditcard", "allreports",
-                    "quotecard", "salesordercard", "invoicecard", "refundcard"
+                    "paymentcard", "supplierpaymentcard", "purchaseordercard", "billcard", "creditcard",
+                    "allreports", "quotecard", "salesordercard", "invoicecard", "refundcard"
                 ];
 
                 if (allowed_links.every((allowed_link) => !current_link.includes(allowed_link))) {

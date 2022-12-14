@@ -38,10 +38,17 @@
         {{#if quoterecord}}
         <form>
             <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-                <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">{{quoterecord.lid}}
-                    {{> helpbutton}}
-                    <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
-                </h2>
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">{{quoterecord.lid}}
+                            {{> helpbutton}}
+                        </h2>
+                    </div>
+                    <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+                    <div class="col-12 col-md-4">
+                        <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
+                    </div>
+                </div>
             </header>
 
             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -591,7 +598,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-success btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                            <button class="btn btn-success btnSave btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                             <button class="btn btn-warning btnResetGridSettings" type="button"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
                                             <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                         </div>
@@ -1799,4 +1806,6 @@
     <script>
         modalDraggable();
     </script>
+
+    {{> init_form_page_script}}
 </template>

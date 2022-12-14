@@ -1,17 +1,17 @@
 <template name="featureallocation">
     <div class="container-fluid">
-        <header style="background-color: #ededed;padding: 16px;margin: -24px;">
-            <h1 style="margin: 16px;">Company Features Allocation {{> helpbutton}}
-            </h1>
-        </header>
-        <div class="fullScreenSpin" style="display:none;">
-            <div class="spinner"></div>
-        </div>
-        <div class="d-xl-flex flex-row align-items-xl-end" style="margin: -24px;padding: 32px;background-color: #ededed;margin-bottom: 20px;margin-top: 0px;">
-            <div class="d-xl-flex flex-grow-0 align-items-xl-end">
-                <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="icon ion-android-bulb" style="margin-right: 8px;"></i>Refresh</button>
-                <button class="btn btn-success btnAddVS1User" type="button" style="margin: 8px;"><i class="fa fa-plus" style="margin-right: 8px"></i>Add VS1 User</button>
-                <!-- <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start" style="margin: 8px;"><label>Employee</label>
+        <header style="background-color: #ededed;" class="row">
+            <div class="col-12 col-md-4">
+                <h1 style="margin: 16px;">Company Features Allocation {{> helpbutton}}</h1>
+            </div>
+            <div class="col-12 col-md-4">
+                {{> loggedcompanyoverview}}
+            </div>
+            <div class="col-12 col-md-4 d-xl-flex flex-row align-items-xl-end" style="margin: -24px;padding: 32px;background-color: #ededed;margin-bottom: 20px;margin-top: 0px;">
+                <div class="d-xl-flex flex-grow-0 align-items-xl-end">
+                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="icon ion-android-bulb" style="margin-right: 8px;"></i>Refresh</button>
+                    <button class="btn btn-success btnAddVS1User" type="button" style="margin: 8px;"><i class="fa fa-plus" style="margin-right: 8px"></i>Add VS1 User</button>
+                    <!-- <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start" style="margin: 8px;"><label>Employee</label>
 <select class="form-control" id="sltEmployeeName" name="sltEmployeeName" style="cursor: pointer;">
 <option value="All" selected="" class="selectAll">All</option>
 {{#each item in employeerecords}}
@@ -21,10 +21,14 @@
 {{/each}}
 </select>
 </div> -->
+                </div>
+                <div class="float-right d-xl-flex flex-row flex-grow-1 justify-content-xl-end">
+                    <button class="btn btn-primary btnTopGlobalSave" type="button" style="margin: 8px;margin-left: 8px;"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
+                    <button class="btn btn-secondary btnBack" type="button" style="margin: 8px;"><i class="fa fa-close" style="margin-right: 8px;"></i>Cancel</button></div>
             </div>
-            <div class="float-right d-xl-flex flex-row flex-grow-1 justify-content-xl-end">
-                <button class="btn btn-primary btnTopGlobalSave" type="button" style="margin: 8px;margin-left: 8px;"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
-                <button class="btn btn-secondary btnBack" type="button" style="margin: 8px;"><i class="fa fa-close" style="margin-right: 8px;"></i>Cancel</button></div>
+        </header>
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
         </div>
         <div class="row d-xl-flex flex-row align-items-xl-start">
             <div class="col d-xl-flex flex-row flex-wrap justify-content-xl-center">

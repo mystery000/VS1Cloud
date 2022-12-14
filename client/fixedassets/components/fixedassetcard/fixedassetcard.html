@@ -19,37 +19,42 @@
 
     <form>
       <header
-        style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-        <h1 style="margin: 12px;margin-bottom: 0px;" class="heading">Fixed Asset
+        style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;" class="row">
+          <div class="col-12 col-md-4">
+              <h1 style="margin: 12px;margin-bottom: 0px;" class="heading">Fixed Asset
 
-          {{> helpbutton}}
+                  {{> helpbutton}}
 
-          <!-- Start Help View Modal -->
-          <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-            <div class="modal-dialog modal-sm" role="document">
-              <div class="modal-content">
-                <div class="modal-header" style="padding-bottom: 8px;">
-                  <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                      aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                  <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
-                      class="btn btn-primary helpModal">View Help Video</a></p>
-                  <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank"
-                      class="btn btn-primary">Download Help File</a></p>
-                  {{> helpadvisor}}
-                  {{> helpgotoforum}}
-                </div>
-                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal"
-                    type="button">Close</button></div>
+                  <!-- Start Help View Modal -->
+                  <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                      <div class="modal-dialog modal-sm" role="document">
+                          <div class="modal-content">
+                              <div class="modal-header" style="padding-bottom: 8px;">
+                                  <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                      aria-hidden="true">×</span></button>
+                              </div>
+                              <div class="modal-body">
+                                  <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
+                                                                       class="btn btn-primary helpModal">View Help Video</a></p>
+                                  <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank"
+                                                                       class="btn btn-primary">Download Help File</a></p>
+                                  {{> helpadvisor}}
+                                  {{> helpgotoforum}}
+                              </div>
+                              <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal"
+                                                                                      type="button">Close</button></div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- End Help View Modal -->
+
+              </h1>
+              <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+              <div class="col-12 col-md-4">
+                  <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i
+                          class="icon ion-android-more-horizontal"></i></a>
               </div>
-            </div>
           </div>
-          <!-- End Help View Modal -->
-
-          <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i
-              class="icon ion-android-more-horizontal"></i></a>
-        </h1>
       </header>
 
       <div class="row" style="background-color: #ededed;">
@@ -473,4 +478,6 @@
   <div class="modal fade" role="dialog" tabindex="-1" id="fixedAssetTypeModal">
     {{ >fixedassettypepopup}}
   </div>
+
+    {{> init_form_page_script}}
 </template>

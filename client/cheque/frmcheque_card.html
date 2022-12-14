@@ -19,18 +19,23 @@
     <form>
       <div class="row no-gutters" style="background-color: #ededed;">
         <div class="col">
-          <header
-            style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-            <input type="hidden" id="h1" name="id">
-            <h2 class="heading" style="margin: 16px;margin-bottom: 0px;">{{chequerecord.lid}}
+          <header class="row"
+            style="background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
+            <div class="col-12 col-md-4">
+                <input type="hidden" id="h1" name="id">
+                <h2 class="heading" style="margin: 16px;margin-bottom: 0px;">{{chequerecord.lid}}
 
-              {{> helpbutton}}
-              <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
-              {{#if equals chequerecord.isReconciled true}}
-              <h3 style="float: right; color: #e02d1b; font-weight: 600;">Reconciled</h3>
-              {{/if}}
-            </h2>
-            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                    {{> helpbutton}}
+                </h2>
+            </div>
+              <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+              <div class="col-12 col-md-4">
+                  <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
+                  {{#if equals chequerecord.isReconciled true}}
+                      <h3 style="float: right; color: #e02d1b; font-weight: 600;">Reconciled</h3>
+                  {{/if}}
+              </div>
+              <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
               <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                   <div class="modal-header" style="padding-bottom: 8px;">
@@ -1476,4 +1481,5 @@
   <script>
     modalDraggable();
   </script>
+    {{> init_form_page_script}}
 </template>

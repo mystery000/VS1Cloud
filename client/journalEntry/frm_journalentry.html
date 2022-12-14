@@ -17,7 +17,7 @@
         </div>
         {{#if record}}
             <div class="row no-gutters" style="background-color: #ededed;">
-                <div class="col">
+                <div class="col-12 col-md-4">
                     <header>
                         <h2 style="margin: 32px;margin-bottom: 0px;">{{record.lid}}
 
@@ -45,11 +45,14 @@
                         </h2>
                     </header>
                 </div>
-                {{#if equals record.isReconciled true}}
-                    <div class="col-2 colProcessed" id="colProcessed">
-                        <h3 style="margin-left: -24px; margin-top: 36px; color: #e02d1b; font-weight: 600;">Reconciled</h3>
-                    </div>
-                {{/if}}
+                <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+                <div class="col-12 col-md-4">
+                    {{#if equals record.isReconciled true}}
+                        <div class="col-2 colProcessed" id="colProcessed">
+                            <h3 style="margin-left: -24px; margin-top: 36px; color: #e02d1b; font-weight: 600;">Reconciled</h3>
+                        </div>
+                    {{/if}}
+                </div>
             </div>
 
             <div class="row" style="padding: 32px; padding-bottom: 0px; background-color: #ededed;">
