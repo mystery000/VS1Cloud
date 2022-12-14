@@ -8,11 +8,18 @@
         {{#if processrecord}}
             <form>
                 <header style="padding: 16px; padding-right: 0px; margin-top: -24px;">
-                    <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
-                        Edit Process - {{processrecord.id}}
-                        {{> helpbutton}}
-                        <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
-                    </h2>
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
+                                Edit Process - {{processrecord.id}}
+                                {{> helpbutton}}
+                            </h2>
+                        </div>
+                        <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+                        <div class="row">
+                            <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
+                        </div>
+                    </div>
                 </header>
                 <div class="row" style="padding-top: 30px">
                     <div class="col-12 col-md-10 col-xl-8 col-xxl-6 mx-auto">
