@@ -390,9 +390,9 @@ Template.non_transactional_list.onRendered(function() {
           ];
           }else if(currenttablename === "tblTitleList"){
             reset_data = [
-              { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: true,  width: "10"},
-              { index: 0, label: 'Title', class: 'colTitleName', active: true, display: true,  width: "200"},
-              { index: 1, label: 'Active', class: 'chkBox', active: true, display: true, width: "20"},
+              { index: 0, label: '#ID', class: '', active: false, display: true,  width: "10"},
+              { index: 1, label: 'Title', class: 'colTitleName', active: true, display: true,  width: "200"},
+              { index: 2, label: 'Active', class: 'chkBox', active: true, display: true, width: "20"},
           ];
           }else if(currenttablename == 'tblProcessList') {
             reset_data = [
@@ -428,19 +428,20 @@ Template.non_transactional_list.onRendered(function() {
           ];
           }else if(currenttablename === "tblCustomerTransactionList"){
             reset_data = [
-              { index: 0, label: 'Company', class: 'colCompany', active: true, display: true,  width: "200"},
-              { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
-              { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "80"},
-              { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "80"},
-              { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80"},
-              { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "80"},
-              { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "80"},
-              { index: 7, label: 'Country', class: 'colCountry', active: true, display: true, width: "100"},
-              { index: 8, label: 'Email', class: 'colEmail', active: false, display: true, width: ""},
-              { index: 9, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "100"},
-              { index: 9, label: 'Custom Field 1', class: 'colPurchaseCustField1', active: false, display: true, width: ""},
-              { index: 9, label: 'Custom Field 2', class: 'colPurchaseCustField2', active: false, display: true, width: ""},
-              { index: 9, label: 'Notes', class: 'colNotes', active: true, display: true, width: "100"},
+              { index: 0, label: '#ID', class: 'colSortDate', active: false, display: true,  width: "10"},
+              { index: 1, label: 'Company', class: 'colCompany', active: true, display: true,  width: "200"},
+              { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
+              { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "80"},
+              { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "80"},
+              { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80"},
+              { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "80"},
+              { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "80"},
+              { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "100"},
+              { index: 9, label: 'Email', class: 'colEmail', active: false, display: true, width: ""},
+              { index: 10, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "100"},
+              { index: 11, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: ""},
+              { index: 12, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: ""},
+              { index: 13, label: 'Notes', class: 'colNotes', active: true, display: true, width: "100"},
           ];
           }else if(currenttablename === "tblCustomerJobDetailsList"){
             reset_data = [
@@ -4894,8 +4895,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
           }
 
           templateObject.getTitleListData = async function (deleteFilter = false) { //GET Data here from Web API or IndexDB
-            let data = {
-            }
+            let data = {}
             templateObject.displayTitleListData(data); //Call this function to display data on the table
           }
 
@@ -4915,7 +4915,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     columnDefs: [
                         {
                         targets: 0,
-                        className: "colClientTypeID colID hiddenColumn",
+                        className: "hiddenColumn",
                         width: "10px",
                         createdCell: function (td, cellData, rowData, row, col) {
                           $(td).closest("tr").attr("id", rowData[0]);
@@ -5496,6 +5496,9 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
     templateObject.displayCustomerTransactionListData = function(data, customerName){
+      let dataTableListJob = [];
+      console.log('customerName:',customerName)
+      console.log('data:',data)
       for (let i = 0; i < data.tjob.length; i++) {
         let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].ARBalance) || 0.00;
         let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditBalance) || 0.00;
@@ -5520,9 +5523,222 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             country: data.tjob[i].Country || LoggedCountry
         };
         if (customerName == data.tjob[i].ParentCustomerName) {
-            // dataTableListJob.push(dataListJob);
+            dataTableListJob.push(dataListJob);
         }
-    }
+        var splashArrayClientTypeList = new Array();
+        let deleteFilter = false;
+        for (let i = 0; i < data.length; i++) {
+          var dataList = [
+            data[i].id,
+            data[i].company,
+            data[i].phone,
+            data[i].arbalance,
+            data[i].creditbalance,
+            data[i].balance,
+            data[i].creditlimit,
+            data[i].salesorderbalance,
+            data[i].country,
+            data[i].email,
+            data[i].accountno,
+            data[i].clientno,
+            data[i].jobtitle,
+            data[i].notes,
+           ];
+            splashArrayClientTypeList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
+        }
+  
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
+        }
+        setTimeout(function () {
+            $('#'+currenttablename).DataTable({
+                data: splashArrayClientTypeList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                    targets: 0,
+                    className: "colTaskId hiddenColumn",
+                    width: "10px",
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      $(td).closest("tr").attr("id", rowData[0]);
+                    }},
+                    {
+                      targets: 1,
+                      className: "colCompany",
+                      width: "200px",
+                    },
+                    {
+                      targets: 2,
+                      className: "colPhone",
+                      width: "95px",
+                    },
+                    {
+                      targets: 3,
+                      className: "colARBalance",
+                      width: "80px",
+                    },
+                    {
+                      targets: 4,
+                      className: "colCreditBalance",
+                      width: "80px",
+                    },
+                    {
+                      targets: 5,
+                      className: "colBalance",
+                      width: "80px",
+                    },
+                    {
+                      targets: 6,
+                      className: "colCreditLimit",
+                      width: "80px",
+                    },
+                    {
+                      targets: 7,
+                      className: "colSalesOrderBalance",
+                      width: "80px",
+                    },
+                    {
+                      targets: 8,
+                      className: "colCountry",
+                      width: "100px",
+                    },
+                    {
+                      targets: 9,
+                      className: "colEmail hiddenColumn",
+                      width: "",
+                    },
+                    {
+                      targets: 10,
+                      className: "colAccountNo hiddenColumn",
+                      width: "",
+                    },
+                    {
+                      targets: 11,
+                      className: "colClientNo hiddenColumn",
+                      width: "",
+                    },
+                    {
+                      targets: 12,
+                      className: "colJobTitle hiddenColumn",
+                      width: "100px",
+                    },
+                    {
+                      targets: 13,
+                      className: "colNotes",
+                      width: "",
+                    },
+                ],
+                buttons: [
+                    {
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Customer Type Settings",
+                        orientation:'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },{
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Customer Type Settings',
+                        filename: "Customer Type Settings",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Customer Type Settings",
+                        orientation:'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+  
+                    }],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[1, "asc"]],
+                action: function () {
+                    $('#'+currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#'+currenttablename+'_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+  
+                        }
+                    } else {
+  
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+  
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                  $('.fullScreenSpin').css('display', 'inline-block');
+                  let dataTableList = [];
+              });
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+                },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function (oSettings) {
+                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#'+currenttablename+'_filter');
+                      if(deleteFilter){
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                      }else{
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#'+currenttablename+'_filter');
+                      }
+                      $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#'+currenttablename+'_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                }
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function () {
+  
+            }).on('length.dt', function (e, settings, len) {
+  
+              $(".fullScreenSpin").css("display", "inline-block");
+              let dataLenght = settings._iDisplayLength;
+              if (dataLenght == -1) {
+                if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                  $(".fullScreenSpin").css("display", "none");
+                } else {
+                  $(".fullScreenSpin").css("display", "none");
+                }
+              } else {
+                $(".fullScreenSpin").css("display", "none");
+              }
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+  
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+      }
     }
 
     templateObject.getCustomerJobDetailsListData = function(){
