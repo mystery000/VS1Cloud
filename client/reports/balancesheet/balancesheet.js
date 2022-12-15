@@ -672,7 +672,7 @@ Template.balancesheetreport.helpers({
 
 
         // Get the selected date
-        let dateTo = $("#balancedate").val();
+        let dateTo = $("#dateFrom").val();
         const day = dateTo.split("/")[0];
         const m = dateTo.split("/")[1];
         const y = dateTo.split("/")[2];
@@ -732,8 +732,13 @@ Template.balancesheetreport.helpers({
 
         let convertedAmount =
             isMinus == true ?
+<<<<<<< HEAD
                 `- ${currencyData.symbol} ${amount}` :
                 `${currencyData.symbol} ${amount}`;
+=======
+            `- ${currencyData.symbol}${amount}` :
+            `${currencyData.symbol}${amount}`;
+>>>>>>> main
 
 
         return convertedAmount;
