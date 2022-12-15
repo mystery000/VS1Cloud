@@ -223,149 +223,6 @@ Template.billcard.onRendered(() => {
     $('#choosetemplate').attr('checked', true);
 
 
-    templateObject.getTemplateInfoNew = function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
-        getVS1Data('TTemplateSettings').then(function(dataObject) {
-          if (dataObject.length == 0) {
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'bill')
-                    {
-
-                         if(data.ttemplatesettings[i].fields.Template == 1)
-                         {
-                                 $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                    $('#Bills_1').attr('checked','checked');
-                                 }
-
-                         }
-                         if(data.ttemplatesettings[i].fields.Template == 2)
-                         {
-                               $('input[name="Bills_2"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_2').attr('checked','checked');
-                               }
-                         }
-
-                         if(data.ttemplatesettings[i].fields.Template == 3)
-                         {
-                               $('input[name="Bills_3"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_3').attr('checked','checked');
-                               }
-                         }
-
-
-                    }
-
-
-                  }
-
-
-                  LoadingOverlay.hide();
-              }).catch(function (err) {
-                LoadingOverlay.hide();
-              });
-          }else{
-                  let data = JSON.parse(dataObject[0].data);
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'bill')
-                    {
-
-                         if(data.ttemplatesettings[i].fields.Template == 1)
-                         {
-                                 $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                    $('#Bills_1').attr('checked','checked');
-                                 }
-
-                         }
-                         if(data.ttemplatesettings[i].fields.Template == 2)
-                         {
-                               $('input[name="Bills_2"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_2').attr('checked','checked');
-                               }
-                         }
-
-                         if(data.ttemplatesettings[i].fields.Template == 3)
-                         {
-                               $('input[name="Bills_3"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_3').attr('checked','checked');
-                               }
-                         }
-
-
-                    }
-
-
-
-                 }
-                  LoadingOverlay.hide();
-          }
-        }).catch(function(err) {
-           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'bill')
-                    {
-
-                         if(data.ttemplatesettings[i].fields.Template == 1)
-                         {
-                                 $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                    $('#Bills_1').attr('checked','checked');
-                                 }
-
-                         }
-                         if(data.ttemplatesettings[i].fields.Template == 2)
-                         {
-                               $('input[name="Bills_2"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_2').attr('checked','checked');
-                               }
-                         }
-
-                         if(data.ttemplatesettings[i].fields.Template == 3)
-                         {
-                               $('input[name="Bills_3"]').val(data.ttemplatesettings[i].fields.Description);
-                               if(data.ttemplatesettings[i].fields.Active == true)
-                               {
-                                 $('#Bills_3').attr('checked','checked');
-                               }
-                         }
-
-
-                    }
-
-
-                  }
-                  LoadingOverlay.hide();
-        }).catch(function (err) {
-          LoadingOverlay.hide();
-        });
-        });
-
-    };
-
-    templateObject.getTemplateInfoNew();
-
     templateObject.getOrganisationDetails = function () {
         let account_id = Session.get('vs1companyStripeID') || '';
         let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
@@ -7485,7 +7342,7 @@ Template.billcard.events({
 
             });
 
-            if($('#print_bill').is(':checked') || $('#print_bill_second').is(':checked')) {
+            if($('#print_bill').is(':checked')) {
                 printTemplate.push('Bills');
             }
 
@@ -7502,7 +7359,10 @@ Template.billcard.events({
 
                     }
                 }
+            } else {
+                LoadingOverlay.hide();
             }
+
             // if ($('.edtCustomerEmail').val() != "") {
             //     $('.pdfCustomerName').html($('#edtCustomerName').val());
             //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
@@ -7600,44 +7460,6 @@ Template.billcard.events({
                 }
             }
         });
-    }, delayTimeAfterSound);
-    },
-
-    'click  #open_print_confirm':function(event)
-    {
-        playPrintAudio();
-        setTimeout(async function(){
-        if($('#choosetemplate').is(':checked'))
-        {
-            $('#templateselection').modal('show');
-        }
-        else
-        {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // } else {
-            //     swal({
-            //         title: 'Customer Email Required',
-            //         text: 'Please enter customer email',
-            //         type: 'error',
-            //         showCancelButton: false,
-            //         confirmButtonText: 'OK'
-            //     }).then((result) => {
-            //         if (result.value) {}
-            //         else if (result.dismiss === 'cancel') {}
-            //     });
-            // }
-            // $('#confirmprint').modal('hide');            
-        }
     }, delayTimeAfterSound);
     },
 

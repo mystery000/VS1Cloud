@@ -1,13 +1,15 @@
 <template name="purchaseordercard">
-  <div class="container-fluid purchasesmodule" style="padding-right: 0px;padding-left: 0px;">
-    <div class="fullScreenSpin" style="display:none;">
+  <div
+    class="container-fluid purchasesmodule"
+    style="padding-right: 0px; padding-left: 0px"
+  >
+    <div class="fullScreenSpin" style="display: none">
       <div class="spinner"></div>
     </div>
 
     <style>
       .templateItem {
         display: inline-flex !important;
-
       }
 
       .btnPreviewTemplate {
@@ -29,54 +31,39 @@
 
     {{#if purchaseorderrecord}}
     <form>
-      {{> transaction_header
-        cardType="PO"
-        data=purchaseorderrecord
-        uploadedFile=uploadedFile
-        isCurrencyEnable=isCurrencyEnable
-        custfields=custfields
-        showTemplateModals=true
-        showUploadAttachment=true
-        showTransactionButtons=true
-        salesCloudPreferenceRec=salesCloudPreferenceRec
-        showCustomer=true
-        showBilingAddress=true
-        showSalesDate=true
-        showPONumber=false
-        showInvoiceNumber=true
-        showVia=true
-        showTerms=true
-        showStatus=true
-        showReference=true
-        showDepartment=true
-        showCustomFields=true
-        showShippingInfo=true
-        showPayment=true
-        showCopyTransaction=true
-        showCopyToInvoice=false
-        showCopyToOrder=false
-      }}
-   
-      <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog"
-      aria-labelledby="templatePreviewLabel" aria-hidden="true">
-      {{> custom_print_template modalId="templatePreviewModal" idPrefix="html-2-pdfwrapper_quotes"
-      namePrefix="pdfwrapper_quotes" }}
+      {{> transaction_header cardType="PO" data=purchaseorderrecord
+      uploadedFile=uploadedFile isCurrencyEnable=isCurrencyEnable
+      custfields=custfields showTemplateModals=true showUploadAttachment=true
+      showTransactionButtons=true
+      salesCloudPreferenceRec=salesCloudPreferenceRec showCustomer=true
+      showBilingAddress=true showSalesDate=true showPONumber=false
+      showInvoiceNumber=true showVia=true showTerms=true showStatus=true
+      showReference=true showDepartment=true showCustomFields=true
+      showShippingInfo=true showPayment=true showCopyTransaction=true
+      showCopyToInvoice=false showCopyToOrder=false }}
+
+      <div
+        class="modal fade"
+        id="templatePreviewModal"
+        tabindex="2"
+        role="dialog"
+        aria-labelledby="templatePreviewLabel"
+        aria-hidden="true"
+      >
+        {{> custom_print_template modalId="templatePreviewModal"
+        idPrefix="html-2-pdfwrapper_quotes" namePrefix="pdfwrapper_quotes" }}
       </div>
 
-
-      {{> deletepop itemName1="Purchase Order" itemName2="purchase order" itemName3="Purchase Order"
-      button1="btnDeletePO" button2="btnDeleteFollowingPOs"}}
+      {{> deletepop itemName1="Purchase Order" itemName2="purchase order"
+      itemName3="Purchase Order" button1="btnDeletePO"
+      button2="btnDeleteFollowingPOs"}}
       <div>
-        {{> transaction_line
-        tablename="tblPurchaseOrderLine"
+        {{> transaction_line tablename="tblPurchaseOrderLine"
         recordLineItems=purchaseorderrecord.LineItems
-        isForeignEnabled=isForeignEnabled
-        canShowBackOrder=false
-        canShowUOM=false
-        includeBOnShippedQty=false
+        isForeignEnabled=isForeignEnabled canShowBackOrder=false
+        canShowUOM=false includeBOnShippedQty=includeBOnShippedQty
         isBatchSerialNoTracking=isBatchSerialNoTracking
-        getDefaultCurrency=getDefaultCurrency
-        }}
+        getDefaultCurrency=getDefaultCurrency }}
       </div>
 
       <style>
@@ -119,50 +106,56 @@
         }
       </style>
 
-      <div class="row align-items-end" style="margin: 16px; margin-top: 0px;">
-        <div class="col-12 col-lg-8 col-xl-10" style="padding-right: 24px;">
+      <div class="row align-items-end" style="margin: 16px; margin-top: 0px">
+        <div class="col-12 col-lg-8 col-xl-10" style="padding-right: 24px">
           <div class="row">
-            <button class="btn btn-primary" type="button" id="addRow" style="margin: 16px; margin-top: 0px;">+ Add New
-              Entry</button>
+            <button
+              class="btn btn-primary"
+              type="button"
+              id="addRow"
+              style="margin: 16px; margin-top: 0px"
+            >
+              + Add New Entry
+            </button>
           </div>
           <div class="row">
             <div class="col-12 col-md-6">
-              <div class="form-group"><label>Comments</label>
-                <textarea class="form-control" rows="3" id="txaComment"
-                  name="txaComment">{{purchaseorderrecord.comments}}</textarea>
+              <div class="form-group">
+                <label>Comments</label>
+                <textarea
+                  class="form-control"
+                  rows="3"
+                  id="txaComment"
+                  name="txaComment"
+                >
+{{purchaseorderrecord.comments}}</textarea
+                >
               </div>
             </div>
             <div class="col-12 col-md-6">
-              <div class="form-group"><label>Picking Instructions</label>
-                <textarea class="form-control" rows="3" id="txapickmemo"
-                  name="txapickmemo">{{purchaseorderrecord.pickmemo}}</textarea>
+              <div class="form-group">
+                <label>Picking Instructions</label>
+                <textarea
+                  class="form-control"
+                  rows="3"
+                  id="txapickmemo"
+                  name="txapickmemo"
+                >
+{{purchaseorderrecord.pickmemo}}</textarea
+                >
               </div>
             </div>
           </div>
 
           <div class="row">
-            <div class="col-12 col-md-1">
-              <div class="row justify-content-left desktopButtons" style="margin-left:0px;">
-
-                <div class="custom-control custom-switch">
-                  <input class="custom-control-input chkGlobalSettings" id="choosetemplate" type="checkbox"
-                    style="cursor: pointer;">
-                  <label class="custom-control-label" style="width:131px;cursor: pointer;" for="choosetemplate">Choose
-                    Template</label>
-                </div>
-
-
-              </div>
-
-            </div>
             <div class="col-12 col-md-11">
               <div class="row justify-content-center desktopButtons">
-                {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
+                {{> transaction_buttons_bottom margin="14px"
+                AttachmentCount=attachmentCount TransactionType="purchaseorders"
+                }}
               </div>
-
             </div>
           </div>
-
 
           <!-- <div class="row justify-content-center desktopButtons">
                             <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 12px;margin-top: 0px;width: 100px;">
@@ -183,37 +176,56 @@
                         </div> -->
         </div>
 
-
-
-
         <div class="modal fade" role="dialog" tabindex="-1" id="confirmprint">
           <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="">Print Confirm</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
 
               <div class="modal-body">
-
                 <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input favCheckBox chkBankingReport" name="print_purchase_order_second"
-                    checked type="checkbox" id="print_purchase_order_second" autocomplete="off">
-                  <label style="cursor: pointer;" class="custom-control-label" for="print_purchase_order_second">Print
-                    Purchase Order</label>
+                  <input
+                    class="custom-control-input favCheckBox chkBankingReport"
+                    name="print_purchase_order_second"
+                    checked
+                    type="checkbox"
+                    id="print_purchase_order_second"
+                    autocomplete="off"
+                  />
+                  <label
+                    style="cursor: pointer"
+                    class="custom-control-label"
+                    for="print_purchase_order_second"
+                    >Print Purchase Order</label
+                  >
                 </div>
-
               </div>
 
-              <div class="modal-footer ">
-                <button class="btn btn-primary printConfirm btnFooter" type="button"><i class="fa fa-print"
-                    style="margin-right: 5px;"></i>Confirm Print</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"
-                    style="margin-right: 5px;"></i>Close</button>
+              <div class="modal-footer">
+                <button
+                  class="btn btn-primary printConfirm btnFooter"
+                  type="button"
+                >
+                  <i class="fa fa-print" style="margin-right: 5px"></i>Confirm
+                  Print
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                >
+                  <i class="fas fa-times" style="margin-right: 5px"></i>Close
+                </button>
               </div>
-
             </div>
           </div>
         </div>
@@ -231,18 +243,20 @@
         {{> transaction_calculation
         isPartialPaid=purchaseorderrecord.isPartialPaid
         SubTotal=purchaseorderrecord.SubTotal
-        TotalTax=purchaseorderrecord.TotalTax
-        Total=purchaseorderrecord.Total
+        TotalTax=purchaseorderrecord.TotalTax Total=purchaseorderrecord.Total
         TotalPaid=purchaseorderrecord.totalPaid
-        BalanceDue=purchaseorderrecord.balanceDue
-        }}
+        BalanceDue=purchaseorderrecord.balanceDue }}
       </div>
 
-      <div class="row justify-content-center mobileButtons" style="display: none;">
-        {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount }}
+      <div
+        class="row justify-content-center mobileButtons"
+        style="display: none"
+      >
+        {{> transaction_buttons_bottom margin="14px"
+        AttachmentCount=attachmentCount TransactionType="purchaseorders" }}
       </div>
 
-      <div class="printID" style="display: none;"></div>
+      <div class="printID" style="display: none"></div>
       <style>
         @media screen and (max-width: 450px) {
           .btnFooter {
@@ -272,235 +286,594 @@
           }
         }
       </style>
-
     </form>
 
     <!-- Start PDF -->
     <!-- New A4 -->
     <div
-      style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; display: none; color: #000000; overflow-x: visible;"
-      id="html-2-pdfwrapper" name="html-2-pdfwrapper">
-      <div style="display: flex; height: fit-content; min-height: 30mm;">
-        <div style="margin: 0px; padding: 16px; width: 120mm; max-width: 120mm;">
-          <div style="display: flex;">
-            <div style="max-width: 60mm; max-height: 30mm;">
-              <img src="assets/img/VS1.png" class="uploadedImage"
-                style="max-height: 30mm;max-width: 200px;margin-bottom: 8px;">
+      style="
+        width: 210mm;
+        background-color: #ffffff;
+        padding: 8px;
+        height: 297mm;
+        font-size: 13.33px;
+        display: none;
+        color: #000000;
+        overflow-x: visible;
+      "
+      id="html-2-pdfwrapper"
+      name="html-2-pdfwrapper"
+    >
+      <div style="display: flex; height: fit-content; min-height: 30mm">
+        <div style="margin: 0px; padding: 16px; width: 120mm; max-width: 120mm">
+          <div style="display: flex">
+            <div style="max-width: 60mm; max-height: 30mm">
+              <img
+                src="assets/img/VS1.png"
+                class="uploadedImage"
+                style="max-height: 30mm; max-width: 200px; margin-bottom: 8px"
+              />
             </div>
-            <div style="width: 70mm;">
-              <div style="padding-left: 16px;font-weight: bold;">
+            <div style="width: 70mm">
+              <div style="padding-left: 16px; font-weight: bold">
                 <a href="{{organizationurl}}">{{organizationurl}}</a>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{organizationname}}</p>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress1}}</p>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress2}}</p>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{city}}</p>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{state}} {{poBox}} </p>
-                {{#if equals companyReg ''}}
-
-                {{else}}
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyReg}}</p>
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                  {{organizationname}}
+                </p>
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                  {{companyaddress1}}
+                </p>
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                  {{companyaddress2}}
+                </p>
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">{{city}}</p>
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                  {{state}} {{poBox}}
+                </p>
+                {{#if equals companyReg ''}} {{else}}
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                  {{companyReg}}
+                </p>
                 {{/if}}
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyabn}}</p>
-                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyphone}}</p>
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                  {{companyabn}}
+                </p>
+                <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                  {{companyphone}}
+                </p>
               </div>
             </div>
           </div>
-          <div style="font-size: 14px;">
-            <p style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: 600;">Supplier</p>
-            <p style="margin-bottom: 0px; color: rgb(0 0 0); display:none;" class="pdfCustomerName"></p>
-            <div style="min-height:50px; width: 50%; margin-bottom: 0px; color: rgb(0 0 0);" class="pdfCustomerAddress">
-            </div>
+          <div style="font-size: 14px">
+            <p style="margin-bottom: 0px; color: rgb(0 0 0); font-weight: 600">
+              Supplier
+            </p>
+            <p
+              style="margin-bottom: 0px; color: rgb(0 0 0); display: none"
+              class="pdfCustomerName"
+            ></p>
+            <div
+              style="
+                min-height: 50px;
+                width: 50%;
+                margin-bottom: 0px;
+                color: rgb(0 0 0);
+              "
+              class="pdfCustomerAddress"
+            ></div>
           </div>
         </div>
-        <div style="margin: 0px; padding: 16px; border: none !important; width: 80mm; max-width: 80mm;">
-          <h4 style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Purchase Order&nbsp;&nbsp;
-            {{purchaseorderrecord.id}}</h4>
-          <div style="display: flex; width: 100%;">
-            <div style="width: 50%; padding-right: 16px;font-weight: bold;">
-              <label style="margin-bottom: 4px; color: rgb(0 0 0); width: 100%;">Date:</label>
-              <label class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No.:</label>
+        <div
+          style="
+            margin: 0px;
+            padding: 16px;
+            border: none !important;
+            width: 80mm;
+            max-width: 80mm;
+          "
+        >
+          <h4 style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0)">
+            Purchase Order&nbsp;&nbsp; {{purchaseorderrecord.id}}
+          </h4>
+          <div style="display: flex; width: 100%">
+            <div style="width: 50%; padding-right: 16px; font-weight: bold">
+              <label style="margin-bottom: 4px; color: rgb(0 0 0); width: 100%"
+                >Date:</label
+              >
+              <label
+                class="pdfPONumber"
+                style="margin-bottom: 4px; color: rgb(0 0 0)"
+                >Invoice No.:</label
+              >
             </div>
-            <div style="width: 50%; padding-left: 16px;">
-              <p style="margin-bottom: 4px; color: rgb(0 0 0);">{{purchaseorderrecord.saledate}}</p>
-              <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;">
-                {{purchaseorderrecord.invoicenumber}}.</p>
+            <div style="width: 50%; padding-left: 16px">
+              <p style="margin-bottom: 4px; color: rgb(0 0 0)">
+                {{purchaseorderrecord.saledate}}
+              </p>
+              <p
+                class="po"
+                style="
+                  margin-bottom: 4px;
+                  color: rgb(0 0 0);
+                  white-space: nowrap;
+                "
+              >
+                {{purchaseorderrecord.invoicenumber}}.
+              </p>
             </div>
           </div>
         </div>
       </div>
-      <hr>
-      <div style="height: 130mm;">
-        <div style="margin: 8px; border: none !important; background-color: rgba(0,0,0,0);">
-          <table class="purchase_print" style="width: 200mm; max-width: 200mm; margin: auto;">
-            <thead style="color: rgb(251,251,251);">
-              <tr style="border-bottom: 1px solid rgba(0, 0, 0, 1);">
-                <th style="width: 200px; background-color: white; color: rgb(0 0 0);">Product Name</th>
-                <th style="width: 250px; background-color: white; color: rgb(0 0 0);">Description</th>
-                <th style="text-align: right; width: 50px; background-color: white; color: rgb(0 0 0);">Qty</th>
-                <th style="text-align: right; width: 90px; background-color: white; color: rgb(0 0 0);">Cost Price</th>
-                <th style="text-align: right; width: 77px; background-color: white; color: rgb(0 0 0);">Tax</th>
-                <th style="text-align: right; width: 77px; background-color: white; color: rgb(0 0 0);"
-                  class="hiddenColumn">Tax</th>
-                <th style="text-align: right; width: 100px; background-color: white; color: rgb(0 0 0);">Amount</th>
+      <hr />
+      <div style="height: 130mm">
+        <div
+          style="
+            margin: 8px;
+            border: none !important;
+            background-color: rgba(0, 0, 0, 0);
+          "
+        >
+          <table
+            class="purchase_print"
+            style="width: 200mm; max-width: 200mm; margin: auto"
+          >
+            <thead style="color: rgb(251, 251, 251)">
+              <tr style="border-bottom: 1px solid rgba(0, 0, 0, 1)">
+                <th
+                  style="
+                    width: 200px;
+                    background-color: white;
+                    color: rgb(0 0 0);
+                  "
+                >
+                  Product Name
+                </th>
+                <th
+                  style="
+                    width: 250px;
+                    background-color: white;
+                    color: rgb(0 0 0);
+                  "
+                >
+                  Description
+                </th>
+                <th
+                  style="
+                    text-align: right;
+                    width: 50px;
+                    background-color: white;
+                    color: rgb(0 0 0);
+                  "
+                >
+                  Qty
+                </th>
+                <th
+                  style="
+                    text-align: right;
+                    width: 90px;
+                    background-color: white;
+                    color: rgb(0 0 0);
+                  "
+                >
+                  Cost Price
+                </th>
+                <th
+                  style="
+                    text-align: right;
+                    width: 77px;
+                    background-color: white;
+                    color: rgb(0 0 0);
+                  "
+                >
+                  Tax
+                </th>
+                <th
+                  style="
+                    text-align: right;
+                    width: 77px;
+                    background-color: white;
+                    color: rgb(0 0 0);
+                  "
+                  class="hiddenColumn"
+                >
+                  Tax
+                </th>
+                <th
+                  style="
+                    text-align: right;
+                    width: 100px;
+                    background-color: white;
+                    color: rgb(0 0 0);
+                  "
+                >
+                  Amount
+                </th>
               </tr>
             </thead>
-            <tbody style="color: rgb(0 0 0);">
+            <tbody style="color: rgb(0 0 0)">
               {{#each item in purchaseorderrecord.LineItems}}
-              <tr id={{item.lineID}} style="border-bottom: 1px solid rgba(0, 0, 0, .1);">
+              <tr
+                id="{{item.lineID}}"
+                style="border-bottom: 1px solid rgba(0, 0, 0, 0.1)"
+              >
                 <td id="lineProductName">{{item.item}}</td>
                 <td id="lineProductDesc">{{item.description}}</td>
-                <td id="lineQty" style="text-align: right;">{{item.quantity}}</td>
-                <td id="lineUnitPrice" style="text-align: right;">{{item.unitPrice}}</td>
-                <td id="lineTaxAmount" style="text-align: right;">{{item.TaxTotal}}</td>
-                <td id="lineTaxCode" class="hiddenColumn" style="text-align: right;">{{item.taxCode}}</td>
-                <td id="lineAmt" style="text-align: right;">{{item.TotalAmt}}</td>
+                <td id="lineQty" style="text-align: right">
+                  {{item.quantity}}
+                </td>
+                <td id="lineUnitPrice" style="text-align: right">
+                  {{item.unitPrice}}
+                </td>
+                <td id="lineTaxAmount" style="text-align: right">
+                  {{item.TaxTotal}}
+                </td>
+                <td
+                  id="lineTaxCode"
+                  class="hiddenColumn"
+                  style="text-align: right"
+                >
+                  {{item.taxCode}}
+                </td>
+                <td id="lineAmt" style="text-align: right">
+                  {{item.TotalAmt}}
+                </td>
               </tr>
               {{/each}}
             </tbody>
           </table>
         </div>
       </div>
-      <hr>
-      <div style="display: flex;">
-        <div style="margin: 8px;min-width: 100mm;max-width: 100mm;width: 100mm;">
-          <p style="font-weight: 600; color: rgb(0 0 0);">Comments</p>
-          <div id="printcomment" style="color: rgb(0 0 0);">{{purchaseorderrecord.comments}}</div>
+      <hr />
+      <div style="display: flex">
+        <div
+          style="margin: 8px; min-width: 100mm; max-width: 100mm; width: 100mm"
+        >
+          <p style="font-weight: 600; color: rgb(0 0 0)">Comments</p>
+          <div id="printcomment" style="color: rgb(0 0 0)">
+            {{purchaseorderrecord.comments}}
+          </div>
         </div>
-        <div style="margin: 8px; border: none !important; min-width: 90mm;max-width: 90mm;width: 90mm;">
-          <div style="width: 100%; display: flex;">
-            <div style="padding-right: 16px; width: 50%;">
-              <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Sub Total</p>
-              <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Total GST</p>
+        <div
+          style="
+            margin: 8px;
+            border: none !important;
+            min-width: 90mm;
+            max-width: 90mm;
+            width: 90mm;
+          "
+        >
+          <div style="width: 100%; display: flex">
+            <div style="padding-right: 16px; width: 50%">
+              <p
+                style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0)"
+              >
+                Sub Total
+              </p>
+              <p
+                style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0)"
+              >
+                Total GST
+              </p>
             </div>
-            <div style="padding-left: 16px; width: 50%;">
-              <p id="subtotal_totalPrint"
-                style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
-                {{purchaseorderrecord.SubTotal}}</p>
-              <p id="print_subtotal_tax"
-                style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
-                {{purchaseorderrecord.TotalTax}}</p>
+            <div style="padding-left: 16px; width: 50%">
+              <p
+                id="subtotal_totalPrint"
+                style="
+                  text-align: right;
+                  margin-bottom: 8px;
+                  font-weight: 600;
+                  color: rgb(0 0 0);
+                "
+              >
+                {{purchaseorderrecord.SubTotal}}
+              </p>
+              <p
+                id="print_subtotal_tax"
+                style="
+                  text-align: right;
+                  margin-bottom: 8px;
+                  font-weight: 600;
+                  color: rgb(0 0 0);
+                "
+              >
+                {{purchaseorderrecord.TotalTax}}
+              </p>
             </div>
           </div>
-          <div id="tax_list_print" style="width: 100%; padding-left: 16px;">
-            <div style="width: 100%; display: flex;">
-            </div>
+          <div id="tax_list_print" style="width: 100%; padding-left: 16px">
+            <div style="width: 100%; display: flex"></div>
           </div>
-          <hr>
-          <div style="width: 100%; display: flex;">
-            <div style="padding-right: 16px; width: 50%;">
-              <p style="font-weight: 800; margin-bottom: 8px; color: rgb(0 0 0);">TOTAL&nbsp; (inc GST)</p>
+          <hr />
+          <div style="width: 100%; display: flex">
+            <div style="padding-right: 16px; width: 50%">
+              <p
+                style="font-weight: 800; margin-bottom: 8px; color: rgb(0 0 0)"
+              >
+                TOTAL&nbsp; (inc GST)
+              </p>
             </div>
-            <div style="padding-left: 16px; width: 50%;">
-              <p id="grandTotalPrint" style="text-align: right; margin-bottom: 8px; font-weight: 800;">
-                {{purchaseorderrecord.Total}}<br></p>
+            <div style="padding-left: 16px; width: 50%">
+              <p
+                id="grandTotalPrint"
+                style="text-align: right; margin-bottom: 8px; font-weight: 800"
+              >
+                {{purchaseorderrecord.Total}}<br />
+              </p>
             </div>
           </div>
         </div>
       </div>
-      <p class="bottome-text-fix" style="font-size: 10px;
-                margin-right: 18px;
-                position: absolute;
-                bottom: 0;
-                z-index: 1111;
-                right: 0;">Page 1 of 1</p>
+      <p
+        class="bottome-text-fix"
+        style="
+          font-size: 10px;
+          margin-right: 18px;
+          position: absolute;
+          bottom: 0;
+          z-index: 1111;
+          right: 0;
+        "
+      >
+        Page 1 of 1
+      </p>
     </div>
 
     <!-- A4 -->
     <!-- Letter -->
     <div
-      style="width: 216mm;background-color: #ffffff;padding: 8px;height: 279mm; font-size: 13.33px; display:none; color: #000000;"
-      id="html-2-pdfwrapperLetter" name="html-2-pdfwrapperLetter">
-      <div class="d-xl-flex align-items-xl-start" style="height: 100%;">
-        <div class="d-flex d-xl-flex flex-column flex-nowrap align-items-xl-center"
-          style="min-height: 100%;height: 100%;max-height: 100%;">
-          <div class="d-lg-flex d-xl-flex align-items-lg-start align-items-xl-start">
-            <div class="card flex-grow-1"
-              style="margin: 8px; border: none !important; width: 140mm; max-width: 140mm; background-color: rgba(0,0,0,0);">
+      style="
+        width: 216mm;
+        background-color: #ffffff;
+        padding: 8px;
+        height: 279mm;
+        font-size: 13.33px;
+        display: none;
+        color: #000000;
+      "
+      id="html-2-pdfwrapperLetter"
+      name="html-2-pdfwrapperLetter"
+    >
+      <div class="d-xl-flex align-items-xl-start" style="height: 100%">
+        <div
+          class="d-flex d-xl-flex flex-column flex-nowrap align-items-xl-center"
+          style="min-height: 100%; height: 100%; max-height: 100%"
+        >
+          <div
+            class="d-lg-flex d-xl-flex align-items-lg-start align-items-xl-start"
+          >
+            <div
+              class="card flex-grow-1"
+              style="
+                margin: 8px;
+                border: none !important;
+                width: 140mm;
+                max-width: 140mm;
+                background-color: rgba(0, 0, 0, 0);
+              "
+            >
               <div class="card-body">
-                <div class="d-lg-flex justify-content-lg-start" style="margin-bottom: 16px;">
-                  <div class="d-lg-flex flex-column justify-content-lg-start"><img src="assets/img/VS1.png"
-                      class="uploadedImage" style="width: 200px;margin-bottom: 8px;"><a
-                      href="{{organizationurl}}">{{organizationurl}}</a>
+                <div
+                  class="d-lg-flex justify-content-lg-start"
+                  style="margin-bottom: 16px"
+                >
+                  <div class="d-lg-flex flex-column justify-content-lg-start">
+                    <img
+                      src="assets/img/VS1.png"
+                      class="uploadedImage"
+                      style="width: 200px; margin-bottom: 8px"
+                    /><a href="{{organizationurl}}">{{organizationurl}}</a>
                   </div>
-                  <div class="d-lg-flex d-xl-flex justify-content-lg-center align-items-xl-start card-text">
-                    <div style="padding-left: 16px;font-weight: bold;">
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{organizationname}}</p>
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress1}}</p>
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress2}}</p>
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{city}}</p>
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{state}} {{poBox}} </p>
-                      {{#if equals companyReg ''}}
-
-                      {{else}}
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyReg}}</p>
+                  <div
+                    class="d-lg-flex d-xl-flex justify-content-lg-center align-items-xl-start card-text"
+                  >
+                    <div style="padding-left: 16px; font-weight: bold">
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                        {{organizationname}}
+                      </p>
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                        {{companyaddress1}}
+                      </p>
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                        {{companyaddress2}}
+                      </p>
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                        {{city}}
+                      </p>
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                        {{state}} {{poBox}}
+                      </p>
+                      {{#if equals companyReg ''}} {{else}}
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                        {{companyReg}}
+                      </p>
                       {{/if}}
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyabn}}</p>
-                      <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyphone}}</p>
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                        {{companyabn}}
+                      </p>
+                      <p style="margin-bottom: 0px; color: rgb(0 0 0)">
+                        {{companyphone}}
+                      </p>
                     </div>
                   </div>
                 </div>
-                <div style="font-size: 14px;">
-                  <h5 style="margin-bottom: 0px;font-weight: bold; color: rgb(0 0 0);">Customer</h5>
-                  <p style="margin-bottom: 0px; display:none;" class="pdfCustomerName">Big Burtha</p>
-                  <div style="min-height:50px; width:30%; margin-bottom: 0px; color: rgb(0 0 0);"
-                    class="pdfCustomerAddress">12 Golf Drive</div>
+                <div style="font-size: 14px">
+                  <h5
+                    style="
+                      margin-bottom: 0px;
+                      font-weight: bold;
+                      color: rgb(0 0 0);
+                    "
+                  >
+                    Customer
+                  </h5>
+                  <p
+                    style="margin-bottom: 0px; display: none"
+                    class="pdfCustomerName"
+                  >
+                    Big Burtha
+                  </p>
+                  <div
+                    style="
+                      min-height: 50px;
+                      width: 30%;
+                      margin-bottom: 0px;
+                      color: rgb(0 0 0);
+                    "
+                    class="pdfCustomerAddress"
+                  >
+                    12 Golf Drive
+                  </div>
                   <!-- <p style="margin-bottom: 0px;">Caulifield South Vic 9820</p>
   <p style="margin-bottom: 0px;">Australia</p> -->
                 </div>
               </div>
             </div>
-            <div class="card"
-              style="margin: 8px; border: none !important; width: 65mm; max-width: 65mm; background-color: rgba(0,0,0,0);">
+            <div
+              class="card"
+              style="
+                margin: 8px;
+                border: none !important;
+                width: 65mm;
+                max-width: 65mm;
+                background-color: rgba(0, 0, 0, 0);
+              "
+            >
               <div class="card-body">
-                <h4 class="card-title" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Purchase
-                  Order&nbsp;&nbsp; {{purchaseorderrecord.id}}</h4>
+                <h4
+                  class="card-title"
+                  style="
+                    font-weight: bold;
+                    font-size: 26.667px;
+                    color: rgb(0 0 0);
+                  "
+                >
+                  Purchase Order&nbsp;&nbsp; {{purchaseorderrecord.id}}
+                </h4>
                 <div class="d-lg-flex d-xl-flex align-items-xl-start card-text">
-                  <div class="d-lg-flex d-xl-flex flex-column align-items-lg-start align-items-xl-start"
-                    style="padding-right: 16px;font-weight: bold; color: rgb(0 0 0);">
-                    <label class="text-nowrap" style="color: rgb(0 0 0);">Date:</label><label class="text-nowrap"
-                      style="color: rgb(0 0 0);">PO Number:</label><label class="text-nowrap"
-                      style="color: rgb(0 0 0);">Terms:</label>
+                  <div
+                    class="d-lg-flex d-xl-flex flex-column align-items-lg-start align-items-xl-start"
+                    style="
+                      padding-right: 16px;
+                      font-weight: bold;
+                      color: rgb(0 0 0);
+                    "
+                  >
+                    <label class="text-nowrap" style="color: rgb(0 0 0)"
+                      >Date:</label
+                    ><label class="text-nowrap" style="color: rgb(0 0 0)"
+                      >PO Number:</label
+                    ><label class="text-nowrap" style="color: rgb(0 0 0)"
+                      >Terms:</label
+                    >
                   </div>
-                  <div style="padding-left: 16px;">
-                    <p style="margin-bottom: 8px; color: rgb(0 0 0);">{{purchaseorderrecord.saledate}}</p>
-                    <p style="margin-bottom: 8px; color: rgb(0 0 0);">{{purchaseorderrecord.custPONumber}}.</p>
-                    <p style="margin-bottom: 8px; color: rgb(0 0 0);">{{purchaseorderrecord.termsName}}</p>
+                  <div style="padding-left: 16px">
+                    <p style="margin-bottom: 8px; color: rgb(0 0 0)">
+                      {{purchaseorderrecord.saledate}}
+                    </p>
+                    <p style="margin-bottom: 8px; color: rgb(0 0 0)">
+                      {{purchaseorderrecord.custPONumber}}.
+                    </p>
+                    <p style="margin-bottom: 8px; color: rgb(0 0 0)">
+                      {{purchaseorderrecord.termsName}}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="flex-grow-1">
-            <div class="card" style="margin: 8px; border: none !important; background-color: rgba(0,0,0,0);">
+            <div
+              class="card"
+              style="
+                margin: 8px;
+                border: none !important;
+                background-color: rgba(0, 0, 0, 0);
+              "
+            >
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table" style="width: 200mm; max-width: 200mm;">
+                  <table class="table" style="width: 200mm; max-width: 200mm">
                     <!-- table-sm -->
-                    <thead class="text-secondary" style="color: rgb(251,251,251); background-color: white;">
+                    <thead
+                      class="text-secondary"
+                      style="color: rgb(251, 251, 251); background-color: white"
+                    >
                       <tr>
-                        <th class="text-nowrap" style="width: 200px; background-color: white; color: rgb(0 0 0);">
-                          Product Name</th>
-                        <th class="text-nowrap" style="width: 250px; background-color: white; color: rgb(0 0 0);">
-                          Description</th>
-                        <th class="text-nowrap text-left"
-                          style="width: 50px; background-color: white; color: rgb(0 0 0);">Qty</th>
-                        <th class="text-nowrap text-left"
-                          style="width: 90px; background-color: white; color: rgb(0 0 0);">Cost Price</th>
-                        <th class="text-nowrap text-left"
-                          style="width: 77px; background-color: white; color: rgb(0 0 0);">Tax</th>
-                        <th class="text-nowrap text-left"
-                          style="width: 100px; background-color: white; color: rgb(0 0 0);">Amount</th>
+                        <th
+                          class="text-nowrap"
+                          style="
+                            width: 200px;
+                            background-color: white;
+                            color: rgb(0 0 0);
+                          "
+                        >
+                          Product Name
+                        </th>
+                        <th
+                          class="text-nowrap"
+                          style="
+                            width: 250px;
+                            background-color: white;
+                            color: rgb(0 0 0);
+                          "
+                        >
+                          Description
+                        </th>
+                        <th
+                          class="text-nowrap text-left"
+                          style="
+                            width: 50px;
+                            background-color: white;
+                            color: rgb(0 0 0);
+                          "
+                        >
+                          Qty
+                        </th>
+                        <th
+                          class="text-nowrap text-left"
+                          style="
+                            width: 90px;
+                            background-color: white;
+                            color: rgb(0 0 0);
+                          "
+                        >
+                          Cost Price
+                        </th>
+                        <th
+                          class="text-nowrap text-left"
+                          style="
+                            width: 77px;
+                            background-color: white;
+                            color: rgb(0 0 0);
+                          "
+                        >
+                          Tax
+                        </th>
+                        <th
+                          class="text-nowrap text-left"
+                          style="
+                            width: 100px;
+                            background-color: white;
+                            color: rgb(0 0 0);
+                          "
+                        >
+                          Amount
+                        </th>
                       </tr>
                     </thead>
-                    <tbody style="color: rgb(0 0 0);">
+                    <tbody style="color: rgb(0 0 0)">
                       {{#each item in purchaseorderrecord.LineItems}}
                       <tr>
                         <td>{{item.item}}</td>
                         <td>{{item.description}}</td>
                         <td class="text-left">{{item.quantity}}</td>
-                        <td class="text-nowrap text-left">{{item.unitPrice}}</td>
+                        <td class="text-nowrap text-left">
+                          {{item.unitPrice}}
+                        </td>
                         <td class="text-nowrap text-left">{{item.taxRate}}</td>
-                        <td class="text-nowrap ttext-left">{{item.TotalAmt}}</td>
+                        <td class="text-nowrap ttext-left">
+                          {{item.TotalAmt}}
+                        </td>
                       </tr>
 
                       {{/each}}
@@ -511,72 +884,184 @@
             </div>
           </div>
           <div class="flex-grow-0">
-            <hr style="margin: 0px; width: 210mm; min-width: 210mm; max-width: 210mm;">
-            <div class="d-lg-flex d-xl-flex align-items-lg-start align-items-xl-start">
-              <div class="card flex-grow-1"
-                style="margin: 8px;min-width: 90mm;max-width: 90mm;width: 90mm; background-color: rgba(0,0,0,0);">
-                <div class="card-body" style="min-width: 350.344px;max-width: 350.344px;width: 350.344px;">
-                  <h4 class="card-title" style="font-size: 20px;font-weight: bold; color: rgb(0 0 0);">Comments</h4>
-                  <p style="color: rgb(0 0 0);">{{purchaseorderrecord.comments}}</p>
+            <hr
+              style="
+                margin: 0px;
+                width: 210mm;
+                min-width: 210mm;
+                max-width: 210mm;
+              "
+            />
+            <div
+              class="d-lg-flex d-xl-flex align-items-lg-start align-items-xl-start"
+            >
+              <div
+                class="card flex-grow-1"
+                style="
+                  margin: 8px;
+                  min-width: 90mm;
+                  max-width: 90mm;
+                  width: 90mm;
+                  background-color: rgba(0, 0, 0, 0);
+                "
+              >
+                <div
+                  class="card-body"
+                  style="
+                    min-width: 350.344px;
+                    max-width: 350.344px;
+                    width: 350.344px;
+                  "
+                >
+                  <h4
+                    class="card-title"
+                    style="
+                      font-size: 20px;
+                      font-weight: bold;
+                      color: rgb(0 0 0);
+                    "
+                  >
+                    Comments
+                  </h4>
+                  <p style="color: rgb(0 0 0)">
+                    {{purchaseorderrecord.comments}}
+                  </p>
                 </div>
               </div>
-              <div class="card flex-grow-1"
-                style="margin: 8px; border: none !important; min-width: 110mm;max-width: 110mm;width: 110mm; background-color: rgba(0,0,0,0);">
+              <div
+                class="card flex-grow-1"
+                style="
+                  margin: 8px;
+                  border: none !important;
+                  min-width: 110mm;
+                  max-width: 110mm;
+                  width: 110mm;
+                  background-color: rgba(0, 0, 0, 0);
+                "
+              >
                 <div class="card-body">
-                  <div class="d-lg-flex d-xl-flex flex-row justify-content-lg-center align-items-xl-start card-text">
-                    <div class="d-lg-flex d-xl-flex flex-column align-items-lg-start align-items-xl-start"
-                      style="padding-right: 16px;"><label class="text-nowrap"
-                        style="font-weight: 600; color: rgb(0 0 0);">Sub
-                        Total</label><label class="text-nowrap" style="font-weight: 600; color: rgb(0 0 0);">Total
-                        GST</label></div>
-                    <div class="d-lg-flex flex-column flex-grow-1 justify-content-lg-end" style="padding-left: 16px;">
-                      <p id="subtotal_totalPrint"
-                        style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
-                        {{purchaseorderrecord.SubTotal}}</p>
-                      <p style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
-                        {{purchaseorderrecord.TotalTax}}</p>
+                  <div
+                    class="d-lg-flex d-xl-flex flex-row justify-content-lg-center align-items-xl-start card-text"
+                  >
+                    <div
+                      class="d-lg-flex d-xl-flex flex-column align-items-lg-start align-items-xl-start"
+                      style="padding-right: 16px"
+                    >
+                      <label
+                        class="text-nowrap"
+                        style="font-weight: 600; color: rgb(0 0 0)"
+                        >Sub Total</label
+                      ><label
+                        class="text-nowrap"
+                        style="font-weight: 600; color: rgb(0 0 0)"
+                        >Total GST</label
+                      >
+                    </div>
+                    <div
+                      class="d-lg-flex flex-column flex-grow-1 justify-content-lg-end"
+                      style="padding-left: 16px"
+                    >
+                      <p
+                        id="subtotal_totalPrint"
+                        style="
+                          text-align: right;
+                          margin-bottom: 8px;
+                          font-weight: 600;
+                          color: rgb(0 0 0);
+                        "
+                      >
+                        {{purchaseorderrecord.SubTotal}}
+                      </p>
+                      <p
+                        style="
+                          text-align: right;
+                          margin-bottom: 8px;
+                          font-weight: 600;
+                          color: rgb(0 0 0);
+                        "
+                      >
+                        {{purchaseorderrecord.TotalTax}}
+                      </p>
                     </div>
                   </div>
-                  <hr>
-                  <div class="d-lg-flex d-xl-flex align-items-lg-start align-items-xl-start card-text">
-                    <div class="d-xl-flex flex-column flex-grow-1 align-items-xl-start" style="padding-right: 16px;">
-                      <label class="text-nowrap" style="font-weight: 800; color: rgb(0 0 0);">TOTAL&nbsp; (inc
-                        GST)</label></div>
-                    <div class="flex-grow-1" style="padding-left: 16px;">
-                      <p id="grandTotalPrint" class="text-right flex-grow-1"
-                        style="margin-bottom: 8px;font-weight: 800; color: rgb(0 0 0);">
-                        {{purchaseorderrecord.Total}}<br></p>
+                  <hr />
+                  <div
+                    class="d-lg-flex d-xl-flex align-items-lg-start align-items-xl-start card-text"
+                  >
+                    <div
+                      class="d-xl-flex flex-column flex-grow-1 align-items-xl-start"
+                      style="padding-right: 16px"
+                    >
+                      <label
+                        class="text-nowrap"
+                        style="font-weight: 800; color: rgb(0 0 0)"
+                        >TOTAL&nbsp; (inc GST)</label
+                      >
+                    </div>
+                    <div class="flex-grow-1" style="padding-left: 16px">
+                      <p
+                        id="grandTotalPrint"
+                        class="text-right flex-grow-1"
+                        style="
+                          margin-bottom: 8px;
+                          font-weight: 800;
+                          color: rgb(0 0 0);
+                        "
+                      >
+                        {{purchaseorderrecord.Total}}<br />
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <span class="d-lg-flex d-xl-flex justify-content-lg-end justify-content-xl-end"
-              style="font-size: 10px;margin-right: 50px;">Page 1 of 1</span>
+            <span
+              class="d-lg-flex d-xl-flex justify-content-lg-end justify-content-xl-end"
+              style="font-size: 10px; margin-right: 50px"
+              >Page 1 of 1</span
+            >
           </div>
         </div>
       </div>
     </div>
     <!-- END PDF -->
-    {{/if}}
-    {{> all_transaction_modals supplierRecord=supplierRecord}}
+    {{/if}} {{> all_transaction_modals supplierRecord=supplierRecord}}
   </div>
   <!-- Start Help Video Modal -->
   <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
-    <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+    <div
+      class="modal-dialog"
+      role="document"
+      style="max-width: 670px !important"
+    >
       <div class="modal-content">
         <div class="modal-header">
-
           <h4 class="title-header">Purchase Order</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-              aria-hidden="true">×</span></button>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
         </div>
         <div class="modal-body">
           <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
           <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
-          <video preload="none" id="myVideo" width="640" height="360" controls="" name="media"
-            style="border: solid 5px #999999f0; height: auto; outline: none;">
-            <source src="https://erphelpes.com/vs1videos/newpurchaseorder.mp4" type="video/mp4">
+          <video
+            preload="none"
+            id="myVideo"
+            width="640"
+            height="360"
+            controls=""
+            name="media"
+            style="border: solid 5px #999999f0; height: auto; outline: none"
+          >
+            <source
+              src="https://erphelpes.com/vs1videos/newpurchaseorder.mp4"
+              type="video/mp4"
+            />
           </video>
         </div>
       </div>
@@ -585,38 +1070,67 @@
 
   <!-- End Help Video Modal -->
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="FixedAssetLineAddModal">
-    <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+  <div
+    class="modal fade"
+    role="dialog"
+    tabindex="-1"
+    id="FixedAssetLineAddModal"
+  >
+    <div
+      class="modal-dialog"
+      role="document"
+      style="max-width: 670px !important"
+    >
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="title-header">Fixed Asset</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-              aria-hidden="true">×</span></button>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-6 col-md-6 col-lg-6">
-              <div class="form-group"><label>Fixed Asset</label>
-                <select type="search" class="form-control" id="fixedAssetLine" name="fixedAssetLine"
-                  style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                </select>
+              <div class="form-group">
+                <label>Fixed Asset</label>
+                <select
+                  type="search"
+                  class="form-control"
+                  id="fixedAssetLine"
+                  name="fixedAssetLine"
+                  style="background-color: rgb(255, 255, 255); cursor: pointer"
+                ></select>
               </div>
             </div>
             <div class="col-6 col-md-6 col-lg-6">
-              <div class="form-group"><label>Cost Type</label>
-                <select type="search" class="form-control" id="costTypeLine" name="costTypeLine"
-                  style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                </select>
+              <div class="form-group">
+                <label>Cost Type</label>
+                <select
+                  type="search"
+                  class="form-control"
+                  id="costTypeLine"
+                  name="costTypeLine"
+                  style="background-color: rgb(255, 255, 255); cursor: pointer"
+                ></select>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="fixedassetlistpopModal">
+  <div
+    class="modal fade"
+    role="dialog"
+    tabindex="-1"
+    id="fixedassetlistpopModal"
+  >
     {{> fixedassetlistpop}}
   </div>
 
