@@ -319,7 +319,7 @@ Template.appointments.onRendered(function() {
         }
     }
     templateObject.hasFollowings();
-        
+
     // $("#employeeListModal").modal("show");
 
     let currentId = FlowRouter.current().context.hash;
@@ -364,7 +364,7 @@ Template.appointments.onRendered(function() {
                 appointmentService
                     .getGlobalSettings()
                     .then(function(data) {
-                        templateObject.getAllAppointmentListData();
+                        templateObject.getAllAppointmentListData(false);
                         let appEndTimeDataToLoad = "19:00";
                         globalSet.defaultProduct = "";
                         globalSet.id = "";
@@ -524,7 +524,7 @@ Template.appointments.onRendered(function() {
                     .catch(function(err) {});
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.getAllAppointmentListData();
+                templateObject.getAllAppointmentListData(false);
                 let appEndTimeDataToLoad = "19:00";
                 globalSet.defaultProduct = "";
                 globalSet.id = "";
@@ -716,7 +716,7 @@ Template.appointments.onRendered(function() {
             appointmentService
                 .getGlobalSettings()
                 .then(function(data) {
-                    templateObject.getAllAppointmentListData();
+                    templateObject.getAllAppointmentListData(false);
                     let appEndTimeDataToLoad = "19:00";
                     globalSet.defaultProduct = "";
                     globalSet.id = "";
@@ -1054,6 +1054,7 @@ Template.appointments.onRendered(function() {
                 }
             },
             eventClick: function(info) {
+
                 $("#frmAppointment")[0].reset();
                 $("#btnHold").prop("disabled", false);
                 $("#btnStartAppointment").prop("disabled", false);
@@ -1900,7 +1901,6 @@ Template.appointments.onRendered(function() {
                                 templateObject.extraProductFees.set(extraProductFees);
                             })
                             .catch(function(err) {
-                                console.error(err);
                             });
                         $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
                     }
@@ -2352,7 +2352,7 @@ Template.appointments.onRendered(function() {
                     )
                 ) {
                     $(".fc-event-main p").css({
-                        "font-size": "8px",
+                        "font-size": "12px",
                     });
                     //     $(info.el).tooltip({
                     //         title: info.event.title.replaceAll('<br>', "\n"),
@@ -2364,13 +2364,26 @@ Template.appointments.onRendered(function() {
                 }
             },
             eventContent: function(event) {
+
+                let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                let eventLeave  = [];
+                let eventStatus = [];
+
+                leaveemployeerecords.forEach((item) => {
+                    eventLeave[item.EmployeeID]  = item.LeaveMethod;
+                    eventStatus[item.EmployeeID] = item.Status;
+                });
+
                 let title = document.createElement("p");
-                if (event.event.title) {
+                if (event.timeText != '') {
                     title.innerHTML = event.timeText + " " + event.event.title;
                     title.style.backgroundColor = event.backgroundColor;
                     title.style.color = "#ffffff";
                 } else {
-                    title.innerHTML = event.timeText + " " + event.event.title;
+                    var empid = event.event._def.publicId.split(':')[1];
+                    $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
+
+                    title.style.color = "#dddddd";
                 }
 
                 let arrayOfDomNodes = [title];
@@ -2506,7 +2519,9 @@ Template.appointments.onRendered(function() {
                 // }
             }
         });
+
         calendar.render();
+
         $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:170px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="off" checked="checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
         $('.fc-today-button').prop('disabled', false);
         let draggableEl = document.getElementById("external-events-list");
@@ -3619,12 +3634,9 @@ Template.appointments.onRendered(function() {
         });
 
     templateObject.getAllAppointmentListData = function(refresh = true) {
-        getVS1Data("TAppointment")
-            .then(function(dataObject) {
+        getVS1Data("TAppointment").then(function(dataObject) {
                 if (dataObject.length == 0 || refresh) {
-                    sideBarService
-                        .getAllAppointmentList(initialDataLoad, 0)
-                        .then(function(data) {
+                    sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
                             addVS1Data("TAppointment", JSON.stringify(data));
                             $(".fullScreenSpin").css("display", "inline-block");
                             let appColor = "#00a3d3";
@@ -3882,7 +3894,7 @@ Template.appointments.onRendered(function() {
                                                 $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
                                             })
                                             .catch(function(err) {
-                                                console.error(err);
+
                                             });
                                     }
 
@@ -5373,6 +5385,7 @@ Template.appointments.onRendered(function() {
                         });
                 } else {
                     let data = JSON.parse(dataObject[0].data);
+
                     let useData = data.tappointmentex;
                     $(".fullScreenSpin").css("display", "none");
                     let appColor = "#00a3d3";
@@ -6445,11 +6458,8 @@ Template.appointments.onRendered(function() {
                         $(".fullScreenSpin").css("display", "none");
                     }, 0);
                 }
-            })
-            .catch(function(err) {
-                sideBarService
-                    .getAllAppointmentList(initialDataLoad, 0)
-                    .then(function(data) {
+            }).catch(function(err) {
+                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
                         addVS1Data("TAppointment", JSON.stringify(data));
                         $(".fullScreenSpin").css("display", "inline-block");
                         let appColor = "";

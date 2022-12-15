@@ -1121,20 +1121,21 @@ Template.inventorylist.onRendered(function() {
             templateObject.taxraterecords.set(taxCodesList);
         });
     };
-    templateObject.checkSetupWizardFinished = async function () {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
-        if( setupFinished === null || setupFinished ===  "" ){
-            let setupInfo = await organisationService.getSetupInfo();
-            if( setupInfo.tcompanyinfo.length > 0 ){
-                let data = setupInfo.tcompanyinfo[0];
-                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
-                templateObject.setupFinished.set(data.IsSetUpWizard)
-            }
-        }else{
-            templateObject.setupFinished.set(setupFinished)
-        }
-    }
-    templateObject.checkSetupWizardFinished();
+    // templateObject.checkSetupWizardFinished = async function () {
+    //     let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+    //     if( setupFinished === null || setupFinished ===  "" ){
+    //         let setupInfo = await organisationService.getSetupInfo();
+    //         if( setupInfo.tcompanyinfo.length > 0 ){
+    //             let data = setupInfo.tcompanyinfo[0];
+    //             localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+    //             templateObject.setupFinished.set(data.IsSetUpWizard)
+    //         }
+    //     }else{
+    //         templateObject.setupFinished.set(setupFinished)
+    //     }
+    // }
+    // templateObject.checkSetupWizardFinished();
+    checkSetupFinished();
     // templateObject.getAccountNames();
     // templateObject.getAllTaxCodes();
     tableResize();

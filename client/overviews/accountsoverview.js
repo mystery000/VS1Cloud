@@ -828,6 +828,10 @@ Template.accountsoverview.onRendered(function() {
         var cardexpiry = data.fields.ExpiryDate || "";
         let useReceiptClaim = data.fields.AllowExpenseClaim || false;
         let expenseCategory = data.fields.ReceiptCategory;
+        var level1 = data.fields.Level1 || "";
+        var level2 = data.fields.Level2 || "";
+        var level3 = data.fields.Level3 || "";
+
 
         if (accounttype === "BANK") {
             $(".isBankAccount").removeClass("isNotBankAccount");
@@ -853,6 +857,9 @@ Template.accountsoverview.onRendered(function() {
         $("#swiftCode").val(swiftCode);
         $("#routingNo").val(routingNo);
         $("#edtBankName").val(localStorage.getItem("vs1companyBankName") || "");
+        $("edtSubAccount1").val(level1);
+        $("edtSubAccount2").val(level2);
+        $("edtSubAccount3").val(level3);
 
         $("#edtCardNumber").val(cardnumber);
         $("#edtExpiryDate").val(cardexpiry ? moment(cardexpiry).format("DD/MM/YYYY") : "");
@@ -958,7 +965,10 @@ Template.accountsoverview.onRendered(function() {
                 expirydate: lineData.ExpiryDate || "",
                 cvc: lineData.CVC || "",
                 useReceiptClaim: lineData.AllowExpenseClaim || false,
-                expenseCategory: lineData.ReceiptCategory || ""
+                expenseCategory: lineData.ReceiptCategory || "",
+                level1: lineData.Level1 || "",
+                level2: lineData.Level2 || "",
+                level3: lineData.Level3 || ""
             };
             dataTableList.push(dataList);
         }
@@ -1232,6 +1242,7 @@ Template.accountsoverview.onRendered(function() {
                       $('#chkEftOption_net').prop('checked', data.taccountvs1[0].fields.IncludeNetTotal);
                       $('#chkEftOption_credit').prop('checked', data.taccountvs1[0].fields.IncludeCreditTotal);
                       $('#chkEftOption_debit').prop('checked', data.taccountvs1[0].fields.IncludeDebitTotal);
+                      $('#accountIsHeader').prop('checked', data.taccountvs1[0].fields.IsHeader);
                     }).catch(function(err) {
                     })
                     //accountService.getOneAccount(listData).then(function (data) {
@@ -1255,6 +1266,9 @@ Template.accountsoverview.onRendered(function() {
                     var cardnumber = $(event.target).closest("tr").find(".colCardNumber").text() || "";
                     var cardexpiry = $(event.target).closest("tr").find(".colExpiryDate").text() || "";
                     var cardcvc = $(event.target).closest("tr").find(".colCVC").text() || "";
+                    var level1 = $(event.target).closest("tr").find(".colLevel1").text() || "";
+                    var level2 = $(event.target).closest("tr").find(".colLevel2").text() || "";
+                    var level3 = $(event.target).closest("tr").find(".colLevel3").text() || "";
 
                     if (accounttype === "BANK") {
                         $(".isBankAccount").removeClass("isNotBankAccount");
@@ -1279,6 +1293,9 @@ Template.accountsoverview.onRendered(function() {
                     $("#swiftCode").val(swiftCode);
                     $("#routingNo").val(routingNo);
                     $("#edtBankName").val(bankname);
+                    $("#edtSubAccount1").val(level1);
+                    $("#edtSubAccount2").val(level2);
+                    $("#edtSubAccount3").val(level3);
 
                     $("#edtCardNumber").val(cardnumber);
                     $("#edtExpiryDate").val(
@@ -1289,7 +1306,11 @@ Template.accountsoverview.onRendered(function() {
                     if (showTrans == "true") {
                         $(".showOnTransactions").prop("checked", true);
                     } else {
-                        $(".showOnTransactions").prop("checked", false);
+                        if (accountname == "Bank" || accountname == "BANK" || accounttype == "Bank" || accounttype == "BANK") {
+                            $(".showOnTransactions").prop("checked", true);
+                        } else {
+                            $(".showOnTransactions").prop("checked", false);
+                        }
                     }
                     let useReceiptClaim = $(event.target).closest("tr").find(".colUseReceiptClaim").attr("checkheader") || false;
                     if (useReceiptClaim == "true") {
@@ -1443,20 +1464,21 @@ Template.accountsoverview.onRendered(function() {
     //     $("#taxRateListModal").modal("toggle");
     //   });
     // });
-    templateObject.checkSetupWizardFinished = async function () {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
-        if( setupFinished === null || setupFinished ===  "" ){
-            let setupInfo = await organisationService.getSetupInfo();
-            if( setupInfo.tcompanyinfo.length > 0 ){
-                let data = setupInfo.tcompanyinfo[0];
-                localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
-                templateObject.setupFinished.set(data.IsSetUpWizard)
-            }
-        }else{
-            templateObject.setupFinished.set(setupFinished)
-        }
-    }
-    templateObject.checkSetupWizardFinished();
+    // templateObject.checkSetupWizardFinished = async function () {
+    //     let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+    //     if( setupFinished === null || setupFinished ===  "" ){
+    //         let setupInfo = await organisationService.getSetupInfo();
+    //         if( setupInfo.tcompanyinfo.length > 0 ){
+    //             let data = setupInfo.tcompanyinfo[0];
+    //             localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+    //             templateObject.setupFinished.set(data.IsSetUpWizard)
+    //         }
+    //     }else{
+    //         templateObject.setupFinished.set(setupFinished)
+    //     }
+    // }
+    // templateObject.checkSetupWizardFinished();
+    checkSetupFinished();
     tableResize();
 });
 

@@ -308,6 +308,7 @@ const erpObject = {
     TProspectList: "TProspectList",
     TABADetailRecord: "TABADetailRecord",
     TABADescriptiveRecord: "TABADescriptiveRecord",
+    TProjectTasksList:"TProjectTasksList",
 };
 
 export default erpObject;

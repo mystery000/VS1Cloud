@@ -1243,6 +1243,7 @@ Template.addsupplierpop.events({
             }
           );
         }
+<<<<<<< HEAD
       }
     }
   },
@@ -1355,6 +1356,23 @@ Template.addsupplierpop.events({
     } else {
       previewFile.class = "default-class";
     }
+=======
+    },
+    "click .addsupplierpop .transTab": function(event) {
+        let templateObject = Template.instance();
+        let supplierName = $("#edtSupplierCompany").val();
+        // templateObject.getAllProductRecentTransactions(supplierName);
+    },
+    "click .addsupplierpop .btnDeleteSupplier": function(event) {
+        playDeleteAudio();
+        let templateObject = Template.instance();
+        let contactService2 = new ContactService();
+        setTimeout(function() {
+            LoadingOverlay.show();
+
+            let currentId = FlowRouter.current().queryParams;
+            var objDetails = "";
+>>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
 
     if (type.split("/")[0] === "image") {
       previewFile.image = true;

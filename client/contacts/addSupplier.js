@@ -25,6 +25,10 @@ Template.supplierscard.onCreated(function() {
     templateObject.defaultpurchaseterm = new ReactiveVar();
     templateObject.isSameAddress = new ReactiveVar();
     templateObject.isSameAddress.set(false);
+<<<<<<< HEAD
+=======
+
+>>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
     /* Attachments */
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
@@ -57,6 +61,62 @@ Template.supplierscard.onRendered(function() {
 
     let purchasetaxcode = '';
     templateObject.defaultpurchasetaxcode.set(loggedTaxCodeSalesInc);
+
+    setTimeout(() => {
+      $("#edtBankName").editableSelect();
+      $("#edtBankName")
+        .editableSelect()
+        .on("click.editable-select", function (e, li) {
+          var $earch = $(this);
+          var offset = $earch.offset();
+          var bankName = e.target.value || "";
+
+          if (e.pageX > offset.left + $earch.width() - 8) {
+            $("#bankNameModal").modal();
+            $(".fullScreenSpin").css("display", "none");
+
+          } else {
+            if (bankName.replace(/\s/g, "") != "") {
+              $("#bankNameModal").modal("toggle");
+            } else {
+              $("#bankNameModal").modal();
+            }
+          }
+        });
+      
+    }, 2500);
+
+    $(document).on("click", "#tblBankName tbody tr", function (e) {
+      var table = $(this);
+      let BankName = table.find(".bankName").text();
+      $('#bankNameModal').modal('toggle');
+      $('#edtBankName').val(BankName);
+    }); 
+    
+    templateObject.fillBankInfoFromUrl = function () {
+      var queryParams = FlowRouter.current().queryParams;
+      if(queryParams.bank) {
+        let edtBankName = queryParams.edtBankName;
+        let edtBankAccountName = queryParams.edtBankAccountName;
+        let edtBSB = queryParams.edtBSB;
+        let edtBankAccountNo = queryParams.edtBankAccountNo;
+        let swiftCode = queryParams.swiftCode;
+        let apcaNo = queryParams.apcaNo;
+        let routingNo = queryParams.routingNo;
+        let sltBankCodes = queryParams.sltBankCodes;
+        $('.bilingTab').click();
+        $('#edtBankName').val(edtBankName)
+        $('#edtBankAccountName').val(edtBankAccountName)
+        $('#edtBsb').val(edtBSB)
+        $('#edtBankAccountNumber').val(edtBankAccountNo)
+        $('#edtSwiftCode').val(swiftCode)
+        $('#edtRoutingNumber').val(routingNo)
+        // $('#sltCurrency').val()
+      }
+    }
+    setTimeout(() => {
+      templateObject.fillBankInfoFromUrl();
+    }, 3500);
 
     // $(document).ready(function () {
     //     history.pushState(null, document.title, location.href);
@@ -669,6 +729,7 @@ Template.supplierscard.onRendered(function() {
             bankAccountName: data.fields.BankAccountName || '',
             bankAccountBSB: data.fields.BankAccountBSB || '',
             bankAccountNo: data.fields.BankAccountNo || '',
+            foreignExchangeCode:data.fields.ForeignExchangeCode || CountryAbbr,
             // openingbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
             // taxcode:data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
         };
@@ -2703,11 +2764,16 @@ Template.supplierscard.events({
 
 Template.supplierscard.helpers({
     record: () => {
-        let temp = Template.instance().records.get();
-        if (temp && temp.mobile) {
-            temp.mobile = temp.mobile.replace('+61', '0')
+        let parentRecord = Template.parentData(0).record;
+        if (parentRecord) {
+            return parentRecord;
+        } else {
+            let temp = Template.instance().records.get();
+            if (temp && temp.mobile) {
+                temp.mobile = temp.mobile.replace('+61', '0')
+            }
+            return temp;
         }
-        return temp;
     },
     countryList: () => {
         return Template.instance().countryData.get();

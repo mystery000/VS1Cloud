@@ -189,6 +189,46 @@ const authenticatedRoutes = FlowRouter.group({
     triggersEnter: [authenticatedRedirect]
 });
 
+let previous_url = "";
+
+FlowRouter.triggers.enter([
+    function (context, redirect, stop) {
+        if (previous_url !== "" && previous_url !== context.path && JSON.parse(localStorage.getItem("isFormUpdated"))) {
+            stop();
+            swal({
+                title: 'WARNING!',
+                text: 'Do you wish to save your changes?',
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    FlowRouter.go(previous_url);
+                } else if (result.dismiss === 'cancel') {
+                    FlowRouter.go(context.path);
+                    //TODO need to url async
+                    previous_url = "";
+                    localStorage.setItem("isFormUpdated", false);
+                }
+            });
+        }
+    }
+]);
+
+FlowRouter.triggers.exit([
+    function (context, redirect) {
+        if (JSON.parse(localStorage.getItem("isFormUpdated"))) {
+            previous_url = context.path;
+        }
+    }
+], {only: ["basreturn", "depositcard", "chequecard", "newbankrule", "customerscard", "workordercard",
+        "employeescard", "leadscard", "supplierscard", "journalentrycard", "fixedassetcard", "bom_setup",
+        "servicelogcard", "new_process", "stockadjustmentcard", "paymentcard", "supplierpaymentcard",
+        "purchaseordercard", "billcard", "creditcard", "allreports", "new_quote", "new_salesorder",
+        "new_invoice", "refundcard"
+    ]});
+
 authenticatedRoutes.route('/accounttransactions', {
     name: 'accounttransactions',
     action() {
@@ -990,6 +1030,14 @@ authenticatedRoutes.route('/suppliersummary', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'suppliersummary'
+        });
+    }
+});
+authenticatedRoutes.route('/supplierreport', {
+    name: 'supplierreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'supplierreport'
         });
     }
 });

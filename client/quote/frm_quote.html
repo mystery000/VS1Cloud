@@ -1107,88 +1107,16 @@
                         </div>
                     </div>
                 </div>
-
-
-
-                <div class="col-12 col-md-6 col-lg-4 col-xl-2" id="totalSection" style="padding-right: 1.5rem; padding-left: 1.5rem;">
-                    <div class="row">
-                        <div class="col-4" style="padding: 0px;">
-                            <p class="lead">Subtotal</p>
-                        </div>
-                        <div class="col-8" style="padding: 0px;">
-                            <p class="lead" id="subtotal_total" name="subtotal_total">{{quoterecord.SubTotal}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4" style="padding: 0px;">
-                            <p class="lead">Tax</p>
-                        </div>
-                        <div class="col-8" style="padding: 0px;">
-                            <p class="lead" id="subtotal_tax" name="subtotal_tax">{{quoterecord.TotalTax}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4" style="padding: 0px;">
-                            <p class="lead">Net</p>
-                        </div>
-                        <div class="col-8" style="padding: 0px;">
-                            <p class="lead" id="subtotal_nett" name="subtotal_nett">{{quoterecord.Total}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12" style="padding: 0px;">
-                            <hr style="border-top: 1px solid #696969;" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4" style="padding: 0px;">
-                            <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="lead">Discount</p>
-                        </div>
-                        <div class="col-8" style="padding: 0px;">
-                            <p data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="lead" id="subtotal_discount" name="subtotal_discount">{{quoterecord.TotalDiscount}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12" style="padding: 0px;">
-                            <hr style="border-top: 1px solid #696969;" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4" style="padding: 0px;">
-                            <p class="lead leadTotal">TOTAL</p>
-                        </div>
-                        <div class="col-8" style="padding: 0px;">
-                            <p class="lead leadTotal" id="grandTotal" name="grandTotal">{{quoterecord.Total}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12" style="padding: 0px;">
-                            <hr style="border-top: 3px solid #696969;" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4" style="padding: 0px;">
-                            <p class="lead">Paid</p>
-                        </div>
-                        <div class="col-8" style="padding: 0px;">
-                            <p class="lead" id="totalPaidAmt" name="totalPaidAmt">{{quoterecord.totalPaid}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4" style="padding: 0px;">
-                            <p class="lead">Due</p>
-                        </div>
-                        <div class="col-8" style="padding: 0px;">
-                            <p class="lead" id="totalBalanceDue" name="totalBalanceDue">{{quoterecord.balanceDue}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12" style="padding: 0px;">
-                            <hr style="border-top: 3px solid #696969;" />
-                            <p style="display:none;" id="totalBalanceDue" name="totalBalanceDue">{{quoterecord.balanceDue}}</p>
-                        </div>
-                    </div>
-                </div>
+                {{> transaction_calculation
+                    isPartialPaid=quoterecord.isPartialPaid
+                    SubTotal=quoterecord.SubTotal
+                    TotalTax=quoterecord.TotalTax
+                    NetTotal=quoterecord.Total
+                    TotalDiscount=quoterecord.TotalDiscount
+                    Total=quoterecord.Total
+                    TotalPaid=quoterecord.totalPaid
+                    BalanceDue=quoterecord.balanceDue
+                }}
             </div>
             <div class="row justify-content-center mobileButtons" style="display: none;">
                 {{> transaction_buttons_bottom margin="12px" AttachmentCount=attachmentCount }}
@@ -1818,10 +1746,6 @@
         </div>
         <!-- End Modal Tax Rate -->
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-            {{> addcustomerpop}}
-        </div>
-
         <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
             {{> newproductpop}}
         </div>
@@ -1829,6 +1753,7 @@
         <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
             {{> copyfrequencypop}}
         </div>
+        {{> all_transaction_modals customerRecord=customerRecord}}
     </div>
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">

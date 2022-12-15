@@ -134,24 +134,28 @@ Template.newsidenav.onCreated(function() {
 
     templateObject.isSerialNumberList = new ReactiveVar();
     templateObject.isSerialNumberList.set(false);
-    getVS1Data('VS1_Dashboard').then(function(dataObject) {
-      if (dataObject.length == 0) {
-      }else{
-      let dataReturnRes = JSON.parse(dataObject[0].data);
-      //if(dataObject[0] && dataObject[0].data && dataObject[0].data.processLog && dataObject[0].data.processLog.TUser && dataObject[0].data.processLog.TUser.updateEmployeeFormAccessDetail && dataObject[0].data.processLog.TUser.updateEmployeeFormAccessDetail.items){
-        let userAccessData = dataReturnRes.ProcessLog.TUser.TEmployeeFormAccessDetail.items||'';
-        userAccessData.map(item=>{
-          if(item.fields.FormName == "FnCloudSidePanelMenu" && item.fields.AccessLevel == 1){
-            templateObject.sideBarPositionClass.set('side');
-            $('#sidebar').removeClass('top');
-            $('#bodyContainer').removeClass('top');
-            $('#sidebarToggleBtn .text').text('Top');
-          }
-        })
-      //}
+    sideBarService.getVS1MenuConfig().then((data) => {
+      if(data.tpreference && !!data.tpreference.length) {
+        const latestAction = data.tpreference[data.tpreference.length - 1];
+        const menuItem = JSON.parse(latestAction.PrefValue);
+        if(menuItem.Location === "TopMenu") {
+          templateObject.sideBarPositionClass.set('top');
+          $('#sidebar').addClass('top');
+          $('#bodyContainer').addClass('top');
+          $('#sidebarToggleBtn .text').text('Side');
+        } else {
+          templateObject.sideBarPositionClass.set('side');
+          $('#sidebar').removeClass('top');
+          $('#bodyContainer').removeClass('top');
+          $('#sidebarToggleBtn .text').text('Top');
+        }
+      } else {
+          templateObject.sideBarPositionClass.set('side');
+          $('#sidebar').removeClass('top');
+          $('#bodyContainer').removeClass('top');
+          $('#sidebarToggleBtn .text').text('Top');
       }
     });
-
     $(document).ready(function() {
         var erpGet = erpDb();
         var LoggedDB = erpGet.ERPDatabase;
@@ -231,13 +235,21 @@ Template.newsidenav.onRendered(function() {
     }
 
     function MyPopper (button, popper) {
-      this.body = $('#popperBounder');
+      this.timer = null;
+      this.bounder = $('#popperBounder');
       this.button = $(button);
-      this.popper = $(popper).clone().appendTo(this.body);
-      
+      this.popper = $(popper).clone().appendTo(this.bounder);
+      this.popper.hover(() => {
+        clearTimeout(this.timer);
+      }, () => {
+        this.timer = setTimeout(() => {
+          this.timer = null;
+          this.hidePopper();
+        }, 1500);
+      });
+
       this.arrow = $('<div class="popper-arrow"></div>').appendTo(this.popper);
     }
-    
     MyPopper.prototype.createInstance = function () {
       this.instance = Popper.createPopper(this.button[0], this.popper[0], {
         placement: "bottom", //preferred placement of popper
@@ -258,7 +270,7 @@ Template.newsidenav.onRendered(function() {
           {
             name: 'preventOverflow',
             options: {
-              boundary: this.body[0],
+              boundary: this.bounder[0],
             },
           },
         ]
@@ -270,7 +282,6 @@ Template.newsidenav.onRendered(function() {
         this.instance = null;
       }
     }
-    
     MyPopper.prototype.showPopper = function () {
       this.popper.addClass('popper-popup');
       this.popper.attr("show-popper", "");
@@ -282,6 +293,10 @@ Template.newsidenav.onRendered(function() {
       this.popper.removeAttr("show-popper");
       this.arrow.removeAttr("data-popper-arrow");
       this.destroyInstance();
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
     }
     MyPopper.prototype.togglePopper = function () {
       if (this.popper[0].hasAttribute("show-popper")) {
@@ -304,6 +319,10 @@ Template.newsidenav.onRendered(function() {
         if (e.currentTarget.popper) {
           poppers.forEach(popper => e.currentTarget.popper !== popper && popper.hidePopper());
           e.currentTarget.popper.showPopper();
+          if (e.currentTarget.popper.timer) clearTimeout(e.currentTarget.popper.timer);
+          e.currentTarget.popper.timer = setTimeout(() => {
+            e.currentTarget.popper.hidePopper();
+          }, 1500);
         }
       })
       $('#colContent').on('click', function () {
@@ -313,6 +332,7 @@ Template.newsidenav.onRendered(function() {
     setTimeout(() => {
       init();
     }, 2000);
+
     templateObject.getSetSideNavFocus = function() {
         var currentLoc = FlowRouter.current().route.path;
         setTimeout(function() {
@@ -1650,6 +1670,12 @@ Template.newsidenav.onRendered(function() {
             addVS1Data('TTaxcodeVS1', JSON.stringify(data));
             $("<span class='process'>Tax Codes Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
         }).catch(function(err) {
+
+        });
+
+        sideBarService.getSubTaxCode().then(function (dataReload) {
+          addVS1Data('TSubTaxVS1', JSON.stringify(dataReload));
+        }).catch(function (err) {
 
         });
     }
@@ -6694,23 +6720,23 @@ Template.newsidenav.events({
     let payload = "";
 
     if ($('#sidebar').hasClass("top")) {
-        payload = {
-          Name: "VS1_EmployeeAccess",
-          Params: {
-              VS1EmployeeAccessList:
-              [
-                  {
-                      EmployeeId:parseInt(Session.get('mySessionEmployeeLoggedID'))||0,
-                      formID:7256,
-                      Access:1
-                  }
-              ]
-          }
-        };
-        //sideBarService.updateEmployeeFormAccessDetail(payload);
-        $('#sidebar').removeClass('top');
-        $('#bodyContainer').removeClass('top');
-        $('#sidebarToggleBtn .text').text('Top');
+      payload = {
+        Name: "VS1_EmployeeAccess",
+        Params: {
+            VS1EmployeeAccessList:
+            [
+                {
+                    EmployeeId:parseInt(Session.get('mySessionEmployeeLoggedID'))||0,
+                    formID:7256,
+                    Access:1
+                }
+            ]
+        }
+      };
+      sideBarService.updateVS1MenuConfig('SideMenu')
+      $('#sidebar').removeClass('top');
+      $('#bodyContainer').removeClass('top');
+      $('#sidebarToggleBtn .text').text('Top');
     } else {
       payload = {
         Name: "VS1_EmployeeAccess",
@@ -6725,7 +6751,7 @@ Template.newsidenav.events({
             ]
         }
       };
-      //sideBarService.updateEmployeeFormAccessDetail(payload);
+      sideBarService.updateVS1MenuConfig('TopMenu')
       $('#sidebar').addClass('top');
       $('#bodyContainer').addClass('top');
       $('#sidebarToggleBtn .text').text('Side');
@@ -8379,6 +8405,39 @@ Template.newsidenav.events({
     'click #sidenavcompanyappsettings': function(event) {
         window.open('/companyappsettings', '_self');
     },
+    'click #organisationsettings': function(event) {
+      window.open('/organisationsettings', '_self');
+    },
+    'click #backuprestore': function(event) {
+      window.open('/backuprestore', '_self');
+    },
+    'click #clienttypesettings': function(event) {
+      window.open('/clienttypesettings', '_self');
+    },
+    'click #leadstatussettings': function(event) {
+      window.open('/leadstatussettings', '_self');
+    },
+    'click #edIntegrations': function(event) {
+      window.open('/edi-integrations', '_self');
+    },
+    'click #emailsettings': function(event) {
+      window.open('/emailsettings', '_self');
+    },
+    'click #payrollrules': function(event) {
+      window.open('/payrollrules', '_self');
+    },
+    'click #templatesettings': function(event) {
+      window.open('/templatesettings', '_self');
+    },
+    'click #setup': function(event) {
+      window.open('/setup', '_self');
+    },
+    'click #subscriptionSettings': function(event) {
+      window.open('/subscriptionSettings', '_self');
+    },
+    'click #uomSettings': function(event) {
+      window.open('/uomSettings', '_self');
+    },
     'click #sidenavcurrenciesSettings': function(event) {
         event.preventDefault();
         FlowRouter.go('/currenciessettings');
@@ -9411,4 +9470,3 @@ Template.newsidenav.helpers({
       return Template.instance().isAppointmentSMS.get();
     }
 });
-

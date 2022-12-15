@@ -3358,6 +3358,7 @@ Template.appointmentlist.events({
         let myStringJSON = '';
         let objectAppData = "";
         let updateAppointment = false;
+<<<<<<< HEAD
         $('.chkBox:checkbox:checked').each(async function() {
             var chkIdLine = $(this).closest('tr').attr('id');
             if (selectAppointment.length > 0) {
@@ -3396,15 +3397,61 @@ Template.appointmentlist.events({
                                 sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
                                     addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                 }).catch(function(err) {
+=======
+        // $('.chkBox:checkbox:checked').each(async function() {
+        //     var chkIdLine = $(this).closest('tr').attr('id');
+        //     if (selectAppointment.length > 0) {
+        //         let checkAppointStartEnd = selectAppointment.filter((item) =>
+        //             parseInt(item.id) == parseInt(chkIdLine)
+        //         );
+        //         let actuatlStartTime0 = checkAppointStartEnd[0].actual_starttime;
+        //         let actuatlStartTime = actuatlStartTime0 == "" ? '' : actuatlStartTime0.split(' ')[0];
+        //         let actuatlStartTimeSplit = actuatlStartTime.split('-')[0] || '';
+        //         let actuatlEndTime0 = checkAppointStartEnd[0].actual_endtime;
+        //         let actuatlEndTime = actuatlEndTime0 == "" ? '' : actuatlEndTime0.split(' ')[0];
+        //         let actuatlEndTimeSplit = actuatlEndTime.split('-')[0] || '';
 
-                                });
+        //         if ((actuatlStartTimeSplit == '1899' || actuatlStartTimeSplit == '')) {
+        //             swal({
+        //                 title: 'Actual Time is not filled in',
+        //                 text: "Can we populate it with the Booked Time? (Your Appointment will be stopped and completed if you proceed)",
+        //                 type: 'warning',
+        //                 showCancelButton: true,
+        //                 confirmButtonText: 'Proceed',
+        //                 cancelButtonText: 'Cancel'
+        //             }).then((result) => {
+        //                 if (result.value) {
+        //                     objectAppData = {
+        //                         type: "TAppointmentEx",
+        //                         fields: {
+        //                             Id: parseInt(chkIdLine),
+        //                             Actual_StartTime: checkAppointStartEnd[0].booked_starttime,
+        //                             Actual_EndTime: checkAppointStartEnd[0].booked_endtime,
+        //                         }
+        //                     };
 
+        //                     appointmentService.saveAppointment(objectAppData).then(async function(data) {
+        //                         updateAppointment = true;
+        //                         sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+        //                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+        //                         }).catch(function(err) {
+>>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
+
+        //                         });
+
+<<<<<<< HEAD
                                 sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataApp) {
                                     addVS1Data('TAppointmentList', JSON.stringify(dataApp));
                                 }).catch(function(err) {
+=======
+        //                         sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataApp) {
+        //                             addVS1Data('TAppointmentList', JSON.stringify(dataApp));
+        //                         }).catch(function(err) {
+>>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
 
-                                });
+        //                         });
 
+<<<<<<< HEAD
                             }).catch(function(err) {
 
                             });
@@ -3437,43 +3484,87 @@ Template.appointmentlist.events({
                                 sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
                                     addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                 }).catch(function(err) {
+=======
+        //                     }).catch(function(err) {
 
-                                });
+        //                     });
+        //                     updateAppointment = true;
+        //                 } else {
+        //                     $('#f-' + chkIdLine).prop("checked", false);
+        //                     updateAppointment = false;
+        //                 }
+        //             });
+        //         } else if ((actuatlEndTimeSplit == '1899' || actuatlEndTimeSplit == '')) {
+        //             swal({
+        //                 title: 'Actual Time is not filled in',
+        //                 text: "Can we populate it with the Booked Time? (Your Appointment will be stopped and completed if you proceed)",
+        //                 type: 'warning',
+        //                 showCancelButton: true,
+        //                 confirmButtonText: 'Proceed',
+        //                 cancelButtonText: 'Cancel'
+        //             }).then((result) => {
+        //                 if (result.value) {
+        //                     objectAppData = {
+        //                         type: "TAppointmentEx",
+        //                         fields: {
+        //                             Id: parseInt(chkIdLine),
+        //                             // Actual_StartTime: checkAppointStartEnd[0].booked_starttime,
+        //                             Actual_EndTime: checkAppointStartEnd[0].booked_endtime,
+        //                         }
+        //                     };
+        //                     appointmentService.saveAppointment(objectAppData).then(async function(data) {
+        //                         updateAppointment = true;
+        //                         sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+        //                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+        //                         }).catch(function(err) {
+>>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
 
+        //                         });
+
+<<<<<<< HEAD
                                 sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataApp) {
                                     addVS1Data('TAppointmentList', JSON.stringify(dataApp));
                                 }).catch(function(err) {
+=======
+        //                         sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataApp) {
+        //                             addVS1Data('TAppointmentList', JSON.stringify(dataApp));
+        //                         }).catch(function(err) {
+>>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
 
-                                });
+        //                         });
 
+<<<<<<< HEAD
                             }).catch(function(err) {
+=======
+        //                     }).catch(function(err) {
+>>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
 
-                            });
-                            updateAppointment = true;
-                        } else {
-                            $('#f-' + chkIdLine).prop("checked", false);
-                            updateAppointment = false;
-                        }
-                    });
-                } else {
-                    updateAppointment = false;
-                }
+        //                     });
+        //                     updateAppointment = true;
+        //                 } else {
+        //                     $('#f-' + chkIdLine).prop("checked", false);
+        //                     updateAppointment = false;
+        //                 }
+        //             });
+        //         } else {
+        //             updateAppointment = false;
+        //         }
 
 
-            };
-            //let checkDataSelect = await updateAppointment;
-            //  if(checkDataSelect){
-            let obj = {
-                AppointID: parseInt(chkIdLine)
-            };
+        //     };
+        //     //let checkDataSelect = await updateAppointment;
+        //     //  if(checkDataSelect){
+        //     let obj = {
+        //         AppointID: parseInt(chkIdLine)
+        //     };
 
-            selectedAppointmentList.push(obj);
+        //     selectedAppointmentList.push(obj);
 
-            templateObject.selectedAppointmentID.set(chkIdLine);
-            //};
-            // selectedAppointmentCheck.push(JsonIn1);
-            // }
-        });
+        //     templateObject.selectedAppointmentID.set(chkIdLine);
+        //     //};
+        //     // selectedAppointmentCheck.push(JsonIn1);
+        //     // }
+        // });
         JsonIn = {
             Name: "VS1_InvoiceAppt",
             Params: {

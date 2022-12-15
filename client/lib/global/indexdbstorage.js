@@ -334,6 +334,7 @@ openDb = function(dbName) {
             db.createObjectStore('TProcTreeVS1', { keyPath: 'EmployeeEmail' });
             db.createObjectStore("TABADescriptiveRecord", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TABADetailRecord", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TProductionPlanData", { keyPath: "EmployeeEmail" });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });
@@ -594,7 +595,11 @@ getStoreToDelete = async function(email) {
 openDbCheckVersion = async function() {
     var promiseversion = new Promise((resolve, reject) => {
         var versionExists = false;
+<<<<<<< HEAD
         let dbReqVersion = indexedDB.open('TDatabaseVersion', 102);
+=======
+        let dbReqVersion = indexedDB.open('TDatabaseVersion', 105);
+>>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
         dbReqVersion.onsuccess = function() {
             resolve(versionExists);
         };
