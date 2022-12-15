@@ -107,12 +107,13 @@ Template.vatreturn.onRendered(function() {
     let productService = new ProductService();
     let accountService = new AccountService();
     let purchaseService = new PurchaseBoardService();
-    let taxRateList = new Array();
+    let taxRateList = [];
     let categories = [];
     let categoryAccountList = [];
     let usedCategories = [];
     const accountTypeList = [];
     const dataTableList = [];
+    let deptrecords = [];
 
     let reasonT4 = [
         { val: "T4-1", title: "Mergers, acquisitions and takeovers" },
@@ -3105,7 +3106,7 @@ Template.vatreturn.events({
         var tax4acost = parseFloat($("#tax1acost").val()) * 15 / (100 + 15);
         $("#tax4acost").val(tax4acost.toFixed(2));
         $("#prt_tax4acost").html("$" + tax4acost.toFixed(2));
-        var tax6cost = parseFloat($("#tax5acost").val()) * 60 / 100;
+        var tax6cost = parseFloat($("#tax5cost").val()) * 60 / 100;
         $("#tax6cost").val(tax6cost.toFixed(2));
         $("#prt_tax6cost").html("$" + tax6cost.toFixed(2));
         var tax8cost = tax6cost + parseFloat($("#tax7acost").val());
@@ -4007,7 +4008,7 @@ Template.vatreturn.events({
 
                 setTimeout(function() {
                     let jsonObj = {
-                        type: "TVATReturn",
+                        type: "TVATReturns",
                         fields: {
                             AccMethod: accMethod,
                             Active: true,
@@ -4030,7 +4031,7 @@ Template.vatreturn.events({
                             _3: parseFloat(tax3cost),
                             _3Selected: taxcodes3,
                             _4: parseFloat(tax4cost),
-                            _4A: parseFloat(tax4Acost),
+                            _4A: parseFloat(tax4acost),
                             _5: parseFloat(tax5cost),
                             _5Selected: taxcodes5,
                             _7: parseFloat(tax7cost),
@@ -4095,6 +4096,7 @@ Template.vatreturn.events({
                             window.open("vatreturnlist", "_self");
                         });
                     }).catch(function(err) {
+                        alert(err);
                         swal({
                             title: 'Oooops...',
                             text: err,
