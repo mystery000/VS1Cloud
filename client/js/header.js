@@ -932,9 +932,6 @@ Template.header.onRendered(function () {
             } else if (segs[0] == Barcode_Prefix_Supplier) {
                 productService.getGlobalSearchSupplier(segs[1]).then(function (data) {
                     let dataSelectID = '';
-                    let isProcessed = '';
-                    var splashArrayList = new Array();
-                    var splashArrayListDupp = new Array();
                     $('.fullScreenSpin').css('display', 'none');
                     let dataTableList = [];
                     let dataTableListDupp = [];
@@ -1029,10 +1026,6 @@ Template.header.onRendered(function () {
                 }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-<<<<<<< HEAD
-            } else {
-                productService.getGlobalSearchReport(searchName).then(function(data) {
-=======
             } else if (segs[0] === Barcode_Prefix_Appointment) {
                 productService.getGlobalSearchAppointment(segs[1]).then(function (data) {//Done Vladyslav
                     let dataSelectID = '';
@@ -1158,7 +1151,6 @@ Template.header.onRendered(function () {
 
             } else {
                 productService.getGlobalSearchReport(searchName).then(function (data) {
->>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
                     let dataSelectID = '';
                     let isProcessed = '';
                     var splashArrayList = new Array();

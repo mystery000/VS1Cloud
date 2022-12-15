@@ -966,7 +966,6 @@ Template.generalledger.events({
               } else {
                 if (reportData.FormID == 225) {
                   reportData.attachments = await getAttachments();
-                  console.log("@@@@@@@@@", reportData.attachments)
                   Meteor.call("sendNormalEmail", reportData);
                   resolve()
                 }
@@ -1197,8 +1196,8 @@ Template.generalledger.helpers({
 
     let convertedAmount =
       isMinus == true
-        ? `- ${currencyData.symbol} ${amount}`
-        : `${currencyData.symbol} ${amount}`;
+        ? `- ${currencyData.symbol}${amount}`
+        : `${currencyData.symbol}${amount}`;
 
 
     return convertedAmount;

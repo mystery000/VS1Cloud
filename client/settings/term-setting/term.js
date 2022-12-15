@@ -53,7 +53,7 @@ $('#tblTermsList tbody').on( 'click', 'tr', function () {
     var isPurchaseDefault = false;
 
 
-    $('#add-terms-title').text('Edit Term Settings');
+        $('#add-terms-title').text('Edit Term Settings');
        let termsID = $(this).closest('tr').attr('id') || 0;
        let termsName = $(event.target).closest("tr").find(".colName").text() || '';
        let description = $(event.target).closest("tr").find(".colDescription").text() || '';
@@ -114,8 +114,12 @@ $('#tblTermsList tbody').on( 'click', 'tr', function () {
        $('#edtDays').val(days);
        $('#myModalTerms').modal('show');
 
-    // }
-    // }
+       //Make btnDelete "Make Active or In-Active"
+       if(status == "In-Active"){
+           $('#view-in-active').html("<button class='btn btn-success btnActivateTerms vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
+       }else{
+           $('#view-in-active').html("<button class='btn btn-danger btnDeleteTerms vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
+       }
 
     });
 });
@@ -141,7 +145,7 @@ Template.termsettings.events({
       sideBarService.getTermsDataList().then(function (dataTermsList) {
           addVS1Data('TTermsVS1List', JSON.stringify(dataTermsList)).then(function (datareturn) {
             sideBarService.getTermsVS1().then(function (dataReload) {
-                addVS1Data('TTermsVS1', JSON.stringify(dataReload)).then(function (datareturn) {
+                addVS1Data('TTermsVS1List', JSON.stringify(dataReload)).then(function (datareturn) {
                     Meteor._reload.reload();
                 }).catch(function (err) {
                     Meteor._reload.reload();
@@ -155,8 +159,7 @@ Template.termsettings.events({
       }).catch(function (err) {
           Meteor._reload.reload();
       });
-      // Meteor._reload.reload();
-    },
+  },
   'click .btnDeleteTerms': function () {
     playDeleteAudio();
     let taxRateService = new TaxRateService();
@@ -199,8 +202,6 @@ Template.termsettings.events({
     });
   }, delayTimeAfterSound);
   },
-<<<<<<< HEAD
-=======
   'click .btnActivateTerms': function() {
       playSaveAudio();
       let contactService = new ContactService();
@@ -293,7 +294,6 @@ Template.termsettings.events({
          });
       }, delayTimeAfterSound);
   },
->>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
   'click .btnSaveTerms': function () {
     playSaveAudio();
     let taxRateService = new TaxRateService();
@@ -357,8 +357,7 @@ Template.termsettings.events({
            type: "TTermsVS1",
            fields: {
                ID: parseInt(termsID),
-               Active: true,
-               //TermsName: termsName,
+               TermsName: termsName,
                Description: description,
                IsDays: isDays,
                IsEOM: isEOM,
@@ -366,13 +365,13 @@ Template.termsettings.events({
                isPurchasedefault: isPurchasedefault,
                isSalesdefault: isSalesdefault,
                Days: termdays||0,
-               PublishOnVS1:true
+               Active: true
            }
        };
 
        taxRateService.saveTerms(objDetails).then(function (objDetails) {
          sideBarService.getTermsVS1().then(function(dataReload) {
-            addVS1Data('TTermsVS1',JSON.stringify(dataReload)).then(function (datareturn) {
+            addVS1Data('TTermsVS1List',JSON.stringify(dataReload)).then(function (datareturn) {
               Meteor._reload.reload();
             }).catch(function (err) {
               Meteor._reload.reload();
@@ -400,20 +399,19 @@ Template.termsettings.events({
         objDetails = {
            type: "TTermsVS1",
            fields: {
-               Active: true,
                TermsName: termsName,
                Description: description,
                IsDays: isDays,
                IsEOM: isEOM,
                IsEOMPlus: isEOMPlus,
                Days: termdays||0,
-               PublishOnVS1:true
+               Active: true
            }
        };
 
        taxRateService.saveTerms(objDetails).then(function (objDetails) {
          sideBarService.getTermsVS1().then(function(dataReload) {
-            addVS1Data('TTermsVS1',JSON.stringify(dataReload)).then(function (datareturn) {
+            addVS1Data('TTermsVS1List',JSON.stringify(dataReload)).then(function (datareturn) {
               Meteor._reload.reload();
             }).catch(function (err) {
               Meteor._reload.reload();
@@ -452,13 +450,13 @@ Template.termsettings.events({
             isSalesdefault: isSalesdefault,
             IsEOMPlus: isEOMPlus,
             Days: termdays||0,
-            PublishOnVS1:true
+            Active: true
         }
     };
 
     taxRateService.saveTerms(objDetails).then(function (objDetails) {
       sideBarService.getTermsVS1().then(function(dataReload) {
-            addVS1Data('TTermsVS1',JSON.stringify(dataReload)).then(function (datareturn) {
+            addVS1Data('TTermsVS1List',JSON.stringify(dataReload)).then(function (datareturn) {
               Meteor._reload.reload();
             }).catch(function (err) {
               Meteor._reload.reload();
@@ -493,6 +491,7 @@ Template.termsettings.events({
       $('#edtName').prop('readonly', false);
       $('#edtDesc').val('');
       $('#edtDays').val('');
+      $('#view-in-active').html("<button class='btn btn-danger btnDeleteTerms vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
 
       templateObject.include7Days.set(false);
       templateObject.includeCOD.set(false);

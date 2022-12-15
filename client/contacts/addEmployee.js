@@ -1701,7 +1701,8 @@ Template.employeescard.onRendered(function() {
             custFld2: '',
             dashboardOptions: '',
             salesQuota: 5000,
-            website: ''
+            website: '',
+            isEmployee:true
         }
 
         templateObject.records.set(lineItemObj);
@@ -1793,7 +1794,8 @@ Template.employeescard.onRendered(function() {
                 custFld2: '',
                 website: '',
                 dashboardOptions: '',
-                salesQuota: 5000
+                salesQuota: 5000,
+                isEmployee:true
             }
 
             templateObject.records.set(lineItemObj);
@@ -1978,7 +1980,8 @@ Template.employeescard.onRendered(function() {
             website: '',
             notes: data.fields.Notes || '',
             dashboardOptions: data.fields.CustFld11 || '',
-            salesQuota: data.fields.CustFld12 || ''
+            salesQuota: data.fields.CustFld12 || '',
+            isEmployee:true,
         };
         templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
 
@@ -2648,6 +2651,10 @@ Template.employeescard.onRendered(function() {
             $('#edtDashboardOptions').val(optionName);
             $('#edtDashboardOptions').attr("defaultlogin", isDefaultLogin);
             $('#dashboardOptionListModal').modal('toggle');
+        });
+        $(document).on("click", "#tblTitleList tbody tr", function (e) {
+            $('#editEmployeeTitle').val($(this).find(".colTypeName").text());
+            $('#employeeTitlePopModal').modal('toggle');
         });
     });
 
@@ -5572,7 +5579,7 @@ Template.employeescard.events({
         let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(async function() {
             LoadingOverlay.show();
-            let title = $('#edtTitle').val();
+            let title = $('#editEmployeeTitle').val();
             let firstname = $('#edtFirstName').val();
             if (firstname === '') {
                 $('.fullScreenSpin').css('display', 'none');
@@ -11266,9 +11273,5 @@ Template.employeescard.helpers({
     earningLines: () => {
         return Template.instance().earningLines.get();
     },
-<<<<<<< HEAD
-    formatPrice: (price) => GlobalFunctions.formatPrice(price)
-=======
     formatPrice: (price) => GlobalFunctions.formatPrice(price),
->>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
 });

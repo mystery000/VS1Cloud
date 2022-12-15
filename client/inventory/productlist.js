@@ -251,6 +251,8 @@ var splashArrayProductList = new Array();
                             "targets": [10]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                     buttons: [
@@ -509,6 +511,8 @@ setTimeout(function () {
                   "targets": [10]
               }
           ],
+          select: true,
+          destroy: true,
           colReorder: true,
           "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
           buttons: [
@@ -763,6 +767,8 @@ setTimeout(function () {
                         "targets": [10]
                     }
                   ],
+                  select: true,
+                  destroy: true,
                   colReorder: true,
                   "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                   buttons: [
@@ -796,7 +802,7 @@ setTimeout(function () {
                   lengthMenu: [ [initialBaseDataLoad, -1], [initialBaseDataLoad, "All"] ],
                   info: true,
                   responsive: true,
-                  "order": [[ 0, "asc" ]],
+                  "order": [[ 1, "asc" ]],
                   action: function () {
                       $('#tblInventory').DataTable().ajax.reload();
                       let draftRecord = templateObject.datatablerecords.get();
@@ -1610,7 +1616,7 @@ Template.productlist.helpers({
         playSaveAudio();
         let productService = new ProductService();
         setTimeout(function(){
-        
+
         let productCode = $("#edtproductvs1code").val();
         let productName = $("#edtproductvs1name").val();
           if(productName == ''){

@@ -184,7 +184,7 @@
                 </div>
                 {{/if}}
                 <div class="{{#if isModal}}{{else}}col-12 col-md-8 col-lg-10 displayInfo{{/if}}" id="displayInfo"
-                    style="padding-top: 8px; {{#if isModal}}{{else}}width:100%;{{/if}}">
+                    style="padding-top: 8px; width: 100%;">
                     <!-- All Cards List -->
                     {{#if isModal}}
 
@@ -233,22 +233,7 @@
                     <div class="card shadow mb-4 cardSizing">
                         <div class="card-header d-flex justify-content-between align-items-xl-center">
                             <!-- <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input" type="checkbox" id="activeChk" checked><label class="custom-control-label" for="activeChk"></label></div> -->
-
-                            <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 customerInfo"
-                                id="customerInfo" style="color: #00A3D3;">
-
-                                {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}}
-                                {{record.joblastname}}-{{record.phone}}
-                                <!-- {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}}
-                                     {{record.joblastname}}-{{record.phone}} -->
-                                <!-- {{record.joblastname}} - {{record.jobphone}} -->
-                                {{else}}
-                                <!-- {{record.company}} - {{record.firstname}} {{record.lastname}} -->
-                                {{#if notEquals record.id ''}}
-                                CUS-{{record.id}} - 
-                                {{/if}}{{record.company}}
-                                {{/if}}
-                            </h6>
+                            {{> vs1_contact_card_header isJob=isJob record=record id="customerInfo"}}
                             <!--here-->
                             <div>
                                 <!-- <span class="font-weight-bold m-0" style="color: #00A3D3;margin-right:14px;">
@@ -362,8 +347,7 @@
                                     {{/if}}
                                     <li class="nav-item" style="cursor: pointer;"><a class="nav-link transactionTab"
                                             role="tab" data-toggle="tab" data-target="#tab-1">Transaction List</a></li>
-                                    <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab" role="tab"
-                                            data-toggle="tab" data-target="#tab-crm">CRM</a></li>
+                                    
                                 </ul>
                                 <div class="tab-content">
                                     <style>
@@ -468,7 +452,8 @@
                                                         <div class="form-group" style="margin: 4px;">
                                                             <label>Email</label><input type="text" class="form-control"
                                                                 id="edtJobCustomerEmail" name="edtJobCustomerEmail"
-                                                                value="{{record.jobemail}}"></div>
+                                                                value="{{record.jobemail}}">
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -600,7 +585,8 @@
                                             <div class="col" style="padding: 4px;margin-top: 16px;">
                                                 <div>
                                                     <ul class="nav nav-tabs nav-justified">
-                                                        <li class="nav-item"><a class="nav-link active" role="tab"
+                                                        
+                                                        <li class="nav-item"><a class="nav-link" role="tab"
                                                                 data-toggle="tab" data-target="#tab-Job4">Address</a>
                                                         </li>
                                                         <li class="nav-item"><a class="nav-link" role="tab"
@@ -620,7 +606,8 @@
                                                     </ul>
 
                                                     <div class="tab-content">
-                                                        <div class="tab-pane active border rounded-0 tab-Job4"
+                                                        
+                                                        <div class="tab-pane border rounded-0 tab-Job4"
                                                             role="tabpanel" id="tab-Job4"
                                                             style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;overflow: auto;">
                                                             <div class="row" style="margin: 4px 12px;">
@@ -688,7 +675,8 @@
                                                                                     </option>
                                                                                     {{/if}}
                                                                                     {{/each}}
-                                                                                </select></div>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -817,7 +805,8 @@
                                                                                                 {{item}}</option>
                                                                                             {{/if}}
                                                                                             {{/each}}
-                                                                                        </select></div>
+                                                                                        </select>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1397,8 +1386,10 @@
                                             <div class="col" style="padding: 4px;margin-top: 16px;">
                                                 <div>
                                                     <ul class="nav nav-tabs nav-justified">
+                                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab active" role="tab"
+                                                            data-toggle="tab" data-target="#tab-crm">CRM</a></li>
                                                         <li class="nav-item" style="cursor: pointer;"><a
-                                                                class="nav-link active" role="tab" data-toggle="tab"
+                                                                class="nav-link" role="tab" data-toggle="tab"
                                                                 data-target="#tab-4">Address</a></li>
                                                         <li class="nav-item" style="cursor: pointer;"><a
                                                                 class="nav-link" role="tab" data-toggle="tab"
@@ -1406,6 +1397,11 @@
                                                         <li class="nav-item" style="cursor: pointer;"><a
                                                                 class="nav-link bilingTab" role="tab" data-toggle="tab"
                                                                 data-target="#tab-6">Invoicing</a></li>
+                                                        {{#if record.issupplier}}
+                                                        <li class="nav-item" style="cursor: pointer;"><a
+                                                            class="nav-link bilingTab" role="tab" data-toggle="tab"
+                                                            data-target="#tab-7">Billing</a></li>
+                                                        {{/if}}
                                                         <li class="nav-item attachmentTab" style="cursor: pointer;"><a
                                                                 class="nav-link" role="tab" data-toggle="tab"
                                                                 data-target="#tab-8">{{#if attachmentCount}}<span
@@ -1458,7 +1454,12 @@
                                                         }
                                                     </style>
                                                     <div class="tab-content">
-                                                        <div class="tab-pane active border rounded-0" role="tabpanel"
+                                                        <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm"
+                                                            style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
+                                                            <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                                            {{> non_transactional_list tablename="tblCustomerCrmList"}}
+                                                        </div>
+                                                        <div class="tab-pane border rounded-0" role="tabpanel"
                                                             id="tab-4"
                                                             style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                             <div class="row no-gutters flex-column"
@@ -1737,20 +1738,6 @@
                                                                     </div>
                                                                 </div> -->
                                                                 <div class="col-md-2 col-6" style="padding: 0;">
-                                                                    <div class="form-group d-xl-flex flex-column align-items-xl-start"
-                                                                        style="margin: 4px;"><label
-                                                                            class="text-nowrap">Preferred Payment
-                                                                            Method</label>
-
-                                                                        <select type="search"
-                                                                            class="form-control preferredPaymentMethodSelect"
-                                                                            id="sltPreferredPayment"
-                                                                            name="sltPreferredPayment"
-                                                                            style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-2 col-6" style="padding: 0;">
                                                                     <div class="form-group"
                                                                         style="margin: 4px;padding-left:4px;">
                                                                         <label>Terms</label>
@@ -1772,6 +1759,17 @@
                                                                             value="{{record.discount}}">
                                                                     </div>
                                                                 </div>
+                                                                <!-- I need to talk with Josef for this part-->
+                                                                <div class="col-md-2 col-6" style="padding: 0;">
+                                                                    <div class="form-group d-xl-flex flex-column justify-content-xl-start"
+                                                                        style="margin: 4px;padding-left:4px;"><label
+                                                                            class="text-nowrap">Credit Limit</label>
+                                                                        <input type="text" class="form-control pointer"
+                                                                            id="edtCustomerCardDiscount"
+                                                                            name="edtCustomerCardDiscount"
+                                                                            value="{{record.discount}}">
+                                                                    </div>
+                                                                </div>
 
                                                                 <!-- <div class="col-md-2 col-6" style="padding: 0;">
                                                                     {{> CurrencyWidget onlyCurrencyField="true"     }}
@@ -1782,6 +1780,90 @@
 
                                                             </div>
                                                         </div>
+
+                                                        <div class="tab-pane border rounded-0" role="tabpanel" id="tab-7" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+
+                                                            <div class="row" style="margin: 6px;">
+                                                                <div class="col-12 col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Terms</label>
+                                                                                <select type="search" class="form-control" id="sltTerms" name="sltTerms" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Payment Method</label>
+                                                                                <select type="search" class="form-control" id="sltPreferredPayment" name="sltPreferredPayment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group" style="margin: 4px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">Account No</label>
+                                                                                <input type="text" class="form-control" id="suppAccountNo" name="suppAccountNo" value="{{record.accountnumber}}">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="row justify-content-left desktopButtons" style=" margin-left:0px;">
+                                                                                {{#if equals record.scountry "Unite States"}}
+                                                                                    {{> toggle_button className="chkGlobalSettings" id="contactor-1099" width="131px" for="choosetemplate" displayName="Contractor 1099"}}
+                                                                                {{else}}
+                                                                                {{/if}}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mb-4" style="margin: 6px;">
+                                                                <div class="col-12 mt-2">
+                                                                    <h4 style="margin-left: 4px;">Banking Details</h4>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>Bank Name</label>
+                                                                        <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName" value="{{record.bankName}}">
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>Bank Account Name</label>
+                                                                        <input type="text" class="form-control" id="edtBankAccountName" name="edtBankAccountName" value="{{record.bankAccountName}}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>BSB</label>
+                                                                        <input type="text" class="form-control" id="edtBsb" name="edtBsb" value="{{record.bankAccountBSB}}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>Bank Account Number</label>
+                                                                        <input type="text" class="form-control" id="edtBankAccountNumber" name="edtBankAccountNumber" value="{{record.bankAccountNo}}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>Swift Code</label>
+                                                                        <input type="text" class="form-control" id="edtSwiftCode" name="edtSwiftCode" value="{{record.bankAccountNo}}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 col-md-3">
+                                                                    <div class="form-group" style="margin: 4px;">
+                                                                        <label>Routing Number</label>
+                                                                        <input type="text" class="form-control" id="edtRoutingNumber" name="edtRoutingNumber" value="{{record.routingNumber}}">
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="col-6 col-md-3">
+                                                                    {{> CurrencyWidget onlyCurrencyField="true" CurrentForeignExchangeCode = record.foreignExchangeCode}}
+                                                                </div>
+                                                               
+                                                            </div>
+                                                        </div>
+
                                                         <div class="tab-pane border rounded-0" role="tabpanel"
                                                             id="tab-8"
                                                             style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
@@ -2509,7 +2591,8 @@
                                                                                 class="form-control"
                                                                                 id="edtJobCustomerEmail"
                                                                                 name="edtJobCustomerEmail"
-                                                                                value="{{record.jobemail}}"></div>
+                                                                                value="{{record.jobemail}}">
+                                                                        </div>
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col d-xl-flex align-items-xl-start"
@@ -3491,11 +3574,19 @@
                                                         style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                                             </div>
                                         </div>
-                                        <div class="row" style="justify-content:space-around;">
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_appointments_toggle" width="131px" for="customer_transctionList_appointments_toggle" displayName="Appointments"}}
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_quotes_toggle" width="131px" for="customer_transctionList_quotes_toggle" displayName="Quotes"}}
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_sales_orders_toggle" width="131px" for="customer_transctionList_sales_orders_toggle" displayName="Sales Orders"}}
-                                            {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_invoices_toggle" width="131px" for="customer_transctionList_invoices_toggle" displayName="Invoices"}}
+                                        <div class="d-flex justify-content-left" style="margin-left: 14px;">
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_appointments_toggle" width="131px" for="customer_transctionList_appointments_toggle" displayName="Appointments"}}
+                                            </div>
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_quotes_toggle" width="131px" for="customer_transctionList_quotes_toggle" displayName="Quotes"}}
+                                            </div>
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_sales_orders_toggle" width="131px" for="customer_transctionList_sales_orders_toggle" displayName="Sales Orders"}}
+                                            </div>
+                                            <div style="width: 163px;">
+                                                {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_invoices_toggle" width="131px" for="customer_transctionList_invoices_toggle" displayName="Invoices"}}
+                                            </div>
                                         </div>
                                         <div class="row rowB" style="margin: 14px; margin-top: 0">
                                             <div class="card-body rounded" style="padding: 0;">
@@ -3668,88 +3759,79 @@
                                                             opacity: 1;
                                                         }
                                                     </style>
-<<<<<<< HEAD
-
-                                                    <table id="tblTransactionlist" style="width:100%"
-                                                        class="dataTable table table-striped table-bordered tblTransactionlist">
-=======
                                                         {{> non_transactional_list tablename="tblCustomerTransactionList"}}
                                                         <!-- <table id="tblJoblist" name="tblJoblist" style="width:100%"
                                                         class="dataTable table table-striped table-bordered tblJoblist">
->>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
                                                         <thead>
                                                             <tr class="dnd-moved">
-                                                                <th class="th colSortDate hiddenColumn">id</th>
-                                                                <th class="th colSaleDate" style="width:80px;">Sale Date
+                                                                <th class="th colCompany" style="width:200px;">Company
                                                                 </th>
-                                                                <th class="th colSalesNo" style="width:80px;">Sales No.
+                                                                <th class="th colPhone" style="width:95px;">Phone</th>                                                                                                       
+                                                                <th class="th colARBalance" style="width:80px;">AR
+                                                                    Balance</th>
+                                                                <th class="th colCreditBalance" style="width:80px;">
+                                                                    Credit Balance</th>
+                                                                <th class="th colBalance" style="width:80px;">Balance
                                                                 </th>
-                                                                <th class="th colCustomer" style="width:200px;">Customer
+                                                                <th class="th colCreditLimit" style="width:80px;">Credit
+                                                                    Limit</th>
+                                                                <th class="th colSalesOrderBalance" style="width:80px;">
+                                                                    Order Balance</th>
+                                                                <th class="th colCountry" style="width:100px;">Country
                                                                 </th>
-                                                                <th class="th colAmountEx" style="width:80px;">Amount
-                                                                    (Ex)</th>
-                                                                <!-- <th class="th colTax" style="width:80px;">Tax</th> -->
-                                                                <th class="th colAmount" style="width:80px;">Amount</th>
-                                                                <th class="th colPaid" style="width:80px;">Paid</th>
-                                                                <th class="th colBalanceOutstanding"
-                                                                    style="width:80px;">Balance Outstanding</th>
-                                                                <th class="th colType">Type</th>
-                                                                <th class="th colSaleCustField1 hiddenColumn">Custom
-                                                                    Field 1</th>
-                                                                <th class="th colSaleCustField2 hiddenColumn">Custom
-                                                                    Field 2</th>
-                                                                <th class="th colEmployee hiddenColumn">Employee</th>
-                                                                <th class="th colComments">Comments</th>
+                                                                <th class="th colEmail hiddenColumn">Email</th>
+                                                                <th class="th colAccountNo hiddenColumn">Account No</th>
+                                                                <th class="th colClientNo hiddenColumn">Custom Field 1
+                                                                </th>
+                                                                <th class="th colJobTitle hiddenColumn">Custom Field 2
+                                                                </th>
+                                                                <th class="th colNotes">Notes</th>
 
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {{#if datatablerecords}}
-                                                            {{#each item in datatablerecords}}
-                                                            <tr class="dnd-moved" id="{{item.id}}"
+                                                            {{#if datatablerecordsjob}}
+                                                            {{#each itemjob in datatablerecordsjob}}
+                                                            <tr class="dnd-moved" id="{{itemjob.id}}"
                                                                 style="cursor: pointer;">
-                                                                <td contenteditable="false"
-                                                                    class="colSortDate hiddenColumn">{{item.sortdate}}
-                                                                </td>
-                                                                <td contenteditable="false" class="colSaleDate"><span
-                                                                        style="display:none;">{{item.sortdate}}</span>{{item.saledate}}
-                                                                </td>
-                                                                <td contenteditable="false" class="colSalesNo">
-                                                                    {{item.transid}}</td>
-                                                                <td contenteditable="false" class="colCustomer">
-                                                                    {{item.customername}}</td>
-                                                                <td contenteditable="false" class="colAmountEx"
+                                                                <td contenteditable="false" class="colCompany">
+                                                                    {{itemjob.company}}</td>
+
+                                                                <td contenteditable="false" class="colPhone">
+                                                                    {{itemjob.phone}}</td>
+                                                                <td contenteditable="false" class="colARBalance"
                                                                     style="text-align: right!important;">
-                                                                    {{item.totalamountex}}
+                                                                    {{itemjob.arbalance}}
                                                                 </td>
-                                                                <!-- <td contenteditable="false" class="colTax" style="text-align: right!important;">{{item.totaltax}}</td> -->
-                                                                <td contenteditable="false" class="colAmount"
+                                                                <td contenteditable="false" class="colCreditBalance"
                                                                     style="text-align: right!important;">
-                                                                    {{item.totalamount}}
-                                                                </td>
-                                                                <td contenteditable="false" class="colPaid"
+                                                                    {{itemjob.creditbalance}}</td>
+                                                                <td contenteditable="false" class="colBalance"
                                                                     style="text-align: right!important;">
-                                                                    {{item.totalpaid}}
+                                                                    {{itemjob.balance}}
                                                                 </td>
-                                                                <td contenteditable="false"
-                                                                    class="colBalanceOutstanding"
+                                                                <td contenteditable="false" class="colCreditLimit"
                                                                     style="text-align: right!important;">
-                                                                    {{item.totaloustanding}}</td>
-                                                                <td contenteditable="false" class="colType">
-                                                                    {{item.type}}</td>
-                                                                <td contenteditable="false"
-                                                                    class="colSaleCustField1 hiddenColumn">
-                                                                    {{item.custfield1}}
+                                                                    {{itemjob.creditlimit}}
                                                                 </td>
+                                                                <td contenteditable="false" class="colSalesOrderBalance"
+                                                                    style="text-align: right!important;">
+                                                                    {{itemjob.salesorderbalance}}</td>
+                                                                <td contenteditable="false" class="colCountry">
+                                                                    {{itemjob.country}}</td>
                                                                 <td contenteditable="false"
-                                                                    class="colSaleCustField2 hiddenColumn">
-                                                                    {{item.custfield2}}
-                                                                </td>
+                                                                    class="colEmail hiddenColumn">{{itemjob.email}}</td>
                                                                 <td contenteditable="false"
-                                                                    class="colEmployee hiddenColumn">{{item.employee}}
-                                                                </td>
-                                                                <td contenteditable="false" class="colComments">
-                                                                    {{item.comments}}</td>
+                                                                    class="colAccountNo hiddenColumn">
+                                                                    {{itemjob.accountno}}</td>
+                                                                <td contenteditable="false"
+                                                                    class="colClientNo hiddenColumn">
+                                                                    {{itemjob.clientno}}</td>
+                                                                <td contenteditable="false"
+                                                                    class="colJobTitle hiddenColumn">
+                                                                    {{itemjob.jobtitle}}</td>
+                                                                <td contenteditable="false" class="colNotes">
+                                                                    {{itemjob.notes}}</td>
                                                             </tr>
                                                             {{/each}}
                                                             {{/if}}
@@ -3760,8 +3842,9 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-crm"
-                                        style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                                        {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}}
+                                        style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
+                                        <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                        {{> non_transactional_list tablename="tblCustomerCrmList"}}
                                     </div>
                                 </div>
                             </div>
@@ -3919,6 +4002,58 @@
             </div>
         </div>
     </div>
+    
+    {{> taskDetailModal}}
+    {{> frmappointmentpop}}
+    {{> newTaskModal}}
+    
+
+    <div class="modal fade customerListCrmModal" role="dialog" tabindex="-1" id="customerListCrmModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
+          style="max-width: 90vw;">
+          <div class="modal-content customerListContent">
+            <div class="modal-header">
+              <h4>Contact List</h4><button type="button" class="close checkclose" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+              <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID"
+                name="customerSelectLineID" readonly>
+              <div class="row">
+                <div class="col-12 contactlistcol">
+                  {{> contactlistpop}}
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="employeeListCRMModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
+            style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+            <div class="modal-header">
+                <h4>Employee List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
+                {{> employeelistpop}}
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    {{> projectListPop}}
+    <input type="hidden" id="assignedID" />
+    <input type="hidden" id="contactID" />
+    <input type="hidden" id="contactType" />
     <script>
         modalDraggable();
     </script>

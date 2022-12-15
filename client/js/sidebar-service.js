@@ -28,7 +28,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
-    return this.getList(this.ERPObjects.TProductVS1, options);
+        return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
   getProductListVS1(limitcount, limitfrom) {
@@ -36,14 +36,14 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-        //select: "[Active]=true",
+        Search: "Active == true",
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
         ListType: "Detail",
-        //select: "[Active]=true",
+        Search: "Active = true",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
@@ -2594,7 +2594,7 @@ export class SideBarService extends BaseService {
 
       options = {
         ListType: "Detail",
-        select: "[Active]=true",
+        select: "pt.Active=true",
         // LimitCount: initialReportLoad
       };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
@@ -2679,13 +2679,13 @@ export class SideBarService extends BaseService {
         options = {
             ListType: "Detail",
             //orderby: '"UOMName asc"',
-            select: "[Active]=true",
+            Search: "Active = true",
         };
       } else {
         options = {
           //orderby: '"UOMName asc"',
           ListType: "Detail",
-          select: "[Active]=true",
+          Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -2706,7 +2706,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TUnitOfMeasure, options);
+    return this.getList(this.ERPObjects.TUnitOfMeasureList, options);
   }
 
   getTaxRateVS1() {
@@ -2874,13 +2874,13 @@ export class SideBarService extends BaseService {
         options = {
             ListType: "Detail",
             orderby: '"Description asc"',
-            select: "[Active]=true",
+            Search: "Active = true",
         };
       } else {
         options = {
           orderby: '"Description asc"',
           ListType: "Detail",
-          select: "[Active]=true",
+          Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -2901,7 +2901,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TTermsVS1, options);
+    return this.getList(this.ERPObjects.TTermsVS1List, options);
   }
 
   getDefaultCustomerTerms() {
@@ -3997,7 +3997,7 @@ export class SideBarService extends BaseService {
     let options = "";
       options = {
        ListType: "Detail",
-       select: "[Active]=true"
+       select: "pt.Active=true"
      };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }

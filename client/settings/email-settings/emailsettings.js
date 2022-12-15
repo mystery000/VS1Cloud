@@ -484,7 +484,7 @@ Template.emailsettings.onRendered(function () {
                                                 if(dataObject.length !=  0)  {
                                                     let temp = JSON.parse(dataObject[0].data)
                                                     let tempIndex = temp.findIndex(item => {
-                                                        return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`
+                                                        return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
                                                     })
                                                     if (tempIndex > -1) {
                                                         basedOnType = temp[tempIndex].value.BasedOnType || ''
@@ -764,7 +764,7 @@ Template.emailsettings.onRendered(function () {
                                                     if(dataObject.length !=  0)  {
                                                         let temp = JSON.parse(dataObject[0].data)
                                                         let tempIndex = temp.findIndex(item => {
-                                                            return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`
+                                                            return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
                                                         })
                                                         if (tempIndex > -1) {
                                                             basedOnType = temp[tempIndex].value.BasedOnType || ''
@@ -1060,7 +1060,7 @@ Template.emailsettings.onRendered(function () {
                                                 if(dataObject.length !=  0)  {
                                                     let temp = JSON.parse(dataObject[0].data)
                                                     let tempIndex = temp.findIndex(item => {
-                                                        return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`
+                                                        return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
                                                     })
                                                     if (tempIndex > -1) {
                                                         basedOnType = temp[tempIndex].value.BasedOnType || ''
@@ -1494,7 +1494,7 @@ Template.emailsettings.onRendered(function () {
                                             if(useData[i].fields.FormID == formID && useData[i].fields.EmployeeID == employeeId) {
                                                 resolve(useData[i].fields.ID)
                                             }
-    
+
                                             if(i==useData.length -1) {resolve(-1)}
                                         }
                                     }).catch(function(err) {
@@ -1526,7 +1526,7 @@ Template.emailsettings.onRendered(function () {
                         })
                     }
                     if (!!recipients) {
-                       
+
                         let attachments = [];
                         let e = jQuery.Event('click');
                         let targetElement = [];
@@ -1741,17 +1741,13 @@ Template.emailsettings.onRendered(function () {
                             })
                         }
                         await getAttachments()
-<<<<<<< HEAD
-                        console.log("1111111111111111111")
-=======
->>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
                         if (typeof recipientIds == 'string') {
                             recipientIds = recipientIds.split('; ');
                         }
                         if (typeof recipients == 'string') {
                             recipients = recipients.split('; ');
                         }
-                        
+
                         let saveSettingPromises = recipientIds.map(async (recipientId, index) => {
                             let scheduleID = await getScheduleID(recipientId)
                             const starttime = frequencyEl.attr('data-starttime');
@@ -1793,7 +1789,7 @@ Template.emailsettings.onRendered(function () {
                                     // attachments: attachments,
                                 }
                             };
-                            
+
 
                             let transIDs = ['54', '177', '12', '18', '21', '61', '69', '71', '74', '77', '17544', '94'];
                             if(transIDs.includes(formID.toString()) == true) {
@@ -1923,7 +1919,6 @@ Template.emailsettings.onRendered(function () {
                                 // objDetail.fields.Active = false;
                             }
 
-                            console.log("2222222222222222222")
                             if (formID == '1') {
                                 // if report type is Grouped Reports....
 
@@ -1942,7 +1937,7 @@ Template.emailsettings.onRendered(function () {
                                     formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
                                     oldSettings = oldSettings.filter(oldSetting => {
                                         return oldSetting.fields.FormID != parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''))
-                                            || oldSetting.fields.EmployeeId != parseInt(recipientId);
+                                            || oldSetting.fields.EmployeeID != parseInt(recipientId);
                                     });
                                 });
 
@@ -1953,7 +1948,6 @@ Template.emailsettings.onRendered(function () {
                                 objDetail.fields.FormName = formName;
                                 // objDetail.fields.Recipients = recipients[index];
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
-                                objDetail.fields.attachments = [];
 
 
                                 //TODO: Set basedon type here
@@ -1971,11 +1965,9 @@ Template.emailsettings.onRendered(function () {
                                     });
                                 });
                                 objDetail.fields.NextDueDate = nextDueDate;
-                                console.log("{{{{{{{", objDetail.fields)
-                                console.log(";;;;;;;;;;;;;;", JSON.stringify(objDetail.fields))
                                 let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
+                                // JSON.parse(JSON.stringify(objDetail.fields))
                                 cloneObjDetailFields.attachments = documents;
-                               
                                 if(basedOnType.includes('EN') == true || basedOnType.includes('EU' == true)) {
                                     getVS1Data('TBasedOnType').then(function(dataObject) {
                                         let temp = dataObject.length > 0 ? JSON.parse(dataObject) : [];
@@ -2003,54 +1995,44 @@ Template.emailsettings.onRendered(function () {
                                 }
 
                                 cloneObjDetailFields = {...cloneObjDetailFields, connectionInfo: connectionDetails, EID: recipientId}
+
                                 // objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                Meteor.call('addTask', cloneObjDetailFields);
+                                // Meteor.call('addTask', cloneObjDetailFields);
                             } else {
-                                const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
-                                oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeId != recipientId);
+                                const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeID == parseInt(recipientId));
+                                oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeID != recipientId);
                                 if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
                                 try {
                                     // Save email settings
                                     await taxRateService.saveScheduleSettings(objDetail).then(dataReturn=>{
-                                        console.log('&&&&&&&& schedule saved on ERP')
                                         taxRateService.getScheduleSettings().then(dataUpdate => {
-<<<<<<< HEAD
-                                            console.log("********** saved schedules", dataUpdate)
-                                            addVS1Data('TReportSchedules', JSON.stringify(dataUpdate)).then(()=>{})
-=======
                                             addVS1Data('TReportSchedules', JSON.stringify(dataUpdate)).then(()=>{
                                             })
->>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
                                         }).catch(function(error){})
                                     }).catch(function(err){
-                                        console.log('error while saving email settings', err)
+
                                     });
                                 } catch (e) {
                                 }
 
-                                // if(transIDs.includes(formID) == false) {
-                                //     objDetail.fields.attachments = documents;
-                                // }
-                                console.log('33333333333333')
                                 objDetail.fields.Offset = new Date().getTimezoneOffset();
 
                                 const nextDueDate = await new Promise((resolve, reject) => {
                                     Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
-                                        if (error){console.log("############", error); return reject(error);} 
-                                        console.log("%%%%%%%%% result", result)
+                                        if (error){
+                                          return reject(error);
+                                        }
                                         resolve(result);
                                     });
                                 });
 
-                                console.log('5555555555555555')
                                 objDetail.fields.NextDueDate = nextDueDate;
 
 
                                 // Add synced cron job here
                                 objDetail.fields.FormName = formName;
-                                
+
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
-                                console.log("oooooobject detail", objDetail, basedOnType)
                                 //TODO: Set basedon type here
                                 async function setBasedOnType() {
                                     localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${recipientId}`, JSON.stringify({
@@ -2060,10 +2042,8 @@ Template.emailsettings.onRendered(function () {
                                     }));
                                 }
                                 await setBasedOnType()
-                                console.log('6666666666666')
                                 let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
                                 cloneObjDetailFields.attachments = documents;
-                                console.log('4444444444444')
                                 if(basedOnType.includes('EN') == true || basedOnType.includes('EU' == true)) {
                                     // ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     //     ...cloneObjDetailFields,
@@ -2074,13 +2054,13 @@ Template.emailsettings.onRendered(function () {
 
                                     getVS1Data('TBasedOnType').then(function(dataObject) {
                                         let temp = dataObject.length > 0 ? JSON.parse(dataObject[0].data) : [];
-                                        let objectDetail = {key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, value: {
+                                        let objectDetail = {key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`, value: {
                                             ...cloneObjDetailFields,
                                             BasedOnType: basedOnType,
                                             connectionInfo: connectionDetails
                                         } }
                                         let tempIndex = temp.findIndex(item => {
-                                            return item.key == `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`
+                                            return item.key == `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`
                                         })
                                         if (tempIndex > -1) {
                                             temp.splice(tempIndex, 1, objectDetail)
@@ -2094,7 +2074,7 @@ Template.emailsettings.onRendered(function () {
                                 // objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
 
                                 cloneObjDetailFields = {...cloneObjDetailFields, connectionInfo :connectionDetails, EID: recipientId}
-                                Meteor.call('addTask', cloneObjDetailFields);
+                                // Meteor.call('addTask', cloneObjDetailFields);
                             }
                         });
                         await Promise.all(saveSettingPromises);
@@ -2102,28 +2082,30 @@ Template.emailsettings.onRendered(function () {
                         let activedSettings = oldSettings.filter((oldSetting)=>{return oldSetting.fields.FormID == formID && oldSetting.fields.Active == true})
                         for (let  i = 0; i < activedSettings.length; i ++ ) {
                             let activedsetting = activedSettings[i];
-                            activedsetting.fields.Active = false;
-                            taxRateService.saveScheduleSettings({
-                                type: "TReportSchedules",
-                                fields: {
-                                    Active: false,
-                                    ID: activedsetting.fields.ID
-                                }
-                            }).then(function() {
-                                localStorage.removeItem(`BasedOnType_${activedsetting.fields.FormID}_${activedsetting.fields.EmployeeId}`);
-                                getVS1Data('TBasedOnType').then(function(dataObject){
-                                    if(dataObject.length != 0) {
-                                        let temp = JSON.parse(dataObject[0].data);
-                                        let tempIndex = temp.findIndex(item => {
-                                            return  item.key == `BasedOnType_${activedsetting.fields.FormID}_${activedsetting.fields.EmployeeID}`;
-                                        })
-                                        if(tempIndex > -1) {
-                                            temp.splice(tempIndex , 1)
-                                        }
-                                        addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){})
+                            if(activedsetting) {
+                                activedsetting.fields.Active = false;
+                                taxRateService.saveScheduleSettings({
+                                    type: "TReportSchedules",
+                                    fields: {
+                                        Active: false,
+                                        ID: activedsetting.fields.ID
                                     }
+                                }).then(function() {
+                                    localStorage.removeItem(`BasedOnType_${activedsetting.fields.FormID}_${activedsetting.fields.EmployeeID}`);
+                                    getVS1Data('TBasedOnType').then(function(dataObject){
+                                        if(dataObject.length != 0) {
+                                            let temp = JSON.parse(dataObject[0].data);
+                                            let tempIndex = temp.findIndex(item => {
+                                                return  item.key == `BasedOnType_${activedsetting.fields.FormID}_${activedsetting.fields.EmployeeID}`;
+                                            })
+                                            if(tempIndex > -1) {
+                                                temp.splice(tempIndex , 1)
+                                            }
+                                            addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){})
+                                        }
+                                    })
                                 })
-                            })
+                            }
                         }
                     }
                 });
@@ -2171,7 +2153,7 @@ Template.emailsettings.onRendered(function () {
                 resolve({ success: true, message: '' });
             } catch (error) {
                 resolve({ success: false, message: 'Something went wrong. Please try again later.' });
-                if (typeof error !== 'string') error = error.message;
+                if (typeof error !== 'string') {error = error.message;}
 
             }
         });
@@ -2213,13 +2195,8 @@ Template.emailsettings.onRendered(function () {
                             Active: true,
                             BeginFromOption: "",
                             ContinueIndefinitely: true,
-<<<<<<< HEAD
-                            EmployeeId: parseInt(recipientId),
-                            EmployeeEmailID: recipients[index], 
-=======
                             EmployeeID: parseInt(recipientId),
-                            // EmployeeEmailID: recipients[index], 
->>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
+                            // EmployeeEmailID: recipients[index],
                             Every: 1,
                             EndDate: fDate,
                             FormID: parseInt(formID),
@@ -2445,7 +2422,7 @@ Template.emailsettings.events({
         // let taxRateService = new TaxRateService();
         let templateObject = Template.instance();
         setTimeout(function(){
-        
+
         // let startTime = "";
         // let startDate = "";
         // let date = "";

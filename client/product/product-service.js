@@ -48,8 +48,6 @@ export class ProductService extends BaseService {
         };
         return this.getList(this.ERPObjects.TCustomerVS1, options);
     }
-<<<<<<< HEAD
-=======
     getGlobalSearchAppointment(searchName) {//APP-123
         let options = {
             select: "[ID]='" + searchName + "' AND [Active]=true",
@@ -104,7 +102,6 @@ export class ProductService extends BaseService {
         };
         return this.getList(this.ERPObjects.TWorkOrderList, options);
     }
->>>>>>> b2ea3e867303622fbce6daec6f10d4a6cc0d4875
 
     getGlobalSearchTimeSheet(searchName) {
         let options = {
