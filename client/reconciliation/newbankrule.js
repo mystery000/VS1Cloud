@@ -8,6 +8,24 @@ import LoadingOverlay from "../LoadingOverlay";
 
 let accountService = new AccountService();
 
+const successSaveCb = () => {
+    LoadingOverlay.hide();
+    playSaveAudio();
+    swal({
+        title: "Bank Rule Successfully Saved",
+        text: "",
+        type: "success",
+        showCancelButton: false,
+        confirmButtonText: "OK",
+    });
+}
+
+const errorSaveCb = (err) => {
+    // console.log(err);
+    LoadingOverlay.hide();
+    swal("Something went wrong", "", "error");
+}
+
 function openBankAccountListModal() {
   $("#bankAccountListModal").modal();
   setTimeout(function () {
@@ -164,6 +182,16 @@ Template.newbankrule.onRendered(function () {
     $("#sltBankAccount").val(accountname);
     $("#sltBankAccountID").val(accountId);
     $("#tblAccount_filter .form-control-sm").val("");
+    getVS1Data("VS1_BankRule")
+        .then(function (dataObject) {
+          if (dataObject.length) {
+            let data = JSON.parse(dataObject[0].data);
+            templateObject.bankRuleData.set(data[accountId]);
+          }
+        })
+        .catch(function (err) {
+            errorSaveCb(err)
+        });
   });
 });
 
@@ -205,9 +233,9 @@ Template.newbankrule.events({
     if (noDataLine != null) {
       noDataLine.remove();
     }
-    let a = Template.instance().bankRuleData.get();
-    a.push({ order: a.length + 1, column: "" });
-    Template.instance().bankRuleData.set(a);
+    let tmp = Template.instance().bankRuleData.get();
+    tmp.push({ order: tmp.length + 1, column: "" });
+    Template.instance().bankRuleData.set(tmp);
   },
 
   "click .btnSave": function (event) {
@@ -224,7 +252,6 @@ Template.newbankrule.events({
       };
       getVS1Data("VS1_BankRule")
         .then(function (dataObject) {
-          console.log('here', dataObject)
           if (dataObject.length == 0) {
             addVS1Data("VS1_BankRule", JSON.stringify(saveData)).then(function (datareturn) {
                 successSaveCb()
@@ -233,9 +260,7 @@ Template.newbankrule.events({
             });
           } else {
             let data = JSON.parse(dataObject[0].data);
-            console.log(data);
             data[accountId] = saveData[accountId];
-            console.log(data);
             addVS1Data("VS1_BankRule", JSON.stringify(data)).then(function (datareturn) {
                 successSaveCb()
             }).catch(function (err) {
@@ -250,24 +275,6 @@ Template.newbankrule.events({
   },
 });
 
-const successSaveCb = () => {
-    LoadingOverlay.hide();
-    playSaveAudio();
-    swal({
-        title: "Bank Rule Successfully Saved",
-        text: "",
-        type: "success",
-        showCancelButton: false,
-        confirmButtonText: "OK",
-    });
-}
-
-const errorSaveCb = (err) => {
-    console.log(err);
-    LoadingOverlay.hide();
-    swal("Something went wrong", "", "error");
-}
-
 Template.newbankrule.helpers({
   bankRuleData: () => {
     return Template.instance().bankRuleData.get();
@@ -279,5 +286,7 @@ Template.newbankrule.helpers({
         return a.name > b.name ? 1 : -1;
       });
   },
-  orderNumber: (val) => val + 1,
+  previewData: () => [...Template.instance()
+    .bankRuleData.get()]
+    .sort((a,b) => a.order > b.order ? 1 : -1)
 });
