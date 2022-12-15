@@ -1412,19 +1412,6 @@ Template.templatesettings.onRendered(function () {
             $('.print-header-value').text(object_invoce[0]["value"]);
           }
 
-          $("#templatePreviewModal .print-head").text(object_invoce[0]["title"]);
-          $("#templatePreviewModal .modal-title").text(
-            object_invoce[0]["title"] + " "+ " template"
-          );
-          if(object_invoce[0]["value"]=="")
-          {
-              $('.print-head-value').text('');
-
-          }
-          else{
-            $('.print-head-value').text(object_invoce[0]["value"]);
-          }
-
 
           if(object_invoce[0]["bsb"]=="")
           { 
