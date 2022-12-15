@@ -5394,7 +5394,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             splashArrayClientTypeList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
         }
-  
+
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function () {
                 MakeNegative();
@@ -5512,7 +5512,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                         exportOptions: {
                             columns: ':visible'
                         }
-  
+
                     }],
                 select: true,
                 destroy: true,
@@ -5530,15 +5530,15 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     $('#'+currenttablename+'_ellipsis').addClass('disabled');
                     if (oSettings._iDisplayLength == -1) {
                         if (oSettings.fnRecordsDisplay() > 150) {
-  
+
                         }
                     } else {
-  
+
                     }
                     if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                         $('.paginate_button.page-item.next').addClass('disabled');
                     }
-  
+
                     $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
                   $('.fullScreenSpin').css('display', 'inline-block');
                   let dataTableList = [];
@@ -5564,9 +5564,9 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     MakeNegative();
                 }, 100);
             }).on('column-reorder', function () {
-  
+
             }).on('length.dt', function (e, settings, len) {
-  
+
               $(".fullScreenSpin").css("display", "inline-block");
               let dataLenght = settings._iDisplayLength;
               if (dataLenght == -1) {
@@ -5584,7 +5584,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             });
             $(".fullScreenSpin").css("display", "none");
         }, 0);
-  
+
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
@@ -6155,7 +6155,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
             }).catch(function(err) {
                 $('.fullScreenSpin').css('display', 'none');
             });
-        } 
+        }
         else {
             let data = JSON.parse(dataObject[0].data);
             let useData = data.tinvoiceex;

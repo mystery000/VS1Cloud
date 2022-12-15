@@ -4008,7 +4008,7 @@ Template.vatreturn.events({
 
                 setTimeout(function() {
                     let jsonObj = {
-                        type: "TVATReturn",
+                        type: "TVATReturns",
                         fields: {
                             AccMethod: accMethod,
                             Active: true,
@@ -4096,6 +4096,7 @@ Template.vatreturn.events({
                             window.open("vatreturnlist", "_self");
                         });
                     }).catch(function(err) {
+                        alert(err);
                         swal({
                             title: 'Oooops...',
                             text: err,

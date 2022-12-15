@@ -2921,66 +2921,55 @@ Template.creditcard.onRendered(() => {
                             </div>
                         </div>
                     `;
-          $("#templatePreviewModal #tax_list_print").append(html);
-        });
-      } else {
-        $("#templatePreviewModal #tax_list_print").remove();
-      }
+                    $("#templatePreviewModal #tax_list_print").append(html);
+                });
+            } else {
+                $("#templatePreviewModal #tax_list_print").remove();
+            }
+        }
+        
+
+        // table content
+        var tbl_content = $("#templatePreviewModal .tbl_content")
+        tbl_content.empty()
+        const data = object_invoce[0]["data"]
+        let idx = 0;
+        for(item of data){
+            idx = 0;
+            var html = '';
+            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+            for(item_temp of item){
+                if (idx > 1)
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+                else
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+                idx++;
+            }
+            html +="</tr>";
+            tbl_content.append(html);
+        }
+
+        if (noHasTotals.includes(object_invoce[0]["title"])) {
+            $("#templatePreviewModal .field_amount").hide();
+            $("#templatePreviewModal .field_payment").css("borderRight", "0px solid black");
+        } else {
+            $("#templatePreviewModal .field_amount").show();
+            $("#templatePreviewModal .field_payment").css("borderRight", "1px solid black");
+        }
+
+        // total amount
+
+        $('#templatePreviewModal #subtotal_total').text("Sub total");
+        $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+
+        $('#templatePreviewModal #grandTotal').text("Grand total");
+        $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+
+        $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
+        $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+        $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
+
     }
-
-    // table content
-    var tbl_content = $("#templatePreviewModal .tbl_content");
-    tbl_content.empty();
-    const data = object_invoce[0]["data"];
-    let idx = 0;
-    for (item of data) {
-      idx = 0;
-      var html = "";
-      html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
-      for (item_temp of item) {
-        if (idx > 1)
-          html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-        else html = html + "<td>" + item_temp + "</td>";
-        idx++;
-      }
-      html += "</tr>";
-      tbl_content.append(html);
-    }
-
-    if (noHasTotals.includes(object_invoce[0]["title"])) {
-      $("#templatePreviewModal .field_amount").hide();
-      $("#templatePreviewModal .field_payment").css(
-        "borderRight",
-        "0px solid black"
-      );
-    } else {
-      $("#templatePreviewModal .field_amount").show();
-      $("#templatePreviewModal .field_payment").css(
-        "borderRight",
-        "1px solid black"
-      );
-    }
-
-    // total amount
-
-    $("#templatePreviewModal #subtotal_total").text("Sub total");
-    $("#templatePreviewModal #subtotal_totalPrint").text(
-      object_invoce[0]["subtotal"]
-    );
-
-    $("#templatePreviewModal #grandTotal").text("Grand total");
-    $("#templatePreviewModal #totalTax_totalPrint").text(
-      object_invoce[0]["gst"]
-    );
-
-    $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
-    $("#templatePreviewModal #totalBalanceDuePrint").text(
-      object_invoce[0]["bal_due"]
-    );
-    $("#templatePreviewModal #paid_amount").text(
-      object_invoce[0]["paid_amount"]
-    );
-  }
 
   function loadTemplateBody2(object_invoce) {
     if (object_invoce[0]["taxItems"]) {
@@ -3000,52 +2989,54 @@ Template.creditcard.onRendered(() => {
                             </div>
                         </div>
                     `;
-          $("#templatePreviewModal #tax_list_print").append(html);
-        });
-      } else {
-        $("#templatePreviewModal #tax_list_print").remove();
-      }
-    }
+                    $("#templatePreviewModal #tax_list_print").append(html);
+                });
+            } else {
+                $("#templatePreviewModal #tax_list_print").remove();
+            }
+        }
+        
 
-    // table content
-    var tbl_content = $("#templatePreviewModal .tbl_content");
-    tbl_content.empty();
-    const data = object_invoce[0]["data"];
-    let idx = 0;
-    for (item of data) {
-      idx = 0;
-      var html = "";
-      html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
-      for (item_temp of item) {
-        if (idx > 1)
-          html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-        else html = html + "<td>" + item_temp + "</td>";
-        idx++;
-      }
-      html += "</tr>";
-      tbl_content.append(html);
-    }
+        // table content
+        var tbl_content = $("#templatePreviewModal .tbl_content")
+        tbl_content.empty()
+        const data = object_invoce[0]["data"]
+        let idx = 0;
+        for(item of data){
+            idx = 0;
+            var html = '';
+            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+            for(item_temp of item){
+                if (idx > 1)
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+                else
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+                idx++;
+            }
+            html +="</tr>";
+            tbl_content.append(html);
+        }
 
-    // total amount
-    if (noHasTotals.includes(object_invoce[0]["title"])) {
-      $(".subtotal2").hide();
-    } else {
-      $(".subtotal2").show();
-    }
+        // total amount
+        if (noHasTotals.includes(object_invoce[0]["title"])) {
+            $(".subtotal2").hide();
+        } else {
+            $(".subtotal2").show();
+        }
 
-    $("#templatePreviewModal #subtotal_totalPrint2").text(
-      object_invoce[0]["subtotal"]
-    );
-    $("#templatePreviewModal #grandTotalPrint2").text(
-      object_invoce[0]["total"]
-    );
-    $("#templatePreviewModal #totalBalanceDuePrint2").text(
-      object_invoce[0]["bal_due"]
-    );
-    $("#templatePreviewModal #paid_amount2").text(
-      object_invoce[0]["paid_amount"]
-    );
-  }
+        $("#templatePreviewModal #subtotal_totalPrint2").text(
+            object_invoce[0]["subtotal"]
+        );
+        $("#templatePreviewModal #grandTotalPrint2").text(
+            object_invoce[0]["total"]
+        );
+        $("#templatePreviewModal #totalBalanceDuePrint2").text(
+            object_invoce[0]["bal_due"]
+        );
+        $("#templatePreviewModal #paid_amount2").text(
+            object_invoce[0]["paid_amount"]
+        );
+    }
 
   function loadTemplateBody3(object_invoce) {
     if (object_invoce[0]["taxItems"]) {
@@ -3072,24 +3063,25 @@ Template.creditcard.onRendered(() => {
       }
     }
 
-    // table content
-    var tbl_content = $("#templatePreviewModal .tbl_content");
-    tbl_content.empty();
-    const data = object_invoce[0]["data"];
-    let idx = 0;
-    for (item of data) {
-      idx = 0;
-      var html = "";
-      html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
-      for (item_temp of item) {
-        if (idx > 1)
-          html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-        else html = html + "<td>" + item_temp + "</td>";
-        idx++;
-      }
-      html += "</tr>";
-      tbl_content.append(html);
-    }
+        // table content
+        var tbl_content = $("#templatePreviewModal .tbl_content")
+        tbl_content.empty()
+        const data = object_invoce[0]["data"]
+        let idx = 0;
+        for(item of data){
+            idx = 0;
+            var html = '';
+            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+            for(item_temp of item){
+                if (idx > 1)
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+                else
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+                idx++;
+            }
+            html +="</tr>";
+            tbl_content.append(html);
+        }
 
     // total amount
     if (noHasTotals.includes(object_invoce[0]["title"])) {
