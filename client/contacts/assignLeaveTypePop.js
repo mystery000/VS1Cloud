@@ -30,6 +30,15 @@ Template.assignLeaveTypePop.onRendered(function () {
     templateObject.getTLeaveTypes();
 });
 
+Template.assignLeaveTypePop.events({
+    'click #tblAssignLeaveTypes > tbody > tr': async function(event) {
+        $(".colALTypeID").html();
+        $(".leave-type-name").html(); 
+        
+         
+    },
+
+});
 
 
 Template.assignLeaveTypePop.onCreated(function () {

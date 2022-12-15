@@ -30,8 +30,11 @@
                                 <tbody> 
                                     {{#if leaveTypesList}}
                                         {{#each leaveType in leaveTypesList}}
-                                            <tr leaveType-id="{{leaveType.ID}}">
-                                                <td class="colALTypeID hiddenColumn">{{leaveType.fields.ID}}</td>
+                                            <tr leaveType-id="{{leaveType.fields.ID}}">
+                                                <td class="colALTypeID hiddenColumn">
+                                                    {{leaveType.fields.ID}}
+                                                    <input type="hidden" class="coledtEmpID" value="{{leaveType.fields.ID}}">
+                                                </td>
                                                 <td class="leave-type-name">{{leaveType.fields.LeaveType}}</td>
                                                 <td >{{leaveType.fields.LeaveCalcMethod}}</td>
                                                 <td >{{leaveType.fields.HoursAccruedAnnually}}</td>
@@ -41,7 +44,7 @@
                                                 <td >{{leaveType.fields.OpeningBalance}}</td>
                                                 <td >{{ terminationBalance leaveType.fields.OnTerminationUnusedBalance}}</td>
                                                 <td >
-                                                    <button type="button" style="margin-bottom: 24px;" class="btn btn-danger btn-rounded btn-sm btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="{{leaveType.ID}}"><i class="fa fa-remove"></i></button>
+                                                    <button type="button" style="margin-bottom: 24px;" class="btn btn-danger btn-rounded btn-sm btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="{{leaveType.fields.ID}}"><i class="fa fa-remove"></i></button>
                                                 </td>
                                             </tr>
                                         {{/each}} 
