@@ -1638,9 +1638,9 @@ Template.templatesettings.onRendered(function () {
             var content = "";
             for(item_temp of item){
                 if (idx > left_idx)
-                  content = content + "<td style='text-align: right;'>" + item_temp + "</td>";
+                  content = content + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                  content = content + "<td>" + item_temp + "</td>";
+                  content = content + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
             tbl_content.append(content);
@@ -1853,11 +1853,11 @@ Template.templatesettings.onRendered(function () {
             tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>");
             var content = "";
             for(item_temp of item){
-                if (idx > left_idx)
-                  content = content + "<td style='text-align: right;'>" + item_temp + "</td>";
-                else
-                  content = content + "<td>" + item_temp + "</td>";
-                idx++;
+              if (idx > left_idx)
+                content = content + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+              else
+                content = content + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+              idx++;
             }
             tbl_content.append(content);
             tbl_content.append("</tr>");

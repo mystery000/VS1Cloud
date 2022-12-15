@@ -1000,11 +1000,11 @@ Template.supplierpaymentcard.onRendered(() => {
        for(item_temp of item){
 
           if(count == 1){
-              html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+            html = html + "<td style='color:#00a3d3; style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else if (count > 2) {
-            html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+            html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else {
-              html = html + "<td>" + item_temp + "</td>";
+            html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           }
           count++;
        }
@@ -1052,11 +1052,11 @@ Template.supplierpaymentcard.onRendered(() => {
        for(item_temp of item){
 
           if(count == 1){
-              html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+            html = html + "<td style='color:#00a3d3; style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else if (count > 2) {
-            html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+            html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else {
-              html = html + "<td>" + item_temp + "</td>";
+            html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           }
           count++;
        }
@@ -1107,11 +1107,11 @@ Template.supplierpaymentcard.onRendered(() => {
        for(item_temp of item){
 
           if(count == 1){
-              html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+            html = html + "<td style='color:#00a3d3; style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else if (count > 2) {
-            html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+            html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           } else {
-              html = html + "<td>" + item_temp + "</td>";
+            html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
           }
           count++;
        }
