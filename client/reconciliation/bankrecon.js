@@ -6,6 +6,7 @@ import '../lib/global/erp-objects';
 import XLSX from 'xlsx';
 import 'jquery-editable-select';
 import { AccountService } from "../accounts/account-service";
+import showBankInfo from "./bankInfo";
 
 let accountService = new AccountService();
 let utilityService = new UtilityService();
@@ -1429,7 +1430,7 @@ Template.bankrecon.onRendered(function() {
         $('#accountListModal').modal('toggle');
         $('#bankAccountName').val(accountname);
         $('#bankAccountID').val(accountTypeId);
-
+        showBankInfo();
         templateObject.reconVS1dep.set(null);
         templateObject.reconVS1with.set(null);
 
