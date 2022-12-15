@@ -204,6 +204,7 @@ FlowRouter.triggers.enter([
                 cancelButtonText: 'Leave'
             }).then((result) => {
                 if (result.value) {
+                    $(document).find(".btn-auto-save").click();
                     FlowRouter.go(previous_url);
                 } else if (result.dismiss === 'cancel') {
                     previous_url = "";

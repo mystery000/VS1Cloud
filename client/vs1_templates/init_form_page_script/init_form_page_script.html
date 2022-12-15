@@ -24,22 +24,11 @@
                         localStorage.setItem("isFormUpdated", true);
                     });
                 }
-            }, 3000);
+            }, 1000);
 
-            if (window.location.pathname == "/stockadjustmentcard") {
-                $(".btnProcess").click(function () {
-                    localStorage.setItem("isFormUpdated", false);
-                });
-            } else if (window.location.pathname == "/allreports") {
-                $(".btnBatchUpdate").click(function () {
-                    localStorage.setItem("isFormUpdated", false);
-                });
-            }
-            else {
-                $(".btnSave").click(function () {
-                    localStorage.setItem("isFormUpdated", false);
-                });
-            }
+            $(".btn-auto-save").click(function () {
+                localStorage.setItem("isFormUpdated", false);
+            });
         });
     </script>
 </template>
