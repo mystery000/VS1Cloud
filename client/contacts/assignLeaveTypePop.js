@@ -20,7 +20,7 @@ Template.assignLeaveTypePop.onRendered(function () {
             let dataObject = await getVS1Data('TAssignLeaveType')
             data = JSON.parse(dataObject[0].data);  
             if (data.tassignleavetype.length > 0) { 
-                let useData = data.tassignleavetype; 
+                let useData = data.tassignleavetype;
                 templateObject.leaveTypesList.set(useData);
             }
         } catch (err) {  
@@ -30,6 +30,15 @@ Template.assignLeaveTypePop.onRendered(function () {
     templateObject.getTLeaveTypes();
 });
 
+Template.assignLeaveTypePop.events({
+    'click #tblAssignLeaveTypes > tbody > tr': async function(event) {
+        $(".colALTypeID").html();
+        $(".leave-type-name").html(); 
+        
+         
+    },
+
+});
 
 
 Template.assignLeaveTypePop.onCreated(function () {
