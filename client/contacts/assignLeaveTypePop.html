@@ -22,27 +22,29 @@
                                         <th class="th colALTypeHours">Hours</th>
                                         <th class="th colALTypeOpeningBalance">Opening Balance</th>
                                         <th class="th colALTypeTerminationBalance">On termination Balance</th>
-                                        <th class="th colALTypeActions">Actions</th>
+                                        <th class="th colALTypeActions">Actions {{timestamp}} </th>
+
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {{#if leaveTypes}}
-                                        {{#each leaveType in leaveTypes}}
+                                .
+                                <tbody> 
+                                    {{#if leaveTypesList}}
+                                        {{#each leaveType in leaveTypesList}}
                                             <tr leaveType-id="{{leaveType.ID}}">
                                                 <td class="colALTypeID hiddenColumn">{{leaveType.ID}}</td>
                                                 <td class="leave-type-name">{{leaveType.LeaveType}}</td>
-                                                <td >{{leaveType.LeaveCalcMethod}}</td>
-                                                <td >{{leaveType.HoursAccruedAnnually}}</td>
-                                                <td >{{leaveType.HoursAccruedAnnuallyFullTimeEmp}}</td>
-                                                <td >{{leaveType.HoursFullTimeEmpFortnightlyPay}}</td>
-                                                <td >{{leaveType.HoursLeave}}</td>
-                                                <td >{{leaveType.OpeningBalance}}</td>
-                                                <td >{{ terminationBalance leaveType.OnTerminationUnusedBalance}}</td>
+                                                <td >{{leaveType.field.LeaveCalcMethod}}</td>
+                                                <td >{{leaveType.field.HoursAccruedAnnually}}</td>
+                                                <td >{{leaveType.field.HoursAccruedAnnuallyFullTimeEmp}}</td>
+                                                <td >{{leaveType.field.HoursFullTimeEmpFortnightlyPay}}</td>
+                                                <td >{{leaveType.field.HoursLeave}}</td>
+                                                <td >{{leaveType.field.OpeningBalance}}</td>
+                                                <td >{{ terminationBalance leaveType.field.OnTerminationUnusedBalance}}</td>
                                                 <td >
                                                     <button type="button" style="margin-bottom: 24px;" class="btn btn-danger btn-rounded btn-sm btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="{{leaveType.ID}}"><i class="fa fa-remove"></i></button>
                                                 </td>
                                             </tr>
-                                        {{/each}}
+                                        {{/each}} 
                                     {{/if}}
                                 </tbody>
                             </table>

@@ -1,7 +1,10 @@
+import { EmployeePayrollService } from '../js/employeepayroll-service';
+
 Template.assignLeaveTypePop.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.custdatatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.leaveTypesList = new ReactiveVar([]);
 
     templateObject.selectedFile = new ReactiveVar();
 });
@@ -9,7 +12,45 @@ Template.assignLeaveTypePop.onCreated(function () {
 Template.assignLeaveTypePop.onRendered(function () {
     const templateObject = Template.instance();
     templateObject.currentDrpDownID = new ReactiveVar();
+
+
+    templateObject.getTLeaveTypes = async() => {
+        try { 
+            let data = [];
+            let dataObject = await getVS1Data('TAssignLeaveType')
+            data = JSON.parse(dataObject[0].data); 
+            let splashArrayAssignLeaveList = [];
+
+            if (data.tassignleavetype.length > 0) {
+
+                let useData = data.tassignleavetype; 
+                // templateObject.assignLeaveTypeInfos.set(useData);
+                for (let i = 0; i < useData.length; i++) {
+
+                    let dataListAllowance = [
+                        useData[i].fields.ID || '',
+                        useData[i].fields.LeaveType || '',
+                        useData[i].fields.LeaveCalcMethod || '',
+                        useData[i].fields.HoursAccruedAnnually || '',
+                        useData[i].fields.HoursAccruedAnnuallyFullTimeEmp || '',
+                        useData[i].fields.HoursFullTimeEmpFortnightlyPay || '',
+                        useData[i].fields.HoursLeave || '',
+                        useData[i].fields.OpeningBalance || '',
+                        ((useData[i].fields.OnTerminationUnusedBalance) ? 'Paid Out' : 'Not Paid Out'),
+                        `<button type="button" style="margin-bottom: 24px;" class="btn btn-danger btn-rounded btn-sm btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="` + useData[i].fields.ID + `"><i class="fa fa-remove"></i></button>`
+                    ];
+                    splashArrayAssignLeaveList.push(dataListAllowance);
+                }
+                templateObject.leaveTypesList.set(splashArrayAssignLeaveList);
+            }
+        } catch (err) {  
+        } 
+    } 
+
+    templateObject.getTLeaveTypes();
 });
+
+
 
 Template.assignLeaveTypePop.onCreated(function () {
     const templateObject = Template.instance();
@@ -43,16 +84,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#period').editableSelect('add','Four Weekly');
         $('#period').editableSelect('add','Monthly');
         $('#period').editableSelect('add','Quarterly');
-
-
-        // $('#leaveCalcMethodSelect').editableSelect('add','Fixed Amount Each Period');
-        // $('#leaveCalcMethodSelect').editableSelect('add','Manually Recorded Rate');
-        // $('#leaveCalcMethodSelect').editableSelect('add','No Calculation Required');
-        // $('#leaveCalcMethodSelect').editableSelect('add','Based on Ordinary Earnings');
-        // $('.customEditableSelect').editableSelect('add', function(item){
-        //     $(this).val(item.id);
-        //     $(this).text(item.name);
-        // });
+        
         $('#edtTfnExemption').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
@@ -208,5 +240,17 @@ Template.assignLeaveTypePop.onCreated(function () {
 Template.assignLeaveTypePop.helpers({
     terminationBalance: (t) => {
         return t ?  'Paid Out': 'Not Paid Out';
+    },
+    leaveTypesList: () => { 
+        return Template.instance().leaveTypesList.get();
+    },
+
+    timestamp: () => {
+        const sentTime = moment(this.createdAt);
+        //if today, just show time, else if some other day, show date and time
+        if (sentTime.isSame(new Date(), "day")) {
+          return sentTime.format("h:mm a");
+        }
+        return sentTime.format("M/D/YY h:mm a");
     }
 })
