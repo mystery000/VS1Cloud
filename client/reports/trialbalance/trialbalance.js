@@ -8,6 +8,7 @@ import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import Datehandler from "../../DateHandler";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import { template } from "lodash";
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
@@ -16,12 +17,14 @@ let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
 const currentDate = new Date();
 
+Template.trialbalance.inheritsHelpersFrom('vs1_report_template');
 Template.trialbalance.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
   templateObject.grandrecords = new ReactiveVar();
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.deptrecords = new ReactiveVar();
+  templateObject.trialbalanceth = new ReactiveVar([]);
 
   FxGlobalFunctions.initVars(templateObject);
   templateObject.reportOptions = new ReactiveVar([]);
@@ -31,6 +34,18 @@ Template.trialbalance.onRendered(() => {
   LoadingOverlay.show();
   const templateObject = Template.instance();
 
+  let reset_data = [
+    { index: 1, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "86" },
+    { index: 2, label: 'Account Number', class:'colAccountNo', active: true, display: true, width: "86" },
+    { index: 3, label: 'Account', class:'colAccount', active: true, display: true, width: "192" },
+    { index: 4, label: 'Credits (Ex)', class:'colCreditsEx', active: true, display: true, width: "137" },
+    { index: 5, label: 'Credits (Inc)', class:'colCreditsInc', active: true, display: true, width: "85" },
+    { index: 6, label: 'Debits (Ex)', class:'colDebitsEx', active: true, display: true, width: "85" },
+    { index: 7, label: 'Debits (Inc)', class:'colDebitsInc', active: true, display: true, width: "85" },
+    { index: 8, label: 'Account Name Only', class:'colAccountNameOnly', active: false, display: true, width: "85" },
+    { index: 9, label: 'TransID', class:'colTransID', active: false, display: true, width: "85" },
+  ]
+  templateObject.trialbalanceth.set(reset_data);
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
 
@@ -707,6 +722,37 @@ Template.trialbalance.events({
       "checked",
       $(event.currentTarget).prop("checked")
     );
+  },
+  'click .chkDatatable': function(event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.'+columnDataValue).addClass('showColumn');
+      $('.'+columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.'+columnDataValue).addClass('hiddenColumn');
+      $('.'+columnDataValue).removeClass('showColumn');
+    }
+},
+'change .custom-range': async function(event) {
+  //   const tableHandler = new TableHandler();
+    let range = $(event.target).val()||0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    console.log($('.' + colClassName).css("width"));
+  //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
+
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
   },
   "click .currency-modal-save": (e) => {
     //$(e.currentTarget).parentsUntil(".modal").modal("hide");
@@ -1452,6 +1498,9 @@ Template.trialbalance.helpers({
       }
         return amount + "%" || "0.00 %";
     },
+    trialbalanceth: () => {
+      return Template.instance().trialbalanceth.get();
+    }
 });
 Template.registerHelper("equals", function (a, b) {
   return a === b;

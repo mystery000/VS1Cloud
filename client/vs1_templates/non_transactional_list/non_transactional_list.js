@@ -375,11 +375,11 @@ Template.non_transactional_list.onRendered(function() {
               { index: 7, label: 'Rate Last Modified', class: 'colRateLastModified', active: false, display: true, width: "200"},
               { index: 8, label: 'Description', class: 'colDescription', active: true, display: true, width: ""},
               { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
-              { index: 9, label: 'Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100"},
-              { index: 9, label: 'Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150"},
-              { index: 9, label: 'Lower Variation', class: 'colLowerVariation', active: false, display: true, width: "150"},
-              { index: 9, label: 'Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250"},
-              { index: 9, label: 'Country ID', class: 'colCountryID', active: false, display: true, width: "100"},
+              { index: 10, label: 'Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100"},
+              { index: 11, label: 'Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150"},
+              { index: 12, label: 'Lower Variation', class: 'colLowerVariation', active: false, display: true, width: "150"},
+              { index: 13, label: 'Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250"},
+              { index: 14, label: 'Country ID', class: 'colCountryID', active: false, display: true, width: "100"},
           ];
           }else if(currenttablename === "tblTitleList"){
             reset_data = [
@@ -5343,6 +5343,7 @@ Template.non_transactional_list.events({
         const tableHandler = new TableHandler();
         let range = $(event.target).val()||0;
         let colClassName = $(event.target).attr("valueclass");
+        console.log("==============", colClassName);
         await $('.' + colClassName).css('width', range);
         $('.dataTable').resizable();
       },

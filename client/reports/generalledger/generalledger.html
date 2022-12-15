@@ -4,26 +4,26 @@
         <table class="table tableExportDetailDiv table-sm dataTable" id="tblgeneralledger" name="tblgeneralledger">
             <thead>
                 <tr class="table-active customDoubleTableHeading">
-                  <!-- {{#each displayfield in report_displayfields}}
-                      {{#if displayfield.display}}
-                          <th data-class="{{displayfield.class}}" thclass="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{displayfield.width}}px">
-                              {{displayfield.custfieldlabel}}
+                    {{#each c in generalledgerth}}
+                      {{#if c.display}}
+                          <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}" class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{c.width}}px">
+                              {{c.label}}
                           </th>
                       {{/if}}
-                  {{/each}} -->
+                    {{/each}} 
 
-                    <th style="width: 195px;" class="colAccountName">Account Name</th>
+                    <!-- <th style="width: 195px;" class="colAccountName">Account Name</th>
                     <th style="width: 86px;" class="colAccountNo">Account No</th>
-                    <!-- <th>Memo</th> -->
+                    <th>Memo</th>
                     <th style="width: 86px;" class="colDate">Date</th>
                     <th style="width: 192px;" class="colClientName">Client Name</th>
                     <th style="width: 137px;" class="colType">Type</th>
-                    <!-- <th>Department</th> -->
+                    <th>Department</th>
                     <th style="width: {{currencyColumnSize (countActive currencyList)}}px; max-width: {{currencyColumnSize (countActive currencyList)}}px !important; min-width: 100px !important;" class="colDebits text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Debits</th>
                     <th style="width: {{currencyColumnSize (countActive currencyList)}}px; max-width: {{currencyColumnSize (countActive currencyList)}}px !important; min-width: 100px !important;" class="colCredit text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Credit</th>
-                    <th style="width: {{currencyColumnSize (countActive currencyList)}}px; max-width: {{currencyColumnSize (countActive currencyList)}}px !important; min-width: 100px !important;" class="colAmount text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount</th>
+                    <th style="width: {{currencyColumnSize (countActive currencyList)}}px; max-width: {{currencyColumnSize (countActive currencyList)}}px !important; min-width: 100px !important;" class="colAmount text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount</th> -->
                 </tr>
-
+<!-- 
                 {{#if isOnlyDefaultActive equal "false" }}
                     <tr class="table-active tblAvoid customDoubleTableHeading">
                         <th></th>
@@ -31,7 +31,7 @@
                         <th></th>
                         <th></th>
                         <th></th>
-                        <!-- <th></th> -->
+                        <th></th>
                         {{#if currencyList}}
                             {{#each c in currencyList }}
                                 {{# if c.active}}
@@ -57,7 +57,7 @@
                         {{/if}}
 
                     </tr>
-                {{/if}}
+                {{/if}} -->
             </thead>
             <!-- ====================== tbody start ========================= -->
             <tbody>

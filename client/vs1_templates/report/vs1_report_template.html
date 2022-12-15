@@ -185,7 +185,7 @@
                                     } */
                                     .tableExportDetailDiv th,
                                     .tableExportDetailDiv td {
-                                        white-space: nowrap;
+                                        /* white-space: nowrap; */
                                         padding: 5px 10px;
                                     }
                                     /* .tableExportDetailDiv th {
@@ -222,7 +222,7 @@
                                         border-right: none !important;
                                     }
                                     table.tableExportDetailDiv th {
-                                        max-width: 190px !important;
+                                        max-width: 350px !important;
                                     }
                                     .swal2-popup.swal2-modal {
                                         padding-bottom: 25px !important;
@@ -307,7 +307,6 @@
                     <div>
                             <form class="d-xl-flex align-items-xl-center">
                                 <div class="flex-grow-1">
-
                                   {{#each displayfield in report_displayfields}}
                                       {{#if displayfield.display}}
                                           <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
@@ -352,6 +351,65 @@
             </div>
         </div>
     </div>
+    <style>
+        th {
+            background-color: #ededed;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: white !important;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #0000000d !important;
+        }
+
+        .JColResizer>tbody>tr>td,
+        .JColResizer>tbody>tr>th {
+            padding: .75rem !important;
+        }
+
+        .hiddenColumn {
+            display: none;
+        }
+
+        .showColumn {
+            display: table-cell;
+            padding: .75rem;
+            vertical-align: top;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+
+        .tbl_responsive{
+          width: 100%!important;
+          overflow-x: auto!important;
+          overflow-y: hidden!important;
+          }
+          .table th.colARBalance,
+          .table th.colCreditBalance,
+          .table th.colBalance,
+          .table th.colCreditLimit,
+          .table th.colSalesOrderBalance {
+            text-align: right !important;
+          }
+          @media print {
+            table.dataTable {
+                width: 100% !important;
+            }
+            table.dataTable tr td {
+                font-size: 0.7rem !important;
+                padding: 0.6rem !important;
+            }
+            table.dataTable tr th {
+                font-size: 0.7rem !important;
+                padding: 0.6rem !important;
+            }
+          }
+    </style>
 
     <!-- End Help Video Modal -->
     {{> FxRateModal currencies=currencyList}}

@@ -3,31 +3,35 @@
     <div class="table-responsive">
         <table class="table table-sm" id="tableExport" name="tableExport">
             <thead>
-                <tr class="table-active customDoubleTableHeading">
+                <!-- <tr class="table-active customDoubleTableHeading">
                     <th>Name</th>
                     <th>Phone</th>
                     <th>Type</th>
-                    <!-- <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total (Ex)</th> -->
                     <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total</th>
-                    <!-- <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Gross Profit</th> -->
                     <th class="text-center {{countActive currencyList}}">Margin</th>
                     <th style="width: 200px;">Address</th>
                     <th>City</th>
                     <th>ZIP</th>
                     <th>State</th>
-                </tr>
+                </tr> -->
 
-                 {{#if isOnlyDefaultActive equal "false" }}
+                 <!-- {{#if isOnlyDefaultActive equal "false" }}
                     <tr class="table-active tblAvoid">
                         <th></th>
                         <th></th>
-                        <th></th>
+                        <th></th> -->
 
-                    
-                        {{#if currencyList}}
-                            {{#each c in currencyList }}
+                        {{#each c in customerdetailsreportth}}
+                        {{#if c.display}}
+                            <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}" class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{c.width}}px">
+                                {{c.label}}
+                            </th>
+                        {{/if}}
+                      {{/each}} 
+                        <!-- {{#if customerdetailsreportth}}
+                            {{#each c in customerdetailsreportth }}
                                 {{# if c.active}}
-                                    <!-- <th class="text-right" active="{{ c.active }}">{{ c.code }}</th> -->
+                                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                 {{/if}}
                             {{/each}}
                         {{/if}}
@@ -43,11 +47,11 @@
                         {{#if currencyList}}
                             {{#each c in currencyList }}
                                 {{# if c.active}}
-                                    <!-- <th class="text-right" active="{{ c.active }}">{{ c.code }}</th> -->
+                                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                 {{/if}}
                             {{/each}}
-                        {{/if}}
-
+                        {{/if}} -->
+<!-- 
                         <th class="text-center"></th>
                         <th style="width: 200px;"></th>
                         <th></th>
@@ -56,7 +60,7 @@
                       
                       
                     </tr>
-                {{/if}}
+                {{/if}} -->
             </thead>
             <tbody>
                 {{#if records}}
@@ -89,7 +93,7 @@
                                 <!-- <td></td> -->
                             {{/if}}
                              <td></td>
-                             <td style="width: 200px;">{{ value.Address }}</td>
+                             <td>{{ value.Address }}</td>
                              <td>{{ value.Suburb }}</td>
                              <td>{{ value.Postcode }}</td>
                              <td>{{ value.State }}</td>
@@ -124,7 +128,7 @@
                                         <!-- <td class="text-right {{#if isNegativeAmount item.Gross_Profit}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Gross_Profit }}</a></td> -->
                                     {{/if}}
                                     <td class="text-center text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">0</a></td>
-                                    <td style="width: 200px;"></td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>

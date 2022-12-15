@@ -20,7 +20,7 @@ Template.agedreceivables.onCreated(() => {
     templateObject.grandrecords = new ReactiveVar();
     templateObject.dateAsAt = new ReactiveVar();
     templateObject.deptrecords = new ReactiveVar();
-
+    templateObject.agedreceivablesth = new ReactiveVar([]);
 
       // Currency related vars //
   FxGlobalFunctions.initVars(templateObject);
@@ -30,6 +30,60 @@ Template.agedreceivables.onRendered(() => {
     $('.fullScreenSpin').css('display', 'inline-block');
     const deptrecords = [];
     const templateObject = Template.instance();
+
+    let reset_data = [
+        { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "" },
+        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "" },
+        { index: 3, label: 'AR Notes', class: 'colARNotes', active: true, display: true, width: "" },
+        { index: 4, label: 'Amount~Due', class: 'colAmountDue', active: true, display: true, width: "" },
+        { index: 5, label: 'Current', class: 'colCurrent', active: true, display: true, width: "" },
+        { index: 6, label: '1-30 Days', class: 'col1-30Days', active: true, display: true, width: "" },
+        { index: 7, label: '30-60 Days', class: 'col30-60Days', active: true, display: true, width: "" },
+        { index: 8, label: '60-90 Days', class: 'col60-90Days', active: true, display: true, width: "" },
+        { index: 9, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "" },
+        { index: 10, label: 'Avg Days Customer~Takes to pay', class: 'colAvgDaysCustomer', active: false, display: true, width: "" },
+        { index: 11, label: 'Invoice#', class: 'colInvoice', active: true, display: true, width: "" },
+        { index: 12, label: 'Rep Name', class: 'colRepName', active: true, display: true, width: "" },
+        { index: 13, label: 'FaxNumber', class: 'colFaxNumber', active: true, display: true, width: "" },
+        { index: 14, label: 'Mobile', class: 'colMobile', active: true, display: true, width: "" },
+        { index: 15, label: 'AltPhone', class: 'colAltPhone', active: true, display: true, width: "" },
+        { index: 16, label: 'StopCredit', class: 'colStopCredit', active: true, display: true, width: "" },
+        { index: 17, label: 'CreditLimit', class: 'colCreditLimit', active: true, display: true, width: "" },
+        { index: 18, label: 'Cust Type', class: 'colCustType', active: false, display: true, width: "" },
+        { index: 19, label: 'P.O. No#', class: 'colPONo', active: false, display: true, width: "" },
+        { index: 20, label: 'Sale Date', class: 'colSaleDate', active: false, display: true, width: "" },
+        { index: 21, label: 'Due Date', class: 'colDueDate', active: false, display: true, width: "" },
+        { index: 22, label: 'Type', class: 'colType', active: false, display: true, width: "" },
+        { index: 23, label: 'Pre-pay#', class: 'colPre-pay', active: false, display: true, width: "" },
+        { index: 24, label: 'Original Amount', class: 'colOriginalAmount', active: false, display: true, width: "" },
+        { index: 25, label: '1-7 Days', class: 'col1-7Days', active: false, display: true, width: "" },
+        { index: 26, label: '7-14 Days', class: 'col7-14Days', active: false, display: true, width: "" },
+        { index: 27, label: '14-21 Days', class: 'col14-21Days', active: false, display: true, width: "" },
+        { index: 28, label: '>21 Days', class: 'col21Days', active: false, display: true, width: "" },
+        { index: 29, label: 'Expiration Date', class: 'colExpirationDate', active: false, display: true, width: "" },
+        { index: 30, label: 'Reg NY', class: 'colRegNY', active: false, display: true, width: "" },
+        { index: 31, label: 'adv emails', class: 'coladvemails', active: false, display: true, width: "" },
+        { index: 32, label: 'Length', class: 'colLength', active: false, display: true, width: "" },
+        { index: 33, label: 'Width', class: 'colWidth', active: false, display: true, width: "" },
+        { index: 34, label: 'Height', class: 'colHeight', active: false, display: true, width: "" },
+        { index: 35, label: 'Region', class: 'colRegion', active: false, display: true, width: "" },
+        { index: 36, label: 'Account~ Name', class: 'colAccountName', active: false, display: true, width: "" },
+        { index: 37, label: 'Overdue~ Surcharge', class: 'colOverdueSurcharge', active: false, display: true, width: "" },
+        { index: 38, label: 'Shipping', class: 'colShipping', active: false, display: true, width: "" },
+        { index: 39, label: 'Terms', class: 'colTerms', active: false, display: true, width: "" },
+        { index: 40, label: 'Related Name', class: 'colRelatedName', active: false, display: true, width: "" },
+        { index: 41, label: 'Department', class: 'colDepartment', active: false, display: true, width: "" },
+        { index: 42, label: 'Status', class: 'colStatus', active: false, display: true, width: "" },
+        { index: 43, label: 'Customer Account No', class: 'colCustomerAccountNo', active: false, display: true, width: "" },
+        { index: 44, label: 'Email', class: 'colEmail', active: false, display: true, width: "" },
+        { index: 45, label: 'Overdue~ Surcharge~ Desc', class: 'colOverdueSurchargeDesc', active: false, display: true, width: "" },
+        { index: 46, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "" },
+        { index: 47, label: 'TransactionName', class: 'colTransactionName', active: false, display: true, width: "" },
+        { index: 48, label: 'Customer ID', class: 'colCustomerID', active: false, display: true, width: "" },
+        { index: 49, label: 'ConNote', class: 'colConNote', active: false, display: true, width: "" },
+        { index: 50, label: 'CheckNo', class: 'colCheckNo', active: false, display: true, width: "" },
+      ];
+      templateObject.agedreceivablesth.set(reset_data);
 
     templateObject.initDate = () => {
         Datehandler.initOneMonth();
@@ -426,6 +480,37 @@ Template.agedreceivables.events({
     'click #btnSummary': function() {
         FlowRouter.go('/agedreceivablessummary');
     },
+    'click .chkDatatable': function (event) {
+        let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+        console.log(columnDataValue);
+        if ($(event.target).is(':checked')) {
+          $('.' + columnDataValue).addClass('showColumn');
+          $('.' + columnDataValue).removeClass('hiddenColumn');
+        } else {
+          $('.' + columnDataValue).addClass('hiddenColumn');
+          $('.' + columnDataValue).removeClass('showColumn');
+        }
+      },
+      'click .btnOpenReportSettings': () => {
+        let templateObject = Template.instance();
+        // let currenttranstablename = templateObject.data.tablename||";
+        $(`thead tr th`).each(function (index) {
+          var $tblrow = $(this);
+          var colWidth = $tblrow.width() || 0;
+          var colthClass = $tblrow.attr('data-class') || "";
+          $('.rngRange' + colthClass).val(colWidth);
+        });
+        $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+      },
+      'change .custom-range': async function (event) {
+        //   const tableHandler = new TableHandler();
+        let range = $(event.target).val() || 0;
+        let colClassName = $(event.target).attr("valueclass");
+        await $('.' + colClassName).css('width', range);
+        //   await $('.colAccountTree').css('width', range);
+        $('.dataTable').resizable();
+      },
+  
     'click td a': async function (event) {
         let id = $(event.target).closest('tr').attr('id').split("item-value-");
         var accountName = id[1].split('_').join(' ');
@@ -741,7 +826,9 @@ Template.agedreceivables.helpers({
     records: () => {
         return Template.instance().records.get();
     },
-
+    agedreceivablesth: () => {
+        return Template.instance().agedreceivablesth.get();
+    },
     redirectionType(item) {
        if (item.type === 'Invoice') {
           return '/invoicecard?id=' + item.entries.InvoiceNumber;

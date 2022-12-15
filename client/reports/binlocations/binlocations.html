@@ -4,15 +4,13 @@
             <table class="table table-sm" id="tableExport" name="tableExport">
                 <thead>
                     <tr class="table-active customDoubleTableHeading">
-                        <th>Department</th>
-                        <th>Bin Location</th>
-                        <th>Bin No</th>
-                        <th>Volume Available</th>
-                        <th>Volume Used</th>
-                        <th>Volume Total</th>
-                        <th>Bin ID</th>
-                        <th>Class ID</th>
-                        <th>Global Ref</th>
+                        {{#if binlocationslistth}}
+                        {{#each c in binlocationslistth }}
+                            {{# if c.display}}
+                                <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}" class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
+                            {{/if}}
+                        {{/each}}
+                    {{/if}}
                     </tr>
                 </thead>
                 <tbody>
