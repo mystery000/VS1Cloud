@@ -86,33 +86,33 @@ Template.addAccountModal.onRendered(function () {
   };
   templateObject.loadAccountTypes();
 
-  // $("#edtBankName").editableSelect();
-  // $("#edtBankName")
-  //   .editableSelect()
-  //   .on("click.editable-select", function (e, li) {
-  //     var $earch = $(this);
-  //     var offset = $earch.offset();
-  //     var bankName = e.target.value || "";
+  $("#edtBankName").editableSelect();
+  $("#edtBankName")
+    .editableSelect()
+    .on("click.editable-select", function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset();
+      var bankName = e.target.value || "";
 
-  //     if (e.pageX > offset.left + $earch.width() - 8) {
-  //       $("#bankNameModal").modal();
-  //       $(".fullScreenSpin").css("display", "none");
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#bankNameModal").modal();
+        $(".fullScreenSpin").css("display", "none");
 
-  //     } else {
-  //       if (bankName.replace(/\s/g, "") != "") {
-  //         $("#bankNameModal").modal("toggle");
-  //       } else {
-  //         $("#bankNameModal").modal();
-  //       }
-  //     }
-  //   });
+      } else {
+        if (bankName.replace(/\s/g, "") != "") {
+          $("#bankNameModal").modal("toggle");
+        } else {
+          $("#bankNameModal").modal();
+        }
+      }
+    });
 
-  //   $(document).on("click", "#tblBankName tbody tr", function (e) {
-  //     var table = $(this);
-  //     let BankName = table.find(".bankName").text();
-  //     $('#bankNameModal').modal('toggle');
-  //     $('#edtBankName').val(BankName);
-  //   });
+    $(document).on("click", "#tblBankName tbody tr", function (e) {
+      var table = $(this);
+      let BankName = table.find(".bankName").text();
+      $('#bankNameModal').modal('toggle');
+      $('#edtBankName').val(BankName);
+    });
 
   templateObject.getTaxRates = function () {
     getVS1Data("TTaxcodeVS1")

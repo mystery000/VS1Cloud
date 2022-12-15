@@ -120,28 +120,6 @@
                 color: #00a3d3;
             }
         </style>
-        <div class="row justify-content-center mb-6">
-            <div class="col-12 col-md-11">
-                <div class="card shadow" style="padding: 16px;">
-                    <div class="row">
-                        <div class="col-12 col-md-12" style="display: flex;">
-                            <div class="ruleType ruleTypeActive" style="border-right: 1px solid #e3e6f0;" id="btnSpentRule">
-                                <p class="" style="margin-bottom: 0; font-weight: 700; font-size: 26px;">Spent money rule</p>
-                                <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;">Applies to bank statement lines where money is going out of your bank account.</p>
-                            </div>
-                            <div class="ruleType" style="border-right: 1px solid #e3e6f0;" id="btnReceivedRule">
-                                <p class="" style="margin-bottom: 0; font-weight: 700; font-size: 26px;">Received money rule</p>
-                                <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;">Applies to bank statement lines where money is coming into your bank account.</p>
-                            </div>
-                            <div class="ruleType" id="btnTransferRule">
-                                <p class="" style="margin-bottom: 0; font-weight: 700; font-size: 26px;">Transfer money rule</p>
-                                <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;">Applies to bank statement lines where money is being transferred between bank accounts.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="row justify-content-center mb-6" id="spentRuleCard">
             <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%;">
@@ -156,19 +134,14 @@
                         <div class="row">
                             <div class="col-12">
                                 <div style="padding: 20px 10px;">
-                                    <h4>1. Select Bank Name</h4>
+                                    <h4>1. Select Bank Account Name</h4>
                                 </div>
                             </div>
                             <div class="col-6 col-md-6 mx-4">
                                 <div class="form-group mb-0">
-                                    <label>Bank Name</label>
-                                    <select class="form-control pointer" id="edtBankName" name="edtBankName">
-                                        <option value=""></option>
-                                        {{#each item in bankNames}}
-                                            <option value="{{item.name}}">{{item.name}}
-                                            </option>
-                                        {{/each}}
-                                    </select>
+                                    <label>Bank Account Name</label>
+                                    <input type="hidden" id="sltBankAccountID" value="">
+                                    <select type="search" class="form-control" id="sltBankAccount" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
                                 </div>
                             </div>
                         </div>
@@ -277,6 +250,12 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
+            {{> addaccountpop}}
+        </div>
+        <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="bankAccountListModal">
+            {{> accountlistpop}}
         </div>
     </div>
 </template>
