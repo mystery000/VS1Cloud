@@ -18,30 +18,10 @@ Template.assignLeaveTypePop.onRendered(function () {
         try { 
             let data = [];
             let dataObject = await getVS1Data('TAssignLeaveType')
-            data = JSON.parse(dataObject[0].data); 
-            let splashArrayAssignLeaveList = [];
-
-            if (data.tassignleavetype.length > 0) {
-
+            data = JSON.parse(dataObject[0].data);  
+            if (data.tassignleavetype.length > 0) { 
                 let useData = data.tassignleavetype; 
-                // templateObject.assignLeaveTypeInfos.set(useData);
-                for (let i = 0; i < useData.length; i++) {
-
-                    let dataListAllowance = [
-                        useData[i].fields.ID || '',
-                        useData[i].fields.LeaveType || '',
-                        useData[i].fields.LeaveCalcMethod || '',
-                        useData[i].fields.HoursAccruedAnnually || '',
-                        useData[i].fields.HoursAccruedAnnuallyFullTimeEmp || '',
-                        useData[i].fields.HoursFullTimeEmpFortnightlyPay || '',
-                        useData[i].fields.HoursLeave || '',
-                        useData[i].fields.OpeningBalance || '',
-                        ((useData[i].fields.OnTerminationUnusedBalance) ? 'Paid Out' : 'Not Paid Out'),
-                        `<button type="button" style="margin-bottom: 24px;" class="btn btn-danger btn-rounded btn-sm btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="` + useData[i].fields.ID + `"><i class="fa fa-remove"></i></button>`
-                    ];
-                    splashArrayAssignLeaveList.push(dataListAllowance);
-                }
-                templateObject.leaveTypesList.set(splashArrayAssignLeaveList);
+                templateObject.leaveTypesList.set(useData);
             }
         } catch (err) {  
         } 
@@ -245,12 +225,5 @@ Template.assignLeaveTypePop.helpers({
         return Template.instance().leaveTypesList.get();
     },
 
-    timestamp: () => {
-        const sentTime = moment(this.createdAt);
-        //if today, just show time, else if some other day, show date and time
-        if (sentTime.isSame(new Date(), "day")) {
-          return sentTime.format("h:mm a");
-        }
-        return sentTime.format("M/D/YY h:mm a");
-    }
+    
 })
