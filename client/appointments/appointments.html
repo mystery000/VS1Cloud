@@ -778,7 +778,7 @@
                         <button class="btn btn-success btnSaveAppointment" type="button" style="margin: 14px;" id="btnSaveAppointment" name="btnSaveAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                         {{#if equals accessStartStopOnly true}}
                             <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDeleteDisbale" name="btnDeleteDisbale" disabled><i class="fas fa-trash-alt" style="margin-right: 5px;"></i><span>Delete</span></button>
-                            <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button> -->                            
+                            <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button> -->
                         {{else}}
                             <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDelete" name="btnDelete"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
                             <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptions" name="btnOptions"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button> -->
@@ -1315,7 +1315,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                                         <th class="thSalesPrice" style="width: 13% !important;text-align: left!important;">Sale Price</th>
                                         <th class="thQty hiddenColumn" style="width: 8% !important;">Quantity</th>
                                         <th class="thTax hiddenColumn" style="width: 8% !important;text-align: left!important;">Tax Rate</th>
-                                        
+
                                         <th style="width: 25px !important;"></th>
                                         <th class="thExtraSellPrice hiddenColumn">Prouct ID</th>
                                     </tr>
@@ -1425,7 +1425,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
     <!-- END Attachments -->
 
     {{> deletepop itemName1="Appointment" itemName2="appointment" itemName3="Appointment" button1="btnDeleteAppointment" button2="btnDeleteFollowingAppointments"}}
-    
+
     <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
         {{> payrollproductlistpop}}
     </div>
@@ -1435,7 +1435,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-        {{> addcustomerpop customerRecord=customerRecord}}
+        <!-- {{> addcustomerpop}} -->
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="productListModal1">
         {{> productlistpopwithcheckboxes}}
@@ -1476,7 +1476,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
             </div>
         </div>
     </div>
-    
+
     <!-- {{> newLeaveRequestModal}} -->
 
     <style>
@@ -4149,5 +4149,5 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 </template>
