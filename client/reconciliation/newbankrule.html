@@ -159,10 +159,11 @@
                                     <h4>1. Select Bank Name</h4>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-6" style="padding: 0 20px;">
+                            <div class="col-6 col-md-6 mx-4">
                                 <div class="form-group mb-0">
                                     <label>Bank Name</label>
                                     <select class="form-control pointer" id="edtBankName" name="edtBankName">
+                                        <option value=""></option>
                                         {{#each item in bankNames}}
                                             <option value="{{item.name}}">{{item.name}}
                                             </option>
@@ -195,17 +196,16 @@
                                             <tbody>
                                                 {{#if bankRuleData}}
                                                     {{#each item in bankRuleData}}
-                                                        <tr class="dnd-moved" id="sc_{{item.id}}">
-                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
-                                                            <td class="colField">
-                                                                <input class="highlightInput lineValue" type="text" value="{{item.column}}">
+                                                        <tr class="dnd-moved">
+                                                            <td class="colColumn">
+                                                                <input class="highlightInput lineColumn" type="text" value="{{item.column}}" data-id="{{@index}}">
                                                             </td>
-                                                            <td class="colValue">
-                                                                <input class="highlightInput lineValue" type="text" value="{{@index}}">
+                                                            <td class="colOrder">
+                                                                <input class="highlightInput lineOrder" type="number" value="{{item.order}}" data-id="{{@index}}">
                                                             </td>
                                                             <td class="text-center">
-                                                                <span class="table-remove btnRemove">
-                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
+                                                                <span class="table-remove btnRemove" data-id="{{@index}}">
+                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
                                                                 </span>
                                                             </td>
                                                         </tr>
@@ -216,20 +216,6 @@
                                                         <td colspan="5">No columns</td>
                                                     </tr>
                                                 {{/unless}}
-                                                <tr class="dnd-moved" id="sampleData" style="display:none">
-                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
-                                                    <td class="colField">
-                                                        <input class="highlightInput lineValue" type="text" value="">
-                                                    </td>
-                                                    <td class="colValue">
-                                                        <input class="highlightInput lineValue" type="text" value="">
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <span class="table-remove btnRemove">
-                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                        </span>
-                                                    </td>
-                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
