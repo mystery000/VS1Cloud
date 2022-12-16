@@ -1396,13 +1396,11 @@ Template.templatesettings.onRendered(function () {
           $("#templatePreviewModal .pdfCustomerAddress").empty();
           $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
     
-          
           $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
+          
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " "+ " template"
           );
-
-
           if(object_invoce[0]["value"]=="")
           {
               $('.print-header-value').text('');
@@ -1411,8 +1409,6 @@ Template.templatesettings.onRendered(function () {
           else{
             $('.print-header-value').text(object_invoce[0]["value"]);
           }
-
-
           if(object_invoce[0]["bsb"]=="")
           { 
               $('#templatePreviewModal .field_payment').hide();
@@ -1575,11 +1571,11 @@ Template.templatesettings.onRendered(function () {
             break;
     
           case "Customer Payment":
-            left_idx = 1;
+            left_idx = 2;
             break;
     
           case "Customer Statement":
-            left_idx = 1;
+            left_idx = 3;
             break;  
     
           case "Invoice":
@@ -1607,11 +1603,11 @@ Template.templatesettings.onRendered(function () {
             break;
     
           case "Supplier Payment":
-            left_idx = 1;
+            left_idx = 2;
             break;
           
           case "Statement": 
-            left_idx = 1;
+            left_idx = 2;
             break;
           
           case "Delivery Docket":
@@ -1623,14 +1619,13 @@ Template.templatesettings.onRendered(function () {
             break;
     
           case "Deposits":
-            left_idx = 1;
+            left_idx = 3;
             break;
     
           case "Cheques":
             left_idx = 1;
             break;
         }
-
         const data = object_invoce[0]["data"];
         let idx = 0;
         for(item of data){
@@ -1737,7 +1732,6 @@ Template.templatesettings.onRendered(function () {
             left_idx = 1;
             break;
         }
-
         const data = object_invoce[0]["data"];
         let idx = 0;
         for(item of data){
