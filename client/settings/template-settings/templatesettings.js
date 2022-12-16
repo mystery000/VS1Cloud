@@ -1397,7 +1397,7 @@ Template.templatesettings.onRendered(function () {
           $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
     
           $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
-          
+
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " "+ " template"
           );
@@ -1440,7 +1440,7 @@ Template.templatesettings.onRendered(function () {
           }
     
           $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
-    
+          $("#templatePreviewModal #stockAdjustmentBarCode").text(object_invoce[0]["pqnumber"]);
           if(object_invoce[0]["invoicenumber"] == ""){
             $("#templatePreviewModal .invoiceNumber").hide();
           }else{
