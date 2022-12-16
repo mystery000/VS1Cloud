@@ -64,6 +64,9 @@ Template.chequecard.onCreated(() => {
   // templateObject.custfields = new ReactiveVar([]);
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.hasFollow = new ReactiveVar(false);
+
+  templateObject.supplierRecord = new ReactiveVar();
+
 });
 Template.chequecard.onRendered(() => {
   
@@ -2788,9 +2791,7 @@ Template.chequecard.onRendered(() => {
       }
     });
 
-  $("#edtSupplierName")
-    .editableSelect()
-    .on("click.editable-select", function (e, li) {
+    $('#edtSupplierName').editableSelect().on('click.editable-select', function(e, li) {
       var $earch = $(this);
       var offset = $earch.offset();
       $("#edtSupplierPOPID").val("");
@@ -2935,6 +2936,53 @@ Template.chequecard.onRendered(() => {
                     }
 
                     setTimeout(function () {
+                      let supplierRecord = {
+                        id: popSupplierID,
+                        company: popSupplierName,
+                        email: popSupplierEmail,
+                        title: popSupplierTitle,
+                        firstname: popSupplierFirstName,
+                        middlename: popSupplierMiddleName,
+                        lastname: popSupplierLastName,
+                        tfn: '' || '',
+                        phone: popSupplierPhone,
+                        mobile: popSupplierMobile,
+                        fax: popSupplierFaxnumber,
+                        skype: popSupplierSkypeName,
+                        website: popSupplierURL,
+                        shippingaddress: popSupplierStreet,
+                        scity: popSupplierStreet2,
+                        sstate: popSupplierState,
+                        spostalcode: popSupplierPostcode,
+                        scountry: popSupplierCountry,
+                        billingaddress: popSupplierbillingaddress,
+                        bcity: popSupplierbcity,
+                        bstate: popSupplierbstate,
+                        bpostalcode: popSupplierbpostalcode,
+                        bcountry: popSupplierbcountry,
+                        custfield1: popSuppliercustfield1,
+                        custfield2: popSuppliercustfield2,
+                        custfield3: popSuppliercustfield3,
+                        custfield4: popSuppliercustfield4,
+                        notes: popSuppliernotes,
+                        preferedpayment: popSupplierpreferedpayment,
+                        terms: popSupplierterms,
+                        deliverymethod: popSupplierdeliverymethod,
+                        accountnumber: popSupplieraccountnumber,
+                        isContractor: popSupplierisContractor,
+                        issupplier: popSupplierissupplier,
+                        iscustomer: popSupplieriscustomer,
+                        bankName: data.tsuppliervs1[0].fields.BankName || '',
+                        swiftCode: data.tsuppliervs1[0].fields.SwiftCode || '',
+                        routingNumber: data.tsuppliervs1[0].fields.RoutingNumber || '',
+                        bankAccountName: data.tsuppliervs1[0].fields.BankAccountName || '',
+                        bankAccountBSB: data.tsuppliervs1[0].fields.BankAccountBSB || '',
+                        bankAccountNo: data.tsuppliervs1[0].fields.BankAccountNo || '',
+                        foreignExchangeCode:data.tsuppliervs1[0].fields.ForeignExchangeCode || CountryAbbr,
+                        // openingbalancedate: data.tsuppliervs1[0].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[0].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                        // taxcode:data.tsuppliervs1[0].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                    };
+                    templateObject.supplierRecord.set(supplierRecord);
                       $("#addSupplierModal").modal("show");
                     }, 200);
                   })
@@ -3070,6 +3118,53 @@ Template.chequecard.onRendered(() => {
                     }
 
                     setTimeout(function () {
+                      let supplierRecord = {
+                        id: popSupplierID,
+                        company: popSupplierName,
+                        email: popSupplierEmail,
+                        title: popSupplierTitle,
+                        firstname: popSupplierFirstName,
+                        middlename: popSupplierMiddleName,
+                        lastname: popSupplierLastName,
+                        tfn: '' || '',
+                        phone: popSupplierPhone,
+                        mobile: popSupplierMobile,
+                        fax: popSupplierFaxnumber,
+                        skype: popSupplierSkypeName,
+                        website: popSupplierURL,
+                        shippingaddress: popSupplierStreet,
+                        scity: popSupplierStreet2,
+                        sstate: popSupplierState,
+                        spostalcode: popSupplierPostcode,
+                        scountry: popSupplierCountry,
+                        billingaddress: popSupplierbillingaddress,
+                        bcity: popSupplierbcity,
+                        bstate: popSupplierbstate,
+                        bpostalcode: popSupplierbpostalcode,
+                        bcountry: popSupplierbcountry,
+                        custfield1: popSuppliercustfield1,
+                        custfield2: popSuppliercustfield2,
+                        custfield3: popSuppliercustfield3,
+                        custfield4: popSuppliercustfield4,
+                        notes: popSuppliernotes,
+                        preferedpayment: popSupplierpreferedpayment,
+                        terms: popSupplierterms,
+                        deliverymethod: popSupplierdeliverymethod,
+                        accountnumber: popSupplieraccountnumber,
+                        isContractor: popSupplierisContractor,
+                        issupplier: popSupplierissupplier,
+                        iscustomer: popSupplieriscustomer,
+                        bankName: data.tsuppliervs1[i].fields.BankName || '',
+                        swiftCode: data.tsuppliervs1[i].fields.SwiftCode || '',
+                        routingNumber: data.tsuppliervs1[i].fields.RoutingNumber || '',
+                        bankAccountName: data.tsuppliervs1[i].fields.BankAccountName || '',
+                        bankAccountBSB: data.tsuppliervs1[i].fields.BankAccountBSB || '',
+                        bankAccountNo: data.tsuppliervs1[i].fields.BankAccountNo || '',
+                        foreignExchangeCode:data.tsuppliervs1[i].fields.ForeignExchangeCode || CountryAbbr,
+                        // openingbalancedate: data.tsuppliervs1[i].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[i].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                        // taxcode:data.tsuppliervs1[i].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                    };
+                    templateObject.supplierRecord.set(supplierRecord);
                       $("#addSupplierModal").modal("show");
                     }, 200);
                   }
@@ -4202,9 +4297,9 @@ Template.chequecard.onRendered(() => {
           html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
           for(item_temp of item){
               if (idx > 1)
-                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
               else
-                  html = html + "<td>" + item_temp + "</td>";
+                html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
               idx++;
           }
 
@@ -4244,11 +4339,11 @@ Template.chequecard.onRendered(() => {
           var html = '';
           html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
           for(item_temp of item){
-              if (idx > 1)
-                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-              else
-                  html = html + "<td>" + item_temp + "</td>";
-              idx++;
+            if (idx > 1)
+              html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            else
+              html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            idx++;
           }
 
           html +="</tr>";
@@ -4287,11 +4382,11 @@ Template.chequecard.onRendered(() => {
           var html = '';
           html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
           for(item_temp of item){
-              if (idx > 1)
-                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-              else
-                  html = html + "<td>" + item_temp + "</td>";
-              idx++;
+            if (idx > 1)
+              html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            else
+              html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            idx++;
           }
 
           html +="</tr>";
@@ -4738,6 +4833,11 @@ Template.chequecard.helpers({
   chequerecord: () => {
     return Template.instance().chequerecord.get();
   },
+
+  supplierRecord: () => {
+    return Template.instance().supplierRecord.get();
+  },
+
   deptrecords: () => {
     return Template.instance()
       .deptrecords.get()
@@ -6331,12 +6431,7 @@ Template.chequecard.events({
       }
     }
   },
-  'click #open_print_confirm' : function(event) {
-    playPrintAudio();
-    setTimeout(function(){
-        $('#templateselection').modal('toggle');
-    }, delayTimeAfterSound);
-  },
+  'click #open_print_confirm' : function(event) {},
   "click .printConfirm": async function (event) {
     playPrintAudio();
     setTimeout(async function(){
@@ -6360,6 +6455,8 @@ Template.chequecard.events({
 
               }
           }
+      } else {
+        // LoadingOverlay.hide();
       }
     }, delayTimeAfterSound);
   },

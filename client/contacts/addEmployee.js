@@ -108,23 +108,6 @@ Template.employeescard.onCreated(function() {
     templateObject.taxCodeList = new ReactiveVar();
     templateObject.defaultsaletaxcode = new ReactiveVar();
 
-    templateObject.tableHeaderItems = new ReactiveVar([
-        {classString:"th colSortDate hiddenColumn", itemLabel:"id",itemStyle:""},
-        {classString:"th colSaleDate", itemLabel:"Sale Date",itemStyle:"width:80px;"},
-        {classString:"th colSalesNo", itemLabel:"Sales No.",itemStyle:"width:80px;"},
-        {classString:"th colCustomer", itemLabel:"Customer",itemStyle:"width:200px;"},
-        {classString:"th colAmountEx", itemLabel:"Amount (Ex)",itemStyle:"width:80px;"},
-        {classString:"th colTax", itemLabel:"Tax",itemStyle:"width:80px;"},
-        {classString:"th colAmount", itemLabel:"Amount",itemStyle:"width:80px;"},
-        {classString:"th colPaid", itemLabel:"Paid",itemStyle:"width:80px;"},
-        {classString:"th colBalanceOutstanding", itemLabel:"Balance Outstanding",itemStyle:"width:80px;"},
-        {classString:"th colStatus hiddenColumn", itemLabel:"Status",itemStyle:""},
-        {classString:"th colSaleCustField1 hiddenColumn", itemLabel:"Custom Field 1",itemStyle:""},
-        {classString:"th colSaleCustField2 hiddenColumn", itemLabel:"Custom Field 2",itemStyle:""},
-        {classString:"th colEmployee hiddenColumn", itemLabel:"Employee",itemStyle:""},
-        {classString:"th colComments", itemLabel:"Comments",itemStyle:""}
-    ])
-
     /* Attachments */
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
@@ -1718,7 +1701,8 @@ Template.employeescard.onRendered(function() {
             custFld2: '',
             dashboardOptions: '',
             salesQuota: 5000,
-            website: ''
+            website: '',
+            isEmployee:true
         }
 
         templateObject.records.set(lineItemObj);
@@ -1810,7 +1794,8 @@ Template.employeescard.onRendered(function() {
                 custFld2: '',
                 website: '',
                 dashboardOptions: '',
-                salesQuota: 5000
+                salesQuota: 5000,
+                isEmployee:true
             }
 
             templateObject.records.set(lineItemObj);
@@ -1995,7 +1980,8 @@ Template.employeescard.onRendered(function() {
             website: '',
             notes: data.fields.Notes || '',
             dashboardOptions: data.fields.CustFld11 || '',
-            salesQuota: data.fields.CustFld12 || ''
+            salesQuota: data.fields.CustFld12 || '',
+            isEmployee:true,
         };
         templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
 
@@ -2326,6 +2312,7 @@ Template.employeescard.onRendered(function() {
             $('#product-list').editableSelect();
             $('#edtDashboardOptions').editableSelect();
             $('#product-list').editableSelect()
+            $('#editEmployeeTitle').editableSelect()
                 .on('click.editable-select', function(e, li) {
                     const $earch = $(this);
                     const offset = $earch.offset();
@@ -2665,7 +2652,22 @@ Template.employeescard.onRendered(function() {
             $('#edtDashboardOptions').attr("defaultlogin", isDefaultLogin);
             $('#dashboardOptionListModal').modal('toggle');
         });
+        $(document).on("click", "#tblTitleList tbody tr", function (e) {
+            $('#editEmployeeTitle').val($(this).find(".colTypeName").text());
+            $('#employeeTitlePopModal').modal('toggle');
+        });
     });
+
+    $(document).on('click', '#editEmployeeTitle', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#employeeTitlePopModal').modal('toggle');
+        } else {
+            $('#employeeTitlePopModal').modal();
+        }
+    });
+
     let prefObject = "";
     if (currentId.id != undefined) {
         setTimeout(function() {
@@ -5577,7 +5579,7 @@ Template.employeescard.events({
         let uploadedItems = templateObject.uploadedFiles.get();
         setTimeout(async function() {
             LoadingOverlay.show();
-            let title = $('#edtTitle').val();
+            let title = $('#editEmployeeTitle').val();
             let firstname = $('#edtFirstName').val();
             if (firstname === '') {
                 $('.fullScreenSpin').css('display', 'none');
@@ -11272,7 +11274,4 @@ Template.employeescard.helpers({
         return Template.instance().earningLines.get();
     },
     formatPrice: (price) => GlobalFunctions.formatPrice(price),
-    tableHeaderItems:() => {
-        return Template.instance().tableHeaderItems.get();
-    },
 });

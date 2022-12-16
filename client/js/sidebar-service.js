@@ -28,7 +28,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
-    return this.getList(this.ERPObjects.TProductVS1, options);
+        return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
   getProductListVS1(limitcount, limitfrom) {
@@ -36,14 +36,14 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-          Search: "PublishOnVS1 == true",
+        Search: "Active == true",
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
         ListType: "Detail",
-        Search: "PublishOnVS1 = true",
+        Search: "Active = true",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
@@ -2594,7 +2594,7 @@ export class SideBarService extends BaseService {
 
       options = {
         ListType: "Detail",
-        select: "[Active]=true",
+        select: "pt.Active=true",
         // LimitCount: initialReportLoad
       };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
@@ -3997,7 +3997,7 @@ export class SideBarService extends BaseService {
     let options = "";
       options = {
        ListType: "Detail",
-       select: "[Active]=true"
+       select: "pt.Active=true"
      };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
@@ -4094,6 +4094,14 @@ export class SideBarService extends BaseService {
       return false
     }
   }
+  getSubTaxCode() {
+     let options = {
+         PropertyList: "ID,Code,Description,Category,Active,GlobalRef,ISEmpty,RegionName",
+         select: "[Active]=true",
+     };
+     return this.getList(this.ERPObjects.TSubTaxCode, options);
+ }
+
   changeDialFormat (mobile, country) {
 
 
@@ -4119,15 +4127,14 @@ export class SideBarService extends BaseService {
   }
 
   getVS1MenuConfig() {
-    console.log('this.erpGet.TPreference: ', this.erpGet.TPreference);
     const data = this.GET(this.erpGet.TPreference);
     return data;
   }
 
   updateVS1MenuConfig (menuType) {
     const prefValue = '{"Location": \"' + menuType + '\", "AccessLevel": 1, "AccessLevelName": \"Full Access\"}'
-    return this.POST( 
-      this.erpGet.TPreference, 
+    return this.POST(
+      this.erpGet.TPreference,
       {
           "type": "TPreference",
           "fields": {

@@ -34,6 +34,9 @@ Template.bankNameModal.onRendered(function () {
 
 
 Template.bankNameModal.events({
+  "click .btnCancelEftBankName": (e) => {
+      $('#bankNameModal').modal('hide');
+  },
 
 });
 

@@ -76,116 +76,13 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.accountID = new ReactiveVar();
     templateObject.stripe_fee_method = new ReactiveVar();
     templateObject.subtaxcodes = new ReactiveVar([]);
-    templateObject.displayfields = new ReactiveVar([]);
-    templateObject.reset_data = new ReactiveVar([]);
-
     templateObject.isbackorderredirect = new ReactiveVar();
     templateObject.isbackorderredirect.set(false);
-
-    templateObject.monthArr = new ReactiveVar();
-    templateObject.plusArr = new ReactiveVar();
     templateObject.hasFollow = new ReactiveVar(false);
+
+    templateObject.supplierRecord = new ReactiveVar();
 });
 Template.purchaseordercard.onRendered(() => {
-  const plusArr = [];
-  const monthArr = [];
-  let isGreenTrack = Session.get('isGreenTrack');
-  let regionData = Session.get('ERPLoggedCountry');
-  let recordObj = null;
-  if(isGreenTrack) {
-    $.get("/GreentrackModules.json").success(function (data) {
-        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
-
-            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
-                recordObj = {
-                    type: data.tvs1licenselevelsnmodules[i].TYPE,
-                    region: data.tvs1licenselevelsnmodules[i].Region,
-                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
-                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
-                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
-                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
-                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
-                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
-                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
-                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
-                    pricenocurrency: data.tvs1licenselevelsnmodules[i].Price || 0,
-                    price: utilityService.modifynegativeCurrencyFormat(data.tvs1licenselevelsnmodules[i].Price) || 0,
-                    discount: data.tvs1licenselevelsnmodules[i].discount,
-                };
-                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "Xero") {
-                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
-                        plusArr.push(recordObj);
-                    }
-                }
-               
-            }
-
-        };
-        templateObject.plusArr.set(plusArr);
-    });
-  } else { 
-    $.get("MasterVS1Pricing.json").success(async function (data) {
-        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
-
-            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
-                recordObj = {
-                    type: data.tvs1licenselevelsnmodules[i].TYPE,
-                    region: data.tvs1licenselevelsnmodules[i].Region,
-                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
-                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
-                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
-                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
-                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
-                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
-                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
-                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
-                    discount: data.tvs1licenselevelsnmodules[i].discount,
-                };
-                if ((data.tvs1licenselevelsnmodules[i].ModuleName != "") && (data.tvs1licenselevelsnmodules[i].IsExtra == true) && (data.tvs1licenselevelsnmodules[i].IsMonthly == true)) {
-                    monthArr.push(recordObj);
-                }
-
-                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "PLUS") {
-                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
-                        plusArr.push(recordObj);
-                    }
-                }
-            }
-        };
-        let purchaedAdModuleList = [];
-            let additionModuleSettings = await getVS1Data('vscloudlogininfo');
-            if( additionModuleSettings.length > 0 ){
-                let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
-                if( additionModules.length > 0 ){
-                    let adModulesList = additionModules.filter((item) => {
-                        if( item.ExtraModules == true && item.ModuleActive == true ){
-                            return item;
-                        }
-                    });
-                    if( adModulesList.length > 0 ){
-                        for (const item of adModulesList) {
-                            purchaedAdModuleList.push(item.ModuleName)
-                        }
-                    }
-                }
-            }
-        templateObject.plusArr.set(plusArr);
-        var monthResult = [];
-        $.each(monthArr, function (i, e) {
-            var matchingItemsMonth = $.grep(monthResult, function (itemMonth) {
-                return itemMonth.moduleName === e.moduleName;
-            });
-            e.isPurchased = false
-            if (matchingItemsMonth.length === 0) {
-                if( purchaedAdModuleList.includes(monthArr[i].moduleName) == true ){
-                    e.isPurchased = true
-                }
-                monthResult.push(e);
-            }
-        });
-        templateObject.monthArr.set(monthResult);
-    });
-  };
     let templateObject = Template.instance();
     $('#edtFrequencyDetail').css('display', 'none');
     // $('#onEventSettings').css('display', 'none');
@@ -347,280 +244,14 @@ Template.purchaseordercard.onRendered(() => {
         $('.uploadedImage').attr('src', imageData);
     }
 
-    // set initial table rest_data
-    function init_reset_data() {
-      let reset_data = [
-        { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
-        { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
-        { index: 2, label: "Qty", class: "Qty", width: "50", active: true, display: true },
-        { index: 3, label: "Ordered", class: "Ordered", width: "75", active: true, display: true },
-        { index: 4, label: "Received", class: "Shipped", width: "75", active: true, display: true },
-        { index: 5, label: "BO", class: "BackOrder", width: "75", active: true, display: true },
-        { index: 6, label: "Price (Ex)", class: "UnitPriceEx", width: "122", active: true, display: true },
-        { index: 7, label: "Price (Inc)", class: "UnitPriceInc", width: "122", active: false, display: true },
-        { index: 8, label: "Customer/Job", class: "CustomerJob", width: "110", active: true, display: true },
-        { index: 9, label: "CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
-        { index: 10, label: "Tax Rate", class: "TaxRate", width: "91", active: false, display: false },
-        { index: 11, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-        { index: 12, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
-        { index: 13, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
-        { index: 14, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
-        { index: 15, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
-        { index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: true, display: true },
-      ];
 
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      let isBOnShippedQty = Session.get("CloudPurchaseQtyOnly") || false;
-      if (isBOnShippedQty) { // false
-        reset_data[2].display = true;
-        reset_data[3].display = false;
-        reset_data[4].display = false;
-        reset_data[5].display = false;
-      } else {
-        reset_data[2].display = false;
-        reset_data[3].display = true;
-        reset_data[4].display = true;
-        reset_data[5].display = true;
-      }
-      if(isBatchSerialNoTracking) {
-        reset_data[13].display = true;
-      } else {
-        reset_data[13].display = false;
-      }
 
-      let templateObject = Template.instance();
-      templateObject.reset_data.set(reset_data);
-    }
-    init_reset_data();
-    templateObject.insertItemWithLabel = (x, a, b) => {
-        var data = [...x];
-        var aPos = data.findIndex((x) => x.label === a);
-        var bPos = data.findIndex(x => x.label === b);
-        if(aPos === -1 || bPos === -1) return data;
-        data[bPos] = {...data[bPos], index: aPos + 1};
-        for(var i = aPos + 1; i < bPos; i++) data[i] = {...data[i], index:data[i].index + 1}
-        return data.sort((a,b) => a.index - b.index);
-    }
-    // set initial table rest_data
-    // custom field displaysettings
-     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
-      reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
-      reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
-      showCustomFieldDisplaySettings(reset_data);
-    
-      try {
-        getVS1Data("VS1_Customize").then(function (dataObject) {
-          if (dataObject.length == 0) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              if(!reset_data[16]) reset_data.push({ index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: false, display: false })
-              reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
-              reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
-              reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
-              showCustomFieldDisplaySettings(reset_data);
-            }).catch(function (err) {
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            if(data.ProcessLog.Obj.CustomLayout.length > 0){
-             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-               if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                 if(!reset_data[16]) reset_data.push({ index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: false, display: false })
-                 reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
-                 reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
-                 reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
-                 showCustomFieldDisplaySettings(reset_data);
-               }
-             }
-           };
-            // handle process here
-          }
-        });
-      } catch (error) {
-      }
-      return;
-    }
-    
-    function showCustomFieldDisplaySettings(reset_data) {
-
-      let custFields = [];
-      let customData = {};
-      let customFieldCount = reset_data.length;
-
-      for (let r = 0; r < customFieldCount; r++) {
-        customData = {
-          active: reset_data[r].active,
-          id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label,
-          class: reset_data[r].class,
-          display: reset_data[r].display,
-          width: reset_data[r].width ? reset_data[r].width : '',
-          // colspan: ["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(reset_data[r].label) == true ? (templateObject.isForeignEnabled.get() == true ? 2 : 1) : 1
-        };
-        custFields.push(customData);
-      }
-      templateObject.displayfields.set(custFields);
-    }
-
-    templateObject.initCustomFieldDisplaySettings("", "tblPurchaseOrderLine");
-    // custom field displaysettings
 
     const purchaseService = new PurchaseBoardService();
     const clientsService = new PurchaseBoardService();
     const contactService = new ContactService();
 
-    templateObject.getTemplateInfoNew = function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
-        getVS1Data('TTemplateSettings').then(function(dataObject) {
-          if (dataObject.length == 0) {
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Purchase_Orders_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-
-                 }
-
-
-                  $('.fullScreenSpin').css('display', 'none');
-              }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-              });
-          }else{
-                  let data = JSON.parse(dataObject[0].data);
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Purchase_Orders_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-
-
-                 }
-                  $('.fullScreenSpin').css('display', 'none');
-          }
-        }).catch(function(err) {
-        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
-
-                     if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
-                     {
-                            if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
-                                    $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                      $('#Purchase_Orders_1').attr('checked','checked');
-                                    }
-
-                            }
-                            if(data.ttemplatesettings[i].fields.Template == 2)
-                            {
-                                  $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Purchase_Orders_2').attr('checked','checked');
-                                  }
-                            }
-
-                            if(data.ttemplatesettings[i].fields.Template == 3)
-                            {
-                                  $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Purchase_Orders_3').attr('checked','checked');
-                                  }
-                            }
-
-
-                     }
-
-
-
-
-                  }
-                  $('.fullScreenSpin').css('display', 'none');
-        }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
-        });
-      });
-
-      };
-
-      templateObject.getTemplateInfoNew();
-
-templateObject.getLastPOData = async function() {
+    templateObject.getLastPOData = async function() {
        let lastBankAccount = "Bank";
        let lastDepartment = defaultDept || "";
        purchaseService.getLastPOID().then(function(data) {
@@ -1280,7 +911,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1293,9 +924,9 @@ templateObject.getLastPOData = async function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1348,7 +979,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1361,9 +992,9 @@ templateObject.getLastPOData = async function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1419,7 +1050,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1432,9 +1063,9 @@ templateObject.getLastPOData = async function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1764,7 +1395,7 @@ templateObject.getLastPOData = async function() {
                         $("#html-2-pdfwrapper_new #tax_list_print").remove();
                     }
                 }
-                
+
         }
 
          // table content
@@ -1814,7 +1445,7 @@ templateObject.getLastPOData = async function() {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            
+
 
             }
 
@@ -4327,6 +3958,54 @@ templateObject.getLastPOData = async function() {
                             }
 
                             setTimeout(function() {
+
+                                let supplierRecord = {
+                                    id: popSupplierID,
+                                    company: popSupplierName,
+                                    email: popSupplierEmail,
+                                    title: popSupplierTitle,
+                                    firstname: popSupplierFirstName,
+                                    middlename: popSupplierMiddleName,
+                                    lastname: popSupplierLastName,
+                                    tfn: '' || '',
+                                    phone: popSupplierPhone,
+                                    mobile: popSupplierMobile,
+                                    fax: popSupplierFaxnumber,
+                                    skype: popSupplierSkypeName,
+                                    website: popSupplierURL,
+                                    shippingaddress: popSupplierStreet,
+                                    scity: popSupplierStreet2,
+                                    sstate: popSupplierState,
+                                    spostalcode: popSupplierPostcode,
+                                    scountry: popSupplierCountry,
+                                    billingaddress: popSupplierbillingaddress,
+                                    bcity: popSupplierbcity,
+                                    bstate: popSupplierbstate,
+                                    bpostalcode: popSupplierbpostalcode,
+                                    bcountry: popSupplierbcountry,
+                                    custfield1: popSuppliercustfield1,
+                                    custfield2: popSuppliercustfield2,
+                                    custfield3: popSuppliercustfield3,
+                                    custfield4: popSuppliercustfield4,
+                                    notes: popSuppliernotes,
+                                    preferedpayment: popSupplierpreferedpayment,
+                                    terms: popSupplierterms,
+                                    deliverymethod: popSupplierdeliverymethod,
+                                    accountnumber: popSupplieraccountnumber,
+                                    isContractor: popSupplierisContractor,
+                                    issupplier: popSupplierissupplier,
+                                    iscustomer: popSupplieriscustomer,
+                                    bankName: data.tsuppliervs1[0].fields.BankName || '',
+                                    swiftCode: data.tsuppliervs1[0].fields.SwiftCode || '',
+                                    routingNumber: data.tsuppliervs1[0].fields.RoutingNumber || '',
+                                    bankAccountName: data.tsuppliervs1[0].fields.BankAccountName || '',
+                                    bankAccountBSB: data.tsuppliervs1[0].fields.BankAccountBSB || '',
+                                    bankAccountNo: data.tsuppliervs1[0].fields.BankAccountNo || '',
+                                    foreignExchangeCode:data.tsuppliervs1[0].fields.ForeignExchangeCode || CountryAbbr,
+                                    // openingbalancedate: data.tsuppliervs1[0].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[0].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                                    // taxcode:data.tsuppliervs1[0].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                                };
+                                templateObject.supplierRecord.set(supplierRecord);
                                 $('#addSupplierModal').modal('show');
                             }, 200);
 
@@ -4422,6 +4101,54 @@ templateObject.getLastPOData = async function() {
                                 }
 
                                 setTimeout(function() {
+
+                                    let supplierRecord = {
+                                        id: popSupplierID,
+                                        company: popSupplierName,
+                                        email: popSupplierEmail,
+                                        title: popSupplierTitle,
+                                        firstname: popSupplierFirstName,
+                                        middlename: popSupplierMiddleName,
+                                        lastname: popSupplierLastName,
+                                        tfn: '' || '',
+                                        phone: popSupplierPhone,
+                                        mobile: popSupplierMobile,
+                                        fax: popSupplierFaxnumber,
+                                        skype: popSupplierSkypeName,
+                                        website: popSupplierURL,
+                                        shippingaddress: popSupplierStreet,
+                                        scity: popSupplierStreet2,
+                                        sstate: popSupplierState,
+                                        spostalcode: popSupplierPostcode,
+                                        scountry: popSupplierCountry,
+                                        billingaddress: popSupplierbillingaddress,
+                                        bcity: popSupplierbcity,
+                                        bstate: popSupplierbstate,
+                                        bpostalcode: popSupplierbpostalcode,
+                                        bcountry: popSupplierbcountry,
+                                        custfield1: popSuppliercustfield1,
+                                        custfield2: popSuppliercustfield2,
+                                        custfield3: popSuppliercustfield3,
+                                        custfield4: popSuppliercustfield4,
+                                        notes: popSuppliernotes,
+                                        preferedpayment: popSupplierpreferedpayment,
+                                        terms: popSupplierterms,
+                                        deliverymethod: popSupplierdeliverymethod,
+                                        accountnumber: popSupplieraccountnumber,
+                                        isContractor: popSupplierisContractor,
+                                        issupplier: popSupplierissupplier,
+                                        iscustomer: popSupplieriscustomer,
+                                        bankName: data.tsuppliervs1[i].fields.BankName || '',
+                                        swiftCode: data.tsuppliervs1[i].fields.SwiftCode || '',
+                                        routingNumber: data.tsuppliervs1[i].fields.RoutingNumber || '',
+                                        bankAccountName: data.tsuppliervs1[i].fields.BankAccountName || '',
+                                        bankAccountBSB: data.tsuppliervs1[i].fields.BankAccountBSB || '',
+                                        bankAccountNo: data.tsuppliervs1[i].fields.BankAccountNo || '',
+                                        foreignExchangeCode:data.tsuppliervs1[i].fields.ForeignExchangeCode || CountryAbbr,
+                                        // openingbalancedate: data.tsuppliervs1[i].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[i].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                                        // taxcode:data.tsuppliervs1[i].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                                    };
+                                    templateObject.supplierRecord.set(supplierRecord);
                                     $('#addSupplierModal').modal('show');
                                 }, 200);
                             }
@@ -5123,8 +4850,9 @@ Template.purchaseordercard.onRendered(function() {
                                     "targets": [5]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-                            bStateSave: true,
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5199,10 +4927,9 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-                        bStateSave: true,
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5279,13 +5006,9 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5372,12 +5095,6 @@ Template.purchaseordercard.onRendered(function() {
                             select: true,
                             destroy: true,
                             colReorder: true,
-
-
-
-                            bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5456,12 +5173,6 @@ Template.purchaseordercard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5541,12 +5252,6 @@ Template.purchaseordercard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5641,6 +5346,7 @@ Template.purchaseordercard.onRendered(function() {
 
 });
 
+
 Template.purchaseordercard.helpers({
 
     getTemplateList: function () {
@@ -5657,6 +5363,11 @@ Template.purchaseordercard.helpers({
     purchaseorderrecord: () => {
         return Template.instance().purchaseorderrecord.get();
     },
+
+    supplierRecord: () => {
+        return Template.instance().supplierRecord.get();
+    },
+
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b) {
             if (a.department == 'NA') {
@@ -5794,18 +5505,6 @@ Template.purchaseordercard.helpers({
     },
     isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
     // custom field displaysettings
-    displayfields: () => {
-        let data = Template.instance().displayfields.get();
-        let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-        if (!isBatchSerialNoTracking) {
-          data.find((x) => x.class === 'SerialNo').display = false;
-          data.find((x) => x.class === 'SerialNo').active = false;
-        }
-        let monthArr = Template.instance().monthArr.get();  
-        data.find((x) => x.class === 'FixedAsset').display = monthArr.find((x) => x.moduleName === 'Fixed Assets').isPurchased;
-        data.find((x) => x.class === 'FixedAsset').active = monthArr.find((x) => x.moduleName === 'Fixed Assets').isPurchased;
-      return data;
-    },
 
     isForeignEnabled: () => {
         return Template.instance().isForeignEnabled.get();
@@ -5813,28 +5512,7 @@ Template.purchaseordercard.helpers({
     getDefaultCurrency: () => {
         return defaultCurrencyCode;
     },
-    convertToForeignAmount: (amount) => {
-        // return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-    },
 
-    displayFieldColspan: (displayfield) => {
-        if(["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(displayfield.custfieldlabel))
-        {
-            if(Template.instance().isForeignEnabled.get() == true) {
-                return 2
-            }
-            return 1;
-        }
-        return 1;
-    },
-
-    subHeaderForeign: (displayfield) => {
-
-        if(["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(displayfield.custfieldlabel)) {
-            return true;
-        }
-        return false;
-    },
 });
 
 Template.purchaseordercard.events({
@@ -6755,6 +6433,8 @@ Template.purchaseordercard.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -7333,32 +7013,7 @@ Template.purchaseordercard.events({
 
         }
     },
-    'click  #open_print_confirm':function(event)
-    {
-        playPrintAudio();
-        setTimeout(async function(){
-        if($('#choosetemplate').is(':checked'))
-        {
-            $('#templateselection').modal('show');
-        }
-        else
-        {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // }
-            // $('#confirmprint').modal('hide');
-        }
-    }, delayTimeAfterSound);
-    },
+    'click  #open_print_confirm':function(event) {},
 
     'click #choosetemplate':function(event)
     {
@@ -7553,7 +7208,7 @@ Template.purchaseordercard.events({
 
           });
 
-        
+
         if($('#print_purchase_order').is(':checked') || $('#print_purchase_order_second').is(':checked')) {
             printTemplate.push('Purchase Orders');
         }
@@ -7635,7 +7290,7 @@ Template.purchaseordercard.events({
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        
+
         if(targetID != undefined) {
             times++;
 
@@ -9213,117 +8868,7 @@ Template.purchaseordercard.events({
         // $("" + columHeaderUpdate + "").html(columData);
         $("th.col" + columHeaderUpdate + "").html(columData);
     },
-    'click .btnSaveGridSettings': async function(event) {
-        playSaveAudio();
-        let templateObject = Template.instance();
-        setTimeout(async function(){
-      let lineItems = [];
-      $(".fullScreenSpin").css("display", "inline-block");
 
-      $(".displaySettings").each(function (index) {
-        var $tblrow = $(this);
-        var fieldID = $tblrow.attr("custid") || 0;
-        var colTitle = $tblrow.find(".divcolumn").text() || "";
-        var colWidth = $tblrow.find(".custom-range").val() || 0;
-        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-        var colHidden = false;
-        if ($tblrow.find(".custom-control-input").is(":checked")) {
-          colHidden = true;
-        } else {
-          colHidden = false;
-        }
-        let lineItemObj = {
-          index: parseInt(fieldID),
-          label: colTitle,
-          active: colHidden,
-          width: parseInt(colWidth),
-          class: colthClass,
-          display: true
-        };
-
-        lineItems.push(lineItemObj);
-      });
-
-
-      let reset_data = templateObject.reset_data.get();
-      reset_data = reset_data.filter(redata => redata.display == false);
-      lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index);
-
-      try {
-        let erpGet = erpDb();
-        let tableName = "tblPurchaseOrderLine";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-
-        $(".fullScreenSpin").css("display", "none");
-        if(added) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-              addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-          });
-
-            swal({
-              title: 'SUCCESS',
-              text: "Display settings is updated!",
-              type: 'success',
-              showCancelButton: false,
-              confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.value) {
-                   $('#myModal2').modal('hide');
-                }
-            });
-        } else {
-          swal("Something went wrong!", "", "error");
-        }
-      } catch (error) {
-        $(".fullScreenSpin").css("display", "none");
-        swal("Something went wrong!", "", "error");
-      }
-    }, delayTimeAfterSound);
-    },
-    'click .btnResetGridSettings': function(event) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      if(isBatchSerialNoTracking) {
-        reset_data[13].display = true;
-      } else {
-        reset_data[13].display = false;
-      }
-      reset_data = templateObject.insertItemWithLabel(reset_data,'BO','Customer/Job');
-      reset_data = templateObject.insertItemWithLabel(reset_data,'Customer/Job','Serial/Lot No');
-      reset_data = templateObject.insertItemWithLabel(reset_data,'Serial/Lot No','Fixed Asset');
-      reset_data = reset_data.filter(redata => redata.display);
-
-      $(".displaySettings").each(function (index) {
-        let $tblrow = $(this);
-        $tblrow.find(".divcolumn").text(reset_data[index].label);
-        $tblrow
-          .find(".custom-control-input")
-          .prop("checked", reset_data[index].active);
-
-        let title = $("#tblPurchaseOrderLine").find("th").eq(index);
-        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
-        } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
-        } else {
-          $(title).html(reset_data[index].label);
-        }
-
-
-        if (reset_data[index].active) {
-          $('.col' + reset_data[index].class).addClass('showColumn');
-          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
-        } else {
-          $('.col' + reset_data[index].class).addClass('hiddenColumn');
-          $('.col' + reset_data[index].class).removeClass('showColumn');
-        }
-        $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
-        $(".col" + reset_data[index].class).css('width', reset_data[index].width);
-      });
-    },
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
             _id: Session.get('mycloudLogonID'),
@@ -10546,7 +10091,7 @@ Template.purchaseordercard.events({
         let basedOnTypeAttr = '';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -10613,7 +10158,7 @@ Template.purchaseordercard.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -10666,7 +10211,7 @@ Template.purchaseordercard.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -10747,17 +10292,17 @@ Template.purchaseordercard.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -10834,21 +10379,21 @@ Template.purchaseordercard.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             // window.open("/invoicecard", "_self");
