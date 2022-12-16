@@ -868,6 +868,7 @@ initTemplateHeaderFooter1 = function() {
   $("#templatePreviewModal .io").text("");
   $("#templatePreviewModal .ro").text("");
   $("#templatePreviewModal .due").text("");
+  $("#templatePreviewModal .div_header1_1").hide();
 }
 
 initTemplateHeaderFooter2 = function() {
