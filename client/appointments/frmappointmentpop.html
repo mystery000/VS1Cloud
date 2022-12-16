@@ -543,15 +543,16 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
         {{> copyfrequencypop}}
     </div>
-    
-    <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-        {{> addcustomerpop}}
-        <!-- {{> addcustomerpop customerRecord=customerRecord}} -->
-    </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
+    {{> all_transaction_modals customerRecord=customerRecord}}
+    <!--  Editor: Vlayslav Date:15/12/2022 Description: Moved into the all_transaction_modals -->
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+        {{> addcustomerpop customerRecord=customerRecord}}
+    </div> -->
+
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
         {{> newproductpop}}
-    </div>
+    </div> -->
 
     {{> deletepop itemName1="Appointment" itemName2="appointment" itemName3="Appointment" button1="btnDeleteAppointment" button2="btnDeleteFollowingAppointments"}}
 
@@ -563,15 +564,15 @@
         {{> productlistpopwithcheckboxes}}
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal2">
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="productListModal2">
         {{> productlistpop}}
-    </div>
+    </div> -->
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
         {{> copyfrequencypop}}
-    </div>
+    </div> -->
 
-    <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
+    <!-- <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
         <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
             <div class="modal-content customerListContent">
                 <div class="modal-header">
@@ -586,7 +587,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="modal fade employeeListModal" role="dialog" tabindex="-1" id="employeeListModal">
         <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">

@@ -561,6 +561,7 @@ Template.non_transactional_list.onRendered(function() {
           if(reset_data[r].active == true){
             $('#'+currenttablename+' .'+reset_data[r].class).removeClass('hiddenColumn');
           }else if(reset_data[r].active == false){
+            console.log('currenttablename:',currenttablename)
             $('#'+currenttablename+' .'+reset_data[r].class).addClass('hiddenColumn');
           };
           custFields.push(customData);
@@ -4916,6 +4917,12 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
               [3,"MIss",'<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
               [4,"Ms",'<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
             ];
+            templateObject.transactiondatatablerecords.set(splashArrayClientTypeList)
+            if(templateObject.transactiondatatablerecords.get()) {
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+            }
             let deleteFilter = false;
             setTimeout(function () {
                 //$('#'+currenttablename).removeClass('hiddenColumn');

@@ -2781,10 +2781,10 @@ Template.customerscard.onRendered(function() {
         }
     })
 
-    $(document).on("click", "#tblTitleList tbody tr", function (e) {
-        $('#editCustomerTitle').val($(this).find(".colTypeName").text());
-        $('#customerTitlePopModal').modal('toggle');
-    });
+    // $(document).on("click", "#tblTitleList tbody tr", function (e) {
+    //     $('#editCustomerTitle').val($(this).find(".colTypeName").text());
+    //     $('#customerTitlePopModal').modal('toggle');
+    // });
 
 });
 

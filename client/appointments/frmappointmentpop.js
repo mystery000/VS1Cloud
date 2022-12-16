@@ -43,7 +43,9 @@ Template.frmappointmentpop.onCreated(() => {
     templateObject.globalSettings = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.allnoninvproducts = new ReactiveVar([]);
-    // templateObject.customerRecord = new ReactiveVar();
+
+    templateObject.customerRecord = new ReactiveVar();
+
 });
 
 Template.frmappointmentpop.onRendered(function() {
@@ -1914,6 +1916,7 @@ Template.frmappointmentpop.onRendered(function() {
                         templateObject
                     );
                 } else {
+                    console.log('customerListModal_toggle')
                     $("#customerListModal").modal("toggle");
                 }
                 setTimeout(function() {
@@ -2062,36 +2065,36 @@ Template.frmappointmentpop.onRendered(function() {
                                         }
 
                                         setTimeout(function() {
-                                            // let customerRecord = {
-                                            //     id:popCustomerID,
-                                            //     phone:popCustomerPhone,
-                                            //     firstname:popCustomerFirstName,
-                                            //     middlename: popCustomerMiddleName,
-                                            //     lastname:popCustomerLastName,
-                                            //     company:data.tcustomer[0].fields.Companyname || '',
-                                            //     email: popCustomerEmail,
-                                            //     title: popCustomerTitle,
-                                            //     tfn: popCustomertfn,
-                                            //     mobile: popCustomerMobile,
-                                            //     fax: popCustomerFaxnumber,
-                                            //     shippingaddress: popCustomerStreet,
-                                            //     scity: popCustomerStreet2,
-                                            //     sstate: popCustomerCountry,
-                                            //     terms: '',
-                                            //     spostalcode: popCustomerPostcode,
-                                            //     scountry: popCustomerState,
-                                            //     billingaddress: popCustomerbillingaddress,
-                                            //     bcity: popCustomerbcity,
-                                            //     bstate: popCustomerbstate,
-                                            //     bpostalcode: popCustomerbpostalcode,
-                                            //     bcountry: popCustomerCountry,
-                                            //     custFld1: popCustomercustfield1,
-                                            //     custFld2: popCustomercustfield2,
-                                            //     jobbcountry: '',
-                                            //     jobscountry: '',
-                                            //     discount:0
-                                            // }
-                                            // templateObject.customerRecord.set(customerRecord);
+                                            let customerRecord = {
+                                                id:popCustomerID,
+                                                phone:popCustomerPhone,
+                                                firstname:popCustomerFirstName,
+                                                middlename: popCustomerMiddleName,
+                                                lastname:popCustomerLastName,
+                                                company:data.tcustomer[0].fields.Companyname || '',
+                                                email: popCustomerEmail,
+                                                title: popCustomerTitle,
+                                                tfn: popCustomertfn,
+                                                mobile: popCustomerMobile,
+                                                fax: popCustomerFaxnumber,
+                                                shippingaddress: popCustomerStreet,
+                                                scity: popCustomerStreet2,
+                                                sstate: popCustomerCountry,
+                                                terms: '',
+                                                spostalcode: popCustomerPostcode,
+                                                scountry: popCustomerState,
+                                                billingaddress: popCustomerbillingaddress,
+                                                bcity: popCustomerbcity,
+                                                bstate: popCustomerbstate,
+                                                bpostalcode: popCustomerbpostalcode,
+                                                bcountry: popCustomerCountry,
+                                                custFld1: popCustomercustfield1,
+                                                custFld2: popCustomercustfield2,
+                                                jobbcountry: '',
+                                                jobscountry: '',
+                                                discount:0
+                                            }
+                                            templateObject.customerRecord.set(customerRecord);
                                             $("#addCustomerModal").modal("show");
                                         }, 200);
                                     })
@@ -2237,36 +2240,37 @@ Template.frmappointmentpop.onRendered(function() {
                                         }
 
                                         setTimeout(function() {
-                                            // let customerRecord = {
-                                            //     id:popCustomerID,
-                                            //     phone:popCustomerPhone,
-                                            //     firstname:popCustomerFirstName,
-                                            //     middlename: popCustomerMiddleName,
-                                            //     lastname:popCustomerLastName,
-                                            //     company:data.tcustomervs1[i].fields.Companyname || '',
-                                            //     email: popCustomerEmail,
-                                            //     title: popCustomerTitle,
-                                            //     tfn: popCustomertfn,
-                                            //     mobile: popCustomerMobile,
-                                            //     fax: popCustomerFaxnumber,
-                                            //     shippingaddress: popCustomerStreet,
-                                            //     scity: popCustomerStreet2,
-                                            //     sstate: popCustomerCountry,
-                                            //     terms: '',
-                                            //     spostalcode: popCustomerPostcode,
-                                            //     scountry: popCustomerState,
-                                            //     billingaddress: popCustomerbillingaddress,
-                                            //     bcity: popCustomerbcity,
-                                            //     bstate: popCustomerbstate,
-                                            //     bpostalcode: popCustomerbpostalcode,
-                                            //     bcountry: popCustomerCountry,
-                                            //     custFld1: popCustomercustfield1,
-                                            //     custFld2: popCustomercustfield2,
-                                            //     jobbcountry: '',
-                                            //     jobscountry: '',
-                                            //     discount:0
-                                            // }
-                                            // templateObject.customerRecord.set(customerRecord);
+                                            let customerRecord = {
+                                                id:popCustomerID,
+                                                phone:popCustomerPhone,
+                                                firstname:popCustomerFirstName,
+                                                middlename: popCustomerMiddleName,
+                                                lastname:popCustomerLastName,
+                                                company:data.tcustomervs1[i].fields.Companyname || '',
+                                                email: popCustomerEmail,
+                                                title: popCustomerTitle,
+                                                tfn: popCustomertfn,
+                                                mobile: popCustomerMobile,
+                                                fax: popCustomerFaxnumber,
+                                                shippingaddress: popCustomerStreet,
+                                                scity: popCustomerStreet2,
+                                                sstate: popCustomerCountry,
+                                                terms: '',
+                                                spostalcode: popCustomerPostcode,
+                                                scountry: popCustomerState,
+                                                billingaddress: popCustomerbillingaddress,
+                                                bcity: popCustomerbcity,
+                                                bstate: popCustomerbstate,
+                                                bpostalcode: popCustomerbpostalcode,
+                                                bcountry: popCustomerCountry,
+                                                custFld1: popCustomercustfield1,
+                                                custFld2: popCustomercustfield2,
+                                                jobbcountry: '',
+                                                jobscountry: '',
+                                                discount:0
+                                            }
+                                            templateObject.customerRecord.set(customerRecord);
+                                            console.log('addCustomerModal_toggle')
                                             $("#addCustomerModal").modal("show");
                                         }, 200);
                                     }
@@ -3482,9 +3486,9 @@ Template.frmappointmentpop.helpers({
     extraProductFees: () => {
         return Template.instance().extraProductFees.get();
     },
-    // customerRecord: () => {
-    //     return Template.instance().customerRecord.get();
-    // },
+    customerRecord: () => {
+        return Template.instance().customerRecord.get();
+    },
 });
 
 Template.frmappointmentpop.events({
