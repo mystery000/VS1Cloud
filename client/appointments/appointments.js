@@ -1983,12 +1983,12 @@ Template.appointments.onRendered(function() {
                 } else {
                     let splitId = id.split(":");
 
-                    FlowRouter.go("/employeescard?id=" + splitId[1]);
+                    // FlowRouter.go("/employeescard?id=" + splitId[1]);
                     setTimeout(function() {
-                        $('.payrollTab').tab('show');
-                        $('a[href="#leave"]').tab('show');
+                        // $('.payrollTab').tab('show');
+                        // $('a[href="#leave"]').tab('show');
 
-                        $('#removeLeaveRequestBtn').show();
+                        // $('#removeLeaveRequestBtn').show();
                         let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                         var getLeaveInfo = leaveemployeerecords.filter((leave) => {
                             return (
@@ -2014,7 +2014,7 @@ Template.appointments.onRendered(function() {
                         }
 
                         $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
-                            window.open("/appointments", "_self");
+                            // window.open("/appointments", "_self");
                         });
                     }, 1000);
                 }
@@ -18806,15 +18806,16 @@ Template.appointments.events({
             cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.value) {
-                FlowRouter.go("/employeescard?id=" + empID);
+                // FlowRouter.go("/employeescard?id=" + empID);
                 // localStorage.setItem("appt_historypage", "appointmentlist");
                 setTimeout(function() {
-                    $('.payrollTab').tab('show');
-                    $('a[href="#leave"]').tab('show');
-                    $('#newLeaveRequestbtn').trigger('click');
-
+                    // $('.payrollTab').tab('show');
+                    // $('a[href="#leave"]').tab('show');
+                    // $('#newLeaveRequestbtn').trigger('click');
+                    
+                    $('#newLeaveRequestModal').modal('show');
                     $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
-                        window.open("/appointments", "_self");
+                        // window.open("/appointments", "_self");
                     });
                 }, 1000);
                 // $("#newLeaveRequestModal").modal("toggle");
