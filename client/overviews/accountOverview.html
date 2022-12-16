@@ -301,7 +301,15 @@
                 <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myAccountModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
         </div>
+        <style>
+        .isNotBankAccount {
+            display: none !important;
+        }
 
+        .isNotCreditAccount {
+            display: none !important;
+        }
+        </style>
         <div class="card-body p-0 rounded">
             <!-- Start {{> optionNavSalesOverview}} -->
             <!-- End -->
@@ -341,13 +349,7 @@
                         opacity: 1;
                     }
 
-                    .isNotBankAccount {
-                        display: none !important;
-                    }
 
-                    .isNotCreditAccount {
-                        display: none !important;
-                    }
                     .th.Balance,
                     .th.colBalance {
                         text-align: right !important;

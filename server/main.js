@@ -11,7 +11,7 @@ const Magento2 = require("node-magento2");
 ("use strict");
 
 let apiIndex = 0;
-const apiKeys = ["2fa825302bd84988871ff138483a86fb", "1f168b12a87398f309f7cf273ded064d", "ab54565999a9098243e68a73b15a43a0"];
+const apiKeys = ["1f168b12a87398f309f7cf273ded064d", "ab54565999a9098243e68a73b15a43a0"]; //"2fa825302bd84988871ff138483a86fb", 
 
 Meteor.startup(() => {
   process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
@@ -156,13 +156,16 @@ Meteor.startup(() => {
 
   (callVeryfiApi = function (imageData, fileName, cb) {
 
-    
-
+    apiIndex ++;
+    if (apiIndex >= apiKeys.length) {
+      apiIndex = 0;
+    }
+    const key = apiKeys[apiIndex];
     const options = {
       method: "GET",
       url: "https://api.mindee.net/v1/products/mindee/expense_receipts/v4/predict",
       headers: {
-        Authorization: "Token " + apiKeys[apiIndex],
+        Authorization: "Token " + key,
         "Content-Type": "multipart/form-data",
       },
       formData: {

@@ -106,5 +106,6 @@
   "notice": "Well done",
   "devDependencies": {
     "html5-qrcode": "^2.0.11"
-  }
+  },
+  "type": "module"
 }
