@@ -84,95 +84,18 @@ Template.reconImportModal.events({
   'click .btnImport' : function () {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
-    // let contactService = new ContactService();
-    let objDetails;
-    let firstName= '';
-    let lastName = '';
-    let taxCode = '';
 
     Papa.parse(templateObject.selectedFile.get(), {
         complete: function(results) {
+          if (FlowRouter.current().route.path === "/bankrecon")
             if(results.data.length > 0){
-                if((results.data[0][0] == "Company") && (results.data[0][1] == "First Name")
-                   && (results.data[0][2] == "Last Name") && (results.data[0][3] == "Phone")
-                   && (results.data[0][4] == "Mobile") && (results.data[0][5] == "Email")
-                   && (results.data[0][6] == "Skype") && (results.data[0][7] == "Street")
-                   && (results.data[0][8] == "Street2" || results.data[0][8] == "City/Suburb") && (results.data[0][9] == "State")
-                   && (results.data[0][10] == "Post Code") && (results.data[0][11] == "Country")) {
-
-                    let dataLength = results.data.length * 500;
-                    setTimeout(function(){
-                      window.open('/customerlist?success=true','_self');
-                      $('.fullScreenSpin').css('display','none');
-                    },parseInt(dataLength));
-
-                    for (let i = 0; i < results.data.length -1; i++) {
-                      firstName = results.data[i+1][1] !== undefined? results.data[i+1][1] :'';
-                      lastName = results.data[i+1][2]!== undefined? results.data[i+1][2] :'';
-                      taxCode = results.data[i+1][12]!== undefined? results.data[i+1][12] :'NT';
-                        objDetails = {
-                            type: "TCustomer",
-                            fields:
-                            {
-                                ClientName: results.data[i+1][0]||'',
-                                FirstName: firstName || '',
-                                LastName: lastName|| '',
-                                Phone: results.data[i+1][3]||'',
-                                Mobile: results.data[i+1][4]||'',
-                                Email: results.data[i+1][5]||'',
-                                SkypeName: results.data[i+1][6]||'',
-                                Street: results.data[i+1][7]||'',
-                                Street2: results.data[i+1][8]||'',
-                                Suburb: results.data[i+1][8]||'',
-                                State: results.data[i+1][9]||'',
-                                PostCode:results.data[i+1][10]||'',
-                                Country:results.data[i+1][11]||'',
-
-                                BillStreet: results.data[i+1][7]||'',
-                                BillStreet2: results.data[i+1][8]||'',
-                                BillState: results.data[i+1][9]||'',
-                                BillPostCode:results.data[i+1][10]||'',
-                                Billcountry:results.data[i+1][11]||'',
-                                TaxCodeName:taxCode||'NT',
-                                PublishOnVS1: true
-                            }
-                        };
-                        if(results.data[i+1][0]){
-                            if(results.data[i+1][0] !== "") {
-                                // contactService.saveCustomer(objDetails).then(function (data) {
-                                //     //$('.fullScreenSpin').css('display','none');
-                                //     //Meteor._reload.reload();
-                                // }).catch(function (err) {
-                                //     //$('.fullScreenSpin').css('display','none');
-                                //     swal({
-                                //         title: 'Oooops...',
-                                //         text: err,
-                                //         type: 'error',
-                                //         showCancelButton: false,
-                                //         confirmButtonText: 'Try Again'
-                                //     }).then((result) => {
-                                //         if (result.value) {
-                                //             window.open('/customerlist?success=true','_self');
-                                //         } else if (result.dismiss === 'cancel') {
-                                //           window.open('/customerlist?success=true','_self');
-                                //         }
-                                //     });
-                                // });
-                            }
-                        }
-                    }
-
-                }else{
-                    $('.fullScreenSpin').css('display','none');
-                    // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
-                    swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
-                }
+                localStorage.setItem('BankStatement', JSON.stringify(results.data))
+                FlowRouter.go('/newbankrule', {}, {preview: 1, bankaccountid: $('#bankAccountID').val(), bankaccountname: $('#bankAccountName').val()})
             }else{
                 $('.fullScreenSpin').css('display','none');
                 // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
                 swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
             }
-
         }
     });
   }

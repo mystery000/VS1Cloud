@@ -1417,7 +1417,8 @@ Template.bankrecon.onRendered(function() {
                 });
                 $('#bankAccountListModal').modal('toggle');
             } else {
-                openBankAccountListModal();
+                setTimeout(() => openBankAccountListModal())
+
             }
         }
     });
@@ -1463,6 +1464,7 @@ Template.bankrecon.onRendered(function() {
 
     $('#btnImportState').on('click', function(e) {
         let accountId = $('#bankAccountID').val()
+        let accountName = $('#bankAccountName').val()
         if ($('#bankAccountName').val() == '')
             swal('Please Select Bank Account!', '', 'warning');
         else {
@@ -1475,7 +1477,7 @@ Template.bankrecon.onRendered(function() {
                     }
                     swal(`Please create a new bank rule for bank`, '', 'warning')
                         .then((result) => {
-                            window.open('/newbankrule', '_self')
+                            FlowRouter.go('/newbankrule', {}, {bankaccountid: accountId, bankaccountname: accountName})
                         });
                 })
                 .catch(function (err) {
