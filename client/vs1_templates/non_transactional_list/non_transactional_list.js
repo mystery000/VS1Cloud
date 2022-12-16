@@ -4918,14 +4918,13 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
               [4,"Ms",'<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
             ];
             templateObject.transactiondatatablerecords.set(splashArrayClientTypeList)
-            if(templateObject.transactiondatatablerecords.get()) {
-              setTimeout(function () {
-                  MakeNegative();
-              }, 100);
-            }
+            // if(templateObject.transactiondatatablerecords.get()) {
+            //   setTimeout(function () {
+            //       MakeNegative();
+            //   }, 100);
+            // }
             let deleteFilter = false;
             setTimeout(function () {
-                //$('#'+currenttablename).removeClass('hiddenColumn');
                 $('#'+currenttablename).DataTable({
                     data: splashArrayClientTypeList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
