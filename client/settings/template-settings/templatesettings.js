@@ -1397,7 +1397,7 @@ Template.templatesettings.onRendered(function () {
           $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
     
           $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
-
+          JsBarcode("#Barcode", "BI-751",{displayValue: false});
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " "+ " template"
           );
@@ -1667,6 +1667,11 @@ Template.templatesettings.onRendered(function () {
         tbl_content.empty();
 
         var left_idx = 0;
+
+
+
+
+        
         switch (object_invoce[0]["title"]) {
           case "Bill":
             left_idx = 1;
