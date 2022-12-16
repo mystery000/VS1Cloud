@@ -7,6 +7,8 @@ import { SideBarService } from '../../js/sidebar-service';
 import { ProductService } from '../../product/product-service';
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
+import { AppointmentService } from '../../appointments/appointment-service';
+let appointmentService = new AppointmentService();
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
@@ -38,6 +40,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     const lineCustomerItems = [];
     const dataTableList = [];
     const tableHeaderList = [];
+    let globalID;
 
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
@@ -57,6 +60,48 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
 
         });
     };
+
+    shareFunction = {
+      initTable : async function(updateID) {
+        if (updateID) {
+          let extraProducts = await appointmentService.getOneAppointmentdataEx(updateID);
+          extraProducts = extraProducts.fields.ExtraProducts;
+          extraProducts = extraProducts.split(":");
+          globalID = extraProducts;
+
+          $("#tblInventoryCheckbox_next").click();
+
+        }
+      }
+    }
+
+    function checkBoxClick() {
+      let currentTableData = templateObject.transactiondatatablerecords.get();
+      let targetRows = [];
+      globalID.forEach(itemID => {
+        let index = currentTableData.findIndex(item => item[1] == itemID);
+        if (index > -1) {
+          let targetRow = currentTableData[index];
+          let chk = targetRow[0];
+          chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
+          targetRow.splice(0, 1, chk);
+          currentTableData.splice(index, 1);
+          targetRows.push(targetRow);
+        }
+      });
+      let newTableData = [...targetRows, ...currentTableData];
+      templateObject.transactiondatatablerecords.set(newTableData);
+      $('#' + currenttablename).DataTable().clear();
+      $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
+      let rows = $('#' + currenttablename).find('tbody tr');
+      for (let i = 0; i < rows.length; i++) {
+          if ($(rows[i]).find('input.chkBox').prop('checked') == true) {
+              if ($(rows[i]).hasClass('checkRowSelected') == false) {
+                  $(rows[i]).addClass('checkRowSelected');
+              }
+          }
+      }
+    }
 
     let currenttablename = templateObject.data.tablename || "";
 
@@ -159,6 +204,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     templateObject.getProductsData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
         getVS1Data('TProductList').then(function(dataObject) {
+
             if (dataObject.length == 0) {
                 sideBarService.getProductListVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
                     await addVS1Data('TProductList', JSON.stringify(data));
@@ -193,7 +239,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         } else {
             deleteFilter = false;
         };
-
         for (let i = 0; i < data.tproductlist.length; i++) {
             if (data.tproductlist[i].Active == true) {
                 linestatus = "";
@@ -235,7 +280,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             }, 100);
         }
         //$('.fullScreenSpin').css('display','none');
-        setTimeout(function() {
+
+        setTimeout(async function() {
             //$('#'+currenttablename).removeClass('hiddenColumn');
             $('#' + currenttablename).DataTable({
                 data: templateObject.transactiondatatablerecords.get(),
@@ -422,7 +468,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                             setTimeout(function() {
                                 $('#' + currenttablename).dataTable().fnPageChange('last');
                             }, 400);
-
+                            checkBoxClick();
                             $('.fullScreenSpin').css('display', 'none');
 
                         }).catch(function(err) {
@@ -484,6 +530,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
 
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
+
+
 
     //Tax Codes List
     templateObject.getTaxCodesListVS1 = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB

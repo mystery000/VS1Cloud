@@ -187,6 +187,7 @@ Template.frmappointmentpop.onRendered(function() {
             $('.fullScreenSpin').css('display', 'inline-block');
             var hours = "0";
             let datalist = [];
+            shareFunction.initTable(updateID);
             var getAppointmentInfo = await appointmentService.getOneAppointmentdataEx(updateID);
             var appointment = {
                 id: getAppointmentInfo.fields.ID || "",

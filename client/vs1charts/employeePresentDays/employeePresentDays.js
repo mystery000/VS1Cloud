@@ -4,7 +4,7 @@ import {SideBarService} from "../../js/sidebar-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 
-Template.employeeAbsentDays.onCreated(() => {
+Template.employeePresentDays.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
   templateObject.dateAsAt = new ReactiveVar();
@@ -17,7 +17,7 @@ Template.employeeAbsentDays.onCreated(() => {
   templateObject.topTenData = new ReactiveVar([]);
 });
 
-Template.employeeAbsentDays.onRendered(() => {
+Template.employeePresentDays.onRendered(() => {
   const templateObject = Template.instance();
 
 	function setFullScreenSpin(){
@@ -31,11 +31,11 @@ Template.employeeAbsentDays.onRendered(() => {
 
 		let empName = [];
 		let empClockedCount = [];
+
 		for (let t = 0; t < data.ttimesheet.length; t++) {
 			if (data.ttimesheet[t].fields.Logs != null) {
 				if (
-					data.ttimesheet[t].fields.InvoiceNotes == "Clocked On" ||
-					data.ttimesheet[t].fields.InvoiceNotes == "paused"
+					data.ttimesheet[t].fields.InvoiceNotes == "Clocked Off"
 				) {
 					clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName]++;
 				}else{
@@ -70,7 +70,7 @@ Template.employeeAbsentDays.onRendered(() => {
 		empName.reverse();
 		empClockedCount.reverse(); 
 
-		var ctx = document.getElementById("employeeAbsentDayschart").getContext("2d");
+		var ctx = document.getElementById("employeePresentDayschart").getContext("2d");
 		var myChart = new Chart(ctx, {
 			type: "horizontalBar",
 			data: {
@@ -197,7 +197,7 @@ Template.employeeAbsentDays.onRendered(() => {
 	templateObject.getAllTimeSheetDataClock();
 });
 
-Template.employeeAbsentDays.helpers({
+Template.employeePresentDays.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
