@@ -111,22 +111,8 @@ Template.journalentrycard.onRendered(() => {
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var journalData = await purchaseService.getOneJournalEnrtyData(currentInvoice);
-            var transactionDate = journalData.fields.TransactionDate;
-            var fromDate = transactionDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingJournals = await sideBarService.getTJournalEntryListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var journalList = followingJournals.tjournalentrylist;
-            if (journalList.length > 1) {
-                templateObject.hasFollow.set(true);
-            } else {
-                templateObject.hasFollow.set(false);
-            }
+            var isRepeated = journalData.fields.RepeatedFrom;
+            templateObject.hasFollow.set(isRepeated);
         }
     }
     templateObject.hasFollowings();
