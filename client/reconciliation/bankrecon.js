@@ -1460,6 +1460,32 @@ Template.bankrecon.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
+
+    $('#btnImportState').on('click', function(e) {
+        let accountId = $('#bankAccountID').val()
+        if ($('#bankAccountName').val() == '')
+            swal('Please Select Bank Account!', '', 'warning');
+        else {
+            getVS1Data("VS1_BankRule")
+                .then(function (dataObject) {
+                    if (dataObject.length) {
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data[accountId] && data[accountId].length)
+                            $('#importModal').modal();
+                        else
+                            swal(`Please create a new bank rule for bank`, '', 'warning')
+                            .then((result) => {
+                                window.open('/newbankrule', '_self')
+                            });
+                    }
+                })
+                .catch(function (err) {
+                    swal('Something went wrong', '', 'error');
+                });
+
+        }
+
+    })
     tableResize();
 });
 

@@ -9,7 +9,7 @@ import LoadingOverlay from "../LoadingOverlay";
 let accountService = new AccountService();
 
 const successSaveCb = () => {
-    LoadingOverlay.hide();
+    // LoadingOverlay.hide();
     playSaveAudio();
     swal({
         title: "Bank Rule Successfully Saved",
@@ -22,7 +22,7 @@ const successSaveCb = () => {
 
 const errorSaveCb = (err) => {
     // console.log(err);
-    LoadingOverlay.hide();
+    // LoadingOverlay.hide();
     swal("Something went wrong", "", "error");
 }
 
@@ -245,7 +245,7 @@ Template.newbankrule.events({
     } else if ($("#sltBankAccountID").val() === "") {
       swal("Please select bank account", "", "error");
     } else {
-      LoadingOverlay.show();
+      // LoadingOverlay.show();
       let accountId = $("#sltBankAccountID").val();
       let saveData = {
         [accountId]: Template.instance().bankRuleData.get(),
