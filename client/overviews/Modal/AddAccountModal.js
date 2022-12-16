@@ -259,7 +259,7 @@ Template.addAccountModal.onRendered(function () {
             }
           }
         });
-        
+
         $(document).on("click", "#tblTaxRate tbody tr", (e) => {
           var table = $(e.currentTarget);
           let lineTaxCode = table.find(".taxName").text();
@@ -1091,23 +1091,13 @@ Template.addAccountModal.onRendered(function () {
     }
 
   // tempcode
-<<<<<<< HEAD
-  $("#sltBankCodes").editableSelect();
-  $("#sltBankCodes")
-    .editableSelect()
-    .on("click.editable-select", function (e, li) {
-      var $earch = $(this);
-      var offset = $earch.offset();
-      var bankName = e.target.value || "";
-=======
   // $("#sltBankCodes").editableSelect();
   // $("#sltBankCodes")
   //   .editableSelect()
   //   .on("click.editable-select", function (e, li) {
   //     var $earch = $(this);
-  //     var offset = $earch.offset(); 
+  //     var offset = $earch.offset();
   //     var bankName = e.target.value || "";
->>>>>>> main
 
   //     if (e.pageX > offset.left + $earch.width() - 8) {
   //       // $("#bankCodeModal").modal();
@@ -1125,22 +1115,13 @@ Template.addAccountModal.onRendered(function () {
   //     }
   //   });
 
-<<<<<<< HEAD
-  $(document).on("click", "#tblBankCode tbody tr", function (e) {
-    var table = $(this);
-    let bankCode = table.find(".bankCode").text();
-    $('#bankCodeModal').modal('toggle');
-    $('#sltBankCodes').val(bankCode);
-  });
-=======
   // $(document).on("click", "#tblBankCode tbody tr", function (e) {
   //   var table = $(this);
-  //   let bankCode = table.find(".bankCode").text(); 
+  //   let bankCode = table.find(".bankCode").text();
   //   // $('#bankCodeModal').modal('toggle');
   //   $("#eftBankCodesModal").modal("toggle");
   //   $('#sltBankCodes').val(bankCode);
   // });
->>>>>>> main
   // tempcode
 });
 
