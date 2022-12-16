@@ -6,6 +6,7 @@ import '../lib/global/erp-objects';
 import XLSX from 'xlsx';
 import 'jquery-editable-select';
 import { AccountService } from "../accounts/account-service";
+import showBankInfo from "./bankInfo";
 
 let accountService = new AccountService();
 let utilityService = new UtilityService();
@@ -1500,7 +1501,8 @@ Template.bankrecon.onRendered(function() {
                 });
                 $('#bankAccountListModal').modal('toggle');
             } else {
-                openBankAccountListModal();
+                setTimeout(() => openBankAccountListModal())
+
             }
         }
     });
@@ -1513,7 +1515,7 @@ Template.bankrecon.onRendered(function() {
         $('#accountListModal').modal('toggle');
         $('#bankAccountName').val(accountname);
         $('#bankAccountID').val(accountTypeId);
-
+        showBankInfo();
         templateObject.reconVS1dep.set(null);
         templateObject.reconVS1with.set(null);
 
@@ -1543,6 +1545,32 @@ Template.bankrecon.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
+
+    $('#btnImportState').on('click', function(e) {
+        let accountId = $('#bankAccountID').val()
+        let accountName = $('#bankAccountName').val()
+        if ($('#bankAccountName').val() == '')
+            swal('Please Select Bank Account!', '', 'warning');
+        else {
+            getVS1Data("VS1_BankRule")
+                .then(function (dataObject) {
+                    if (dataObject.length) {
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data[accountId] && data[accountId].length)
+                            return $('#importModal').modal();
+                    }
+                    swal(`Please create a new bank rule for bank`, '', 'warning')
+                        .then((result) => {
+                            FlowRouter.go('/newbankrule', {}, {bankaccountid: accountId, bankaccountname: accountName})
+                        });
+                })
+                .catch(function (err) {
+                    swal('Something went wrong', '', 'error');
+                });
+
+        }
+
+    })
     tableResize();
 });
 
