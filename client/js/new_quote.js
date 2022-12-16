@@ -264,147 +264,6 @@ Template.new_quote.onRendered(() => {
         }
     };
 
-    templateObject.getTemplateInfoNew = function(){
-       LoadingOverlay.show();
-        getVS1Data('TTemplateSettings').then(function(dataObject) {
-          if (dataObject.length == 0) {
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Quotes_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Quotes_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Quotes_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-                 }
-
-
-                  LoadingOverlay.hide();
-              }).catch(function (err) {
-                LoadingOverlay.hide();
-              });
-          }else{
-                  let data = JSON.parse(dataObject[0].data);
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Quotes_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Quotes_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Quotes_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-
-                 }
-                  LoadingOverlay.hide();
-          }
-        }).catch(function(err) {
-        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                     if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
-                     {
-                            if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
-                                    $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                      $('#Quotes_1').attr('checked','checked');
-                                    }
-
-                            }
-                            if(data.ttemplatesettings[i].fields.Template == 2)
-                            {
-                                  $('input[name="Quotes_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Quotes_2').attr('checked','checked');
-                                  }
-                            }
-
-                            if(data.ttemplatesettings[i].fields.Template == 3)
-                            {
-                                  $('input[name="Quotes_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Quotes_3').attr('checked','checked');
-                                  }
-                            }
-
-
-                     }
-                  }
-
-
-                  LoadingOverlay.hide();
-        }).catch(function (err) {
-          LoadingOverlay.hide();
-        });
-      });
-
-    };
-
-    templateObject.getTemplateInfoNew();
-
     templateObject.getLastQuoteData = async function() {
         let lastBankAccount = "Bank";
         let lastDepartment = defaultDept || "";
@@ -976,7 +835,7 @@ Template.new_quote.onRendered(() => {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -989,9 +848,9 @@ Template.new_quote.onRendered(() => {
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
              }
 
@@ -1043,7 +902,7 @@ Template.new_quote.onRendered(() => {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1056,9 +915,9 @@ Template.new_quote.onRendered(() => {
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
              }
 
@@ -1112,7 +971,7 @@ Template.new_quote.onRendered(() => {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1125,9 +984,9 @@ Template.new_quote.onRendered(() => {
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
              }
 
@@ -1448,7 +1307,7 @@ Template.new_quote.onRendered(() => {
             }
         }
 
-        
+
 
         }
 
@@ -5025,13 +4884,9 @@ Template.new_quote.onRendered(function() {
                                     "targets": [5]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-
-
-
-                            bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5127,8 +4982,9 @@ Template.new_quote.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5212,13 +5068,9 @@ Template.new_quote.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5836,28 +5688,7 @@ Template.new_quote.events({
         clickedInput = "three";
         $('#clickedControl').val(clickedInput);
     },
-    'click  #open_print_confirm': function(event) {
-        playPrintAudio();
-        setTimeout(async function(){
-        if($('#choosetemplate').is(':checked')) {
-            $('#templateselection').modal('show');
-        } else {
-           LoadingOverlay.show();
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // }
-            // $('#confirmprint').modal('hide');
-        }
-    }, delayTimeAfterSound);
-    },
+    'click  #open_print_confirm': function(event) {},
     'click #choosetemplate':function(event) {
         if($('#choosetemplate').is(':checked'))
         {
@@ -6817,6 +6648,8 @@ Template.new_quote.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -7382,7 +7215,7 @@ Template.new_quote.events({
         let salesService = new SalesBoardService();
         setTimeout(function(){
         LoadingOverlay.show();
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -7426,7 +7259,7 @@ Template.new_quote.events({
           }
         }
     }, delayTimeAfterSound);
-    },    
+    },
     'click .btnDeleteQuote': function(event) {
         playDeleteAudio();
         let templateObject = Template.instance();
@@ -10620,7 +10453,7 @@ Template.new_quote.events({
         let basedOnTypeAttr = 'F,';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -10687,7 +10520,7 @@ Template.new_quote.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -10740,7 +10573,7 @@ Template.new_quote.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -10821,17 +10654,17 @@ Template.new_quote.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -10908,21 +10741,21 @@ Template.new_quote.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             window.open("/invoicecard", "_self");

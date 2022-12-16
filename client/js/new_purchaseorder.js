@@ -244,161 +244,14 @@ Template.purchaseordercard.onRendered(() => {
         $('.uploadedImage').attr('src', imageData);
     }
 
-    
-  
+
+
 
     const purchaseService = new PurchaseBoardService();
     const clientsService = new PurchaseBoardService();
     const contactService = new ContactService();
 
-    templateObject.getTemplateInfoNew = function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
-        getVS1Data('TTemplateSettings').then(function(dataObject) {
-          if (dataObject.length == 0) {
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Purchase_Orders_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-
-                 }
-
-
-                  $('.fullScreenSpin').css('display', 'none');
-              }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-              });
-          }else{
-                  let data = JSON.parse(dataObject[0].data);
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Purchase_Orders_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-
-
-                 }
-                  $('.fullScreenSpin').css('display', 'none');
-          }
-        }).catch(function(err) {
-        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
-
-                     if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
-                     {
-                            if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
-                                    $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                      $('#Purchase_Orders_1').attr('checked','checked');
-                                    }
-
-                            }
-                            if(data.ttemplatesettings[i].fields.Template == 2)
-                            {
-                                  $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Purchase_Orders_2').attr('checked','checked');
-                                  }
-                            }
-
-                            if(data.ttemplatesettings[i].fields.Template == 3)
-                            {
-                                  $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Purchase_Orders_3').attr('checked','checked');
-                                  }
-                            }
-
-
-                     }
-
-
-
-
-                  }
-                  $('.fullScreenSpin').css('display', 'none');
-        }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
-        });
-      });
-
-      };
-
-      templateObject.getTemplateInfoNew();
-
-templateObject.getLastPOData = async function() {
+    templateObject.getLastPOData = async function() {
        let lastBankAccount = "Bank";
        let lastDepartment = defaultDept || "";
        purchaseService.getLastPOID().then(function(data) {
@@ -1058,7 +911,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1071,9 +924,9 @@ templateObject.getLastPOData = async function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1126,7 +979,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1139,9 +992,9 @@ templateObject.getLastPOData = async function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1197,7 +1050,7 @@ templateObject.getLastPOData = async function() {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1210,9 +1063,9 @@ templateObject.getLastPOData = async function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1542,7 +1395,7 @@ templateObject.getLastPOData = async function() {
                         $("#html-2-pdfwrapper_new #tax_list_print").remove();
                     }
                 }
-                
+
         }
 
          // table content
@@ -1592,7 +1445,7 @@ templateObject.getLastPOData = async function() {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            
+
 
             }
 
@@ -4248,7 +4101,7 @@ templateObject.getLastPOData = async function() {
                                 }
 
                                 setTimeout(function() {
-                                    
+
                                     let supplierRecord = {
                                         id: popSupplierID,
                                         company: popSupplierName,
@@ -4997,8 +4850,9 @@ Template.purchaseordercard.onRendered(function() {
                                     "targets": [5]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-                            bStateSave: true,
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5073,10 +4927,9 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-                        bStateSave: true,
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5153,13 +5006,9 @@ Template.purchaseordercard.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5246,12 +5095,6 @@ Template.purchaseordercard.onRendered(function() {
                             select: true,
                             destroy: true,
                             colReorder: true,
-
-
-
-                            bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5330,12 +5173,6 @@ Template.purchaseordercard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5415,12 +5252,6 @@ Template.purchaseordercard.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -6602,6 +6433,8 @@ Template.purchaseordercard.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -7180,32 +7013,7 @@ Template.purchaseordercard.events({
 
         }
     },
-    'click  #open_print_confirm':function(event)
-    {
-        playPrintAudio();
-        setTimeout(async function(){
-        if($('#choosetemplate').is(':checked'))
-        {
-            $('#templateselection').modal('show');
-        }
-        else
-        {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // }
-            // $('#confirmprint').modal('hide');
-        }
-    }, delayTimeAfterSound);
-    },
+    'click  #open_print_confirm':function(event) {},
 
     'click #choosetemplate':function(event)
     {
@@ -7400,7 +7208,7 @@ Template.purchaseordercard.events({
 
           });
 
-        
+
         if($('#print_purchase_order').is(':checked') || $('#print_purchase_order_second').is(':checked')) {
             printTemplate.push('Purchase Orders');
         }
@@ -7482,7 +7290,7 @@ Template.purchaseordercard.events({
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        
+
         if(targetID != undefined) {
             times++;
 
@@ -10283,7 +10091,7 @@ Template.purchaseordercard.events({
         let basedOnTypeAttr = '';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -10350,7 +10158,7 @@ Template.purchaseordercard.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -10403,7 +10211,7 @@ Template.purchaseordercard.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -10484,17 +10292,17 @@ Template.purchaseordercard.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -10571,21 +10379,21 @@ Template.purchaseordercard.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             // window.open("/invoicecard", "_self");

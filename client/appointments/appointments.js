@@ -78,6 +78,9 @@ Template.appointments.onCreated(function() {
     templateObject.productFees = new ReactiveVar();
     templateObject.extraProductFees = new ReactiveVar([]);
     templateObject.leaveemployeerecords = new ReactiveVar([]);
+
+    // templateObject.customerRecord = new ReactiveVar();
+
 });
 
 async function sendAppointmentEmail() {
@@ -1980,12 +1983,12 @@ Template.appointments.onRendered(function() {
                 } else {
                     let splitId = id.split(":");
 
-                    FlowRouter.go("/employeescard?id=" + splitId[1]);
+                    // FlowRouter.go("/employeescard?id=" + splitId[1]);
                     setTimeout(function() {
-                        $('.payrollTab').tab('show');
-                        $('a[href="#leave"]').tab('show');
+                        // $('.payrollTab').tab('show');
+                        // $('a[href="#leave"]').tab('show');
 
-                        $('#removeLeaveRequestBtn').show();
+                        // $('#removeLeaveRequestBtn').show();
                         let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                         var getLeaveInfo = leaveemployeerecords.filter((leave) => {
                             return (
@@ -2011,7 +2014,7 @@ Template.appointments.onRendered(function() {
                         }
 
                         $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
-                            window.open("/appointments", "_self");
+                            // window.open("/appointments", "_self");
                         });
                     }, 1000);
                 }
@@ -8422,6 +8425,36 @@ Template.appointments.onRendered(function() {
                                         }
 
                                         setTimeout(function() {
+                                            // let customerRecord = {
+                                            //     id:popCustomerID,
+                                            //     phone:popCustomerPhone,
+                                            //     firstname:popCustomerFirstName,
+                                            //     middlename: popCustomerMiddleName,
+                                            //     lastname:popCustomerLastName,
+                                            //     company:data.tcustomer[0].fields.Companyname || '',
+                                            //     email: popCustomerEmail,
+                                            //     title: popCustomerTitle,
+                                            //     tfn: popCustomertfn,
+                                            //     mobile: popCustomerMobile,
+                                            //     fax: popCustomerFaxnumber,
+                                            //     shippingaddress: popCustomerStreet,
+                                            //     scity: popCustomerStreet2,
+                                            //     sstate: popCustomerCountry,
+                                            //     terms: '',
+                                            //     spostalcode: popCustomerPostcode,
+                                            //     scountry: popCustomerState,
+                                            //     billingaddress: popCustomerbillingaddress,
+                                            //     bcity: popCustomerbcity,
+                                            //     bstate: popCustomerbstate,
+                                            //     bpostalcode: popCustomerbpostalcode,
+                                            //     bcountry: popCustomerCountry,
+                                            //     custFld1: popCustomercustfield1,
+                                            //     custFld2: popCustomercustfield2,
+                                            //     jobbcountry: '',
+                                            //     jobscountry: '',
+                                            //     discount:0
+                                            // }
+                                            // templateObject.customerRecord.set(customerRecord);
                                             $("#addCustomerModal").modal("show");
                                         }, 200);
                                     })
@@ -8567,6 +8600,36 @@ Template.appointments.onRendered(function() {
                                         }
 
                                         setTimeout(function() {
+                                            // let customerRecord = {
+                                            //     id:popCustomerID,
+                                            //     phone:popCustomerPhone,
+                                            //     firstname:popCustomerFirstName,
+                                            //     middlename: popCustomerMiddleName,
+                                            //     lastname:popCustomerLastName,
+                                            //     company:data.tcustomervs1[i].fields.Companyname || '',
+                                            //     email: popCustomerEmail,
+                                            //     title: popCustomerTitle,
+                                            //     tfn: popCustomertfn,
+                                            //     mobile: popCustomerMobile,
+                                            //     fax: popCustomerFaxnumber,
+                                            //     shippingaddress: popCustomerStreet,
+                                            //     scity: popCustomerStreet2,
+                                            //     sstate: popCustomerCountry,
+                                            //     terms: '',
+                                            //     spostalcode: popCustomerPostcode,
+                                            //     scountry: popCustomerState,
+                                            //     billingaddress: popCustomerbillingaddress,
+                                            //     bcity: popCustomerbcity,
+                                            //     bstate: popCustomerbstate,
+                                            //     bpostalcode: popCustomerbpostalcode,
+                                            //     bcountry: popCustomerCountry,
+                                            //     custFld1: popCustomercustfield1,
+                                            //     custFld2: popCustomercustfield2,
+                                            //     jobbcountry: '',
+                                            //     jobscountry: '',
+                                            //     discount:0
+                                            // }
+                                            // templateObject.customerRecord.set(customerRecord);
                                             $("#addCustomerModal").modal("show");
                                         }, 200);
                                     }
@@ -18743,15 +18806,16 @@ Template.appointments.events({
             cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.value) {
-                FlowRouter.go("/employeescard?id=" + empID);
+                // FlowRouter.go("/employeescard?id=" + empID);
                 // localStorage.setItem("appt_historypage", "appointmentlist");
                 setTimeout(function() {
-                    $('.payrollTab').tab('show');
-                    $('a[href="#leave"]').tab('show');
-                    $('#newLeaveRequestbtn').trigger('click');
-
+                    // $('.payrollTab').tab('show');
+                    // $('a[href="#leave"]').tab('show');
+                    // $('#newLeaveRequestbtn').trigger('click');
+                    
+                    $('#newLeaveRequestModal').modal('show');
                     $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
-                        window.open("/appointments", "_self");
+                        // window.open("/appointments", "_self");
                     });
                 }, 1000);
                 // $("#newLeaveRequestModal").modal("toggle");
@@ -18964,6 +19028,9 @@ Template.appointments.helpers({
     extraProductFees: () => {
         return Template.instance().extraProductFees.get();
     },
+    // customerRecord: () => {
+    //     return Template.instance().customerRecord.get();
+    // },
 });
 
 Template.registerHelper("equals", function(a, b) {

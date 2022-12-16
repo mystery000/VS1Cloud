@@ -1,4 +1,5 @@
 import { ProductService } from "../product/product-service";
+import { SMSService } from "../js/sms-settings-service";
 import { ContactService } from "../contacts/contact-service";
 import { AppointmentService } from './appointment-service';
 import { ReactiveVar } from "meteor/reactive-var";
@@ -15,6 +16,7 @@ import "../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../LoadingOverlay";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let smsService = new SMSService();
 let productService = new ProductService();
 let appointmentService = new AppointmentService();
 let contactService = new ContactService();
@@ -182,6 +184,7 @@ Template.frmappointmentpop.onRendered(function() {
             $('.fullScreenSpin').css('display', 'inline-block');
             var hours = "0";
             let datalist = [];
+            shareFunction.initTable(updateID);
             var getAppointmentInfo = await appointmentService.getOneAppointmentdataEx(updateID);
             var appointment = {
                 id: getAppointmentInfo.fields.ID || "",
@@ -2916,7 +2919,12 @@ Template.frmappointmentpop.onRendered(function() {
             }
         });
 
-    $(document).on("click", "#tblEmployeelist tbody tr", function(e) {
+    $(document).on("click", "#employeeListModal #tblEmployeelist tbody tr", function(e) {
+
+        // for taskDetailModal
+
+        // end
+
         let employeeName = $(this).find(".colEmployeeName").text() || '';
         let employeeID = $(this).find(".colID").text() || '';
         templateObject.empID.set(employeeID);
@@ -3203,44 +3211,44 @@ Template.frmappointmentpop.onRendered(function() {
         saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
         stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service].",
     };
-    // smsService
-    //     .getSMSSettings()
-    //     .then((result) => {
-    //         if (result.terppreference.length > 0) {
-    //             for (let i = 0; i < result.terppreference.length; i++) {
-    //                 switch (result.terppreference[i].PrefName) {
-    //                     case "VS1SMSID":
-    //                         smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
-    //                         break;
-    //                     case "VS1SMSToken":
-    //                         smsSettings.twilioAccountToken =
-    //                             result.terppreference[i].Fieldvalue;
-    //                         break;
-    //                     case "VS1SMSPhone":
-    //                         smsSettings.twilioTelephoneNumber =
-    //                             result.terppreference[i].Fieldvalue;
-    //                         break;
-    //                     case "VS1HEADERSMSMSG":
-    //                         smsSettings.headerAppointmentSMSMessage =
-    //                             result.terppreference[i].Fieldvalue;
-    //                         break;
-    //                     case "VS1SAVESMSMSG":
-    //                         smsSettings.saveAppointmentSMSMessage =
-    //                             result.terppreference[i].Fieldvalue;
-    //                         break;
-    //                     case "VS1STARTSMSMSG":
-    //                         smsSettings.startAppointmentSMSMessage =
-    //                             result.terppreference[i].Fieldvalue;
-    //                         break;
-    //                     case "VS1STOPSMSMSG":
-    //                         smsSettings.stopAppointmentSMSMessage =
-    //                             result.terppreference[i].Fieldvalue;
-    //                 }
-    //             }
-    //             templateObject.defaultSMSSettings.set(smsSettings);
-    //         }
-    //     })
-    //     .catch((error) => {});
+    smsService
+        .getSMSSettings()
+        .then((result) => {
+            if (result.terppreference.length > 0) {
+                for (let i = 0; i < result.terppreference.length; i++) {
+                    switch (result.terppreference[i].PrefName) {
+                        case "VS1SMSID":
+                            smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1SMSToken":
+                            smsSettings.twilioAccountToken =
+                                result.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1SMSPhone":
+                            smsSettings.twilioTelephoneNumber =
+                                result.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1HEADERSMSMSG":
+                            smsSettings.headerAppointmentSMSMessage =
+                                result.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1SAVESMSMSG":
+                            smsSettings.saveAppointmentSMSMessage =
+                                result.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1STARTSMSMSG":
+                            smsSettings.startAppointmentSMSMessage =
+                                result.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1STOPSMSMSG":
+                            smsSettings.stopAppointmentSMSMessage =
+                                result.terppreference[i].Fieldvalue;
+                    }
+                }
+                templateObject.defaultSMSSettings.set(smsSettings);
+            }
+        })
+        .catch((error) => {});
 
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise(async(resolve, reject) => {

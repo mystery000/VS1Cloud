@@ -57,13 +57,13 @@ Template.transaction_line.onRendered(function() {
                         plusArr.push(recordObj);
                     }
                 }
-               
+
             }
 
         };
         templateObject.plusArr.set(plusArr);
     });
-  } else { 
+  } else {
     $.get("MasterVS1Pricing.json").success(async function (data) {
         for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
 
@@ -184,7 +184,7 @@ Template.transaction_line.onRendered(function() {
   templateObject.init_reset_data();
   // custom field displaysettings
   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-     
+
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       if(listType == "tblSalesOrderLine" || listType == "tblQuoteLine") {
@@ -207,15 +207,15 @@ Template.transaction_line.onRendered(function() {
             reset_data = reset_data.map( data => {
             x = reset_data_salesorder.find( x => x.class === data.class);
             if(x != undefined) {
-                x.index = data.index; 
-                x.width = data.width; 
+                x.index = data.index;
+                x.width = data.width;
                 return x;
             } else {
                 data.active = false;
                 data.display = false;
                 return data;
-            }   
-            });    
+            }
+            });
       }
       if(listType == 'tblCreditLine' || listType == 'tblBillLine') {
         let reset_data_credit = [
@@ -234,14 +234,14 @@ Template.transaction_line.onRendered(function() {
           reset_data = reset_data.map( data => {
             x = reset_data_credit.find( x => x.class === data.class);
             if(x != undefined) {
-                x.index = data.index; 
-                x.width = data.width; 
+                x.index = data.index;
+                x.width = data.width;
                 return x;
             } else {
                 data.active = false;
                 data.display = false;
                 return data;
-            }   
+            }
             });
       }
       templateObject.showCustomFieldDisplaySettings(reset_data);
@@ -251,18 +251,17 @@ Template.transaction_line.onRendered(function() {
               if (dataObject.length == 0) {
                   sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
                       reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                      console.log(reset_data);
                       reset_data = templateObject.reset_data.get().map( data => {
                         x = reset_data.find( x => x.class === data.class);
                         if(x != undefined) {
-                            x.index = data.index; 
-                            x.width = data.width; 
+                            x.index = data.index;
+                            x.width = data.width;
                             return x;
                         } else {
                             data.active = false;
                             data.display = false;
                             return data;
-                        }   
+                        }
                       })
                       templateObject.showCustomFieldDisplaySettings(reset_data);
                   }).catch(function(err) {});
@@ -276,13 +275,13 @@ Template.transaction_line.onRendered(function() {
                                 x = reset_data.find( x => x.class === data.class);
                                 if(x != undefined) {
                                     x.index = data.index;
-                                    x.width = data.width; 
+                                    x.width = data.width;
                                     return x;
                                 } else {
                                     data.active = false;
                                     data.display = false;
                                     return data;
-                                }               
+                                }
                               });
                               templateObject.showCustomFieldDisplaySettings(reset_data);
                           }
@@ -325,7 +324,7 @@ Template.transaction_line.onRendered(function() {
   }
 
   templateObject.initCustomFieldDisplaySettings("", currenttranstablename);
-  
+
 });
 
 Template.transaction_line.events({
@@ -364,7 +363,7 @@ Template.transaction_line.events({
           $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
           $(".col" + reset_data[index].class).css('width', reset_data[index].width);
       });
-  }, 
+  },
   'click .btnOpenTranSettings': async function (event, template) {
       let templateObject = Template.instance();
       let currenttranstablename = templateObject.data.tablename||"";
@@ -468,7 +467,7 @@ Template.transaction_line.helpers({
             serialNo.active = false;
         }
     }
-    let monthArr = Template.instance().monthArr.get(); 
+    let monthArr = Template.instance().monthArr.get();
     let fixedAsset = data.find((x) => x.class === 'FixedAsset');
     let month = monthArr.find((x) => x.moduleName === 'Fixed Assets');
     if(fixedAsset != undefined && month != undefined){
@@ -519,7 +518,7 @@ Template.transaction_line.helpers({
   convertToForeignAmount: (amount) => {
       return FxGlobalFunctions.convertToForeignAmount(amount, $('#exchange_rate').val(), FxGlobalFunctions.getCurrentCurrencySymbol());
   }
-  
+
 });
 
 Template.registerHelper("equals", function (a, b) {

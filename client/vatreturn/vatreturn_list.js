@@ -447,7 +447,7 @@ Template.vatreturnlist.events({
             window.open("/vatreturnlist", "_self");
         });
     },
-    "click #btnNewVatReturn": function(event) {
+    "click #btnNewVATReturn": function(event) {
         FlowRouter.go("/vatreturn");
     },
     "click .chkDatatable": function(event) {
