@@ -4004,7 +4004,14 @@
     </div>
     
     {{> taskDetailModal}}
-    {{> frmappointmentpop}}
+    <!-- 
+        Edito: Vladyslav
+        Modified: 16/12/2022
+        Description: 
+        This is making infinite cycle issue because when the user open customer dropdown on the appointmentlist/frmappointmentpop,
+        It's calling same addCustomerPop modal in both place.
+    -->
+    <!-- {{> frmappointmentpop}} -->
     {{> newTaskModal}}
     
 

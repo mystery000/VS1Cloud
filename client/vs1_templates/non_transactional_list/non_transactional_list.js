@@ -4953,7 +4953,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                             text: '',
                             download: 'open',
                             className: "btntabletocsv hiddenColumn",
-                            filename: "Customer Type Settings",
+                            filename: "Customer Title Settings",
                             orientation:'portrait',
                             exportOptions: {
                                 columns: ':visible'
@@ -4963,8 +4963,8 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                             download: 'open',
                             className: "btntabletopdf hiddenColumn",
                             text: '',
-                            title: 'Customer Type Settings',
-                            filename: "Customer Type Settings",
+                            title: 'Customer Title Settings',
+                            filename: "Customer Title Settings",
                             exportOptions: {
                                 columns: ':visible',
                                 stripHtml: false
@@ -5008,11 +5008,11 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                         }
 
                         $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
-                      $('.fullScreenSpin').css('display', 'inline-block');
+                          $('.fullScreenSpin').css('display', 'inline-block');
                       });
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
+                      setTimeout(function () {
+                          MakeNegative();
+                      }, 100);
                     },
                     language: { search: "",searchPlaceholder: "Search List..." },
                     "fnInitComplete": function (oSettings) {
