@@ -732,13 +732,8 @@ Template.balancesheetreport.helpers({
 
         let convertedAmount =
             isMinus == true ?
-<<<<<<< HEAD
-                `- ${currencyData.symbol} ${amount}` :
-                `${currencyData.symbol} ${amount}`;
-=======
             `- ${currencyData.symbol}${amount}` :
             `${currencyData.symbol}${amount}`;
->>>>>>> main
 
 
         return convertedAmount;
