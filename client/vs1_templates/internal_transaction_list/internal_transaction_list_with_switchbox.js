@@ -257,7 +257,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             var dataList = [
                 chkBox,
                 data.tproductlist[i].PARTSID || "",
-                data.tproductlist[i].PARTNAM || "",
+                data.tproductlist[i].PARTNAME || "",
                 data.tproductlist[i].PARTSDESCRIPTION || "",
                 data.tproductlist[i].BARCODE || "",
                 costprice,
