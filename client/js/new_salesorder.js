@@ -2689,7 +2689,10 @@ Template.new_salesorder.onRendered(function () {
                             templateObject.lineitems.set(lineItems);
 
                             templateObject.selectedCurrency.set(salesorderrecord.currency);
-                            templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                            templateObject.inputSelectedCurrency.set(salesorderrecord.currncy);
+                            setTimeout(()=>{
+                                templateObject.checkAbleToMakeWorkOrder()
+                            }, 100)
                             if (templateObject.salesorderrecord.get()) {
 
 
@@ -3025,6 +3028,9 @@ Template.new_salesorder.onRendered(function () {
 
                                 templateObject.selectedCurrency.set(salesorderrecord.currency);
                                 templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                                setTimeout(()=>{
+                                    templateObject.checkAbleToMakeWorkOrder()
+                                }, 100)
                                 if (templateObject.salesorderrecord.get()) {
 
 
@@ -3245,6 +3251,9 @@ Template.new_salesorder.onRendered(function () {
 
                                     templateObject.selectedCurrency.set(salesorderrecord.currency);
                                     templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                                    setTimeout(()=>{
+                                        templateObject.checkAbleToMakeWorkOrder()
+                                    }, 100)
                                     if (templateObject.salesorderrecord.get()) {
 
 
@@ -3581,6 +3590,10 @@ Template.new_salesorder.onRendered(function () {
 
                         templateObject.selectedCurrency.set(salesorderrecord.currency);
                         templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                        setTimeout(()=>{
+                            templateObject.checkAbleToMakeWorkOrder()
+                        }, 100)
+                      
                         if (templateObject.salesorderrecord.get()) {
 
 
@@ -4033,6 +4046,9 @@ Template.new_salesorder.onRendered(function () {
                     templateObject.salesorderrecord.set(salesorderrecord);
                     templateObject.selectedCurrency.set(salesorderrecord.currency);
                     templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                    setTimeout(()=>{
+                        templateObject.checkAbleToMakeWorkOrder()
+                    }, 100)
                     if (templateObject.salesorderrecord.get()) {
 
 
@@ -4329,6 +4345,9 @@ Template.new_salesorder.onRendered(function () {
                             templateObject.salesorderrecord.set(salesorderrecord);
                             templateObject.selectedCurrency.set(salesorderrecord.currency);
                             templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                            setTimeout(()=>{
+                                templateObject.checkAbleToMakeWorkOrder()
+                            }, 100)
                             if (templateObject.salesorderrecord.get()) {
 
                                 Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
@@ -4616,6 +4635,9 @@ Template.new_salesorder.onRendered(function () {
                                 templateObject.salesorderrecord.set(salesorderrecord);
                                 templateObject.selectedCurrency.set(salesorderrecord.currency);
                                 templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                                setTimeout(()=>{
+                                    templateObject.checkAbleToMakeWorkOrder()
+                                }, 100)
                                 if (templateObject.salesorderrecord.get()) {
 
                                     Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
@@ -4830,6 +4852,9 @@ Template.new_salesorder.onRendered(function () {
                         templateObject.salesorderrecord.set(salesorderrecord);
                         templateObject.selectedCurrency.set(salesorderrecord.currency);
                         templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                        setTimeout(()=>{
+                            templateObject.checkAbleToMakeWorkOrder()
+                        }, 100)
                         if (templateObject.salesorderrecord.get()) {
 
 
@@ -5004,9 +5029,7 @@ Template.new_salesorder.onRendered(function () {
         }
     }
 
-    setTimeout(()=>{
-        templateObject.checkAbleToMakeWorkOrder();
-    }, 1500)
+  
 
     templateObject.getDepartments = function() {
         getVS1Data('TDeptClass').then(function(dataObject) {
