@@ -1917,7 +1917,6 @@ Template.frmappointmentpop.onRendered(function() {
                         templateObject
                     );
                 } else {
-                    console.log('customerListModal_toggle')
                     $("#customerListModal").modal("toggle");
                 }
                 setTimeout(function() {
@@ -2480,6 +2479,7 @@ Template.frmappointmentpop.onRendered(function() {
                                         data.tcustomer[0].fields.Discount || 0;
                                     let popCustomerType =
                                         data.tcustomer[0].fields.ClientTypeName || "";
+                                    let popCompany = data.tcustomer[0].fields.Companyname || ''
                                     //$('#edtCustomerCompany').attr('readonly', true);
                                     $("#edtCustomerCompany").val(popCustomerName);
                                     $("#edtCustomerPOPID").val(popCustomerID);
@@ -2533,6 +2533,36 @@ Template.frmappointmentpop.onRendered(function() {
                                     }
 
                                     setTimeout(function() {
+                                        let customerRecord = {
+                                            id:popCustomerID,
+                                            phone:popCustomerPhone,
+                                            firstname:popCustomerFirstName,
+                                            middlename: popCustomerMiddleName,
+                                            lastname:popCustomerLastName,
+                                            company:popCompany,
+                                            email: popCustomerEmail,
+                                            title: popCustomerTitle,
+                                            tfn: popCustomertfn,
+                                            mobile: popCustomerMobile,
+                                            fax: popCustomerFaxnumber,
+                                            shippingaddress: popCustomerStreet,
+                                            scity: popCustomerStreet2,
+                                            sstate: popCustomerCountry,
+                                            terms: '',
+                                            spostalcode: popCustomerPostcode,
+                                            scountry: popCustomerState,
+                                            billingaddress: popCustomerbillingaddress,
+                                            bcity: popCustomerbcity,
+                                            bstate: popCustomerbstate,
+                                            bpostalcode: popCustomerbpostalcode,
+                                            bcountry: popCustomerCountry,
+                                            custFld1: popCustomercustfield1,
+                                            custFld2: popCustomercustfield2,
+                                            jobbcountry: '',
+                                            jobscountry: '',
+                                            discount:0
+                                        }
+                                        templateObject.customerRecord.set(customerRecord);
                                         $("#addCustomerModal").modal("show");
                                     }, 200);
                                 })

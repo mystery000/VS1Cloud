@@ -561,7 +561,6 @@ Template.non_transactional_list.onRendered(function() {
           if(reset_data[r].active == true){
             $('#'+currenttablename+' .'+reset_data[r].class).removeClass('hiddenColumn');
           }else if(reset_data[r].active == false){
-            console.log('currenttablename:',currenttablename)
             $('#'+currenttablename+' .'+reset_data[r].class).addClass('hiddenColumn');
           };
           custFields.push(customData);
@@ -4918,12 +4917,13 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
               [4,"Ms",'<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
             ];
             templateObject.transactiondatatablerecords.set(splashArrayClientTypeList)
-            // if(templateObject.transactiondatatablerecords.get()) {
-            //   setTimeout(function () {
-            //       MakeNegative();
-            //   }, 100);
-            // }
+            if(templateObject.transactiondatatablerecords.get()) {
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+            }
             let deleteFilter = false;
+            console.log('OK')
             setTimeout(function () {
                 $('#'+currenttablename).DataTable({
                     data: splashArrayClientTypeList,
@@ -4991,6 +4991,7 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     responsive: true,
                     "order": [[1, "asc"]],
                     action: function () {
+                      console.log('table reload...')
                         $('#'+currenttablename).DataTable().ajax.reload();
                     },
                     "fnDrawCallback": function (oSettings) {
