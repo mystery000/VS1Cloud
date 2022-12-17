@@ -14,7 +14,6 @@ import { SideBarService } from "../js/sidebar-service";
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import "../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../LoadingOverlay";
-import { conforms } from "lodash";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let smsService = new SMSService();
@@ -188,6 +187,7 @@ Template.frmappointmentpop.onRendered(function() {
             $('.fullScreenSpin').css('display', 'inline-block');
             var hours = "0";
             let datalist = [];
+            shareFunction.initTable(updateID);
             var getAppointmentInfo = await appointmentService.getOneAppointmentdataEx(updateID);
             var appointment = {
                 id: getAppointmentInfo.fields.ID || "",
@@ -2259,6 +2259,7 @@ Template.frmappointmentpop.onRendered(function() {
                                             jobscountry: '',
                                             discount:0
                                         }
+                                        console.log('value:',$("#edtCustomerCompany").val())
                                         templateObject.customerRecord.set(customerRecord);
                                         $("#addCustomerModal").modal("show");
                                     }, 200);
