@@ -5,6 +5,7 @@ import { SideBarService } from "../../js/sidebar-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import { UtilityService } from "../../utility-service";
+import { bankNameList } from "../../lib/global/bank-names";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -29,6 +30,7 @@ Template.addAccountModal.onCreated(function () {
   templateObject.accountTypes = new ReactiveVar([]);
   templateObject.expenseCategories = new ReactiveVar([]);
   templateObject.taxRates = new ReactiveVar([]);
+  templateObject.bankNames = new ReactiveVar([]);
 });
 
 Template.addAccountModal.onRendered(function () {
@@ -39,6 +41,7 @@ Template.addAccountModal.onRendered(function () {
   const dataTableListTax = [];
   const tableHeaderListTax = [];
   let categories = [];
+  templateObject.bankNames.set(bankNameList);
   templateObject.loadAccountTypes = () => {
     let accountTypeList = [];
     getVS1Data("TAccountType")
@@ -256,7 +259,7 @@ Template.addAccountModal.onRendered(function () {
             }
           }
         });
-        
+
         $(document).on("click", "#tblTaxRate tbody tr", (e) => {
           var table = $(e.currentTarget);
           let lineTaxCode = table.find(".taxName").text();
@@ -1093,7 +1096,7 @@ Template.addAccountModal.onRendered(function () {
   //   .editableSelect()
   //   .on("click.editable-select", function (e, li) {
   //     var $earch = $(this);
-  //     var offset = $earch.offset(); 
+  //     var offset = $earch.offset();
   //     var bankName = e.target.value || "";
 
   //     if (e.pageX > offset.left + $earch.width() - 8) {
@@ -1114,7 +1117,7 @@ Template.addAccountModal.onRendered(function () {
 
   // $(document).on("click", "#tblBankCode tbody tr", function (e) {
   //   var table = $(this);
-  //   let bankCode = table.find(".bankCode").text(); 
+  //   let bankCode = table.find(".bankCode").text();
   //   // $('#bankCodeModal').modal('toggle');
   //   $("#eftBankCodesModal").modal("toggle");
   //   $('#sltBankCodes').val(bankCode);
@@ -1124,14 +1127,14 @@ Template.addAccountModal.onRendered(function () {
 
 Template.addAccountModal.events({
   "blur #apcaNo": function (e) {
-    let apcaNo = $("#apcaNo").val(); 
+    let apcaNo = $("#apcaNo").val();
     if(apcaNo) {
       swal({
         title: `Attention!`,
         html: `<p>You need to ensure that any Supplier or Employee you wish to pay via EFT, has the banking details setup.</p> <p>Do you wish to add banking details to a Supplier or Employee now?</p>
               <br>
-              <button type="button" class="btn btn-success btn-add-to-employee swl-cstm-btn-yes-sbmt-rqst">Add to Employee</button> 
-              <button type="button" class="btn btn-success btn-add-to-supplier swl-cstm-btn-no-jst-prceed">Add to Supplier</button> 
+              <button type="button" class="btn btn-success btn-add-to-employee swl-cstm-btn-yes-sbmt-rqst">Add to Employee</button>
+              <button type="button" class="btn btn-success btn-add-to-supplier swl-cstm-btn-no-jst-prceed">Add to Supplier</button>
               <button type="button" class="btn btn-secondary btn-apca-cancel swl-cstm-btn-cancel" ><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button><br><br>`,
         showCancelButton: false,
         showConfirmButton: false,
@@ -1140,7 +1143,7 @@ Template.addAccountModal.events({
             const employee = document.querySelector('.btn-add-to-employee')
             const supplier = document.querySelector('.btn-add-to-supplier')
             const cancel = document.querySelector('.btn-apca-cancel')
-        
+
             let edtBankName = $('#edtBankName').val();
             let edtBankAccountName = $('#edtBankAccountName').val();
             let edtBSB = $('#edtBSB').val();
@@ -1158,7 +1161,7 @@ Template.addAccountModal.events({
                   FlowRouter.go('/employeelist?'+params);
                 }, 150);
             })
-        
+
             supplier.addEventListener('click', () => {
                 swal.close();
                 $("#addNewAccount").modal("toggle");
@@ -1166,7 +1169,7 @@ Template.addAccountModal.events({
                   FlowRouter.go('/supplierlist?'+params);
                 }, 150);
             })
-        
+
             cancel.addEventListener('click', () => {
                 swal.close();
             })
@@ -1182,7 +1185,7 @@ Template.addAccountModal.events({
     let organisationService = new OrganisationService();
     setTimeout(function(){
     LoadingOverlay.show();
-    
+
     let forTransaction = false;
     if ($("#showOnTransactions").is(":checked")) {
       forTransaction = true;
@@ -1619,8 +1622,8 @@ Template.addAccountModal.events({
 
   "click #openEftOptionsModal" : (e) => {
     $('#eftOptionsModal').modal();
-  }, 
-  
+  },
+
 });
 
 Template.addAccountModal.helpers({
@@ -1661,5 +1664,12 @@ Template.addAccountModal.helpers({
   },
   expenseCategories: () => {
     return Template.instance().expenseCategories.get();
+  },
+  bankNames: () => {
+    return Template.instance()
+      .bankNames.get()
+      .sort(function (a, b) {
+        return a.name > b.name ? 1 : -1;
+      });
   },
 });

@@ -181,6 +181,15 @@
 
         {{> employeecompletedjobs
             md=8 defaultPosition=18 key="payroll__employee_jobs_completed" }}
+        
+        {{> employeeLeave
+            md=8  defaultPosition=18 key="payroll__employee_absent"}}
+
+        {{> employeePresentDays
+        md=8  defaultPosition=19 key="payroll__employee_clocked_on"}}
+
+        {{> employeeLeaveDays
+        md=8  defaultPosition=19 key="payroll__employee_leave"}}
 
         {{> clockedOnEmployees
             md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
