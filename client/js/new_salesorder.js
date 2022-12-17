@@ -93,12 +93,11 @@ Template.new_salesorder.onCreated(function() {
     this.hasFollow = new ReactiveVar(false);
 
     this.customerRecord = new ReactiveVar();
-
 });
 
 Template.new_salesorder.onRendered(function () {
     let templateObject = Template.instance();
-    
+
     templateObject.hasFollowings = async function() {
         var currentDate = new Date();
         let salesService = new SalesBoardService();
@@ -8011,6 +8010,394 @@ Template.new_salesorder.helpers({
 
 
         return _saleOrder.fields.Lines;
+    },
+
+
+    ////////////////////////////////////////////////////////////////
+    printEmailData: async () => {
+        var splashLineArray = new Array();
+        var erpGet = erpDb();
+        let lineItemsForm = [];
+        let lineItemObjForm = {};
+        var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+        var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
+
+        let templateObject = Template.instance();
+        console.log({ templateObject })
+        // let stripe_id = templateObject.accountID.get();
+        // let stripe_fee_method = templateObject.stripe_fee_method.get();
+        let stripe_id = '';
+        let stripe_fee_method = '';
+        let name = $('#edtCustomerEmail').attr('customerfirstname');
+        let surname = $('#edtCustomerEmail').attr('customerlastname');
+        let termname = $('#sltTerms').val() || '';
+        if (!termname) return null;
+        let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
+        let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
+        $('#tblSalesOrderLine > tbody > tr').each(function() {
+            var lineID = this.id;
+            let tdproduct = $('#' + lineID + " .lineProductName").val();
+            let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdQty = $('#' + lineID + " .lineQty").val();
+            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
+            let tdlineamt = $('#' + lineID + " .lineAmt").text();
+            let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
+            let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumbers');
+            let tdExpiryDates = $('#' + lineID + " .colSerialNo").attr('data-expirydates');
+
+            if (tdproduct != "") {
+
+                lineItemObjForm = {
+                    type: "TSalesOrderLine",
+                    fields: {
+                        ProductName: tdproduct || '',
+                        ProductDescription: tddescription || '',
+                        UOMQtySold: parseFloat(tdQty) || 0,
+                        UOMQtyShipped: parseFloat(tdQty) || 0,
+                        LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                        Headershipdate: saleDate,
+                        LineTaxCode: tdtaxCode || '',
+                        DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                    }
+                };
+
+                // Feature/ser-lot number tracking: Save Serial Numbers
+                if (tdSerialNumber) {
+                    const serialNumbers = tdSerialNumber.split(',');
+                    let tpqaList = [];
+                    for (let i = 0; i < serialNumbers.length; i++) {
+                        const tpqaObject = {
+                            type: "TPQASN",
+                            fields: {
+                                Active: true,
+                                Qty: 1,
+                                SerialNumber: serialNumbers[i],
+                            }
+                        };
+                        tpqaList.push(tpqaObject);
+                    }
+                    const pqaObject = {
+                        type: "TPQA",
+                        fields: {
+                            Active: true,
+                            PQASN: tpqaList,
+                            Qty: serialNumbers.length,
+                        }
+                    }
+                    lineItemObjForm.fields.PQA = pqaObject;
+                }
+
+                // Feature/ser-lot number tracking: Save Lot Number
+                if (tdLotNumber) {
+                    const lotNumbers = tdLotNumber.split(',');
+                    const expiryDates = tdExpiryDates.split(',');
+                    let tpqaList = [];
+                    for (let i = 0; i < lotNumbers.length; i++) {
+                        const dates = expiryDates[i].split('/');
+                        const tpqaObject = {
+                            type: "PQABatch",
+                            fields: {
+                                Active: true,
+                                BatchExpiryDate: new Date(parseInt(dates[2]), parseInt(dates[1]) - 1, parseInt(dates[0])).toISOString(),
+                                Qty: 1,
+                                BatchNo: lotNumbers[i],
+                            }
+                        };
+                        tpqaList.push(tpqaObject);
+                    }
+                    const pqaObject = {
+                        type: "TPQA",
+                        fields: {
+                            Active: true,
+                            PQABatch: tpqaList,
+                            Qty: lotNumbers.length,
+                        }
+                    }
+                    lineItemObjForm.fields.PQA = pqaObject;
+                }
+
+                lineItemsForm.push(lineItemObjForm);
+                splashLineArray.push(lineItemObjForm);
+            }
+        });
+        if ($('#formCheck-one').is(':checked')) {
+            getchkcustomField1 = false;
+        }
+        if ($('#formCheck-two').is(':checked')) {
+            getchkcustomField2 = false;
+        }
+
+        let customer = $('#edtCustomerName').val();
+        let customerEmail = $('#edtCustomerEmail').val();
+        
+        let departement = $('#sltDept').val();
+        let total = $('#totalBalanceDue').html() || 0;
+        let tax = $('#subtotal_tax').html() || 0;
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentSalesOrder = getso_id[getso_id.length - 1];
+
+        var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+        let ForeignExchangeRate = $('#exchange_rate').val()||0;
+        let foreignCurrencyFields = {}
+        if( FxGlobalFunctions.isCurrencyEnabled() ){
+            foreignCurrencyFields = {
+                ForeignExchangeCode: currencyCode,
+                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            }
+        }
+        
+        const currentSalesOrderId = parseInt(currentSalesOrder);
+
+        let company = Session.get('vs1companyName');
+        let vs1User = localStorage.getItem('mySession');
+        let currencyname = (CountryAbbr).toLowerCase();
+        let stringQuery = "?";
+        for (let l = 0; l < lineItemsForm.length; l++) {
+            stringQuery = stringQuery + "product" + l + "=" + lineItemsForm[l].fields.ProductName + "&price" + l + "=" + lineItemsForm[l].fields.LinePrice + "&qty" + l + "=" + lineItemsForm[l].fields.UOMQtySold + "&";
+        }
+        stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + currentSalesOrderId + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Sales Order&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + departement + "&currency=" + currencyname;
+
+        let attachment = [];
+        let invoiceId = currentSalesOrderId;
+        let encodedPdf = await generatePdfForMail(invoiceId);
+        let pdfObject = "";
+
+        function generatePdfForMail(invoiceId) {
+            let file = "Sales Order-" + invoiceId + ".pdf"
+            return new Promise((resolve, reject) => {
+                $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+                let templateObject = Template.instance();
+                let completeTabRecord;
+                let doc = new jsPDF('p', 'pt', 'a4');
+                var source = document.getElementById('html-2-pdfwrapper');
+                var opt = {
+                    margin: 0,
+                    filename: file,
+                    image: {
+                        type: 'jpeg',
+                        quality: 0.98
+                    },
+                    html2canvas: {
+                        scale: 2
+                    },
+                    jsPDF: {
+                        unit: 'in',
+                        format: 'a4',
+                        orientation: 'portrait'
+                    }
+                }
+                resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
+                // doc.addHTML(source, function () {
+                //     doc.setFontSize(10);
+                //     doc.setTextColor(255, 255, 255);
+                //     doc.textWithLink('Pay Now', 482, 113, { url: 'https://www.depot.vs1cloud.com/stripe/' + stringQuery });
+                //     resolve(doc.output('blob'));
+                //     $('#html-2-pdfwrapper').css('display', 'none');
+                // });
+            });
+        }
+
+        let base64data = encodedPdf.split(',')[1];
+        pdfObject = {
+            filename: 'Sales Order-' + invoiceId + '.pdf',
+            content: base64data,
+            encoding: 'base64'
+        };
+        attachment.push(pdfObject);
+        let erpInvoiceId = currentSalesOrderId;
+
+
+        let mailFromName = Session.get('vs1companyName');
+        let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
+        let customerEmailName = $('#edtCustomerName').val();
+        let checkEmailData = $('#edtCustomerEmail').val();
+        let grandtotal = $('#grandTotal').html();
+        let amountDueEmail = $('#totalBalanceDue').html();
+        let emailDueDate = $("#dtDueDate").val();
+        let customerBillingAddress = $('#txabillingAddress').val();
+        let customerTerms = $('#sltTerms').val();
+        let customerSubtotal = $('#subtotal_total').html();
+        let customerTax = $('#subtotal_tax').html();
+        let customerNett = $('#subtotal_nett').html();
+        let customerTotal = $('#grandTotal').html();
+        let mailSubject = 'Sales Order ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
+        let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
+            "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
+            "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
+
+        var htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+            '        <tr>' +
+            '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+            '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+            '                    <table class="main">' +
+            '                        <tr>' +
+            '                            <td class="wrapper">' +
+            '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+            '                                    <tr>' +
+            '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+            '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Sales Order No. ' + erpInvoiceId + ' Details</span>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr style="height: 16px;"></tr>' +
+            '                                    <tr>' +
+            '                                        <td>' +
+            '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr style="height: 48px;"></tr>' +
+            '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+            '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+            '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal +'</p>' +
+            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+            '                                                <tbody>' +
+            '                                                    <tr>' +
+            '                                                        <td align="center" style="padding-bottom: 15px;">' +
+            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+            '                                                                <tbody>' +
+            '                                                                    <tr>' +
+            '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+            '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+            '                                                                    </tr>' +
+            '                                                                </tbody>' +
+            '                                                            </table>' +
+            '                                                        </td>' +
+            '                                                    </tr>' +
+            '                                                </tbody>' +
+            '                                            </table>' +
+            '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr>' +
+            '                                        <td class="content-block" style="padding: 16px 32px;">' +
+            '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
+            '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+            '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+            '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr style="background-color: #ededed;">' +
+            '                                        <td class="content-block" style="padding: 16px 32px;">' +
+            '                                            <div style="width: 100%; padding: 16px 0px;">' +
+            '                                                <div style="width: 50%; float: left;">' +
+            '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+            '                                                </div>' +
+            '                                                <div style="width: 50%; float: right;">' +
+            '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
+            '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress +'</p>' +
+            '                                                </div>' +
+            '                                            </div>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr style="background-color: #ededed;">' +
+            '                                        <td class="content-block" style="padding: 16px 32px;">' +
+            '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+            '                                            <div style="width: 100%; padding: 16px 0px;">' +
+            '                                                <div style="width: 50%; float: left;">' +
+            '                                                    <p style="font-size: 18px;">Terms</p>' +
+            '                                                </div>' +
+            '                                                <div style="width: 50%; float: right;">' +
+            '                                                    <p style="font-size: 16px;">' + customerTerms +'</p>' +
+            '                                                </div>' +
+            '                                            </div>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr>' +
+            '                                        <td class="content-block" style="padding: 16px 32px;">' +
+            '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+            '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+            '                                                <div style="width: 50%; float: left;">' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+            '                                                </div>' +
+            '                                                <div style="width: 50%; float: right; text-align: right;">' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
+            '                                                </div>' +
+            '                                            </div>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr>' +
+            '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+            '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+            '                                                <tbody>' +
+            '                                                    <tr>' +
+            '                                                        <td align="center">' +
+            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+            '                                                                <tbody>' +
+            '                                                                    <tr>' +
+            '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+            '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+            '                                                                    </tr>' +
+            '                                                                </tbody>' +
+            '                                                            </table>' +
+            '                                                        </td>' +
+            '                                                    </tr>' +
+            '                                                </tbody>' +
+            '                                            </table>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr>' +
+            '                                        <td class="content-block" style="padding: 16px 32px;">' +
+            '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr>' +
+            '                                        <td>' +
+            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+            '                                                <tbody>' +
+            '                                                    <tr>' +
+            '                                                        <td align="center">' +
+            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+            '                                                                <tbody>' +
+            '                                                                    <tr>' +
+            '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+            '                                                                    </tr>' +
+            '                                                                </tbody>' +
+            '                                                            </table>' +
+            '                                                        </td>' +
+            '                                                    </tr>' +
+            '                                                </tbody>' +
+            '                                            </table>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                </table>' +
+            '                            </td>' +
+            '                        </tr>' +
+            '                    </table>' +
+            '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+            '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+            '                            <tr>' +
+            '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+            '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
+            '                                    <br>' +
+            '                                    <a href="mailto:' + mailFrom + '" style="color: #999999; font-size: 12px; text-align: center;">Contact Us</a>' +
+            '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+            '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+            '                                </td>' +
+            '                            </tr>' +
+            '                        </table>' +
+            '                    </div>' +
+            '                </div>' +
+            '            </td>' +
+            '        </tr>' +
+            '    </table>';
+
+        return {
+            mailFromName,
+            mailFrom,
+            checkEmailData,
+            mailSubject,
+            htmlmailBody,
+            attachment
+        }
     }
 });
 
@@ -9138,6 +9525,7 @@ Template.new_salesorder.events({
     },
     'click .printConfirm':async function (event) {
         playPrintAudio();
+        return
         setTimeout(async function(){
           var printTemplate = [];
           LoadingOverlay.show();
@@ -13469,8 +13857,4 @@ Template.new_salesorder.events({
 
 Template.registerHelper('equals', function(a, b) {
     return a === b;
-});
-
-Template.registerHelper('temp', function() {
-    alert('test!');
 });

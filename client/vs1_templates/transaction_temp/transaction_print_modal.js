@@ -45,23 +45,23 @@ const TransactionTypeTemplates = {
       active: true,
     },
   ],
-  'invoices': [
+  invoices: [
     {
-      name: 'Invoices',
-      title: 'Invoices',
-      key: 'invoice',
-      active: true
+      name: "Invoices",
+      title: "Invoices",
+      key: "invoice",
+      active: true,
     },
     {
-      name: 'Invoice Back Orders',
-      title: 'Invoice Back Orders',
-      key: 'invoice',
+      name: "Invoice Back Orders",
+      title: "Invoice Back Orders",
+      key: "invoice",
       active: false,
     },
     {
-      name: 'Delivery Docket',
-      title: 'Delivery Docket',
-      key: 'delivery_docket',
+      name: "Delivery Docket",
+      title: "Delivery Docket",
+      key: "delivery_docket",
       active: true,
     },
   ],
@@ -116,6 +116,7 @@ const TransactionTypeTemplates = {
 Template.transaction_print_modal.onCreated(async function () {
   const templateObject = Template.instance();
   const transactionType = templateObject.data.TransactionType;
+  const pageData = templateObject.data.data;
 
   const getTemplates = async () => {
     const vs1Data = await getVS1Data("TTemplateSettings");
@@ -128,54 +129,54 @@ Template.transaction_print_modal.onCreated(async function () {
 
       addVS1Data("TTemplateSettings", JSON.stringify(templateInfomation));
 
-      const templates = TransactionTypeTemplates[transactionType].filter(item => item.active).map(
-        (template) => {
+      const templates = TransactionTypeTemplates[transactionType]
+        .filter((item) => item.active)
+        .map((template) => {
           let templateList = templateInfomation.ttemplatesettings
             .filter((item) => item.fields.SettingName == template.name)
             .sort((a, b) => a.fields.Template - b.fields.Template);
 
-          templateList = ['1', '2', '3'].map(item => ({
+          templateList = ["1", "2", "3"].map((item) => ({
             fields: {
               SettingName: template.name,
               Template: item,
               Description: `Template ${item}`,
             },
-            type: "TTemplateSettings"
-          }))
+            type: "TTemplateSettings",
+          }));
           return {
             templateName: template.name,
             templateList,
           };
-        }
-      );
+        });
 
       console.log("vs1Data.length == 0", templates);
 
       return templates;
     } else {
       const vs1DataList = JSON.parse(vs1Data[0].data);
-      const templates = TransactionTypeTemplates[transactionType].filter(item => item.active).map(
-        (template) => {
+      const templates = TransactionTypeTemplates[transactionType]
+        .filter((item) => item.active)
+        .map((template) => {
           let templateList = vs1DataList.ttemplatesettings
             .filter((item) => item.fields.SettingName == template.name)
             .sort((a, b) => a.fields.Template - b.fields.Template);
 
           if (templateList.length === 0) {
-            templateList = ['1', '2', '3'].map(item => ({
+            templateList = ["1", "2", "3"].map((item) => ({
               fields: {
                 SettingName: template.name,
                 Template: item,
                 Description: `Template ${item}`,
               },
-              type: "TTemplateSettings"
-            }))
+              type: "TTemplateSettings",
+            }));
           }
           return {
             templateName: template.name,
-            templateList
+            templateList,
           };
-        }
-      );
+        });
 
       console.log("vs1Data.length != 0", templates);
 
@@ -242,20 +243,48 @@ Template.transaction_print_modal.events({
   "click #deliveryDocket": function (event) {
     const checked = event.currentTarget.checked;
   },
-  "click #printModal .printConfirm": function (event) {
+  "click #printModal .printConfirm": async function (event) {
+    const templateObject = Template.instance();
     playPrintAudio();
-    const isCheckedDeliveryDocket = $("#printModal #print_delivery_docket").is(
-      ":checked"
-    );
-    const isCheckedTemplate = $("#printModal #print_template").is(":checked");
     const isCheckedEmail = $("#printModal #emailSend").is(":checked");
     const isCheckedSms = $("#printModal #sms").is(":checked");
+    const data = await Template.new_salesorder.__helpers
+      .get("printEmailData")
+      .call();
+    
+    console.log({ data });
 
-    console.log({
-      isCheckedDeliveryDocket,
-      isCheckedTemplate,
-      isCheckedEmail,
-      isCheckedSms,
-    });
+    if (isCheckedEmail && validateEmail(data.checkEmailData)) {
+      LoadingOverlay.show();
+      Meteor.call(
+        "sendEmail",
+        {
+          from: "" + data.mailFromName + " <" + data.mailFrom + ">",
+          to: data.checkEmailData,
+          subject: data.mailSubject,
+          text: "",
+          html: data.htmlmailBody,
+          attachments: data.attachment,
+        },
+        function (error, result) {
+          if (error && error.error === "error") {
+            console.log("Send email: ", { error, result })
+            if (FlowRouter.current().queryParams.trans) {
+              // FlowRouter.go(
+              //   "/customerscard?id=" +
+              //     FlowRouter.current().queryParams.trans +
+              //     "&transTab=active"
+              // );
+            } else {
+              // FlowRouter.go("/salesorderslist?success=true");
+            }
+          } else {
+          }
+          LoadingOverlay.hide();
+        }
+      );
+    } else {
+      console.log('Check Customer Email.');
+    }
   },
 });
