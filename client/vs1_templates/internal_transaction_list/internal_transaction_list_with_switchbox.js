@@ -62,49 +62,53 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     };
 
     shareFunction = {
-      initTable : async function(updateID) {
-        if (updateID) {
-          let extraProducts = await appointmentService.getOneAppointmentdataEx(updateID);
-          extraProducts = extraProducts.fields.ExtraProducts;
-          extraProducts = extraProducts.split(":");
-          globalID = extraProducts;
+        initTable: async function(updateID) {
+            if (updateID) {
+                let extraProducts = await appointmentService.getOneAppointmentdataEx(updateID);
+                extraProducts = extraProducts.fields.ExtraProducts;
+                extraProducts = extraProducts.split(":");
+                globalID = extraProducts;
 
-          $("#tblInventoryCheckbox_next").click();
+                $("#tblInventoryCheckbox_next").click();
 
+            }
         }
-      }
     }
 
     function checkBoxClick() {
-      let currentTableData = templateObject.transactiondatatablerecords.get();
-      let targetRows = [];
-      globalID.forEach(itemID => {
-        let index = currentTableData.findIndex(item => item[1] == itemID);
-        if (index > -1) {
-          let targetRow = currentTableData[index];
-          let chk = targetRow[0];
-          chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
-          targetRow.splice(0, 1, chk);
-          currentTableData.splice(index, 1);
-          targetRows.push(targetRow);
+        let currentTableData = templateObject.transactiondatatablerecords.get();
+        let targetRows = [];
+        globalID.forEach(itemID => {
+            let index = currentTableData.findIndex(item => item[1] == itemID);
+            if (index > -1) {
+                let targetRow = currentTableData[index];
+                let chk = targetRow[0];
+                chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
+                targetRow.splice(0, 1, chk);
+                currentTableData.splice(index, 1);
+                targetRows.push(targetRow);
+            }
+        });
+        let newTableData = [...targetRows, ...currentTableData];
+        templateObject.transactiondatatablerecords.set(newTableData);
+        $('#' + currenttablename).DataTable().clear();
+        $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
+        let rows = $('#' + currenttablename).find('tbody tr');
+        for (let i = 0; i < rows.length; i++) {
+            if ($(rows[i]).find('input.chkBox').prop('checked') == true) {
+                if ($(rows[i]).hasClass('checkRowSelected') == false) {
+                    $(rows[i]).addClass('checkRowSelected');
+                }
+            }
         }
-      });
-      let newTableData = [...targetRows, ...currentTableData];
-      templateObject.transactiondatatablerecords.set(newTableData);
-      $('#' + currenttablename).DataTable().clear();
-      $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
-      let rows = $('#' + currenttablename).find('tbody tr');
-      for (let i = 0; i < rows.length; i++) {
-          if ($(rows[i]).find('input.chkBox').prop('checked') == true) {
-              if ($(rows[i]).hasClass('checkRowSelected') == false) {
-                  $(rows[i]).addClass('checkRowSelected');
-              }
-          }
-      }
     }
 
     let currenttablename = templateObject.data.tablename || "";
+    let pan = templateObject.data.pan || "";
 
+    if (pan != "") {
+        currenttablename = currenttablename + "_" + pan;
+    }
     templateObject.tablename.set(currenttablename);
 
     // set initial table rest_data
@@ -124,13 +128,13 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 { index: 10, label: 'Extra Sell Price', class: 'colExtraSellPrice', active: false, display: true, width: "100" },
                 { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ];
-        } else if (currenttablename == "tbltaxCodeCheckbox") {
+        } else if (currenttablename.includes("tbltaxCodeCheckbox")) {
             reset_data = [
-                { index: 0, label: '#ID', class: 'colCodeId', active: false, display: true, width: "100" },
-                { index: 1, label: 'Name', class: 'colCodeName', active: true, display: true, width: "100" },
-                { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "100" },
-                { index: 3, label: 'Tax Rate', class: 'colTaxRate', active: true, display: true, width: "100" },
-                { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "20" },
+                { index: 1, label: '#ID', class: 'colId', active: false, display: true, width: "100" },
+                { index: 2, label: 'Name', class: 'colCodeName', active: true, display: true, width: "30%" },
+                { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "40%" },
+                { index: 4, label: 'Tax Rate', class: 'colTaxRate', active: true, display: true, width: "20%" },
+                // { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "20" },
             ];
         }
         templateObject.reset_data.set(reset_data);
@@ -257,7 +261,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             var dataList = [
                 chkBox,
                 data.tproductlist[i].PARTSID || "",
-                data.tproductlist[i].PARTNAM || "",
+                data.tproductlist[i].PARTNAME || "",
                 data.tproductlist[i].PARTSDESCRIPTION || "",
                 data.tproductlist[i].BARCODE || "",
                 costprice,
@@ -579,12 +583,14 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             } else if (data.ttaxcodevs1[i].fields.Active == false) {
                 linestatus = "In-Active";
             };
-            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="t-1-' + data.ttaxcodevs1[i].fields.Id + '"><label class="custom-control-label chkBox pointer" for="t-1-' + data.ttaxcodevs1[i].fields.Id + '"></label></div>'; //switchbox
+            chkBoxId = "t-" + pan + "-" + data.ttaxcodevs1[i].Id
+            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
             taxRate = (data.ttaxcodevs1[i].fields.Rate * 100).toFixed(2);
             var dataList = [
                 chkBox,
-                data.ttaxcodevs1[i].fields.CodeName || "",
-                data.ttaxcodevs1[i].fields.Description || '-',
+                data.ttaxcodevs1[i].Id || 0,
+                data.ttaxcodevs1[i].CodeName || "",
+                data.ttaxcodevs1[i].Description || '-',
                 taxRate || 0,
             ];
 
@@ -605,18 +611,27 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
-                        className: "colCodeId pointer",
+                        className: "colChkBox pointer",
                         orderable: false,
-                        width: "15%",
+                        width: "10%",
+                    },
+                    {
+                        targets: 1,
+                        className: "colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[1]);
+                        }
                     },
                     {
                         targets: 2,
                         className: "colCodeName",
-                        width: "25%",
+                        width: "30%",
                     },
                     {
                         targets: 3,
                         className: "colDescription",
+                        width: "40%",
                     },
                     {
                         targets: 4,
@@ -702,12 +717,14 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                                 } else if (data.ttaxcodevs1[j].fields.Active == false) {
                                     linestatus = "In-Active";
                                 };
-                                chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="t-1-' + data.ttaxcodevs1[j].fields.Id + '"><label class="custom-control-label chkBox pointer" for="t-1-' + data.ttaxcodevs1[j].fields.Id + '"></label></div>'; //switchbox
+                                chkBoxId = "t-" + pan + "-" + dataObjectnew.ttaxcodevs1[j].Id;
+                                chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
                                 taxRate = (data.ttaxcodevs1[j].fields.Rate * 100).toFixed(2);
                                 var dataList = [
                                     chkBox,
-                                    data.ttaxcodevs1[j].fields.CodeName || "",
-                                    data.ttaxcodevs1[j].fields.Description || '-',
+                                    dataObjectnew.ttaxcodevs1[j].Id || 0,
+                                    dataObjectnew.ttaxcodevs1[j].CodeName || "",
+                                    dataObjectnew.ttaxcodevs1[j].Description || '-',
                                     taxRate || 0,
                                 ];
 
@@ -737,14 +754,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function(oSettings) {
-                    // $("<a class='btn btn-primary scanTaxBarcodePOP' href='' id='scanProdBarcodePOP' role='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryCheckbox_filter");
-                    // $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryCheckbox_filter");
-                    if (data.Params.Search.replace(/\s/g, "") == "") {
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-
-                    } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    }
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -787,7 +796,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     //Check URL to make right call.
     if (currenttablename == "tblInventoryCheckbox") {
         templateObject.getProductsData();
-    } else if (currenttablename == "tbltaxCodeCheckbox") {
+    } else if (currenttablename.includes("tbltaxCodeCheckbox")) {
         templateObject.getTaxCodesListVS1();
     }
     tableResize();
@@ -875,7 +884,7 @@ Template.internal_transaction_list_with_switchbox.events({
         if (currenttablename == "tblInventoryCheckbox") {
             await clearData('TProductList');
             templateObject.getProductsData(true);
-        } else if (currenttablename == "tbltaxCodeCheckbox") {
+        } else if (currenttablename.includes("tbltaxCodeCheckbox")) {
             await clearData('TTaxcodeVS1');
             templateObject.getTaxCodesListVS1(true);
         }
@@ -893,7 +902,7 @@ Template.internal_transaction_list_with_switchbox.events({
         if (currenttablename == "tblInventoryCheckbox") {
             await clearData('TProductList');
             templateObject.getProductsData(false);
-        } else if (currenttablename == "tbltaxCodeCheckbox") {
+        } else if (currenttablename.includes("tbltaxCodeCheckbox")) {
             await clearData('TTaxcodeVS1');
             templateObject.getTaxCodesListVS1(false);
         }

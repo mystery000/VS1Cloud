@@ -165,9 +165,9 @@ Template.newsidenav.onCreated(function() {
 Template.newsidenav.onRendered(function() {
     let userData = localStorage.getItem('vs1cloudLoginInfo');
     var countObjectTimes = 0;
-    let allDataToLoad = 78;
+    let allDataToLoad = 79;
     let progressPercentage = 0;
-
+    var currentLoc = FlowRouter.current().route.path;
     let templateObject = Template.instance();
     let employeeLoggedUserAccess = Session.get('ERPSolidCurrentUSerAccess');
 
@@ -334,7 +334,7 @@ Template.newsidenav.onRendered(function() {
     }, 2000);
 
     templateObject.getSetSideNavFocus = function() {
-        var currentLoc = FlowRouter.current().route.path;
+
         setTimeout(function() {
             var currentLoc = FlowRouter.current().route.path;
 
@@ -1073,21 +1073,21 @@ Template.newsidenav.onRendered(function() {
         }
     }
 
-    if ((employeeLoggedUserAccess) && (LoggedDB !== null)) {
-
-    } else {
-        if (currentLoc !== '/') {
-
-            CloudUser.update({
-                _id: Session.get('mycloudLogonID')
-            }, {
-                $set: {
-                    userMultiLogon: false
-                }
-            });
-        }
-
-    }
+    // if ((employeeLoggedUserAccess) && (LoggedDB !== null)) {
+    //
+    // } else {
+    //     if (currentLoc !== '/') {
+    //
+    //         CloudUser.update({
+    //             _id: Session.get('mycloudLogonID')
+    //         }, {
+    //             $set: {
+    //                 userMultiLogon: false
+    //             }
+    //         });
+    //     }
+    //
+    // }
     let sidePanelToggle = Session.get('sidePanelToggle');
     // if ((sidePanelToggle === '') || (!sidePanelToggle)) {
     //   Session.setPersistent('sidePanelToggle', "toggled");
@@ -1214,7 +1214,7 @@ Template.newsidenav.onRendered(function() {
                                         $('.allocationModal').removeClass('killAllocationPOP');
                                     }, 800);
                                 }
-                            }, 3000);
+                            }, 300);
                         } else {
                             $('.loadingbar').css('width', 100 + '%').attr('aria-valuenow', 100);
                             $(".headerprogressLabel").text("All Your Information Loaded");
@@ -1235,7 +1235,7 @@ Template.newsidenav.onRendered(function() {
                                         $('.allocationModal').removeClass('killAllocationPOP');
                                     }, 800);
                                 }
-                            }, 3000);
+                            }, 300);
                         }
                     }
                 }
@@ -1594,6 +1594,42 @@ Template.newsidenav.onRendered(function() {
             //localStorage.setItem('VS1CustomerList', JSON.stringify(data) || '');
             addVS1Data('TCustomerVS1', JSON.stringify(data));
             $("<span class='process'>Customers Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+        }).catch(function(err) {
+
+        });
+
+
+        sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function(data) {
+            countObjectTimes++;
+            progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+            $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+            //$(".progressBarInner").text("Customers "+Math.round(progressPercentage)+"%");
+            $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+            $(".progressName").text("Leads ");
+            if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+                if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                } else {
+                    $('.headerprogressbar').addClass('headerprogressbarShow');
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                }
+
+            } else if (Math.round(progressPercentage) >= 100) {
+                $('.checkmarkwrapper').removeClass("hide");
+                setTimeout(function() {
+                    if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                        $('.headerprogressbar').removeClass('headerprogressbarShow');
+                        $('.headerprogressbar').addClass('headerprogressbarHidden');
+                    } else {
+                        $('.headerprogressbar').removeClass('headerprogressbarShow');
+                        $('.headerprogressbar').addClass('headerprogressbarHidden');
+                    }
+
+                }, 1000);
+            }
+            //localStorage.setItem('VS1CustomerList', JSON.stringify(data) || '');
+            addVS1Data('TProspectEx', JSON.stringify(data));
+            $("<span class='process'>Leads Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
         }).catch(function(err) {
 
         });
@@ -4794,9 +4830,9 @@ Template.newsidenav.onRendered(function() {
                                 $('.allocationModal').removeClass('killAllocationPOP');
                             }, 800);
                         }
-                    }, 3000);
+                    }, 300);
                 }
-            }, 3000);
+            }, 300);
 
             setTimeout(function() {
                 $('.loadingbar').css('width', 100 + '%').attr('aria-valuenow', 100);
@@ -5307,7 +5343,7 @@ Template.newsidenav.onRendered(function() {
                     }
 
 
-                }, 3000);
+                }, 300);
 
             }
             /* Quick Objects*/
@@ -5646,7 +5682,7 @@ Template.newsidenav.onRendered(function() {
                         }, 1000);
                     }
 
-                }, 3000);
+                }, 300);
             }
             /* End Quick Objects */
 
@@ -5762,11 +5798,11 @@ Template.newsidenav.onRendered(function() {
                                     $("<span class='process'>Invoices Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
                                     //setTimeout(function() {
                                     templateObject.getFollowedQuickDataDetailsPull();
-                                    //}, 3000);
+                                    //}, 300);
                                 }).catch(function(err) {
                                     //setTimeout(function() {
                                     templateObject.getFollowedQuickDataDetailsPull();
-                                    //}, 3000);
+                                    //}, 300);
                                 });
                             } else {
 
@@ -5806,11 +5842,11 @@ Template.newsidenav.onRendered(function() {
                                                 $("<span class='process'>Invoices Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
                                                 //setTimeout(function() {
                                                 templateObject.getFollowedQuickDataDetailsPull();
-                                                //  }, 3000);
+                                                //  }, 300);
                                             }).catch(function(err) {
                                                 //setTimeout(function() {
                                                 templateObject.getFollowedQuickDataDetailsPull();
-                                                //}, 3000);
+                                                //}, 300);
                                             });
                                         } else {
                                             templateObject.getFollowedQuickDataDetailsPull();
@@ -5853,11 +5889,11 @@ Template.newsidenav.onRendered(function() {
                             $("<span class='process'>Invoices Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
                             //setTimeout(function() {
                             templateObject.getFollowedQuickDataDetailsPull();
-                            //}, 3000);
+                            //}, 300);
                         }).catch(function(err) {
                             //setTimeout(function() {
                             templateObject.getFollowedQuickDataDetailsPull();
-                            //}, 3000);
+                            //}, 300);
                         });
                     });
                     templateObject.getAllInvoiceListData();
@@ -5983,7 +6019,7 @@ Template.newsidenav.onRendered(function() {
                     allDataToLoad = allDataToLoad - 1;
                 }
 
-            }, 3000);
+            }, 300);
         }
 
 
@@ -6157,7 +6193,7 @@ Template.newsidenav.onRendered(function() {
                     templateObject.getFollowedSalesDetailsPull();
                 }
 
-            }, 2500);
+            }, 250);
         }
 
         //If launching Appoing. Don't worry about the rest
