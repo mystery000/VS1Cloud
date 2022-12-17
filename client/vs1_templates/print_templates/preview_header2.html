@@ -19,11 +19,9 @@
         .print-header2 {
             font-family: Calibri, sans-serif !important;
             font-size: 36px;
+            padding-right: 5px;
+            text-align: center;
             font-weight: bold;
-        }
-        .print-header-value2 {
-            font-family: Calibri, sans-serif !important;
-            color: red;
         }
         .o_abn_label2 {
             font-family: Calibri, sans-serif !important;
@@ -40,32 +38,22 @@
             line-height: 1.2rem;
         }
     </style>
-      <div class="template-preview-header2">
+    <div class="template-preview-header2">
         <div class="d-flex flex-row d-sm-flex d-md-flex">
-            <div class="col-6 col-md-6 col-sm-12 d-flex" style="height: 10rem; margin: 0px; padding: 0px; flex-wrap: wrap; align-content: center;">
+            <div class="col-3 col-md-3 col-sm-12 d-flex" style="height: 10rem; margin: 0px; padding: 0px; flex-wrap: wrap; align-content: center;">
                 <div style="width: 100%"><!-- max-width: 60mm; max-height: 30mm; -->
                     <img src="assets/img/VS1.png" class="uploadedImage" style="width: 50%; margin-bottom: 0px;">
-                    <p class="label-p2" style="padding-left: 10px; margin-top: 10px; font-size: 18px;">
-                        <span class="o_abn_label2"></span>&nbsp;&nbsp;
-                        <span class="o_abn2"></span>
-                    </p>
                 </div>
             </div>
-            <div class="col-6 col-md-6 col-sm-12 d-flex flex-column" style="margin: 0px; padding: 0px; border: none !important; justify-content: space-evenly;">
-                <p class="label-p p_header2" style="font-size: 24px; font-weight: bold; padding-right: 20px; text-align: right;">
-                    <span class="print-header2"></span>
-                    <br><br>
-                    <span>No:</span>&nbsp;&nbsp;&nbsp;
-                    <span class="print-header-value2"></span>
-                </p>
-                <p class="label-p p_header2_2" style="font-size: 36px; font-weight: bold; padding-right: 20px; text-align: right;">
-                    <span class="print-header2"></span>&nbsp;&nbsp;
-                    <span class="date2"></span>
-                </p>
+            <div class="col-4 col-md-4 col-sm-12" style="margin-top: 10px; padding: 0px; border: none !important; ">
+                <p><svg id="stockAdjustmentBarCode"></svg></p>
+            </div>
+            <div class="col-5 col-md-5 col-sm-12 d-flex flex-column" style="margin: 0px; padding: 0px; border: none !important; justify-content: space-evenly;">
+                <p class="label-p print-header2"></p>
             </div>
         </div>
         <div class="d-flex flex-row d-sm-flex d-md-flex" style="margin: 10px 0px 0px;">
-            <div class="col-6 col-md-6 col-sm-12" style="margin: 0px; padding-left: 10px;">
+            <div class="col-6 col-md-6 col-sm-12" style="margin: 0px; padding: 0px;">
                 <div style="width: 100%; border: none !important; font-size: 18px;">
                     <p class="label-p">
                         <span class="o_name2"></span><br>
@@ -75,17 +63,19 @@
                         <span class="o_email2"></span><br>
                         <span class="o_state2"></span><br>
                     </p>
-                    
+                    <p class="label-p2">
+                        <span class="o_abn_label2"></span>&nbsp;&nbsp;
+                        <span class="o_abn2"></span>
+                    </p>
                 </div>
             </div>
             <div class="col-3 col-md-3 col-sm-12" style="margin: 0px; padding: 0px 0px 0px 20px;">
                 <div style="width: 100%; border: none !important; font-size: 18px; min-height: 180px;">
-                    <div class="div_invoice2" style="width: 100%;">
                     <p class="label-p2">
-                        <span style="font-weight: bold;" class="label_date2">Invoice Date</span><br>
+                        <span style="font-weight: bold;">Invoice Date</span><br>
                         <span class="date2"></span>
                     </p>
-                    <p class="label-p2 p_inv_num">
+                    <p class="label-p2">
                         <span style="font-weight: bold;">Invoice Number</span><br>
                         <span class="io2"></span>
                     </p>
@@ -97,7 +87,6 @@
                         <span style="font-weight: bold;">Due Date</span><br>
                         <span class="due2"></span>
                     </p>
-                    </div>
                 </div>
             </div>
             <div class="col-3 col-md-3 col-sm-12" style="margin: 0px; padding: 0px 0px 0px 20px;">

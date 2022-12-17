@@ -1397,7 +1397,6 @@ Template.templatesettings.onRendered(function () {
           $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
     
           $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
-          JsBarcode("#Barcode", "BI-751",{displayValue: false});
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " "+ " template"
           );
@@ -1531,8 +1530,6 @@ Template.templatesettings.onRendered(function () {
                       $('#templatePreviewModal .customfield3data').text( object_invoce[0]["customfield3"]);
                     }
 
-
-
               }
 
               if(object_invoce[0]["customfield1"] == "NA")
@@ -1555,7 +1552,10 @@ Template.templatesettings.onRendered(function () {
               }
          }
       }
-
+      async function addAttachment() {
+       await JsBarcode('#Barcode', 'SA-');
+       addAttachment();
+      }
       function loadTemplateBody1(object_invoce) {
         // table content
         var tbl_content = $("#templatePreviewModal .tbl_content");
