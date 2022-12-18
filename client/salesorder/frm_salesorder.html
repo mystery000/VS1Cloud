@@ -114,7 +114,7 @@
 
 
           <div class="row">
-            <div class="col-12 col-md-1">
+            <!-- <div class="col-12 col-md-1">
               <div class="row justify-content-left desktopButtons" style="margin-left:0px;">
 
                 <div class="custom-control custom-switch">
@@ -127,10 +127,10 @@
 
               </div>
 
-            </div>
+            </div> -->
             <div class="col-12 col-md-12">
               <div class="row justify-content-center desktopButtons">
-                {{> transaction_footer margin="12px" attachmentCount=attachmentCount type="salesorder" }}
+                {{> transaction_footer margin="12px" AttachmentCount=attachmentCount TransactionType="sales" data=salesorderrecord cardType="Sales Order" }}
               </div>
 
             </div>
@@ -541,7 +541,7 @@
         }}
       </div>
       <div class="row justify-content-center mobileButtons" style="display: none;">
-        {{> transaction_footer margin="12px" AttachmentCount=attachmentCount }}
+        {{> transaction_footer margin="12px" AttachmentCount=attachmentCount TransactionType="sales" data=salesorderrecord cardType="Sales Order" printData=test }}
       </div>
       <style>
         @media screen and (max-width: 450px) {

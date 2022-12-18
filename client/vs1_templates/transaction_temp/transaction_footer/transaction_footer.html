@@ -5,9 +5,11 @@
     hideAttachmentButton
     hideRemoveButton
     hideCancelButton
-    attachmentCount
+    AttachmentCount
     title
-    type
+    TransactionType
+    cardType
+    data
 -->
 <template name="transaction_footer">
   <style>
@@ -27,13 +29,13 @@
 
   {{#unless hidePrintButton}}
     {{> template_footer_print_button
-      type=type
+      type=TransactionType
     }}
   {{/unless}}
 
   {{#unless hideAttachmentButton}}
     {{> template_footer_attachment_button
-      count=attachmentCount
+      count=AttachmentCount
     }}
   {{/unless}}
 
@@ -44,4 +46,6 @@
   {{#unless hideCancelButton}}
     {{> template_footer_cancel_button}}
   {{/unless}}
+
+  {{> transaction_print_modal TransactionType=TransactionType data=data cardType=cardType}}
 </template>
