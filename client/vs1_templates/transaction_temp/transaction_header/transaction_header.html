@@ -4,7 +4,6 @@
   uploadedFile
   isCurrencyEnable
   custfields
-  showTemplateModals
   showUploadAttachment
   showTransactionButtons
   salesCloudPreferenceRec
@@ -181,25 +180,7 @@
   {{#if showUploadAttachment}}
   {{> files_viewer_modal }}
   {{/if}}
-<!-- It should be move to footer later -->
-  {{#if showTemplateModals}}
-  <!-- {{> template_selection_modal
-    templateTitle=cardType
-  }} -->
-  <div 
-    class="modal fade" 
-    id="templatePreviewModal" 
-    tabindex="2" 
-    role="dialog"
-    aria-labelledby="templatePreviewLabel" 
-    aria-hidden="true">
-    {{> custom_print_template 
-      modalId="templatePreviewModal" 
-      idPrefix="html-2-pdfwrapper"
-      namePrefix="html-2-pdfwrapper" 
-    }}
-  </div>
-  {{/if}}
+
   <div class="row" style="background-color: #ededed;">
     {{#if data.ispaid}}
     <div class="col-12 colPaid" style="display: none;">

@@ -23,7 +23,6 @@
         uploadedFile=uploadedFile
         isCurrencyEnable=isCurrencyEnable
         custfields=custfields
-        showTemplateModals=true
         showUploadAttachment=true
         showTransactionButtons=false
         salesCloudPreferenceRec=purchaseCloudPreferenceRec
@@ -703,7 +702,7 @@
                   </div>
               </div>
             </div>
-              {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="cheques" }}
+              {{> transaction_footer margin="14px" attachmentCount=attachmentCount type="cheques" }}
           </div>
         </div>
         {{> transaction_calculation
@@ -716,7 +715,7 @@
           }}
       </div>
       <div class="row justify-content-center mobileButtons" style="display: none;">
-          {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="cheques" }}
+          {{> transaction_footer margin="14px" attachmentCount=attachmentCount type="cheques" }}
       </div>
       <div class="printID" style="display: none;"></div>
       <style>

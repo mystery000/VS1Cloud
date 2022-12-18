@@ -121,7 +121,6 @@
         uploadedFile=uploadedFile
         isCurrencyEnable=isCurrencyEnable
         custfields=custfields
-        showTemplateModals=true
         showUploadAttachment=true
         showTransactionButtons=true
         salesCloudPreferenceRec=salesCloudPreferenceRec
@@ -176,7 +175,7 @@
                 <!-- {{# transaction_footer margin="14px" }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
                                     {{/transaction_footer}} -->
                 <!-- {{> transaction_footer margin="14px" AttachmentCount=attachmentCount }} -->
-                {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="invoices" }}
+                {{> transaction_footer margin="14px" attachmentCount=attachmentCount type="invoices" }}
               </div>
             </div>
           </div>
@@ -251,7 +250,7 @@
 
       </div>
       <div class="row justify-content-center mobileButtons" style="display: none;">
-        {{> transaction_footer margin="12px" AttachmentCount=attachmentCount TransactionType="invoices" }}
+        {{> transaction_footer margin="12px" attachmentCount=attachmentCount type="invoices" }}
       </div>
       <div class="printID" style="display: none;"></div>
       <style>
