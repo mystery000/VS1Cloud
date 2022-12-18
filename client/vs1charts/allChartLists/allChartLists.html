@@ -128,9 +128,10 @@
     <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}" style="min-width: 100%;">
         <!-- New Charts -->
 
+        {{#if is_available_chart currentTemplate "bankaccountschart"}}
         {{> bankaccountschart
             md=6 defaultPosition=0 key="dashboard__bank_accountschart" }}
-
+        {{/if}}
         {{> mytaskswidgetchart
             md=6 defaultPosition=1 key="dashboard__my_tasks" }}
 
@@ -158,11 +159,15 @@
         {{> invstockonhandanddemand
             md=8 defaultPosition=4 key="inventory__stock_on_hand_and_demand" }}
 
+    {{#if is_available_chart currentTemplate "top10Customers"}}
         {{> top10Customers
             md=4 defaultPosition=11 key="contacts__top_10_customers" }}
+    {{/if}}
 
+    {{#if is_available_chart currentTemplate "top10Suppliers"}}
         {{> top10Suppliers
             md=4 defaultPosition=12 key="contacts__top_10_supplies" }}
+    {{/if}}
 
         {{> resalescomparision
             md=4 defaultPosition=13 key="dashboard__employee_sales_comparison" canvasID="employeeSalesComparisonChart"}}
@@ -176,8 +181,10 @@
         {{> quotedinvoicedamounts
             md=6 defaultPosition=16 key="dashboard__quoted_amounts_/_invoiced_amounts" }}
 
+    {{#if is_available_chart currentTemplate "activeEmployees"}}
         {{> activeEmployees
             md=4 defaultPosition=17 key="contacts__active_employees" }}
+    {{/if}}
 
         {{> employeecompletedjobs
             md=8 defaultPosition=18 key="payroll__employee_jobs_completed" }}
