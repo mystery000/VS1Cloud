@@ -15,6 +15,22 @@
         showUploadAttachment=true
         showTransactionButtons=true
         salesCloudPreferenceRec=purchaseCloudPreferenceRec
+        showCustomer=true
+        showBilingAddress=true
+        showSalesDate=true
+        showPONumber=false
+        showInvoiceNumber=true
+        showVia=true
+        showTerms=true
+        showStatus=true
+        showReference=true
+        showDepartment=true
+        showCustomFields=true
+        showShippingInfo=true
+        showPayment=true
+        showCopyTransaction=true
+        showCopyToInvoice=false
+        showCopyToOrder=false
       }}
       <div>
         {{> transaction_line
@@ -92,23 +108,9 @@
           </div>
 
           <div class="row">
-            <div class="col-12 col-md-1">
-              <div class="row justify-content-left desktopButtons" style="margin-left:0px;">
-
-                <div class="custom-control custom-switch">
-                  <input class="custom-control-input chkGlobalSettings" id="choosetemplate" type="checkbox"
-                    style="cursor: pointer;">
-                  <label class="custom-control-label" style="width:131px;cursor: pointer;" for="choosetemplate">Choose
-                    Template</label>
-                </div>
-
-
-              </div>
-
-            </div>
             <div class="col-12 col-md-11">
               <div class="row justify-content-center desktopButtons">
-                {{> transaction_buttons_bottom margin="14px" AttachmentCount=attachmentCount}}
+                {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="bills"}}
               </div>
             </div>
           </div>
@@ -149,36 +151,6 @@
         TotalPaid=billrecord.totalPaid
         BalanceDue=billrecord.balanceDue
         }}
-      </div>
-
-      <div class="modal fade" role="dialog" tabindex="-1" id="confirmprint">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="">Print Confirm</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-
-            <div class="modal-body">
-
-              <div class="custom-control custom-checkbox">
-                <input class="custom-control-input favCheckBox chkBankingReport" name="print_bill_second" checked
-                  type="checkbox" id="print_bill_second" autocomplete="off">
-                <label style="cursor: pointer;" class="custom-control-label" for="print_bill_second">Print Bills</label>
-              </div>
-            </div>
-
-            <div class="modal-footer ">
-              <button class="btn btn-primary printConfirm btnFooter" type="button"><i class="fa fa-print"
-                  style="margin-right: 5px;"></i>Confirm Print</button>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"
-                  style="margin-right: 5px;"></i>Close</button>
-            </div>
-
-          </div>
-        </div>
       </div>
 
       <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog"
@@ -408,7 +380,7 @@
       </div>
 
       <div class="row justify-content-center mobileButtons" style="display: none;">
-        {{> transaction_buttons_bottom margin="16px" AttachmentCount=attachmentCount }}
+        {{> transaction_footer margin="16px" AttachmentCount=attachmentCount TransactionType="bills" }}
       </div>
       <div class="printID" style="display: none;"></div>
       <style>

@@ -196,22 +196,8 @@ Template.purchaseordercard.onRendered(() => {
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
-            var orderDate = poData.fields.OrderDate;
-            var fromDate = orderDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingPOs = await sideBarService.getAllTPurchaseOrderListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var poList = followingPOs.tpurchaseorderlist;
-            if(poList.length > 1) {
-                templateObject.hasFollow.set(true);
-            } else {
-                templateObject.hasFollow.set(false);
-            }
+            var isRepeated = poData.fields.RepeatedFrom;
+            templateObject.hasFollow.set(isRepeated);
         }
 
     }
@@ -251,154 +237,7 @@ Template.purchaseordercard.onRendered(() => {
     const clientsService = new PurchaseBoardService();
     const contactService = new ContactService();
 
-    templateObject.getTemplateInfoNew = function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
-        getVS1Data('TTemplateSettings').then(function(dataObject) {
-          if (dataObject.length == 0) {
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Purchase_Orders_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-
-                 }
-
-
-                  $('.fullScreenSpin').css('display', 'none');
-              }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-              });
-          }else{
-                  let data = JSON.parse(dataObject[0].data);
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Purchase_Orders_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Purchase_Orders_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-
-
-                 }
-                  $('.fullScreenSpin').css('display', 'none');
-          }
-        }).catch(function(err) {
-        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
-
-                     if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
-                     {
-                            if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
-                                    $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                      $('#Purchase_Orders_1').attr('checked','checked');
-                                    }
-
-                            }
-                            if(data.ttemplatesettings[i].fields.Template == 2)
-                            {
-                                  $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Purchase_Orders_2').attr('checked','checked');
-                                  }
-                            }
-
-                            if(data.ttemplatesettings[i].fields.Template == 3)
-                            {
-                                  $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Purchase_Orders_3').attr('checked','checked');
-                                  }
-                            }
-
-
-                     }
-
-
-
-
-                  }
-                  $('.fullScreenSpin').css('display', 'none');
-        }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
-        });
-      });
-
-      };
-
-      templateObject.getTemplateInfoNew();
-
-templateObject.getLastPOData = async function() {
+    templateObject.getLastPOData = async function() {
        let lastBankAccount = "Bank";
        let lastDepartment = defaultDept || "";
        purchaseService.getLastPOID().then(function(data) {
@@ -1071,9 +910,9 @@ templateObject.getLastPOData = async function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1139,9 +978,9 @@ templateObject.getLastPOData = async function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1210,9 +1049,9 @@ templateObject.getLastPOData = async function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -7160,32 +6999,7 @@ Template.purchaseordercard.events({
 
         }
     },
-    'click  #open_print_confirm':function(event)
-    {
-        playPrintAudio();
-        setTimeout(async function(){
-        if($('#choosetemplate').is(':checked'))
-        {
-            $('#templateselection').modal('show');
-        }
-        else
-        {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // }
-            // $('#confirmprint').modal('hide');
-        }
-    }, delayTimeAfterSound);
-    },
+    'click  #open_print_confirm':function(event) {},
 
     'click #choosetemplate':function(event)
     {

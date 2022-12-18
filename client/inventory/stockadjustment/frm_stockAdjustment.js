@@ -99,6 +99,9 @@ Template.stockadjustmentcard.onRendered(() => {
         $('.uploadedImage').attr('src', imageData);
     };
 
+
+
+
     const records = [];
     let stockTransferService = new StockTransferService();
 
@@ -332,7 +335,7 @@ Template.stockadjustmentcard.onRendered(() => {
                         };
 
                         let getDepartmentVal = data.fields.Lines[0].fields.DeptName || defaultDept;
-
+                        console.log(getDepartmentVal);
                         setTimeout(function () {
                             // $('#sltDepartment').val(getDepartmentVal);
                             $('#sltAccountName').val(data.fields.AccountName);

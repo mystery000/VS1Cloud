@@ -127,99 +127,98 @@
     </style>
     <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}" style="min-width: 100%;">
         <!-- New Charts -->
-
-        {{#if is_available_chart currentTemplate "bankaccountschart"}}
+        <!--
         {{> bankaccountschart
-            md=6 defaultPosition=0 key="dashboard__bank_accountschart" }}
-        {{/if}}
-        {{> mytaskswidgetchart
-            md=6 defaultPosition=1 key="dashboard__my_tasks" }}
+                md=6 defaultPosition=0 key="dashboard__bank_accountschart" }}
 
-        {{> monthlyprofitandloss
-            md=8 defaultPosition=2 key="dashboard__monthyl_profit_and_loss"}}
+            {{> mytaskswidgetchart
+                    md=6 defaultPosition=1 key="dashboard__my_tasks" }}
 
-        {{> mytaskswidgetchart
-            md=4 defaultPosition=2 key="dsmcharts__my_tasks" }}
+            {{> monthlyprofitandloss
+                    md=8 defaultPosition=2 key="dashboard__monthyl_profit_and_loss"}}
 
-        {{> mytaskswidgetchart
-            md=4 defaultPosition=2 key="dscharts__my_tasks" }}
+            {{> mytaskswidgetchart
+                    md=4 defaultPosition=2 key="dsmcharts__my_tasks" }}
 
-        {{> dsmAppointmentsWidget
-            md=8 defaultPosition=3 key="dsmcharts__appointment_chart" }}
+            {{> mytaskswidgetchart
+                    md=4 defaultPosition=2 key="dscharts__my_tasks" }}
 
-        {{> quotedsalesorderinvoicedamounts
-            md=4 defaultPosition=1 key="sales__sales_overview" }}
+            {{> dsmAppointmentsWidget
+                    md=8 defaultPosition=3 key="dsmcharts__appointment_chart" }}
 
-        {{> accountrevenuestreams
-            md=8 defaultPosition=2 key="accounts__revenue_streams"}}
+            {{> quotedsalesorderinvoicedamounts
+                    md=4 defaultPosition=1 key="sales__sales_overview" }}
 
-        {{> profitandlosschart
-            md=4 defaultPosition=3 key="dashboard__profit_and_loss" }}
+            {{> accountrevenuestreams
+                    md=8 defaultPosition=2 key="accounts__revenue_streams"}}
 
-        {{> invstockonhandanddemand
-            md=8 defaultPosition=4 key="inventory__stock_on_hand_and_demand" }}
+            {{> profitandlosschart
+                    md=4 defaultPosition=3 key="dashboard__profit_and_loss" }}
 
-    {{#if is_available_chart currentTemplate "top10Customers"}}
-        {{> top10Customers
-            md=4 defaultPosition=11 key="contacts__top_10_customers" }}
-    {{/if}}
+            {{> invstockonhandanddemand
+                    md=8 defaultPosition=4 key="inventory__stock_on_hand_and_demand" }}
 
-    {{#if is_available_chart currentTemplate "top10Suppliers"}}
-        {{> top10Suppliers
-            md=4 defaultPosition=12 key="contacts__top_10_supplies" }}
-    {{/if}}
+            {{> top10Customers
+                    md=4 defaultPosition=11 key="contacts__top_10_customers" }}
 
-        {{> resalescomparision
-            md=4 defaultPosition=13 key="dashboard__employee_sales_comparison" canvasID="employeeSalesComparisonChart"}}
+            {{> top10Suppliers
+                    md=4 defaultPosition=12 key="contacts__top_10_supplies" }}
 
-        {{> expenseschart
-            md=8 defaultPosition=14 key="dashboard__expenses" }}
+            {{> resalescomparision
+                    md=4 defaultPosition=13 key="dashboard__employee_sales_comparison" canvasID="employeeSalesComparisonChart"}}
 
-        {{> monthlyearnings
-            md=6 defaultPosition=15 key="dashboard__monthly_earnings" }}
+            {{> expenseschart
+                    md=8 defaultPosition=14 key="dashboard__expenses" }}
 
-        {{> quotedinvoicedamounts
-            md=6 defaultPosition=16 key="dashboard__quoted_amounts_/_invoiced_amounts" }}
+            {{> monthlyearnings
+                    md=6 defaultPosition=15 key="dashboard__monthly_earnings" }}
 
-    {{#if is_available_chart currentTemplate "activeEmployees"}}
-        {{> activeEmployees
-            md=4 defaultPosition=17 key="contacts__active_employees" }}
-    {{/if}}
+            {{> quotedinvoicedamounts
+                    md=6 defaultPosition=16 key="dashboard__quoted_amounts_/_invoiced_amounts" }}
 
-        {{> employeecompletedjobs
-            md=8 defaultPosition=18 key="payroll__employee_jobs_completed" }}
+            {{> activeEmployees
+                    md=4 defaultPosition=17 key="contacts__active_employees" }}
 
-        {{> clockedOnEmployees
-            md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
+            {{> employeecompletedjobs
+                    md=8 defaultPosition=18 key="payroll__employee_jobs_completed" }}
 
-        {{> monthllyexpenses
-            md=8 defaultPosition=21 key="purchases__monthly_expenses" }}
+            {{> employeeLeave
+                    md=8  defaultPosition=18 key="payroll__employee_absent"}}
 
-        {{> expensebreakdown
-            md=4 defaultPosition=22 key="purchases__expenses_breakdown" }}
+            {{> employeePresentDays
+                    md=8  defaultPosition=19 key="payroll__employee_clocked_on"}}
 
-        {{> absenteeRate
-            md=8 defaultPosition=23 key="employees__absentee_rate_over_last_12_months" }}
+            {{> employeeLeaveDays
+                    md=8  defaultPosition=19 key="payroll__employee_leave"}}
 
-        <!-- position 17 to 18, 24 -->
+            {{> clockedOnEmployees
+                    md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
+
+            {{> monthllyexpenses
+                    md=8 defaultPosition=21 key="purchases__monthly_expenses" }}
+
+            {{> expensebreakdown
+                    md=4 defaultPosition=22 key="purchases__expenses_breakdown" }}
+
+            {{> absenteeRate
+                    md=8 defaultPosition=23 key="employees__absentee_rate_over_last_12_months" }}
+
+        position 17 to 18, 24
         {{> dashboardManagerCharts}}
 
 
-        {{> dsmTop10Customers
-            md=4 defaultPosition=24 key="dsmcharts__top_10_customers" }}
+            {{> dsmTop10Customers
+                    md=4 defaultPosition=24 key="dsmcharts__top_10_customers" }}
 
-        <!-- {{> dsmResalescomparision
-            md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison" }} -->
+            {{> resalescomparision md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison" canvasID="dsm_employeeSalesComparisonChart"}}
 
-        {{> resalescomparision md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison" canvasID="dsm_employeeSalesComparisonChart"}}
+            {{#if equals isaccountoverview true}}
 
-        {{#if equals isaccountoverview true}}
+            {{else}}
+                {{> accountslistchart
+                        md=12 defaultPosition=29 key="dashboard__account_list" }}
 
-        {{else}}
-        {{> accountslistchart
-        md=12 defaultPosition=29 key="dashboard__account_list" }}
-
-        {{/if}}
+            {{/if}}
 
         <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="27" data-default-class="col-md-8" key="dscharts__appointment_chart">
             {{> dsAppointmentsWidget}}
@@ -228,14 +227,13 @@
 
         {{> opportunitiesStatus md=4 defaultPosition=30 key="dsmcharts__opportunities_status" }}
 
-        {{> dsmleadlistchart md=12 defaultPosition=31 key="dsmcharts__lead_list" }}
+            {{> dsmleadlistchart md=12 defaultPosition=31 key="dsmcharts__lead_list" }}
 
-        <!-- <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="31" data-default-class="col-md-12" key="dsmcharts__lead_list" style="margin-top:25px !important">
-            {{> dsmleadlistchart}}
-        </div> -->
-        <!-- position 30, 31 -->
+
+         position 30, 31
         {{> dashboardSalesCharts}}
-        {{> dsleadlistchart md=12 defaultPosition=33 key="dscharts__lead_list" }}
+            {{> dsleadlistchart md=12 defaultPosition=33 key="dscharts__lead_list" }}
+      -->
 
     </div>
     <div class="row no-gutters justify-content-center">

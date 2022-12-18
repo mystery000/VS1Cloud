@@ -1,0 +1,75 @@
+<!-- Transaction Footer -->
+<!-- Params 
+    hideSaveButton
+    hidePrintButton
+    hideAttachmentButton
+    hideRemoveButton
+    hideCancelButton
+    attachmentCount
+    title
+-->
+<template name="transaction_footer">
+  <style>
+    .btnFooter{
+      /* margin: {{margin}}; */
+      margin: 12px;
+      margin-top: 0px;
+      min-width: 100px;
+    }
+    .btnFooter .fa {
+      padding-right: 8px;
+    }
+  </style>
+  {{#unless hideSaveButton}}
+  <button 
+    class="btn btn-success btnSave btnFooter {{SaveButton}}" 
+    type="button">
+    <i class="fa fa-save"></i>
+    Save
+  </button>
+  {{/unless}}
+
+  {{#unless hidePrintButton}}
+  <button 
+    class="btn btn-primary btnFooter {{PrintButton}}" 
+    id="open_print_confirm" 
+    type="button">
+    <i class="fa fa-print"></i>Print
+  </button>
+  {{/unless}}
+
+  {{#unless hideAttachmentButton}}
+  <a 
+    class="btn btn-primary btn_Attachment btnFooter {{AttachmentsButton}}" 
+    role="button" 
+    data-toggle="modal" 
+    href="#myModalAttachment"
+    id="btn_Attachment"
+    name="btn_Attachment">
+    {{#if AttachmentCount}}
+    <span id="attachment-count">{{AttachmentCount}}</span>{{/if}} 
+    <i class="fa fa-paperclip"></i>
+    Add Attachments
+  </a>
+  {{/unless}}
+
+  {{#unless hideRemoveButton}}
+  <button
+    class="btn btn-danger btnRemove btnFooter {{RemoveButton}}" 
+    type="button">
+    <i class="fa fa-remove"></i>
+    Delete
+  </button>
+  {{/unless}}
+
+  {{#unless hideCancelButton}}
+  <button 
+    class="btn btn-secondary btnBack btnFooter {{CancelButton}}" 
+    type="button">
+    <i class="fa fa-remove"></i>
+    Cancel
+  </button>
+  {{/unless}}
+
+  {{> transaction_print_modal TransactionType=TransactionType data=data cardType=cardType}}
+</template>

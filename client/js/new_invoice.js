@@ -113,23 +113,11 @@ Template.new_invoice.onRendered(function() {
         var currentInvoice = getso_id[getso_id.length - 1];
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
-            var invData = await salesService.getOneInvoicedataEx(currentInvoice);
-            var saleDate = invData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingInvoices = await sideBarService.getAllTInvoiceListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var invList = followingInvoices.tinvoicelist;
-            if (invList.length > 1) {
-                templateObject.hasFollow.set(true);
-            } else {
-                templateObject.hasFollow.set(false);
-            }
+            var invData = await salesService.getOneInvoicedataEx(currentInvoice); 
+            console.log("##########################")
+            console.log(invData);
+            var isRepeated = invData.fields.RepeatedFrom;
+            templateObject.hasFollow.set(isRepeated);
         }
     }
     templateObject.hasFollowings();
@@ -257,318 +245,6 @@ Template.new_invoice.onRendered(function() {
         $(".Invoice").css("display", "none");
         $(".add_dy .coltr").addClass("col-md-6");
     }
-
-    // set initial table rest_data
-    templateObject.getTemplateInfoNew = function() {
-        $(".fullScreenSpin").css("display", "inline-block");
-        getVS1Data("TTemplateSettings")
-            .then(function(dataObject) {
-                if (dataObject.length == 0) {
-                    sideBarService
-                        .getTemplateInformation(initialBaseDataLoad, 0)
-                        .then(function(data) {
-                            addVS1Data("TTemplateSettings", JSON.stringify(data));
-
-                            for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                                if (
-                                    data.ttemplatesettings[i].fields.SettingName == "Invoices"
-                                ) {
-                                    if (data.ttemplatesettings[i].fields.Template == 1) {
-                                        $('input[name="Invoices_1"]').val(
-                                            data.ttemplatesettings[i].fields.Description
-                                        );
-                                        if (data.ttemplatesettings[i].fields.Active == true) {
-                                            $("#Invoices_1").attr("checked", "checked");
-                                        }
-                                    }
-                                    if (data.ttemplatesettings[i].fields.Template == 2) {
-                                        $('input[name="Invoices_2"]').val(
-                                            data.ttemplatesettings[i].fields.Description
-                                        );
-                                        if (data.ttemplatesettings[i].fields.Active == true) {
-                                            $("#Invoices_2").attr("checked", "checked");
-                                        }
-                                    }
-
-                                    if (data.ttemplatesettings[i].fields.Template == 3) {
-                                        $('input[name="Invoices_3"]').val(
-                                            data.ttemplatesettings[i].fields.Description
-                                        );
-                                        if (data.ttemplatesettings[i].fields.Active == true) {
-                                            $("#Invoices_3").attr("checked", "checked");
-                                        }
-                                    }
-                                }
-
-                                if (
-                                    data.ttemplatesettings[i].fields.SettingName ==
-                                    "Invoice Back Orders"
-                                ) {
-                                    if (data.ttemplatesettings[i].fields.Template == 1) {
-                                        $('input[name="Invoice Back Orders_1"]').val(
-                                            data.ttemplatesettings[i].fields.Description
-                                        );
-                                        if (data.ttemplatesettings[i].fields.Active == true) {
-                                            $("#Invoice_Back_Orders_1").attr("checked", "checked");
-                                        }
-                                    }
-                                    if (data.ttemplatesettings[i].fields.Template == 2) {
-                                        $('input[name="Invoice Back Orders_2"]').val(
-                                            data.ttemplatesettings[i].fields.Description
-                                        );
-                                        if (data.ttemplatesettings[i].fields.Active == true) {
-                                            $("#Invoice_Back_Orders_2").attr("checked", "checked");
-                                        }
-                                    }
-
-                                    if (data.ttemplatesettings[i].fields.Template == 3) {
-                                        $('input[name="Invoice Back Orders_3"]').val(
-                                            data.ttemplatesettings[i].fields.Description
-                                        );
-                                        if (data.ttemplatesettings[i].fields.Active == true) {
-                                            $("#Invoice_Back_Orders_3").attr("checked", "checked");
-                                        }
-                                    }
-                                }
-
-                                if (
-                                    data.ttemplatesettings[i].fields.SettingName ==
-                                    "Delivery Docket"
-                                ) {
-                                    if (data.ttemplatesettings[i].fields.Template == 1) {
-                                        $('input[name="Delivery Docket_1"]').val(
-                                            data.ttemplatesettings[i].fields.Description
-                                        );
-                                        if (data.ttemplatesettings[i].fields.Active == true) {
-                                            $("#Delivery_Docket_1").attr("checked", "checked");
-                                        }
-                                    }
-                                    if (data.ttemplatesettings[i].fields.Template == 2) {
-                                        $('input[name="Delivery Docket_2"]').val(
-                                            data.ttemplatesettings[i].fields.Description
-                                        );
-                                        if (data.ttemplatesettings[i].fields.Active == true) {
-                                            $("#Delivery_Docket_2").attr("checked", "checked");
-                                        }
-                                    }
-
-                                    if (data.ttemplatesettings[i].fields.Template == 3) {
-                                        $('input[name="Delivery Docket_3"]').val(
-                                            data.ttemplatesettings[i].fields.Description
-                                        );
-                                        if (data.ttemplatesettings[i].fields.Active == true) {
-                                            $("#Delivery_Docket_3").attr("checked", "checked");
-                                        }
-                                    }
-                                }
-                            }
-
-                            $(".fullScreenSpin").css("display", "none");
-                        })
-                        .catch(function(err) {
-                            $(".fullScreenSpin").css("display", "none");
-                        });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-
-                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                        if (data.ttemplatesettings[i].fields.SettingName == "Invoices") {
-                            if (data.ttemplatesettings[i].fields.Template == 1) {
-                                $('input[name="Invoices_1"]').val(
-                                    data.ttemplatesettings[i].fields.Description
-                                );
-                                if (data.ttemplatesettings[i].fields.Active == true) {
-                                    $("#Invoices_1").attr("checked", "checked");
-                                }
-                            }
-                            if (data.ttemplatesettings[i].fields.Template == 2) {
-                                $('input[name="Invoices_2"]').val(
-                                    data.ttemplatesettings[i].fields.Description
-                                );
-                                if (data.ttemplatesettings[i].fields.Active == true) {
-                                    $("#Invoices_2").attr("checked", "checked");
-                                }
-                            }
-
-                            if (data.ttemplatesettings[i].fields.Template == 3) {
-                                $('input[name="Invoices_3"]').val(
-                                    data.ttemplatesettings[i].fields.Description
-                                );
-                                if (data.ttemplatesettings[i].fields.Active == true) {
-                                    $("#Invoices_3").attr("checked", "checked");
-                                }
-                            }
-                        }
-
-                        if (
-                            data.ttemplatesettings[i].fields.SettingName ==
-                            "Invoice Back Orders"
-                        ) {
-                            if (data.ttemplatesettings[i].fields.Template == 1) {
-                                $('input[name="Invoice Back Orders_1"]').val(
-                                    data.ttemplatesettings[i].fields.Description
-                                );
-                                if (data.ttemplatesettings[i].fields.Active == true) {
-                                    $("#Invoice_Back_Orders_1").attr("checked", "checked");
-                                }
-                            }
-                            if (data.ttemplatesettings[i].fields.Template == 2) {
-                                $('input[name="Invoice Back Orders_2"]').val(
-                                    data.ttemplatesettings[i].fields.Description
-                                );
-                                if (data.ttemplatesettings[i].fields.Active == true) {
-                                    $("#Invoice_Back_Orders_2").attr("checked", "checked");
-                                }
-                            }
-
-                            if (data.ttemplatesettings[i].fields.Template == 3) {
-                                $('input[name="Invoice Back Orders_3"]').val(
-                                    data.ttemplatesettings[i].fields.Description
-                                );
-                                if (data.ttemplatesettings[i].fields.Active == true) {
-                                    $("#Invoice_Back_Orders_3").attr("checked", "checked");
-                                }
-                            }
-                        }
-
-                        if (
-                            data.ttemplatesettings[i].fields.SettingName == "Delivery Docket"
-                        ) {
-                            if (data.ttemplatesettings[i].fields.Template == 1) {
-                                $('input[name="Delivery Docket_1"]').val(
-                                    data.ttemplatesettings[i].fields.Description
-                                );
-                                if (data.ttemplatesettings[i].fields.Active == true) {
-                                    $("#Delivery_Docket_1").attr("checked", "checked");
-                                }
-                            }
-                            if (data.ttemplatesettings[i].fields.Template == 2) {
-                                $('input[name="Delivery Docket_2"]').val(
-                                    data.ttemplatesettings[i].fields.Description
-                                );
-                                if (data.ttemplatesettings[i].fields.Active == true) {
-                                    $("#Delivery_Docket_2").attr("checked", "checked");
-                                }
-                            }
-
-                            if (data.ttemplatesettings[i].fields.Template == 3) {
-                                $('input[name="Delivery Docket_3"]').val(
-                                    data.ttemplatesettings[i].fields.Description
-                                );
-                                if (data.ttemplatesettings[i].fields.Active == true) {
-                                    $("#Delivery_Docket_3").attr("checked", "checked");
-                                }
-                            }
-                        }
-                    }
-                    $(".fullScreenSpin").css("display", "none");
-                }
-            })
-            .catch(function(err) {
-                sideBarService
-                    .getTemplateInformation(initialBaseDataLoad, 0)
-                    .then(function(data) {
-                        addVS1Data("TTemplateSettings", JSON.stringify(data));
-                        for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                            if (data.ttemplatesettings[i].fields.SettingName == "Invoices") {
-                                if (data.ttemplatesettings[i].fields.Template == 1) {
-                                    $('input[name="Invoices_1"]').val(
-                                        data.ttemplatesettings[i].fields.Description
-                                    );
-                                    if (data.ttemplatesettings[i].fields.Active == true) {
-                                        $("#Invoices_1").attr("checked", "checked");
-                                    }
-                                }
-                                if (data.ttemplatesettings[i].fields.Template == 2) {
-                                    $('input[name="Invoices_2"]').val(
-                                        data.ttemplatesettings[i].fields.Description
-                                    );
-                                    if (data.ttemplatesettings[i].fields.Active == true) {
-                                        $("#Invoices_2").attr("checked", "checked");
-                                    }
-                                }
-
-                                if (data.ttemplatesettings[i].fields.Template == 3) {
-                                    $('input[name="Invoices_3"]').val(
-                                        data.ttemplatesettings[i].fields.Description
-                                    );
-                                    if (data.ttemplatesettings[i].fields.Active == true) {
-                                        $("#Invoices_3").attr("checked", "checked");
-                                    }
-                                }
-                            }
-
-                            if (
-                                data.ttemplatesettings[i].fields.SettingName ==
-                                "Invoice Back Orders"
-                            ) {
-                                if (data.ttemplatesettings[i].fields.Template == 1) {
-                                    $('input[name="Invoice Back Orders_1"]').val(
-                                        data.ttemplatesettings[i].fields.Description
-                                    );
-                                    if (data.ttemplatesettings[i].fields.Active == true) {
-                                        $("#Invoice_Back_Orders_1").attr("checked", "checked");
-                                    }
-                                }
-                                if (data.ttemplatesettings[i].fields.Template == 2) {
-                                    $('input[name="Invoice Back Orders_2"]').val(
-                                        data.ttemplatesettings[i].fields.Description
-                                    );
-                                    if (data.ttemplatesettings[i].fields.Active == true) {
-                                        $("#Invoice_Back_Orders_2").attr("checked", "checked");
-                                    }
-                                }
-
-                                if (data.ttemplatesettings[i].fields.Template == 3) {
-                                    $('input[name="Invoice Back Orders_3"]').val(
-                                        data.ttemplatesettings[i].fields.Description
-                                    );
-                                    if (data.ttemplatesettings[i].fields.Active == true) {
-                                        $("#Invoice_Back_Orders_3").attr("checked", "checked");
-                                    }
-                                }
-                            }
-
-                            if (
-                                data.ttemplatesettings[i].fields.SettingName ==
-                                "Delivery Docket"
-                            ) {
-                                if (data.ttemplatesettings[i].fields.Template == 1) {
-                                    $('input[name="Delivery Docket_1"]').val(
-                                        data.ttemplatesettings[i].fields.Description
-                                    );
-                                    if (data.ttemplatesettings[i].fields.Active == true) {
-                                        $("#Delivery_Docket_1").attr("checked", "checked");
-                                    }
-                                }
-                                if (data.ttemplatesettings[i].fields.Template == 2) {
-                                    $('input[name="Delivery Docket_2"]').val(
-                                        data.ttemplatesettings[i].fields.Description
-                                    );
-                                    if (data.ttemplatesettings[i].fields.Active == true) {
-                                        $("#Delivery_Docket_2").attr("checked", "checked");
-                                    }
-                                }
-
-                                if (data.ttemplatesettings[i].fields.Template == 3) {
-                                    $('input[name="Delivery Docket_3"]').val(
-                                        data.ttemplatesettings[i].fields.Description
-                                    );
-                                    if (data.ttemplatesettings[i].fields.Active == true) {
-                                        $("#Delivery_Docket_3").attr("checked", "checked");
-                                    }
-                                }
-                            }
-                        }
-                        $(".fullScreenSpin").css("display", "none");
-                    })
-                    .catch(function(err) {
-                        $(".fullScreenSpin").css("display", "none");
-                    });
-            });
-    };
-
-    templateObject.getTemplateInfoNew();
 
     templateObject.getLastInvoiceData = async function() {
         let lastBankAccount = "Bank";
@@ -11918,9 +11594,9 @@ Template.new_invoice.onRendered(function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, 0.1);'>";
             for (item_temp of item) {
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -11998,9 +11674,9 @@ Template.new_invoice.onRendered(function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, 0.1);'>";
             for (item_temp of item) {
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -12066,9 +11742,9 @@ Template.new_invoice.onRendered(function() {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, 0.1);'>";
             for (item_temp of item) {
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -13919,60 +13595,7 @@ Template.new_invoice.events({
         clickedInput = "two";
         $("#clickedControl").val(clickedInput);
     },
-    "click  #open_print_confirm": function(event) {
-        playPrintAudio();
-        setTimeout(async function() {
-            if ($("#choosetemplate").is(":checked")) {
-                let invoice_type = FlowRouter.current().queryParams.type;
-
-                if (invoice_type == "bo") {
-                    $("#confirmprint #print_invoice_option").css("display", "none");
-                    $("#confirmprint #print_delivery_option").css("display", "none");
-
-                    $("#confirmprint #Invoices_back_orders_option").css("display", "block");
-                } else {
-                    $("#confirmprint #Invoices_back_orders_option").css("display", "none");
-                    $("#confirmprint #print_invoice_option").css("display", "block");
-                    $("#confirmprint  #print_delivery_option").css("display", "block");
-                }
-
-                $("#templateselection").modal("show");
-            } else {
-                $(".fullScreenSpin").css("display", "inline-block");
-                // $("#html-2-pdfwrapper").css("display", "block");
-                let result = await exportSalesToPdf(template_list[0], 1);
-                // if ($(".edtCustomerEmail").val() != "") {
-                //     $(".pdfCustomerName").html($("#edtCustomerName").val());
-                //     $(".pdfCustomerAddress").html(
-                //         $("#txabillingAddress")
-                //         .val()
-                //         .replace(/[\r\n]/g, "<br />")
-                //     );
-                //     $("#printcomment").html(
-                //         $("#txaComment")
-                //         .val()
-                //         .replace(/[\r\n]/g, "<br />")
-                //     );
-                //     var ponumber = $("#ponumber").val() || ".";
-                //     $(".po").text(ponumber);
-                //     var rowCount = $(".tblInvoiceLine tbody tr").length;
-
-                //     exportSalesToPdf1();
-                // } else {
-                //     swal({
-                //         title: "Customer Email Required",
-                //         text: "Please enter customer email",
-                //         type: "error",
-                //         showCancelButton: false,
-                //         confirmButtonText: "OK",
-                //     }).then((result) => {
-                //         if (result.value) {} else if (result.dismiss === "cancel") {}
-                //     });
-                // }
-                // $("#confirmprint").modal("hide");
-            }
-        }, delayTimeAfterSound);
-    },
+    "click  #open_print_confirm": function(event) {},
 
     "click #choosetemplate": function(event) {
         if ($("#choosetemplate").is(":checked")) {

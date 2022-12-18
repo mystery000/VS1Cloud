@@ -80,22 +80,8 @@ Template.chequecard.onRendered(() => {
     if (getso_id[1]) {
       currentInvoice = parseInt(currentInvoice);
       var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
-      var orderDate = chequeData.fields.OrderDate;
-      var fromDate = orderDate.substring(0, 10);
-      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-      var followingCheques = await sideBarService.getAllChequeListData(
-        fromDate,
-        toDate,
-        false,
-        initialReportLoad,
-        0
-      );
-      var chequeList = followingCheques.tchequelist;
-      if(chequeList.length > 1){
-        templateObject.hasFollow.set(true);
-      } else {
-        templateObject.hasFollow.set(false);
-      }
+      var isRepeated = chequeData.fields.RepeatedFrom;
+      templateObject.hasFollow.set(isRepeated);
     }
   }
   templateObject.hasFollowings();
@@ -4297,9 +4283,9 @@ Template.chequecard.onRendered(() => {
           html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
           for(item_temp of item){
               if (idx > 1)
-                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
               else
-                  html = html + "<td>" + item_temp + "</td>";
+                html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
               idx++;
           }
 
@@ -4339,11 +4325,11 @@ Template.chequecard.onRendered(() => {
           var html = '';
           html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
           for(item_temp of item){
-              if (idx > 1)
-                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-              else
-                  html = html + "<td>" + item_temp + "</td>";
-              idx++;
+            if (idx > 1)
+              html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            else
+              html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            idx++;
           }
 
           html +="</tr>";
@@ -4382,11 +4368,11 @@ Template.chequecard.onRendered(() => {
           var html = '';
           html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
           for(item_temp of item){
-              if (idx > 1)
-                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-              else
-                  html = html + "<td>" + item_temp + "</td>";
-              idx++;
+            if (idx > 1)
+              html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            else
+              html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            idx++;
           }
 
           html +="</tr>";
@@ -6431,12 +6417,7 @@ Template.chequecard.events({
       }
     }
   },
-  'click #open_print_confirm' : function(event) {
-    playPrintAudio();
-    setTimeout(function(){
-        $('#templateselection').modal('toggle');
-    }, delayTimeAfterSound);
-  },
+  'click #open_print_confirm' : function(event) {},
   "click .printConfirm": async function (event) {
     playPrintAudio();
     setTimeout(async function(){
@@ -6460,6 +6441,8 @@ Template.chequecard.events({
 
               }
           }
+      } else {
+        // LoadingOverlay.hide();
       }
     }, delayTimeAfterSound);
   },
