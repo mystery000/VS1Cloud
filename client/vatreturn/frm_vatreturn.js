@@ -172,67 +172,6 @@ Template.vatreturn.onRendered(function() {
                             }
                         }
                         templateObject.taxRateList.set(taxRateList);
-
-                        setTimeout(function() {
-                            if (taxRateList.length > 0) {
-                                $(".tblTaxRate").DataTable({
-                                        // data: splashArrayTaxRateList,
-                                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                        columnDefs: [{
-                                                orderable: false,
-                                                targets: 0
-                                            },
-                                            {
-                                                className: "colCodeName",
-                                                "targets": [1]
-                                            },
-                                            {
-                                                className: "colDescription",
-                                                "targets": [2]
-                                            },
-                                            {
-                                                className: "colTaxRate text-right",
-                                                "targets": [3]
-                                            }
-                                        ],
-                                        select: true,
-                                        destroy: true,
-                                        colReorder: true,
-                                        pageLength: initialDatatableLoad,
-                                        lengthMenu: [
-                                            [initialDatatableLoad, -1],
-                                            [initialDatatableLoad, "All"],
-                                        ],
-                                        info: true,
-                                        responsive: true,
-                                        order: [
-                                            [0, "asc"]
-                                        ],
-                                        action: function() {
-                                            $(".tblTaxRate").DataTable().ajax.reload();
-                                        },
-                                        fnDrawCallback: function(oSettings) {
-                                            // $('.dataTables_paginate').css('display', 'none');
-                                        },
-                                        language: { search: "", searchPlaceholder: "Search List..." },
-                                        fnInitComplete: function() {},
-                                    })
-                                    .on("page", function() {
-                                        // setTimeout(function() {
-                                        //     MakeNegative();
-                                        // }, 100);
-                                        let draftRecord = templateObject.taxRateList.get();
-                                        templateObject.taxRateList.set(draftRecord);
-                                    })
-                                    .on("column-reorder", function() {})
-                                    .on("length.dt", function(e, settings, len) {
-                                        // setTimeout(function() {
-                                        //     MakeNegative();
-                                        // }, 100);
-                                    });;
-                                $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
-                            }
-                        }, 10);
                         $('.fullScreenSpin').css('display', 'none');
                     }).catch(function(err) {
                         $('.fullScreenSpin').css('display', 'none');
@@ -254,67 +193,6 @@ Template.vatreturn.onRendered(function() {
                         }
                     }
                     templateObject.taxRateList.set(taxRateList);
-
-                    setTimeout(function() {
-                        if (taxRateList.length > 0) {
-                            $(".tblTaxRate").DataTable({
-                                    // data: splashArrayTaxRateList,
-                                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                    columnDefs: [{
-                                            orderable: false,
-                                            targets: 0
-                                        },
-                                        {
-                                            className: "colCodeName",
-                                            "targets": [1]
-                                        },
-                                        {
-                                            className: "colDescription",
-                                            "targets": [2]
-                                        },
-                                        {
-                                            className: "colTaxRate text-right",
-                                            "targets": [3]
-                                        }
-                                    ],
-                                    select: true,
-                                    destroy: true,
-                                    colReorder: true,
-                                    pageLength: initialDatatableLoad,
-                                    lengthMenu: [
-                                        [initialDatatableLoad, -1],
-                                        [initialDatatableLoad, "All"],
-                                    ],
-                                    info: true,
-                                    responsive: true,
-                                    order: [
-                                        [0, "asc"]
-                                    ],
-                                    action: function() {
-                                        $(".tblTaxRate").DataTable().ajax.reload();
-                                    },
-                                    fnDrawCallback: function(oSettings) {
-                                        // $('.dataTables_paginate').css('display', 'none');
-                                    },
-                                    language: { search: "", searchPlaceholder: "Search List..." },
-                                    fnInitComplete: function() {},
-                                })
-                                .on("page", function() {
-                                    // setTimeout(function() {
-                                    //     MakeNegative();
-                                    // }, 100);
-                                    let draftRecord = templateObject.taxRateList.get();
-                                    templateObject.taxRateList.set(draftRecord);
-                                })
-                                .on("column-reorder", function() {})
-                                .on("length.dt", function(e, settings, len) {
-                                    // setTimeout(function() {
-                                    //     MakeNegative();
-                                    // }, 100);
-                                });;
-                            $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
-                        }
-                    }, 10);
                     $('.fullScreenSpin').css('display', 'none');
                 }
             })
@@ -334,67 +212,6 @@ Template.vatreturn.onRendered(function() {
                         }
                     }
                     templateObject.taxRateList.set(taxRateList);
-
-                    setTimeout(function() {
-                        if (taxRateList.length > 0) {
-                            $(".tblTaxRate").DataTable({
-                                    // data: splashArrayTaxRateList,
-                                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                    columnDefs: [{
-                                            orderable: false,
-                                            targets: 0
-                                        },
-                                        {
-                                            className: "colCodeName",
-                                            "targets": [1]
-                                        },
-                                        {
-                                            className: "colDescription",
-                                            "targets": [2]
-                                        },
-                                        {
-                                            className: "colTaxRate text-right",
-                                            "targets": [3]
-                                        }
-                                    ],
-                                    select: true,
-                                    destroy: true,
-                                    colReorder: true,
-                                    pageLength: initialDatatableLoad,
-                                    lengthMenu: [
-                                        [initialDatatableLoad, -1],
-                                        [initialDatatableLoad, "All"],
-                                    ],
-                                    info: true,
-                                    responsive: true,
-                                    order: [
-                                        [0, "asc"]
-                                    ],
-                                    action: function() {
-                                        $(".tblTaxRate").DataTable().ajax.reload();
-                                    },
-                                    fnDrawCallback: function(oSettings) {
-                                        // $('.dataTables_paginate').css('display', 'none');
-                                    },
-                                    language: { search: "", searchPlaceholder: "Search List..." },
-                                    fnInitComplete: function() {},
-                                })
-                                .on("page", function() {
-                                    // setTimeout(function() {
-                                    //     MakeNegative();
-                                    // }, 100);
-                                    let draftRecord = templateObject.taxRateList.get();
-                                    templateObject.taxRateList.set(draftRecord);
-                                })
-                                .on("column-reorder", function() {})
-                                .on("length.dt", function(e, settings, len) {
-                                    // setTimeout(function() {
-                                    //     MakeNegative();
-                                    // }, 100);
-                                });;
-                            $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
-                        }
-                    }, 10);
                 });
             });
     }

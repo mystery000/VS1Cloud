@@ -5,6 +5,7 @@ import { UtilityService } from "../../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../../js/sidebar-service';
 import { ProductService } from '../../product/product-service';
+import { AccountService } from "../../accounts/account-service";
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
 import { AppointmentService } from '../../appointments/appointment-service';
@@ -13,6 +14,7 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
 let productService = new ProductService();
+let accountService = new AccountService();
 // Template.internal_transaction_list_with_switchbox.inheritsHooksFrom('export_import_print_display_button');
 
 Template.internal_transaction_list_with_switchbox.onCreated(function() {
@@ -825,15 +827,11 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     }
     templateObject.displayAccountsData = async function(data, isField = false) {
         var splashArrayaccountsList = new Array();
-        let lineItems = [];
-        let lineItemObj = {};
         let fullAccountTypeName = "";
         let accBalance = "";
         let deleteFilter = false;
         let chkBoxId;
         let chkBox;
-        let costprice = 0.00;
-        let sellrate = 0.00;
         let taxRate = 0;
         let linestatus = '';
         // if (data.Params.Search.replace(/\s/g, "") == "") {

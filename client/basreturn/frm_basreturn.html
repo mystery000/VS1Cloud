@@ -2134,6 +2134,17 @@
         </div>
 
         <!-- Modal Tax Rate -modal -->
+        <style>
+            .colCodeName{
+                width: 30% !important;
+            }
+            .colDescription{
+                width: 40% !important;
+            }
+            .colTaxRate{
+                width: 20% !important;
+            }
+        </style>
         {{#each pan in gstPanList}}
         <div class="modal fade" role="dialog" tabindex="-1" id="gst{{pan}}option">
             <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
@@ -2153,6 +2164,23 @@
         </div>
         {{/each}}
 
+        <style>
+            .colAccountName{
+                width: 22% !important;
+            }
+            .colDescription{
+                width: 22% !important;
+            }
+            .colAccountNo{
+                width: 15% !important;
+            }
+            .colType{
+                width: 15% !important;
+            }
+            .colBalance{
+                width: 15% !important;
+            }
+        </style>
         {{#each pan in accountsPanList}}
         <div class="modal fade" role="dialog" tabindex="-1" id="accounts{{pan}}option">
             <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
