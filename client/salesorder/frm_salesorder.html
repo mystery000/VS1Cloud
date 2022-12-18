@@ -4,46 +4,6 @@
       <div class="spinner"></div>
     </div>
 
-    <style>
-      @media screen and (max-width: 450px) {
-        .btnSettings {
-          padding: 0px !important;
-          font-size: 16px !important;
-        }
-
-        h2 {
-          font-size: 24px !important;
-        }
-      }
-
-
-      .templateItem {
-        display: inline-flex !important;
-
-      }
-
-      .btnPreviewTemplate {
-        padding: 6px;
-        cursor: pointer;
-      }
-
-      .btnPreviewTemplate:hover {
-        background-color: #f8f9fc;
-      }
-
-      #tblSalesOrderLine_length,
-      #tblSalesOrderLine_filter {
-        display: none;
-      }
-
-      .colUnitPriceEx,
-      .colUnitPriceInc,
-      .colAmountEx,
-      .colAmountInc {
-        cursor: pointer;
-      }
-    </style>
-
     {{#if salesorderrecord}}
     <form>
       {{> transaction_header
@@ -170,7 +130,7 @@
             </div>
             <div class="col-12 col-md-12">
               <div class="row justify-content-center desktopButtons">
-                {{> transaction_footer margin="12px" AttachmentCount=attachmentCount }}
+                {{> transaction_footer margin="12px" attachmentCount=attachmentCount type="salesorder" }}
               </div>
 
             </div>
