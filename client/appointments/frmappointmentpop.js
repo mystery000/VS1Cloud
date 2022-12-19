@@ -2259,9 +2259,10 @@ Template.frmappointmentpop.onRendered(function() {
                                             jobscountry: '',
                                             discount:0
                                         }
-                                        console.log('value:',$("#edtCustomerCompany").val())
                                         templateObject.customerRecord.set(customerRecord);
-                                        $("#addCustomerModal").modal("show");
+                                        setTimeout(() => {
+                                            $("#addCustomerModal").modal("show");
+                                        }, 200);
                                     }, 200);
                                 }
                                 if (!added) {

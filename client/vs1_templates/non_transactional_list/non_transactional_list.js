@@ -4923,7 +4923,6 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
               }, 100);
             }
             let deleteFilter = false;
-            console.log('OK')
             setTimeout(function () {
                 $('#'+currenttablename).DataTable({
                     data: splashArrayClientTypeList,
@@ -4991,7 +4990,6 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     responsive: true,
                     "order": [[1, "asc"]],
                     action: function () {
-                      console.log('table reload...')
                         $('#'+currenttablename).DataTable().ajax.reload();
                     },
                     "fnDrawCallback": function (oSettings) {
