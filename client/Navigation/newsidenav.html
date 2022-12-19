@@ -501,23 +501,23 @@
                 </li>
             {{/if}}
             {{#if includeCRM}}
-            <li class="crmLi" id="sidenavcrm">
-                <a href="#crmSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader crmLiHeader"><i class="fas fa-tasks faHeader"></i> CRM</a>
-                <ul class="collapse list-unstyled" id="crmSubmenu">
-                    <li>
-                        <a class="sidenavleads text-left" id="sidenavleads" name="sidenavleads"><i class="fas fa-user-friends"></i> Lead List</a>
-                    </li>
-                    <li>
-                        <a id="sidenavtasks" name="sidenavtasks" class="text-left"><i class="fas fa-user-tie"></i> Task List</a>
-                    </li>
-                    <li>
-                        <a id="sidenavprojects" name="sidenavprojects" class="text-left"><i class="fas fa-user-tie"></i> Project List</a>
-                    </li>
-                    <li>
-                        <a id="sidecampaignlist" name="sidecampaignlist" class="text-left"><i class="fas fa-user-tie"></i> Campaign List</a>
-                    </li>
-                </ul>
-            </li>
+                <li class="crmLi" id="sidenavcrm">
+                    <a href="#crmSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader crmLiHeader"><i class="fas fa-tasks faHeader"></i> CRM</a>
+                    <ul class="collapse list-unstyled" id="crmSubmenu">
+                        <li>
+                            <a class="sidenavleads text-left" id="sidenavleads" name="sidenavleads"><i class="fas fa-user-friends"></i> Lead List</a>
+                        </li>
+                        <li>
+                            <a id="sidenavtasks" name="sidenavtasks" class="text-left"><i class="fas fa-user-tie"></i> Task List</a>
+                        </li>
+                        <li>
+                            <a id="sidenavprojects" name="sidenavprojects" class="text-left"><i class="fas fa-user-tie"></i> Project List</a>
+                        </li>
+                        <li>
+                            <a id="sidecampaignlist" name="sidecampaignlist" class="text-left"><i class="fas fa-user-tie"></i> Campaign List</a>
+                        </li>
+                    </ul>
+                </li>
             {{/if}}
             {{#if includeDashboard}}
                 <li class="dashboardLi" id="sidenavdashbaord">
@@ -534,6 +534,12 @@
                 </li>
             {{/if}}
 
+            {{#if isGreenTrack}}
+                <li class="gsemployeesLi" id="sidenavemployeesGreenTrack">
+                    <a class="liHeader sidenavemployeesGreenTrack text-left"><i class="fa fa-user faHeader"></i><span> Employee List</span></a>
+                </li>
+            {{/if}}
+
             <li class="fixedAssetsLi" id="sidenavfixedAssets">
                 <a href="#fixedAssetsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader fixedAssetsLiHeader"><i class="fas fa-home faHeader"></i> Fixed Asset</a>
                 <ul class="collapse list-unstyled" id="fixedAssetsSubmenu">
@@ -545,49 +551,6 @@
                     </li>
                 </ul>
             </li>
-
-            <li class="manufacturingLi" id="sidenavmanufacturing">
-                    <a href="#manufacturingSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader manufacturingLiHeader">
-                        <i class="fas fa-industry faHeader"></i>
-                        Manufacturing
-                    </a>
-                    <ul class="collapse list-unstyled" id="manufacturingSubmenu">
-                        <li>
-                            <a id="sidenavbomList" name="sidenavbomList" class="text-left"><i class="fas fa-industry"></i> Bill&nbsp;of Materials-BOM
-                            </a>
-                        </li>
-                        <li>
-                            <a id="sidenavmobileapp" name="sidenavmobileapp" class="text-left">
-                                <i class="fas fa-mobile"></i> Mobile App
-                            </a>
-                        </li>
-                        <li>
-                            <a id="sidenavnewworkorder" name="sidenavnewworkorder" class="text-left">
-                                <i class="fas fa-plus"></i> New Work&nbsp;Order
-                            </a>
-                        </li>
-                        <li>
-                            <a id="sidenavprocesses" name="sidenavprocesses" class="text-left"><i class="fas fa-microchip"></i> Processes</a>
-                        </li>
-                        <li>
-                            <a id="sidenavproductionplanner" name="sidenavproductionplanner" class="text-left">
-                                <i class="fas fa-marker"></i> Production Planner
-                            </a>
-                        </li>
-                        <li>
-                            <a id="sidenavnewworkorderlist" name="sidenavnewworkorderlist" class="text-left">
-                                <i class="fas fa-list"></i> Work&nbsp;Order List
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            <!-- {{/if}} -->
-
-            {{#if isGreenTrack}}
-                <li class="gsemployeesLi" id="sidenavemployeesGreenTrack">
-                    <a class="liHeader sidenavemployeesGreenTrack text-left"><i class="fa fa-user faHeader"></i><span> Employee List</span></a>
-                </li>
-            {{/if}}
 
             {{#if includeInventory}}
                 <li class="inventoryLi" id="sidenavinventory">
@@ -643,6 +606,44 @@
                     </ul>
                 </li>
             {{/if}}
+
+            <li class="manufacturingLi" id="sidenavmanufacturing">
+                <a href="#manufacturingSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader manufacturingLiHeader">
+                    <i class="fas fa-industry faHeader"></i>
+                    Manufacturing
+                </a>
+                <ul class="collapse list-unstyled" id="manufacturingSubmenu">
+                    <li>
+                        <a id="sidenavbomList" name="sidenavbomList" class="text-left"><i class="fas fa-industry"></i> Bill&nbsp;of Materials-BOM
+                        </a>
+                    </li>
+                    <li>
+                        <a id="sidenavmobileapp" name="sidenavmobileapp" class="text-left">
+                            <i class="fas fa-mobile"></i> Mobile App
+                        </a>
+                    </li>
+                    <li>
+                        <a id="sidenavnewworkorder" name="sidenavnewworkorder" class="text-left">
+                            <i class="fas fa-plus"></i> New Work&nbsp;Order
+                        </a>
+                    </li>
+                    <li>
+                        <a id="sidenavprocesses" name="sidenavprocesses" class="text-left"><i class="fas fa-microchip"></i> Processes</a>
+                    </li>
+                    <li>
+                        <a id="sidenavproductionplanner" name="sidenavproductionplanner" class="text-left">
+                            <i class="fas fa-marker"></i> Production Planner
+                        </a>
+                    </li>
+                    <li>
+                        <a id="sidenavnewworkorderlist" name="sidenavnewworkorderlist" class="text-left">
+                            <i class="fas fa-list"></i> Work&nbsp;Order List
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <!-- {{/if}} -->
+            
 
             {{#if includePayments}}
                 <li class="paymentsLi" id="sidenavpayments">
@@ -712,13 +713,7 @@
                   <a class="liHeader payrollLiHeader text-left" ><i class="fas fa-hourglass-half faHeader"></i> Clock On/Off</a>
               </li>
             {{/if}}
-
-            {{#if includeExpenseClaims}}
-                <li class="receiptLi" id="sidenavreceipt">
-                    <a class="liHeader receiptLiHeader text-left"><i class="fas fa-receipt faHeader"></i> Receipt Claims</a>
-                </li>
-            {{/if}}
-
+            
             {{#if includePurchases}}
                 <li class="purchasesLi" id="sidenavpurchases">
                     <a href="#purchasesSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader purchasesLiHeader"><i class="fa fa-arrow-circle-down faHeader"></i> Purchases</a>
@@ -748,6 +743,12 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+            {{/if}}
+
+            {{#if includeExpenseClaims}}
+                <li class="receiptLi" id="sidenavreceipt">
+                    <a class="liHeader receiptLiHeader text-left"><i class="fas fa-receipt faHeader"></i> Receipt Claims</a>
                 </li>
             {{/if}}
 
