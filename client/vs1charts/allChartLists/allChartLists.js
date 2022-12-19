@@ -14,19 +14,6 @@ import '../../lib/global/indexdbstorage.js';
 import { SideBarService } from "../../js/sidebar-service";
 let _ = require("lodash");
 
-let chartsPlaceList = {
-    "Accounts_Overview" : [
-        "accountrevenuestreams",
-        "profitandlosschart",
-    ],
-    
-    "Contacts_Overview": [
-        "top10Customers",
-        "top10Suppliers",
-        "activeEmployees",
-    ],
-};
-
 let sideBarService = new SideBarService();
 /**
  * Current User ID
@@ -740,12 +727,6 @@ Template.allChartLists.helpers({
             isAccountOverviewPage = true;
         }
         return isAccountOverviewPage;
-    },
-
-    is_available_chart: (current, chart) => {
-        console.log(current, chart, chartsPlaceList);
-        //return chartsPlaceList[current].includes(chart);
-        return 1;
     }
 });
 
