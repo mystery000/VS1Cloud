@@ -289,6 +289,7 @@ Template.newsidenav.onRendered(function() {
     }
     MyPopper.prototype.hidePopper = function() {
         this.popper.removeClass('popper-popup');
+        this.popper.removeClass('show');
         this.popper.removeAttr("show-popper");
         this.arrow.removeAttr("data-popper-arrow");
         this.destroyInstance();
