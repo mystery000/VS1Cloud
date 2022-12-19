@@ -5733,6 +5733,13 @@ Template.employeescard.events({
                 };
             }
             contactService.saveEmployeeEx(objDetails).then(function(objDetails) {
+
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
+
                 let employeeSaveID = objDetails.fields.ID;
                 sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function(dataReload) {
                     addVS1Data('TEmployee', JSON.stringify(dataReload));

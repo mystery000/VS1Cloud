@@ -7990,6 +7990,13 @@ Template.new_quote.events({
                             }
                         }
                         contactService.saveCustomerEx(customerData).then(function (objDetails) {
+
+                            if (localStorage.getItem("enteredURL") != null) {
+                                FlowRouter.go(localStorage.getItem("enteredURL"));
+                                localStorage.removeItem("enteredURL");
+                                return;
+                            }
+
                             let customerSaveID = objDetails.fields.ID;
                             if (customerSaveID) {
                                 sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function (dataReload) {

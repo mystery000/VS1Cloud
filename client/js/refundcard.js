@@ -7768,6 +7768,13 @@ Template.refundcard.events({
                 };
             }
             salesService.saveRefundSale(objDetails).then(function(objDetails) {
+
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
+
                 var customerID = $('#edtCustomerEmail').attr('customerid');
 
                 $('#html-2-pdfwrapper').css('display', 'block');

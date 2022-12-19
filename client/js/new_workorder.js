@@ -811,7 +811,7 @@ Template.new_workorder.events({
 
         await saveMainOrders();
 
-        
+
 
         $('.fullScreenSpin').css('display', 'none');
         swal({
@@ -821,6 +821,13 @@ Template.new_workorder.events({
             showCancelButton: false,
             confirmButtonText: 'Continue',
         }).then ((result)=>{
+
+            if (localStorage.getItem("enteredURL") != null) {
+                FlowRouter.go(localStorage.getItem("enteredURL"));
+                localStorage.removeItem("enteredURL");
+                return;
+            }
+
             FlowRouter.go('/workorderlist')
         });
 

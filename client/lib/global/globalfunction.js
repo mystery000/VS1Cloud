@@ -396,6 +396,13 @@ batchUpdateCall = function (url) {
                   localStorage.setItem('VS1SalesEmpReport_dash', JSON.stringify(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_salesperemployee.items)||'');
                   getVS1Data('vscloudlogininfo').then(function (dataObject) {
                     if(dataObject.length == 0){
+
+                        if (localStorage.getItem("enteredURL") != null) {
+                            FlowRouter.go(localStorage.getItem("enteredURL"));
+                            localStorage.removeItem("enteredURL");
+                            return;
+                        }
+
                       setTimeout(function () {
                         if(url){
                           window.open(url,'_self');
@@ -426,6 +433,13 @@ batchUpdateCall = function (url) {
                       dashboardArray.ProcessLog.ClientDetails.ProcessLog.TransactionTableLastUpdated = dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated;
 
                       addLoginData(dashboardArray).then(function (datareturnCheck) {
+
+                          if (localStorage.getItem("enteredURL") != null) {
+                              FlowRouter.go(localStorage.getItem("enteredURL"));
+                              localStorage.removeItem("enteredURL");
+                              return;
+                          }
+
                         setTimeout(function () {
                         if(url){
                           window.open(url,'_self');
@@ -510,6 +524,12 @@ batchUpdateCall = function (url) {
     sideBarService.getCurrentLoggedUser().then(function (data) {
       addVS1Data('TAppUser', JSON.stringify(data));
     });
+    
+    if (localStorage.getItem("enteredURL") != null) {
+        FlowRouter.go(localStorage.getItem("enteredURL"));
+        localStorage.removeItem("enteredURL");
+        return;
+    }
 };
 
 getHour24 = function (timeString) {

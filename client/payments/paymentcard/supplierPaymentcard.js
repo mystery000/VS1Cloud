@@ -8764,6 +8764,13 @@ Template.supplierpaymentcard.events({
       };
 
       paymentService.saveSuppDepositData(objDetails).then(function (data) {
+
+          if (localStorage.getItem("enteredURL") != null) {
+              FlowRouter.go(localStorage.getItem("enteredURL"));
+              localStorage.removeItem("enteredURL");
+              return;
+          }
+
           var customerID = $("#edtSupplierEmail").attr("customerid");
           // Start End Send Email
           $("#html-2-pdfwrapper").css("display", "block");

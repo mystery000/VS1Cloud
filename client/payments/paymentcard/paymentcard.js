@@ -5120,6 +5120,13 @@ Template.paymentcard.events({
                 };
 
                 paymentService.saveDepositData(objDetails).then(function (data) {
+
+                    if (localStorage.getItem("enteredURL") != null) {
+                        FlowRouter.go(localStorage.getItem("enteredURL"));
+                        localStorage.removeItem("enteredURL");
+                        return;
+                    }
+
                     var customerID = $('#edtCustomerEmail').attr('customerid');
                     // Send Email
                     $('#html-2-pdfwrapper').css('display', 'block');

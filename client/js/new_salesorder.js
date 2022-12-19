@@ -10589,6 +10589,13 @@ Template.new_salesorder.events({
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.value) {
+
+                                        if (localStorage.getItem("enteredURL") != null) {
+                                            FlowRouter.go(localStorage.getItem("enteredURL"));
+                                            localStorage.removeItem("enteredURL");
+                                            return;
+                                        }
+
                                         if(FlowRouter.current().queryParams.trans){
                                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                                         }else{

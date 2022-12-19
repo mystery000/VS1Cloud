@@ -6939,6 +6939,12 @@ Template.chequecard.events({
 
       purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
 
+          if (localStorage.getItem("enteredURL") != null) {
+              FlowRouter.go(localStorage.getItem("enteredURL"));
+              localStorage.removeItem("enteredURL");
+              return;
+          }
+
           const supplierID = $("#edtSupplierEmail").attr("supplierid");
           localStorage.setItem("check_acc", bankAccount);
           $("#html-2-pdfwrapper").css("display", "block");

@@ -914,6 +914,13 @@ Template.newbankrule.events({
 
         }
         swal('API is not ready.', '', 'error');
+        // TODO when you add api here, please insert following block in success case.
+        if (localStorage.getItem("enteredURL") != null) {
+            FlowRouter.go(localStorage.getItem("enteredURL"));
+            localStorage.removeItem("enteredURL");
+            return;
+        }
+
         return false;
     }, delayTimeAfterSound);
     },
