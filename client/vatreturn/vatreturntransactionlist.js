@@ -49,23 +49,25 @@ Template.vatreturntransactionlist.onRendered(function() {
         let datemethod = "Accrual";
         var startDate = "";
         var endDate = "";
-        if (transactionitem == "G1" || transactionitem == "G2" || transactionitem == "G3" || transactionitem == "G4" ||
-            transactionitem == "G7" || transactionitem == "G10" || transactionitem == "G11" || transactionitem == "G13" ||
-            transactionitem == "G14" || transactionitem == "G15" || transactionitem == "G18") {
+        if (transactionitem == "1" || transactionitem == "1A" || transactionitem == "2" || transactionitem == "2A" ||
+            transactionitem == "3" || transactionitem == "5" || transactionitem == "7" || transactionitem == "10" ||
+            transactionitem == "12") {
             datemethod = data.Tab1_Type;
             startDate = data.Tab1_Year + "-" + months[data.Tab1_Month] + "-01";
             var endMonth = (data.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.Tab1_Month]) / 3) * 3) : (months[data.Tab1_Month]);
             endDate = new Date(data.Tab1_Year, (parseInt(endMonth)), 0);
             endDate = moment(endDate).format("YYYY-MM-DD");
         }
-        if (transactionitem == "W1" || transactionitem == "W2" || transactionitem == "W3" || transactionitem == "W4") {
+        if (transactionitem == "14" || transactionitem == "14A" || transactionitem == "15" || transactionitem == "15A" ||
+            transactionitem == "16" || transactionitem == "17" || transactionitem == "18") {
             datemethod = data.Tab2_Type;
             startDate = data.Tab2_Year + "-" + months[data.Tab2_Month] + "-01";
             var endMonth = (data.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.Tab2_Month]) / 3) * 3) : (months[data.Tab2_Month]);
             endDate = new Date(data.Tab2_Year, (parseInt(endMonth)), 0);
             endDate = moment(endDate).format("YYYY-MM-DD");
         }
-        if (transactionitem == "T1") {
+        if (transactionitem == "21" || transactionitem == "22" || transactionitem == "26" || transactionitem == "27" ||
+            transactionitem == "30" || transactionitem == "31" || transactionitem == "34" || transactionitem == "35") {
             datemethod = data.Tab3_Type;
             startDate = data.Tab3_Year + "-" + months[data.Tab3_Month] + "-01";
             var endMonth = (data.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.Tab3_Month]) / 3) * 3) : (months[data.Tab3_Month]);

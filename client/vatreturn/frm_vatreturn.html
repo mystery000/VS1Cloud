@@ -46,15 +46,15 @@
                     <div class="custom-control" style="float:left">
                         <label>Enable: </label>
                     </div>
-                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px;">
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:110px;">
                         <input class="custom-control-input" type="checkbox" name="vatreturnCategory1" id="vatreturnCategory1" checked style="cursor: pointer;">
                         <label class="custom-control-label" for="vatreturnCategory1" style="cursor: pointer;">SERVICES</label>
                     </div>
-                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px;">
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:118px;">
                         <input class="custom-control-input" type="checkbox" name="vatreturnCategory2" id="vatreturnCategory2" checked style="cursor: pointer;">
                         <label class="custom-control-label" for="vatreturnCategory2" style="cursor: pointer;">INPUT TAX</label>
                     </div>
-                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px;">
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:158px;">
                         <input class="custom-control-input" type="checkbox" name="vatreturnCategory3" id="vatreturnCategory3" style="cursor: pointer;">
                         <label class="custom-control-label" for="vatreturnCategory3" style="cursor: pointer;">DIESEL REFUND</label>
                     </div>
@@ -1245,7 +1245,7 @@
                                             1
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax1cost" name="tax1cost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax1cost" style="float:left; width:90%; border:none"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1253,7 +1253,7 @@
                                             4
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax4cost" name="tax4cost" style="float:left; width:90%;border:none" />
+                                            <span id="prt_tax4cost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1264,7 +1264,7 @@
                                             1A
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax1acost" name="tax1acost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax1acost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1272,7 +1272,7 @@
                                             4A
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax4acost" name="tax4acost" style="float:left; width:90%;border:none" />
+                                            <span id="prt_tax4acost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1283,7 +1283,7 @@
                                             2
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax2cost" name="tax2cost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax2cost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1294,7 +1294,7 @@
                                             2A
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax2acost" name="tax2acost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax2acost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1305,7 +1305,7 @@
                                             3
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax3cost" name="tax3cost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax3cost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1319,9 +1319,9 @@
                                             5
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax5cost" name="tax5cost" value="0" style="float:left; width:55%;border:none" readonly="readonly" />
+                                            <span id="prt_tax5cost" style="float:left; width:55%;border:none"></span>
                                             <span style="float:left;">&nbsp;×&nbsp;</span>
-                                            <input type="text" class="form-control" id="tax5rate" name="tax5rate" value="60" style="float:left; width:30%;border: none;" readonly="readonly">
+                                            <span id="prt_tax5rate" style="float:left; width:30%;border: none;">60</span>
                                             <span style="float:left;">&nbsp;%&nbsp;</span>
                                         </div>
                                     </div>
@@ -1330,7 +1330,7 @@
                                             6
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax6cost" name="tax6cost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax6cost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1341,7 +1341,7 @@
                                             7
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax7cost" name="tax7cost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax7cost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1352,7 +1352,7 @@
                                             8
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax8acost" name="tax8acost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax8acost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1360,7 +1360,7 @@
                                             9
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax9acost" name="tax9acost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax9acost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1374,7 +1374,7 @@
                                             10
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax10cost" name="tax10cost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax10cost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1382,7 +1382,7 @@
                                             11
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax11cost" name="tax11cost" style="float:left; width:90%;border:none" />
+                                            <span id="prt_tax11cost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1395,7 +1395,7 @@
                                             12
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax12cost" name="tax12cost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax12cost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1408,7 +1408,7 @@
                                             13
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax13cost" name="tax13cost" style="float:left; width:90%;border:none" readonly="readonly" />
+                                            <span id="prt_tax13cost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1432,7 +1432,7 @@
                                             14
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax14cost" name="tax14cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax14cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1443,7 +1443,7 @@
                                             14A
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax14acost" name="tax14acost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax14acost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1454,7 +1454,7 @@
                                             15
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax15cost" name="tax15cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax15cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1465,7 +1465,7 @@
                                             15A
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax15acost" name="tax15acost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax15acost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1479,7 +1479,7 @@
                                             16
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax16cost" name="tax16cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax16cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1490,7 +1490,7 @@
                                             17
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax17cost" name="tax17cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax17cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1501,7 +1501,7 @@
                                             18
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax18cost" name="tax18cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax18cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1512,7 +1512,7 @@
                                             19
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax19cost" name="tax19cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax19cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1523,7 +1523,7 @@
                                             20
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax20cost" name="tax20cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax20cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1551,7 +1551,7 @@
                                             21
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax21cost" name="tax21cost" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax21cost" style="float:left; width:55%;border: none;"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">                                                            
@@ -1564,7 +1564,7 @@
                                             22
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax22cost" name="tax22cost" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax22cost" style="float:left; width:55%;border: none;"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">                                                            
@@ -1578,9 +1578,9 @@
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
                                             <span style="float:left;">$&nbsp;</span>
-                                            <input type="text" class="form-control transactionView" id="tax23cost" name="tax23cost" value="0" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax23cost" style="float:left; width:55%;border: none;"></span>
                                             <span style="float:left;">&nbsp;×&nbsp;</span>
-                                            <input type="text" class="form-control" id="tax23rate" name="tax23rate" value="80" style="float:left; width:30%;border: none;" readonly="readonly">
+                                            <span id="prt_tax23rate" style="float:left; width:30%;border: none;">80</span>
                                             <span style="float:left;">&nbsp;%&nbsp;</span>
                                         </div>
                                     </div>
@@ -1595,9 +1595,9 @@
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
                                             <span style="float:left;">$&nbsp;</span>
-                                            <input type="text" class="form-control transactionView" id="tax24cost" name="tax24cost" value="0" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax24cost" style="float:left; width:55%;border: none;"></span>
                                             <span style="float:left;">&nbsp;×&nbsp;</span>
-                                            <input type="text" class="form-control" id="tax24rate" name="tax24rate" value="332.80" style="float:left; width:30%;border: none;" readonly="readonly">
+                                            <span id="prt_tax24rate" style="float:left; width:30%;border: none;">332.80</span>
                                             <span style="float:left;">&nbsp;(cl)&nbsp;</span>
                                         </div>
                                     </div>
@@ -1606,7 +1606,7 @@
                                             25
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax25cost" name="tax25cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax25cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1620,7 +1620,7 @@
                                             26
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax26cost" name="tax26cost" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax26cost" style="float:left; width:55%;border: none;"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1633,7 +1633,7 @@
                                             27
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax27cost" name="tax27cost" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax27cost" style="float:left; width:55%;border: none;"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1647,9 +1647,9 @@
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
                                             <span style="float:left;">$&nbsp;</span>
-                                            <input type="text" class="form-control transactionView" id="tax28cost" name="tax28cost" value="0" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax28cost" style="float:left; width:55%;border: none;"></span>
                                             <span style="float:left;">&nbsp;×&nbsp;</span>
-                                            <input type="text" class="form-control" id="tax28rate" name="tax28rate" value="562.00" style="float:left; width:30%;border: none;" readonly="readonly">
+                                            <span id="prt_tax28rate" style="float:left; width:30%;border: none;">562.00</span>
                                             <span style="float:left;">&nbsp;(cl)&nbsp;</span>
                                         </div>
                                     </div>
@@ -1658,7 +1658,7 @@
                                             29
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax29cost" name="tax29cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax29cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1672,7 +1672,7 @@
                                             30
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax30cost" name="tax30cost" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax30cost" style="float:left; width:55%;border: none;"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1685,7 +1685,7 @@
                                             31
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax31cost" name="tax31cost"  style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax31cost" style="float:left; width:55%;border: none;"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1699,9 +1699,9 @@
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
                                             <span style="float:left;">$&nbsp;</span>
-                                            <input type="text" class="form-control transactionView" id="tax32cost" name="tax32cost" value="0" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax32cost" style="float:left; width:55%;border: none;"></span>
                                             <span style="float:left;">&nbsp;×&nbsp;</span>
-                                            <input type="text" class="form-control" id="tax32rate" name="tax32rate" value="207.00" style="float:left; width:30%;border: none;" readonly="readonly">
+                                            <span id="prt_tax32rate" style="float:left; width:30%;border: none;">207.00</span>
                                             <span style="float:left;">&nbsp;(cl)&nbsp;</span>
                                         </div>
                                     </div>
@@ -1710,7 +1710,7 @@
                                             33
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax33cost" name="tax33cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax33cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1724,7 +1724,7 @@
                                             34
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax34cost" name="tax34cost" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax34cost" style="float:left; width:55%;border: none;"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1737,7 +1737,7 @@
                                             35
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax35cost" name="tax35cost" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax35cost" style="float:left; width:55%;border: none;"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1751,9 +1751,9 @@
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
                                             <span style="float:left;">$&nbsp;</span>
-                                            <input type="text" class="form-control transactionView" id="tax36cost" name="tax36cost" value="0" style="float:left; width:55%;border: none;" readonly="readonly">
+                                            <span id="prt_tax36cost" style="float:left; width:55%;border: none;"></span>
                                             <span style="float:left;">&nbsp;×&nbsp;</span>
-                                            <input type="text" class="form-control" id="tax36rate" name="tax36rate" value="384.50" style="float:left; width:30%;border: none;" readonly="readonly">
+                                            <span id="prt_tax36rate" style="float:left; width:30%;border: none;">384.50</span>
                                             <span style="float:left;">&nbsp;(cl)&nbsp;</span>
                                         </div>
                                     </div>
@@ -1762,7 +1762,7 @@
                                             37
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax37cost" name="tax37cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax37cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1773,7 +1773,7 @@
                                             38
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <input type="text" class="form-control transactionView" id="tax38cost" name="tax38cost" style="float:left; width:90%;border: none;" readonly="readonly">
+                                            <span id="prt_tax38cost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1795,6 +1795,17 @@
         </div>
 
         <!-- Modal Tax Rate -modal -->
+        <style>
+            .colCodeName{
+                width: 30% !important;
+            }
+            .colDescription{
+                width: 40% !important;
+            }
+            .colTaxRate{
+                width: 20% !important;
+            }
+        </style>
         {{#each pan in taxCodePanList}}
         <div class="modal fade" role="dialog" tabindex="-1" id="taxCode{{pan}}option">
             <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
@@ -1803,129 +1814,7 @@
                         <h4>Tax Code List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
-                        <div class="card-body p-1 rounded">
-                            <div class="table-responsive">
-                                <style>
-                                    .thID {
-                                        width: 5% !important;
-                                    }
-                                    .thName {
-                                        width: 10% !important;
-                                    }
-                                    .thRate {
-                                        width: 8% !important;
-                                    }
-                                </style>
-                                <table id="tblTaxRate" style="width:100%" class="table table-striped table-bordered tblTaxRate">
-                                    <thead>
-                                        <tr class="dnd-moved">
-                                            <th class="colCodeId"></th>
-                                            <th class="colCodeName" style="text-align: left!important;">Name</th>
-                                            <th class="colDescription">Description</th>
-                                            <th class="colTaxRate" style="text-align: left!important;">Rate</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {{#if taxRateList}}
-                                            {{#each item in taxRateList}}
-                                                <tr class="dnd-moved" style="cursor: pointer;">
-                                                    <td contenteditable="false" class="colCodeId">
-                                                        <div class="custom-control custom-switch">
-                                                            {{#if equals pan "1"}}
-                                                                {{#if equals item.CodeName "VAT"}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                                {{/if}}
-                                                            {{else if equals pan "1A"}}
-                                                                {{#if equals item.CodeName 'VAT'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                                {{/if}}
-                                                            {{else if equals pan 3}}
-                                                                {{#if equals item.CodeName 'FRE'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                                {{/if}}
-                                                            {{else if equals pan 4}}
-                                                                {{#if equals item.CodeName 'INP'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                                {{/if}}
-                                                            {{else if equals pan 7}}
-                                                                {{#if equals item.CodeName 'ADJ'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                                {{/if}}
-                                                            {{else if equals pan 10}}
-                                                                {{#if equals item.CodeName 'CAF'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "CAG"}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "CAI"}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                                {{/if}}
-                                                            {{else if equals pan 11}}
-                                                                {{#if equals item.CodeName 'NCF'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "NCG"}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "NCI"}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                                {{/if}}
-                                                            {{else if equals pan 13}}
-                                                                {{#if equals item.CodeName 'CAI'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "NCI"}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                                {{/if}}
-                                                            {{else if equals pan 14}}
-                                                                {{#if equals item.CodeName 'CAF'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "NCF"}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                                {{/if}}
-                                                            {{else if equals pan 15}}
-                                                                {{#if equals item.CodeName 'PRI'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                                {{/if}}
-                                                            {{else if equals pan 18}}
-                                                                {{#if equals item.CodeName 'ADJ'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                                {{/if}}
-                                                            {{else}}
-                                                                <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                            {{/if}}
-                                                            <label class="custom-control-label" for="t-{{pan}}-{{item.Id}}" style="cursor: pointer;"></label>
-                                                        </div>
-                                                    </td>
-                                                    <td contenteditable="false" class="colCodeName">{{item.CodeName}}</td>
-                                                    <td contenteditable="false" class="colDescription">{{item.Description}}</td>
-                                                    <td contenteditable="false" class="colTaxRate">{{item.TaxRate}}</td>
-                                                </tr>
-                                            {{/each}}
-                                        {{/if}}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        {{> internal_transaction_list_with_switchbox tablename="tbltaxCodeCheckbox" pan=pan}}
                     </div>
                     <div class="modal-footer">
                         <button id="sel-{{pan}}" name="sel-{{pan}}" type="button" class="btn btn-primary btnselTaxList">OK</button>
