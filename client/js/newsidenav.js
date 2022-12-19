@@ -309,7 +309,7 @@ Template.newsidenav.onRendered(function() {
 
     function init() {
         $('body #sidebar .components > li').each((index, li) => {
-            const ul = $(li).find('> ul')[0];
+            const ul = $(li).find('> div')[0];
             if (ul) {
                 const a = $(li).find('> a')[0];
                 a.popper = new MyPopper(a, ul);
