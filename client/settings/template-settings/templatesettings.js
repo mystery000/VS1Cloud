@@ -1531,7 +1531,11 @@ Template.templatesettings.onRendered(function () {
                     }
 
               }
-
+                // $('document').ready(function() {
+                //     $('#btnPreviewTemplate').on('click', function() {   
+                //      JsBarcode("#Barcode", "barcodeValue");  
+                //      });
+                //     });
               if(object_invoce[0]["customfield1"] == "NA")
               {
                     $('#customfieldlable').css('display', 'none');
