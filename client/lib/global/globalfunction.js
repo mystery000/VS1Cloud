@@ -846,7 +846,6 @@ convertDateFormatForPrint3 = function(pDate) {
 
 initTemplateHeaderFooter1 = function() {
   $("#templatePreviewModal #printcomment").text("");
-  $("#templatePreviewModal #Barcode").text("123");
   $("#templatePreviewModal .o_abn_label").text("");
   $("#templatePreviewModal .o_abn").text("");
   $("#templatePreviewModal .pdfCustomerAddress").empty();

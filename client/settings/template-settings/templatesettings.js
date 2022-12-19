@@ -1552,10 +1552,6 @@ Template.templatesettings.onRendered(function () {
               }
          }
       }
-      async function addAttachment() {
-       await JsBarcode('#Barcode', 'SA-');
-       addAttachment();
-      }
       function loadTemplateBody1(object_invoce) {
         // table content
         var tbl_content = $("#templatePreviewModal .tbl_content");

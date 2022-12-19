@@ -1411,10 +1411,10 @@ Template.stockadjustmentcard.onRendered(() => {
         $('#scanBarcode').modal('toggle');
         if (barcodeScanner != '') {
 
-            // setTimeout(function() {
-            //     $('#tblSearchOverview_filter .form-control-sm').val(barcodeScanner);
-            // }, 200);
-            // templateObject.getAllGlobalSearch(barcodeScanner);
+             setTimeout(function() {
+                $('#tblSearchOverview_filter .form-control-sm').val(barcodeScanner);
+            }, 200);
+            templateObject.getAllGlobalSearch(barcodeScanner);
         }
     }
 
