@@ -4,7 +4,10 @@
             localStorage.setItem("isFormUpdated", false);
 
             setTimeout(() => {
-                $("body").on("change", "input, select, textarea", function () {
+                $("#form").on("change", "input, select, textarea", function () {
+                    localStorage.setItem("isFormUpdated", true);
+                });
+                $(".card").on("change", "input, select, textarea", function () {
                     localStorage.setItem("isFormUpdated", true);
                 });
 
