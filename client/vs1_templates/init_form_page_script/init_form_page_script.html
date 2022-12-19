@@ -10,7 +10,9 @@
                 $(".card").on("change", "input, select, textarea", function () {
                     localStorage.setItem("isFormUpdated", true);
                 });
-
+                $(".card").on("click", "checkbox", function () {
+                    localStorage.setItem("isFormUpdated", true);
+                });
                 $(".btnSave").click(function () {
                     localStorage.setItem("isFormUpdated", false);
                 });
