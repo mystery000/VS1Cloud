@@ -204,8 +204,10 @@ FlowRouter.triggers.enter([
                 cancelButtonText: 'Leave'
             }).then((result) => {
                 if (result.value) {
+                    localStorage.setItem("enteredURL", context.path);
                     $(document).find(".btn-auto-save").click();
-                    FlowRouter.go(previous_url);
+                    FlowRouter.reload();
+                    // FlowRouter.go(previous_url);
                 } else if (result.dismiss === 'cancel') {
                     previous_url = "";
                     localStorage.setItem("isFormUpdated", false);

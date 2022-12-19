@@ -4454,10 +4454,13 @@ Template.journalentrycard.events({
                 return false;
             }
             purchaseService.saveJournalEnrtry(objDetails).then(function(objDetails) {
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
                 FlowRouter.go('/journalentrylist?success=true');
                 $('.modal-backdrop').css('display', 'none');
-
-
             }).catch(function(err) {
                 if (err === 'Error: "Unable to lock object: "') {
                     swal({

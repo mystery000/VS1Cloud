@@ -1,6 +1,8 @@
 <template name="leave_confirm_script">
     <script>
         $(document).ready(function() {
+            localStorage.removeItem("enteredURL");
+
             if(!sessionStorage.getItem("pageLoaded")){
                 // localStorage.clear();
                 window.open('/','_self');
