@@ -318,153 +318,30 @@ Template.vatreturn.onRendered(function() {
                                     $("#datemethod2-t3").prop('checked', true);
                                 }
 
-                                let _1Selected = data.tvatreturn[i].fields._1Selected.split(",");
-                                let _1ASelected = data.tvatreturn[i].fields._1ASelected.split(",");
-                                let _2Selected = data.tvatreturn[i].fields._2Selected.split(",");
-                                let _2ASelected = data.tvatreturn[i].fields._2ASelected.split(",");
-                                let _3Selected = data.tvatreturn[i].fields._3Selected.split(",");
-                                let _5Selected = data.tvatreturn[i].fields._5Selected.split(",");
-                                let _7Selected = data.tvatreturn[i].fields._7Selected.split(",");
-                                let _10Selected = data.tvatreturn[i].fields._10Selected.split(",");
-                                let _12Selected = data.tvatreturn[i].fields._12Selected.split(",");
-                                let _14Selected = data.tvatreturn[i].fields._14Selected.split(",");
-                                let _14ASelected = data.tvatreturn[i].fields._14ASelected.split(",");
-                                let _15Selected = data.tvatreturn[i].fields._15Selected.split(",");
-                                let _15ASelected = data.tvatreturn[i].fields._15ASelected.split(",");
-                                let _16Selected = data.tvatreturn[i].fields._16Selected.split(",");
-                                let _17Selected = data.tvatreturn[i].fields._17Selected.split(",");
-                                let _18Selected = data.tvatreturn[i].fields._18Selected.split(",");
-                                let _21Selected = data.tvatreturn[i].fields._21Selected.split(",");
-                                let _22Selected = data.tvatreturn[i].fields._22Selected.split(",");
-                                let _26Selected = data.tvatreturn[i].fields._26Selected.split(",");
-                                let _27Selected = data.tvatreturn[i].fields._27Selected.split(",");
-                                let _30Selected = data.tvatreturn[i].fields._30Selected.split(",");
-                                let _31Selected = data.tvatreturn[i].fields._31Selected.split(",");
-                                let _34Selected = data.tvatreturn[i].fields._34Selected.split(",");
-                                let _35Selected = data.tvatreturn[i].fields._35Selected.split(",");
-
-                                for (var j = 0; j < taxRateList.length; j++) {
-                                    _1Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-1-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _1ASelected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-1a-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _2Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-2-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _2ASelected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-2a-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _3Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-3-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _5Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-5-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _7Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-7-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _10Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-10-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _12Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-12-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _14Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-14-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _14ASelected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-14a-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _15Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-15-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _15ASelected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-15a-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _16Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-16-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _17Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-17-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _18Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-18-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _21Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-21-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _22Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-22-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _26Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-26-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _27Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-27-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _30Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-30-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _31Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-31-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _34Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-34-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _35Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-35-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                }
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._1Selected, "tbltaxCodeCheckbox_1");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._1ASelected, "tbltaxCodeCheckbox_1A");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._2Selected, "tbltaxCodeCheckbox_2");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._2ASelected, "tbltaxCodeCheckbox_2A");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._3Selected, "tbltaxCodeCheckbox_3");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._5Selected, "tbltaxCodeCheckbox_5");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._7Selected, "tbltaxCodeCheckbox_7");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._10Selected, "tbltaxCodeCheckbox_10");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._12Selected, "tbltaxCodeCheckbox_12");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._14Selected, "tbltaxCodeCheckbox_14");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._14ASelected, "tbltaxCodeCheckbox_14A");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._15Selected, "tbltaxCodeCheckbox_15");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._15ASelected, "tbltaxCodeCheckbox_15A");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._16Selected, "tbltaxCodeCheckbox_16");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._17Selected, "tbltaxCodeCheckbox_17");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._18Selected, "tbltaxCodeCheckbox_18");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._27Selected, "tbltaxCodeCheckbox_27");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._30Selected, "tbltaxCodeCheckbox_30");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._31Selected, "tbltaxCodeCheckbox_31");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._34Selected, "tbltaxCodeCheckbox_34");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields._35Selected, "tbltaxCodeCheckbox_35");
                             }
                             if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
                                 let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
@@ -623,153 +500,30 @@ Template.vatreturn.onRendered(function() {
                                 $("#datemethod2-t3").prop('checked', true);
                             }
 
-                            let _1Selected = data.tvatreturn[i].fields._1Selected.split(",");
-                            let _1ASelected = data.tvatreturn[i].fields._1ASelected.split(",");
-                            let _2Selected = data.tvatreturn[i].fields._2Selected.split(",");
-                            let _2ASelected = data.tvatreturn[i].fields._2ASelected.split(",");
-                            let _3Selected = data.tvatreturn[i].fields._3Selected.split(",");
-                            let _5Selected = data.tvatreturn[i].fields._5Selected.split(",");
-                            let _7Selected = data.tvatreturn[i].fields._7Selected.split(",");
-                            let _10Selected = data.tvatreturn[i].fields._10Selected.split(",");
-                            let _12Selected = data.tvatreturn[i].fields._12Selected.split(",");
-                            let _14Selected = data.tvatreturn[i].fields._14Selected.split(",");
-                            let _14ASelected = data.tvatreturn[i].fields._14ASelected.split(",");
-                            let _15Selected = data.tvatreturn[i].fields._15Selected.split(",");
-                            let _15ASelected = data.tvatreturn[i].fields._15ASelected.split(",");
-                            let _16Selected = data.tvatreturn[i].fields._16Selected.split(",");
-                            let _17Selected = data.tvatreturn[i].fields._17Selected.split(",");
-                            let _18Selected = data.tvatreturn[i].fields._18Selected.split(",");
-                            let _21Selected = data.tvatreturn[i].fields._21Selected.split(",");
-                            let _22Selected = data.tvatreturn[i].fields._22Selected.split(",");
-                            let _26Selected = data.tvatreturn[i].fields._26Selected.split(",");
-                            let _27Selected = data.tvatreturn[i].fields._27Selected.split(",");
-                            let _30Selected = data.tvatreturn[i].fields._30Selected.split(",");
-                            let _31Selected = data.tvatreturn[i].fields._31Selected.split(",");
-                            let _34Selected = data.tvatreturn[i].fields._34Selected.split(",");
-                            let _35Selected = data.tvatreturn[i].fields._35Selected.split(",");
-
-                            for (var j = 0; j < taxRateList.length; j++) {
-                                _1Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-1-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _1ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-1a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _2Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-2-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _2ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-2a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _3Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-3-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _5Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-5-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _7Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-7-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _10Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-10-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _12Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-12-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _14Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-14-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _14ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-14a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _15Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-15-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _15ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-15a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _16Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-16-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _17Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-17-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _18Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-18-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _21Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-21-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _22Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-22-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _26Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-26-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _27Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-27-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _30Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-30-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _31Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-31-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _34Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-34-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _35Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-35-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                            }
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._1Selected, "tbltaxCodeCheckbox_1");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._1ASelected, "tbltaxCodeCheckbox_1A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._2Selected, "tbltaxCodeCheckbox_2");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._2ASelected, "tbltaxCodeCheckbox_2A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._3Selected, "tbltaxCodeCheckbox_3");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._5Selected, "tbltaxCodeCheckbox_5");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._7Selected, "tbltaxCodeCheckbox_7");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._10Selected, "tbltaxCodeCheckbox_10");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._12Selected, "tbltaxCodeCheckbox_12");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._14Selected, "tbltaxCodeCheckbox_14");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._14ASelected, "tbltaxCodeCheckbox_14A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._15Selected, "tbltaxCodeCheckbox_15");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._15ASelected, "tbltaxCodeCheckbox_15A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._16Selected, "tbltaxCodeCheckbox_16");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._17Selected, "tbltaxCodeCheckbox_17");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._18Selected, "tbltaxCodeCheckbox_18");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._27Selected, "tbltaxCodeCheckbox_27");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._30Selected, "tbltaxCodeCheckbox_30");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._31Selected, "tbltaxCodeCheckbox_31");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._34Selected, "tbltaxCodeCheckbox_34");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._35Selected, "tbltaxCodeCheckbox_35");
                         }
                         if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
                             let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
@@ -928,153 +682,30 @@ Template.vatreturn.onRendered(function() {
                                 $("#datemethod2-t3").prop('checked', true);
                             }
 
-                            let _1Selected = data.tvatreturn[i].fields._1Selected.split(",");
-                            let _1ASelected = data.tvatreturn[i].fields._1ASelected.split(",");
-                            let _2Selected = data.tvatreturn[i].fields._2Selected.split(",");
-                            let _2ASelected = data.tvatreturn[i].fields._2ASelected.split(",");
-                            let _3Selected = data.tvatreturn[i].fields._3Selected.split(",");
-                            let _5Selected = data.tvatreturn[i].fields._5Selected.split(",");
-                            let _7Selected = data.tvatreturn[i].fields._7Selected.split(",");
-                            let _10Selected = data.tvatreturn[i].fields._10Selected.split(",");
-                            let _12Selected = data.tvatreturn[i].fields._12Selected.split(",");
-                            let _14Selected = data.tvatreturn[i].fields._14Selected.split(",");
-                            let _14ASelected = data.tvatreturn[i].fields._14ASelected.split(",");
-                            let _15Selected = data.tvatreturn[i].fields._15Selected.split(",");
-                            let _15ASelected = data.tvatreturn[i].fields._15ASelected.split(",");
-                            let _16Selected = data.tvatreturn[i].fields._16Selected.split(",");
-                            let _17Selected = data.tvatreturn[i].fields._17Selected.split(",");
-                            let _18Selected = data.tvatreturn[i].fields._18Selected.split(",");
-                            let _21Selected = data.tvatreturn[i].fields._21Selected.split(",");
-                            let _22Selected = data.tvatreturn[i].fields._22Selected.split(",");
-                            let _26Selected = data.tvatreturn[i].fields._26Selected.split(",");
-                            let _27Selected = data.tvatreturn[i].fields._27Selected.split(",");
-                            let _30Selected = data.tvatreturn[i].fields._30Selected.split(",");
-                            let _31Selected = data.tvatreturn[i].fields._31Selected.split(",");
-                            let _34Selected = data.tvatreturn[i].fields._34Selected.split(",");
-                            let _35Selected = data.tvatreturn[i].fields._35Selected.split(",");
-
-                            for (var j = 0; j < taxRateList.length; j++) {
-                                _1Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-1-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _1ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-1a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _2Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-2-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _2ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-2a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _3Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-3-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _5Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-5-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _7Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-7-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _10Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-10-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _12Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-12-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _14Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-14-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _14ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-14a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _15Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-15-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _15ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-15a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _16Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-16-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _17Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-17-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _18Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-18-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _21Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-21-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _22Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-22-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _26Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-26-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _27Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-27-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _30Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-30-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _31Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-31-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _34Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-34-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _35Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-35-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                            }
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._1Selected, "tbltaxCodeCheckbox_1");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._1ASelected, "tbltaxCodeCheckbox_1A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._2Selected, "tbltaxCodeCheckbox_2");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._2ASelected, "tbltaxCodeCheckbox_2A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._3Selected, "tbltaxCodeCheckbox_3");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._5Selected, "tbltaxCodeCheckbox_5");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._7Selected, "tbltaxCodeCheckbox_7");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._10Selected, "tbltaxCodeCheckbox_10");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._12Selected, "tbltaxCodeCheckbox_12");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._14Selected, "tbltaxCodeCheckbox_14");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._14ASelected, "tbltaxCodeCheckbox_14A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._15Selected, "tbltaxCodeCheckbox_15");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._15ASelected, "tbltaxCodeCheckbox_15A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._16Selected, "tbltaxCodeCheckbox_16");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._17Selected, "tbltaxCodeCheckbox_17");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._18Selected, "tbltaxCodeCheckbox_18");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._27Selected, "tbltaxCodeCheckbox_27");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._30Selected, "tbltaxCodeCheckbox_30");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._31Selected, "tbltaxCodeCheckbox_31");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._34Selected, "tbltaxCodeCheckbox_34");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields._35Selected, "tbltaxCodeCheckbox_35");
                         }
                         if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
                             let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
@@ -1647,152 +1278,30 @@ Template.vatreturn.onRendered(function() {
                                 $("#tax13cost").val(tax13cost);
                                 $("#prt_tax13cost").html("$" + tax13cost);
 
-                                let _1Selected = data.tvatreturn[0].fields._1Selected.split(",");
-                                let _1ASelected = data.tvatreturn[0].fields._1ASelected.split(",");
-                                let _2Selected = data.tvatreturn[0].fields._2Selected.split(",");
-                                let _2ASelected = data.tvatreturn[0].fields._2ASelected.split(",");
-                                let _3Selected = data.tvatreturn[0].fields._3Selected.split(",");
-                                let _5Selected = data.tvatreturn[0].fields._5Selected.split(",");
-                                let _7Selected = data.tvatreturn[0].fields._7Selected.split(",");
-                                let _10Selected = data.tvatreturn[0].fields._10Selected.split(",");
-                                let _12Selected = data.tvatreturn[0].fields._12Selected.split(",");
-                                let _14Selected = data.tvatreturn[0].fields._14Selected.split(",");
-                                let _14ASelected = data.tvatreturn[0].fields._14ASelected.split(",");
-                                let _15Selected = data.tvatreturn[0].fields._15Selected.split(",");
-                                let _15ASelected = data.tvatreturn[0].fields._15ASelected.split(",");
-                                let _16Selected = data.tvatreturn[0].fields._16Selected.split(",");
-                                let _17Selected = data.tvatreturn[0].fields._17Selected.split(",");
-                                let _18Selected = data.tvatreturn[0].fields._18Selected.split(",");
-                                let _21Selected = data.tvatreturn[0].fields._21Selected.split(",");
-                                let _22Selected = data.tvatreturn[0].fields._22Selected.split(",");
-                                let _26Selected = data.tvatreturn[0].fields._26Selected.split(",");
-                                let _27Selected = data.tvatreturn[0].fields._27Selected.split(",");
-                                let _30Selected = data.tvatreturn[0].fields._30Selected.split(",");
-                                let _31Selected = data.tvatreturn[0].fields._31Selected.split(",");
-                                let _34Selected = data.tvatreturn[0].fields._34Selected.split(",");
-                                let _35Selected = data.tvatreturn[0].fields._35Selected.split(",");
-                                for (var j = 0; j < taxRateList.length; j++) {
-                                    _1Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-1-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _1ASelected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-1a-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _2Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-2-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _2ASelected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-2a-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _3Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-3-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _5Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-5-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _7Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-7-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _10Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-10-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _12Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-12-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _14Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-14-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _14ASelected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-14a-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _15Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-15-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _15ASelected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-15a-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _16Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-16-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _17Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-17-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _18Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-18-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _21Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-21-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _22Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-22-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _26Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-26-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _27Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-27-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _30Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-30-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _31Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-31-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _34Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-34-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                    _35Selected.forEach((item, k) => {
-                                        if (taxRateList[j].CodeName == item) {
-                                            $("#t-35-" + taxRateList[j].Id).prop('checked', true);
-                                        }
-                                    });
-                                }
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._1Selected, "tbltaxCodeCheckbox_1");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._1ASelected, "tbltaxCodeCheckbox_1A");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._2Selected, "tbltaxCodeCheckbox_2");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._2ASelected, "tbltaxCodeCheckbox_2A");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._3Selected, "tbltaxCodeCheckbox_3");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._5Selected, "tbltaxCodeCheckbox_5");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._7Selected, "tbltaxCodeCheckbox_7");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._10Selected, "tbltaxCodeCheckbox_10");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._12Selected, "tbltaxCodeCheckbox_12");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._14Selected, "tbltaxCodeCheckbox_14");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._14ASelected, "tbltaxCodeCheckbox_14A");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._15Selected, "tbltaxCodeCheckbox_15");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._15ASelected, "tbltaxCodeCheckbox_15A");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._16Selected, "tbltaxCodeCheckbox_16");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._17Selected, "tbltaxCodeCheckbox_17");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._18Selected, "tbltaxCodeCheckbox_18");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._21Selected, "tbltaxCodeCheckbox_21");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._22Selected, "tbltaxCodeCheckbox_22");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._26Selected, "tbltaxCodeCheckbox_26");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._27Selected, "tbltaxCodeCheckbox_27");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._30Selected, "tbltaxCodeCheckbox_30");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._31Selected, "tbltaxCodeCheckbox_31");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._34Selected, "tbltaxCodeCheckbox_34");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields._35Selected, "tbltaxCodeCheckbox_35");
                                 if (data.tvatreturn[0].fields.Tab2_Type == "Quarterly") {
                                     $("#datemethod1-t2").prop('checked', true);
                                     $("#datemethod2-t2").prop('checked', false);
@@ -2020,152 +1529,30 @@ Template.vatreturn.onRendered(function() {
                                     $("#tax13cost").val(tax13cost);
                                     $("#prt_tax13cost").html("$" + tax13cost);
 
-                                    let _1Selected = data.tvatreturn[i].fields._1Selected.split(",");
-                                    let _1ASelected = data.tvatreturn[i].fields._1ASelected.split(",");
-                                    let _2Selected = data.tvatreturn[i].fields._2Selected.split(",");
-                                    let _2ASelected = data.tvatreturn[i].fields._2ASelected.split(",");
-                                    let _3Selected = data.tvatreturn[i].fields._3Selected.split(",");
-                                    let _5Selected = data.tvatreturn[i].fields._5Selected.split(",");
-                                    let _7Selected = data.tvatreturn[i].fields._7Selected.split(",");
-                                    let _10Selected = data.tvatreturn[i].fields._10Selected.split(",");
-                                    let _12Selected = data.tvatreturn[i].fields._12Selected.split(",");
-                                    let _14Selected = data.tvatreturn[i].fields._14Selected.split(",");
-                                    let _14ASelected = data.tvatreturn[i].fields._14ASelected.split(",");
-                                    let _15Selected = data.tvatreturn[i].fields._15Selected.split(",");
-                                    let _15ASelected = data.tvatreturn[i].fields._15ASelected.split(",");
-                                    let _16Selected = data.tvatreturn[i].fields._16Selected.split(",");
-                                    let _17Selected = data.tvatreturn[i].fields._17Selected.split(",");
-                                    let _18Selected = data.tvatreturn[i].fields._18Selected.split(",");
-                                    let _21Selected = data.tvatreturn[i].fields._21Selected.split(",");
-                                    let _22Selected = data.tvatreturn[i].fields._22Selected.split(",");
-                                    let _26Selected = data.tvatreturn[i].fields._26Selected.split(",");
-                                    let _27Selected = data.tvatreturn[i].fields._27Selected.split(",");
-                                    let _30Selected = data.tvatreturn[i].fields._30Selected.split(",");
-                                    let _31Selected = data.tvatreturn[i].fields._31Selected.split(",");
-                                    let _34Selected = data.tvatreturn[i].fields._34Selected.split(",");
-                                    let _35Selected = data.tvatreturn[i].fields._35Selected.split(",");
-                                    for (var j = 0; j < taxRateList.length; j++) {
-                                        _1Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-1-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _1ASelected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-1a-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _2Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-2-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _2ASelected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-2a-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _3Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-3-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _5Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-5-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _7Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-7-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _10Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-10-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _12Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-12-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _14Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-14-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _14ASelected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-14a-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _15Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-15-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _15ASelected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-15a-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _16Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-16-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _17Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-17-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _18Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-18-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _21Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-21-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _22Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-22-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _26Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-26-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _27Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-27-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _30Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-30-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _31Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-31-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _34Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-34-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                        _35Selected.forEach((item, k) => {
-                                            if (taxRateList[j].CodeName == item) {
-                                                $("#t-35-" + taxRateList[j].Id).prop('checked', true);
-                                            }
-                                        });
-                                    }
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._1Selected, "tbltaxCodeCheckbox_1");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._1ASelected, "tbltaxCodeCheckbox_1A");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._2Selected, "tbltaxCodeCheckbox_2");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._2ASelected, "tbltaxCodeCheckbox_2A");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._3Selected, "tbltaxCodeCheckbox_3");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._5Selected, "tbltaxCodeCheckbox_5");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._7Selected, "tbltaxCodeCheckbox_7");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._10Selected, "tbltaxCodeCheckbox_10");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._12Selected, "tbltaxCodeCheckbox_12");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._14Selected, "tbltaxCodeCheckbox_14");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._14ASelected, "tbltaxCodeCheckbox_14A");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._15Selected, "tbltaxCodeCheckbox_15");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._15ASelected, "tbltaxCodeCheckbox_15A");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._16Selected, "tbltaxCodeCheckbox_16");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._17Selected, "tbltaxCodeCheckbox_17");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._18Selected, "tbltaxCodeCheckbox_18");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._27Selected, "tbltaxCodeCheckbox_27");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._30Selected, "tbltaxCodeCheckbox_30");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._31Selected, "tbltaxCodeCheckbox_31");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._34Selected, "tbltaxCodeCheckbox_34");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._35Selected, "tbltaxCodeCheckbox_35");
                                     if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
                                         $("#datemethod1-t2").prop('checked', true);
                                         $("#datemethod2-t2").prop('checked', false);
@@ -2395,152 +1782,30 @@ Template.vatreturn.onRendered(function() {
                             $("#tax13cost").val(tax13cost);
                             $("#prt_tax13cost").html("$" + tax13cost);
 
-                            let _1Selected = data.tvatreturn[0].fields._1Selected.split(",");
-                            let _1ASelected = data.tvatreturn[0].fields._1ASelected.split(",");
-                            let _2Selected = data.tvatreturn[0].fields._2Selected.split(",");
-                            let _2ASelected = data.tvatreturn[0].fields._2ASelected.split(",");
-                            let _3Selected = data.tvatreturn[0].fields._3Selected.split(",");
-                            let _5Selected = data.tvatreturn[0].fields._5Selected.split(",");
-                            let _7Selected = data.tvatreturn[0].fields._7Selected.split(",");
-                            let _10Selected = data.tvatreturn[0].fields._10Selected.split(",");
-                            let _12Selected = data.tvatreturn[0].fields._12Selected.split(",");
-                            let _14Selected = data.tvatreturn[0].fields._14Selected.split(",");
-                            let _14ASelected = data.tvatreturn[0].fields._14ASelected.split(",");
-                            let _15Selected = data.tvatreturn[0].fields._15Selected.split(",");
-                            let _15ASelected = data.tvatreturn[0].fields._15ASelected.split(",");
-                            let _16Selected = data.tvatreturn[0].fields._16Selected.split(",");
-                            let _17Selected = data.tvatreturn[0].fields._17Selected.split(",");
-                            let _18Selected = data.tvatreturn[0].fields._18Selected.split(",");
-                            let _21Selected = data.tvatreturn[0].fields._21Selected.split(",");
-                            let _22Selected = data.tvatreturn[0].fields._22Selected.split(",");
-                            let _26Selected = data.tvatreturn[0].fields._26Selected.split(",");
-                            let _27Selected = data.tvatreturn[0].fields._27Selected.split(",");
-                            let _30Selected = data.tvatreturn[0].fields._30Selected.split(",");
-                            let _31Selected = data.tvatreturn[0].fields._31Selected.split(",");
-                            let _34Selected = data.tvatreturn[0].fields._34Selected.split(",");
-                            let _35Selected = data.tvatreturn[0].fields._35Selected.split(",");
-                            for (var j = 0; j < taxRateList.length; j++) {
-                                _1Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-1-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _1ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-1a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _2Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-2-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _2ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-2a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _3Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-3-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _5Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-5-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _7Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-7-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _10Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-10-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _12Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-12-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _14Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-14-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _14ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-14a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _15Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-15-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _15ASelected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-15a-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _16Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-16-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _17Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-17-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _18Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-18-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _21Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-21-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _22Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-22-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _26Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-26-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _27Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-27-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _30Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-30-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _31Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-31-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _34Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-34-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                                _35Selected.forEach((item, k) => {
-                                    if (taxRateList[j].CodeName == item) {
-                                        $("#t-35-" + taxRateList[j].Id).prop('checked', true);
-                                    }
-                                });
-                            }
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._1Selected, "tbltaxCodeCheckbox_1");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._1ASelected, "tbltaxCodeCheckbox_1A");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._2Selected, "tbltaxCodeCheckbox_2");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._2ASelected, "tbltaxCodeCheckbox_2A");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._3Selected, "tbltaxCodeCheckbox_3");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._5Selected, "tbltaxCodeCheckbox_5");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._7Selected, "tbltaxCodeCheckbox_7");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._10Selected, "tbltaxCodeCheckbox_10");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._12Selected, "tbltaxCodeCheckbox_12");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._14Selected, "tbltaxCodeCheckbox_14");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._14ASelected, "tbltaxCodeCheckbox_14A");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._15Selected, "tbltaxCodeCheckbox_15");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._15ASelected, "tbltaxCodeCheckbox_15A");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._16Selected, "tbltaxCodeCheckbox_16");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._17Selected, "tbltaxCodeCheckbox_17");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._18Selected, "tbltaxCodeCheckbox_18");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._21Selected, "tbltaxCodeCheckbox_21");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._22Selected, "tbltaxCodeCheckbox_22");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._26Selected, "tbltaxCodeCheckbox_26");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._27Selected, "tbltaxCodeCheckbox_27");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._30Selected, "tbltaxCodeCheckbox_30");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._31Selected, "tbltaxCodeCheckbox_31");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._34Selected, "tbltaxCodeCheckbox_34");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields._35Selected, "tbltaxCodeCheckbox_35");
                             if (data.tvatreturn[0].fields.Tab2_Type == "Quarterly") {
                                 $("#datemethod1-t2").prop('checked', true);
                                 $("#datemethod2-t2").prop('checked', false);
