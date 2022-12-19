@@ -5,6 +5,7 @@ import { UtilityService } from "../../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../../js/sidebar-service';
 import { ProductService } from '../../product/product-service';
+import { AccountService } from "../../accounts/account-service";
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
 import { AppointmentService } from '../../appointments/appointment-service';
@@ -13,6 +14,7 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
 let productService = new ProductService();
+let accountService = new AccountService();
 // Template.internal_transaction_list_with_switchbox.inheritsHooksFrom('export_import_print_display_button');
 
 Template.internal_transaction_list_with_switchbox.onCreated(function() {
@@ -61,51 +63,97 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         });
     };
 
+    let currenttablename = templateObject.data.tablename || "";
+    let pan = templateObject.data.pan || "";
+
+    if (pan != "") {
+        currenttablename = currenttablename + "_" + pan;
+    }
+    templateObject.tablename.set(currenttablename);
+
     shareFunction = {
-      initTable : async function(updateID) {
-        if (updateID) {
-          let extraProducts = await appointmentService.getOneAppointmentdataEx(updateID);
-          extraProducts = extraProducts.fields.ExtraProducts;
-          extraProducts = extraProducts.split(":");
-          globalID = extraProducts;
+        initTable: async function(updateID) {
+            if (updateID) {
+                let extraProducts = await appointmentService.getOneAppointmentdataEx(updateID);
+                extraProducts = extraProducts.fields.ExtraProducts;
+                extraProducts = extraProducts.split(":");
+                globalID = extraProducts;
 
-          $("#tblInventoryCheckbox_next").click();
+                $("#tblInventoryCheckbox_next").click();
 
+            }
         }
-      }
+    }
+
+    shareFunctionByName = {
+        initTable: async function(colNames, tablename = "tbltaxCodeCheckbox_G1") {
+            if (colNames) {
+                let colnames = colNames.split(",");
+                localStorage.setItem("colnames_" + tablename.split("_")[1], JSON.stringify(colnames));
+                $("#" + tablename + "_next").click();
+                // setTimeout(function() {
+                //     checkBoxClickByName(globalNames);
+                // }, 2000);
+            }
+        }
     }
 
     function checkBoxClick() {
-      let currentTableData = templateObject.transactiondatatablerecords.get();
-      let targetRows = [];
-      globalID.forEach(itemID => {
-        let index = currentTableData.findIndex(item => item[1] == itemID);
-        if (index > -1) {
-          let targetRow = currentTableData[index];
-          let chk = targetRow[0];
-          chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
-          targetRow.splice(0, 1, chk);
-          currentTableData.splice(index, 1);
-          targetRows.push(targetRow);
+        let currentTableData = templateObject.transactiondatatablerecords.get();
+        let targetRows = [];
+        globalID.forEach(itemID => {
+            let index = currentTableData.findIndex(item => item[1] == itemID);
+            if (index > -1) {
+                let targetRow = currentTableData[index];
+                let chk = targetRow[0];
+                chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
+                targetRow.splice(0, 1, chk);
+                currentTableData.splice(index, 1);
+                targetRows.push(targetRow);
+            }
+        });
+        let newTableData = [...targetRows, ...currentTableData];
+        templateObject.transactiondatatablerecords.set(newTableData);
+        $('#' + currenttablename).DataTable().clear();
+        $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
+        let rows = $('#' + currenttablename).find('tbody tr');
+        for (let i = 0; i < rows.length; i++) {
+            if ($(rows[i]).find('input.chkBox').prop('checked') == true) {
+                if ($(rows[i]).hasClass('checkRowSelected') == false) {
+                    $(rows[i]).addClass('checkRowSelected');
+                }
+            }
         }
-      });
-      let newTableData = [...targetRows, ...currentTableData];
-      templateObject.transactiondatatablerecords.set(newTableData);
-      $('#' + currenttablename).DataTable().clear();
-      $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
-      let rows = $('#' + currenttablename).find('tbody tr');
-      for (let i = 0; i < rows.length; i++) {
-          if ($(rows[i]).find('input.chkBox').prop('checked') == true) {
-              if ($(rows[i]).hasClass('checkRowSelected') == false) {
-                  $(rows[i]).addClass('checkRowSelected');
-              }
-          }
-      }
     }
 
-    let currenttablename = templateObject.data.tablename || "";
-
-    templateObject.tablename.set(currenttablename);
+    function checkBoxClickByName() {
+        let currentTableData = templateObject.transactiondatatablerecords.get();
+        let targetRows = [];
+        var colnames = JSON.parse(localStorage.getItem("colnames_" + currenttablename.split("_")[1]));
+        colnames.forEach(itemName => {
+            let index = currentTableData.findIndex(item => item[2] == itemName);
+            if (index > -1) {
+                let targetRow = currentTableData[index];
+                let chk = targetRow[0];
+                chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
+                targetRow.splice(0, 1, chk);
+                currentTableData.splice(index, 1);
+                targetRows.push(targetRow);
+            }
+        });
+        let newTableData = [...targetRows, ...currentTableData];
+        templateObject.transactiondatatablerecords.set(newTableData);
+        $('#' + currenttablename).DataTable().clear();
+        $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
+        let rows = $('#' + currenttablename).find('tbody tr');
+        for (let i = 0; i < rows.length; i++) {
+            if ($(rows[i]).find('input.chkBox').prop('checked') == true) {
+                if ($(rows[i]).hasClass('checkRowSelected') == false) {
+                    $(rows[i]).addClass('checkRowSelected');
+                }
+            }
+        }
+    }
 
     // set initial table rest_data
     templateObject.init_reset_data = function() {
@@ -124,13 +172,22 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 { index: 10, label: 'Extra Sell Price', class: 'colExtraSellPrice', active: false, display: true, width: "100" },
                 { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ];
-        } else if (currenttablename == "tbltaxCodeCheckbox") {
+        } else if (currenttablename.includes("tbltaxCodeCheckbox")) {
             reset_data = [
-                { index: 0, label: '#ID', class: 'colCodeId', active: false, display: true, width: "100" },
-                { index: 1, label: 'Name', class: 'colCodeName', active: true, display: true, width: "100" },
-                { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "100" },
-                { index: 3, label: 'Tax Rate', class: 'colTaxRate', active: true, display: true, width: "100" },
-                { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "20" },
+                { index: 1, label: '#ID', class: 'colId', active: false, display: true, width: "100" },
+                { index: 2, label: 'Name', class: 'colCodeName', active: true, display: true, width: "30%" },
+                { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "40%" },
+                { index: 4, label: 'Tax Rate', class: 'colTaxRate', active: true, display: true, width: "20%" },
+                // { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "20" },
+            ];
+        } else if (currenttablename.includes("tblaccountsCheckbox")) {
+            reset_data = [
+                { index: 1, label: '#ID', class: 'colId', active: false, display: true, width: "100" },
+                { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "22%" },
+                { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "22%" },
+                { index: 4, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "15%" },
+                { index: 5, label: 'Type', class: 'colType', active: true, display: true, width: "15%" },
+                { index: 6, label: 'Balance', class: 'colBalance', active: true, display: true, width: "15%" },
             ];
         }
         templateObject.reset_data.set(reset_data);
@@ -257,7 +314,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             var dataList = [
                 chkBox,
                 data.tproductlist[i].PARTSID || "",
-                data.tproductlist[i].PARTNAM || "",
+                data.tproductlist[i].PARTNAME || "",
                 data.tproductlist[i].PARTSDESCRIPTION || "",
                 data.tproductlist[i].BARCODE || "",
                 costprice,
@@ -531,8 +588,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
-
-
     //Tax Codes List
     templateObject.getTaxCodesListVS1 = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
@@ -562,6 +617,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let lineItems = [];
         let lineItemObj = {};
         let deleteFilter = false;
+        let chkBoxId;
         let chkBox;
         let costprice = 0.00;
         let sellrate = 0.00;
@@ -574,17 +630,19 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         // };
 
         for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-            if (data.ttaxcodevs1[i].fields.Active == true) {
+            if (data.ttaxcodevs1[i].Active == true) {
                 linestatus = "";
-            } else if (data.ttaxcodevs1[i].fields.Active == false) {
+            } else if (data.ttaxcodevs1[i].Active == false) {
                 linestatus = "In-Active";
             };
-            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="t-1-' + data.ttaxcodevs1[i].fields.Id + '"><label class="custom-control-label chkBox pointer" for="t-1-' + data.ttaxcodevs1[i].fields.Id + '"></label></div>'; //switchbox
-            taxRate = (data.ttaxcodevs1[i].fields.Rate * 100).toFixed(2);
+            chkBoxId = "t-" + pan + "-" + data.ttaxcodevs1[i].Id
+            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
+            taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
             var dataList = [
                 chkBox,
-                data.ttaxcodevs1[i].fields.CodeName || "",
-                data.ttaxcodevs1[i].fields.Description || '-',
+                data.ttaxcodevs1[i].Id || 0,
+                data.ttaxcodevs1[i].CodeName || "",
+                data.ttaxcodevs1[i].Description || '-',
                 taxRate || 0,
             ];
 
@@ -605,18 +663,27 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
-                        className: "colCodeId pointer",
+                        className: "colChkBox pointer",
                         orderable: false,
-                        width: "15%",
+                        width: "10%",
+                    },
+                    {
+                        targets: 1,
+                        className: "colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[1]);
+                        }
                     },
                     {
                         targets: 2,
                         className: "colCodeName",
-                        width: "25%",
+                        width: "30%",
                     },
                     {
                         targets: 3,
                         className: "colDescription",
+                        width: "40%",
                     },
                     {
                         targets: 4,
@@ -624,42 +691,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         width: "20%",
                     },
                 ],
-                // buttons: [
-                //     {
-                //         extend: 'csvHtml5',
-                //         text: '',
-                //         download: 'open',
-                //         className: "btntabletocsv hiddenColumn",
-                //         filename: "Products List",
-                //         orientation:'portrait',
-                //         exportOptions: {
-                //             columns: ':visible'
-                //         }
-                //     },{
-                //         extend: 'print',
-                //         download: 'open',
-                //         className: "btntabletopdf hiddenColumn",
-                //         text: '',
-                //         title: 'Lead Status Settings',
-                //         filename: "Products List",
-                //         exportOptions: {
-                //             columns: ':visible',
-                //             stripHtml: false
-                //         }
-                //     },
-                //     {
-                //         extend: 'excelHtml5',
-                //         title: '',
-                //         download: 'open',
-                //         className: "btntabletoexcel hiddenColumn",
-                //         filename: "Products List",
-                //         orientation:'portrait',
-                //         exportOptions: {
-                //             columns: ':visible'
-                //         }
-                //
-                //     }
-                // ],
                 select: true,
                 destroy: true,
                 colReorder: true,
@@ -695,41 +726,18 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         let dataLenght = oSettings._iDisplayLength;
                         let customerSearch = $('#' + currenttablename + '_filter input').val();
 
-                        sideBarService.getTaxRateVS1(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
-                            for (let j = 0; j < dataObjectnew.ttaxcodevs1.length; i++) {
-                                if (data.ttaxcodevs1[j].fields.Active == true) {
-                                    linestatus = "";
-                                } else if (data.ttaxcodevs1[j].fields.Active == false) {
-                                    linestatus = "In-Active";
-                                };
-                                chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="t-1-' + data.ttaxcodevs1[j].fields.Id + '"><label class="custom-control-label chkBox pointer" for="t-1-' + data.ttaxcodevs1[j].fields.Id + '"></label></div>'; //switchbox
-                                taxRate = (data.ttaxcodevs1[j].fields.Rate * 100).toFixed(2);
-                                var dataList = [
-                                    chkBox,
-                                    data.ttaxcodevs1[j].fields.CodeName || "",
-                                    data.ttaxcodevs1[j].fields.Description || '-',
-                                    taxRate || 0,
-                                ];
+                        let uniqueChars = [...new Set(splashArrayTaxCodesList)];
+                        templateObject.transactiondatatablerecords.set(uniqueChars);
+                        var datatable = $('#' + currenttablename).DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                        setTimeout(function() {
+                            $('#' + currenttablename).dataTable().fnPageChange('first');
+                        }, 400);
+                        checkBoxClickByName();
 
-                                splashArrayTaxCodesList.push(dataList);
-                                templateObject.transactiondatatablerecords.set(splashArrayTaxCodesList);
-                            }
-                            let uniqueChars = [...new Set(splashArrayTaxCodesList)];
-                            templateObject.transactiondatatablerecords.set(uniqueChars);
-                            var datatable = $('#' + currenttablename).DataTable();
-                            datatable.clear();
-                            datatable.rows.add(uniqueChars);
-                            datatable.draw(false);
-                            setTimeout(function() {
-                                $('#' + currenttablename).dataTable().fnPageChange('last');
-                            }, 400);
-
-                            $('.fullScreenSpin').css('display', 'none');
-
-                        }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-
+                        $('.fullScreenSpin').css('display', 'none');
                     });
                     setTimeout(function() {
                         MakeNegative();
@@ -737,18 +745,226 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function(oSettings) {
-                    // $("<a class='btn btn-primary scanTaxBarcodePOP' href='' id='scanProdBarcodePOP' role='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryCheckbox_filter");
-                    // $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryCheckbox_filter");
-                    if (data.Params.Search.replace(/\s/g, "") == "") {
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-
-                    } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    }
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.Params.Count || 0; //get count from API data
+                    let countTableData = data.ttaxcodevs1.length || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+
+        }, 0);
+
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
+    //Tax Codes List
+    templateObject.getAccountsListVS1 = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
+        getVS1Data("TAccountVS1").then(function(dataObject) {
+            if (dataObject.length == 0) {
+                accountService.getAccountListVS1().then(async function(data) {
+                    await addVS1Data('TAccountVS1', JSON.stringify(data));
+                    templateObject.displayAccountsData(data);
+                }).catch(function(err) {
+
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayAccountsData(data, true);
+            }
+        }).catch(function(err) {
+            accountService.getAccountListVS1().then(async function(data) {
+                await addVS1Data('TAccountVS1', JSON.stringify(data));
+                templateObject.displayAccountsData(data);
+            }).catch(function(err) {
+
+            });
+        });
+    }
+    templateObject.displayAccountsData = async function(data, isField = false) {
+        var splashArrayaccountsList = new Array();
+        let fullAccountTypeName = "";
+        let accBalance = "";
+        let deleteFilter = false;
+        let chkBoxId;
+        let chkBox;
+        let taxRate = 0;
+        let linestatus = '';
+        // if (data.Params.Search.replace(/\s/g, "") == "") {
+        //     deleteFilter = true;
+        // } else {
+        //     deleteFilter = false;
+        // };
+
+        for (let i = 0; i < data.taccountvs1.length; i++) {
+            let lineData = data.taccountvs1[i];
+
+            if (isField) {
+                lineData = data.taccountvs1[i].fields;
+            }
+
+            if (lineData.Active == true) {
+                linestatus = "";
+            } else if (lineData.Active == false) {
+                linestatus = "In-Active";
+            };
+
+            if (!isNaN(lineData.Balance)) {
+                accBalance = utilityService.modifynegativeCurrencyFormat(lineData.Balance) || 0.0;
+            } else {
+                accBalance = Currency + "0.00";
+            }
+
+            chkBoxId = "f-" + pan + "-" + lineData.ID || lineData.Id;
+            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
+            taxRate = (data.taccountvs1[i].Rate * 100).toFixed(2);
+            var dataList = [
+                chkBox,
+                lineData.ID || lineData.Id || "",
+                lineData.AccountName || "",
+                lineData.Description || "",
+                lineData.AccountNumber || "",
+                fullAccountTypeName || lineData.AccountTypeName,
+                accBalance || 0,
+            ];
+
+            splashArrayaccountsList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayaccountsList);
+        }
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+
+        setTimeout(function() {
+            //$('#'+currenttablename).removeClass('hiddenColumn');
+            $('#' + currenttablename).DataTable({
+                data: templateObject.transactiondatatablerecords.get(),
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [{
+                        targets: 0,
+                        className: "colChkBox pointer",
+                        orderable: false,
+                        width: "10%",
+                    },
+                    {
+                        targets: 1,
+                        className: "colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[1]);
+                        }
+                    },
+                    {
+                        targets: 2,
+                        className: "colAccountName",
+                        width: "22%",
+                    },
+                    {
+                        targets: 3,
+                        className: "colDescription",
+                        width: "22%",
+                    },
+                    {
+                        targets: 4,
+                        className: "colAccountNo",
+                        width: "15%",
+                    },
+                    {
+                        targets: 5,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 6,
+                        className: "colBalance",
+                        width: "15%",
+                    },
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                // "order": [[1, "asc"]],
+                order: false,
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        let dataLenght = oSettings._iDisplayLength;
+                        let customerSearch = $('#' + currenttablename + '_filter input').val();
+
+                        let uniqueChars = [...new Set(splashArrayaccountsList)];
+                        templateObject.transactiondatatablerecords.set(uniqueChars);
+                        var datatable = $('#' + currenttablename).DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                        setTimeout(function() {
+                            $('#' + currenttablename).dataTable().fnPageChange('first');
+                        }, 400);
+                        checkBoxClickByName();
+
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search List..." },
+                "fnInitComplete": function(oSettings) {
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.taccountvs1.length || 0; //get count from API data
 
                     return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
@@ -787,8 +1003,10 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     //Check URL to make right call.
     if (currenttablename == "tblInventoryCheckbox") {
         templateObject.getProductsData();
-    } else if (currenttablename == "tbltaxCodeCheckbox") {
+    } else if (currenttablename.includes("tbltaxCodeCheckbox")) {
         templateObject.getTaxCodesListVS1();
+    } else if (currenttablename.includes("tblaccountsCheckbox")) {
+        templateObject.getAccountsListVS1();
     }
     tableResize();
 });
@@ -875,7 +1093,7 @@ Template.internal_transaction_list_with_switchbox.events({
         if (currenttablename == "tblInventoryCheckbox") {
             await clearData('TProductList');
             templateObject.getProductsData(true);
-        } else if (currenttablename == "tbltaxCodeCheckbox") {
+        } else if (currenttablename.includes("tbltaxCodeCheckbox")) {
             await clearData('TTaxcodeVS1');
             templateObject.getTaxCodesListVS1(true);
         }
@@ -893,7 +1111,7 @@ Template.internal_transaction_list_with_switchbox.events({
         if (currenttablename == "tblInventoryCheckbox") {
             await clearData('TProductList');
             templateObject.getProductsData(false);
-        } else if (currenttablename == "tbltaxCodeCheckbox") {
+        } else if (currenttablename.includes("tbltaxCodeCheckbox")) {
             await clearData('TTaxcodeVS1');
             templateObject.getTaxCodesListVS1(false);
         }
