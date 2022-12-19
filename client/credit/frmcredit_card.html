@@ -33,7 +33,7 @@
     <form>
       {{> transaction_header cardType="Credit" data=creditrecord
       uploadedFile=uploadedFile isCurrencyEnable=isCurrencyEnable
-      custfields=custfields showTemplateModals=true showUploadAttachment=true
+      custfields=custfields showUploadAttachment=true
       showTransactionButtons=false
       salesCloudPreferenceRec=purchaseCloudPreferenceRec showCustomer=true
       showBilingAddress=true showSalesDate=true showPONumber=false
@@ -821,8 +821,7 @@
         class="row justify-content-center mobileButtons"
         style="display: none"
       >
-        {{> transaction_footer margin="14px"
-        AttachmentCount=attachmentCount TransactionType="credits" }}
+        {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="credits" }}
       </div>
       <div class="printID" style="display: none"></div>
       <style>
