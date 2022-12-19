@@ -63,6 +63,14 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         });
     };
 
+    let currenttablename = templateObject.data.tablename || "";
+    let pan = templateObject.data.pan || "";
+
+    if (pan != "") {
+        currenttablename = currenttablename + "_" + pan;
+    }
+    templateObject.tablename.set(currenttablename);
+
     shareFunction = {
         initTable: async function(updateID) {
             if (updateID) {
@@ -73,6 +81,19 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
 
                 $("#tblInventoryCheckbox_next").click();
 
+            }
+        }
+    }
+
+    shareFunctionByName = {
+        initTable: async function(colNames, tablename = "tbltaxCodeCheckbox_G1") {
+            if (colNames) {
+                let colnames = colNames.split(",");
+                localStorage.setItem("colnames_" + tablename.split("_")[1], JSON.stringify(colnames));
+                $("#" + tablename + "_next").click();
+                // setTimeout(function() {
+                //     checkBoxClickByName(globalNames);
+                // }, 2000);
             }
         }
     }
@@ -105,13 +126,34 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         }
     }
 
-    let currenttablename = templateObject.data.tablename || "";
-    let pan = templateObject.data.pan || "";
-
-    if (pan != "") {
-        currenttablename = currenttablename + "_" + pan;
+    function checkBoxClickByName() {
+        let currentTableData = templateObject.transactiondatatablerecords.get();
+        let targetRows = [];
+        var colnames = JSON.parse(localStorage.getItem("colnames_" + currenttablename.split("_")[1]));
+        colnames.forEach(itemName => {
+            let index = currentTableData.findIndex(item => item[2] == itemName);
+            if (index > -1) {
+                let targetRow = currentTableData[index];
+                let chk = targetRow[0];
+                chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
+                targetRow.splice(0, 1, chk);
+                currentTableData.splice(index, 1);
+                targetRows.push(targetRow);
+            }
+        });
+        let newTableData = [...targetRows, ...currentTableData];
+        templateObject.transactiondatatablerecords.set(newTableData);
+        $('#' + currenttablename).DataTable().clear();
+        $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
+        let rows = $('#' + currenttablename).find('tbody tr');
+        for (let i = 0; i < rows.length; i++) {
+            if ($(rows[i]).find('input.chkBox').prop('checked') == true) {
+                if ($(rows[i]).hasClass('checkRowSelected') == false) {
+                    $(rows[i]).addClass('checkRowSelected');
+                }
+            }
+        }
     }
-    templateObject.tablename.set(currenttablename);
 
     // set initial table rest_data
     templateObject.init_reset_data = function() {
@@ -649,42 +691,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         width: "20%",
                     },
                 ],
-                // buttons: [
-                //     {
-                //         extend: 'csvHtml5',
-                //         text: '',
-                //         download: 'open',
-                //         className: "btntabletocsv hiddenColumn",
-                //         filename: "Products List",
-                //         orientation:'portrait',
-                //         exportOptions: {
-                //             columns: ':visible'
-                //         }
-                //     },{
-                //         extend: 'print',
-                //         download: 'open',
-                //         className: "btntabletopdf hiddenColumn",
-                //         text: '',
-                //         title: 'Lead Status Settings',
-                //         filename: "Products List",
-                //         exportOptions: {
-                //             columns: ':visible',
-                //             stripHtml: false
-                //         }
-                //     },
-                //     {
-                //         extend: 'excelHtml5',
-                //         title: '',
-                //         download: 'open',
-                //         className: "btntabletoexcel hiddenColumn",
-                //         filename: "Products List",
-                //         orientation:'portrait',
-                //         exportOptions: {
-                //             columns: ':visible'
-                //         }
-                //
-                //     }
-                // ],
                 select: true,
                 destroy: true,
                 colReorder: true,
@@ -702,65 +708,40 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 },
 
                 "fnDrawCallback": function(oSettings) {
-                    // $('.paginate_button.page-item').removeClass('disabled');
-                    // $('#' + currenttablename + '_ellipsis').addClass('disabled');
-                    // if (oSettings._iDisplayLength == -1) {
-                    //     if (oSettings.fnRecordsDisplay() > 150) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
 
-                    //     }
-                    // } else {
+                        }
+                    } else {
 
-                    // }
-                    // if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                    //     $('.paginate_button.page-item.next').addClass('disabled');
-                    // }
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
 
-                    // $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
-                    //     $('.fullScreenSpin').css('display', 'inline-block');
-                    //     let dataLenght = oSettings._iDisplayLength;
-                    //     let customerSearch = $('#' + currenttablename + '_filter input').val();
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        let dataLenght = oSettings._iDisplayLength;
+                        let customerSearch = $('#' + currenttablename + '_filter input').val();
 
-                    //     sideBarService.getTaxRateVS1(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
-                    //         for (let j = 0; j < dataObjectnew.ttaxcodevs1.length; i++) {
-                    //             if (data.ttaxcodevs1[j].Active == true) {
-                    //                 linestatus = "";
-                    //             } else if (data.ttaxcodevs1[j].Active == false) {
-                    //                 linestatus = "In-Active";
-                    //             };
-                    //             chkBoxId = "t-" + pan + "-" + dataObjectnew.ttaxcodevs1[j].Id;
-                    //             chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
-                    //             taxRate = (data.ttaxcodevs1[j].Rate * 100).toFixed(2);
-                    //             var dataList = [
-                    //                 chkBox,
-                    //                 dataObjectnew.ttaxcodevs1[j].Id || 0,
-                    //                 dataObjectnew.ttaxcodevs1[j].CodeName || "",
-                    //                 dataObjectnew.ttaxcodevs1[j].Description || '-',
-                    //                 taxRate || 0,
-                    //             ];
+                        let uniqueChars = [...new Set(splashArrayTaxCodesList)];
+                        templateObject.transactiondatatablerecords.set(uniqueChars);
+                        var datatable = $('#' + currenttablename).DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                        setTimeout(function() {
+                            $('#' + currenttablename).dataTable().fnPageChange('first');
+                        }, 400);
+                        checkBoxClickByName();
 
-                    //             splashArrayTaxCodesList.push(dataList);
-                    //             templateObject.transactiondatatablerecords.set(splashArrayTaxCodesList);
-                    //         }
-                    //         let uniqueChars = [...new Set(splashArrayTaxCodesList)];
-                    //         templateObject.transactiondatatablerecords.set(uniqueChars);
-                    //         var datatable = $('#' + currenttablename).DataTable();
-                    //         datatable.clear();
-                    //         datatable.rows.add(uniqueChars);
-                    //         datatable.draw(false);
-                    //         setTimeout(function() {
-                    //             $('#' + currenttablename).dataTable().fnPageChange('last');
-                    //         }, 400);
-
-                    //         $('.fullScreenSpin').css('display', 'none');
-
-                    //     }).catch(function(err) {
-                    //         $('.fullScreenSpin').css('display', 'none');
-                    //     });
-
-                    // });
-                    // setTimeout(function() {
-                    //     MakeNegative();
-                    // }, 100);
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function(oSettings) {
@@ -927,42 +908,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         width: "15%",
                     },
                 ],
-                // buttons: [
-                //     {
-                //         extend: 'csvHtml5',
-                //         text: '',
-                //         download: 'open',
-                //         className: "btntabletocsv hiddenColumn",
-                //         filename: "Products List",
-                //         orientation:'portrait',
-                //         exportOptions: {
-                //             columns: ':visible'
-                //         }
-                //     },{
-                //         extend: 'print',
-                //         download: 'open',
-                //         className: "btntabletopdf hiddenColumn",
-                //         text: '',
-                //         title: 'Lead Status Settings',
-                //         filename: "Products List",
-                //         exportOptions: {
-                //             columns: ':visible',
-                //             stripHtml: false
-                //         }
-                //     },
-                //     {
-                //         extend: 'excelHtml5',
-                //         title: '',
-                //         download: 'open',
-                //         className: "btntabletoexcel hiddenColumn",
-                //         filename: "Products List",
-                //         orientation:'portrait',
-                //         exportOptions: {
-                //             columns: ':visible'
-                //         }
-                //
-                //     }
-                // ],
                 select: true,
                 destroy: true,
                 colReorder: true,
@@ -978,7 +923,42 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 action: function() {
                     $('#' + currenttablename).DataTable().ajax.reload();
                 },
-                "fnDrawCallback": function(oSettings) {},
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        let dataLenght = oSettings._iDisplayLength;
+                        let customerSearch = $('#' + currenttablename + '_filter input').val();
+
+                        let uniqueChars = [...new Set(splashArrayaccountsList)];
+                        templateObject.transactiondatatablerecords.set(uniqueChars);
+                        var datatable = $('#' + currenttablename).DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                        setTimeout(function() {
+                            $('#' + currenttablename).dataTable().fnPageChange('first');
+                        }, 400);
+                        checkBoxClickByName();
+
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function(oSettings) {
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
