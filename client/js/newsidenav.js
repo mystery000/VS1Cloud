@@ -289,6 +289,7 @@ Template.newsidenav.onRendered(function() {
     }
     MyPopper.prototype.hidePopper = function() {
         this.popper.removeClass('popper-popup');
+        this.popper.removeClass('show');
         this.popper.removeAttr("show-popper");
         this.arrow.removeAttr("data-popper-arrow");
         this.destroyInstance();
@@ -308,7 +309,7 @@ Template.newsidenav.onRendered(function() {
 
     function init() {
         $('body #sidebar .components > li').each((index, li) => {
-            const ul = $(li).find('> ul')[0];
+            const ul = $(li).find('> div')[0];
             if (ul) {
                 const a = $(li).find('> a')[0];
                 a.popper = new MyPopper(a, ul);
