@@ -1700,6 +1700,9 @@ Template.non_transactional_list.onRendered(function() {
                                     dataObjectnew.taccountvs1list[j].AllowExpenseClaim || false,
                                     dataObjectnew.taccountvs1list[j].ReceiptCategory || "",
                                     linestatus,
+                                    dataObjectnew.taccountvs1list[j].Level1 || "",
+                                    dataObjectnew.taccountvs1list[j].Level2 || "",
+                                    dataObjectnew.taccountvs1list[j].Level3 || "",
                                 ];
 
                                 splashArrayAccountsOverview.push(dataListDupp);
@@ -6836,7 +6839,7 @@ Template.non_transactional_list.onRendered(function() {
       }).catch(function(err) {
           getAppointments();
       })
-  
+
         async function getAppointments() {
           crmService.getAllAppointments(customerName).then(async function(dataObj) {
               if (dataObj.tappointmentex.length > 0) {
@@ -6900,7 +6903,7 @@ Template.non_transactional_list.onRendered(function() {
         })
         }
       }
-  
+
       templateObject.displayCustomerCrmListData = function(data){
         var splashArrayClientTypeList = new Array();
         let deleteFilter = false;
@@ -6917,7 +6920,7 @@ Template.non_transactional_list.onRendered(function() {
             splashArrayClientTypeList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
         }
-  
+
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function () {
                 MakeNegative();
@@ -6994,7 +6997,7 @@ Template.non_transactional_list.onRendered(function() {
                         exportOptions: {
                             columns: ':visible'
                         }
-  
+
                     }],
                 select: true,
                 destroy: true,
@@ -7012,15 +7015,15 @@ Template.non_transactional_list.onRendered(function() {
                     $('#'+currenttablename+'_ellipsis').addClass('disabled');
                     if (oSettings._iDisplayLength == -1) {
                         if (oSettings.fnRecordsDisplay() > 150) {
-  
+
                         }
                     } else {
-  
+
                     }
                     if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                         $('.paginate_button.page-item.next').addClass('disabled');
                     }
-  
+
                     $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
                   $('.fullScreenSpin').css('display', 'inline-block');
                   let dataTableList = [];
@@ -7046,9 +7049,9 @@ Template.non_transactional_list.onRendered(function() {
                     MakeNegative();
                 }, 100);
             }).on('column-reorder', function () {
-  
+
             }).on('length.dt', function (e, settings, len) {
-  
+
               $(".fullScreenSpin").css("display", "inline-block");
               let dataLenght = settings._iDisplayLength;
               if (dataLenght == -1) {
@@ -7066,7 +7069,7 @@ Template.non_transactional_list.onRendered(function() {
             });
             $(".fullScreenSpin").css("display", "none");
         }, 0);
-  
+
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
       }
 

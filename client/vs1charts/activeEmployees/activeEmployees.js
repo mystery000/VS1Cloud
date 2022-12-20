@@ -20,7 +20,7 @@ Template.activeEmployees.onRendered(() => {
         getVS1Data('TAppUser').then(function (dataObject) {
             if(dataObject.length == 0){
                 contactService.getCurrentLoggedUser().then(function (data) {
-                  addVS1Data('TAppUser', JSON.stringify(data));
+                  //addVS1Data('TAppUser', JSON.stringify(data));
                   let dataListloggedUser = {};
                   let vs1EmployeeImage = Session.get("vs1EmployeeImages");
 
@@ -68,7 +68,7 @@ Template.activeEmployees.onRendered(() => {
             }
         }).catch(function (err) {
             contactService.getCurrentLoggedUser().then(function (data) {
-              addVS1Data('TAppUser', JSON.stringify(data));
+              //addVS1Data('TAppUser', JSON.stringify(data));
               let dataListloggedUser = {};
               let vs1EmployeeImage = Session.get("vs1EmployeeImages");
 
