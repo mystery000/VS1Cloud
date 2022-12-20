@@ -4,12 +4,29 @@
   uploadedFile
   isCurrencyEnable
   custfields
-  showTemplateModals
   showUploadAttachment
   showTransactionButtons
   salesCloudPreferenceRec
+  showCustomer
+  showBilingAddress
+  showSalesDate
+  showPONumber
+  showInvoiceNumber
+  showVia
+  showTerms
+  showStatus
+  showReference
+  showDepartment
+  showCurrency
+  showCustomFields
+  showShippingInfo
+  showPayment
+  showCopyTransaction
+  showCopyToInvoice
+  showCopyToOrder
+  showBalanceDue
  -->
-<template name="transaction_header">
+ <template name="transaction_header">
   <style>
     @media (min-width: 1200px) {
       .row-middle .col-xl-2 {
@@ -145,17 +162,22 @@
           </div>
           <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
           <div class="col-12 col-md-4">
-              <a
-                      class="btn btnSettings"
-                      role="button"
-                      data-toggle="modal"
-                      href="#myModal4"
-                      style="float: right;">
-                  <i class="icon ion-android-more-horizontal"></i>
-              </a>
+              {{#if showCustomFields}}
+                  <a
+                          class="btn btnSettings"
+                          role="button"
+                          data-toggle="modal"
+                          href="#myModal4"
+                          style="float: right;">
+                      <i class="icon ion-android-more-horizontal"></i>
+                  </a>
+              {{/if}}
+              {{#if equals data.isReconciled true}}
+                  <h3 style="float: right; color: #e02d1b; font-weight: 600;">Reconciled</h3>
+              {{/if}}
+              <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
           </div>
       </div>
-    <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
   </header>
 
   {{> help_modal}}
@@ -165,27 +187,9 @@
   {{#if showUploadAttachment}}
   {{> files_viewer_modal }}
   {{/if}}
-<!-- It should be move to footer later -->
-  {{#if showTemplateModals}}
-  {{> template_selection_modal
-    templateTitle=cardType
-  }}
-  <div 
-    class="modal fade" 
-    id="templatePreviewModal" 
-    tabindex="2" 
-    role="dialog"
-    aria-labelledby="templatePreviewLabel" 
-    aria-hidden="true">
-    {{> custom_print_template 
-      modalId="templatePreviewModal" 
-      idPrefix="html-2-pdfwrapper"
-      namePrefix="html-2-pdfwrapper" 
-    }}
-  </div>
-  {{/if}}
+
   <div class="row" style="background-color: #ededed;">
-    {{#if equals data.ispaid true}}
+    {{#if data.ispaid}}
     <div class="col-12 colPaid" style="display: none;">
       <p style="font-size: 25px;font-weight: 700 ;color: #e74a3b; margin: 16px 32px 0px 32px;">Paid</p>
       <input class="form-control form-control ispaidInv" type="hidden" value="true">
@@ -193,7 +197,21 @@
     {{/if}}
 
     <div class="col-12 col-xl-10">
+      {{#if equals cardType 'Cheque'}}
+      {{> transaction_cheque_header
+        data=data
+      }}
+      {{#if showCustomFields}}
+        {{> custom_fields
+          containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
+          salesCloudPreferenceRec=salesCloudPreferenceRec
+          custfields=custfields
+          data=data
+        }}
+      {{/if}}
+      {{else}}
       <div class="row" style="margin: 8px 16px 0px 16px;">
+        {{#if showCustomer}}
         <div class="col-12 col-md-6 col-lg-6 col-xl-3">
           {{# if equals cardType 'Invoice'}}
             {{> customer_selector
@@ -217,9 +235,12 @@
             label=getUserLabel
           }}
         </div>
+        {{/if}}
       </div>
+      {{/if}}
       
       <div class="row" style="margin: 16px 16px 0px 16px;">
+        {{#if showBilingAddress}}
         <div class="col-12 col-md-6 col-lg-2 col-xl-3">
           {{# vs1_textarea 
             label="Billing Address" 
@@ -228,8 +249,10 @@
             name="txabillingAddress"
           }}{{data.invoiceToDesc}}{{/vs1_textarea}}
         </div>
+        {{/if}}
         <div class="col-12 col-md-6 col-lg-8 col-xl-9 ">
           <div class="row row-middle">
+            {{#if showSalesDate}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
             {{> sale_date_selector
               label=getDateInputLabel
@@ -237,28 +260,24 @@
               DueDate=data.duedate
             }}
             </div>
+            {{/if}}
+            {{#if showPONumber}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{#if equals cardType 'Invoice'}}
               {{> po_number_input
-                value=invoicerecord.custPONumber
-                firstname=invoicerecord.firstname
-                lastname=invoicerecord.lastname
+                value=data.custPONumber
+                firstname=data.firstname
+                lastname=data.lastname
               }}
-              {{else}}
-              {{#if equals cardType 'Sales Order'}}
-              {{> po_number_input
-                value=invoicerecord.custPONumber
-                firstname=invoicerecord.firstname
-                lastname=invoicerecord.lastname
-              }}
-              {{else}}
-              {{> invoice_number_input
-                value=data.invoicenumber
-              }}
-              {{/if}}
-              {{/if}}
             </div>
-            {{#unless equals cardType 'Invoice'}}
+            {{/if}}
+            {{#if showInvoiceNumber}}
+              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                {{> invoice_number_input
+                  value=data.invoicenumber
+                }}
+              </div>
+            {{/if}}
+            {{#if showVia}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
               {{> default_select
                 label="Via"
@@ -267,7 +286,8 @@
                 name="shipvia"
               }}
             </div>
-            {{/unless}}
+            {{/if}}
+            {{#if showTerms}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
               {{> default_select
                 label="Terms"
@@ -276,6 +296,8 @@
                 name="sltTerms"
               }}
             </div>
+            {{/if}}
+            {{#if showStatus}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
               {{> default_select
                 label="Status"
@@ -284,6 +306,8 @@
                 name="sltStatus"
               }}
             </div>
+            {{/if}}
+            {{#if showReference}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
               {{> default_input
                 label="Reference"
@@ -294,7 +318,8 @@
                 defaultValue=data.reference
               }}
             </div>
-
+            {{/if}}
+            {{#if showDepartment}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
               {{> default_select
                 label="Department"
@@ -302,6 +327,7 @@
                 name="sltDept"
               }}
             </div>
+            {{/if}}
             {{#if isCurrencyEnable}}
               {{#if equals cardType 'Invoice'}}
               {{> CurrencyWidget rate="sell" trans="true"}}
@@ -313,17 +339,18 @@
               {{/if}}
               {{/if}}
             {{/if}}
-
+            {{#if showCustomFields}}
             {{> custom_fields
               containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
               salesCloudPreferenceRec=salesCloudPreferenceRec
               custfields=custfields
+              data=data
             }}
-
+            {{/if}}
           </div>
         </div>
-
       </div>
+      {{#if showShippingInfo}}
       <div class="row" style="margin: 16px 16px 0px 16px;">
         <div class="col-12 mb-3">
           <a class="btn btn-link" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-notes"
@@ -339,11 +366,12 @@
 
         </div>
       </div>
+      {{/if}}
     </div>
     <div class="col-12 col-xl-2">
       <div class="row justify-content-end">
         {{> transaction_buttons_top 
-          showBalanceDue=true
+          hideBalanceDue=hideBalanceDue
           showButtons=showTransactionButtons
           recorddeleted=data.deleted
           recordispaid=data.ispaid
@@ -351,6 +379,10 @@
           recordtype=cardType
           isConverted=data.isConverted
           abletomakeworkorder=abletomakeworkorder
+          showPayment=showPayment
+          showCopyTransaction=showCopyTransaction
+          showCopyToInvoice=showCopyToInvoice
+          showCopyToOrder=showCopyToOrder
         }}
       </div>
     </div>

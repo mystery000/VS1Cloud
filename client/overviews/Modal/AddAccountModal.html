@@ -133,9 +133,13 @@
                             </div>
                             <div class="col-6 col-md-4">
                                 <div class="form-group" style="margin: 4px;"><label>Bank Name</label>
-                                    <!-- <input type="text" class="form-control" id="edtBankName" name="edtBankName"> -->
-                                    <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName">
-                                    </select>
+                                    <input type="text" class="form-control" id="edtBankName" name="edtBankName">
+                                    <!-- <select class="form-control pointer" id="edtBankName" name="edtBankName">
+                                        {{#each item in bankNames}}
+                                            <option value="{{item.name}}">{{item.name}}
+                                            </option>
+                                        {{/each}}
+                                    </select> -->
                                 </div>
                             </div>
                             <div class="col-6 col-md-4">
@@ -324,5 +328,12 @@
       {{> bankNameModal}}
     </div>
     {{> eftOptionsModal}}
-    {{> eftBankCodesModal}}
+    <div class="modal fade" role="dialog" tabindex="-1" id="eftBankCodesModal">
+        {{> eftBankCodesModal}}
+    </div>
+    
+    <div class="modal fade" role="dialog" tabindex="-1" id="taxRateModal">
+        {{> newtaxratepop}}
+    </div>
+    <!-- {{> newtaxratepop}} -->
 </template>

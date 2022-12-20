@@ -386,7 +386,13 @@ Template.paymentcard.onRendered(() => {
         let customer = $('#edtCustomerName').val();
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
+        if (name == undefined)
+            name = customer;
+        if (surname == undefined)
+            surname = "";
         let dept = $('#sltDepartment').val();
+        if (dept == "Default" || dept == undefined)
+            dept = "";
         var erpGet = erpDb();
         let fx = $('#sltCurrency').val();
 
@@ -472,7 +478,7 @@ Template.paymentcard.onRendered(() => {
                 paylink: "",
                 supplier_type: "Customer",
                 supplier_name: customer,
-                supplier_addr: "",
+                supplier_addr: customer + "\r\n" + name + " " + surname + "\r\n" + customerEmail + "\r\n" + dept,
                 fields: {
                     "Date": ["15", "left"],
                     "Type": ["15", "left"],
@@ -523,7 +529,7 @@ Template.paymentcard.onRendered(() => {
                 paylink: "",
                 supplier_type: "Customer",
                 supplier_name: customer,
-                supplier_addr: "",
+                supplier_addr: customer + "\r\n" + name + " " + surname + "\r\n" + customerEmail + "\r\n" + dept,
                 fields: {
                     "Date": ["15", "left"],
                     "Type": ["15", "left"],
@@ -578,7 +584,7 @@ Template.paymentcard.onRendered(() => {
                 paylink: "",
                 supplier_type: "Customer",
                 supplier_name: customer,
-                supplier_addr: "",
+                supplier_addr: customer + "\r\n" + name + " " + surname + "\r\n" + customerEmail + "\r\n" + dept,
                 fields: {
                     "Date": ["15", "left"],
                     "Type": ["15", "left"],
@@ -906,11 +912,11 @@ Template.paymentcard.onRendered(() => {
             var count = 0;
             for (item_temp of item) {
                 if (count == 1) {
-                    html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+                    html = html + "<td style='color:#00a3d3; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else if (count > 2) {
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else {
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 }
                 count++;
             }
@@ -957,11 +963,11 @@ Template.paymentcard.onRendered(() => {
             var count = 0;
             for (item_temp of item) {
                 if (count == 1) {
-                    html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+                    html = html + "<td style='color:#00a3d3; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else if (count > 2) {
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else {
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 }
                 count++;
             }
@@ -1012,11 +1018,11 @@ Template.paymentcard.onRendered(() => {
             var count = 0;
             for (item_temp of item) {
                 if (count == 1) {
-                    html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+                    html = html + "<td style='color:#00a3d3; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else if (count > 2) {
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else {
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 }
                 count++;
             }
@@ -9535,48 +9541,44 @@ Template.paymentcard.events({
 
         });
 
-        $('#html-2-pdfwrapper').css('display', 'block');
-        if ($('.edtCustomerEmail').val() != "") {
-            $('.pdfCustomerName').html($('#edtCustomerName').val());
-            $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-
-            var ponumber = $('#ponumber').val() || '.';
-            $('.po').text(ponumber);
-            var rowCount = $('.tblInvoiceLine tbody tr').length;
-
-            if ($('#print_custom_payment').is(':checked') || $('#print_custom_payment_second').is(':checked')) {
-                printTemplate.push('Customer Payments');
-            }
-
-            if (printTemplate.length > 0) {
-
-                for (var i = 0; i < printTemplate.length; i++) {
-                    if (printTemplate[i] == 'Customer Payments') {
-                        var template_number = $('input[name="Customer Payments"]:checked').val();
-                    }
-
-                    let result = await exportSalesToPdf(printTemplate[i], template_number);
-                    if (result == true) {
-                    }
-
-                }
-
-            }
-
-
-        } else {
-            swal({
-                title: 'Customer Email Required',
-                text: 'Please enter customer email',
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.value) {
-                } else if (result.dismiss === 'cancel') {
-                }
-            });
+        if ($('#print_custom_payment').is(':checked') || $('#print_custom_payment_second').is(':checked')) {
+            printTemplate.push('Customer Payments');
         }
+
+        if (printTemplate.length > 0) {
+            for (var i = 0; i < printTemplate.length; i++) {
+                if (printTemplate[i] == 'Customer Payments') {
+                    var template_number = $('input[name="Customer Payments"]:checked').val();
+                }
+
+                let result = await exportSalesToPdf(printTemplate[i], template_number);
+                if (result == true) {
+                }
+
+            }
+        }
+
+        // $('#html-2-pdfwrapper').css('display', 'block');
+        // if ($('.edtCustomerEmail').val() != "") {
+        //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+        //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+
+        //     var ponumber = $('#ponumber').val() || '.';
+        //     $('.po').text(ponumber);
+        //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+        // } else {
+        //     swal({
+        //         title: 'Customer Email Required',
+        //         text: 'Please enter customer email',
+        //         type: 'error',
+        //         showCancelButton: false,
+        //         confirmButtonText: 'OK'
+        //     }).then((result) => {
+        //         if (result.value) {
+        //         } else if (result.dismiss === 'cancel') {
+        //         }
+        //     });
+        // }
     }, delayTimeAfterSound);
     },
 

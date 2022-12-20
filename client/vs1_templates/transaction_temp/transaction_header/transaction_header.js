@@ -15,7 +15,7 @@ Template.transaction_header.helpers({
   },
   getDateInputLabel: () => {
     const cardType = Template.instance().data.cardType;
-    if (cardType === 'Invoice'|| cardType === 'Sales Order' ) return "Sales Date";
+    if (cardType === 'Invoice'|| cardType === 'Sales Order' || cardType === 'PO' ) return "Sales Date";
     else return "Order Date";
   }
 })

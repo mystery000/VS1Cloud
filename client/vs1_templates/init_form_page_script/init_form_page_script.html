@@ -13,6 +13,10 @@
                     localStorage.setItem("isFormUpdated", true);
                 });
 
+                $(".btnSave").click(function () {
+                    localStorage.setItem("isFormUpdated", false);
+                });
+
                 if (window.location.pathname == "/newbankrule" || window.location.pathname == "/customerscard"
                         || window.location.pathname == "/employeescard" || window.location.pathname == "/leadscard"
                         || window.location.pathname == "/supplierscard" || window.location.pathname == "/allreports") {
