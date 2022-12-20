@@ -707,6 +707,22 @@
                 </li>
             {{/if}}
 
+            <!-- {{#if includeMyPayroll}} -->
+                <li class="payrollLi" id="sidenavmypayroll">
+                    <a href="#mypayrollSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader payrollLiHeader"><i class="fas fa-hand-holding-usd faHeader"></i> Payroll, My</a>
+                    <ul class="collapse list-unstyled" id="mypayrollSubmenu">
+                        <li>
+                            <a id="mypayroll" name="mypayroll" class="text-left"><i class="fas fa-hand-holding-usd"></i> My Payroll
+                            </a>
+                        </li>
+                        <li>
+                            <a id="mypayrollleave" name="mypayrollleave" class="text-left"><i class="fas fa-hand-holding-usd"></i>My PayrollLeave
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            <!-- {{/if}} -->
+
             {{#if includePayrollClockOnOffOnly}}
               <li class="payrollLi" id="sidenavtimeclock" name="sidenavtimeclock">
                   <a class="liHeader payrollLiHeader text-left" ><i class="fas fa-hourglass-half faHeader"></i> Clock On/Off</a>
