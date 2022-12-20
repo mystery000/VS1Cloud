@@ -5334,12 +5334,10 @@ function openEditTaskModals(id, type) {
             $(".crmDatepicker").val(begunDate);
 
         } else {
-            alert(0);
             swal("Cannot edit this task", "", "warning");
             return;
         }
     }).catch(function(err) {
-        alert(err);
         $(".fullScreenSpin").css("display", "none");
 
         swal(err, "", "error");

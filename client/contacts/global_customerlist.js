@@ -646,7 +646,6 @@ Template.global_customerlist.onRendered(function() {
   }
 
   templateObject.getCustomersData();
-  tableResize();
 });
 
 
