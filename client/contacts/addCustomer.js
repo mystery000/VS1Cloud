@@ -227,14 +227,14 @@ Template.customerscard.onRendered(function() {
                         tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
                     }
                     templateObject.all_projects.set(all_projects);
-                    
+
                     let active_projects = all_projects.filter((project) => project.fields.Active == true);
                     let deleted_projects = all_projects.filter((project) => project.fields.Active == false);
                     let favorite_projects = active_projects.filter((project) => project.fields.AddToFavourite == true);
 
                     templateObject.active_projects.set(active_projects);
                     templateObject.deleted_projects.set(deleted_projects);
-                    templateObject.favorite_projects.set(favorite_projects);                    
+                    templateObject.favorite_projects.set(favorite_projects);
                 } else {
                     templateObject.tprojectlist.set([]);
                 }
@@ -2781,7 +2781,7 @@ Template.customerscard.onRendered(function() {
         }
     })
 
-    $(document).on("click", "#tblTitleList tbody tr", function (e) {
+    $(document).on("click", "#tblTitleList tbody tr", function(e) {
         $('#editCustomerTitle').val($(this).find(".colTypeName").text());
         $('#customerTitlePopModal').modal('toggle');
     });
@@ -4854,8 +4854,7 @@ function openEditTaskModals(id, type) {
             contactService.getOneEmployeeDataEx(assignId).then(function(empDetailInfo) {
                 $('#contactEmailUser').val(empDetailInfo.fields.Email);
                 $('#contactPhoneUser').val(empDetailInfo.fields.Phone);
-            }).catch(function(err) {
-            });
+            }).catch(function(err) {});
 
             // $('#contactEmailClient').val(selected_record.ClientEmail);
             // $('#contactPhoneClient').val(selected_record.ClientPhone);
