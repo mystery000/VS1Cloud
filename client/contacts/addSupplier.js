@@ -2085,11 +2085,21 @@ Template.supplierscard.onRendered(function() {
             })
 
             $(document).on("click", "#termsList tbody tr", function(e) {
+                let prevValue = $('#sltTerms').val();
+                let currentValue = $(this).find(".colTermName").text();
+                if(prevValue !== currentValue){
+                    localStorage.setItem("isFormUpdated", true);
+                }
                 $('#sltTerms').val($(this).find(".colTermName").text());
                 $('#termsListModal').modal('toggle');
             });
 
             $(document).on("click", "#tblTitleList tbody tr", function (e) {
+                let prevValue = $('#editSupplierTitle').val();
+                let updatedValue = $(this).find(".colTypeName").text();
+                if(prevValue !== updatedValue){
+                    localStorage.setItem("isFormUpdated", true);
+                }
                 $('#editSupplierTitle').val($(this).find(".colTypeName").text());
                 $('#supplierTitlePopModal').modal('toggle');
             });

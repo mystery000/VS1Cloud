@@ -2653,6 +2653,11 @@ Template.employeescard.onRendered(function() {
             $('#dashboardOptionListModal').modal('toggle');
         });
         $(document).on("click", "#tblTitleList tbody tr", function (e) {
+            let prevValue = $('#editEmployeeTitle').val();
+            let updatedValue = $(this).find(".colTypeName").text();
+            if(prevValue !== updatedValue){
+                localStorage.setItem("isFormUpdated", true);
+            }
             $('#editEmployeeTitle').val($(this).find(".colTypeName").text());
             $('#employeeTitlePopModal').modal('toggle');
         });
