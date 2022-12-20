@@ -2323,6 +2323,7 @@ Template.alltaskdatatable.events({
 
     // update task rename task
     "click .btnSaveEditTask": function(e) {
+        alert(1);
         playSaveAudio();
         let templateObject = Template.instance();
         setTimeout(function() {
