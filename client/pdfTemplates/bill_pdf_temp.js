@@ -141,8 +141,8 @@ Template.billPrintTemp.onRendered(()=>{
                             ispaid: useData[d].fields.IsPaid,
                             isPartialPaid: isPartialPaid,
                             department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept,
-                            unformattedSaleDate: useData[d].fields.OrderDate?useData[d].fields.OrderDate:'',
-                            unformattedDueDate: useData[d].fields.DueDate?useData[d].fields.DueDate:''
+                            unformattedSaleDate: new Date(useData[d].fields.OrderDate),
+                            unformattedDueDate: new Date(useData[d].fields.DueDate),
                         };
 
                         // templateObject.CleintName.set(useData[d].fields.SupplierName);
