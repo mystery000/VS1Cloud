@@ -772,29 +772,8 @@
             </div>
             <!-- END PDF -->
         {{/if}}
-
-        <!-- Modal print-button -modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
-            {{> accountlistpop}}
-        </div>
-        <!-- End AccountList -->
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
-            {{> addaccountpop}}
-        </div>
-
-        <!-- Modal Tax Rate -modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
-            {{> taxratelistpop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
-            {{> newtaxratepop}}
-        </div>
-        <!-- End Modal Tax Rate -->
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
-            {{> copyfrequencypop}}
-        </div>
+        {{> all_transaction_modals}}
+    
     </div>
 
     <!-- Start Help Video Modal -->
