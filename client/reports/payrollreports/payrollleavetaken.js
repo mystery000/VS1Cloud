@@ -21,6 +21,7 @@ Template.payrollleavetaken.onCreated(() => {
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.records = new ReactiveVar([]);
   templateObject.reportOptions = new ReactiveVar([]);
+  templateObject.leavetakenth = new ReactiveVar([]);
 
   // templateObject.currencyList = new ReactiveVar([]);
   // templateObject.activeCurrencyList = new ReactiveVar([]);
@@ -31,19 +32,31 @@ Template.payrollleavetaken.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
 
+  reset_data = [
+    { index: 1, label: 'Employee Name', class: 'colEmployeeName', active: true, display: true, width: "" },
+    { index: 2, label: 'Pay Date', class: 'colPayDate', active: true, display: true, width: "" },
+    { index: 3, label: 'Date Taken', class: 'colDateTaken', active: true, display: true, width: "" },
+    { index: 4, label: 'Leave Type', class: 'colLeaveType', active: true, display: true, width: "" },
+    { index: 5, label: 'Hours', class: 'colHours', active: true, display: true, width: "" },
+    { index: 6, label: 'Is Certified', class: 'colIsCertified', active: true, display: true, width: "" },
+    { index: 7, label: 'Pay ID', class: 'colPayID', active: false, display: true, width: "" },
+    { index: 8, label: 'Employee ID', class: 'colEmployeeED', active: false, display: true, width: "" },
+  ]
+  templateObject.leavetakenth.set(reset_data);
+
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
 
-  templateObject.setDateAs = ( dateFrom = null ) => {
-    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  templateObject.setDateAs = (dateFrom = null) => {
+    templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
   };
 
   templateObject.getLeaveTakenReportData = async (dateFrom, dateTo, ignoreDate = false) => {
     LoadingOverlay.show();
-    templateObject.setDateAs( dateFrom );
+    templateObject.setDateAs(dateFrom);
     let data = await CachedHttp.get(erpObject.TLeaveTaken, async () => {
-      return await reportService.getLeaveTakenReport( dateFrom, dateTo, ignoreDate);
+      return await reportService.getLeaveTakenReport(dateFrom, dateTo, ignoreDate);
     }, {
       requestParams: {
         DateFrom: dateFrom,
@@ -54,8 +67,8 @@ Template.payrollleavetaken.onRendered(() => {
       useLocalStorage: false,
       validate: (cachedResponse) => {
         if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom)
-        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
-        && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
+          && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
+          && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
           return true;
         }
         return false;
@@ -64,23 +77,23 @@ Template.payrollleavetaken.onRendered(() => {
 
 
     data = data.response;
-    
+
     let reportData = [];
-    if( data.tleavetaken.length > 0 ){
-      for (const item of data.tleavetaken ) {
+    if (data.tleavetaken.length > 0) {
+      for (const item of data.tleavetaken) {
         let isExist = reportData.filter((subitem) => {
-          if( subitem.EmployeeID == item.EmployeeID ){
-              subitem.SubAccounts.push(item)
-              return subitem
+          if (subitem.EmployeeID == item.EmployeeID) {
+            subitem.SubAccounts.push(item)
+            return subitem
           }
         });
 
-        if( isExist.length == 0 ){
+        if (isExist.length == 0) {
           reportData.push({
-              TotalAmountUsed: 0,
-              TotalBalance: 0,
-              SubAccounts: [item],
-              ...item
+            TotalAmountUsed: 0,
+            TotalBalance: 0,
+            SubAccounts: [item],
+            ...item
           });
         }
         LoadingOverlay.hide();
@@ -102,7 +115,7 @@ Template.payrollleavetaken.onRendered(() => {
     if (templateObject.records.get()) {
       setTimeout(function () {
         $("td a").each(function () {
-          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+          if ($(this).text().indexOf("-" + Currency) >= 0) {
             $(this).addClass("text-danger");
             $(this).removeClass("fgrblue");
           }
@@ -135,11 +148,41 @@ Template.payrollleavetaken.onRendered(() => {
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
+  templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()))
   LoadingOverlay.hide();
 });
 
 Template.payrollleavetaken.events({
+  'click .chkDatatable': function (event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.' + columnDataValue).addClass('showColumn');
+      $('.' + columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.' + columnDataValue).addClass('hiddenColumn');
+      $('.' + columnDataValue).removeClass('showColumn');
+    }
+  },
+
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click .btnRefresh": function () {
     LoadingOverlay.show();
     localStorage.setItem("VS1PayrollHistory_Report", "");
@@ -171,47 +214,47 @@ Template.payrollleavetaken.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
-    setTimeout(function(){
-    let values = [];
-    let basedOnTypeStorages = Object.keys(localStorage);
-    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-      let employeeId = storage.split("_")[2];
-      return (
-        storage.includes("BasedOnType_") &&
-        employeeId == Session.get("mySessionEmployeeLoggedID")
-      );
-    });
-    let i = basedOnTypeStorages.length;
-    if (i > 0) {
-      while (i--) {
-        values.push(localStorage.getItem(basedOnTypeStorages[i]));
-      }
-    }
-    values.forEach((value) => {
-      let reportData = JSON.parse(value);
-      reportData.HostURL = $(location).attr("protocal")
-        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-        : "http://" + $(location).attr("hostname");
-      if (reportData.BasedOnType.includes("P")) {
-        if (reportData.FormID == 1) {
-          let formIds = reportData.FormIDs.split(",");
-          if (formIds.includes("225")) {
-            reportData.FormID = 225;
-            Meteor.call("sendNormalEmail", reportData);
-          }
-        } else {
-          if (reportData.FormID == 225)
-            Meteor.call("sendNormalEmail", reportData);
+    setTimeout(function () {
+      let values = [];
+      let basedOnTypeStorages = Object.keys(localStorage);
+      basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+        let employeeId = storage.split("_")[2];
+        return (
+          storage.includes("BasedOnType_") &&
+          employeeId == Session.get("mySessionEmployeeLoggedID")
+        );
+      });
+      let i = basedOnTypeStorages.length;
+      if (i > 0) {
+        while (i--) {
+          values.push(localStorage.getItem(basedOnTypeStorages[i]));
         }
       }
-    });
+      values.forEach((value) => {
+        let reportData = JSON.parse(value);
+        reportData.HostURL = $(location).attr("protocal")
+          ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+          : "http://" + $(location).attr("hostname");
+        if (reportData.BasedOnType.includes("P")) {
+          if (reportData.FormID == 1) {
+            let formIds = reportData.FormIDs.split(",");
+            if (formIds.includes("225")) {
+              reportData.FormID = 225;
+              Meteor.call("sendNormalEmail", reportData);
+            }
+          } else {
+            if (reportData.FormID == 225)
+              Meteor.call("sendNormalEmail", reportData);
+          }
+        }
+      });
 
-    document.title = "Payroll Leave Taken Report";
-    $(".printReport").print({
-      title: "Payroll Leave Taken Report | " + loggedCompany,
-      noPrintSelector: ".addSummaryEditor",
-    });
-  }, delayTimeAfterSound);
+      document.title = "Payroll Leave Taken Report";
+      $(".printReport").print({
+        title: "Payroll Leave Taken Report | " + loggedCompany,
+        noPrintSelector: ".addSummaryEditor",
+      });
+    }, delayTimeAfterSound);
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
@@ -421,24 +464,27 @@ Template.payrollleavetaken.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1PayrollHistory_Report", "");
     templateObject.getPayHistory(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },
   "click [href='#noInfoFound']": function () {
     swal({
-        title: 'Information',
-        text: "No further information available on this column",
-        type: 'warning',
-        confirmButtonText: 'Ok'
-      })
+      title: 'Information',
+      text: "No further information available on this column",
+      type: 'warning',
+      confirmButtonText: 'Ok'
+    })
   },
   ...Datehandler.getDateRangeEvents(),
   ...FxGlobalFunctions.getEvents(),
 });
 
 Template.payrollleavetaken.helpers({
+  leavetakenth: () => {
+    return Template.instance().leavetakenth.get();
+  },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
@@ -446,21 +492,21 @@ Template.payrollleavetaken.helpers({
     return Template.instance().records.get();
   },
   redirectionType(item) {
-      return '/employeescard?id=' + item.EmployeeID;
+    return '/employeescard?id=' + item.EmployeeID;
   },
-  formatPrice( amount ){
+  formatPrice(amount) {
     let utilityService = new UtilityService();
-    if( isNaN( amount ) ){
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    if (isNaN(amount)) {
+      amount = (amount === undefined || amount === null || amount.length === 0) ? 0 : amount;
+      amount = (amount) ? Number(amount.replace(/[^0-9.-]+/g, "")) : 0;
     }
-    return ( amount != 0 )? utilityService.modifynegativeCurrencyFormat(amount): "" || "";
+    return (amount != 0) ? utilityService.modifynegativeCurrencyFormat(amount) : "" || "";
   },
-  checkZero( value ){
-     return ( value == 0 )? '': value;
+  checkZero(value) {
+    return (value == 0) ? '' : value;
   },
-  formatDate: ( date ) => {
-    return ( date )? moment(date).format("DD/MM/YYYY") : '';
+  formatDate: (date) => {
+    return (date) ? moment(date).format("DD/MM/YYYY") : '';
   },
   // convertAmount: (amount, currencyData) => {
   //   let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory

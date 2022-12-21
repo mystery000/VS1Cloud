@@ -84,7 +84,7 @@
                             vertical-align: top;
                         }
                     </style>
-                    {{> deletepop itemName1="Transfer" itemName2="stock transfer" itemName3="Stock Transfer" button1="btnDeleteStock" button2="btnDeleteFollowingStocks"}}
+                    <!-- {{> deletepop itemName1="Transfer" itemName2="stock transfer" itemName3="Stock Transfer" button1="btnDeleteStock" button2="btnDeleteFollowingStocks"}} -->
                     <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -337,7 +337,7 @@
                 </div>
             </div>
 
-            <div class="row justify-content-center">
+            <!-- <div class="row justify-content-center">
                 <button class="btn btn-success btnSave" type="button" style="margin: 12px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                 <button class="btn btn-success btnProcess" type="button" style="margin: 12px;"><i class="fa fa-check" style="margin-right: 5px;"></i>Process</button>
                 <button class="btn btn-primary btnHold" type="button" style="margin: 12px;"><i class="fa fa-clock" style="margin-right: 5px;"></i>Hold</button>
@@ -347,8 +347,13 @@
                 <button class="btn btn-secondary btnBack" type="button" style="margin: 12px;">
                     <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
                 </button>
-            </div>
-            <div class="printID" id="{{stocktransferrecord.id}}" style="display: none;">{{stocktransferrecord.id}}</div>
+            </div> -->
+            {{> transaction_footer 
+                TransactionType='stocktransfer'
+                showProcessButton=true
+                showHoldButton=true
+                hideAttachmentButton=true
+            }}
             <!-- Start PDF -->
             <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; display: none; overflow-x: visible;" id="html-2-pdfwrapper" name="html-2-pdfwrapper">
                 <div style="display: flex; height: 50mm;">

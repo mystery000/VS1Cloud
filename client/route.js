@@ -207,6 +207,7 @@ FlowRouter.triggers.enter([
                     FlowRouter.go(previous_url);
                 } else if (result.dismiss === 'cancel') {
                     FlowRouter.go(context.path);
+                    Meteor._reload.reload();
                     //TODO need to url async
                     previous_url = "";
                     localStorage.setItem("isFormUpdated", false);
@@ -2420,4 +2421,21 @@ authenticatedRoutes.route('/productionplanner', {
             yield: 'production_planner'
         })
     }
-})
+});
+authenticatedRoutes.route('/mypayroll', {
+    name: 'mypayroll',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'mypayroll'
+        });
+    }
+});
+
+authenticatedRoutes.route('/mypayrollleave', {
+    name: 'mypayrollleave',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'mypayrollleave'
+        });
+    }
+});

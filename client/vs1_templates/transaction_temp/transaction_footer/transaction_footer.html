@@ -6,10 +6,14 @@
     hideRemoveButton
     hideCancelButton
     AttachmentCount
+<<<<<<< HEAD
     title
     TransactionType
     cardType
     data
+=======
+    TransactionType
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
 -->
 <template name="transaction_footer">
   <style>
@@ -23,11 +27,53 @@
       padding-right: 8px;
     }
   </style>
+<<<<<<< HEAD
   {{#unless hideSaveButton}}
     {{> template_footer_save_button }}
   {{/unless}}
+=======
+  <div class="row no-gutters">
+    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
 
+      {{#unless hideSaveButton}}
+        {{> template_footer_save_button }}
+      {{/unless}}
+
+       <!-- for Stock Adjustment -->
+       {{#if showProcessButton}}
+        {{> template_footer_process_button }}
+      {{/if}}
+
+      <!-- for Stock Adjustment -->
+      {{#if showHoldButton}}
+        {{> template_footer_hold_button }}
+      {{/if}}
+
+      {{#unless hidePrintButton}}
+        {{> template_footer_print_button
+          type=TransactionType
+        }}
+      {{/unless}}
+
+      {{#unless hideAttachmentButton}}
+        {{> template_footer_attachment_button
+          count=AttachmentCount
+        }}
+      {{/unless}}
+
+      {{#unless hideRemoveButton}}
+        {{> template_footer_remove_button 
+          type=TransactionType}}
+      {{/unless}}
+
+      {{#unless hideCancelButton}}
+        {{> template_footer_cancel_button}}
+      {{/unless}}
+    </div>
+  </div>
   {{#unless hidePrintButton}}
+<<<<<<< HEAD
     {{> template_footer_print_button
       type=TransactionType
     }}
@@ -48,4 +94,8 @@
   {{/unless}}
 
   {{> transaction_print_modal TransactionType=TransactionType data=data cardType=cardType}}
+=======
+    {{> transaction_print_modal TransactionType=TransactionType }}
+  {{/unless}}
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
 </template>

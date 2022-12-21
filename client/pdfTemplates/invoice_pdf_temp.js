@@ -86,12 +86,13 @@ Template.invoicePrintTemp.onRendered(function () {
                         if (useData[d].fields.TotalPaid > 0) {
                             isPartialPaid = true;
                         }
-                        
                         let invoicerecord = {
                             id: useData[d].fields.ID,
                             custPONumber: useData[d].fields.CustPONumber,
                             saledate: useData[d].fields.SaleDate ? moment(useData[d].fields.SaleDate).format('DD/MM/YYYY') : "",
                             duedate: useData[d].fields.DueDate ? moment(useData[d].fields.DueDate).format('DD/MM/YYYY') : "",
+                            saleDate: new Date(useData[d].fields.SaleDate),
+                            dueDate: new Date(useData[d].fields.DueDate),
                             comments: useData[d].fields.Comments,
                             termsName: useData[d].fields.TermsName,
                             Total: totalInc,

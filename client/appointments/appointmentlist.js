@@ -338,10 +338,12 @@ Template.appointmentlist.onRendered(async function() {
                         }
                         return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
                     }));
-
-                    for (var i = 0; i < clientList.length; i++) {
-                        $('#customer').editableSelect('add', clientList[i].customername);
-                    }
+                    /* @Editor Vladyslav 15/12/2022
+                    ** We use customer dropdown instead of the  bellow select options
+                    */
+                    // for (var i = 0; i < clientList.length; i++) {
+                    //     $('#customer').editableSelect('add', clientList[i].customername);
+                    // }
 
                 });
             } else {
@@ -376,10 +378,12 @@ Template.appointmentlist.onRendered(async function() {
                     }
                     return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
                 }));
-
-                for (var i = 0; i < clientList.length; i++) {
-                    $('#customer').editableSelect('add', clientList[i].customername);
-                }
+                /* @Editor Vladyslav 15/12/2022
+                ** We use customer dropdown instead of the  bellow select options
+                */
+                // for (var i = 0; i < clientList.length; i++) {
+                //     $('#customer').editableSelect('add', clientList[i].customername);
+                // }
 
             }
         }).catch(function(err) {
@@ -413,10 +417,12 @@ Template.appointmentlist.onRendered(async function() {
                     }
                     return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
                 }));
-
-                for (var i = 0; i < clientList.length; i++) {
-                    $('#customer').editableSelect('add', clientList[i].customername);
-                }
+                /* @Editor Vladyslav 15/12/2022
+                    ** We use customer dropdown instead of the  bellow select options
+                    */    
+                // for (var i = 0; i < clientList.length; i++) {
+                //     $('#customer').editableSelect('add', clientList[i].customername);
+                // }
 
             });
         });

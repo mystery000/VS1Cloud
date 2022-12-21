@@ -123,7 +123,7 @@
 
         <div class="row justify-content-center mb-6" id="spentRuleCard">
             <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%;">
-                <div class="card col-lg-6 col-md-12 col-sm-12 spentBankRuleCard" id="spentBankRuleCard">
+                <div class="card col-lg-10 col-md-12 col-sm-12 spentBankRuleCard" id="spentBankRuleCard">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
                             <p class="text-primary m-0 font-weight-bold" id="spentRuleTitle">New Bank rule</p>
@@ -140,8 +140,13 @@
                             <div class="col-6 col-md-6 mx-4">
                                 <div class="form-group mb-0">
                                     <label>Bank Account Name</label>
+<<<<<<< HEAD
                                     <input type="hidden" id="sltBankAccountID" value="">
                                     <select type="search" class="form-control" id="sltBankAccount" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
+=======
+                                    <input type="hidden" id="bankAccountID" value="">
+                                    <select type="search" class="form-control" id="bankAccountName" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
                                 </div>
                             </div>
                         </div>
@@ -206,25 +211,48 @@
                             </div>
                             <div class="col-12">
                                 <div class="col-12 col-md-12" style="padding: 0 20px;">
+<<<<<<< HEAD
                                     <div>
                                         <p>Preview bank statement</p>
+=======
+                                    <div class="row justify-content-between align-items-center mb-3">
+                                        <div class="col-auto">Preview bank statement</div>
+                                        <div class="col-auto">{{> reconImportModal}}</div>
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
                                     </div>
                                     {{#if bankRuleData}}
                                     <div class="table-responsive" style="padding: .375rem .75rem;">
                                         <table id="tblBankRulePreview" style="width:100%;" class="table table-bordered tblBankRulePreview">
                                             <thead>
+<<<<<<< HEAD
                                             <tr class="dnd-moved">
                                                 {{#each item in previewColumn}}
                                                     <th>{{item.column}}</th>
                                                 {{/each}}
                                             </tr>
+=======
+                                                <tr class="dnd-moved">
+                                                    {{#each item in previewColumn}}
+                                                        <th>{{item.order}}</th>
+                                                    {{/each}}
+                                                </tr>
+                                                <tr class="dnd-moved">
+                                                    {{#each item in previewColumn}}
+                                                        <th>{{item.column}}</th>
+                                                    {{/each}}
+                                                </tr>
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
                                             </thead>
                                             <tbody>
                                                 {{#if previewData}}
                                                     {{#each rowItem in previewData}}
                                                     <tr class="dnd-moved">
                                                         {{#each item in rowItem}}
+<<<<<<< HEAD
                                                             <td>{{item}}</td>
+=======
+                                                            <td style="height: 50px">{{item}}</td>
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
                                                         {{/each}}
                                                     </tr>
                                                     {{/each}}
