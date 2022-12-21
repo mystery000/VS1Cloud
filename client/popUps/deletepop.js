@@ -2,15 +2,19 @@
 const TransactionTypeTemplates = {
   sales: 
     {
-      name: "Sales Orders",
-      title: "Sales Order",
-      key: "sales_order",
+      item1: "Sales Order",
+      item2: "sales order",
+      item3: "Sales Order",
+      button1: 'btnDeleteSO',
+      button2: 'btnDeleteFollowingSOs'
     },
   bills: 
     {
-      name: "bill",
-      title: "Bill",
-      key: "bill",
+      item1: "Bill",
+      item2: "bill",
+      item3: "Bill",
+      button1: 'btnDeleteBill',
+      button2 : 'btnDeleteFollowingBills'
     },
   cheques: 
     {
@@ -20,21 +24,35 @@ const TransactionTypeTemplates = {
     },
   credits: 
     {
-      name: "Credits",
-      title: "Credit",
-      key: "credit",
+      item1: "Credit",
+      item2: "credit",
+      item3: "Credit",
+      button1: 'btnDeleteCredit',
+      button2: 'btnDeleteFollowingCredits'
     },
   invoices: 
     {
-      name: "Invoices",
-      title: "Invoice",
-      key: "invoice",
+      item1: "Invoice",
+      item2: "invoice",
+      item3: "Invoices",
+      button1: 'btnDeleteInvoice',
+      button2: 'btnDeleteFollowingInvoices'
     },
   refunds:
     {
-      name: "Refunds",
-      title: "Refund",
-      key: "refund",
+      item1: "Refund",
+      item2: "refund",
+      item3: "Refund",
+      button1: 'btnDeleteRefund',
+      button2: 'btnDeleteFollowingRefunds'
+    },
+  workorders:
+    {
+      item1: 'Work Order',
+      item2: 'wokr order',
+      item3: 'Work Order',
+      button1: 'btnDeleteWO',
+      button2: 'btnDeleteFollowingWOs'
     },
   supplierpayments:
     {
@@ -46,45 +64,33 @@ const TransactionTypeTemplates = {
     },
   purchaseorders:
     {
-      item1: "Purchase Order",
+      item1: "Purchase Orders",
       item2: "purchase order",
       item3: "Purchase Order",
-      button1: 'btnDeletePO',
-      button2: 'btnDeleteFollowingPOs',
+      button1: "btnDeletePO",
+      button2: "btnDeleteFollowingPOs"
     },
   quotes:
     {
-      name: "Quotes",
-      title: "Quote",
-      key: "quote",
+      item1: "Quote",
+      item2: "quote",
+      item3: "Quote",
+      button1: 'btnDeleteQuote',
+      button2: 'btnDeleteFollowingQuotes'
     },
   stockadjustment: {
     item1: 'Stock Adj',
     item2: 'stock adjustment',
     item3: 'Stock Adjustment',
     button1: 'btnDeleteStock',
-    button2: 'btnDeleteFollowingStocks',
+    button2: 'btnDeleteFollowingStocks'
   },
   stocktransfer: {
     item1: 'Transfer',
     item2: 'stock transfer',
     item3: 'Stock Transfer',
     button1: 'btnDeleteStock',
-    button2: 'btnDeleteFollowingStocks',
-  },
-  workorder: {
-    item1: 'Sales Order',
-    item2: 'sales order',
-    item3: 'Sales Order',
-    button1: 'btnDeleteSO',
-    button2: 'btnDeleteFollowingSOs',
-  },
-  customer_payment: {
-    item1: 'Payment',
-    item2: 'payment',
-    item3: 'Payment',
-    button1: 'btnDeletePayment',
-    button2: 'btnDeleteFollowingPayments',
+    button2: 'btnDeleteFollowingStocks'
   },
 };
 

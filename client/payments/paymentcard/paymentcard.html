@@ -658,6 +658,8 @@
             </style>
             <!-- {{> deletepop itemName1="Payment" itemName2="payment" itemName3="Payment" button1="btnDeletePayment"
             button2="btnDeleteFollowingPayments"}} -->
+            <!-- {{> deletepop itemName1="Payment" itemName2="payment" itemName3="Payment" button1="btnDeletePayment"
+            button2="btnDeleteFollowingPayments"}} -->
 
             <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                 <div class="modal-dialog" role="document">
@@ -807,6 +809,37 @@
                 class="fas fa-undo-alt" style="margin-right: 5px;"></i>Recover Payment</button>
           </div>
           {{/if}}
+        </div>
+      </div>
+      <div class="modal fade" role="dialog" tabindex="-1" id="confirmprint">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="">Print Confirm</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+
+              <div class="custom-control custom-checkbox">
+                <input class="custom-control-input favCheckBox chkBankingReport" name="print_custom_payment_second"
+                  checked type="checkbox" id="print_custom_payment_second" autocomplete="off">
+                <label style="cursor: pointer;" class="custom-control-label" for="print_custom_payment_second">Print
+                  Custom Payment</label>
+              </div>
+
+            </div>
+
+            <div class="modal-footer ">
+              <button class="btn btn-primary printConfirm btnFooter" type="button"><i class="fa fa-print"
+                  style="margin-right: 5px;"></i>Confirm Print</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"
+                  style="margin-right: 5px;"></i>Close</button>
+            </div>
+
+          </div>
         </div>
       </div>
 
@@ -1030,36 +1063,10 @@
           </div>
         </div>
         <div class="col-12 col-md-10">
-          <!-- <div class="row justify-content-center desktopButtons">
-            <button class="btn btn-success btnSave btnFooter vs1ButtonMargin" type="button"
-              style="margin-top: 0px;width: 100px;">
-              <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-            </button>
-
-            <button class="btn btn-danger btnRemove vs1ButtonMargin" type="button"
-              style="margin-top: 0px;width: 100px;"><i class="fa fa-trash"
-                style="padding-right: 8px;"></i>Delete</button>
-
-            <button class="btn btn-primary vs1ButtonMargin" id="open_print_confirm" type="button"
-              style="margin-top: 0px;width: 100px;">
-              <i class="fa fa-print" style="padding-right: 8px;"></i>Print
-            </button>
-
-            <a class="btn btn-primary btn_Attachment btnFooter vs1ButtonMargin" role="button" style="margin-top: 0px;"
-              data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-              {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i
-                class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-            </a>
-            <button class="btn btn-secondary btnBack btnFooter vs1ButtonMargin" type="button"
-              style="margin-top: 0px;width: 100px;">
-              <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-            </button>
-          </div> -->
           {{> transaction_footer 
             TransactionType='customer_payment'
             AttachmentCount=attachmentCount 
           }}
-
         </div>
       </div>
       <!-- <div class="row justify-content-center">

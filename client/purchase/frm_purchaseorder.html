@@ -42,19 +42,8 @@
       showShippingInfo=true showPayment=true showCopyTransaction=true
       showCopyToInvoice=false showCopyToOrder=false }}
 
-      <div
-        class="modal fade"
-        id="templatePreviewModal"
-        tabindex="2"
-        role="dialog"
-        aria-labelledby="templatePreviewLabel"
-        aria-hidden="true"
-      >
-        {{> custom_print_template modalId="templatePreviewModal"
-        idPrefix="html-2-pdfwrapper_quotes" namePrefix="pdfwrapper_quotes" }}
-      </div>
-
-      <!-- {{> deletepop itemName1="Purchase Order" itemName2="purchase order"
+<!-- 
+      {{> deletepop itemName1="Purchase Order" itemName2="purchase order"
       itemName3="Purchase Order" button1="btnDeletePO"
       button2="btnDeleteFollowingPOs"}} -->
       <div>
@@ -150,7 +139,7 @@
           <div class="row">
             <div class="col-12 col-md-11">
               <div class="row justify-content-center desktopButtons">
-                {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="purchaseorders"}}
+                {{> transaction_footer AttachmentCount=attachmentCount TransactionType="purchaseorders"}}
               </div>
             </div>
           </div>
@@ -234,17 +223,6 @@
         TotalTax=purchaseorderrecord.TotalTax Total=purchaseorderrecord.Total
         TotalPaid=purchaseorderrecord.totalPaid
         BalanceDue=purchaseorderrecord.balanceDue }}
-      </div>
-
-      <div
-        class="row justify-content-center mobileButtons"
-        style="display: none"
-      >
-        {{> transaction_footer 
-          margin="14px" 
-          AttachmentCount=attachmentCount 
-          TransactionType='purchaseorders'
-        }}
       </div>
 
       <div class="printID" style="display: none"></div>
