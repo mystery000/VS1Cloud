@@ -5460,20 +5460,20 @@ Template.non_transactional_list.onRendered(function() {
         let deleteFilter = false;
         for (let i = 0; i < dataTableListJob.length; i++) {
             var dataList = [
-                data[i].id,
-                data[i].orderdate,
-                data[i].id,
-                data[i].suppliername,
-                data[i].totalamountex,
-                data[i].totaltax,
-                data[i].totalamount,
-                data[i].totalpaid,
-                data[i].totaloustanding,
-                data[i].type,
-                data[i].custfield1,
-                data[i].custfield2,
-                data[i].employee,
-                data[i].comments,
+                dataTableListJob[i].id,
+                dataTableListJob[i].orderdate,
+                dataTableListJob[i].id,
+                dataTableListJob[i].suppliername,
+                dataTableListJob[i].totalamountex,
+                dataTableListJob[i].totaltax,
+                dataTableListJob[i].totalamount,
+                dataTableListJob[i].totalpaid,
+                dataTableListJob[i].totaloustanding,
+                dataTableListJob[i].type,
+                dataTableListJob[i].custfield1,
+                dataTableListJob[i].custfield2,
+                dataTableListJob[i].employee,
+                dataTableListJob[i].comments,
             ];
             splashArrayClientTypeList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
