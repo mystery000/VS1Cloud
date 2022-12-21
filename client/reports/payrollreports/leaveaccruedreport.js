@@ -22,11 +22,23 @@ Template.leaveaccruedreport.onCreated(() => {
   templateObject.records = new ReactiveVar([]);
   templateObject.reportOptions = new ReactiveVar();
   FxGlobalFunctions.initVars(templateObject);
+  templateObject.leaveaccruedth = new ReactiveVar([]);
 });
 
 Template.leaveaccruedreport.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
+
+  let reset_data = [
+    { index: 1, label: 'Accrued Date', class: 'colAccruedDate', active: true, display: true, width: "" },
+    { index: 2, label: 'Leave Type', class: 'colLeaveType', active: true, display: true, width: "" },
+    { index: 3, label: 'Employee', class: 'colEmployee', active: true, display: true, width: "" },
+    { index: 4, label: 'Pay No', class: 'colPayNo', active: true, display: true, width: "" },
+    { index: 5, label: 'Accrued Type', class: 'colAccruedType', active: true, display: true, width: "" },
+    { index: 6, label: 'Hours', class: 'colHours', active: true, display: true, width: "" },
+    { index: 7, label: 'Value', class: 'colValue', active: true, display: true, width: "" },
+  ]
+  templateObject.leaveaccruedth.set(reset_data);
 
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
@@ -138,6 +150,35 @@ Template.leaveaccruedreport.onRendered(() => {
 });
 
 Template.leaveaccruedreport.events({
+  'click .chkDatatable': function(event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');    if ($(event.target).is(':checked')) {
+      $('.'+columnDataValue).addClass('showColumn');
+      $('.'+columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.'+columnDataValue).addClass('hiddenColumn');
+      $('.'+columnDataValue).removeClass('showColumn');
+    }
+},
+
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click .btnRefresh": function () {
     LoadingOverlay.show();
     localStorage.setItem("VS1LeaveAccrued_Report", "");
@@ -390,6 +431,9 @@ Template.leaveaccruedreport.events({
 });
 
 Template.leaveaccruedreport.helpers({
+  leaveaccruedth: () => {
+    return Template.instance().leaveaccruedth.get();
+  },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },

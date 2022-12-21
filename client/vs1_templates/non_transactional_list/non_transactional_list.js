@@ -7553,6 +7553,7 @@ Template.non_transactional_list.events({
         const tableHandler = new TableHandler();
         let range = $(event.target).val() || 0;
         let colClassName = $(event.target).attr("valueclass");
+        console.log("==============", colClassName);
         await $('.' + colClassName).css('width', range);
         $('.dataTable').resizable();
     },
