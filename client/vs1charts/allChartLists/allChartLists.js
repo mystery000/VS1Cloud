@@ -18,7 +18,10 @@ let chartsPlaceList = {
     "Accounts_Overview" : [
         "accountrevenuestreams",
         "profitandlosschart",
+<<<<<<< HEAD
+=======
         "accountslistchart",
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
     ],
 
     "Contacts_Overview": [
@@ -73,10 +76,13 @@ let chartsPlaceList = {
         "top10Customers",
         "resalescomparision",
     ],
+<<<<<<< HEAD
+=======
 
     "CRM_Overview" : [
         "",
     ]
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
 };
 
 let sideBarService = new SideBarService();
@@ -797,6 +803,12 @@ Template.allChartLists.helpers({
     },
 
     is_available_chart: (current, chart) => {
+<<<<<<< HEAD
+        console.log(current, chart, chartsPlaceList[current].includes(chart));
+        return chartsPlaceList[current].includes(chart);
+//        return 1;
+    }
+=======
 //        console.log(current, chart, chartsPlaceList[current].includes(chart));
         return chartsPlaceList[current].includes(chart);
 //        return 1;
@@ -806,6 +818,7 @@ Template.allChartLists.helpers({
         //console.log(FlowRouter.current().path, currentTemplate);
         return FlowRouter.current().path.includes(currentTemplate);
     },
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
 });
 
 Template.registerHelper('equals', function(a, b) {

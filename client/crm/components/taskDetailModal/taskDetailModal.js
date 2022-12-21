@@ -94,6 +94,7 @@ Template.taskDetailModal.onRendered(function() {
         $("#taskDetailModalCategoryLabel").val(colProjectName);
     });
 
+<<<<<<< HEAD
     templateObject.getInitTProjectList = function() {
         getVS1Data("TCRMProjectList").then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -151,6 +152,65 @@ Template.taskDetailModal.onRendered(function() {
             addVS1Data("TCRMProjectList", JSON.stringify(data));
         }).catch(function(err) {});
     };
+=======
+    // templateObject.getInitTProjectList = function() {
+    //     getVS1Data("TCRMProjectList").then(function(dataObject) {
+    //         if (dataObject.length == 0) {
+    //             templateObject.getTProjectList();
+    //         } else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             if (data.tprojectlist && data.tprojectlist.length > 0) {
+    //                 let tprojectlist = data.tprojectlist;
+
+    //                 // var url = new URL(window.location.href);
+    //                 // let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+
+    //                 // if (employeeID) {
+    //                 //     tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
+    //                 // } else {
+    //                 tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
+    //                 // }
+
+    //                 let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
+    //         style="margin-right: 8px;"></i>All Tasks</a>`;
+    //                 let ProjectName = "";
+    //                 tprojectlist.forEach((proj) => {
+    //                     ProjectName = proj.fields.ProjectName.length > 26 ? proj.fields.ProjectName.substring(0, 26) + "..." : proj.fields.ProjectName;
+    //                     add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
+    //                 });
+    //                 $("#goProjectWrapper").html(add_projectlist);
+    //                 $(".goProjectWrapper").html(add_projectlist);
+    //             }
+    //         }
+    //     }).catch(function(err) {
+    //         templateObject.getTProjectList();
+    //     });
+    // };
+
+    // templateObject.getTProjectList = function() {
+    //     var url = FlowRouter.current().path;
+    //     url = new URL(window.location.href);
+    //     let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+
+    //     crmService.getTProjectList(employeeID).then(function(data) {
+    //         if (data.tprojectlist && data.tprojectlist.length > 0) {
+    //             let tprojectlist = data.tprojectlist;
+    //             tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
+
+    //             let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
+    //       style="margin-right: 8px;"></i>All Tasks</a>`;
+    //             let ProjectName = "";
+    //             tprojectlist.forEach((proj) => {
+    //                 ProjectName = proj.fields.ProjectName.length > 26 ? proj.fields.ProjectName.substring(0, 26) + "..." : proj.fields.ProjectName;
+    //                 add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
+    //             });
+    //             $("#goProjectWrapper").html(add_projectlist);
+    //             $(".goProjectWrapper").html(add_projectlist);
+    //         }
+    //         addVS1Data("TCRMProjectList", JSON.stringify(data));
+    //     }).catch(function(err) {});
+    // };
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
 
     templateObject.getInitAllLabels = function() {
         getVS1Data("TCRMLabelList").then(function(dataObject) {
@@ -257,7 +317,11 @@ Template.taskDetailModal.onRendered(function() {
     };
 
     setTimeout(() => {
+<<<<<<< HEAD
         templateObject.getInitTProjectList();
+=======
+        // templateObject.getInitTProjectList();
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
         templateObject.getInitAllLabels();
     }, 500);
 });
@@ -371,6 +435,13 @@ Template.taskDetailModal.events({
             }
         }, delayTimeAfterSound);
     },
+<<<<<<< HEAD
+=======
+
+    "click .btnAddSubTask": function(event) {
+        $("#newTaskModal").modal("toggle");
+    },
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
 });
 
 Template.taskDetailModal.helpers({});
