@@ -71,7 +71,7 @@ Template.depositcard.onCreated(()=>{
     templateObject.totalDebit.set(Currency+ '0.00');
     templateObject.accountnamerecords = new ReactiveVar();
     templateObject.datatablepaymentlistrecords = new ReactiveVar([]);
-    
+
     setTimeout(function () {
 
         var x = window.matchMedia("(max-width: 1024px)");
@@ -1484,7 +1484,7 @@ Template.depositcard.onRendered(()=>{
                 }).then((result) => {
                     return;
                 });
-            return; 
+            return;
         }
         $(".colAccount").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
@@ -1641,7 +1641,7 @@ Template.depositcard.onRendered(()=>{
         var customfieldlabel1 = 'Custom Field 1';
         var customfieldlabel2 = 'Custom Field 2';
         var customfieldlabel3 = 'Custom Field 3';
-        
+
         let account = $('#sltAccountName').val();
         let depositTotal = $('#depositTotal').val();
         let depositTotalLine = $('#depositTotalLine').text();
@@ -1996,7 +1996,7 @@ Template.depositcard.onRendered(()=>{
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -2113,7 +2113,7 @@ Template.depositcard.onRendered(()=>{
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                 // $(".btnSave").trigger("click");
             } else {
-                
+
             }
             $('#html-2-pdfwrapper').css('display', 'none');
             $("#html-2-pdfwrapper_quotes").hide();
@@ -2543,218 +2543,6 @@ Template.depositcard.onRendered(function(){
     const taxCodesList = [];
     const accountnamerecords = [];
     const templateObject = Template.instance();
-    tempObj.getAllProducts = function () {
-      getVS1Data('TAccountVS1').then(function (dataObject) {
-        if(dataObject.length == 0){
-          accountService.getAccountListVS1().then(function (data) {
-
-              let records = [];
-              let inventoryData = [];
-              for(let i=0; i<data.taccountvs1.length; i++){
-                let accountnamerecordObj = {
-                  accountname: data.taccountvs1[i].AccountName || ' '
-                };
-
-                if(data.taccountvs1[i].AccountTypeName ==  "BANK" || data.taccountvs1[i].AccountTypeName.toUpperCase() == "CCARD" || data.taccountvs1[i].AccountTypeName.toUpperCase() == "OCLIAB"){
-                  accountnamerecords.push(accountnamerecordObj);
-                }
-                  var dataList = [
-                      data.taccountvs1[i].AccountName || '-',
-                      data.taccountvs1[i].Description || '',
-                      data.taccountvs1[i].AccountNumber || '',
-                      data.taccountvs1[i].AccountTypeName|| '',
-                      utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].Balance * 100) / 100),
-                      data.taccountvs1[i].TaxCode || ''];
-
-                  splashArrayProductList.push(dataList);
-              }
-              templateObject.accountnamerecords.set(accountnamerecords);
-              localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
-
-              if(splashArrayProductList){
-
-                  $('#tblAccount').dataTable({
-                      data :  splashArrayProductList.sort(),
-
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      paging: true,
-                      "aaSorting": [],
-                      "orderMulti": true,
-                      columnDefs: [
-
-                          { className: "productName", "targets": [ 0 ] },
-                          { className: "productDesc", "targets": [ 1 ] },
-                          { className: "accountnumber", "targets": [ 2 ] },
-                          { className: "salePrice", "targets": [ 3 ] },
-                          { className: "prdqty text-right", "targets": [ 4 ] },
-                          { className: "taxrate", "targets": [ 5 ] }
-                      ],
-                      colReorder: true,
-
-
-
-                      "order": [[ 0, "asc" ]],
-
-
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true
-
-                  });
-
-                  $('div.dataTables_filter input').addClass('form-control form-control-sm');
-              }
-          });
-        }else{
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data.taccountvs1;
-
-            let records = [];
-            let inventoryData = [];
-            for(let i=0; i<useData.length; i++){
-                var accBalance = "";
-                if (!isNaN(useData[i].fields.Balance)) {
-                    accBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance)|| 0.00;
-                }else{
-                    accBalance = Currency + "0.00";
-                }
-                let accountnamerecordObj = {
-                accountname: useData[i].fields.AccountName || ' '
-            };
-
-            if(useData[i].fields.AccountTypeName ===  "BANK" || useData[i].fields.AccountTypeName.toUpperCase() === "CCARD" || useData[i].fields.AccountTypeName.toUpperCase() === "OCLIAB"){
-            accountnamerecords.push(accountnamerecordObj);
-            }
-              var dataList = [
-                  useData[i].fields.AccountName || '-',
-                  useData[i].fields.Description || '',
-                  useData[i].fields.AccountNumber || '',
-                  useData[i].fields.AccountTypeName|| '',
-                  accBalance,
-                  useData[i].fields.TaxCode || ''];
-
-              splashArrayProductList.push(dataList);
-          }
-          templateObject.accountnamerecords.set(accountnamerecords);
-          localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
-
-          if(splashArrayProductList){
-
-              $('#tblAccount').dataTable({
-                  data :  splashArrayProductList.sort(),
-
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  paging: true,
-                  "aaSorting": [],
-                  "orderMulti": true,
-                  columnDefs: [
-
-                      { className: "productName", "targets": [ 0 ] },
-                      { className: "productDesc", "targets": [ 1 ] },
-                      { className: "accountnumber", "targets": [ 2 ] },
-                      { className: "salePrice", "targets": [ 3 ] },
-                      { className: "prdqty text-right", "targets": [ 4 ] },
-                      { className: "taxrate", "targets": [ 5 ] }
-                  ],
-                  colReorder: true,
-
-
-
-                  "order": [[ 0, "asc" ]],
-
-
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                  info: true,
-                  responsive: true
-
-              });
-
-              $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-
-
-
-
-
-          }
-        }
-      }).catch(function (err) {
-        accountService.getAccountListVS1().then(function (data) {
-
-            let records = [];
-            let inventoryData = [];
-            for(let i=0; i<data.taccountvs1.length; i++){
-              let accountnamerecordObj = {
-                accountname: data.taccountvs1[i].AccountName || ' '
-              };
-
-              if(data.taccountvs1[i].AccountTypeName ==  "BANK" || data.taccountvs1[i].AccountTypeName.toUpperCase() == "CCARD" || data.taccountvs1[i].AccountTypeName.toUpperCase() == "OCLIAB"){
-                accountnamerecords.push(accountnamerecordObj);
-              }
-
-                var dataList = [
-                    data.taccountvs1[i].AccountName || '-',
-                    data.taccountvs1[i].Description || '',
-                    data.taccountvs1[i].AccountNumber || '',
-                    data.taccountvs1[i].AccountTypeName|| '',
-                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].Balance * 100) / 100),
-                    data.taccountvs1[i].TaxCode || ''];
-
-                splashArrayProductList.push(dataList);
-            }
-            templateObject.accountnamerecords.set(accountnamerecords);
-            localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
-
-            if(splashArrayProductList){
-
-                $('#tblAccount').dataTable({
-                    data :  splashArrayProductList.sort(),
-
-                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    paging: true,
-                    "aaSorting": [],
-                    "orderMulti": true,
-                    columnDefs: [
-
-                        { className: "productName", "targets": [ 0 ] },
-                        { className: "productDesc", "targets": [ 1 ] },
-                        { className: "accountnumber", "targets": [ 2 ] },
-                        { className: "salePrice", "targets": [ 3 ] },
-                        { className: "prdqty text-right", "targets": [ 4 ] },
-                        { className: "taxrate", "targets": [ 5 ] }
-                    ],
-                    colReorder: true,
-
-
-
-                    "order": [[ 0, "asc" ]],
-
-
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                    info: true,
-                    responsive: true
-
-                });
-
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-
-
-
-
-
-            }
-        });
-      });
-
-    };
-
-    setTimeout(function () {
-    //tempObj.getAllProducts();
-    }, 500);
 
 });
 Template.depositcard.helpers({
@@ -3209,7 +2997,7 @@ Template.depositcard.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -3290,17 +3078,17 @@ Template.depositcard.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -3377,21 +3165,21 @@ Template.depositcard.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             // window.open("/invoicecard", "_self");
@@ -3948,7 +3736,7 @@ Template.depositcard.events({
         let taxcodeList = templateObject.taxraterecords.get();
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-       
+
         if(targetID != undefined){
             times++;
             if (times == 1) {

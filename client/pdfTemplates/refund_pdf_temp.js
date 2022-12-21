@@ -166,8 +166,8 @@ Template.refundPrintTemp.onRendered(() => {
                             saleCustField2: useData[d].fields.SaleCustField2,
                             totalPaid: totalPaidAmount,
                             ispaid: useData[d].fields.IsPaid,
-                            unformattedSaleDate: useData[d].fields.SaleDate?useData[d].fields.SaleDate:'',
-                            unformattedDueDate: useData[d].fields.DueDate?useData[d].fields.DueDate:''
+                            unformattedSaleDate: new Date(useData[d].fields.SaleDate),
+                            unformattedDueDate: new Date(useData[d].fields.DueDate)
                         };
 
                         refundData.push(invoicerecord);

@@ -199,8 +199,8 @@ Template.chequePrintTemp.onRendered(() => {
                                 saleCustField2: useData[d].fields.SalesComments,
                                 totalPaid: totalPaidAmount,
                                 ispaid: useData[d].fields.IsPaid,
-                                unformattedSaleDate: useData[d].fields.OrderDate?useData[d].fields.OrderDate:'',
-                                unformattedDueDate: useData[d].fields.DueDate?useData[d].fields.DueDate:''
+                                unformattedSaleDate: new Date(useData[d].fields.OrderDate),
+                                unformattedDueDate: new Date(useData[d].fields.DueDate),
                             };
 
                             recordsTemp.push(chequerecord)

@@ -1417,6 +1417,11 @@ Template.leadscard.onRendered(function() {
         // $('#addLetterTemplateModal').modal('toggle');
     })
     $(document).on("click", "#tblStatusPopList tbody tr", function(e) {
+        let prevValue = $('#leadStatus').val();
+        let updatedValue = $(this).find(".colStatusName").text();
+        if(prevValue !== updatedValue){
+            localStorage.setItem("isFormUpdated", true);
+        }
         $('#leadStatus').val($(this).find(".colStatusName").text());
         $('#statusPopModal').modal('toggle');
         $('#tblStatusPopList_filter .form-control-sm').val('');
@@ -1534,6 +1539,11 @@ Template.leadscard.onRendered(function() {
     })
 
     $(document).on("click", "#tblTitleList tbody tr", function (e) {
+        let prevValue = $('#editLeadTitle').val();
+        let updatedValue = $(this).find(".colTypeName").text();
+        if(prevValue !== updatedValue){
+            localStorage.setItem("isFormUpdated", true);
+        }
         $('#editLeadTitle').val($(this).find(".colTypeName").text());
         $('#leadTitlePopModal').modal('toggle');
     });

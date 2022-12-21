@@ -27,7 +27,6 @@ const successSaveCb = () => {
 }
 
 const errorSaveCb = (err) => {
-    // console.log(err);
     // LoadingOverlay.hide();
     swal("Something went wrong", "", "error");
 }
@@ -137,8 +136,8 @@ Template.newbankrule.onRendered(function () {
   const templateObject = Template.instance();
   templateObject.bankNames.set(bankNameList);
   templateObject.bankRuleData.set([]);
-  $("#sltBankAccount").editableSelect();
-  $("#sltBankAccount")
+  $("#bankAccountName").editableSelect();
+  $("#bankAccountName")
     .editableSelect()
     .on("click.editable-select", function (e, li) {
       const $each = $(this);
@@ -182,13 +181,14 @@ Template.newbankrule.onRendered(function () {
     if (FlowRouter.current().queryParams.bankaccountid) {
       let accountname = FlowRouter.current().queryParams.bankaccountname;
       let accountId = FlowRouter.current().queryParams.bankaccountid;
-      $("#sltBankAccount").val(accountname);
-      $("#sltBankAccountID").val(accountId);
+      $("#bankAccountName").val(accountname);
+      $("#bankAccountID").val(accountId);
       getVS1Data("VS1_BankRule")
         .then(function (dataObject) {
           if (dataObject.length) {
             let data = JSON.parse(dataObject[0].data);
-            templateObject.bankRuleData.set(data[accountId] ? data[accountId] : []);
+            if (data[accountId])
+              return templateObject.bankRuleData.set(data[accountId]);
           }
         })
         .catch(function (err) {
@@ -196,10 +196,14 @@ Template.newbankrule.onRendered(function () {
         });
     }
 
-    if (FlowRouter.current().queryParams.preview && FlowRouter.current().queryParams.bankaccountid === $("#sltBankAccountID").val()) {
+    if (FlowRouter.current().queryParams.preview && FlowRouter.current().queryParams.bankaccountid === $("#bankAccountID").val()) {
       let tmp = localStorage.getItem('BankStatement')
-      if (tmp)
-        templateObject.importData.set(JSON.parse(tmp))
+      if (tmp) {
+        let tmpData = JSON.parse(tmp)
+        templateObject.importData.set(tmpData)
+        if (tmpData[0] && tmpData[0].length)
+          templateObject.bankRuleData.set(tmpData[0].map((item,index) => ({column: item, order: index + 1})))
+      }
     }
 
   $(document).on("click", ".newbankrule #tblAccount tbody tr", function (e) {
@@ -209,10 +213,10 @@ Template.newbankrule.onRendered(function () {
     let accountname = table.find(".productName").text();
     let accountId = table.find(".colAccountID").text();
     $("#bankAccountListModal").modal("toggle");
-    $("#sltBankAccount").val(accountname);
-    $("#sltBankAccountID").val(accountId);
+    $("#bankAccountName").val(accountname);
+    $("#bankAccountID").val(accountId);
     $("#tblAccount_filter .form-control-sm").val("");
-    if (FlowRouter.current().queryParams.preview && FlowRouter.current().queryParams.bankaccountid === $("#sltBankAccountID").val()) {
+    if (FlowRouter.current().queryParams.preview && FlowRouter.current().queryParams.bankaccountid === $("#bankAccountID").val()) {
       let tmp = localStorage.getItem('BankStatement')
       if (tmp)
         templateObject.importData.set(JSON.parse(tmp))
@@ -273,19 +277,24 @@ Template.newbankrule.events({
       noDataLine.remove();
     }
     let tmp = Template.instance().bankRuleData.get();
-    tmp.push({ order: tmp.length + 1, column: "" });
-    Template.instance().bankRuleData.set(tmp);
+    for (let index = 0; index < tmp.length + 1; index++) {
+      if (tmp.findIndex((item) => item.order == index + 1) === -1) {
+        tmp.push({ order: index + 1, column: "" });
+        Template.instance().bankRuleData.set(tmp);
+        break
+      }
+    }
   },
 
   "click .btnSave": function (event) {
     let tmp = Template.instance().bankRuleData.get();
     if (tmp.length === 0) {
       swal("Please add columns", "", "error");
-    } else if ($("#sltBankAccountID").val() === "") {
+    } else if ($("#bankAccountID").val() === "") {
       swal("Please select bank account", "", "error");
     } else {
       // LoadingOverlay.show();
-      let accountId = $("#sltBankAccountID").val();
+      let accountId = $("#bankAccountID").val();
       let saveData = {
         [accountId]: Template.instance().bankRuleData.get(),
       };
@@ -329,15 +338,13 @@ Template.newbankrule.helpers({
     .bankRuleData.get()]
     .sort((a,b) => a.order > b.order ? 1 : -1),
   previewData: () => {
-    let tmpCol = [...Template.instance()
-      .bankRuleData.get()]
-      .sort((a,b) => a.order > b.order ? 1 : -1)
+    let tmpCol = Template.instance().bankRuleData.get()
     let tmpData = []
     let tmpImport = Template.instance().importData.get()
     for (let rowIndex = 1; rowIndex < tmpImport.length; rowIndex++) {
       let tmpRow = []
       for (let colIndex = 0; colIndex < tmpCol.length; colIndex++) {
-        let matchIndex = tmpImport[0].indexOf(tmpCol[colIndex].column)
+        let matchIndex = tmpCol.findIndex((item) => item.order == colIndex + 1)
         tmpRow.push(matchIndex === -1 ? null : tmpImport[rowIndex][matchIndex])
       }
       tmpData.push(tmpRow)

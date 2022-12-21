@@ -234,17 +234,18 @@
                         </div>
                     </div> -->
                     <div class="card shadow mb-4 cardSizing">
-                        <div class="card-header d-flex justify-content-between align-items-xl-center">
+                        {{> vs1_contact_card_header isJob=isJob record=record id="customerInfo"}}
+                        <!-- <div class="card-header d-flex justify-content-between align-items-xl-center"> -->
                             <!-- <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input" type="checkbox" id="activeChk" checked><label class="custom-control-label" for="activeChk"></label></div> -->
-                            {{> vs1_contact_card_header isJob=isJob record=record id="customerInfo"}}
+                            <!-- {{> vs1_contact_card_header isJob=isJob record=record id="customerInfo"}} -->
                             <!--here-->
-                            <div>
+                            <!-- <div> -->
                                 <!-- <span class="font-weight-bold m-0" style="color: #00A3D3;margin-right:14px;">
                               {{#if notEquals record.id ''}}
                                 CUS-{{record.id}}
                               {{/if}}
                              </span> -->
-                                <button type="button" class="btn btn-success btnReceiveCustomerPayment"
+                                <!-- <button type="button" class="btn btn-success btnReceiveCustomerPayment"
                                     style="margin:7px;" id="btnReceiveCustomerPayment"><i
                                         class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Receive
                                     Payment</button>
@@ -252,7 +253,7 @@
                                     data-toggle="modal" href="#myModal4"><i
                                         class="fas fa-ellipsis-v text-gray-400"></i></a>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- Start {{> optionCustomFiled}} -->
                         {{> customfieldDroppop}}
                         {{> customfieldpop}}
@@ -4027,7 +4028,14 @@
     </div>
     
     {{> taskDetailModal}}
-    {{> frmappointmentpop}}
+    <!-- 
+        Edito: Vladyslav
+        Modified: 16/12/2022
+        Description: 
+        This is making infinite cycle issue because when the user open customer dropdown on the appointmentlist/frmappointmentpop,
+        It's calling same addCustomerPop modal in both place.
+    -->
+    <!-- {{> frmappointmentpop}} -->
     {{> newTaskModal}}
     
 

@@ -881,8 +881,6 @@ Template.basreturn.onRendered(function() {
             let taxRateList = templateObject.taxRateList.get();
             let accountsList = templateObject.accountsList.get();
 
-            alert(3);
-
             reportService.getAllBASReturn().then(function(data) {
                 for (let i = 0; i < data.tbasreturn.length; i++) {
                     if (getid == "") {
