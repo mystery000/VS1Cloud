@@ -18,9 +18,11 @@ const TransactionTypeTemplates = {
     },
   cheques: 
     {
-      name: "Cheques",
-      title: "Cheque",
-      key: "cheque",
+      item1: "Cheque",
+      item2: "cheque",
+      item3: "Cheque",
+      button1: 'btnDeleteCheque',
+      button2: 'btnDeleteFollowingCheques'
     },
   credits: 
     {
