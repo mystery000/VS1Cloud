@@ -1,34 +1,26 @@
 <template name="balancesheetreport">
-    {{# vs1_report_template tabledisplayname="Balance Sheet" tablename="tblBalanceSheet" dateAsAt=dateAsAt currencyList=reset_data}}
-        <div class="table-responsive">
-            <table class="table table-sm tableExportDetailDiv dataTable" id="tableExport" name="tableExport">
-                <thead>
-                    <!-- <tr class="table-secondary customDoubleTableHeading">
-                        <th></th>
-                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }}" style="font-weight: 800;">Sub Account Totals</th>
-                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }}" style="font-weight: 800;">Header Account Totals</th>
-                    </tr> -->
-                        <tr class="table-active tblAvoid customDoubleTableHeading">
-                            {{#if currencyList}}
-                                {{#each c in currencyList }}
-                                    {{# if c.display}}
-                                        <!-- <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.label }}</th> -->
-                                        
-                                        <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}" class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
-                                    {{/if}}
-                                {{/each}}
+    {{# vs1_report_template tabledisplayname="Balance Sheet" tablename="tblBalanceSheet" dateAsAt=dateAsAt
+    currencyList=reset_data}}
+    <div class="table-responsive">
+        <table class="table table-sm tableExportDetailDiv dataTable table-striped table-bordered" id="tblBalanceSheet"
+            name="tblBalanceSheet">
+            <thead>
+                <tr class="table-active tblAvoid customDoubleTableHeading">
+                    {{#if currencyList}}
+                    {{#each c in currencyList }}
+                    {{# if c.display}}
+                    <!-- <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.label }}</th> -->
 
-                                <!-- {{#each c in currencyList }}
-                                    {{# if c.active}}
-                                        <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.label }}</th>
-                                    {{/if}}
-                                {{/each}} -->
-                            {{/if}}
-
-                        </tr>
-                </thead>
-                <tbody>
-                    {{#if records}}
+                    <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
+                        class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                        style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
+                    {{/if}}
+                    {{/each}}
+                    {{/if}}
+                </tr>
+            </thead>
+            <tbody>
+                <!-- {{#if records}}
                         {{#each records}}
                             <tr>
                                 {{#each value in dataArrHeader}}
@@ -140,69 +132,73 @@
                         <tr class="odd" style="text-align: center;">
                             <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
                         </tr>
-                    {{/if}}
-                </tbody>
+                    {{/if}} -->
+            </tbody>
 
-            </table>
-        </div>
+        </table>
+    </div>
     {{/vs1_report_template}}
-        <style>
-            th {
-                background-color: #ededed;
+    <style>
+        th {
+            background-color: #ededed;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: white !important;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #0000000d !important;
+        }
+
+        .JColResizer>tbody>tr>td,
+        .JColResizer>tbody>tr>th {
+            padding: .75rem !important;
+        }
+
+        .hiddenColumn {
+            display: none;
+        }
+
+        .showColumn {
+            display: table-cell;
+            padding: .75rem;
+            vertical-align: top;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+
+        .tbl_responsive {
+            width: 100% !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+        }
+
+        .table th.colARBalance,
+        .table th.colCreditBalance,
+        .table th.colBalance,
+        .table th.colCreditLimit,
+        .table th.colSalesOrderBalance {
+            text-align: right !important;
+        }
+
+        @media print {
+            table.dataTable {
+                width: 100% !important;
             }
 
-            .table-striped tbody tr:nth-of-type(odd) {
-                background-color: white !important;
+            table.dataTable tr td {
+                font-size: 0.7rem !important;
+                padding: 0.6rem !important;
             }
 
-            .table-striped tbody tr:nth-of-type(even) {
-                background-color: #0000000d !important;
+            table.dataTable tr th {
+                font-size: 0.7rem !important;
+                padding: 0.6rem !important;
             }
-
-            .JColResizer>tbody>tr>td,
-            .JColResizer>tbody>tr>th {
-                padding: .75rem !important;
-            }
-
-            .hiddenColumn {
-                display: none;
-            }
-
-            .showColumn {
-                display: table-cell;
-                padding: .75rem;
-                vertical-align: top;
-            }
-
-            input[type=number]::-webkit-inner-spin-button,
-            input[type=number]::-webkit-outer-spin-button {
-                opacity: 1;
-            }
-
-            .tbl_responsive{
-              width: 100%!important;
-              overflow-x: auto!important;
-              overflow-y: hidden!important;
-              }
-              .table th.colARBalance,
-              .table th.colCreditBalance,
-              .table th.colBalance,
-              .table th.colCreditLimit,
-              .table th.colSalesOrderBalance {
-                text-align: right !important;
-              }
-              @media print {
-                table.dataTable {
-                    width: 100% !important;
-                }
-                table.dataTable tr td {
-                    font-size: 0.7rem !important;
-                    padding: 0.6rem !important;
-                }
-                table.dataTable tr th {
-                    font-size: 0.7rem !important;
-                    padding: 0.6rem !important;
-                }
-              }
-        </style>
+        }
+    </style>
 </template>

@@ -67,36 +67,37 @@ Template.vs1_report_template.onRendered(function () {
     switch (currenttablename) {
       case "tblgeneralledger":
         reset_data = [
-          { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "85" },
+          { index: 1, label: 'Account ID', class: 'colAccountID', active: true, display: true, width: "85" },
           { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "110" },
-          { index: 3, label: 'Type', class: 'colType', active: true, display: true, width: "85" },
-          { index: 4, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "85" },
-          { index: 5, label: 'Product Description', class: 'colCredit', active: true, display: true, width: "85" },
-          { index: 6, label: 'Department', class: 'colDepartment', active: true, display: true, width: "85" },
-          { index: 7, label: 'Debits (Ex)', class: 'colDebitsEx', active: true, display: true, width: "120" },
-          { index: 8, label: 'Credits (Ex)', class: 'colCreditEx', active: true, display: true, width: "120" },
-          { index: 9, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "120" },
-          { index: 10, label: 'Rep Name', class: 'colRepName', active: true, display: true, width: "85" },
-          { index: 11, label: 'Debits (Inc)', class: 'colDebitsInc', active: true, display: true, width: "120" },
-          { index: 12, label: 'Credits (Inc)', class: 'colCreditInc', active: true, display: true, width: "120" },
-          { index: 13, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "120" },
-          { index: 14, label: 'Amount (Inc)', class: 'colAmountInc', active: true, display: true, width: "120" },
-          { index: 15, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
-          { index: 16, label: 'Global Ref', class: 'colGlobalRef', active: false, display: true, width: "85" },
-          { index: 17, label: 'Account Number', class: 'colAccountNo', active: false, display: true, width: "140" },
-          { index: 18, label: 'Tax Code', class: 'colTaxCode', active: false, display: true, width: "150" },
-          { index: 19, label: 'Tax Rate', class: 'colTaxRate', active: false, display: true, width: "85" },
-          { index: 20, label: 'Class ID', class: 'colClassID', active: false, display: true, width: "85" },
-          { index: 21, label: 'Sale ID', class: 'colSaleID', active: false, display: true, width: "85" },
-          { index: 22, label: 'Purchase Order ID', class: 'colPurchaseOrderID', active: false, display: true, width: "85" },
-          { index: 23, label: 'Payment ID', class: 'colPaymentID', active: false, display: true, width: "85" },
-          { index: 24, label: 'Details', class: 'colDetails', active: false, display: true, width: "85" },
-          { index: 25, label: 'Account ID', class: 'colAccountID', active: false, display: true, width: "85" },
-          { index: 26, label: 'FixedAsset ID', class: 'colFixedAssetID', active: false, display: true, width: "85" },
-          { index: 27, label: 'Check Number', class: 'colCheckNumber', active: false, display: true, width: "85" },
-          { index: 28, label: 'Memo', class: 'colMemo', active: false, display: true, width: "85" },
-          { index: 29, label: 'Ref No', class: 'colRefNo', active: false, display: true, width: "85" },
-          { index: 30, label: 'PrepaymentID', class: 'colPrepaymentID', active: false, display: true, width: "85" },
+          { index: 3, label: 'Account Number', class: 'colAccountNo', active: true, display: true, width: "140" },
+          { index: 4, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
+          { index: 5, label: 'Amount (Ex)', class: 'colAmountEx', active: false, display: true, width: "120" },
+          { index: 6, label: 'Amount (Inc)', class: 'colAmountInc', active: false, display: true, width: "120" },      
+          { index: 7, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
+          { index: 8, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
+          { index: 9, label: 'Class ID', class: 'colClassID', active: true, display: true, width: "85" },
+          { index: 10, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "120" },
+          { index: 11, label: 'Credits (Ex)', class: 'colCreditEx', active: false, display: true, width: "120" },
+          { index: 12, label: 'Credits (Inc)', class: 'colCreditInc', active: false, display: true, width: "120" },
+          { index: 13, label: 'Date', class: 'colDate', active: true, display: true, width: "85" },
+          { index: 14, label: 'Debits (Ex)', class: 'colDebitsEx', active: false, display: true, width: "120" },
+          { index: 15, label: 'Debits (Inc)', class: 'colDebitsInc', active: false, display: true, width: "120" },
+          { index: 16, label: 'Details', class: 'colDetails', active: false, display: true, width: "85" },
+          { index: 17, label: 'FixedAsset ID', class: 'colFixedAssetID', active: false, display: true, width: "85" },
+          { index: 18, label: 'Global Ref', class: 'colGlobalRef', active: true, display: true, width: "85" },
+          { index: 19, label: 'ID', class: 'colID', active: false, display: true, width: "50" },
+          { index: 20, label: 'Memo', class: 'colMemo', active: false, display: true, width: "85" },
+          { index: 21, label: 'Payment ID', class: 'colPaymentID', active: false, display: true, width: "85" },
+          { index: 22, label: 'PrepaymentID', class: 'colPrepaymentID', active: false, display: true, width: "85" },
+          { index: 23, label: 'Product Description', class: 'colCredit', active: true, display: true, width: "150" },
+          { index: 24, label: 'Product ID', class: 'colProductID', active: false, display: true, width: "120" },
+          { index: 25, label: 'Purchase Order ID', class: 'colPurchaseOrderID', active: true, display: true, width: "150" },
+          { index: 26, label: 'Ref No', class: 'colRefNo', active: false, display: true, width: "85" },
+          { index: 27, label: 'Rep Name', class: 'colRepName', active: true, display: true, width: "85" },
+          { index: 28, label: 'Sale ID', class: 'colSaleID', active: false, display: true, width: "85" },
+          { index: 29, label: 'Tax Code', class: 'colTaxCode', active: false, display: true, width: "150" },
+          { index: 30, label: 'Tax Rate', class: 'colTaxRate', active: false, display: true, width: "85" },
+          { index: 31, label: 'Type', class: 'colType', active: true, display: true, width: "85" },
         ];
         break;
       case "taxSummary":
@@ -114,20 +115,18 @@ Template.vs1_report_template.onRendered(function () {
         ]
         break;
       case "tblBalanceSheet":
-        // reset_data = templateObject.data.currencyList;
-        // console.log("------------>", templateObject.data.currencyList);
         reset_data = [
-          { index: 1, label: 'Account Tree', class: 'colAccountTree', active: true, display: true, width: "86" },
-          { index: 2, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "86" },
-          { index: 3, label: 'Sub-Account-Totals', class: 'colSubAccountTotals', active: true, display: true, width: "192" },
-          { index: 4, label: 'Header-Account-Totals', class: 'colHeaderAccountTotals', active: true, display: true, width: "137" },
-          { index: 5, label: 'Total Current~Assets &~Liabilities', class: 'colTotalCurrentAssets', active: true, display: true, width: "85" },
-          { index: 6, label: 'Total ~Assets &~Liabilities', class: 'colTotalAssets', active: true, display: true, width: "85" },
-          { index: 7, label: 'ID', class: 'colID', active: false, display: true, width: "85" },
-          { index: 8, label: 'SortID', class: 'colSortID', active: false, display: true, width: "85" },
-          { index: 9, label: 'TypeID', class: 'colTypeID', active: false, display: true, width: "85" },
-          { index: 10, label: 'ACCNAME', class: 'colACCNAME', active: false, display: true, width: "85" },
-        ]
+          { index: 1, label: 'ACCNAME', class: 'colACCNAME', active: true, display: true, width: "85" },
+          { index: 2, label: 'Account Tree', class: 'colAccountTree', active: true, display: true, width: "250" },
+          { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "100" },
+          { index: 4, label: 'Header-Account-Totals', class: 'colHeaderAccountTotals', active: true, display: true, width: "200" },
+          { index: 5, label: 'ID', class: 'colID', active: true, display: true, width: "85" },
+          { index: 6, label: 'SortID', class: 'colSortID', active: true, display: true, width: "85" },
+          { index: 7, label: 'Sub-Account-Totals', class: 'colSubAccountTotals', active: true, display: true, width: "200" },
+          { index: 8, label: 'Total ~Assets &~Liabilities', class: 'colTotalAssets', active: true, display: true, width: "200" },
+          { index: 9, label: 'Total Current~Assets &~Liabilities', class: 'colTotalCurrentAssets', active: true, display: true, width: "300" },
+          { index: 10, label: 'TypeID', class: 'colTypeID', active: true, display: true, width: "85" },
+      ]
         break;
       case "transactionjournallist":
         reset_data = [
@@ -1064,8 +1063,6 @@ Template.vs1_report_template.onRendered(function () {
     let custFields = [];
     let customData = {};
     let customFieldCount = reset_data.length;
-    console.log("===============================>", reset_data);
-
     for (let r = 0; r < customFieldCount; r++) {
       customData = {
         active: reset_data[r].active,
@@ -1097,25 +1094,6 @@ Template.vs1_report_template.onRendered(function () {
 
 
 Template.vs1_report_template.events({
-  // 'click .btnOpenReportSettings': async function (event, template) {
-  //     console.log("=====================================");
-  //     let templateObject = Template.instance();
-  //     let currenttranstablename = templateObject.data.tablename||"100";
-  //     $(`#${currenttranstablename} thead tr th`).each(function (index) {
-  //       var $tblrow = $(this);
-  //       var colWidth = $tblrow.width() || 0;
-  //       var colthClass = $tblrow.attr('data-class') || "100";
-  //       $('.rngRange' + colthClass).val(colWidth);
-  //     });
-  //    $('.'+templateObject.data.tablename+'_Modal').modal('toggle');
-  // },
-  // 'change .custom-range': async function(event) {
-  //   const tableHandler = new TableHandler();
-  //   let range = $(event.target).val()||0;
-  //   let colClassName = $(event.target).attr("valueclass");
-  //   await $('.' + colClassName).css('width', range);
-  //   $('.dataTable').resizable();
-  // },
   'click .btnOpenReportSettings': () => {
     let templateObject = Template.instance();
     // let currenttranstablename = templateObject.data.tablename||";
@@ -1128,23 +1106,6 @@ Template.vs1_report_template.events({
     $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
 
   },
-  // 'change .custom-range': async function(event) {
-  // //   const tableHandler = new TableHandler();
-  //   let range = $(event.target).val()||0;
-  //   let colClassName = $(event.target).attr("valueclass");
-  //   await $('.' + colClassName).css('width', range);
-  //   $('.dataTable').resizable();
-  // },
-  // 'click .chkDatatable': function(event) {
-  //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-  //     if ($(event.target).is(':checked')) {
-  //       $('.'+columnDataValue).addClass('showColumn');
-  //       $('.'+columnDataValue).removeClass('hiddenColumn');
-  //     } else {
-  //       $('.'+columnDataValue).addClass('hiddenColumn');
-  //       $('.'+columnDataValue).removeClass('showColumn');
-  //     }
-  // },
   "blur .divcolumn": async function (event) {
     const templateObject = Template.instance();
     let columData = $(event.target).text();
