@@ -80,22 +80,8 @@ Template.chequecard.onRendered(() => {
     if (getso_id[1]) {
       currentInvoice = parseInt(currentInvoice);
       var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
-      var orderDate = chequeData.fields.OrderDate;
-      var fromDate = orderDate.substring(0, 10);
-      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-      var followingCheques = await sideBarService.getAllChequeListData(
-        fromDate,
-        toDate,
-        false,
-        initialReportLoad,
-        0
-      );
-      var chequeList = followingCheques.tchequelist;
-      if(chequeList.length > 1){
-        templateObject.hasFollow.set(true);
-      } else {
-        templateObject.hasFollow.set(false);
-      }
+      var isRepeated = chequeData.fields.RepeatedFrom;
+      templateObject.hasFollow.set(isRepeated);
     }
   }
   templateObject.hasFollowings();

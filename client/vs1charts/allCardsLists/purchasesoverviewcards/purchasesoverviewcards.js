@@ -91,7 +91,7 @@ Template.purchasesoverviewcards.onRendered(function() {
                 .then(function (data) {
                   let lineItems = [];
                   let lineItemObj = {};
-                  addVS1Data("TbillReport", JSON.stringify(data));
+                  //addVS1Data("TbillReport", JSON.stringify(data));
                   let totalExpense = 0;
                   let totalBill = 0;
                   let totalCredit = 0;
@@ -321,7 +321,7 @@ Template.purchasesoverviewcards.onRendered(function() {
                 0
               )
               .then(function (data) {
-                addVS1Data("TbillReport", JSON.stringify(data));
+                //addVS1Data("TbillReport", JSON.stringify(data));
                 let lineItems = [];
                 let lineItemObj = {};
 

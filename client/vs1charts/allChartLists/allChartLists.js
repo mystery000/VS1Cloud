@@ -14,6 +14,66 @@ import '../../lib/global/indexdbstorage.js';
 import { SideBarService } from "../../js/sidebar-service";
 let _ = require("lodash");
 
+let chartsPlaceList = {
+    "Accounts_Overview" : [
+        "accountrevenuestreams",
+        "profitandlosschart",
+    ],
+
+    "Contacts_Overview": [
+        "top10Customers",
+        "top10Suppliers",
+        "activeEmployees",
+    ],
+
+    "Dashboard_Overview": [
+        "bankaccountschart",
+        "monthlyprofitandloss",
+        "profitandlosschart",
+        "resalescomparision",
+        "expenseschart",
+        "accountslistchart",
+        "mytaskswidgetchart",
+    ],
+
+    "DSMCharts_Overview": [
+        "mytaskswidgetchart",
+        "dsmTop10Customers",
+        "dsmAppointmentsWidget",
+        "resalescomparision",
+        "opportunitiesStatus",
+        "dsmleadlistchart",
+    ],
+
+    "DSCharts_Overview": [
+        "dashboardSalesCharts",
+        "dsAppointmentsWidget",
+        "dsleadlistchart",
+        "mytaskswidgetchart",
+    ],
+
+    "Inventory_Overview": [
+        "invstockonhandanddemand",
+        "top10Suppliers",
+    ],
+
+    "Payroll_Overview": [
+        "employeecompletedjobs",
+        "clockedOnEmployees",
+    ],
+
+    "Purchases_Overview": [
+        "monthllyexpenses",
+        "expensebreakdown",
+    ],
+
+    "Sales_Overview": [
+        "quotedsalesorderinvoicedamounts",
+        "top10Customers",
+        "resalescomparision",
+    ],
+};
+
 let sideBarService = new SideBarService();
 /**
  * Current User ID
@@ -727,6 +787,12 @@ Template.allChartLists.helpers({
             isAccountOverviewPage = true;
         }
         return isAccountOverviewPage;
+    },
+
+    is_available_chart: (current, chart) => {
+        console.log(current, chart, chartsPlaceList[current].includes(chart));
+        return chartsPlaceList[current].includes(chart);
+//        return 1;
     }
 });
 
