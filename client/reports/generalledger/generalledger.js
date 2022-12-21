@@ -985,6 +985,18 @@ Template.generalledger.onRendered(() => {
 
 
   // ------------------------------------------------------------------------------------------------------
+  $("#tblgeneralledger tbody").on("click", "tr", function () {
+    var listData = $(this).closest("tr").children('td').eq(8).text();
+    var checkDeleted = $(this).closest("tr").find(".colStatus").text() || "";
+
+    if (listData) {
+      if (checkDeleted == "Deleted") {
+        swal("You Cannot View This Transaction", "Because It Has Been Deleted", "info");
+      } else {
+        FlowRouter.go("/journalentrycard?id=" + listData);
+      }
+    }
+  });
 
 
   LoadingOverlay.hide();
@@ -1075,33 +1087,34 @@ Template.generalledger.events({
 
     LoadingOverlay.hide();
   },
-  "click td": async function (event) {
-    let accountName = $(event.target).parent().children('td').eq(1).text();
-    // let toDate = moment($("#dateTo").val())
-    //   .clone()
-    //   .endOf("month")
-    //   .format("YYYY-MM-DD");
-    // let fromDate = moment($("#dateFrom").val())
-    //   .clone()
-    //   .startOf("year")
-    //   .format("YYYY-MM-DD");
-    let toDate = $("#dateTo").val().replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$2-$1");
-    let fromDate = $("#dateFrom").val().replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$2-$1");
-    console.log(toDate, fromDate);
-    //Session.setPersistent('showHeader',true);
-    await clearData("TAccountRunningBalanceReport");
-    window.open(
-      "/balancetransactionlist?accountName=" +
-      accountName + 
-      "&toDate=" +
-      toDate +
-      "&fromDate=" +
-      fromDate +
-      "&isTabItem=" +
-      false,
-      "_self"
-    );
-  },
+  // "click td": async function (event) {
+  //   let accountName = $(event.target).parent().children('td').eq(1).text();
+  //   // let toDate = moment($("#dateTo").val())
+  //   //   .clone()
+  //   //   .endOf("month")
+  //   //   .format("YYYY-MM-DD");
+  //   // let fromDate = moment($("#dateFrom").val())
+  //   //   .clone()
+  //   //   .startOf("year")
+  //   //   .format("YYYY-MM-DD");
+  //   let toDate = $("#dateTo").val().replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$2-$1");
+  //   let fromDate = $("#dateFrom").val().replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$2-$1");
+  //   console.log(toDate, fromDate);
+  //   //Session.setPersistent('showHeader',true);
+  //   await clearData("TAccountRunningBalanceReport");
+  //   window.open(
+  //     "/balancetransactionlist?accountName=" +
+  //     accountName + 
+  //     "&toDate=" +
+  //     toDate +
+  //     "&fromDate=" +
+  //     fromDate +
+  //     "&isTabItem=" +
+  //     false,
+  //     "_self"
+  //   );
+  // },
+  
   "click #dropdownDateRang": function (e) {
     let dateRangeID = e.target.id;
     $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
