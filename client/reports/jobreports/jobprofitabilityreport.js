@@ -19,6 +19,7 @@ Template.jobprofitabilityreport.onCreated(() => {
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.records = new ReactiveVar([]);
   templateObject.reportOptions = new ReactiveVar([]);
+  templateObject.jobprofitabilityreportth = new ReactiveVar([]);
 
   FxGlobalFunctions.initVars(templateObject);
 });
@@ -27,15 +28,70 @@ Template.jobprofitabilityreport.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
 
+  let reset_data = [
+    { index: 1, label: 'Company Name', class: 'colCompanyName', active: true, display: true, width: "85" },
+    { index: 2, label: 'Job Name', class: 'colJobName', active: true, display: true, width: "85" },
+    { index: 3, label: 'Job Number', class: 'colJobNumber', active: true, display: true, width: "85" },
+    { index: 4, label: 'Txn Type', class: 'colTxnType', active: true, display: true, width: "85" },
+    { index: 5, label: 'Txn No', class: 'colTxnNo', active: true, display: true, width: "85" },
+    { index: 6, label: 'Cost Ex', class: 'colCostEx', active: true, display: true, width: "85" },
+    { index: 7, label: 'Income Ex', class: 'colIncomeEx', active: true, display: true, width: "85" },
+    { index: 8, label: 'Quoted Ex', class: 'colQuotedEx', active: true, display: true, width: "85" },
+    { index: 9, label: 'Diff Inc Cost', class: 'colDiffIncCost', active: true, display: true, width: "85" },
+    { index: 10, label: '%Diff Inc By Cost', class: 'colDiffIncByCost', active: true, display: true, width: "85" },
+    { index: 11, label: 'Diff Inc Quote', class: 'colDiffIncQuote', active: true, display: true, width: "85" },
+    { index: 12, label: '%Diff Inc By Quote', class: 'colDiffIncByQuote', active: true, display: true, width: "85" },
+    { index: 13, label: 'Backorders', class: 'colBackorders', active: true, display: true, width: "85" },
+    { index: 14, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "85" },
+    { index: 15, label: 'Debit Ex', class: 'colDebitEx', active: true, display: true, width: "85" },
+    { index: 16, label: 'Credit Ex', class: 'colCreditEx', active: true, display: true, width: "85" },
+    { index: 17, label: 'Profit %', class: 'colProfitpercent', active: true, display: true, width: "85" },
+    { index: 18, label: 'Department', class: 'colDepartment', active: true, display: true, width: "85" },
+    { index: 19, label: 'Product', class: 'colProduct', active: true, display: true, width: "85" },
+    { index: 20, label: 'Sub  Group', class: 'colSubGroup', active: true, display: true, width: "85" },
+    { index: 21, label: 'Type', class: 'colType', active: true, display: true, width: "85" },
+    { index: 22, label: 'Dept', class: 'colDept', active: true, display: true, width: "85" },
+    { index: 23, label: 'Area', class: 'colArea', active: true, display: true, width: "85" },
+    { index: 24, label: 'Landed Cost', class: 'colLandedCost', active: true, display: true, width: "85" },
+    { index: 25, label: 'Latestcost', class: 'colLatestcost', active: true, display: true, width: "85" },
+    { index: 26, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "85" },
+    { index: 27, label: 'Last Name', class: 'colLastName', active: true, display: true, width: "85" },
+    { index: 28, label: 'Diff Inc Landedcost', class: 'colDiffIncLandedcost', active: true, display: true, width: "85" },
+    { index: 29, label: '%Diff Inc By Landedcost', class: 'colDiffIncByLandedcost', active: true, display: true, width: "85" },
+    { index: 30, label: 'Diff Inc Latestcost', class: 'colDiffIncLatestcost', active: true, display: true, width: "85" },
+    { index: 31, label: '%Diff Inc By Latestcost', class: 'colDiffIncByLatestcost', active: true, display: true, width: "85" },
+    { index: 32, label: 'Ordered', class: 'colOrderd', active: true, display: true, width: "85" },
+    { index: 33, label: 'Shipped', class: 'colShipped', active: true, display: true, width: "85" },
+    { index: 34, label: 'Back Ordered', class: 'colBackOrdered', active: true, display: true, width: "85" },
+    { index: 35, label: 'CUSTFLD1', class: 'colCUSTFLD1', active: true, display: true, width: "85" },
+    { index: 36, label: 'CUSTFLD2', class: 'colCUSTFLD2', active: true, display: true, width: "85" },
+    { index: 37, label: 'CUSTFLD3', class: 'colCUSTFLD3', active: true, display: true, width: "85" },
+    { index: 39, label: 'CUSTFLD4', class: 'colCUSTFLD4', acticve: true, display: true, width: "85" },
+    { index: 40, label: 'CUSTFLD5', class: 'colCUSTFLD5', active: true, display: true, width: "85" },
+    { index: 41, label: 'CUSTFLD6', class: 'colCUSTFLD6', active: true, display: true, width: "85" },
+    { index: 42, label: 'CUSTFLD7', class: 'colCUSTFLD7', active: true, display: true, width: "85" },
+    { index: 43, label: 'CUSTFLD8', class: 'colCUSTFLD8', active: true, display: true, width: "85" },
+    { index: 44, label: 'JobNotes', class: 'colJobNotes', active: true, display: true, width: "85" },
+    { index: 45, label: 'CUSTFLD9', class: 'colCUSTFLD9', active: true, display: true, width: "85" },
+    { index: 46, label: 'CUSTFLD10', class: 'colCUSTFLD10', active: true, display: true, width: "85" },
+    { index: 47, label: 'CUSTFLD11', class: 'colCUSTFLD11', active: true, display: true, width: "85" },
+    { index: 48, label: 'CUSTFLD12', class: 'colCUSTFLD12', active: true, display: true, width: "85" },
+    { index: 49, label: 'CUSTFLD13', class: 'colCUSTFLD13', active: true, display: true, width: "85" },
+    { index: 50, label: 'CUSTFLD14', class: 'colCUSTFLD14', active: true, display: true, width: "85" },
+    { index: 51, label: 'CUSTFLD15', class: 'colCUSTFLD15', active: true, display: true, width: "85" },
+    { index: 52, label: 'Profit $', class: 'colProfitdoller', active: true, display: true, width: "85" },
+  ]
+  templateObject.jobprofitabilityreportth.set(reset_data);
+
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
 
-  templateObject.setDateAs = ( dateFrom = null ) => {
-    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  templateObject.setDateAs = (dateFrom = null) => {
+    templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
   };
 
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function (ignoreDate = true, formatDateFrom = new Date(), formatDateTo = new Date()) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.fromDate = formatDateFrom;
@@ -49,7 +105,7 @@ Template.jobprofitabilityreport.onRendered(() => {
       };
     }
     $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
+    if (ignoreDate == true) {
       $('.edtReportDates').attr('disabled', true);
       templateObject.dateAsAt.set("Current Date");
     }
@@ -60,9 +116,9 @@ Template.jobprofitabilityreport.onRendered(() => {
     await templateObject.getJobProfitabilityReportData();
   };
 
-  templateObject.loadReport = async  (dateFrom = null, dateTo = null, ignoreDate = false) => {
+  templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
     LoadingOverlay.show();
-    templateObject.setDateAs( dateFrom );
+    templateObject.setDateAs(dateFrom);
     // let data = [];
     // if (!localStorage.getItem('VS1JobProfitability_Report')) {
     //   const options = await templateObject.reportOptions.get();
@@ -83,7 +139,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     // let ignoreDate = options.ignoreDate || false;
 
     let data = await CachedHttp.get(erpObject.TJobProfitability, async () => {
-      return await reportService.getJobProfitabilityReport( dateFrom, dateTo, ignoreDate);
+      return await reportService.getJobProfitabilityReport(dateFrom, dateTo, ignoreDate);
     }, {
       useIndexDb: true,
       useLocalStorage: false,
@@ -96,21 +152,21 @@ Template.jobprofitabilityreport.onRendered(() => {
 
 
     let reportData = [];
-    if( data.tjobprofitability.length > 0 ){
-      for (const item of data.tjobprofitability ) {
+    if (data.tjobprofitability.length > 0) {
+      for (const item of data.tjobprofitability) {
         let isExist = reportData.filter((subitem) => {
-          if( subitem.CompanyName == item.CompanyName ){
-              subitem.SubAccounts.push(item)
-              return subitem
+          if (subitem.CompanyName == item.CompanyName) {
+            subitem.SubAccounts.push(item)
+            return subitem
           }
         });
 
-        if( isExist.length == 0 ){
+        if (isExist.length == 0) {
           reportData.push({
-              // TotalOrCost: 0,
-              // TotalCrCost: 0,
-              SubAccounts: [item],
-              ...item
+            // TotalOrCost: 0,
+            // TotalCrCost: 0,
+            SubAccounts: [item],
+            ...item
           });
         }
         $(".fullScreenSpin").css("display", "none");
@@ -131,7 +187,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     if (templateObject.records.get()) {
       setTimeout(function () {
         $("td a").each(function () {
-          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+          if ($(this).text().indexOf("-" + Currency) >= 0) {
             $(this).addClass("text-danger");
             $(this).removeClass("fgrblue");
           }
@@ -153,17 +209,47 @@ Template.jobprofitabilityreport.onRendered(() => {
 
 
   templateObject.initDate();
-  
+
   templateObject.loadReport(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
+  templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()))
   LoadingOverlay.hide();
 });
 
 Template.jobprofitabilityreport.events({
+  'click .chkDatatable': function (event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    console.log(columnDataValue);
+    if ($(event.target).is(':checked')) {
+      $('.' + columnDataValue).addClass('showColumn');
+      $('.' + columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.' + columnDataValue).addClass('hiddenColumn');
+      $('.' + columnDataValue).removeClass('showColumn');
+    }
+  },
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click .btnRefresh": function () {
     LoadingOverlay.show();
     localStorage.setItem("VS1JobProfitability_Report", "");
@@ -195,47 +281,47 @@ Template.jobprofitabilityreport.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
-    setTimeout(function(){
-    let values = [];
-    let basedOnTypeStorages = Object.keys(localStorage);
-    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-      let employeeId = storage.split("_")[2];
-      return (
-        storage.includes("BasedOnType_") &&
-        employeeId == Session.get("mySessionEmployeeLoggedID")
-      );
-    });
-    let i = basedOnTypeStorages.length;
-    if (i > 0) {
-      while (i--) {
-        values.push(localStorage.getItem(basedOnTypeStorages[i]));
-      }
-    }
-    values.forEach((value) => {
-      let reportData = JSON.parse(value);
-      reportData.HostURL = $(location).attr("protocal")
-        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-        : "http://" + $(location).attr("hostname");
-      if (reportData.BasedOnType.includes("P")) {
-        if (reportData.FormID == 1) {
-          let formIds = reportData.FormIDs.split(",");
-          if (formIds.includes("225")) {
-            reportData.FormID = 225;
-            Meteor.call("sendNormalEmail", reportData);
-          }
-        } else {
-          if (reportData.FormID == 225)
-            Meteor.call("sendNormalEmail", reportData);
+    setTimeout(function () {
+      let values = [];
+      let basedOnTypeStorages = Object.keys(localStorage);
+      basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+        let employeeId = storage.split("_")[2];
+        return (
+          storage.includes("BasedOnType_") &&
+          employeeId == Session.get("mySessionEmployeeLoggedID")
+        );
+      });
+      let i = basedOnTypeStorages.length;
+      if (i > 0) {
+        while (i--) {
+          values.push(localStorage.getItem(basedOnTypeStorages[i]));
         }
       }
-    });
+      values.forEach((value) => {
+        let reportData = JSON.parse(value);
+        reportData.HostURL = $(location).attr("protocal")
+          ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+          : "http://" + $(location).attr("hostname");
+        if (reportData.BasedOnType.includes("P")) {
+          if (reportData.FormID == 1) {
+            let formIds = reportData.FormIDs.split(",");
+            if (formIds.includes("225")) {
+              reportData.FormID = 225;
+              Meteor.call("sendNormalEmail", reportData);
+            }
+          } else {
+            if (reportData.FormID == 225)
+              Meteor.call("sendNormalEmail", reportData);
+          }
+        }
+      });
 
-    document.title = "Job Profitability Report";
-    $(".printReport").print({
-      title: "Job Profitability Report | " + loggedCompany,
-      noPrintSelector: ".addSummaryEditor",
-    });
-  }, delayTimeAfterSound);
+      document.title = "Job Profitability Report";
+      $(".printReport").print({
+        title: "Job Profitability Report | " + loggedCompany,
+        noPrintSelector: ".addSummaryEditor",
+      });
+    }, delayTimeAfterSound);
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
@@ -481,25 +567,25 @@ Template.jobprofitabilityreport.events({
   },
   "click [href='#noInfoFound']": function () {
     swal({
-        title: 'Information',
-        text: "No further information available on this column",
-        type: 'warning',
-        confirmButtonText: 'Ok'
-      })
+      title: 'Information',
+      text: "No further information available on this column",
+      type: 'warning',
+      confirmButtonText: 'Ok'
+    })
   },
 
-   /**
-   * This is the new way to handle any modification on the date fields
-   */
-    "change #dateTo, change #dateFrom": (e, templateObject) => {
-      templateObject.loadReport(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-        false
-      );
-      templateObject.dateAsAt.set($('#dateTo').val());
-    },
-    ...Datehandler.getDateRangeEvents()
+  /**
+  * This is the new way to handle any modification on the date fields
+  */
+  "change #dateTo, change #dateFrom": (e, templateObject) => {
+    templateObject.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
+    );
+    templateObject.dateAsAt.set($('#dateTo').val());
+  },
+  ...Datehandler.getDateRangeEvents()
 });
 
 Template.jobprofitabilityreport.helpers({
@@ -511,7 +597,7 @@ Template.jobprofitabilityreport.helpers({
   },
 
   redirectionType(item) {
-    if(item.TransactionType === 'Invoice') {
+    if (item.TransactionType === 'Invoice') {
       return '/invoicecard?id=' + item.SaleID;
     } else if (item.TransactionType === 'Quote') {
       return 'quotecard?id=' + item.saleId;
@@ -527,32 +613,32 @@ Template.jobprofitabilityreport.helpers({
       return '#noInfoFound';
     }
   },
-  formatPrice( amount ){
+  formatPrice(amount) {
     let utilityService = new UtilityService();
-    if( isNaN( amount ) ){
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    if (isNaN(amount)) {
+      amount = (amount === undefined || amount === null || amount.length === 0) ? 0 : amount;
+      amount = (amount) ? Number(amount.replace(/[^0-9.-]+/g, "")) : 0;
     }
-    return ( amount != 0 )? utilityService.modifynegativeCurrencyFormat(amount): "" || "";
+    return (amount != 0) ? utilityService.modifynegativeCurrencyFormat(amount) : "" || "";
   },
-  formatPercent( percentVal ){
-      if( isNaN(percentVal) ){
-          percentVal = ( percentVal === undefined || percentVal === null || percentVal.length === 0) ? 0 : percentVal;
-          percentVal = ( percentVal )? Number(percentVal.replace(/[^0-9.-]+/g,"")): 0;
-      }
-      return ( percentVal != 0 )? `${parseFloat(percentVal).toFixed(2)}%` : '';
+  formatPercent(percentVal) {
+    if (isNaN(percentVal)) {
+      percentVal = (percentVal === undefined || percentVal === null || percentVal.length === 0) ? 0 : percentVal;
+      percentVal = (percentVal) ? Number(percentVal.replace(/[^0-9.-]+/g, "")) : 0;
+    }
+    return (percentVal != 0) ? `${parseFloat(percentVal).toFixed(2)}%` : '';
   },
-  checkZero( value ){
-    return ( value == 0 )? '': value;
+  checkZero(value) {
+    return (value == 0) ? '' : value;
   },
-  formatDate: ( date ) => {
-    return ( date )? moment(date).format("YYYY/MM/DD") : '';
+  formatDate: (date) => {
+    return (date) ? moment(date).format("YYYY/MM/DD") : '';
   },
-   // FX Module //
+  // FX Module //
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    if(isNaN(amount)) {
+    if (isNaN(amount)) {
       if (!amount || amount.trim() == "") {
         return "";
       }
@@ -655,6 +741,9 @@ Template.jobprofitabilityreport.helpers({
   },
   currencyList: () => {
     return Template.instance().currencyList.get();
+  },
+  jobprofitabilityreportth: () => {
+    return Template.instance().jobprofitabilityreportth.get();
   },
   isNegativeAmount(amount) {
     if (Math.sign(amount) === -1) {

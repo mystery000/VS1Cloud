@@ -3,7 +3,16 @@
     <div class="table-responsive">
       <table class="table table-sm" id="tableExport" name="tableExport">
         <thead>
-          <tr class="table-active customDoubleTableHeading">
+          {{#if agedpayablesth}}
+          {{#each c in agedpayablesth }}
+          {{# if c.display}}
+          <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
+              class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+              style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
+          {{/if}}
+          {{/each}}
+          {{/if}}
+          <!-- <tr class="table-active customDoubleTableHeading">
             <th>Contact</th>
             <th style="width: 130px;">Type</th>
             <th>PO No.</th>
@@ -71,7 +80,7 @@
               {{/if}}
 
             </tr>
-          {{/if}}
+          {{/if}} -->
         </thead>
         <tbody>
           {{#if records}}
