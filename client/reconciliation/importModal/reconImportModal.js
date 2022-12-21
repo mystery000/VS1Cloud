@@ -7,6 +7,42 @@ Template.reconImportModal.onCreated(function () {
 
 Template.reconImportModal.onRendered(function () {
   const templateObject = Template.instance();
+  $('#btnImportState').on('click', function(e) {
+    let accountId = $('#bankAccountID').val()
+    let accountName = $('#bankAccountName').val()
+    if (accountName == '')
+        swal('Please Select Bank Account!', '', 'warning');
+    else {
+        getVS1Data("VS1_BankRule")
+          .then(function (dataObject) {
+              if (dataObject.length) {
+                  let data = JSON.parse(dataObject[0].data);
+                  if (data[accountId] && data[accountId].length)
+                      return $('#importModal').modal();
+              }
+              swal({
+                  text: `This will allow you to manually import a bank statement directly
+                  from your Company Bank Account Into your VS1 Bank
+                  Reconciliation from. You just need to map or create the rules for
+                  the first time, for which column on your Company Bank Account
+                  import match's the fields in VS1 and it will remember moving
+                  forward.`,
+                  type: 'info',
+                  showCancelButton: true,
+                  // confirmButtonText: 'Yes',
+                  // cancelButtonText: 'No'
+              })
+                  .then((result) => {
+                      if (result && result.value)
+                          return $('#importModal').modal();
+                          // FlowRouter.go('/newbankrule', {}, {bankaccountid: accountId, bankaccountname: accountName})
+                  });
+          })
+          .catch(function (err) {
+              swal('Something went wrong', '', 'error');
+          });
+    }
+  })
 });
 
 Template.reconImportModal.events({
@@ -87,12 +123,12 @@ Template.reconImportModal.events({
 
     Papa.parse(templateObject.selectedFile.get(), {
         complete: function(results) {
-          if (FlowRouter.current().route.path === "/bankrecon")
+          // if (FlowRouter.current().route.path === "/bankrecon")
+          $('.fullScreenSpin').css('display','none');
             if(results.data.length > 0){
                 localStorage.setItem('BankStatement', JSON.stringify(results.data))
-                FlowRouter.go('/newbankrule', {}, {preview: 1, bankaccountid: $('#bankAccountID').val(), bankaccountname: $('#bankAccountName').val()})
+                window.open(`/newbankrule?preview=1&bankaccountid=${$('#bankAccountID').val()}&bankaccountname=${$('#bankAccountName').val()}`, '_self')
             }else{
-                $('.fullScreenSpin').css('display','none');
                 // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
                 swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
             }
