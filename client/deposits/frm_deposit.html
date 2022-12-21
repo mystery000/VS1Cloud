@@ -580,13 +580,13 @@
         {{/if}}
 
         <!-- Modal print-button -modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+        <!-- <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
             {{> accountlistpop}}
-        </div>
+        </div> -->
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
+        <!-- <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
             {{> addaccountpop}}
-        </div>
+        </div> -->
         <!-- End AccountList -->
 
         <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodModal">
@@ -597,9 +597,9 @@
             {{> newpaymentmethodpop}}
         </div>
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+        <!-- <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
             {{> copyfrequencypop}}
-        </div>
+        </div> -->
 
         <!-- Modal Payment Method -modal -->
         <!-- <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodModal">
@@ -649,7 +649,7 @@
         <!-- End Payment Method -->
 
         <!-- Modal Customer List -->
-        <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
+        <!-- <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
             <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
                 <div class="modal-content customerListContent">
                     <div class="modal-header">
@@ -664,11 +664,12 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- End Modal Customer List -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+        <!-- <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
             {{> addcustomerpop}}
-        </div>
+        </div> -->
+        {{> all_transaction_modals customerRecord=customerRecord}}
     </div>
 
     <!-- Start Help Video Modal -->
