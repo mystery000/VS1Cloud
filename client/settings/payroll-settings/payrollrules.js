@@ -22323,6 +22323,42 @@ Template.payrollrules.events({
                 $('.graterThenDiv').css('display', 'block');
                 $('.weekendDiv').css('display', 'none');
         }
+    },
+    "click .chkSameSupplier": (e, ui) => {
+        let elementId =  e.target.id;
+        let checked = $(event.target).is(':checked');
+        switch (elementId){
+            case 'chkTimeAndHalf':
+                if(checked){
+                    $("#edtTimeAndHalf").removeAttr("readonly");
+                }else{
+                    $('#edtTimeAndHalf').attr('readonly', true);
+                }
+            break;
+            case 'chkDoubleTime':
+                if(checked){
+                    $("#edtDoubleTime").removeAttr("readonly");
+                }else{
+                    $('#edtDoubleTime').attr('readonly', true);
+                }
+            break;
+            case 'chkWeekend1':
+                if(checked){
+                    $("#edtWeekend1").removeAttr("readonly");
+                }else{
+                    $('#edtWeekend1').attr('readonly', true);
+                }
+            break;
+            case 'chkWeekend2':
+                if(checked){
+                    $("#edtWeekend2").removeAttr("readonly");
+                }else{
+                    $('#edtWeekend2').attr('readonly', true);
+                }
+            break;
+            default:
+            break;
+        }
     }
 
 
