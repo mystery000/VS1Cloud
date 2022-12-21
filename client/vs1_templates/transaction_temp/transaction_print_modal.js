@@ -1,4 +1,5 @@
 import { SideBarService } from "../../js/sidebar-service";
+import { ContactService } from "../../contacts/contact-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import "jquery-ui-dist/external/jquery/jquery";
 import "jquery-ui-dist/jquery-ui";
@@ -9,117 +10,136 @@ import { SMSService } from "../../js/sms-settings-service";
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
 
-const TransactionTypeTemplates = {
-  sales: [
-    {
-      name: "Delivery Docket",
-      title: "Delivery Docket",
-      key: "delivery_docket",
-      active: true,
-    },
-    {
-      name: "Sales Orders",
-      title: "Sales Orders",
-      key: "sales_order",
-      active: true,
-    },
-  ],
-  bills: [
-    {
-      name: "bill",
-      title: "Bills",
-      key: "bill",
-      active: true,
-    },
-  ],
-  cheques: [
-    {
-      name: "Cheques",
-      title: "Cheques",
-      key: "cheque",
-      active: true,
-    },
-  ],
-  credits: [
-    {
-      name: "Credits",
-      title: "Credits",
-      key: "credit",
-      active: true,
-    },
-  ],
-  invoices: [
-    {
-      name: "Invoices",
-      title: "Invoices",
-      key: "invoice",
-      active: true,
-    },
-    {
-      name: "Invoice Back Orders",
-      title: "Invoice Back Orders",
-      key: "invoice",
-      active: false,
-    },
-    {
-      name: "Delivery Docket",
-      title: "Delivery Docket",
-      key: "delivery_docket",
-      active: true,
-    },
-  ],
-  refunds: [
-    {
-      name: "Refunds",
-      title: "Refunds",
-      key: "refund",
-      active: true,
-    },
-  ],
-  workorders: [
-    {
-      name: "Delivery Docket",
-      title: "Delivery Docket",
-      key: "delivery_docket",
-      active: true,
-    },
-    {
-      name: "Sales Orders",
-      title: "Sales Orders",
-      key: "sales_order",
-      active: true,
-    },
-  ],
-  supplierpayments: [
-    {
-      name: "Supplier Payments",
-      title: "Supplier Payments",
-      key: "supplier_payment",
-      active: true,
-    },
-  ],
-  purchaseorders: [
-    {
-      name: "Purchase Orders",
-      title: "Purchase Orders",
-      key: "purchase_order",
-      active: true,
-    },
-  ],
-  quotes: [
-    {
-      name: "Quotes",
-      title: "Quotes",
-      key: "quote",
-      active: true,
-    },
-  ],
+const TransactionTypeData = {
+  sales: {
+    templates: [
+      {
+        name: "Delivery Docket",
+        title: "Delivery Docket",
+        key: "delivery_docket",
+        active: true,
+      },
+      {
+        name: "Sales Orders",
+        title: "Sales Orders",
+        key: "sales_order",
+        active: true,
+      },
+    ],
+  },
+  bills: {
+    templates: [
+      {
+        name: "bill",
+        title: "Bills",
+        key: "bill",
+        active: true,
+      },
+    ],
+  },
+  cheques: {
+    templates: [
+      {
+        name: "Cheques",
+        title: "Cheques",
+        key: "cheque",
+        active: true,
+      },
+    ],
+  },
+  credits: {
+    templates: [
+      {
+        name: "Credits",
+        title: "Credits",
+        key: "credit",
+        active: true,
+      },
+    ],
+  },
+  invoices: {
+    templates: [
+      {
+        name: "Invoices",
+        title: "Invoices",
+        key: "invoice",
+        active: true,
+      },
+      {
+        name: "Invoice Back Orders",
+        title: "Invoice Back Orders",
+        key: "invoice",
+        active: false,
+      },
+      {
+        name: "Delivery Docket",
+        title: "Delivery Docket",
+        key: "delivery_docket",
+        active: true,
+      },
+    ],
+  },
+  refunds: {
+    templates: [
+      {
+        name: "Refunds",
+        title: "Refunds",
+        key: "refund",
+        active: true,
+      },
+    ],
+  },
+  workorders: {
+    templates: [
+      {
+        name: "Delivery Docket",
+        title: "Delivery Docket",
+        key: "delivery_docket",
+        active: true,
+      },
+      {
+        name: "Sales Orders",
+        title: "Sales Orders",
+        key: "sales_order",
+        active: true,
+      },
+    ],
+  },
+  supplierpayments: {
+    templates: [
+      {
+        name: "Supplier Payments",
+        title: "Supplier Payments",
+        key: "supplier_payment",
+        active: true,
+      },
+    ],
+  },
+  purchaseorders: {
+    templates: [
+      {
+        name: "Purchase Orders",
+        title: "Purchase Orders",
+        key: "purchase_order",
+        active: true,
+      },
+    ],
+  },
+  quotes: {
+    templates: [
+      {
+        name: "Quotes",
+        title: "Quotes",
+        key: "quote",
+        active: true,
+      },
+    ],
+  },
 };
 
 Template.transaction_print_modal.onCreated(async function () {
   const templateObject = Template.instance();
   const transactionType = templateObject.data.TransactionType;
-  const pageData = templateObject.data.data;
 
   const getTemplates = async () => {
     const vs1Data = await getVS1Data("TTemplateSettings");
@@ -132,7 +152,7 @@ Template.transaction_print_modal.onCreated(async function () {
 
       addVS1Data("TTemplateSettings", JSON.stringify(templateInfomation));
 
-      const templates = TransactionTypeTemplates[transactionType]
+      const templates = TransactionTypeData[transactionType].templates
         .filter((item) => item.active)
         .map((template) => {
           let templateList = templateInfomation.ttemplatesettings
@@ -158,7 +178,7 @@ Template.transaction_print_modal.onCreated(async function () {
       return templates;
     } else {
       const vs1DataList = JSON.parse(vs1Data[0].data);
-      const templates = TransactionTypeTemplates[transactionType]
+      const templates = TransactionTypeData[transactionType].templates
         .filter((item) => item.active)
         .map((template) => {
           let templateList = vs1DataList.ttemplatesettings
@@ -201,7 +221,7 @@ Template.transaction_print_modal.onRendered(function () {
     const templates = templateObject.templates.get();
     templates.forEach((templateType) => {
       templateType.templateList.forEach((template) => {
-        const templateKey = TransactionTypeTemplates[transactionType].find(
+        const templateKey = TransactionTypeData[transactionType].templates.find(
           (transation) => transation.name === template.fields.SettingName
         ).key;
         if (template.fields.Active) {
@@ -233,17 +253,17 @@ Template.transaction_print_modal.helpers({
     return status ? { checked: "checked" } : null;
   },
   getTemplate: (TransactionType, templateName) => {
-    return TransactionTypeTemplates[TransactionType].find(
+    return TransactionTypeData[TransactionType].templates.find(
       (template) => template.name === templateName
     );
   },
   getTemplateTitle: (TransactionType, templateName) => {
-    return TransactionTypeTemplates[TransactionType].find(
+    return TransactionTypeData[TransactionType].templates.find(
       (template) => template.name === templateName
     ).title;
   },
   getTemplateKey: (TransactionType, templateName) => {
-    return TransactionTypeTemplates[TransactionType].find(
+    return TransactionTypeData[TransactionType].templates.find(
       (template) => template.name === templateName
     ).key;
   },
@@ -257,15 +277,36 @@ Template.transaction_print_modal.events({
     const checked = event.currentTarget.checked;
   },
   "click #printModal .printConfirm": async function (event) {
-    // const templateObject = Template.instance();
-    // playPrintAudio();
+    const templateObject = Template.instance();
+    const transactionType = templateObject.data.TransactionType;
     const isCheckedEmail = $("#printModal #emailSend").is(":checked");
     const isCheckedSms = $("#printModal #sms").is(":checked");
+    const customerElId = $("#customer_id").val();
+    const customerId = $(`#${customerElId}`).attr("custid").trim() || $(`#${customerElId}`).attr("suppid").trim();
+
+    const contactService = new ContactService();
+
+    const customData = await getVS1Data("TCustomerVS1");
+    let contactServiceData = null;
+
+    if (customerId) {
+      if (customData.length === 0) {
+        contactServiceData = await contactService.getOneCustomerDataEx(customerId);
+      } else {
+        const data = JSON.parse(customData[0].data);
+        contactServiceData = data.tcustomervs1.find(
+          (customer) => parseInt(customer.fields.ID) === parseInt(customerId)
+        );
+      }
+    }
+
+    console.log({ customerId, contactServiceData })
+
     // const data = await Template.new_salesorder.__helpers
-    //   .get("printEmailData")
+    //   .get("saleOrder")
     //   .call();
 
-    // console.log({ data });
+    // console.log("saleOrderLines==========>", data);
 
     // Send Email with attachments
     // if (isCheckedEmail && validateEmail(data.checkEmailData)) {
@@ -302,9 +343,9 @@ Template.transaction_print_modal.events({
     }
 
     // Send SMS
-    if (isCheckedSms) {
+    if (isCheckedSms && contactServiceData) {
       // should set up
-      const phoneNumber = "";
+      const phoneNumber = contactServiceData.fields.Mobile;
 
       const smsSettings = {
         twilioAccountId: "",
@@ -361,7 +402,7 @@ Template.transaction_print_modal.events({
         companyName
       );
 
-      console.log({companyName})
+      console.log({ companyName });
 
       if (phoneNumber) {
         const sendSMSResult = Meteor.call(
@@ -376,8 +417,8 @@ Template.transaction_print_modal.events({
             res(result);
           }
         );
-  
-        console.log({ sendSMSResult })
+
+        console.log({ sendSMSResult });
       }
     }
   },
