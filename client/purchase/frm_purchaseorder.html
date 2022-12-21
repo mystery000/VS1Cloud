@@ -54,9 +54,9 @@
         idPrefix="html-2-pdfwrapper_quotes" namePrefix="pdfwrapper_quotes" }}
       </div>
 
-      {{> deletepop itemName1="Purchase Order" itemName2="purchase order"
+      <!-- {{> deletepop itemName1="Purchase Order" itemName2="purchase order"
       itemName3="Purchase Order" button1="btnDeletePO"
-      button2="btnDeleteFollowingPOs"}}
+      button2="btnDeleteFollowingPOs"}} -->
       <div>
         {{> transaction_line tablename="tblPurchaseOrderLine"
         recordLineItems=purchaseorderrecord.LineItems
@@ -227,17 +227,7 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-12 col-md-6 col-lg-4 col-xl-5">
-                        <button class="btn btn-primary" type="button" id="addRow" style="margin-bottom: 120px;">+ Add New Entry</button>
-                        <div class="form-group"><label>Comments</label>
-                            <textarea class="form-control" rows="4" id="txaComment" name="txaComment">{{invoicerecord.comments}}</textarea>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4 col-xl-5 colComments">
-                        <div class="form-group"><label>Picking Instructions</label>
-                            <textarea class="form-control" rows="4" id="txapickmemo" name="txapickmemo">{{invoicerecord.pickmemo}}</textarea>
-                        </div>
-                    </div> -->
+       
         {{> transaction_calculation
         isPartialPaid=purchaseorderrecord.isPartialPaid
         SubTotal=purchaseorderrecord.SubTotal
@@ -250,7 +240,11 @@
         class="row justify-content-center mobileButtons"
         style="display: none"
       >
-        {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="purchaseorders" }}
+        {{> transaction_footer 
+          margin="14px" 
+          AttachmentCount=attachmentCount 
+          TransactionType='purchaseorders'
+        }}
       </div>
 
       <div class="printID" style="display: none"></div>
