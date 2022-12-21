@@ -85,12 +85,20 @@
             </div>
         </div>
         <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px;">
-            <div class="col-6 col-md-6 col-sm-12 d-flex">
+            <div class="col-3 col-md-3 col-sm-12 d-flex">
                 <div style="width: 100%;">
                     <p class="label-p3 toLabel3" style="color: #71c6a5;">INVOICE TO: </p>
                     <div style="width: 100%; min-height: 100px;">
                         <p class="label-p pdfCustomerAddress3"></p>
                     </div>
+                </div>
+            </div>
+            <div class="col-3 col-md-3 col-sm-12 d-flex">
+                <div style="width: 100%;">
+                <p><svg id="stockAdjustmentBarCode"></svg></p>
+                <script>
+                    JsBarcode("#stockAdjustmentBarCode", "BI-751",{displayValue: false});
+                </script>
                 </div>
             </div>
             <div class="col-6 col-md-6 col-sm-12 d-flex">

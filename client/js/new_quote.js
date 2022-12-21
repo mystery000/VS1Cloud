@@ -98,22 +98,8 @@ Template.new_quote.onRendered(() => {
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
-            var saleDate = quoteData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingQuotes = await sideBarService.getAllTQuoteListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var quoteList = followingQuotes.tquotelist;
-            if (quoteList.length > 1) {
-                templateObject.hasFollow.set(true);
-            } else {
-                templateObject.hasFollow.set(false);
-            }
+            var isRepeated = quoteData.fields.RepeatedFrom;
+            templateObject.hasFollow.set(isRepeated);
         }
     }
     templateObject.hasFollowings();

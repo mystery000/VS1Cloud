@@ -129,11 +129,16 @@
                     left: 0;
                 }
             </style>
+            
+            <!-- Fix 2022/12/21 -->
+
+            {{> dashboardCardCharts tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}}
+
             <!-- All Cards List -->
-            {{> allCardsLists tabGroupID="1" chartGroup="Dashboard"}}
+            <!-- {{> allCardsLists tabGroupID="1" chartGroup="Dashboard"}} -->
 
             <!-- All charts list -->
-            {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" }}
+            <!-- {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}} -->
 
             <!-- <div class="row">
                 <ul class="col-area col-sm-6" id="col1">

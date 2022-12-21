@@ -1775,6 +1775,24 @@ authenticatedRoutes.route('/newbankrecon', {
     }
 });
 
+authenticatedRoutes.route('/newreconrule', {
+    name: 'newreconrule',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'newreconrule'
+        });
+    }
+});
+
+authenticatedRoutes.route('/reconrulelist', {
+    name: 'reconrulelist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'reconrulelist'
+        });
+    }
+});
+
 authenticatedRoutes.route('/newbankrule', {
     name: 'newbankrule',
     action() {
