@@ -139,6 +139,7 @@
         {{/if}}
 
         {{#if is_available_chart currentTemplate "mytaskswidgetchart"}}
+<<<<<<< HEAD
             {{> mytaskswidgetchart
                     md=6 defaultPosition=1 key="dashboard__my_tasks" }}
 
@@ -165,6 +166,43 @@
                     md=8 defaultPosition=2 key="accounts__revenue_streams"}}
         {{/if}}
 
+=======
+            {{#if is_dashboard_check "dashboardsalesmanager"}}
+                {{> mytaskswidgetchart
+                        md=4 defaultPosition=2 key="dsmcharts__my_tasks" }}
+
+            {{else if is_dashboard_check "dashboardsales"}}
+                {{> mytaskswidgetchart
+                    md=4 defaultPosition=2 key="dscharts__my_tasks" }}
+
+            {{else}}
+                {{> mytaskswidgetchart
+                        md=6 defaultPosition=1 key="dashboard__my_tasks" }}
+            {{/if}}
+        {{/if}}
+
+        {{#if is_available_chart currentTemplate "dsmAppointmentsWidget"}}
+            {{> dsmAppointmentsWidget
+                    md=8 defaultPosition=3 key="dsmcharts__appointment_chart" }}
+        {{/if}}
+
+        {{#if is_available_chart currentTemplate "quotedsalesorderinvoicedamounts"}}
+            {{> quotedsalesorderinvoicedamounts
+                    md=4 defaultPosition=1 key="sales__sales_overview" }}
+        {{/if}}
+
+        {{#if is_available_chart currentTemplate "accountrevenuestreams"}}
+            {{> accountrevenuestreams
+                    md=8 defaultPosition=2 key="accounts__revenue_streams"}}
+        {{/if}}
+
+        {{#if is_available_chart currentTemplate "accountslistchart"}}
+            {{> accountslistchart
+                    md=12 defaultPosition=29 key="accounts__account_list" }}
+
+        {{/if}}
+
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
         {{#if is_available_chart currentTemplate "profitandlosschart"}}
             {{> profitandlosschart
                     md=4 defaultPosition=3 key="dashboard__profit_and_loss" }}

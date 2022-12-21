@@ -3,7 +3,7 @@
     <div class="table-responsive">
         <table class="table table-sm" id="tableExport" name="tableExport">
             <thead>
-                <tr class="table-active customDoubleTableHeading">
+                <!-- <tr class="table-active customDoubleTableHeading">
                     <th>Supplier</th>
                     <th>PO No</th>
                     <th>Trans Type</th>
@@ -58,7 +58,18 @@
                     <th></th>
 
                     </tr>
-                {{/if}}
+                {{/if}} -->
+                <tr class="table-active tblAvoid customDoubleTableHeading">
+                    {{#each c in supplierreportth}}
+                    {{#if c.display}}
+                    <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}"
+                      class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                      style="text-align: left!important; width:{{c.width}}px">
+                      {{c.label}}
+                    </th>
+                    {{/if}}
+                    {{/each}}
+                  </tr>
             </thead>
             <tbody>
                 {{#if records}}
@@ -135,7 +146,6 @@
                                             <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right" style="font-weight: 800;">{{ convertAmount value.TotalTax c}}</td>
                                         {{/if}}
                                     {{/each}}
-
                                     {{#each c in currencyList }}
                                         {{#if c.active}}
                                             <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right" style="font-weight: 800;">{{ convertAmount value.TotalCostInc c}}</td>

@@ -335,7 +335,10 @@ Template.stockadjustmentcard.onRendered(() => {
                         };
 
                         let getDepartmentVal = data.fields.Lines[0].fields.DeptName || defaultDept;
+<<<<<<< HEAD
                         console.log(getDepartmentVal);
+=======
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
                         setTimeout(function () {
                             // $('#sltDepartment').val(getDepartmentVal);
                             $('#sltAccountName').val(data.fields.AccountName);
@@ -2148,7 +2151,7 @@ Template.stockadjustmentcard.events({
         let templateObject = Template.instance();
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
-        if(targetID != undefined) {    
+        if(targetID != undefined) {
             times++;
             if (times == 1) {
                 $('#deleteLineModal').modal('toggle');
@@ -2180,7 +2183,7 @@ Template.stockadjustmentcard.events({
         let stockTransferService = new StockTransferService();
         setTimeout(async function(){
         var currentDate = new Date();
-        
+
         swal({
             title: 'Delete Stock Adjustment',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -2325,7 +2328,7 @@ Template.stockadjustmentcard.events({
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         setTimeout(function(){
-        
+
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblStockAdjustmentLine tbody>tr').length > 1) {
             this.click;

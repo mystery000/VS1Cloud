@@ -462,7 +462,11 @@ Template.newLeaveRequestModal.onRendered(() => {
                 }, 1000);
             });
         }, 1000);
+<<<<<<< HEAD
     }; 
+=======
+    };
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
 
     templateObject.getAssignLeaveTypes();
 
@@ -478,9 +482,9 @@ Template.newLeaveRequestModal.onRendered(() => {
             changeMonth: true,
             changeYear: true,
             yearRange: "-90:+10",
-        });  
-        $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", new Date().getDay+7); 
- 
+        });
+        $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", new Date().getDay+7);
+
 
         $('#edtLeavePayPeriod').editableSelect('add', 'Weekly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Fortnightly');
@@ -491,12 +495,18 @@ Template.newLeaveRequestModal.onRendered(() => {
         
         $('#edtLeavePayPeriod').val('Weekly');
 
+        $('#edtLeavePayPeriod').val('Weekly');
+
         $('#edtLeavePayStatus').editableSelect('add', 'Awaiting');
         $('#edtLeavePayStatus').editableSelect('add', 'Approved');
         $('#edtLeavePayStatus').editableSelect('add', 'Denied');
         $('#edtLeavePayStatus').editableSelect('add', 'Deleted');
 
+<<<<<<< HEAD
         $('#edtLeavePayStatus').val('Awaiting'); 
+=======
+        $('#edtLeavePayStatus').val('Awaiting');
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
 
         $('#period').editableSelect('add', 'Weekly');
         $('#period').editableSelect('add', 'Fortnightly');
@@ -581,11 +591,19 @@ Template.newLeaveRequestModal.onRendered(() => {
 
 Template.newLeaveRequestModal.events({
     'click #btnSaveLeaveRequest': async function(event) {
+<<<<<<< HEAD
         
         playSaveAudio();
 
         let templateObject = Template.instance();
         
+=======
+
+        playSaveAudio();
+
+        let templateObject = Template.instance();
+
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
         setTimeout(async function() {
 
             let currentId     = FlowRouter.current().queryParams;
@@ -662,7 +680,11 @@ Template.newLeaveRequestModal.events({
                         $('#newLeaveRequestModal').modal('hide');
                         $('#edtLeaveTypeofRequestID, #edtLeaveTypeofRequest, #edtLeaveDescription, #edtLeavePayPeriod, #edtLeaveHours, #edtLeavePayStatus').val('');
                         $('.fullScreenSpin').css('display', 'none');
+<<<<<<< HEAD
                         
+=======
+
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
                         swal({
                             title: 'Leave request added successfully',
                             text: '',
@@ -673,11 +695,19 @@ Template.newLeaveRequestModal.events({
                             if (result.value) {
                                 if (result.value) {}
                             }
+<<<<<<< HEAD
                         }); 
 
                         window.open("/appointments", "_self");
                     } 
                     else 
+=======
+                        });
+
+                        window.open("/appointments", "_self");
+                    }
+                    else
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
                     {
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
