@@ -2488,7 +2488,7 @@ Template.vatreturn.events({
                                         window.open("vatreturnlist", "_self");
                                     });
                                 }).catch(function(err) {
-                                    alert(err);
+
                                     swal({
                                         title: 'Oooops...',
                                         text: err,
@@ -2924,7 +2924,7 @@ Template.vatreturn.events({
                             window.open("vatreturnlist", "_self");
                         });
                     }).catch(function(err) {
-                        alert(err);
+
                         swal({
                             title: 'Oooops...',
                             text: err,

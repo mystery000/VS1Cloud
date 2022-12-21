@@ -227,14 +227,14 @@ Template.customerscard.onRendered(function() {
                         tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
                     }
                     templateObject.all_projects.set(all_projects);
-                    
+
                     let active_projects = all_projects.filter((project) => project.fields.Active == true);
                     let deleted_projects = all_projects.filter((project) => project.fields.Active == false);
                     let favorite_projects = active_projects.filter((project) => project.fields.AddToFavourite == true);
 
                     templateObject.active_projects.set(active_projects);
                     templateObject.deleted_projects.set(deleted_projects);
-                    templateObject.favorite_projects.set(favorite_projects);                    
+                    templateObject.favorite_projects.set(favorite_projects);
                 } else {
                     templateObject.tprojectlist.set([]);
                 }
@@ -2247,7 +2247,6 @@ Template.customerscard.onRendered(function() {
                 const offset = $each.offset();
                 const clientTypeDataName = e.target.value || '';
                 editableCustomerType(e, $each, offset, clientTypeDataName);
-
             });
 
             function setClientType(data, clientTypeDataName) {
@@ -2434,6 +2433,11 @@ Template.customerscard.onRendered(function() {
 
     $(document).on("click", "#termsList tbody tr", function(e) {
         let selectedTermsDropdownID = $('#selectLineID').val() || 'sltTerms';
+        let prevValue = $('#' + selectedTermsDropdownID + '').val();
+        let currentValue = $(this).find(".colTermName").text();
+        if(prevValue !== currentValue){
+            localStorage.setItem("isFormUpdated", true);
+        }
         $('#' + selectedTermsDropdownID + '').val($(this).find(".colTermName").text());
         $('#termsListModal').modal('toggle');
     });
@@ -2449,6 +2453,11 @@ Template.customerscard.onRendered(function() {
     });
     $(document).on("click", "#tblTaxRate tbody tr", function(e) {
         let selectedTaxRateDropdownID = $('#selectLineID').val() || 'sltTaxCode';
+        let prevValue = $('#' + selectedTaxRateDropdownID + '').val();
+        let currentValue = $(this).find(".taxName").text();
+        if(prevValue !== currentValue){
+            localStorage.setItem("isFormUpdated", true);
+        }
         $('#' + selectedTaxRateDropdownID + '').val($(this).find(".taxName").text());
         $('#taxRateListModal').modal('toggle');
     });
@@ -2695,6 +2704,11 @@ Template.customerscard.onRendered(function() {
         // $('#leadRep').val($('#leadRep').val().replace(/\s/g, ''));
     })
     $(document).on("click", "#tblStatusPopList tbody tr", function(e) {
+        let prevValue = $('#leadStatus').val();
+        let updatedValue = $(this).find(".colStatusName").text();
+        if(prevValue !== updatedValue){
+            localStorage.setItem("isFormUpdated", true);
+        }
         $('#leadStatus').val($(this).find(".colStatusName").text());
         $('#statusPopModal').modal('toggle');
         $('#tblStatusPopList_filter .form-control-sm').val('');
@@ -2782,7 +2796,13 @@ Template.customerscard.onRendered(function() {
     })
 
     $(document).on("click", "#tblTitleList tbody tr", function (e) {
+        let prevValue = $('#editCustomerTitle').val();
+        let updatedValue = $(this).find(".colTypeName").text();
+        if(prevValue !== updatedValue){
+            localStorage.setItem("isFormUpdated", true);
+        }
         $('#editCustomerTitle').val($(this).find(".colTypeName").text());
+        localStorage.setItem("isFormUpdated", true);
         $('#customerTitlePopModal').modal('toggle');
     });
 
@@ -4854,8 +4874,7 @@ function openEditTaskModals(id, type) {
             contactService.getOneEmployeeDataEx(assignId).then(function(empDetailInfo) {
                 $('#contactEmailUser').val(empDetailInfo.fields.Email);
                 $('#contactPhoneUser').val(empDetailInfo.fields.Phone);
-            }).catch(function(err) {
-            });
+            }).catch(function(err) {});
 
             // $('#contactEmailClient').val(selected_record.ClientEmail);
             // $('#contactPhoneClient').val(selected_record.ClientPhone);
@@ -5315,12 +5334,10 @@ function openEditTaskModals(id, type) {
             $(".crmDatepicker").val(begunDate);
 
         } else {
-            alert(0);
             swal("Cannot edit this task", "", "warning");
             return;
         }
     }).catch(function(err) {
-        alert(err);
         $(".fullScreenSpin").css("display", "none");
 
         swal(err, "", "error");

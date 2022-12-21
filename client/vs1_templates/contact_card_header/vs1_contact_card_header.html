@@ -1,21 +1,44 @@
 <template name="vs1_contact_card_header">
-    <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 customerInfo" id="{{id}}" style="color: #00A3D3; font-size: 28px;">
-    {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}} {{record.joblastname}}-{{record.phone}}
-    {{else}}
-        {{#if notEquals record.id ''}}
-            {{#if equals record.issupplier true}}
-                SUP-{{record.id}} - 
-            {{else if equals record.isLead true}}
-                LED-{{record.id}} - 
-            {{else if equals record.isjob true}}
-                JOB-{{record.id}} - 
-            {{else if equals record.isEmployee true}}
-                EMP-{{record.id}} - 
+    <div class="card-header d-flex justify-content-between align-items-xl-center">
+        <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 customerInfo" id="{{id}}"
+            style="color: #00A3D3; font-size: 28px;">
+            {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}} {{record.joblastname}}-{{record.phone}}
             {{else}}
-                CUS-{{record.id}} - 
+            {{#if record.phone}}
+            {{record.company}}-{{record.phone}}
+            {{else}}
+            {{record.company}}
             {{/if}}
-        {{/if}}
-    {{record.company}}
-    {{/if}}
-</h6>
+            {{/if}}
+        </h6>
+        <div style="display: flex; align-items: center;">
+            <span class="font-weight-bold m-0" style="color: #00A3D3;margin-right:14px;font-size: 28px;">
+                {{#if notEquals record.id ''}}
+                    {{#if equals record.issupplier true}}
+                        SUP-{{record.id}}
+                    {{else if equals record.isLead true}}
+                        LED-{{record.id}}
+                    {{else if equals record.isjob true}}
+                        JOB-{{record.id}}
+                    {{else if equals record.isEmployee true}}
+                        EMP-{{record.id}}
+                    {{else}}
+                        CUS-{{record.id}}
+                    {{/if}}
+                {{/if}}
+            </span>
+            {{#if notEquals record.isLead true}}
+                {{#if notEquals record.isEmployee true}}
+                    <button type="button" class="btn btn-success btnReceiveCustomerPayment" style="margin:7px;"
+                    id="btnReceiveCustomerPayment"><i class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Receive
+                    Payment</button>
+                {{/if}}
+            {{else}}
+            {{/if}}
+            <a class="btn btnOpenSettings" role="button" style="margin:7px;margin-right:0px;" data-toggle="modal"
+                href="#myModal4"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
+        </div>
+    </div>
+
+
 </template>

@@ -126,6 +126,8 @@ Template.creditPrintTemp.onRendered(function() {
                             custPONumber: useData[d].fields.CustPONumber,
                             saledate: useData[d].fields.OrderDate ? moment(useData[d].fields.OrderDate).format('DD/MM/YYYY') : "",
                             duedate: useData[d].fields.DueDate ? moment(useData[d].fields.DueDate).format('DD/MM/YYYY') : "",
+                            // saleDate: new Date(useData[d].fields.OrderDate),
+                            // dueDate: new Date(useData[d].fields.DueDate),
                             employeename: useData[d].fields.EmployeeName,
                             status: useData[d].fields.OrderStatus,
                             invoicenumber: useData[d].fields.SupplierInvoiceNumber,
@@ -150,8 +152,8 @@ Template.creditPrintTemp.onRendered(function() {
                             totalPaid: totalPaidAmount,
                             ispaid: useData[d].fields.IsPaid,
                             department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept,
-                            unformattedSaleDate : useData[d].fields.OrderDate? useData[d].fields.OrderDate : '',
-                            unformattedDueDate: useData[d].fields.DueDate?useData[d].fields.DueDate: ''
+                            unformattedSaleDate : new Date(useData[d].fields.OrderDate),
+                            unformattedDueDate: new Date(useData[d].fields.DueDate),
                         };
                         let getDepartmentVal = useData[d].fields.Lines[0].fields.LineClassName || defaultDept;
                         creditTemp.push(creditrecord);
