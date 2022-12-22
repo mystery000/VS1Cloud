@@ -29,17 +29,17 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 col-xl-2">
-                                    <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY">
-                                        <label>Sale Date</label>
-                                        <div class="input-group date" style="cursor: pointer;">
-                                            <input type="text" class="form-control" id="dtSODate" name="dtSODate" value="{{workorderrecord.saledate}}"/>
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {{> single_date_picker
+                                            label="Sale Date"
+                                            id="dtSODate"
+                                            name="dtSODate"
+                                            defaultValue=workorderrecord.saledate
+                                          }}
                             </div>
                         </div>
+
+
+                        
                         <div class="row" style="margin: 16px 16px 0px 16px;">
                             <div class="col-12 col-md-6 col-xl-4">
                                 <div class="form-group"><label>Billing Address</label>

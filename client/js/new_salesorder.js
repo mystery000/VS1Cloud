@@ -2691,7 +2691,7 @@ Template.new_salesorder.onRendered(function () {
                             templateObject.inputSelectedCurrency.set(salesorderrecord.currncy);
                             setTimeout(()=>{
                                 templateObject.checkAbleToMakeWorkOrder()
-                            }, 100)
+                            }, 1000)
                             if (templateObject.salesorderrecord.get()) {
 
 
@@ -3029,7 +3029,7 @@ Template.new_salesorder.onRendered(function () {
                                 templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                                 setTimeout(()=>{
                                     templateObject.checkAbleToMakeWorkOrder()
-                                }, 100)
+                                }, 1000)
                                 if (templateObject.salesorderrecord.get()) {
 
 
@@ -3252,7 +3252,7 @@ Template.new_salesorder.onRendered(function () {
                                     templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                                     setTimeout(()=>{
                                         templateObject.checkAbleToMakeWorkOrder()
-                                    }, 100)
+                                    }, 1000)
                                     if (templateObject.salesorderrecord.get()) {
 
 
@@ -3591,7 +3591,7 @@ Template.new_salesorder.onRendered(function () {
                         templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                         setTimeout(()=>{
                             templateObject.checkAbleToMakeWorkOrder()
-                        }, 100)
+                        }, 1000)
                       
                         if (templateObject.salesorderrecord.get()) {
 
@@ -4047,7 +4047,7 @@ Template.new_salesorder.onRendered(function () {
                     templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                     setTimeout(()=>{
                         templateObject.checkAbleToMakeWorkOrder()
-                    }, 100)
+                    }, 1000)
                     if (templateObject.salesorderrecord.get()) {
 
 
@@ -4346,7 +4346,7 @@ Template.new_salesorder.onRendered(function () {
                             templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                             setTimeout(()=>{
                                 templateObject.checkAbleToMakeWorkOrder()
-                            }, 100)
+                            }, 1000)
                             if (templateObject.salesorderrecord.get()) {
 
                                 Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
@@ -4636,7 +4636,7 @@ Template.new_salesorder.onRendered(function () {
                                 templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                                 setTimeout(()=>{
                                     templateObject.checkAbleToMakeWorkOrder()
-                                }, 100)
+                                }, 1000)
                                 if (templateObject.salesorderrecord.get()) {
 
                                     Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
@@ -4853,7 +4853,7 @@ Template.new_salesorder.onRendered(function () {
                         templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                         setTimeout(()=>{
                             templateObject.checkAbleToMakeWorkOrder()
-                        }, 100)
+                        }, 1000)
                         if (templateObject.salesorderrecord.get()) {
 
 
@@ -7646,41 +7646,46 @@ Template.new_salesorder.onRendered(function() {
         let temp = localStorage.getItem('TWorkorders');
         workorderList = temp?JSON.parse(temp): [];
 
-        let returnvalue = false;
-        let lineTable  = $('#tblSalesOrderLine');
-        setTimeout(function() {
+    let returnvalue = false;
+    
+    setTimeout(function () {
+      let lineTable = $("#tblSalesOrderLine");
+      let orderlines = $(lineTable).find("tbody tr");
+      console.log('orderlines', orderlines)
+      for (let i = 0; i < orderlines.length; i++) {
+        let line = orderlines[i];
+        let productName = $(line).find(".lineProductName").val();
+        console.log('product name', productName)
+        let existBOM = false;
 
-            let orderlines = $(lineTable).find('tbody tr')
-            for(let i = 0 ; i < orderlines.length; i++) {
-                let line =  orderlines[i];
-                let productName = $(line).find('.lineProductName').val();
-                let existBOM = false;
+        let index = bomProducts.findIndex((product) => {
+          console.log('product', product.fields.productName, product.fields.productName == productName)
+          return product.fields.productName == productName;
+        });
+        
+        if (index > -1) {
+          existBOM = true;
+        }
+        
+        if (existBOM == true) {
+          //check if the workorder is already exists
+          let workOrderIndex = workorderList.findIndex((order) => {
+              return (
+                order.SalesOrderID == tempObj.SalesOrderId.get() &&
+                order.line.fields.ProductName == productName
+              );  
 
-                let index = bomProducts.findIndex(product => {
-                    return product.fields.productName == productName
-                })
-
-                if(index > -1) {
-                    existBOM = true;
-                }
-
-                if(existBOM == true) {
-                    //check if the workorder is already exists
-                    let workOrderIndex = workorderList.findIndex(order=>{
-                        return order.SalesOrderID == tempObj.salesOrderId.get() && order.line.fields.ProductName == productName;
-                    })
-                    if(workOrderIndex == -1) {
-                        returnvalue = true
-                    }
-                }
-            }
-        }, 1000)
-
-        setTimeout(()=>{
-            tempObj.abletomakeworkorder.set(returnvalue);
-        },1000)
-    }
-
+          });
+          
+          if (workOrderIndex == -1) {
+            returnvalue = true;
+          }
+         
+        }
+      }
+      tempObj.abletomakeworkorder.set(returnvalue);
+    }, 2000);
+  };
 
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 
