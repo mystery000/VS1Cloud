@@ -1717,9 +1717,15 @@
                                                     <h5 class="modal-title" id="addLetterTemplateLabel">{{#if equals isAdd true}}Create a template{{else}}Edit a template{{/if}}</h5>
                                                 </div>
                                                 <div class="modal-body form-group p-3" style="display: flex; flex-direction: column; align-items: stretch; gap: 20px">
+                                                    <!-- Label -->
                                                     <input type="text" class="form-control p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateLbl" placeholder="Reference Letter Label"/>
+                                                    <!-- Appointment -->
+                                                    <input type="text" class="form-control p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTamplateAppointment" placeholder="Appointment"/>
+                                                    <!-- Recipient -->
                                                     <input type="text" class="form-control p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTamplateRecipient" placeholder="To:" disabled/>
+                                                    <!-- Subject -->
                                                     <input type="text" class="form-control p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateSubject" placeholder="Subject"/>
+                                                    <!-- Message -->
                                                     <textarea type="text" class="form-control p-2" style="width: 100%; height: 200px; resize: none; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateContent" placeholder="Enter Message Here"></textarea>
                                                 </div>
                                                 <div class="modal-footer">

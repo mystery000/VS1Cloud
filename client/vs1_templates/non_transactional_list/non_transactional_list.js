@@ -390,9 +390,9 @@ Template.non_transactional_list.onRendered(function() {
             ];
         } else if (currenttablename === "tblTitleList") {
             reset_data = [
-                { index: 0, label: '#ID', class: '', active: false, display: true, width: "" },
-                { index: 1, label: 'Title', class: 'colTitleName', active: true, display: true, width: "150" },
-                { index: 2, label: 'Active', class: 'chkBox', active: true, display: true, width: "50" },
+                { index: 0, label: '#ID', class: '', active: false, display: true, width: "10" },
+                { index: 1, label: 'Title', class: 'colTitleName', active: true, display: true, width: "200" },
+                { index: 2, label: 'Active', class: 'chkBox', active: true, display: true, width: "20" },
             ];
         } else if (currenttablename == 'tblProcessList') {
             reset_data = [
@@ -557,15 +557,10 @@ Template.non_transactional_list.onRendered(function() {
                 width: reset_data[r].width ? reset_data[r].width : ''
             };
 
-            let currentTable = document.getElementById(currenttablename);
             if (reset_data[r].active == true) {
-                if(currentTable){
-                    $('#' + currenttablename + ' .' + reset_data[r].class).removeClass('hiddenColumn');
-                }
+                $('#' + currenttablename + ' .' + reset_data[r].class).removeClass('hiddenColumn');
             } else if (reset_data[r].active == false) {
-                if(currentTable){
-                    $('#' + currenttablename + ' .' + reset_data[r].class).addClass('hiddenColumn');
-                }
+                $('#' + currenttablename + ' .' + reset_data[r].class).addClass('hiddenColumn');
             };
             custFields.push(customData);
         }
@@ -1705,9 +1700,6 @@ Template.non_transactional_list.onRendered(function() {
                                     dataObjectnew.taccountvs1list[j].AllowExpenseClaim || false,
                                     dataObjectnew.taccountvs1list[j].ReceiptCategory || "",
                                     linestatus,
-                                    dataObjectnew.taccountvs1list[j].Level1 || "",
-                                    dataObjectnew.taccountvs1list[j].Level2 || "",
-                                    dataObjectnew.taccountvs1list[j].Level3 || "",
                                 ];
 
                                 splashArrayAccountsOverview.push(dataListDupp);
@@ -4980,20 +4972,16 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.displayTitleListData(data); //Call this function to display data on the table
     }
 
-    templateObject.displayTitleListData = async function(data,deleteFilter = false) {
+    templateObject.displayTitleListData = async function(data) {
         var splashArrayClientTypeList = [
             [1, "Mr", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>', ],
             [2, "Mrs", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
             [3, "MIss", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
             [4, "Ms", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
         ];
-        templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
-        if (templateObject.transactiondatatablerecords.get()) {
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-        }
+        let deleteFilter = false;
         setTimeout(function() {
+            //$('#'+currenttablename).removeClass('hiddenColumn');
             $('#' + currenttablename).DataTable({
                 data: splashArrayClientTypeList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -5008,12 +4996,12 @@ Template.non_transactional_list.onRendered(function() {
                     {
                         targets: 1,
                         className: "colTypeName",
-                        width: "150px",
+                        width: "200px",
                     },
                     {
                         targets: 2,
                         className: "chkBox pointer",
-                        width: "50px",
+                        width: "20px",
                     },
                 ],
                 buttons: [{
@@ -5460,20 +5448,20 @@ Template.non_transactional_list.onRendered(function() {
         let deleteFilter = false;
         for (let i = 0; i < dataTableListJob.length; i++) {
             var dataList = [
-                dataTableListJob[i].id,
-                dataTableListJob[i].orderdate,
-                dataTableListJob[i].id,
-                dataTableListJob[i].suppliername,
-                dataTableListJob[i].totalamountex,
-                dataTableListJob[i].totaltax,
-                dataTableListJob[i].totalamount,
-                dataTableListJob[i].totalpaid,
-                dataTableListJob[i].totaloustanding,
-                dataTableListJob[i].type,
-                dataTableListJob[i].custfield1,
-                dataTableListJob[i].custfield2,
-                dataTableListJob[i].employee,
-                dataTableListJob[i].comments,
+                data[i].id,
+                data[i].orderdate,
+                data[i].id,
+                data[i].suppliername,
+                data[i].totalamountex,
+                data[i].totaltax,
+                data[i].totalamount,
+                data[i].totalpaid,
+                data[i].totaloustanding,
+                data[i].type,
+                data[i].custfield1,
+                data[i].custfield2,
+                data[i].employee,
+                data[i].comments,
             ];
             splashArrayClientTypeList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
@@ -6809,112 +6797,515 @@ Template.non_transactional_list.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
-    templateObject.getCustomerCrmListData = function(){
+
+    templateObject.getCustomerCrmListData = function(deleteFilter = false, datefrom="", dateto="") {
         let dataTableList = [];
         let customerName = $('#edtCustomerCompany').val();
-        crmService.getAllTasksByContactName(customerName).then(async function(data) {
-          if (data.tprojecttasks.length > 0) {
-              for (let i = 0; i < data.tprojecttasks.length; i++) {
-                  let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
-                  let taskLabelArray = [];
-                  if (taskLabel !== null) {
-                      if (taskLabel.length === undefined || taskLabel.length === 0) {
-                          taskLabelArray.push(taskLabel.fields);
-                      } else {
-                          for (let j = 0; j < taskLabel.length; j++) {
-                              taskLabelArray.push(taskLabel[j].fields);
-                          }
-                      }
-                  }
-                  let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
-                  taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
-                  const dataList = {
-                      id: data.tprojecttasks[i].fields.ID || 0,
-                      priority: data.tprojecttasks[i].fields.priority || 0,
-                      date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                      taskName: 'Task',
-                      projectID: data.tprojecttasks[i].fields.ProjectID || '',
-                      projectName: data.tprojecttasks[i].fields.ProjectName || '',
-                      description: taskDescription,
-                      labels: taskLabelArray,
-                      category: 'task',
-                      completed: data.tprojecttasks[i].fields.Completed,
-                      completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
-                  };
-                  dataTableList.push(dataList);
-              }
-          }
-          await getAppointments();
-      }).catch(function(err) {
-          getAppointments();
-      })
 
-        async function getAppointments() {
-          crmService.getAllAppointments(customerName).then(async function(dataObj) {
-              if (dataObj.tappointmentex.length > 0) {
-                  dataObj.tappointmentex.map(data => {
-                      let obj = {
-                          id: data.fields.ID,
-                          priority: 0,
-                          date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                          taskName: 'Appointment',
-                          projectID: data.fields.ProjectID || '',
-                          projectName: '',
-                          description: '',
-                          labels: '',
-                          category: 'appointment',
-                          completed: data.fields.Actual_EndTime ? true : false,
-                          completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+        let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
+        let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
+
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]);
+
+        getVS1Data("TCRMTaskList").then(async function(dataObject) {
+            if (dataObject.length == 0) {
+                crmService.getAllTasksByContactName(customerName).then(async function(data) {
+                    if (data.tprojecttasks.length > 0) {
+                        for (let i = 0; i < data.tprojecttasks.length; i++) {
+                            let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
+                            due_date = new Date(due_date);
+                            if (due_date >= fromDate && due_date <= toDate ) {
+                                let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
+                                let taskLabelArray = [];
+                                if (taskLabel !== null) {
+                                    if (taskLabel.length === undefined || taskLabel.length === 0) {
+                                        taskLabelArray.push(taskLabel.fields);
+                                    } else {
+                                        for (let j = 0; j < taskLabel.length; j++) {
+                                            taskLabelArray.push(taskLabel[j].fields);
+                                        }
+                                    }
+                                }
+                                let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
+                                taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+
+                                if (deleteFilter == false) {
+                                    if (!data.tprojecttasks[i].fields.Completed) {
+                                        const dataList = {
+                                            id: data.tprojecttasks[i].fields.ID || 0,
+                                            priority: data.tprojecttasks[i].fields.priority || 0,
+                                            date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                            taskName: 'Task',
+                                            projectID: data.tprojecttasks[i].fields.ProjectID || '',
+                                            projectName: data.tprojecttasks[i].fields.ProjectName || '',
+                                            description: taskDescription,
+                                            labels: taskLabelArray,
+                                            category: 'task',
+                                            completed: data.tprojecttasks[i].fields.Completed,
+                                            completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
+                                        };
+                                        dataTableList.push(dataList);
+                                    }
+                                } else {
+                                    const dataList = {
+                                        id: data.tprojecttasks[i].fields.ID || 0,
+                                        priority: data.tprojecttasks[i].fields.priority || 0,
+                                        date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                        taskName: 'Task',
+                                        projectID: data.tprojecttasks[i].fields.ProjectID || '',
+                                        projectName: data.tprojecttasks[i].fields.ProjectName || '',
+                                        description: taskDescription,
+                                        labels: taskLabelArray,
+                                        category: 'task',
+                                        completed: data.tprojecttasks[i].fields.Completed,
+                                        completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
+                                    };
+                                    dataTableList.push(dataList);
+                                }
+                            }
                         }
-                      dataTableList.push(obj);
-                  })
-              }
-              await getEmails();
-          }).catch(function(error) {
-              getEmails();
-          })
-        }
-        async function getEmails() {
-          sideBarService.getCorrespondences().then(dataReturn => {
-            let totalCorrespondences = dataReturn.tcorrespondence;
-            totalCorrespondences = totalCorrespondences.filter(item => {
-                return item.fields.MessageTo == $('#edtCustomerEmail').val()
-            })
-            if (totalCorrespondences.length > 0 && $('#edtCustomerEmail').val() != '') {
-                totalCorrespondences.map(item => {
-                    let labels = [];
-                    labels.push(item.fields.Ref_Type)
-                    let obj = {
-                        id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
-                        priority: 0,
-                        date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
-                        taskName: 'Email',
-                        projectID: '',
-                        projectName: '',
-                        description: '',
-                        labels: '',
-                        category: 'email',
-                        completed: false,
-                        completedby: "",
                     }
-                    dataTableList.push(obj)
+                    await getAppointments(deleteFilter);
+                }).catch(function(err) {
+                    getAppointments(deleteFilter);
                 })
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let all_records = data.tprojecttasks;
+
+                for (let i = 0; i < all_records.length; i++) {
+                    let due_date = all_records[i].fields.due_date == "" ? "1770-01-01" : all_records[i].fields.due_date;
+                    due_date = new Date(due_date);
+                    if (all_records[i].fields.ContactName == customerName && due_date >= fromDate && due_date <= toDate ) {
+                        let taskLabel = all_records[i].fields.TaskLabel;
+                        let taskLabelArray = [];
+                        if (taskLabel !== null) {
+                            if (taskLabel.length === undefined || taskLabel.length === 0) {
+                                taskLabelArray.push(taskLabel.fields);
+                            } else {
+                                for (let j = 0; j < taskLabel.length; j++) {
+                                    taskLabelArray.push(taskLabel[j].fields);
+                                }
+                            }
+                        }
+                        let taskDescription = all_records[i].fields.TaskDescription || '';
+                        taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+
+                        if (deleteFilter == false) {
+                            if (!all_records[i].fields.Completed) {
+                                const dataList = {
+                                    id: all_records[i].fields.ID || 0,
+                                    priority: all_records[i].fields.priority || 0,
+                                    date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                    taskName: 'Task',
+                                    projectID: all_records[i].fields.ProjectID || '',
+                                    projectName: all_records[i].fields.ProjectName || '',
+                                    description: taskDescription,
+                                    labels: taskLabelArray,
+                                    category: 'task',
+                                    completed: all_records[i].fields.Completed,
+                                    completedby: all_records[i].fields.due_date ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : "",
+                                };
+                                dataTableList.push(dataList);
+                            }
+                        } else {
+                            const dataList = {
+                                id: all_records[i].fields.ID || 0,
+                                priority: all_records[i].fields.priority || 0,
+                                date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                taskName: 'Task',
+                                projectID: all_records[i].fields.ProjectID || '',
+                                projectName: all_records[i].fields.ProjectName || '',
+                                description: taskDescription,
+                                labels: taskLabelArray,
+                                category: 'task',
+                                completed: all_records[i].fields.Completed,
+                                completedby: all_records[i].fields.due_date ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : "",
+                            };
+                            dataTableList.push(dataList);
+                        }
+                    }
+                }
+                await getAppointments(deleteFilter);
             }
-            try {
-                dataTableList.sort((a, b) => {
-                    new Date(a.date) - new Date(b.date)
+        }).catch(function(err) {
+            crmService.getAllTasksByContactName(customerName).then(async function(data) {
+                if (data.tprojecttasks.length > 0) {
+                    for (let i = 0; i < data.tprojecttasks.length; i++) {
+                        let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
+                        due_date = new Date(due_date);
+                        if (due_date >= fromDate && due_date <= toDate ) {
+                            let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
+                            let taskLabelArray = [];
+                            if (taskLabel !== null) {
+                                if (taskLabel.length === undefined || taskLabel.length === 0) {
+                                    taskLabelArray.push(taskLabel.fields);
+                                } else {
+                                    for (let j = 0; j < taskLabel.length; j++) {
+                                        taskLabelArray.push(taskLabel[j].fields);
+                                    }
+                                }
+                            }
+                            let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
+                            taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+
+                            if (deleteFilter == false) {
+                                if (!data.tprojecttasks[i].fields.Completed) {
+                                    const dataList = {
+                                        id: data.tprojecttasks[i].fields.ID || 0,
+                                        priority: data.tprojecttasks[i].fields.priority || 0,
+                                        date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                        taskName: 'Task',
+                                        projectID: data.tprojecttasks[i].fields.ProjectID || '',
+                                        projectName: data.tprojecttasks[i].fields.ProjectName || '',
+                                        description: taskDescription,
+                                        labels: taskLabelArray,
+                                        category: 'task',
+                                        completed: data.tprojecttasks[i].fields.Completed,
+                                        completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
+                                    };
+                                    dataTableList.push(dataList);
+                                }
+                            } else {
+                                const dataList = {
+                                    id: data.tprojecttasks[i].fields.ID || 0,
+                                    priority: data.tprojecttasks[i].fields.priority || 0,
+                                    date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                    taskName: 'Task',
+                                    projectID: data.tprojecttasks[i].fields.ProjectID || '',
+                                    projectName: data.tprojecttasks[i].fields.ProjectName || '',
+                                    description: taskDescription,
+                                    labels: taskLabelArray,
+                                    category: 'task',
+                                    completed: data.tprojecttasks[i].fields.Completed,
+                                    completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
+                                };
+                                dataTableList.push(dataList);
+                            }
+                        }
+                    }
+                }
+                await getAppointments(deleteFilter);
+            }).catch(function(err) {
+                getAppointments(deleteFilter);
+            })
+        });
+
+        async function getAppointments(deleteFilter = false) {
+            getVS1Data("TAppointment").then(async function(dataObject) {
+                if (dataObject.length == 0) {
+                    crmService.getAllAppointments(customerName).then(async function(dataObj) {
+                        if (dataObj.tappointmentex.length > 0) {
+                            addVS1Data("TAppointment", JSON.stringify(dataObj));
+                            dataObj.tappointmentex.map(data => {
+                                let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                                creationDate = new Date(creationDate);
+                                if(creationDate >= fromDate && creationDate <= toDate){
+                                    if (!deleteFilter) {
+                                        if (data.fields.Actual_EndTime == "") {
+                                            let obj = {
+                                                id: data.fields.ID,
+                                                priority: 0,
+                                                date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                taskName: 'Appointment',
+                                                projectID: data.fields.ProjectID || '',
+                                                projectName: '',
+                                                description: '',
+                                                labels: '',
+                                                category: 'appointment',
+                                                completed: data.fields.Actual_EndTime ? true : false,
+                                                completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                                            }
+                                            dataTableList.push(obj);
+                                        }
+                                    } else {
+                                        let obj = {
+                                            id: data.fields.ID,
+                                            priority: 0,
+                                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                            taskName: 'Appointment',
+                                            projectID: data.fields.ProjectID || '',
+                                            projectName: '',
+                                            description: '',
+                                            labels: '',
+                                            category: 'appointment',
+                                            completed: data.fields.Actual_EndTime ? true : false,
+                                            completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                                        }
+                                        dataTableList.push(obj);
+                                    }
+                                }
+                            })
+                        }
+                        await getEmails(deleteFilter);
+                    }).catch(function(error) {
+                        getEmails(deleteFilter);
+                    })
+                } else {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tappointmentex;
+                    for (let i = 0; i < useData.length; i++) {
+                        let creationDate = useData[i].fields.StartTime == "" ? "1770-01-01" : useData[i].fields.StartTime;
+                        creationDate = new Date(creationDate);
+                        if (useData[i].fields.ClientName == customerName && creationDate >= fromDate && creationDate <= toDate) {
+                            if (!deleteFilter) {
+                                if (useData[i].fields.Actual_EndTime == "") {
+                                    let obj = {
+                                        id: useData[i].fields.ID,
+                                        priority: 0,
+                                        date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
+                                        taskName: 'Appointment',
+                                        projectID: useData[i].fields.ProjectID || '',
+                                        projectName: '',
+                                        description: '',
+                                        labels: '',
+                                        category: 'appointment',
+                                        completed: useData[i].fields.Actual_EndTime ? true : false,
+                                        completedby: useData[i].fields.Actual_EndTime ? moment(useData[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                                    }
+                                    dataTableList.push(obj);
+                                }
+                            } else {
+                                let obj = {
+                                    id: useData[i].fields.ID,
+                                    priority: 0,
+                                    date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
+                                    taskName: 'Appointment',
+                                    projectID: useData[i].fields.ProjectID || '',
+                                    projectName: '',
+                                    description: '',
+                                    labels: '',
+                                    category: 'appointment',
+                                    completed: useData[i].fields.Actual_EndTime ? true : false,
+                                    completedby: useData[i].fields.Actual_EndTime ? moment(useData[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                                }
+                                dataTableList.push(obj);
+                            }
+                        }
+                    }
+                    if (dataTableList.length == 0) {
+                        crmService.getAllAppointments(customerName).then(async function(dataObj) {
+                            if (dataObj.tappointmentex.length > 0) {
+                                addVS1Data("TAppointment", JSON.stringify(dataObj));
+                                dataObj.tappointmentex.map(data => {
+                                    let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                                    creationDate = new Date(creationDate);
+                                    if(creationDate >= fromDate && creationDate <= toDate){
+                                        if (!deleteFilter) {
+                                            if (data.fields.Actual_EndTime == "") {
+                                                let obj = {
+                                                    id: data.fields.ID,
+                                                    priority: 0,
+                                                    date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                    taskName: 'Appointment',
+                                                    projectID: data.fields.ProjectID || '',
+                                                    projectName: '',
+                                                    description: '',
+                                                    labels: '',
+                                                    category: 'appointment',
+                                                    completed: data.fields.Actual_EndTime ? true : false,
+                                                    completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                                                }
+                                                dataTableList.push(obj);
+                                            }
+                                        } else {
+                                            let obj = {
+                                                id: data.fields.ID,
+                                                priority: 0,
+                                                date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                taskName: 'Appointment',
+                                                projectID: data.fields.ProjectID || '',
+                                                projectName: '',
+                                                description: '',
+                                                labels: '',
+                                                category: 'appointment',
+                                                completed: data.fields.Actual_EndTime ? true : false,
+                                                completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                                            }
+                                            dataTableList.push(obj);
+                                        }
+                                    }
+                                })
+                            }
+                            await getEmails(deleteFilter);
+                        }).catch(function(error) {
+                            getEmails(deleteFilter);
+                        })
+                    } else {
+                        await getEmails(deleteFilter);
+                    }
+                }
+            }).catch(function(err) {
+                crmService.getAllAppointments(customerName).then(async function(dataObj) {
+                    if (dataObj.tappointmentex.length > 0) {
+                        dataObj.tappointmentex.map(data => {
+                            let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                            creationDate = new Date(creationDate);
+                            if(creationDate >= fromDate && creationDate <= toDate){
+                                if (!deleteFilter) {
+                                    if (data.fields.Actual_EndTime == "") {
+                                        let obj = {
+                                            id: data.fields.ID,
+                                            priority: 0,
+                                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                            taskName: 'Appointment',
+                                            projectID: data.fields.ProjectID || '',
+                                            projectName: '',
+                                            description: '',
+                                            labels: '',
+                                            category: 'appointment',
+                                            completed: data.fields.Actual_EndTime ? true : false,
+                                            completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                                        }
+                                        dataTableList.push(obj);
+                                    }
+                                } else {
+                                    let obj = {
+                                        id: data.fields.ID,
+                                        priority: 0,
+                                        date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                        taskName: 'Appointment',
+                                        projectID: data.fields.ProjectID || '',
+                                        projectName: '',
+                                        description: '',
+                                        labels: '',
+                                        category: 'appointment',
+                                        completed: data.fields.Actual_EndTime ? true : false,
+                                        completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                                    }
+                                    dataTableList.push(obj);
+                                }
+                            }
+                        })
+                    }
+                    await getEmails(deleteFilter);
+                }).catch(function(error) {
+                    getEmails(deleteFilter);
                 })
-            } catch (error) {}
-            templateObject.displayCustomerCrmListData(dataTableList)
-        })
-        .catch((err) => {
-            $('.fullScreenSpin').css('display', 'none');
-        })
+            });
         }
-      }
+        async function getEmails(deleteFilter = false) {
+            getVS1Data('TCorrespondence').then(data => {
+                if (data.length == 0) {
+                    sideBarService.getCorrespondences().then(dataReturn => {
+                        let totalCorrespondences = dataReturn.tcorrespondence;
+                        totalCorrespondences = totalCorrespondences.filter(item => {
+                            return item.fields.MessageTo == $('#edtCustomerEmail').val()
+                        })
+                        if (totalCorrespondences.length > 0 && $('#edtCustomerEmail').val() != '') {
+                            totalCorrespondences.map(item => {
+                                let ref_Date = item.fields.Ref_Date == "" ? "1770-01-01" : item.fields.Ref_Date;
+                                ref_Date = new Date(ref_Date);
 
+                                if (ref_Date >= fromDate && ref_Date <= toDate ) {
+                                    let labels = [];
+                                    labels.push(item.fields.Ref_Type)
+                                    let obj = {
+                                        id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
+                                        priority: 0,
+                                        date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
+                                        taskName: 'Email',
+                                        projectID: '',
+                                        projectName: '',
+                                        description: '',
+                                        labels: '',
+                                        category: 'email',
+                                        completed: false,
+                                        completedby: "",
+                                    }
+                                    dataTableList.push(obj)
+                                }
+                            })
+                        }
+                        try {
+                            dataTableList.sort((a, b) => {
+                                new Date(a.date) - new Date(b.date)
+                            })
+                        } catch (error) {}
+                        templateObject.displayCustomerCrmListData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
+                    }).catch((err) => {
+                        $('.fullScreenSpin').css('display', 'none');
+                    })
+                } else {
+                    let dataObj = JSON.parse(data[0].data);
+                    if (dataObj.tcorrespondence.length > 0) {
+                        for (let i = 0; i < dataObj.tcorrespondence.length; i++) {
+                            let ref_Date = dataObj.tcorrespondence[i].fields.Ref_Date == "" ? "1770-01-01" : dataObj.tcorrespondence[i].fields.Ref_Date;
+                            ref_Date = new Date(ref_Date);
+                            if (dataObj.tcorrespondence[i].fields.MessageTo == $('#edtCustomerEmail').val() && ref_Date >= fromDate && ref_Date <= toDate) {
+                                let labels = [];
+                                labels.push(dataObj.tcorrespondence[i].fields.Ref_Type)
+                                let obj = {
+                                    id: dataObj.tcorrespondence[i].fields.MessageId ? parseInt(dataObj.tcorrespondence[i].fields.MessageId) : 999999,
+                                    priority: 0,
+                                    date: dataObj.tcorrespondence[i].fields.Ref_Date !== '' ? moment(dataObj.tcorrespondence[i].fields.Ref_Date).format('DD/MM/YYYY') : '',
+                                    taskName: 'Email',
+                                    projectID: '',
+                                    projectName: '',
+                                    description: '',
+                                    labels: '',
+                                    category: 'email',
+                                    completed: false,
+                                    completedby: "",
+                                }
+                                dataTableList.push(obj)
+                            }
+                        }
+                        try {
+                            dataTableList.sort((a, b) => {
+                                new Date(a.date) - new Date(b.date)
+                            })
+                        } catch (error) {}
+                        templateObject.displayCustomerCrmListData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
+                    }
+                }
+            }).catch(function(err) {
+                sideBarService.getCorrespondences().then(dataReturn => {
+                    let totalCorrespondences = dataReturn.tcorrespondence;
+                    totalCorrespondences = totalCorrespondences.filter(item => {
+                        return item.fields.MessageTo == $('#edtCustomerEmail').val()
+                    })
+                    if (totalCorrespondences.length > 0 && $('#edtCustomerEmail').val() != '') {
+                        totalCorrespondences.map(item => {
+                            let ref_Date = item.fields.Ref_Date == "" ? "1770-01-01" : item.fields.Ref_Date;
+                            ref_Date = new Date(ref_Date);
+                            if (ref_Date >= fromDate && ref_Date <= toDate ) {
+                                let labels = [];
+                                labels.push(item.fields.Ref_Type)
+                                let obj = {
+                                    id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
+                                    priority: 0,
+                                    date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
+                                    taskName: 'Email',
+                                    projectID: '',
+                                    projectName: '',
+                                    description: '',
+                                    labels: '',
+                                    category: 'email',
+                                    completed: false,
+                                    completedby: "",
+                                }
+                                dataTableList.push(obj)
+                            }
+                        })
+                    }
+                    try {
+                        dataTableList.sort((a, b) => {
+                            new Date(a.date) - new Date(b.date)
+                        })
+                    } catch (error) {}
+                    $("#dateFrom").val(moment(fromDate).format("DD/MM/YYYY"));
+                    $("#dateTo").val(moment(toDate).format("DD/MM/YYYY"));
+                    templateObject.displayCustomerCrmListData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
+                }).catch((err) => {
+                    $('.fullScreenSpin').css('display', 'none');
+                })
+            });
+        }
+    }
 
-    templateObject.displayCustomerCrmListData = function(data, deleteFilter = false) {
+    templateObject.displayCustomerCrmListData = function(data, deleteFilter = false, fromDate="", toDate="") {
         var splashArrayClientTypeList = new Array();
         for (let i = 0; i < data.length; i++) {
             var dataList = [
@@ -6929,6 +7320,7 @@ Template.non_transactional_list.onRendered(function() {
             splashArrayClientTypeList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
         }
+
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function() {
                 MakeNegative();
@@ -6937,7 +7329,7 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayClientTypeList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                sDom: "<'row'><'row'<'col-sm-12 col-lg-7'f><'col-sm-12 col-lg-5 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
                         className: "hiddenColumn",
@@ -7017,6 +7409,7 @@ Template.non_transactional_list.onRendered(function() {
                 ],
                 info: true,
                 responsive: true,
+                bLengthChange: false,
                 "order": [
                     [1, "asc"]
                 ],
@@ -7047,13 +7440,71 @@ Template.non_transactional_list.onRendered(function() {
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function(oSettings) {
-                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                    // $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                    $(`<div class="btn-group btnNav btnAddLineGroup" style="height:35px">
+                        <button type="button" class="btn btn-primary btnAddLine" id="btnAddLine" style="margin-right: 0px;"><i class='fas fa-plus'></i></button>
+                        <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item btnAddLineTask pointer" id="btnAddLineTask">+ Task</a>
+                        </div>
+                    </div>`).insertAfter('#' + currenttablename + '_filter');
                     if (deleteFilter) {
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Completed</button>").insertAfter('#' + currenttablename + '_filter');
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Completed</button>").insertAfter('#' + currenttablename + '_filter');
                     } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Completed</button>").insertAfter('#' + currenttablename + '_filter');
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Completed</button>").insertAfter('#' + currenttablename + '_filter');
                     }
-                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+
+                    var html = `<div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                        <div class="form-group" style="margin: 12px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 12px;">From</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin: 12px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 12px;">To</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateTo" name="dateTo" >
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                    setTimeout(function() {
+                        $(".colDateFilter").html(html);
+                        $("#dateFrom, #dateTo").datepicker({
+                            showOn: "button",
+                            buttonText: "Show Date",
+                            buttonImageOnly: true,
+                            buttonImage: "/img/imgCal2.png",
+                            dateFormat: "dd/mm/yy",
+                            showOtherMonths: true,
+                            selectOtherMonths: true,
+                            changeMonth: true,
+                            changeYear: true,
+                            yearRange: "-90:+10",
+                            onSelect: function(formated, dates) {
+                                const datefrom = $("#dateFrom").val();
+                                const dateto = $("#dateTo").val();
+                                templateObject.getCustomerCrmListData(false, datefrom, dateto);
+                            },
+                            onChangeMonthYear: function(year, month, inst) {
+                                // Set date to picker
+                                $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+                                // Hide (close) the picker
+                                // $(this).datepicker('hide');
+                                // // Change ttrigger the on change function
+                                // $(this).trigger('change');
+                            }
+                        });
+                        $("#dateFrom").val(fromDate);
+                        $("#dateTo").val(toDate);
+                    }, 100);
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {}
             }).on('page', function() {
@@ -7390,7 +7841,7 @@ Template.non_transactional_list.onRendered(function() {
     } else if (currenttablename == "tblCurrencyList") {
         templateObject.getCurrencyListData();
     } else if (currenttablename === "tblTitleList") {
-        templateObject.getTitleListData(false);
+        templateObject.getTitleListData();
     } else if (currenttablename == 'tblProcessList') {
         templateObject.getProcessListData();
     } else if (currenttablename == "tblSupplierTransactionList") {
@@ -7404,7 +7855,11 @@ Template.non_transactional_list.onRendered(function() {
     } else if (currenttablename === "tblLeadCrmList") {
         templateObject.getLeadCrmListData();
     } else if (currenttablename === "tblCustomerCrmList") {
-        templateObject.getCustomerCrmListData(false);
+        $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
+        $("#dateTo").val(moment().format('DD/MM/YYYY'));
+        const datefrom = $("#dateFrom").val();
+        const dateto = $("#dateTo").val();
+        templateObject.getCustomerCrmListData(false, datefrom, dateto);
     } else if (currenttablename === "tblSupplierCrmList") {
         templateObject.getSupplierCrmListData();
     }
@@ -7412,74 +7867,73 @@ Template.non_transactional_list.onRendered(function() {
 });
 
 Template.non_transactional_list.events({
-  "click .btnViewDeleted": async function (e) {
-      $(".fullScreenSpin").css("display", "inline-block");
-      e.stopImmediatePropagation();
-      const templateObject = Template.instance();
-      let currenttablename = await templateObject.tablename.get()||'';
-      $('.btnViewDeleted').css('display','none');
-      $('.btnHideDeleted').css('display','inline-block');
+    "click .btnViewDeleted": async function(e) {
+        $(".fullScreenSpin").css("display", "inline-block");
+        e.stopImmediatePropagation();
+        const templateObject = Template.instance();
+        let currenttablename = await templateObject.tablename.get() || '';
+        $('.btnViewDeleted').css('display', 'none');
+        $('.btnHideDeleted').css('display', 'inline-block');
 
-      if(currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist"){
-        await clearData('TERPCombinedContactsVS1');
-        templateObject.getContactOverviewData(true);
-      }else if(currenttablename == "tblEmployeelist"){
-        await clearData('TEmployeeList');
-        templateObject.getEmployeeListData(true);
-      }else if(currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList"){
-        await clearData('TAccountVS1List');
-        templateObject.getAccountsOverviewData(true);
-      }else if(currenttablename == "tblClienttypeList"){
-        await clearData('TClientTypeList');
-        templateObject.getClientTypeListData(true);
-      }else if(currenttablename == "tblLeadStatusList"){
-        await clearData('TLeadStatusTypeList');
-        templateObject.getLeadStatusListData(true);
-    }else if(currenttablename == "tblDepartmentList"){
-        await clearData('TDeptClassList');
-        templateObject.getDepartmentData(true);
-    }else if(currenttablename == "tblPaymentMethodList"){
-        await clearData('TPaymentList');
-        templateObject.getPaymentMethodData(true);
-    }else if(currenttablename == "tblTermsList"){
-        await clearData('TTermsVS1List');
-        templateObject.getTermsData(true);
-    }else if(currenttablename == "tblUOMList"){
-      await clearData('TUOMList');
-      templateObject.getUOMListData(true);
-    }else if(currenttablename == "tblSupplierlist"){
-      await clearData('TSupplierVS1List');
-      templateObject.getSupplierListData(true);
-    }else if(currenttablename == "tblLeadlist"){
-      await clearData('TProspectList');
-      templateObject.getLeadListData(true);
-    }else if(currenttablename == "tblCurrencyList"){
-      await clearData('TCurrency');
-      templateObject.getCurrencyListData(true);
-    }else if(currenttablename === "tblTitleList"){
-      templateObject.getTitleListData(true);
-    }else if(currenttablename == 'tblProcessList' ) {
-      await clearData('TProcessStep');
-      templateObject.getProcessListData(true);
-    }else if(currenttablename == "tblSupplierTransactionList"){
-      await clearData('TbillReport')
-      templateObject.getSupplierTransactionListData(true);
-    }else if(currenttablename == "tblCustomerTransactionList"){
-      await clearData('TJobVS1');
-      templateObject.getCustomerTransactionListData(true);
-    }else if (currenttablename === "tblCustomerJobDetailsList"){
-      await clearData('TJobVS1');
-      templateObject.getCustomerJobDetailsListData(true);
-    }else if (currenttablename === "tblEmployeeTransactionList"){
-      await clearData('TInvoiceEx');
-      templateObject.getEmployeeTransactionListData(true);
-    }else if (currenttablename === "tblLeadCrmList"){
-      templateObject.getLeadCrmListData(true);
-    }else if (currenttablename === "tblCustomerCrmList"){
-      templateObject.getCustomerCrmListData(true);
-    }else if (currenttablename === "tblSupplierCrmList"){
-      templateObject.getSupplierCrmListData(true);
-    }
+        if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
+            await clearData('TERPCombinedContactsVS1');
+            templateObject.getContactOverviewData(true);
+        } else if (currenttablename == "tblEmployeelist") {
+            await clearData('TEmployeeList');
+            templateObject.getEmployeeListData(true);
+        } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
+            await clearData('TAccountVS1List');
+            templateObject.getAccountsOverviewData(true);
+        } else if (currenttablename == "tblClienttypeList") {
+            await clearData('TClientTypeList');
+            templateObject.getClientTypeListData(true);
+        } else if (currenttablename == "tblLeadStatusList") {
+            await clearData('TLeadStatusTypeList');
+            templateObject.getLeadStatusListData(true);
+        } else if (currenttablename == "tblDepartmentList") {
+            await clearData('TDeptClassList');
+            templateObject.getDepartmentData(true);
+        } else if (currenttablename == "tblPaymentMethodList") {
+            await clearData('TPaymentList');
+            templateObject.getPaymentMethodData(true);
+        } else if (currenttablename == "tblTermsList") {
+            await clearData('TTermsVS1List');
+            templateObject.getTermsData(true);
+        } else if (currenttablename == "tblUOMList") {
+            await clearData('TUOMList');
+            templateObject.getUOMListData(true);
+        } else if (currenttablename == "tblSupplierlist") {
+            await clearData('TSupplierVS1List');
+            templateObject.getSupplierListData(true);
+        } else if (currenttablename == "tblLeadlist") {
+            await clearData('TProspectList');
+            templateObject.getLeadListData(true);
+        } else if (currenttablename == "tblCurrencyList") {
+            await clearData('TCurrency');
+            templateObject.getCurrencyListData(true);
+        } else if (currenttablename === "tblTitleList") {
+            templateObject.getTitleListData(true);
+        } else if (currenttablename == 'tblProcessList') {
+            await clearData('TProcessStep');
+            templateObject.getProcessListData(true);
+        } else if (currenttablename == "tblSupplierTransactionList") {
+            // await clearData('T')
+            templateObject.getSupplierTransactionListData(true);
+        } else if (currenttablename == "tblCustomerTransactionList") {
+            templateObject.getCustomerTransactionListData(true);
+        } else if (currenttablename === "tblCustomerJobDetailsList") {
+            templateObject.getCustomerJobDetailsListData(true);
+        } else if (currenttablename === "tblEmployeeTransactionList") {
+            templateObject.getEmployeeTransactionListData(true);
+        } else if (currenttablename === "tblLeadCrmList") {
+            templateObject.getLeadCrmListData(true);
+        } else if (currenttablename === "tblCustomerCrmList") {
+            const datefrom = $("#dateFrom").val();
+            const dateto = $("#dateTo").val();
+            templateObject.getCustomerCrmListData(true, datefrom, dateto);
+        } else if (currenttablename === "tblSupplierCrmList") {
+            templateObject.getSupplierCrmListData(true);
+        }
 
     },
     "click .btnHideDeleted": async function(e) {
@@ -7543,7 +7997,9 @@ Template.non_transactional_list.events({
         } else if (currenttablename === "tblLeadCrmList") {
             templateObject.getLeadCrmListData(false);
         } else if (currenttablename === "tblCustomerCrmList") {
-            templateObject.getCustomerCrmListData(false);
+            const datefrom = $("#dateFrom").val();
+            const dateto = $("#dateTo").val();
+            templateObject.getCustomerCrmListData(false, datefrom, dateto);
         } else if (currenttablename === "tblSupplierCrmList") {
             templateObject.getSupplierCrmListData(false)
         }
@@ -7553,7 +8009,6 @@ Template.non_transactional_list.events({
         const tableHandler = new TableHandler();
         let range = $(event.target).val() || 0;
         let colClassName = $(event.target).attr("valueclass");
-        console.log("==============", colClassName);
         await $('.' + colClassName).css('width', range);
         $('.dataTable').resizable();
     },
@@ -7672,6 +8127,10 @@ Template.non_transactional_list.events({
         jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletopdf').click();
         $(".fullScreenSpin").css("display", "none");
     },
+    // "change #dateFrom, change #dateTo": function() {
+    //     let templateObject = Template.instance();
+        
+    // },
 });
 
 Template.non_transactional_list.helpers({

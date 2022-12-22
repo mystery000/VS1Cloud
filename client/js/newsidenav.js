@@ -8441,18 +8441,6 @@ Template.newsidenav.events({
     'click #payrollrules': function(event) {
         window.open('/payrollrules', '_self');
     },
-    'click #mypayroll': function(event) {
-      event.preventDefault();
-      FlowRouter.go('/mypayroll');
-      let templateObject = Template.instance();
-      templateObject.getSetSideNavFocus();
-    },
-    'click #mypayrollleave': function(event) {
-        event.preventDefault();
-        FlowRouter.go('/mypayrollleave');
-        let templateObject = Template.instance();
-        templateObject.getSetSideNavFocus();
-    },
     'click #templatesettings': function(event) {
         window.open('/templatesettings', '_self');
     },

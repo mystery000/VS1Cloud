@@ -1,0 +1,176 @@
+<template name="listview_datepicker">
+  <div class="table-responsive">
+    <style>
+      th {
+        background-color: #ededed;
+      }
+
+      .table-striped tbody tr:nth-of-type(odd) {
+        background-color: white !important;
+      }
+
+      .table-striped tbody tr:nth-of-type(even) {
+        background-color: #0000000d !important;
+      }
+
+      .JColResizer > tbody > tr > td,
+      .JColResizer > tbody > tr > th {
+        padding: 0.75rem !important;
+      }
+
+      .hiddenColumn {
+        display: none;
+      }
+
+      .showColumn {
+        display: table-cell;
+        padding: 0.75rem;
+        vertical-align: top;
+      }
+
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        opacity: 1;
+      }
+
+      input[type="search"]#tblReceiptList_filter {
+        width: 150px !important;
+      }
+    </style>
+    <div class="row no-gutters d-xl-flex align-items-xl-end">
+      <div
+        class="col d-sm-flex justify-content-sm-start align-items-sm-center"
+      ></div>
+      <div
+        class="col-sm-12 float-right d-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm m-0 p-0"
+      >
+        <div class="dropdown" style="margin: 8px; margin-top: 0px">
+          <style>
+            .dropdown-toggle::after {
+              display: none;
+            }
+          </style>
+          <button
+            class="btn dropdown-toggle"
+            data-toggle="dropdown"
+            aria-expanded="true"
+            type="button"
+          >
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+          <div class="dropdown-menu" role="menu">
+            <h6 class="dropdown-header" role="presentation">Date ranges</h6>
+            <a
+              class="dropdown-item timeFilter"
+              id="lastMonth"
+              role="presentation"
+              href="#"
+              >Last Month</a
+            >
+            <a
+              class="dropdown-item timeFilter"
+              id="lastQuarter"
+              role="presentation"
+              href="#"
+              >Last Quarter</a
+            >
+            <a
+              class="dropdown-item timeFilter"
+              id="last12Months"
+              role="presentation"
+              href="#"
+              >Last 12 Months</a
+            >
+            <a
+              class="dropdown-item timeFilter"
+              id="ignoreDate"
+              role="presentation"
+              href="#"
+              >Ignore Date</a
+            >
+          </div>
+        </div>
+        <div
+          class="form-group"
+          style="margin: 8px; margin-top: 0px; display: inline-flex"
+        >
+          <!-- <label style="margin-top: 8px; margin-right: 16px;">From</label> -->
+          <div class="input-group date" style="width: 160px">
+            <input
+              type="text"
+              class="form-control"
+              id="dateFrom"
+              name="dateFrom"
+              placeholder="From"
+            />
+            <div class="input-group-addon">
+              <span class="glyphicon glyphicon-th"></span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="form-group"
+          style="
+            margin: 8px;
+            margin-right: 0px;
+            margin-top: 0px;
+            display: inline-flex;
+          "
+        >
+          <!-- <label style="margin-top: 8px; margin-right: 16px;">To</label> -->
+          <div class="input-group date" style="width: 160px">
+            <input
+              type="text"
+              class="form-control"
+              id="dateTo"
+              name="dateTo"
+              placeholder="To"
+            />
+            <div class="input-group-addon">
+              <span class="glyphicon glyphicon-th"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table
+        id="{{tablename}}"
+        class="dataTable table table-striped table-bordered {{tablename}}"
+      >
+        <thead>
+          <tr class="dnd-moved">
+            <th class="th col" style="width: 2%">
+              <div
+                class="custom-control custom-checkbox chkBox"
+                style="width: 15px; margin-right: -6px"
+              >
+                <input
+                  class="custom-control-input chkBoxAll"
+                  type="checkbox"
+                  id="formCheck-All"
+                />
+                <label
+                  class="custom-control-label chkBoxAll"
+                  for="formCheck-All"
+                ></label>
+              </div>
+            </th>
+            {{#each displayfield in listview_datepicker_displayfields}}
+            {{#if displayfield.display}}
+            <th
+              data-class="{{displayfield.class}}"
+              thclass="{{displayfield.class}}"
+              data-col-index="{{displayfield.id}}"
+              data-col-active="{{ displayfield.active}}"
+              class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"
+              style="text-align: left!important; {{#if displayfield.width}} width:{{displayfield.width}};{{/if}}"
+            >
+              {{displayfield.custfieldlabel}}
+            </th>
+            {{/if}} 
+            {{/each}}
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</template>
