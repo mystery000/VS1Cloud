@@ -21,10 +21,7 @@ const successSaveCb = () => {
 }
 
 const errorSaveCb = (err) => {
-<<<<<<< HEAD
     // console.log(err);
-=======
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
     // LoadingOverlay.hide();
     swal("Something went wrong", "", "error");
 }
@@ -134,13 +131,8 @@ Template.newbankrule.onRendered(function () {
   const templateObject = Template.instance();
   templateObject.bankNames.set(bankNameList);
   templateObject.bankRuleData.set([]);
-<<<<<<< HEAD
   $("#sltBankAccount").editableSelect();
   $("#sltBankAccount")
-=======
-  $("#bankAccountName").editableSelect();
-  $("#bankAccountName")
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
     .editableSelect()
     .on("click.editable-select", function (e, li) {
       const $each = $(this);
@@ -184,23 +176,13 @@ Template.newbankrule.onRendered(function () {
     if (FlowRouter.current().queryParams.bankaccountid) {
       let accountname = FlowRouter.current().queryParams.bankaccountname;
       let accountId = FlowRouter.current().queryParams.bankaccountid;
-<<<<<<< HEAD
       $("#sltBankAccount").val(accountname);
       $("#sltBankAccountID").val(accountId);
-=======
-      $("#bankAccountName").val(accountname);
-      $("#bankAccountID").val(accountId);
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
       getVS1Data("VS1_BankRule")
         .then(function (dataObject) {
           if (dataObject.length) {
             let data = JSON.parse(dataObject[0].data);
-<<<<<<< HEAD
             templateObject.bankRuleData.set(data[accountId] ? data[accountId] : []);
-=======
-            if (data[accountId])
-              return templateObject.bankRuleData.set(data[accountId]);
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
           }
         })
         .catch(function (err) {
@@ -208,21 +190,10 @@ Template.newbankrule.onRendered(function () {
         });
     }
 
-<<<<<<< HEAD
     if (FlowRouter.current().queryParams.preview && FlowRouter.current().queryParams.bankaccountid === $("#sltBankAccountID").val()) {
       let tmp = localStorage.getItem('BankStatement')
       if (tmp)
         templateObject.importData.set(JSON.parse(tmp))
-=======
-    if (FlowRouter.current().queryParams.preview && FlowRouter.current().queryParams.bankaccountid === $("#bankAccountID").val()) {
-      let tmp = localStorage.getItem('BankStatement')
-      if (tmp) {
-        let tmpData = JSON.parse(tmp)
-        templateObject.importData.set(tmpData)
-        if (tmpData[0] && tmpData[0].length)
-          templateObject.bankRuleData.set(tmpData[0].map((item,index) => ({column: item, order: index + 1})))
-      }
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
     }
 
   $(document).on("click", ".newbankrule #tblAccount tbody tr", function (e) {
@@ -232,17 +203,10 @@ Template.newbankrule.onRendered(function () {
     let accountname = table.find(".productName").text();
     let accountId = table.find(".colAccountID").text();
     $("#bankAccountListModal").modal("toggle");
-<<<<<<< HEAD
     $("#sltBankAccount").val(accountname);
     $("#sltBankAccountID").val(accountId);
     $("#tblAccount_filter .form-control-sm").val("");
     if (FlowRouter.current().queryParams.preview && FlowRouter.current().queryParams.bankaccountid === $("#sltBankAccountID").val()) {
-=======
-    $("#bankAccountName").val(accountname);
-    $("#bankAccountID").val(accountId);
-    $("#tblAccount_filter .form-control-sm").val("");
-    if (FlowRouter.current().queryParams.preview && FlowRouter.current().queryParams.bankaccountid === $("#bankAccountID").val()) {
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
       let tmp = localStorage.getItem('BankStatement')
       if (tmp)
         templateObject.importData.set(JSON.parse(tmp))
@@ -303,37 +267,19 @@ Template.newbankrule.events({
       noDataLine.remove();
     }
     let tmp = Template.instance().bankRuleData.get();
-<<<<<<< HEAD
     tmp.push({ order: tmp.length + 1, column: "" });
     Template.instance().bankRuleData.set(tmp);
-=======
-    for (let index = 0; index < tmp.length + 1; index++) {
-      if (tmp.findIndex((item) => item.order == index + 1) === -1) {
-        tmp.push({ order: index + 1, column: "" });
-        Template.instance().bankRuleData.set(tmp);
-        break
-      }
-    }
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
   },
 
   "click .btnSave": function (event) {
     let tmp = Template.instance().bankRuleData.get();
     if (tmp.length === 0) {
       swal("Please add columns", "", "error");
-<<<<<<< HEAD
     } else if ($("#sltBankAccountID").val() === "") {
       swal("Please select bank account", "", "error");
     } else {
       // LoadingOverlay.show();
       let accountId = $("#sltBankAccountID").val();
-=======
-    } else if ($("#bankAccountID").val() === "") {
-      swal("Please select bank account", "", "error");
-    } else {
-      // LoadingOverlay.show();
-      let accountId = $("#bankAccountID").val();
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
       let saveData = {
         [accountId]: Template.instance().bankRuleData.get(),
       };
@@ -377,23 +323,15 @@ Template.newbankrule.helpers({
     .bankRuleData.get()]
     .sort((a,b) => a.order > b.order ? 1 : -1),
   previewData: () => {
-<<<<<<< HEAD
     let tmpCol = [...Template.instance()
       .bankRuleData.get()]
       .sort((a,b) => a.order > b.order ? 1 : -1)
-=======
-    let tmpCol = Template.instance().bankRuleData.get()
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
     let tmpData = []
     let tmpImport = Template.instance().importData.get()
     for (let rowIndex = 1; rowIndex < tmpImport.length; rowIndex++) {
       let tmpRow = []
       for (let colIndex = 0; colIndex < tmpCol.length; colIndex++) {
-<<<<<<< HEAD
         let matchIndex = tmpImport[0].indexOf(tmpCol[colIndex].column)
-=======
-        let matchIndex = tmpCol.findIndex((item) => item.order == colIndex + 1)
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
         tmpRow.push(matchIndex === -1 ? null : tmpImport[rowIndex][matchIndex])
       }
       tmpData.push(tmpRow)
