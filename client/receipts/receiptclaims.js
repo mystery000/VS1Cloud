@@ -44,6 +44,7 @@ Template.receiptsoverview.onRendered(function () {
      */
     templateObject.loadDefaultCurrency = async c => FxGlobalFunctions.loadDefaultCurrencyForReport(c);
 
+    let receiptData = null;
 
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnSearchAlert');
@@ -105,6 +106,63 @@ Template.receiptsoverview.onRendered(function () {
     $('.trip-groups').on('click', function (e, li) {
         templateObject.setTripGroupList(e);
     });
+
+    $('.checkclose').on('click', function () {
+        $('#supplierListModal').modal('hide');
+
+        if ( receiptData != null ) {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            contactService.saveSupplier(receiptData).then(function (supplier) {
+                $('.fullScreenSpin').css('display', 'none');
+
+                let from = $('#employeeListModal').attr('data-from');
+                let parentElement;
+                if (from == 'ViewReceipt') {
+                    parentElement = "#viewReceiptModal";
+                } else if (from == 'NavExpense') {
+                    parentElement = "#nav-expense";
+                } else if (from == 'NavTime') {
+                    parentElement = "#nav-time";
+                }
+                
+                let supplierSaveID = supplier.fields.ID;
+                if (supplierSaveID) {
+                    $(parentElement + ' .merchants').val(receiptData.fields.ClientName);
+                    $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
+                    const suppliers = templateObject.suppliers.get();
+                    suppliers.push({
+                        supplierid: supplier.fields.ID,
+                        suppliername: receiptData.fields.ClientName,
+                    });
+                    templateObject.suppliers.set(suppliers);
+                    sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
+                        addVS1Data('TSupplierVS1', JSON.stringify(dataReload));
+                    }).catch(function (err) {
+
+                    });
+                }
+                receiptData = null;
+            }).catch(function (err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+    
+                    } else if (result.dismiss == 'cancel') {
+    
+                    }
+                });
+                $('.fullScreenSpin').css('display', 'none');
+                receiptData = null;
+            });
+        }
+
+    });
+
     templateObject.getAllReceiptCategory = function () {
         getVS1Data('TReceiptCategory').then(function (dataObject) {
             if (dataObject.length === 0) {
@@ -1536,7 +1594,6 @@ Template.receiptsoverview.onRendered(function () {
     templateObject.getOCRResultFromImage = function (imageData, fileName) {
         $('.fullScreenSpin').css('display', 'inline-block');
         ocrService.POST(imageData, fileName).then(function (data) {
-            $('.fullScreenSpin').css('display', 'none');
 
             let from = $('#employeeListModal').attr('data-from');
             let paymenttype = data.payment_type;
@@ -1602,11 +1659,15 @@ Template.receiptsoverview.onRendered(function () {
                         $(parentElement + ' .merchants').attr('data-id', supplier.supplierid);
                     }
                 });
+                
                 if (!isExistSupplier) {
                     contactService.getOneSupplierDataExByName(supplier_name).then(function (data) {
                         if (data.tsupplier.length == 0) {
                             // create supplier with vendor data
-                            objDetails = {
+                            $('.fullScreenSpin').css('display', 'none');
+                            $('#supplierListModal').modal('toggle');
+
+                            receiptData = {
                                 type: "TSupplier",
                                 fields: {
                                     ClientName: supplier_name,
@@ -1630,42 +1691,7 @@ Template.receiptsoverview.onRendered(function () {
                                     PublishOnVS1: true,
                                     Notes: vendor_type
                                 }
-                            };
-                            contactService.saveSupplier(objDetails).then(function (supplier) {
-                                let supplierSaveID = supplier.fields.ID;
-                                if (supplierSaveID) {
-                                    sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
-                                        addVS1Data('TSupplierVS1', JSON.stringify(dataReload));
-                                        $('.fullScreenSpin').css('display', 'none');
-                                        //  Meteor._reload.reload();
-                                        $(parentElement + ' .merchants').val(supplier_name);
-                                        $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
-                                        const suppliers = templateObject.suppliers.get();
-                                        suppliers.push({
-                                            supplierid: supplier.fields.ID,
-                                            suppliername: supplier_name,
-                                        });
-                                        templateObject.suppliers.set(suppliers);
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-                                }
-                            }).catch(function (err) {
-                                swal({
-                                    title: 'Oooops...',
-                                    text: err,
-                                    type: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Try Again'
-                                }).then((result) => {
-                                    if (result.value) {
-
-                                    } else if (result.dismiss == 'cancel') {
-
-                                    }
-                                });
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
+                            };                            
                         } else {
                             $(parentElement + ' .merchants').val(supplier_name);
                             $(parentElement + ' .merchants').attr('data-id', data.tsupplier[0].fields.ID);
@@ -1675,11 +1701,13 @@ Template.receiptsoverview.onRendered(function () {
                                 suppliername: supplier_name,
                             });
                             templateObject.suppliers.set(suppliers);
-                            $('.fullScreenSpin').css('display', 'none');
                         }
+                        $('.fullScreenSpin').css('display', 'none');
                     }).catch(function (err) {
-
+                        $('.fullScreenSpin').css('display', 'none');
                     });
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
                 }
             } else {
                 swal({
@@ -2047,6 +2075,7 @@ Template.receiptsoverview.events({
         $('#nav-time .img-placeholder').css('opacity', 1);
     },
     'click #nav-expense .btn-upload': function (event) {
+        $('#nav-expense .attachment-upload').val('');
         $('#nav-expense .attachment-upload').trigger('click');
     },
     'click #nav-time .btn-upload': function (event) {

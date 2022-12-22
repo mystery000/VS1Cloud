@@ -137,7 +137,9 @@ Template.emailsettings.onCreated(function () {
 
 Template.emailsettings.onRendered(function () {
 
-
+    tinymce.init({
+        selector: 'textarea#edtTemplateContent',
+    });
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
@@ -3093,7 +3095,11 @@ Template.emailsettings.events({
         let correspondenceTemp = templateObject.correspondences.get()
         let tempLabel = $("#edtTemplateLbl").val();
         let tempSubject = $('#edtTemplateSubject').val();
-        let tempContent = $("#edtTemplateContent").val();
+        let iframe = document.getElementById("edtTemplateContent_ifr");
+        var tempHtml = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
+        // let tempHtml = $("#edtTemplateContent_ifr").val();
+        let tempContent = tempHtml.replace(/<[^>]+>/g, ' ');
+        
         if(templateObject.isAdd.get() == true) {
             if(correspondenceTemp.length > 0 ) {
                 let index = correspondenceTemp.findIndex(item=>{

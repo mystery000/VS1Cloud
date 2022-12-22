@@ -1546,7 +1546,6 @@ Template.bankrecon.onRendered(function() {
         }, 1000);
     });
 
-<<<<<<< HEAD
     $('#btnImportState').on('click', function(e) {
         let accountId = $('#bankAccountID').val()
         let accountName = $('#bankAccountName').val()
@@ -1572,46 +1571,6 @@ Template.bankrecon.onRendered(function() {
         }
 
     })
-=======
-    // $('#btnImportState').on('click', function(e) {
-    //     let accountId = $('#bankAccountID').val()
-    //     let accountName = $('#bankAccountName').val()
-    //     if ($('#bankAccountName').val() == '')
-    //         swal('Please Select Bank Account!', '', 'warning');
-    //     else {
-    //         getVS1Data("VS1_BankRule")
-    //             .then(function (dataObject) {
-    //                 if (dataObject.length) {
-    //                     let data = JSON.parse(dataObject[0].data);
-    //                     if (data[accountId] && data[accountId].length)
-    //                         return $('#importModal').modal();
-    //                 }
-    //                 swal({
-    //                     text: `This will allow you to manually import a bank statement directly
-    //                     from your Company Bank Account Into your VS1 Bank
-    //                     Reconciliation from. You just need to map or create the rules for
-    //                     the first time, for which column on your Company Bank Account
-    //                     import match's the fields in VS1 and it will remember moving
-    //                     forward.`,
-    //                     type: 'info',
-    //                     showCancelButton: true,
-    //                     // confirmButtonText: 'Yes',
-    //                     // cancelButtonText: 'No'
-    //                 })
-    //                     .then((result) => {
-    //                         if (result.value)
-    //                             return $('#importModal').modal();
-    //                             // FlowRouter.go('/newbankrule', {}, {bankaccountid: accountId, bankaccountname: accountName})
-    //                     });
-    //             })
-    //             .catch(function (err) {
-    //                 swal('Something went wrong', '', 'error');
-    //             });
-
-    //     }
-
-    // })
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
     tableResize();
 });
 

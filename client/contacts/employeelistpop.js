@@ -594,7 +594,7 @@ Template.employeelistpop.onRendered(function () {
 
                 //$('.fullScreenSpin').css('display','none');
                 setTimeout(function () {
-                    $(currenttablename).DataTable({
+                    $("#"+currenttablename).DataTable({
                         data: splashArrayEmployeeList,
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         columnDefs: [
@@ -648,7 +648,7 @@ Template.employeelistpop.onRendered(function () {
                         responsive: true,
                         "order": [[0, "asc"]],
                         action: function () {
-                            $(currenttablename).DataTable().ajax.reload();
+                            $("#"+currenttablename).DataTable().ajax.reload();
                         },
                         "fnDrawCallback": function (oSettings) {
                             $('.paginate_button.page-item').removeClass('disabled');
@@ -733,12 +733,12 @@ Template.employeelistpop.onRendered(function () {
                                                 }
 
                                                 let uniqueChars = [...new Set(splashArrayEmployeeList)];
-                                                var datatable = $(currenttablename).DataTable();
+                                                var datatable = $("#"+currenttablename).DataTable();
                                                 datatable.clear();
                                                 datatable.rows.add(uniqueChars);
                                                 datatable.draw(false);
                                                 setTimeout(function () {
-                                                  $(currenttablename).dataTable().fnPageChange('last');
+                                                  $("#"+currenttablename).dataTable().fnPageChange('last');
                                                 }, 400);
 
                                                 $('.fullScreenSpin').css('display', 'none');
@@ -842,7 +842,7 @@ Template.employeelistpop.onRendered(function () {
                                           splashArrayEmployeeList.push(dataListEmployee);
                                           //}
                                       }
-                                      var datatable = $(currenttablename).DataTable();
+                                      var datatable = $("#"+currenttablename).DataTable();
                                       datatable.clear();
                                       datatable.rows.add(splashArrayEmployeeList);
                                       datatable.draw(false);
@@ -1050,7 +1050,7 @@ Template.employeelistpop.onRendered(function () {
 
                 //$('.fullScreenSpin').css('display','none');
                 setTimeout(function () {
-                    $(currenttablename).DataTable({
+                    $("#"+currenttablename).DataTable({
                         data: splashArrayEmployeeList,
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         columnDefs: [
@@ -1104,7 +1104,7 @@ Template.employeelistpop.onRendered(function () {
                         responsive: true,
                         "order": [[0, "asc"]],
                         action: function () {
-                            $(currenttablename).DataTable().ajax.reload();
+                            $("#"+currenttablename).DataTable().ajax.reload();
                         },
                         "fnDrawCallback": function (oSettings) {
                             $('.paginate_button.page-item').removeClass('disabled');
@@ -1187,12 +1187,12 @@ Template.employeelistpop.onRendered(function () {
                                                 }
 
                                                 let uniqueChars = [...new Set(splashArrayEmployeeList)];
-                                                var datatable = $(currenttablename).DataTable();
+                                                var datatable = $("#"+currenttablename).DataTable();
                                                 datatable.clear();
                                                 datatable.rows.add(uniqueChars);
                                                 datatable.draw(false);
                                                 setTimeout(function () {
-                                                  $(currenttablename).dataTable().fnPageChange('last');
+                                                  $("#"+currenttablename).dataTable().fnPageChange('last');
                                                 }, 400);
 
                                                 $('.fullScreenSpin').css('display', 'none');
@@ -1294,7 +1294,7 @@ Template.employeelistpop.onRendered(function () {
                                           splashArrayEmployeeList.push(dataListEmployee);
                                           //}
                                       }
-                                      var datatable = $(currenttablename).DataTable();
+                                      var datatable = $("#"+currenttablename).DataTable();
                                       datatable.clear();
                                       datatable.rows.add(splashArrayEmployeeList);
                                       datatable.draw(false);
@@ -1487,7 +1487,7 @@ Template.employeelistpop.events({
                         splashArrayEmployeeList.push(dataListEmployee);
                         //}
                     }
-                    var datatable = $(currenttablename).DataTable();
+                    var datatable = $("#"+currenttablename).DataTable();
                     datatable.clear();
                     datatable.rows.add(splashArrayEmployeeList);
                     datatable.draw(false);
@@ -1592,7 +1592,7 @@ Template.employeelistpop.events({
                     // clientList.push(employeerecordObj);
                     //}
                 }
-                var datatable = $(currenttablename).DataTable();
+                var datatable = $("#"+currenttablename).DataTable();
                 datatable.clear();
                 datatable.rows.add(splashArrayEmployeeList);
                 datatable.draw(false);
@@ -2024,5 +2024,8 @@ Template.employeelistpop.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
+    },
+    tablename: () => {
+        return Template.instance().tablename.get();
     }
 });

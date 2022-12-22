@@ -1362,9 +1362,9 @@
                 vertical-align: top;
               }
             </style>
-            {{> deletepop itemName1="Payment" itemName2="payment"
+            <!-- {{> deletepop itemName1="Payment" itemName2="payment"
             itemName3="Payment" button1="btnDeletePayment"
-            button2="btnDeleteFollowingPayments"}}
+            button2="btnDeleteFollowingPayments"}} -->
             <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -1636,11 +1636,10 @@
 
         <div class="col-12 col-md-6">
           <div class="row justify-content-center desktopButtons">
-            {{> transaction_footer margin="14px"
-            AttachmentCount=attachmentCount SaveButton="vs1ButtonMargin"
-            PrintButton="vs1ButtonMargin" AttachmentsButton="vs1ButtonMargin"
-            RemoveButton="vs1ButtonMargin" CancelButton="vs1ButtonMargin"
-            TransactionType="supplierpayments"}}
+            {{> transaction_footer 
+              margin="14px"
+              AttachmentCount=attachmentCount 
+              TransactionType="supplierpayments"}}
           </div>
         </div>
       </div>
