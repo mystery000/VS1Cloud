@@ -1017,7 +1017,7 @@ Template.internal_transaction_list_with_switchbox.helpers({
         }
     },
     int_trans_with_switchbox_displayfields: () => {
-        return Template.instance().int_trans_with_switchbox_displayget();
+        return Template.instance().int_trans_with_switchbox_displayfields.get();
     },
     tablename: () => {
         return Template.instance().tablename.get();
