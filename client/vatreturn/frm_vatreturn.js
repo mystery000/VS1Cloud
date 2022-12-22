@@ -2488,11 +2488,6 @@ Template.vatreturn.events({
                                         window.open("vatreturnlist", "_self");
                                     });
                                 }).catch(function(err) {
-<<<<<<< HEAD
-                                    alert(err);
-=======
-
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
                                     swal({
                                         title: 'Oooops...',
                                         text: err,
@@ -2928,7 +2923,6 @@ Template.vatreturn.events({
                             window.open("vatreturnlist", "_self");
                         });
                     }).catch(function(err) {
-
                         swal({
                             title: 'Oooops...',
                             text: err,

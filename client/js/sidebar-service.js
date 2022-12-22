@@ -915,8 +915,9 @@ export class SideBarService extends BaseService {
         options = {
           IgnoreDates:true,
           orderby: '"name asc"',
+          // search: 'email="'+ dataSearchName+ '"',
           search: 'name="' + dataSearchName + '"',
-          // search: 'name='+ dataSearchName+ ' OR email=' + dataSearchName + '',
+          // search: "name='"+ dataSearchName+ ' OR email=' + dataSearchName + "'",
           // search: 'name="' + dataSearchName + '" OR email="' +  dataSearchName + '"',
           //search: 'name="' + dataSearchName + '" OR street="' + dataSearchName + '" OR suburb="' + dataSearchName + '" OR state="' + dataSearchName + '" OR postcode="' + dataSearchName + '"',
         };

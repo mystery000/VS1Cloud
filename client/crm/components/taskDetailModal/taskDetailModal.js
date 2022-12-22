@@ -63,7 +63,7 @@ Template.taskDetailModal.onRendered(function() {
         //}
 
     });
-    $(document).on("click", "#employeeListCRMModal #tblEmployeelist tbody tr", function(e) {
+    $(document).on("click", "#employeeListCRMModal .tblEmployeelist tbody tr", function(e) {
         var table = $(this);
         let colEmployeeName = table.find(".colEmployeeName").text();
         let colID = table.find(".colID").text();
@@ -94,7 +94,6 @@ Template.taskDetailModal.onRendered(function() {
         $("#taskDetailModalCategoryLabel").val(colProjectName);
     });
 
-<<<<<<< HEAD
     templateObject.getInitTProjectList = function() {
         getVS1Data("TCRMProjectList").then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -113,6 +112,8 @@ Template.taskDetailModal.onRendered(function() {
                     tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
                     // }
 
+                    console.log("tprojectlist=", tprojectlist);
+
                     let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
             style="margin-right: 8px;"></i>All Tasks</a>`;
                     let ProjectName = "";
@@ -122,6 +123,9 @@ Template.taskDetailModal.onRendered(function() {
                     });
                     $("#goProjectWrapper").html(add_projectlist);
                     $(".goProjectWrapper").html(add_projectlist);
+                }
+                else{
+
                 }
             }
         }).catch(function(err) {
@@ -152,65 +156,6 @@ Template.taskDetailModal.onRendered(function() {
             addVS1Data("TCRMProjectList", JSON.stringify(data));
         }).catch(function(err) {});
     };
-=======
-    // templateObject.getInitTProjectList = function() {
-    //     getVS1Data("TCRMProjectList").then(function(dataObject) {
-    //         if (dataObject.length == 0) {
-    //             templateObject.getTProjectList();
-    //         } else {
-    //             let data = JSON.parse(dataObject[0].data);
-    //             if (data.tprojectlist && data.tprojectlist.length > 0) {
-    //                 let tprojectlist = data.tprojectlist;
-
-    //                 // var url = new URL(window.location.href);
-    //                 // let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
-
-    //                 // if (employeeID) {
-    //                 //     tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
-    //                 // } else {
-    //                 tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
-    //                 // }
-
-    //                 let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
-    //         style="margin-right: 8px;"></i>All Tasks</a>`;
-    //                 let ProjectName = "";
-    //                 tprojectlist.forEach((proj) => {
-    //                     ProjectName = proj.fields.ProjectName.length > 26 ? proj.fields.ProjectName.substring(0, 26) + "..." : proj.fields.ProjectName;
-    //                     add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
-    //                 });
-    //                 $("#goProjectWrapper").html(add_projectlist);
-    //                 $(".goProjectWrapper").html(add_projectlist);
-    //             }
-    //         }
-    //     }).catch(function(err) {
-    //         templateObject.getTProjectList();
-    //     });
-    // };
-
-    // templateObject.getTProjectList = function() {
-    //     var url = FlowRouter.current().path;
-    //     url = new URL(window.location.href);
-    //     let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
-
-    //     crmService.getTProjectList(employeeID).then(function(data) {
-    //         if (data.tprojectlist && data.tprojectlist.length > 0) {
-    //             let tprojectlist = data.tprojectlist;
-    //             tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
-
-    //             let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
-    //       style="margin-right: 8px;"></i>All Tasks</a>`;
-    //             let ProjectName = "";
-    //             tprojectlist.forEach((proj) => {
-    //                 ProjectName = proj.fields.ProjectName.length > 26 ? proj.fields.ProjectName.substring(0, 26) + "..." : proj.fields.ProjectName;
-    //                 add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
-    //             });
-    //             $("#goProjectWrapper").html(add_projectlist);
-    //             $(".goProjectWrapper").html(add_projectlist);
-    //         }
-    //         addVS1Data("TCRMProjectList", JSON.stringify(data));
-    //     }).catch(function(err) {});
-    // };
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
 
     templateObject.getInitAllLabels = function() {
         getVS1Data("TCRMLabelList").then(function(dataObject) {
@@ -317,11 +262,7 @@ Template.taskDetailModal.onRendered(function() {
     };
 
     setTimeout(() => {
-<<<<<<< HEAD
-        templateObject.getInitTProjectList();
-=======
         // templateObject.getInitTProjectList();
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
         templateObject.getInitAllLabels();
     }, 500);
 });
@@ -333,94 +274,77 @@ Template.taskDetailModal.events({
         let templateObject = Template.instance();
         setTimeout(function() {
             let taskID = $("#txtCrmTaskID").val();
+            
+            let selected_lbls = [];
+            let unselected_lbls = [];
+            $("#detailTaskLabelWrapper input:checked").each(function() {
+                selected_lbls.push($(this).attr("name"));
+            });
+            $("#detailTaskLabelWrapper input:unchecked").each(function() {
+                unselected_lbls.push($(this).attr("name"));
+            });
+
+            let editTaskDetailName = $(".editTaskDetailName").val();
+            let editTaskDetailDescription = $(".editTaskDetailDescription").val();
+            if (editTaskDetailName == "") {
+                swal("Please endter the task name", "", "warning");
+                return;
+            }
+
+            let assignId = $('#assignedID').val();
+            let assignName = $('#crmEditSelectEmployeeList').val();
+            let assignPhone = $('#contactPhoneUser').val();
+            let assignEmail = $('#contactEmailUser').val();
+            let contactID = $('#contactID').val();
+            let contactName = $('#crmEditSelectLeadList').val();
+            let contactPhone = $('#contactPhoneClient').val();
+            let contactEmail = $('#contactEmailClient').val();
+
+            let contactType = $('#contactType').val();
+            let customerID = 0;
+            let leadID = 0;
+            let supplierID = 0;
+            if (contactType == 'Customer') {
+                customerID = contactID;
+            } else if (contactType == 'Lead') {
+                leadID = contactID;
+            } else if (contactType == 'Supplier') {
+                supplierID = contactID;
+            }
+
+            let projectID = $("#addProjectID").val() ? $("#addProjectID").val() : 11;
+            projectID = $("#editProjectID").val() ? $("#editProjectID").val() : projectID;
+
+            let projectName = $("#taskDetailModalCategoryLabel").val();
+            let due_date = $("#taskmodalDuedate").val() ? new Date($("#taskmodalDuedate").datepicker("getDate")) : "";
+            due_date = due_date != "" ? moment(due_date).format("YYYY-MM-DD") : "";
+
+            let completed = $('#chkComplete_taskEdit').prop("checked");
+
+            var objDetails = {
+                type: "Tprojecttasks",
+                fields: {
+                    TaskName: editTaskDetailName,
+                    TaskDescription: editTaskDetailDescription,
+                    CustomerID: customerID,
+                    LeadID: leadID,
+                    SupplierID: supplierID,
+                    AssignID: assignId,
+                    AssignName: assignName,
+                    AssignEmail: assignEmail,
+                    AssignPhone: assignPhone,
+                    ContactName: contactName,
+                    ContactPhone: contactPhone,
+                    ContactEmail: contactEmail,
+                    ProjectID: projectID,
+                    ProjectName: projectName,
+                    Completed: completed,
+                    due_date: due_date
+                },
+            };
+
             if (taskID) {
-                let selected_lbls = [];
-                let unselected_lbls = [];
-                $("#detailTaskLabelWrapper input:checked").each(function() {
-                    selected_lbls.push($(this).attr("name"));
-                });
-                $("#detailTaskLabelWrapper input:unchecked").each(function() {
-                    unselected_lbls.push($(this).attr("name"));
-                });
-
-                let editTaskDetailName = $(".editTaskDetailName").val();
-                let editTaskDetailDescription = $(".editTaskDetailDescription").val();
-                if (editTaskDetailName == "") {
-                    swal("Please endter the task name", "", "warning");
-                    return;
-                }
-
-                let assignId = $('#assignedID').val();
-                let assignName = $('#crmEditSelectEmployeeList').val();
-                let assignPhone = $('#contactPhoneUser').val();
-                let assignEmail = $('#contactEmailUser').val();
-                let contactID = $('#contactID').val();
-                let contactName = $('#crmEditSelectLeadList').val();
-                let contactPhone = $('#contactPhoneClient').val();
-                let contactEmail = $('#contactEmailClient').val();
-
-                let contactType = $('#contactType').val();
-                let customerID = 0;
-                let leadID = 0;
-                let supplierID = 0;
-                if (contactType == 'Customer') {
-                    customerID = contactID;
-                } else if (contactType == 'Lead') {
-                    leadID = contactID;
-                } else if (contactType == 'Supplier') {
-                    supplierID = contactID;
-                }
-
-                let projectID = $("#addProjectID").val() ? $("#addProjectID").val() : 11;
-                projectID = $("#editProjectID").val() ? $("#editProjectID").val() : projectID;
-
-                let projectName = $("#taskDetailModalCategoryLabel").val();
-                let due_date = $("#taskmodalDuedate").val() ? new Date($("#taskmodalDuedate").datepicker("getDate")) : "";
-                due_date = due_date != "" ? moment(due_date).format("YYYY-MM-DD") : "";
-
-                let completed = $('#chkComplete_taskEdit').prop("checked");
-
-                var objDetails = {
-                    type: "Tprojecttasks",
-                    fields: {
-                        ID: taskID,
-                        TaskName: editTaskDetailName,
-                        TaskDescription: editTaskDetailDescription,
-                        CustomerID: customerID,
-                        LeadID: leadID,
-                        SupplierID: supplierID,
-                        AssignID: assignId,
-                        AssignName: assignName,
-                        AssignEmail: assignEmail,
-                        AssignPhone: assignPhone,
-                        ContactName: contactName,
-                        ContactPhone: contactPhone,
-                        ContactEmail: contactEmail,
-                        ProjectID: projectID,
-                        ProjectName: projectName,
-                        Completed: completed,
-                        due_date: due_date
-                    },
-                };
-                $(".fullScreenSpin").css("display", "inline-block");
-
-                crmService.saveNewTask(objDetails).then(function(data) {
-                    $(".fullScreenSpin").css("display", "none");
-                    $(".btnRefresh").addClass('btnSearchAlert');
-
-                    crmService.getAllTaskList().then(function(data) {
-                        if (data.tprojecttasks && data.tprojecttasks.length > 0) {
-                            addVS1Data("TCRMTaskList", JSON.stringify(data));
-                            Meteor._reload.reload();
-                        }
-                    }).catch(function(err) {
-                        $(".fullScreenSpin").css("display", "none");
-                    });
-                    // setTimeout(() => {
-                    //     // templateObject.getAllTaskList();
-                    // }, 400);
-                });
-
+                objDetails.fields.ID = taskID;
                 selected_lbls.forEach((lbl) => {
                     crmService
                         .updateLabel({
@@ -433,15 +357,73 @@ Template.taskDetailModal.events({
                         .then(function(data) {});
                 });
             }
+
+            $(".fullScreenSpin").css("display", "inline-block");
+
+            crmService.saveNewTask(objDetails).then(function(data) {
+                $(".fullScreenSpin").css("display", "none");
+                $(".btnRefresh").addClass('btnSearchAlert');
+
+                crmService.getAllTaskList().then(async function(data) {
+                    if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+                        await addVS1Data("TCRMTaskList", JSON.stringify(data));
+                        Meteor._reload.reload();
+                    }
+                }).catch(function(err) {
+                    $(".fullScreenSpin").css("display", "none");
+                });
+                // setTimeout(() => {
+                //     // templateObject.getAllTaskList();
+                // }, 400);
+            });
         }, delayTimeAfterSound);
     },
-<<<<<<< HEAD
-=======
 
     "click .btnAddSubTask": function(event) {
         $("#newTaskModal").modal("toggle");
     },
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
+
+    "click .delete-task": function(e) {
+        let id = e.target.dataset.id;
+        if (id == "edit") id = $("#txtCrmTaskID").val();
+        var objDetails = {
+            type: "Tprojecttasks",
+            fields: {
+                ID: id,
+                Active: false,
+            },
+        };
+
+        let templateObject = Template.instance();
+        if (id) {
+            swal({
+                title: "Delete Task",
+                text: "Are you sure want to delete this task?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+            }).then((result) => {
+                if (result.value) {
+                    $(".fullScreenSpin").css("display", "inline-block");
+                    crmService.saveNewTask(objDetails).then(function(objDetails) {
+                        // recalculate count here
+                        $(".fullScreenSpin").css("display", "none");
+                        crmService.getAllTaskList().then(async function(data) {
+                            if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+                                await addVS1Data("TCRMTaskList", JSON.stringify(data));
+                                Meteor._reload.reload();
+                            }
+                        }).catch(function(err) {
+                            $(".fullScreenSpin").css("display", "none");
+                        });
+                        $("#taskDetailModal").modal("hide");
+                        // $("#newProjectTasksModal").modal("hide");
+                    });
+                } else if (result.dismiss === "cancel") {} else {}
+            });
+        }
+    },
 });
 
 Template.taskDetailModal.helpers({});

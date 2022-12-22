@@ -335,10 +335,6 @@ Template.stockadjustmentcard.onRendered(() => {
                         };
 
                         let getDepartmentVal = data.fields.Lines[0].fields.DeptName || defaultDept;
-<<<<<<< HEAD
-                        console.log(getDepartmentVal);
-=======
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
                         setTimeout(function () {
                             // $('#sltDepartment').val(getDepartmentVal);
                             $('#sltAccountName').val(data.fields.AccountName);

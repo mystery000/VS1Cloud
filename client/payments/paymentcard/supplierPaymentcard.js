@@ -12483,11 +12483,11 @@ Template.supplierpaymentcard.events({
     if(targetID != undefined){
       times++;
       if (times == 1) {
-        if (targetID == 0) {
-          $(event.target).closest("tr").remove();
-        } else {
-          $("#deleteLineModal").modal("toggle");
-        }
+        // if (targetID == 0) {
+        //   $(event.target).closest("tr").remove();
+        // } else {
+          $("#deleteLineModal").modal("show");
+        // }
       } else {
         if ($("#tblSupplierPaymentcard tbody>tr").length > 1) {
           this.click;
@@ -12515,13 +12515,13 @@ Template.supplierpaymentcard.events({
           if (targetID == 0) {
             $(event.target).closest("tr").remove();
           } else {
-            $("#deleteLineModal").modal("toggle");
+            $("#deleteLineModal").modal("show");
           }
         }
       }
     } else {
-      if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
-      else $("#footerDeleteModal1").modal("toggle");
+      if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("show");
+      else $("#footerDeleteModal1").modal("show");
     }
   },
   "click .btnRecoverPayment": function (event) {
@@ -12732,7 +12732,7 @@ Template.supplierpaymentcard.events({
     } else {
       this.click;
     }
-    $("#deleteLineModal").modal("toggle");
+    $("#deleteLineModal").modal("show");
   }, delayTimeAfterSound);
   },
   // 'click .printConfirm': function(event) {
