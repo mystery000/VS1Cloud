@@ -933,9 +933,14 @@ Template.inventorylist.onRendered(function() {
 
     $("#tblInventoryOverview tbody").on("click", "td.colAvailable", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
+        var listProductName = $(this).closest("tr").find(".colProductName").text();
         if (listData) {
-            FlowRouter.go("/stockmovementreport?id=" + listData);
+            // FlowRouter.go("/stockmovementreport?id=" + listData);
             // Filter the stock movement report based on product ID
+            //modified by Matthias
+            $('#recentTransactionPopUp').modal("show");
+            $(".productNameOnRT").text(listProductName);
+
         }
     });
 
