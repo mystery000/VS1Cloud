@@ -8440,6 +8440,8 @@ Template.newsidenav.events({
     },
     'click #payrollrules': function(event) {
         window.open('/payrollrules', '_self');
+<<<<<<< HEAD
+=======
     },
     'click #mypayroll': function(event) {
       event.preventDefault();
@@ -8452,6 +8454,7 @@ Template.newsidenav.events({
         FlowRouter.go('/mypayrollleave');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
     },
     'click #templatesettings': function(event) {
         window.open('/templatesettings', '_self');

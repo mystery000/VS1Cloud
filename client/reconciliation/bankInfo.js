@@ -4,6 +4,16 @@ export default showBankInfo = () => {
             swal({
                 type: 'info',
                 title: 'Fully Automated Bank Integration coming in April 2023',
+<<<<<<< HEAD
+                input: 'checkbox',
+                inputValue: 1,
+                inputPlaceholder: '   Do not Show again',
+                showCancelButton: false,
+                confirmButtonText: 'Ok',
+            }).then((result) => {
+                // console.log(result)
+                if (result && result.value)
+=======
                 // input: 'checkbox',
                 // inputValue: 1,
                 // inputPlaceholder: '   Do not Show again',
@@ -19,8 +29,13 @@ export default showBankInfo = () => {
                 }
             }).then((result) => {
                 if (result && result.value && result.value[0])
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
                     localStorage.setItem("VS1ReconcileShowBankInfo", true);
             });
         }, 3000);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2

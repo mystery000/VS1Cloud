@@ -24,9 +24,10 @@ Template.projectListPop.onRendered(function() {
                 if (data.tprojectlist && data.tprojectlist.length > 0) {
                     let tprojectlist = data.tprojectlist;
                     let all_projects = data.tprojectlist;
-
+                    
                     var url = new URL(window.location.href);
-                    let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+                    // let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+                    let employeeID = '';
 
                     if (employeeID) {
                         all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);

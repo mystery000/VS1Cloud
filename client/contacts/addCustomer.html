@@ -1458,6 +1458,26 @@
                                                         <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm"
                                                             style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
                                                             <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                                            <style>
+                                                                #tblCustomerCrmList{
+                                                                    width:100% !important;
+                                                                }
+                                                                #tblCustomerCrmList .colDate{
+                                                                    width:15% !important;
+                                                                }
+                                                                #tblCustomerCrmList .colTaskName{
+                                                                    width:20% !important;
+                                                                }
+                                                                #tblCustomerCrmList .colTaskDesc{
+                                                                    width:35% !important;
+                                                                }
+                                                                #tblCustomerCrmList .colCompletedBy{
+                                                                    width:15% !important;
+                                                                }
+                                                                #tblCustomerCrmList .colCompleteTask{
+                                                                    width:15% !important;
+                                                                }
+                                                            </style>
                                                             {{> non_transactional_list tablename="tblCustomerCrmList"}}
                                                         </div>
                                                         <div class="tab-pane border rounded-0" role="tabpanel"
@@ -3842,31 +3862,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-crm"
-                                        style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
-                                        <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
-                                        <style>
-                                            #tblCustomerCrmList{
-                                                width:100% !important;
-                                            }
-                                            #tblCustomerCrmList .colDate{
-                                                width:15% !important;
-                                            }
-                                            #tblCustomerCrmList .colTaskName{
-                                                width:20% !important;
-                                            }
-                                            #tblCustomerCrmList .colTaskDesc{
-                                                width:35% !important;
-                                            }
-                                            #tblCustomerCrmList .colCompletedBy{
-                                                width:15% !important;
-                                            }
-                                            #tblCustomerCrmList .colCompleteTask{
-                                                width:15% !important;
-                                            }
-                                        </style>
-                                        {{> non_transactional_list tablename="tblCustomerCrmList"}}
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -4008,7 +4003,7 @@
                 </div>
                 <div class="modal-body mainCustomerModalBody appointmentCustomer"
                     style="padding: 0px; overflow-x: hidden;">
-                    {{> employeelistpop}}
+                    {{> employeelistpop tablename="employeelistpop1"}}
                 </div>
                 <div class="modal-footer">
                     <!-- <div class="custom-control custom-switch" style="cursor: pointer;">
@@ -4069,7 +4064,7 @@
                     aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
-                {{> employeelistpop}}
+                {{> employeelistpop tablename="employeelistpop2"}}
             </div>
             <div class="modal-footer">
                 <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>

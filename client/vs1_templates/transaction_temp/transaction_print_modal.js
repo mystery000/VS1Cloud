@@ -10,6 +10,113 @@ import { SMSService } from "../../js/sms-settings-service";
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
 
+<<<<<<< HEAD
+const TransactionTypeTemplates = {
+  sales: [
+    {
+      name: "Delivery Docket",
+      title: "Delivery Docket",
+      key: "delivery_docket",
+      active: true,
+    },
+    {
+      name: "Sales Orders",
+      title: "Sales Orders",
+      key: "sales_order",
+      active: true,
+    },
+  ],
+  bills: [
+    {
+      name: "bill",
+      title: "Bills",
+      key: "bill",
+      active: true,
+    },
+  ],
+  cheques: [
+    {
+      name: "Cheques",
+      title: "Cheques",
+      key: "cheque",
+      active: true,
+    },
+  ],
+  credits: [
+    {
+      name: "Credits",
+      title: "Credits",
+      key: "credit",
+      active: true,
+    },
+  ],
+  invoices: [
+    {
+      name: "Invoices",
+      title: "Invoices",
+      key: "invoice",
+      active: true,
+    },
+    {
+      name: "Invoice Back Orders",
+      title: "Invoice Back Orders",
+      key: "invoice",
+      active: false,
+    },
+    {
+      name: "Delivery Docket",
+      title: "Delivery Docket",
+      key: "delivery_docket",
+      active: true,
+    },
+  ],
+  refunds: [
+    {
+      name: "Refunds",
+      title: "Refunds",
+      key: "refund",
+      active: true,
+    },
+  ],
+  workorders: [
+    {
+      name: "Delivery Docket",
+      title: "Delivery Docket",
+      key: "delivery_docket",
+      active: true,
+    },
+    {
+      name: "Sales Orders",
+      title: "Sales Orders",
+      key: "sales_order",
+      active: true,
+    },
+  ],
+  supplierpayments: [
+    {
+      name: "Supplier Payments",
+      title: "Supplier Payments",
+      key: "supplier_payment",
+      active: true,
+    },
+  ],
+  purchaseorders: [
+    {
+      name: "Purchase Orders",
+      title: "Purchase Orders",
+      key: "purchase_order",
+      active: true,
+    },
+  ],
+  quotes: [
+    {
+      name: "Quotes",
+      title: "Quotes",
+      key: "quote",
+      active: true,
+    },
+  ],
+=======
 const TransactionTypeData = {
   sales: {
     templates: [
@@ -135,11 +242,13 @@ const TransactionTypeData = {
       },
     ],
   },
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
 };
 
 Template.transaction_print_modal.onCreated(async function () {
   const templateObject = Template.instance();
   const transactionType = templateObject.data.TransactionType;
+  const pageData = templateObject.data.data;
 
   const getTemplates = async () => {
     const vs1Data = await getVS1Data("TTemplateSettings");
@@ -152,7 +261,11 @@ Template.transaction_print_modal.onCreated(async function () {
 
       addVS1Data("TTemplateSettings", JSON.stringify(templateInfomation));
 
+<<<<<<< HEAD
+      const templates = TransactionTypeTemplates[transactionType]
+=======
       const templates = TransactionTypeData[transactionType].templates
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
         .filter((item) => item.active)
         .map((template) => {
           let templateList = templateInfomation.ttemplatesettings
@@ -178,7 +291,11 @@ Template.transaction_print_modal.onCreated(async function () {
       return templates;
     } else {
       const vs1DataList = JSON.parse(vs1Data[0].data);
+<<<<<<< HEAD
+      const templates = TransactionTypeTemplates[transactionType]
+=======
       const templates = TransactionTypeData[transactionType].templates
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
         .filter((item) => item.active)
         .map((template) => {
           let templateList = vs1DataList.ttemplatesettings
@@ -278,6 +395,48 @@ Template.transaction_print_modal.events({
   },
   "click #printModal .printConfirm": async function (event) {
     const templateObject = Template.instance();
+<<<<<<< HEAD
+    playPrintAudio();
+    const isCheckedEmail = $("#printModal #emailSend").is(":checked");
+    const isCheckedSms = $("#printModal #sms").is(":checked");
+    const data = await Template.new_salesorder.__helpers
+      .get("printEmailData")
+      .call();
+    
+    console.log({ data });
+
+    if (isCheckedEmail && validateEmail(data.checkEmailData)) {
+      LoadingOverlay.show();
+      Meteor.call(
+        "sendEmail",
+        {
+          from: "" + data.mailFromName + " <" + data.mailFrom + ">",
+          to: data.checkEmailData,
+          subject: data.mailSubject,
+          text: "",
+          html: data.htmlmailBody,
+          attachments: data.attachment,
+        },
+        function (error, result) {
+          if (error && error.error === "error") {
+            console.log("Send email: ", { error, result })
+            if (FlowRouter.current().queryParams.trans) {
+              // FlowRouter.go(
+              //   "/customerscard?id=" +
+              //     FlowRouter.current().queryParams.trans +
+              //     "&transTab=active"
+              // );
+            } else {
+              // FlowRouter.go("/salesorderslist?success=true");
+            }
+          } else {
+          }
+          LoadingOverlay.hide();
+        }
+      );
+    } else {
+      console.log('Check Customer Email.');
+=======
     const transactionType = templateObject.data.TransactionType;
     const isCheckedEmail = $("#printModal #emailSend").is(":checked");
     const isCheckedSms = $("#printModal #sms").is(":checked");
@@ -429,6 +588,7 @@ Template.transaction_print_modal.events({
       $(`#${dataKey}-modal`).modal("show");
     } else {
       $(`#${dataKey}-modal`).modal("hide");
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
     }
   },
 });

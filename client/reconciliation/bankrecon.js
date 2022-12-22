@@ -1546,6 +1546,33 @@ Template.bankrecon.onRendered(function() {
         }, 1000);
     });
 
+<<<<<<< HEAD
+    $('#btnImportState').on('click', function(e) {
+        let accountId = $('#bankAccountID').val()
+        let accountName = $('#bankAccountName').val()
+        if ($('#bankAccountName').val() == '')
+            swal('Please Select Bank Account!', '', 'warning');
+        else {
+            getVS1Data("VS1_BankRule")
+                .then(function (dataObject) {
+                    if (dataObject.length) {
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data[accountId] && data[accountId].length)
+                            return $('#importModal').modal();
+                    }
+                    swal(`Please create a new bank rule for bank`, '', 'warning')
+                        .then((result) => {
+                            FlowRouter.go('/newbankrule', {}, {bankaccountid: accountId, bankaccountname: accountName})
+                        });
+                })
+                .catch(function (err) {
+                    swal('Something went wrong', '', 'error');
+                });
+
+        }
+
+    })
+=======
     // $('#btnImportState').on('click', function(e) {
     //     let accountId = $('#bankAccountID').val()
     //     let accountName = $('#bankAccountName').val()
@@ -1584,6 +1611,7 @@ Template.bankrecon.onRendered(function() {
     //     }
 
     // })
+>>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
     tableResize();
 });
 

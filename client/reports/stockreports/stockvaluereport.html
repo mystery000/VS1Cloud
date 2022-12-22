@@ -3,7 +3,7 @@
     <div class="table-responsive">
       <table class="table table-sm" id="tableExport" name="tableExport">
         <thead>
-          <tr class="table-active customDoubleTableHeading">
+          <!-- <tr class="table-active customDoubleTableHeading">
             <th>Department</th>
             <th>Product ID</th>
             <th>Trans</th>
@@ -41,7 +41,18 @@
               <th></th>
 
             </tr>
-          {{/if}}
+          {{/if}} -->
+          <tr>
+            {{#if stockvaluereportth}}
+            {{#each c in stockvaluereportth }}
+            {{# if c.display}}
+            <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
+                class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
+            {{/if}}
+            {{/each}}
+            {{/if}}
+        </tr>
         </thead>
         <tbody>
           {{#if records}}

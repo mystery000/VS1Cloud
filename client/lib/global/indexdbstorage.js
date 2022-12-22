@@ -437,7 +437,6 @@ addVS1Data = async function(objectName, vs1Data) {
         data: vs1Data,
         timestamp: currenctUpdateDate
     };
-
     let objectStore = transaction.objectStore(objectName);
     objectStore.put(loginInfo);
 };
