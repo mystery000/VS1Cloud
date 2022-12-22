@@ -39,13 +39,17 @@
         position=1
         cardActive=true
         cardKey="dashboard-outstanding-invoice-amount"
-        highlightColor="info"
+        highlightColor="warning"
         actionClass="overdueInvoiceAmt"
     }}
         {{> kpiCardTitle
             title="Aged Receivables Summary (Amount)"
             size="small"
-            color="info"
+<<<<<<< HEAD
+            color="warning" 
+=======
+            color="warning"
+>>>>>>> 29a21fd37b5c699750b5d362ca6a9ae81834b663
             textTransform="uppercase"
             align=""
         }}
@@ -58,7 +62,7 @@
                 subValueName="oustandingInvQty"
                 subText="Quantity"
                 iconName="fa-file-invoice-dollar"
-                color="secondary"
+                color="warning"
             }}
         {{/kpiCardBody}}
     {{/kpiCard}}

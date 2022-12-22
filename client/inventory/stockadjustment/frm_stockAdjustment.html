@@ -413,7 +413,7 @@
                                             vertical-align: top;
                                         }
                                     </style>
-                                    {{> deletepop itemName1="Stock Adj" itemName2="stock adjustment" itemName3="Stock Adjustment" button1="btnDeleteStock" button2="btnDeleteFollowingStocks"}}
+                                    <!-- {{> deletepop itemName1="Stock Adj" itemName2="stock adjustment" itemName3="Stock Adjustment" button1="btnDeleteStock" button2="btnDeleteFollowingStocks"}} -->
                                     <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
@@ -537,7 +537,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row no-gutters">
+            <!-- <div class="row no-gutters">
                 <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;">
                     <button class="btn btn-success btnProcess" type="button" style="margin: 12px;"><i class="fa fa-check" style="margin-right: 5px;"></i>Process</button>
                     <button class="btn btn-primary btnHold" type="button" style="margin: 12px;"><i class="fa fa-clock" style="margin-right: 5px;"></i>Hold</button>
@@ -546,7 +546,14 @@
                     <button class="btn btn-primary printConfirm" type="button" style="margin: 12px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
                     <button class="btn btn-secondary btnBack" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                 </div>
-            </div>
+            </div> -->
+            {{> transaction_footer
+                showProcessButton=true
+                showHoldButton=true
+                hideAttachmentButton=true
+                hideSaveButton=true
+                TransactionType='stockadjustment'
+            }}
 
             <!-- Start PDF -->
             <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; display: none; color: #000000; overflow-x: visible;" id="html-2-pdfwrapper" name="html-2-pdfwrapper">

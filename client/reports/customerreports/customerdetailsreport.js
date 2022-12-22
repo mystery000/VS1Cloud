@@ -19,6 +19,7 @@ Template.customerdetailsreport.onCreated(() => {
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.reportOptions = new ReactiveVar([]);
   templateObject.records = new ReactiveVar([]);
+  templateObject.customerdetailsreportth = new ReactiveVar([]);
 
   // Currency related vars //
   FxGlobalFunctions.initVars(templateObject);
@@ -49,6 +50,29 @@ Template.customerdetailsreport.onRendered(() => {
   templateObject.getCustomerDetailReportData = async function ( dateFrom, dateTo, ignoreDate ) {
     LoadingOverlay.show();
     templateObject.setDateAs( dateFrom );
+
+    let reset_data = [
+      { index: 1, label: 'Company Name', class:'colCompanyName', active: true, display: true, width: "85" },
+      { index: 2, label: 'Rep', class:'colRep', active: true, display: true, width: "85" },
+      { index: 3, label: 'Discount Type', class:'colDiscountType', active: true, display: true, width: "85" },
+      { index: 4, label: 'Discount', class:'colDiscount', active: true, display: true, width: "85" },
+      { index: 5, label: 'Special Discount', class:'colSpecialDiscount', active: true, display: true, width: "85" },
+      { index: 6, label: 'Orig Price', class:'colOrigPrice', active: true, display: true, width: "85" },
+      { index: 7, label: 'Line Price', class:'colLinePrice', active: true, display: true, width: "85" },
+      { index: 8, label: 'Product ID', class:'colProductID', active: true, display: true, width: "85" },
+      { index: 9, label: 'Description', class:'colDescription', active: true, display: true, width: "85" },
+      { index: 10, label: 'Sub Group', class:'colSubGroup', active: true, display: true, width: "85" },
+      { index: 11, label: 'Type', class:'colType', active: true, display: true, width: "85" },
+      { index: 12, label: 'Dept', class:'colDept', active: true, display: true, width: "85" },
+      { index: 13, label: 'Customer ID', class:'colCustomerID', active: false, display: true, width: "85" },
+      { index: 14, label: 'Password', class:'colPassword', active: false, display: true, width: "85" },
+      { index: 15, label: 'Test', class:'colTest', active: false, display: true, width: "85" },
+      { index: 16, label: 'Birthday', class:'colBirthday', active: false, display: true, width: "85" },
+    ];
+
+    templateObject.customerdetailsreportth.set(reset_data);
+
+
     let data = [];
     if (!localStorage.getItem('VS1CustomerDetails_Report')) {
     data = await reportService.getCustomerDetailReport( dateFrom, dateTo, ignoreDate);
@@ -58,6 +82,7 @@ Template.customerdetailsreport.onRendered(() => {
     }else{
       data = JSON.parse(localStorage.getItem('VS1CustomerDetails_Report'));
     }
+    console.log(data);
     let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
         let reportGroups = []; 
@@ -147,6 +172,37 @@ Template.customerdetailsreport.onRendered(() => {
 });
 
 Template.customerdetailsreport.events({
+  'click .chkDatatable': function(event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    console.log("111111111111", columnDataValue);
+    if ($(event.target).is(':checked')) {
+      $('.'+columnDataValue).addClass('showColumn');
+      $('.'+columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.'+columnDataValue).addClass('hiddenColumn');
+      $('.'+columnDataValue).removeClass('showColumn');
+    }
+},
+
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click #ignoreDate":  (e, templateObject) => {
     localStorage.setItem("VS1CustomerDetails_Report", "");
     templateObject.getCustomerDetailReportData(
@@ -353,6 +409,9 @@ Template.customerdetailsreport.helpers({
         return false
     }
     return true
+  },
+  customerdetailsreportth: () => {
+    return Template.instance().customerdetailsreportth.get();
   },
   checkEmpty: ( item ) => {
     if( item.TotalEx == 0 && item.TotalInc == 0 && item.TotalGrossProfit == 0 ){
