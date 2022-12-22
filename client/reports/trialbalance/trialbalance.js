@@ -908,7 +908,7 @@ Template.trialbalance.events({
       });
     }, delayTimeAfterSound);
   },
-  "click .btnSpreadLink": function() {
+  "click .btnSpreadSheetLink": function() {
     LoadingOverlay.show();
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
