@@ -126,7 +126,6 @@
         uploadedFile=uploadedFile
         isCurrencyEnable=isCurrencyEnable
         custfields=custfields
-        showUploadAttachment=true
         showTransactionButtons=false
         salesCloudPreferenceRec=salesCloudPreferenceRec
         showCustomer=true
@@ -158,7 +157,7 @@
           isBatchSerialNoTracking=isBatchSerialNoTracking
           getDefaultCurrency=getDefaultCurrency
           }}
-        {{> deletepop itemName1="Refund" itemName2="refund" itemName3="Refund" button1="btnDeleteRefund" button2="btnDeleteFollowingRefunds"}}
+        <!-- {{> deletepop itemName1="Refund" itemName2="refund" itemName3="Refund" button1="btnDeleteRefund" button2="btnDeleteFollowingRefunds"}} -->
       </div>
 
       <div class="row align-items-end" style="margin: 16px;">
@@ -185,7 +184,7 @@
           <div class="row">
             <div class="col-12 col-md-12">
               <div class="row justify-content-center desktopButtons">
-                {{> transaction_footer margin="16px" AttachmentCount=attachmentCount TransactionType="refunds" }}
+                {{> transaction_footer AttachmentCount=attachmentCount TransactionType="refunds" }}
               </div>
             </div>
           </div>
@@ -238,12 +237,6 @@
 
             </div>
           </div>
-        </div>
-
-        <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog"
-          aria-labelledby="templatePreviewLabel" aria-hidden="true">
-          {{> custom_print_template modalId="templatePreviewModal" idPrefix="html-2-pdfwrapper_quotes"
-          namePrefix="html-2-pdfwrapper_quotes" }}
         </div>
 
         <div

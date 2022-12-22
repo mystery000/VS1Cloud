@@ -11044,7 +11044,45 @@ Template.employeescard.events({
         }
         $('#earningRateSettingsModal').modal('toggle');
     },
+    "click #productCostPayRate":(e,ui)=>{
+        if($('#productCostPayRate').is(':checked')){
+            $('.fullScreenSpin').css('display', 'inline-block');
+            // let selectClient = templateObject.selectedTimesheet.get();
+            // let contactService = new ContactService();
+            // let data = {
+            //     type: "TTimeSheet",
+            //     fields: {
+            //         ID: selectClient[x].TimesheetID,
+            //         Status: "Processed"
+            //     }
 
+            // };
+            // contactService.saveClockTimeSheet(data).then(function(data) {
+            //     if ((x + 1) == selectClient.length) {
+            //         sideBarService.getAllTimeSheetList().then(function(data) {
+            //             addVS1Data('TTimeSheet', JSON.stringify(data));
+            //             setTimeout(function() {
+            //                 window.open('/timesheet', '_self');
+            //             }, 200);
+            //         })
+            //     }
+            // }).catch(function(err) {
+            //     swal({
+            //         title: 'Oooops...',
+            //         text: err,
+            //         type: 'error',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Try Again'
+            //     }).then((result) => {
+            //         if (result.value) {
+            //             // Meteor._reload.reload();
+            //         } else if (result.dismiss === 'cancel') {}
+            //     });
+            //     $('.fullScreenSpin').css('display', 'none');
+            // });
+            // $('.fullScreenSpin').css('display', 'none');
+        }
+    }
 
 });
 

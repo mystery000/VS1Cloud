@@ -4465,7 +4465,7 @@ Template.stocktransfercard.events({
         $('#deleteLineModal').modal('toggle');
     }, delayTimeAfterSound);
     },
-    'click .removebutton': function(event) {
+    'click .btnRemove': function(event) {
         let templateObject = Template.instance();
         var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');

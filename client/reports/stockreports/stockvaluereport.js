@@ -22,6 +22,7 @@ Template.stockvaluereport.onCreated(() => {
   templateObject.records = new ReactiveVar([]);
   templateObject.reportOptions = new ReactiveVar();
   FxGlobalFunctions.initVars(templateObject);
+  templateObject.stockvaluereportth = new ReactiveVar([]);
 });
 
 Template.stockvaluereport.onRendered(() => {
@@ -29,6 +30,27 @@ Template.stockvaluereport.onRendered(() => {
   LoadingOverlay.show();
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
+
+    let reset_data = [
+      { index: 1, label: 'Department Name', class: 'colDepartmentName', active: true, display: true, width: "" },
+      { index: 2, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "" },
+      { index: 3, label: 'Trans Type', class: 'colTransType', active: true, display: true, width: "" },
+      { index: 4, label: 'Qty', class: 'colQty', active: true, display: true, width: "" },
+      { index: 5, label: 'Running Qty', class: 'colRunningQty', active: true, display: true, width: "" },
+      { index: 6, label: 'Unit Cost~When Posted', class: 'colUnitCostWhenPosted', active: true, display: true, width: "" },
+      { index: 7, label: 'Todays Unit~Avg Cost', class: 'colTodaysUnitAvgCost', active: true, display: true, width: "" },
+      { index: 8, label: 'Total Cost~When Posted', class: 'colTotalCostWhenPosted', active: true, display: true, width: "" },
+      { index: 9, label: 'Todays Total~Avg Cost', class: 'colTodaysTotalAvgCost', active: true, display: true, width: "" },
+      { index: 10, label: 'Trans Date', class: 'colTransDate', active: true, display: true, width: "" },
+      { index: 11, label: 'Transaction No', class: 'colTransactionNo', active: false, display: true, width: "" },
+      { index: 12, label: 'Opening', class: 'colOpenning', active: false, display: true, width: "" },
+      { index: 13, label: 'Actual Date', class: 'colActualDate', active: false, display: true, width: "" },
+      { index: 14, label: 'Sub Group', class: 'colSubGroup', active: false, display: true, width: "" },
+      { index: 15, label: 'Type', class: 'colType', active: false, display: true, width: "" },
+      { index: 16, label: 'Dept', class: 'colDept', active: false, display: true, width: "" },
+    ];
+    templateObject.stockvaluereportth.set(reset_data);
+
     // const currentDate = new Date();
 
     // /**
@@ -199,6 +221,36 @@ Template.stockvaluereport.onRendered(() => {
 });
 
 Template.stockvaluereport.events({
+  'click .chkDatatable': function (event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    console.log(columnDataValue);
+    if ($(event.target).is(':checked')) {
+      $('.' + columnDataValue).addClass('showColumn');
+      $('.' + columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.' + columnDataValue).addClass('hiddenColumn');
+      $('.' + columnDataValue).removeClass('showColumn');
+    }
+  },
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click .btnRefresh": function () {
     LoadingOverlay.show();
     localStorage.setItem("VS1StockValue_Report", "");
@@ -549,6 +601,9 @@ Template.stockvaluereport.events({
 });
 
 Template.stockvaluereport.helpers({
+  stockvaluereportth: () => {
+    return Template.instance().stockvaluereportth.get();
+  },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },

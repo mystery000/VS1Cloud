@@ -24,7 +24,7 @@ Template.agedpayables.onCreated(() => {
     templateObject.grandrecords = new ReactiveVar();
     templateObject.dateAsAt = new ReactiveVar();
     templateObject.deptrecords = new ReactiveVar();
-
+    templateObject.agedpayablesth = new ReactiveVar([]);
     // Currency related vars //
   //  templateObject.currencyList = new ReactiveVar([]);
   //  templateObject.activeCurrencyList = new ReactiveVar([]);
@@ -36,6 +36,35 @@ Template.agedpayables.onCreated(() => {
 Template.agedpayables.onRendered(() => {
     LoadingOverlay.show();
     const templateObject = Template.instance();
+
+
+    let reset_data = [
+      { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "" },
+      { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "" },
+      { index: 3, label: 'PO Number', class: 'colPONumber', active: true, display: true, width: "" },
+      { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "" },
+      { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "" },
+      { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "" },
+      { index: 7, label: '1-30 Days', class: 'col130Days', active: true, display: true, width: "" },
+      { index: 8, label: '30-60 Days', class: 'col3060Days', active: true, display: true, width: "" },
+      { index: 9, label: '60-90 Days', class: 'col6090Days', active: true, display: true, width: "" },
+      { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "" },
+      { index: 11, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "" },
+      { index: 12, label: 'Invoice Date', class: 'colInvoiceDate', active: true, display: true, width: "" },
+      { index: 13, label: 'Original Amount', class: 'colOriginalAmount', active: true, display: true, width: "" },
+      { index: 14, label: 'Details', class: 'colDetails', active: false, display: true, width: "" },
+      { index: 15, label: 'Invoice Number', class: 'colInvoiceNumber', active: false, display: true, width: "" },
+      { index: 16, label: 'Account Name', class: 'colAccountName', active: false, display: true, width: "" },
+      { index: 17, label: 'Supplier ID', class: 'colSupplierID', active: false, display: true, width: "" },
+      { index: 18, label: 'Terms', class: 'colTerms', active: false, display: true, width: "" },
+      { index: 19, label: 'APNotes', class: 'colAPNotes', active: false, display: true, width: "" },
+      { index: 20, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "" },
+      { index: 21, label: 'PCStatus', class: 'colPCStatus', active: false, display: true, width: "" },
+      { index: 22, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "" },
+      { index: 23, label: 'POGlobalRef', class: 'colPOGlobalRef', active: false, display: true, width: "" },
+    ]
+
+    templateObject.agedpayablesth.set(reset_data);
 
     templateObject.initDate = () => {
       Datehandler.initOneMonth();
@@ -688,6 +717,37 @@ Template.agedpayables.events({
     'click #btnSummary': function() {
         FlowRouter.go('/agedpayablessummary');
     },
+    'click .chkDatatable': function (event) {
+      let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+      console.log(columnDataValue);
+      if ($(event.target).is(':checked')) {
+        $('.' + columnDataValue).addClass('showColumn');
+        $('.' + columnDataValue).removeClass('hiddenColumn');
+      } else {
+        $('.' + columnDataValue).addClass('hiddenColumn');
+        $('.' + columnDataValue).removeClass('showColumn');
+      }
+    },
+    'click .btnOpenReportSettings': () => {
+      let templateObject = Template.instance();
+      // let currenttranstablename = templateObject.data.tablename||";
+      $(`thead tr th`).each(function (index) {
+        var $tblrow = $(this);
+        var colWidth = $tblrow.width() || 0;
+        var colthClass = $tblrow.attr('data-class') || "";
+        $('.rngRange' + colthClass).val(colWidth);
+      });
+      $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+    },
+    'change .custom-range': async function (event) {
+      //   const tableHandler = new TableHandler();
+      let range = $(event.target).val() || 0;
+      let colClassName = $(event.target).attr("valueclass");
+      await $('.' + colClassName).css('width', range);
+      //   await $('.colAccountTree').css('width', range);
+      $('.dataTable').resizable();
+    },
+  
     // 'change #dateTo': function () {
     //     let templateObject = Template.instance();
     //     $('.fullScreenSpin').css('display', 'inline-block');
@@ -1100,6 +1160,9 @@ Template.agedpayables.events({
 });
 
 Template.agedpayables.helpers({
+  agedpayablesth: () => {
+    return Template.instance().agedpayablesth.get();
+  },
   records: () => {
     return Template.instance().records.get();
     //   .sort(function(a, b){

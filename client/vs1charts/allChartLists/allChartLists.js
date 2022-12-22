@@ -18,7 +18,6 @@ let chartsPlaceList = {
     "Accounts_Overview" : [
         "accountrevenuestreams",
         "profitandlosschart",
-        "accountslistchart",
     ],
 
     "Contacts_Overview": [
@@ -73,10 +72,6 @@ let chartsPlaceList = {
         "top10Customers",
         "resalescomparision",
     ],
-
-    "CRM_Overview" : [
-        "",
-    ]
 };
 
 let sideBarService = new SideBarService();
@@ -797,15 +792,10 @@ Template.allChartLists.helpers({
     },
 
     is_available_chart: (current, chart) => {
-//        console.log(current, chart, chartsPlaceList[current].includes(chart));
+        console.log(current, chart, chartsPlaceList[current].includes(chart));
         return chartsPlaceList[current].includes(chart);
 //        return 1;
-    },
-
-    is_dashboard_check: (currentTemplate) => {
-        //console.log(FlowRouter.current().path, currentTemplate);
-        return FlowRouter.current().path.includes(currentTemplate);
-    },
+    }
 });
 
 Template.registerHelper('equals', function(a, b) {

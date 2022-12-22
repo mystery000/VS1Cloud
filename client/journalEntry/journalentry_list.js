@@ -102,18 +102,18 @@ Template.journalentrylist.onRendered(function() {
   // set initial table rest_data
   function init_reset_data() {
     let reset_data = [
-      { index: 0, label: 'Transaction Date', class:'colAccountName', active: true, display: true, width: "85" },
+      { index: 0, label: 'Transaction Date', class:'colTransactionDate', active: true, display: true, width: "85" },
       { index: 1, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 2, label: 'Department Name', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 3, label: 'Entry No', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 4, label: 'Debit Amount', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 5, label: 'Credit Amount', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 6, label: 'Tax Amount', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 7, label: 'Account No', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 8, label: 'Employee Name', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 9, label: 'Approved', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 10, label: 'Journal Memo', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 11, label: 'Memo', class:'colAccountName', active: false, display: true, width: "" },
+      { index: 2, label: 'Department Name', class:'colDepartmentName', active: true, display: true, width: "" },
+      { index: 3, label: 'Entry No', class:'colEntryNo', active: true, display: true, width: "" },
+      { index: 4, label: 'Debit Amount', class:'colDebitAmount', active: true, display: true, width: "" },
+      { index: 5, label: 'Credit Amount', class:'colCreditAmount', active: true, display: true, width: "" },
+      { index: 6, label: 'Tax Amount', class:'colTaxAmount', active: true, display: true, width: "" },
+      { index: 7, label: 'Account No', class:'colAccountNo', active: false, display: true, width: "" },
+      { index: 8, label: 'Employee Name', class:'colemployeeName', active: false, display: true, width: "" },
+      { index: 9, label: 'Approved', class:'colApproved', active: false, display: true, width: "" },
+      { index: 10, label: 'Journal Memo', class:'colJournalMemo', active: false, display: true, width: "" },
+      { index: 11, label: 'Memo', class:'colMemo', active: false, display: true, width: "" },
     ];
 
     let templateObject = Template.instance();
@@ -1662,11 +1662,13 @@ Template.journalentrylist.events({
     var columns = $("#tblJournalList th");
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
+    console.log("-------------",columnDataValue);
     $.each(columns, function (i, v) {
       let className = v.classList;
       let replaceClass = className[1];
-
-      if (v.innerText == columnDataValue) {
+      console.log("========", replaceClass);
+      if (v.innerText.trim() == columnDataValue) {
+        console.log($(event.target).is(":checked"));
         if ($(event.target).is(":checked")) {
           $("." + replaceClass + "").css("display", "table-cell");
           $("." + replaceClass + "").css("padding", ".75rem");
@@ -1677,6 +1679,19 @@ Template.journalentrylist.events({
       }
     });
   },
+//   'click .chkDatatable': function(event) {
+//     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+//     // console.log(templateObject.tableheaderrecords.get());
+//     console.log($('.'+columnDataValue).attr("class"));
+//     if ($(event.target).is(':checked')) {
+//       $('.'+columnDataValue).addClass('showColumn');
+//       $('.'+columnDataValue).removeClass('hiddenColumn');
+//     } else {
+//       $('.'+columnDataValue).addClass('hiddenColumn');
+//       $('.'+columnDataValue).removeClass('showColumn');
+//     }
+// },
+
   "keyup #tblJournalList_filter input": function (event) {
     if ($(event.target).val() != "") {
       $(".btnRefreshJournalEntry").addClass("btnSearchAlert");

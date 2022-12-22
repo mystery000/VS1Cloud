@@ -6,6 +6,7 @@ import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
+import { ReactiveVar } from "meteor/reactive-var";
 
 const reportService = new ReportService();
 const utilityService = new UtilityService();
@@ -23,6 +24,7 @@ const templateObject = Template.instance();
 
   templateObject.isIgnoreDate = new ReactiveVar();
   templateObject.isIgnoreDate.set(false);
+  templateObject.report1099th = new ReactiveVar();
 
    // Currency related vars //
    templateObject.currencyList = new ReactiveVar([]);
@@ -36,6 +38,20 @@ Template.report1099.onRendered(()=>{
   const templateObject = Template.instance();
     var deptrecords = [];
     LoadingOverlay.show();
+
+    let reset_data = [
+      { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "" },
+      { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "" },
+      { index: 3, label: 'Payment', class: 'colPayment', active: true, display: true, width: "" },
+      { index: 4, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+      { index: 5, label: 'Method', class: 'colMethod', active: true, display: true, width: "" },
+      { index: 6, label: 'Bill Street', class: 'colBillStreet', active: true, display: true, width: "" },
+      { index: 7, label: 'Bill Place', class: 'colBillPlace', active: true, display: true, width: "" },
+      { index: 8, label: 'Card Amount', class: 'colCardAmount', active: true, display: true, width: "" },
+      { index: 9, label: 'Non Card Amount', class: 'colNonCardAmount', active: true, display: true, width: "" },
+    ];
+    templateObject.report1099th.set(reset_data);
+
     templateObject.initDate = () => {
       Datehandler.initOneMonth();
     };
@@ -483,6 +499,36 @@ Template.report1099.onRendered(()=>{
   });
 
   Template.report1099.events({
+    'click .chkDatatable': function(event) {
+      let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+      console.log(columnDataValue);
+      if ($(event.target).is(':checked')) {
+        $('.'+columnDataValue).addClass('showColumn');
+        $('.'+columnDataValue).removeClass('hiddenColumn');
+      } else {
+        $('.'+columnDataValue).addClass('hiddenColumn');
+        $('.'+columnDataValue).removeClass('showColumn');
+      }
+  },
+    'click .btnOpenReportSettings': () => {
+        let templateObject = Template.instance();
+        // let currenttranstablename = templateObject.data.tablename||";
+        $(`thead tr th`).each(function (index) {
+          var $tblrow = $(this);
+          var colWidth = $tblrow.width() || 0;
+          var colthClass = $tblrow.attr('data-class') || "";
+          $('.rngRange' + colthClass).val(colWidth);
+        });
+       $('.'+templateObject.data.tablename+'_Modal').modal('toggle');
+    },
+    'change .custom-range': async function(event) {
+    //   const tableHandler = new TableHandler();
+      let range = $(event.target).val()||0;
+      let colClassName = $(event.target).attr("valueclass");
+      await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+      $('.dataTable').resizable();
+    },
     "click #ignoreDate":  (e, templateObject) => {
       localStorage.setItem("VS11099Contractor_Report", "");
       templateObject.ContractorPaymentSummaryReports(
@@ -680,6 +726,9 @@ Template.report1099.onRendered(()=>{
 
   });
   Template.report1099.helpers({
+    report1099th: () => {
+      return Template.instance().report1099th.get();
+    },
     records : () => {
        return Template.instance().records.get();
      //   .sort(function(a, b){

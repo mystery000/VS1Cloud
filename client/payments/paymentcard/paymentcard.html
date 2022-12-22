@@ -28,6 +28,7 @@
         data=record
         isCurrencyEnable=isCurrencyEnable
       }}
+      <input type="hidden" id="txabillingAddress" />
 
       <div>
         <div class="card-body rounded" style="padding-bottom: 0px !important;padding-top: 0px !important;">
@@ -655,8 +656,10 @@
                 background: transparent !important;
               }
             </style>
-            {{> deletepop itemName1="Payment" itemName2="payment" itemName3="Payment" button1="btnDeletePayment"
-            button2="btnDeleteFollowingPayments"}}
+            <!-- {{> deletepop itemName1="Payment" itemName2="payment" itemName3="Payment" button1="btnDeletePayment"
+            button2="btnDeleteFollowingPayments"}} -->
+            <!-- {{> deletepop itemName1="Payment" itemName2="payment" itemName3="Payment" button1="btnDeletePayment"
+            button2="btnDeleteFollowingPayments"}} -->
 
             <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                 <div class="modal-dialog" role="document">
@@ -808,111 +811,6 @@
           {{/if}}
         </div>
       </div>
-
-      <!-- <div class="d-xl-flex align-items-xl-center" style="padding: 16px;padding-top: 0px;">
-                    <div class="flex-grow-1" style="margin: 0px 16px;">
-                        <div style="float: right;">
-                            <hr style="  border-top: 3px solid #696969;" />
-                            <div class="d-flex d-xl-flex flex-row justify-content-xl-end align-items-xl-center">
-                                <div>
-                                    <div>
-                                        <p class="lead" style="  color: #696969; font-weight: 700; margin: 0px;">Applied</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div>
-                                        <p class="lead appliedAmount" style="  color: #696969; font-weight: 700; padding-left: 20px; margin: 0px;">{{record.applied}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr style="  border-top: 3px solid #696969;" />
-                        </div>
-                    </div>
-                </div> -->
-
-      <div class="modal fade" role="dialog" tabindex="-1" id="templateselection">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header" style="padding-bottom: 8px;">
-              <h4>Select Template</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                  aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-              <div class="row justify-content-center mb-3">
-
-
-                <div class="row">
-                  {{#each title in getTemplateList}}
-                  <div class="col-12 ">
-                    <div class="card shadow mb-3">
-                      <div class="card-header py-3">
-                        <span id="{{title}}_title" class="text-primary m-0 font-weight-bold">{{title}}</span>
-                      </div>
-                      <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                          {{#each index in getTemplateNumber}}
-                          <li class="list-group-item templateItem justify-content-between" data-id="{{title}}"
-                            data-template-id="{{index}}">
-                            <div class="custom-control custom-switch">
-
-                              {{#if equals index '1'}}
-
-                              {{#if equals title 'Customer Payments'}}
-                              <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}"
-                                id="Customer_Payments_{{index}}" value="{{index}}" checked style="cursor: pointer;">
-                              {{/if}}
-
-                              {{else}}
-
-                              {{#if equals title 'Customer Payments'}}
-                              <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}"
-                                id="Customer_Payments_{{index}}" value="{{index}}" style="cursor: pointer;">
-                              {{/if}}
-
-                              {{/if}}
-
-                              {{#if equals title 'Customer Payments'}}
-                              <label class="custom-control-label" for="Customer_Payments_{{index}}"
-                                style="cursor: pointer; color: transparent;"></label>
-                              {{/if}}
-                              <input type="text" name="{{title}}_{{index}}"
-                                style="border: 1px solid rgb(209 211 226 / 0%);" value="Template {{index}}" />
-
-
-                            </div>
-
-                            <i id="btnPreviewTemplate" data-id="{{title}}" class="far fa-eye btnPreviewTemplate"
-                              data-toggle="modal"></i>
-                          </li>
-                          {{/each}}
-                        </ul>
-                      </div>
-                    </div>
-                    <div class="col-12">
-                      <div class="custom-control custom-switch">
-                        <input class="custom-control-input chkGlobalSettings" name="print_custom_payment" checked
-                          type="checkbox" id="print_custom_payment" autocomplete="off">
-                        <label style="cursor: pointer;" class="custom-control-label" for="print_custom_payment">Print
-                          Customer Payment</label>
-                      </div>
-                    </div>
-
-                  </div>
-                  {{/each}}
-                </div>
-
-              </div>
-            </div>
-            <div class="modal-footer" style="padding: 6px;">
-              <button class="btn btn-primary printConfirm btnFooter" type="button"><i class="fa fa-print"
-                  style="margin-right: 5px;"></i>Confirm Print</button>
-              <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
       <div class="modal fade" role="dialog" tabindex="-1" id="confirmprint">
         <div class="modal-dialog modal-dialog-centered modal-sm">
           <div class="modal-content">
@@ -943,11 +841,6 @@
 
           </div>
         </div>
-      </div>
-      <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog"
-        aria-labelledby="templatePreviewLabel" aria-hidden="true">
-        {{> custom_print_template modalId="templatePreviewModal" idPrefix="html-2-pdfwrapper_quotes"
-        namePrefix="pdfwrapper_quotes" }}
       </div>
 
       <div
@@ -1161,47 +1054,19 @@
       <div class="row">
         <div class="col-12 col-md-1">
           <div class="row justify-content-center desktopButtons">
-
             <div class="custom-control custom-switch">
               <input class="custom-control-input chkGlobalSettings" id="choosetemplate" type="checkbox"
                 style="cursor: pointer;">
               <label class="custom-control-label" style="width:131px;cursor: pointer;" for="choosetemplate">Choose
                 Template</label>
             </div>
-
-
           </div>
-
         </div>
         <div class="col-12 col-md-10">
-          <div class="row justify-content-center desktopButtons">
-
-
-            <button class="btn btn-success btnSave btn-auto-save btnFooter vs1ButtonMargin" type="button"
-              style="margin-top: 0px;width: 100px;">
-              <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-            </button>
-
-            <button class="btn btn-danger btnRemove vs1ButtonMargin" type="button"
-              style="margin-top: 0px;width: 100px;"><i class="fa fa-trash"
-                style="padding-right: 8px;"></i>Delete</button>
-
-            <button class="btn btn-primary vs1ButtonMargin" id="open_print_confirm" type="button"
-              style="margin-top: 0px;width: 100px;">
-              <i class="fa fa-print" style="padding-right: 8px;"></i>Print
-            </button>
-
-            <a class="btn btn-primary btn_Attachment btnFooter vs1ButtonMargin" role="button" style="margin-top: 0px;"
-              data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-              {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i
-                class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-            </a>
-            <button class="btn btn-secondary btnBack btnFooter vs1ButtonMargin" type="button"
-              style="margin-top: 0px;width: 100px;">
-              <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-            </button>
-          </div>
-
+          {{> transaction_footer 
+            TransactionType='customer_payment'
+            AttachmentCount=attachmentCount 
+          }}
         </div>
       </div>
       <!-- <div class="row justify-content-center">

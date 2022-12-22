@@ -4,7 +4,6 @@
   uploadedFile
   isCurrencyEnable
   custfields
-  showUploadAttachment
   showTransactionButtons
   salesCloudPreferenceRec
   showCustomer
@@ -12,6 +11,7 @@
   showSalesDate
   showPONumber
   showInvoiceNumber
+  showOrderNumber
   showVia
   showTerms
   showStatus
@@ -184,10 +184,6 @@
   {{> customfieldDroppop}}
   {{> customfieldpop}}
 
-  {{#if showUploadAttachment}}
-  {{> files_viewer_modal }}
-  {{/if}}
-
   <div class="row" style="background-color: #ededed;">
     {{#if data.ispaid}}
     <div class="col-12 colPaid" style="display: none;">
@@ -276,6 +272,16 @@
                   value=data.invoicenumber
                 }}
               </div>
+            {{/if}}
+            {{#if showOrderNumber}}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+              {{> default_input 
+                label='Order Number'
+                id='edtOrderNumber'
+                name='edtOrderNumber'
+                value=workorderrecord.salesorderid
+              }}
+            </div>
             {{/if}}
             {{#if showVia}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
