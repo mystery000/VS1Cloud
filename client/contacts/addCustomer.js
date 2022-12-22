@@ -2795,16 +2795,12 @@ Template.customerscard.onRendered(function() {
         }
     })
 
-<<<<<<< HEAD
-    $(document).on("click", "#tblTitleList tbody tr", function(e) {
-=======
     $(document).on("click", "#tblTitleList tbody tr", function (e) {
         let prevValue = $('#editCustomerTitle').val();
         let updatedValue = $(this).find(".colTypeName").text();
         if(prevValue !== updatedValue){
             localStorage.setItem("isFormUpdated", true);
         }
->>>>>>> 14ae5ff548fbd8ad042fb70b0a040cf49b1ed6f2
         $('#editCustomerTitle').val($(this).find(".colTypeName").text());
         localStorage.setItem("isFormUpdated", true);
         $('#customerTitlePopModal').modal('toggle');
