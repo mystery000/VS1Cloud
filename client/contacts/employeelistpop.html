@@ -106,41 +106,40 @@
                 </div>
             </div>
             <!-- End -->
+            <style>
+                th {
+                    background-color: #ededed;
+                }
+                .table-striped tbody tr:nth-of-type(odd) {
+                    background-color: white !important;
+                }
 
+                .table-striped tbody tr:nth-of-type(even) {
+                    background-color: #0000000d !important;
+                }
+
+                .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
+                    padding: .75rem!important;
+                }
+                .hiddenColumn{
+                    display:none;
+                }
+                .showColumn {
+                    display:table-cell;
+                    padding:.75rem;
+                    vertical-align:top;
+                }
+
+                input[type=number]::-webkit-inner-spin-button,
+                input[type=number]::-webkit-outer-spin-button {
+                    opacity: 1;
+                }
+
+                .colNotes {
+                    width: 200px !important;
+                }
+            </style>
             <div class="table-responsive">
-                <style>
-                    th {
-                        background-color: #ededed;
-                    }
-                    .table-striped tbody tr:nth-of-type(odd) {
-                        background-color: white !important;
-                    }
-
-                    .table-striped tbody tr:nth-of-type(even) {
-                        background-color: #0000000d !important;
-                    }
-
-                    .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
-                        padding: .75rem!important;
-                    }
-                    .hiddenColumn{
-                        display:none;
-                    }
-                    .showColumn {
-                        display:table-cell;
-                        padding:.75rem;
-                        vertical-align:top;
-                    }
-
-                    input[type=number]::-webkit-inner-spin-button,
-                    input[type=number]::-webkit-outer-spin-button {
-                        opacity: 1;
-                    }
-
-                    .colNotes {
-                        width: 200px !important;
-                    }
-                </style>
                 <table id="tblEmployeelist" name="tblEmployeelist" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblEmployeelist">
                     <thead>
                         <tr class="dnd-moved">

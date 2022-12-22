@@ -94,63 +94,63 @@ Template.taskDetailModal.onRendered(function() {
         $("#taskDetailModalCategoryLabel").val(colProjectName);
     });
 
-    templateObject.getInitTProjectList = function() {
-        getVS1Data("TCRMProjectList").then(function(dataObject) {
-            if (dataObject.length == 0) {
-                templateObject.getTProjectList();
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                if (data.tprojectlist && data.tprojectlist.length > 0) {
-                    let tprojectlist = data.tprojectlist;
+    // templateObject.getInitTProjectList = function() {
+    //     getVS1Data("TCRMProjectList").then(function(dataObject) {
+    //         if (dataObject.length == 0) {
+    //             templateObject.getTProjectList();
+    //         } else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             if (data.tprojectlist && data.tprojectlist.length > 0) {
+    //                 let tprojectlist = data.tprojectlist;
 
-                    // var url = new URL(window.location.href);
-                    // let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+    //                 // var url = new URL(window.location.href);
+    //                 // let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
 
-                    // if (employeeID) {
-                    //     tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
-                    // } else {
-                    tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
-                    // }
+    //                 // if (employeeID) {
+    //                 //     tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
+    //                 // } else {
+    //                 tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
+    //                 // }
 
-                    let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
-            style="margin-right: 8px;"></i>All Tasks</a>`;
-                    let ProjectName = "";
-                    tprojectlist.forEach((proj) => {
-                        ProjectName = proj.fields.ProjectName.length > 26 ? proj.fields.ProjectName.substring(0, 26) + "..." : proj.fields.ProjectName;
-                        add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
-                    });
-                    $("#goProjectWrapper").html(add_projectlist);
-                    $(".goProjectWrapper").html(add_projectlist);
-                }
-            }
-        }).catch(function(err) {
-            templateObject.getTProjectList();
-        });
-    };
+    //                 let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
+    //         style="margin-right: 8px;"></i>All Tasks</a>`;
+    //                 let ProjectName = "";
+    //                 tprojectlist.forEach((proj) => {
+    //                     ProjectName = proj.fields.ProjectName.length > 26 ? proj.fields.ProjectName.substring(0, 26) + "..." : proj.fields.ProjectName;
+    //                     add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
+    //                 });
+    //                 $("#goProjectWrapper").html(add_projectlist);
+    //                 $(".goProjectWrapper").html(add_projectlist);
+    //             }
+    //         }
+    //     }).catch(function(err) {
+    //         templateObject.getTProjectList();
+    //     });
+    // };
 
-    templateObject.getTProjectList = function() {
-        var url = FlowRouter.current().path;
-        url = new URL(window.location.href);
-        let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+    // templateObject.getTProjectList = function() {
+    //     var url = FlowRouter.current().path;
+    //     url = new URL(window.location.href);
+    //     let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
 
-        crmService.getTProjectList(employeeID).then(function(data) {
-            if (data.tprojectlist && data.tprojectlist.length > 0) {
-                let tprojectlist = data.tprojectlist;
-                tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
+    //     crmService.getTProjectList(employeeID).then(function(data) {
+    //         if (data.tprojectlist && data.tprojectlist.length > 0) {
+    //             let tprojectlist = data.tprojectlist;
+    //             tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
 
-                let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
-          style="margin-right: 8px;"></i>All Tasks</a>`;
-                let ProjectName = "";
-                tprojectlist.forEach((proj) => {
-                    ProjectName = proj.fields.ProjectName.length > 26 ? proj.fields.ProjectName.substring(0, 26) + "..." : proj.fields.ProjectName;
-                    add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
-                });
-                $("#goProjectWrapper").html(add_projectlist);
-                $(".goProjectWrapper").html(add_projectlist);
-            }
-            addVS1Data("TCRMProjectList", JSON.stringify(data));
-        }).catch(function(err) {});
-    };
+    //             let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
+    //       style="margin-right: 8px;"></i>All Tasks</a>`;
+    //             let ProjectName = "";
+    //             tprojectlist.forEach((proj) => {
+    //                 ProjectName = proj.fields.ProjectName.length > 26 ? proj.fields.ProjectName.substring(0, 26) + "..." : proj.fields.ProjectName;
+    //                 add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
+    //             });
+    //             $("#goProjectWrapper").html(add_projectlist);
+    //             $(".goProjectWrapper").html(add_projectlist);
+    //         }
+    //         addVS1Data("TCRMProjectList", JSON.stringify(data));
+    //     }).catch(function(err) {});
+    // };
 
     templateObject.getInitAllLabels = function() {
         getVS1Data("TCRMLabelList").then(function(dataObject) {
@@ -257,7 +257,7 @@ Template.taskDetailModal.onRendered(function() {
     };
 
     setTimeout(() => {
-        templateObject.getInitTProjectList();
+        // templateObject.getInitTProjectList();
         templateObject.getInitAllLabels();
     }, 500);
 });
@@ -370,6 +370,10 @@ Template.taskDetailModal.events({
                 });
             }
         }, delayTimeAfterSound);
+    },
+
+    "click .btnAddSubTask": function(event) {
+        $("#newTaskModal").modal("toggle");
     },
 });
 
