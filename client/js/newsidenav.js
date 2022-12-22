@@ -790,7 +790,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavshipping').removeClass('active');
                 $('#sidenavreceipt').removeClass('active');
                 $('#sidenavfixedAssets').removeClass('active');
-                $('.collapse').collapse('hide');
+                // $('.collapse').collapse('hide');
             } else if ((currentLoc == "/timesheet") || (currentLoc == "/adpapi") ||
                 (currentLoc == "/squareapi") || (currentLoc == "/employeetimeclock") || (currentLoc == "/payrolloverview")) {
                 $('#sidenavaccounts').removeClass('active');
@@ -921,7 +921,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavshipping').removeClass('active');
                 $('#sidenavreceipt').removeClass('active');
                 $('#sidenavfixedAssets').addClass('active');
-                $('.collapse').collapse('hide');
+                // $('.collapse').collapse('hide');
             }
         }, 50);
     }
