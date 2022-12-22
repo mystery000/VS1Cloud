@@ -908,6 +908,77 @@ Template.trialbalance.events({
       });
     }, delayTimeAfterSound);
   },
+  "click .btnSpreadLink": function() {
+    LoadingOverlay.show();
+    let utilityService = new UtilityService();
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+    let formatDateFrom =
+      dateFrom.getFullYear() +
+      "-" +
+      (dateFrom.getMonth() + 1) +
+      "-" +
+      dateFrom.getDate();
+    let formatDateTo =
+      dateTo.getFullYear() +
+      "-" +
+      (dateTo.getMonth() + 1) +
+      "-" +
+      dateTo.getDate();
+
+    // const filename = loggedCompany + "-Profit and Loss" + ".csv";
+
+    var table = $("#tableExport").filter("table");
+    var rows = table.find('tr').not(options.ignoreRows);
+
+    var numCols = rows.first().find("td,th").not(options.ignoreColumns).length;
+    var tables = [];
+    var wsnames = [];
+
+    var maintab = {
+      rows: []
+    };
+
+    rows.each(function() {
+      var cells = [];
+      $(this).find("td,th").not(options.ignoreColumns)
+          .each(function(i, col) {
+              var column = $(col);
+
+              // Strip whitespaces
+              var content = options.trimContent ? $.trim(column.text()) : column.text();
+              cells.push({
+                "data-type": "String",
+                "data-style": "",
+                "data-value": content,
+                "innerHTML": "",
+                "data-formula": null,
+                getAttribute: function (attr_val) {
+                  if (attr_val) {
+                    return this[attr_val];
+                  }
+                }
+              });
+          });
+      maintab.rows.push({cells: cells});
+    });
+
+    tables.push(maintab);
+
+    //raw data tab content
+
+    tables.push([]);
+    
+    //----------------
+    
+    wsnames.push(loggedCompany + "-Trial Balance");
+    wsnames.push("Raw data");
+
+
+    utilityService.multipleTablesToExcel(tables, wsnames, loggedCompany + "-Trial Balance", "");
+  },
   "click .btnExportReport": function () {
     LoadingOverlay.show();
     let utilityService = new UtilityService();
