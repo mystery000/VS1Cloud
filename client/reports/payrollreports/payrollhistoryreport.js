@@ -132,7 +132,7 @@ Template.payrollhistoryreport.onRendered(() => {
         return false;
       }
     })
-    
+
     let paySlipReport = [];
     data = data.response;
     if( data.tpayhistory.length > 0 ){
@@ -204,7 +204,6 @@ Template.payrollhistoryreport.onRendered(() => {
 Template.payrollhistoryreport.events({
   'click .chkDatatable': function(event) {
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-    console.log("111111111111", columnDataValue);
     if ($(event.target).is(':checked')) {
       $('.'+columnDataValue).addClass('showColumn');
       $('.'+columnDataValue).removeClass('hiddenColumn');
@@ -354,8 +353,8 @@ Template.payrollhistoryreport.events({
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
     templateObject.getPayHistory(
-      null, 
-      null, 
+      null,
+      null,
       true
     )
   },
@@ -363,8 +362,8 @@ Template.payrollhistoryreport.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1PayrollHistory_Report", "");
     templateObject.getPayHistory(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },

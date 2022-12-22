@@ -87,7 +87,6 @@ Template.balancesheetreport.onRendered(() => {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log(data);
                 templateObject.displayBalanceSheetData(data);
             }
         }).catch(function (err) {
@@ -150,8 +149,6 @@ Template.balancesheetreport.onRendered(() => {
                 MakeNegative();
             }, 100);
         }
-        console.log(splashArrayBalanceSheetReport);
-        //$('.fullScreenSpin').css('display','none');
 
         setTimeout(function () {
             $('#tblBalanceSheet').DataTable({
@@ -443,7 +440,6 @@ Template.balancesheetreport.events({
 
     'click .chkDatatable': function (event) {
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-        console.log(columnDataValue);
         if ($(event.target).is(':checked')) {
             $('.' + columnDataValue).addClass('showColumn');
             $('.' + columnDataValue).removeClass('hiddenColumn');
@@ -575,7 +571,6 @@ Template.balancesheetreport.events({
     "click td": async function (event) {
         let accountName = $(event.target).parent().first().text();
         let toDate = moment($("#balanceDate").val()).clone().endOf("month").format("YYYY-MM-DD");
-        console.log(toDate);
         let fromDate = "1899-01-01";
         Session.setPersistent("showHeader", true);
         await clearData('TAccountRunningBalanceReport');

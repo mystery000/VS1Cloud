@@ -112,7 +112,6 @@ Template.taskDetailModal.onRendered(function() {
                     tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
                     // }
 
-                    console.log("tprojectlist=", tprojectlist);
 
                     let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
             style="margin-right: 8px;"></i>All Tasks</a>`;
@@ -274,7 +273,7 @@ Template.taskDetailModal.events({
         let templateObject = Template.instance();
         setTimeout(function() {
             let taskID = $("#txtCrmTaskID").val();
-            
+
             let selected_lbls = [];
             let unselected_lbls = [];
             $("#detailTaskLabelWrapper input:checked").each(function() {

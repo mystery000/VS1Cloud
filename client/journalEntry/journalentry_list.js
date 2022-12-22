@@ -1662,13 +1662,12 @@ Template.journalentrylist.events({
     var columns = $("#tblJournalList th");
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
-    console.log("-------------",columnDataValue);
     $.each(columns, function (i, v) {
       let className = v.classList;
       let replaceClass = className[1];
-      console.log("========", replaceClass);
+
       if (v.innerText.trim() == columnDataValue) {
-        console.log($(event.target).is(":checked"));
+
         if ($(event.target).is(":checked")) {
           $("." + replaceClass + "").css("display", "table-cell");
           $("." + replaceClass + "").css("padding", ".75rem");
@@ -1681,8 +1680,7 @@ Template.journalentrylist.events({
   },
 //   'click .chkDatatable': function(event) {
 //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-//     // console.log(templateObject.tableheaderrecords.get());
-//     console.log($('.'+columnDataValue).attr("class"));
+
 //     if ($(event.target).is(':checked')) {
 //       $('.'+columnDataValue).addClass('showColumn');
 //       $('.'+columnDataValue).removeClass('hiddenColumn');

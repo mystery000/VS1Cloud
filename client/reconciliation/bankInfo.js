@@ -10,7 +10,6 @@ export default showBankInfo = () => {
                 showCancelButton: false,
                 confirmButtonText: 'Ok',
             }).then((result) => {
-                // console.log(result)
                 if (result && result.value)
                     localStorage.setItem("VS1ReconcileShowBankInfo", true);
             });

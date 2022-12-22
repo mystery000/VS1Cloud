@@ -826,12 +826,11 @@ Template.currenciessettings.events({
 //     let range = $(event.target).val()||0;
 //     let colClassName = $(event.target).attr("valueclass");
 //     await $('.' + colClassName).css('width', range);
-//     console.log($('.' + colClassName).css("width"));
 //   //   await $('.colAccountTree').css('width', range);
 //     $('.dataTable').resizable();
 //   },
 
-  'click .btnOpenReportSettings': () => { 
+  'click .btnOpenReportSettings': () => {
     let templateObject = Template.instance();
     // let currenttranstablename = templateObject.data.tablename||";
     $(`thead tr th`).each(function (index) {

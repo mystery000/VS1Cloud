@@ -110,7 +110,7 @@ Template.new_salesorder.onRendered(function () {
             var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
             var isRepeated = soData.fields.RepeatedFrom;
             templateObject.hasFollow.set(isRepeated);
-        }        
+        }
     }
     templateObject.hasFollowings();
     $('#edtFrequencyDetail').css('display', 'none');
@@ -3592,7 +3592,7 @@ Template.new_salesorder.onRendered(function () {
                         setTimeout(()=>{
                             templateObject.checkAbleToMakeWorkOrder()
                         }, 1000)
-                      
+
                         if (templateObject.salesorderrecord.get()) {
 
 
@@ -5028,7 +5028,7 @@ Template.new_salesorder.onRendered(function () {
         }
     }
 
-  
+
 
     templateObject.getDepartments = function() {
         getVS1Data('TDeptClass').then(function(dataObject) {
@@ -7647,40 +7647,39 @@ Template.new_salesorder.onRendered(function() {
         workorderList = temp?JSON.parse(temp): [];
 
     let returnvalue = false;
-    
+
     setTimeout(function () {
       let lineTable = $("#tblSalesOrderLine");
       let orderlines = $(lineTable).find("tbody tr");
-      console.log('orderlines', orderlines)
       for (let i = 0; i < orderlines.length; i++) {
         let line = orderlines[i];
         let productName = $(line).find(".lineProductName").val();
-        console.log('product name', productName)
+
         let existBOM = false;
 
         let index = bomProducts.findIndex((product) => {
-          console.log('product', product.fields.productName, product.fields.productName == productName)
+
           return product.fields.productName == productName;
         });
-        
+
         if (index > -1) {
           existBOM = true;
         }
-        
+
         if (existBOM == true) {
           //check if the workorder is already exists
           let workOrderIndex = workorderList.findIndex((order) => {
               return (
                 order.SalesOrderID == tempObj.SalesOrderId.get() &&
                 order.line.fields.ProductName == productName
-              );  
+              );
 
           });
-          
+
           if (workOrderIndex == -1) {
             returnvalue = true;
           }
-         
+
         }
       }
       tempObj.abletomakeworkorder.set(returnvalue);
@@ -8040,8 +8039,6 @@ Template.new_salesorder.helpers({
         return _saleOrder.fields.Lines;
     },
 
-
-    ////////////////////////////////////////////////////////////////
     printEmailData: async () => {
         var splashLineArray = new Array();
         var erpGet = erpDb();
@@ -8051,7 +8048,6 @@ Template.new_salesorder.helpers({
         var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
 
         let templateObject = Template.instance();
-        console.log({ templateObject })
         // let stripe_id = templateObject.accountID.get();
         // let stripe_fee_method = templateObject.stripe_fee_method.get();
         let stripe_id = '';
@@ -8159,7 +8155,7 @@ Template.new_salesorder.helpers({
 
         let customer = $('#edtCustomerName').val();
         let customerEmail = $('#edtCustomerEmail').val();
-        
+
         let departement = $('#sltDept').val();
         let total = $('#totalBalanceDue').html() || 0;
         let tax = $('#subtotal_tax').html() || 0;
@@ -8176,7 +8172,7 @@ Template.new_salesorder.helpers({
                 ForeignExchangeRate: parseFloat(ForeignExchangeRate),
             }
         }
-        
+
         const currentSalesOrderId = parseInt(currentSalesOrder);
 
         let company = Session.get('vs1companyName');

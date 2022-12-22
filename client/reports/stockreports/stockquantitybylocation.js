@@ -260,7 +260,6 @@ Template.stockquantitybylocation.onRendered(() => {
 Template.stockquantitybylocation.events({
   'click .chkDatatable': function (event) {
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-    console.log(columnDataValue);
     if ($(event.target).is(':checked')) {
       $('.' + columnDataValue).addClass('showColumn');
       $('.' + columnDataValue).removeClass('hiddenColumn');
@@ -832,4 +831,3 @@ Template.registerHelper("notEquals", function (a, b) {
 Template.registerHelper("containsequals", function (a, b) {
   return a.indexOf(b) >= 0;
 });
-
