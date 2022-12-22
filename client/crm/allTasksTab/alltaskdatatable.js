@@ -2323,7 +2323,6 @@ Template.alltaskdatatable.events({
 
     // update task rename task
     "click .btnSaveEditTask": function(e) {
-        alert(1);
         playSaveAudio();
         let templateObject = Template.instance();
         setTimeout(function() {
@@ -4146,7 +4145,7 @@ function openEditTaskModal(id, type) {
             $("#taskmodalNameLabel").html(selected_record.TaskName);
             $(".activityAdded").html("Added on " + moment(selected_record.MsTimeStamp).format("MMM D h:mm A"));
             // let due_date = selected_record.due_date ? moment(selected_record.due_date).format("D MMM") : "No Date";
-            let due_date = selected_record.due_date ? moment(selected_record.due_date).format("YYYY-MM-DD") : "";
+            let due_date = selected_record.due_date ? moment(selected_record.due_date).format("DD/MM/YYYY") : "";
 
 
             let todayDate = moment().format("ddd");

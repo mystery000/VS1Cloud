@@ -159,12 +159,12 @@
                             </div>
                         </div>
                         <div class="card shadow mb-4 cardSizing" style="margin: 8px;">
-                            {{> vs1_contact_card_header isJob=isJob record=record id="leadInfo"}}
-                            <!-- <div class="card-header d-flex justify-content-between align-items-xl-center"> -->
+                            <div class="card-header d-flex justify-content-between align-items-xl-center">
                                 <!-- <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input" type="checkbox" id="activeChk" checked><label class="custom-control-label" for="activeChk"></label></div> -->
+                                {{> vs1_contact_card_header isJob=isJob record=record id="leadInfo"}}
                                 <!--here-->
-                                <!-- <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
-                            </div> -->
+                                <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
+                            </div>
 
                             {{> customfieldDroppop}}
                             {{> customfieldpop}}
@@ -472,6 +472,26 @@
                                                         <div class="tab-content">
                                                             <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
                                                                 <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                                                <style>
+                                                                    #tblLeadCrmList{
+                                                                        width:100% !important;
+                                                                    }
+                                                                    #tblLeadCrmList .colDate{
+                                                                        width:15% !important;
+                                                                    }
+                                                                    #tblLeadCrmList .colTaskName{
+                                                                        width:20% !important;
+                                                                    }
+                                                                    #tblLeadCrmList .colTaskDesc{
+                                                                        width:35% !important;
+                                                                    }
+                                                                    #tblLeadCrmList .colCompletedBy{
+                                                                        width:15% !important;
+                                                                    }
+                                                                    #tblLeadCrmList .colCompleteTask{
+                                                                        width:15% !important;
+                                                                    }
+                                                                </style>
                                                                 {{> non_transactional_list tablename="tblLeadCrmList"}}
                                                             </div>
                                                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-4" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
@@ -975,7 +995,7 @@
                             <h4>Employee List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                         </div>
                         <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
-                            {{> employeelistpop}}
+                            {{> employeelistpop tablename="tblEmployeelist1"}}
                         </div>
                         <div class="modal-footer">
                           <!-- <div class="custom-control custom-switch" style="cursor: pointer;">
@@ -1055,7 +1075,7 @@
                     aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
-                {{> employeelistpop}}
+                {{> employeelistpop tablename="tblEmployeelist2"}}
             </div>
             <div class="modal-footer">
                 <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
@@ -1072,5 +1092,4 @@
     <script>
         modalDraggable();
     </script>
-    {{> init_form_page_script}}
 </template>
