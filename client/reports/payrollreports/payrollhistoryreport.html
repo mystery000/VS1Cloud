@@ -3,7 +3,7 @@
         <div class="table-responsive">
             <table class="table table-sm" id="tableExport" name="tableExport">
                 <thead>
-                    <tr class="table-active customDoubleTableHeading">
+                    <!-- <tr class="table-active customDoubleTableHeading">
                         <th>Employee</th>
                         <th>Date</th>
                         <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Wages</th>
@@ -57,6 +57,15 @@
                             {{/if}}
                         
                         </tr>
+                    {{/if}} -->
+                    {{#if payrollhistoryth}}
+                    {{#each c in payrollhistoryth }}
+                    {{# if c.display}}
+                    <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
+                        class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                        style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
+                    {{/if}}
+                    {{/each}}
                     {{/if}}
                 </thead>
                 <tbody>

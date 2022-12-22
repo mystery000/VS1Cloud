@@ -121,7 +121,6 @@
         uploadedFile=uploadedFile
         isCurrencyEnable=isCurrencyEnable
         custfields=custfields
-        showUploadAttachment=true
         showTransactionButtons=true
         salesCloudPreferenceRec=salesCloudPreferenceRec
         showCustomer=true
@@ -226,17 +225,7 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-12 col-md-6 col-lg-4 col-xl-5">
-                        <button class="btn btn-primary" type="button" id="addRow" style="margin-bottom: 120px;">+ Add New Entry</button>
-                        <div class="form-group"><label>Comments</label>
-                            <textarea class="form-control" rows="4" id="txaComment" name="txaComment">{{invoicerecord.comments}}</textarea>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4 col-xl-5 colComments">
-                        <div class="form-group"><label>Picking Instructions</label>
-                            <textarea class="form-control" rows="4" id="txapickmemo" name="txapickmemo">{{invoicerecord.pickmemo}}</textarea>
-                        </div>
-                    </div> -->
+        
         {{> transaction_calculation
         isPartialPaid=invoicerecord.isPartialPaid
         SubTotal=invoicerecord.SubTotal
@@ -252,36 +241,7 @@
       <div class="row justify-content-center mobileButtons" style="display: none;">
         {{> transaction_footer margin="12px" AttachmentCount=attachmentCount TransactionType="invoices" }}
       </div>
-      <div class="printID" style="display: none;"></div>
-      <style>
-        @media screen and (max-width: 450px) {
-          .btnFooter {
-            width: 39% !important;
-          }
-
-          .btnSave {
-            margin-right: 8px !important;
-          }
-
-          .btn_Attachment {
-            margin-right: 8px !important;
-          }
-
-          .printConfirm {
-            margin-left: 8px !important;
-          }
-
-          .btnBack {
-            margin-left: 8px !important;
-          }
-        }
-
-        @media screen and (max-width: 427px) {
-          .btn_Attachment {
-            font-size: 14px !important;
-          }
-        }
-      </style>
+     
     </form>
     <!-- Start PDF -->
     <style media="screen">

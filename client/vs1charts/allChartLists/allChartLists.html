@@ -139,18 +139,15 @@
         {{/if}}
 
         {{#if is_available_chart currentTemplate "mytaskswidgetchart"}}
-            {{#if is_dashboard_check "dashboardsalesmanager"}}
-                {{> mytaskswidgetchart
-                        md=4 defaultPosition=2 key="dsmcharts__my_tasks" }}
+            {{> mytaskswidgetchart
+                    md=6 defaultPosition=1 key="dashboard__my_tasks" }}
 
-            {{else if is_dashboard_check "dashboardsales"}}
-                {{> mytaskswidgetchart
+            {{> mytaskswidgetchart
+                    md=4 defaultPosition=2 key="dsmcharts__my_tasks" }}
+
+            {{> mytaskswidgetchart
                     md=4 defaultPosition=2 key="dscharts__my_tasks" }}
 
-            {{else}}
-                {{> mytaskswidgetchart
-                        md=6 defaultPosition=1 key="dashboard__my_tasks" }}
-            {{/if}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "dsmAppointmentsWidget"}}
@@ -166,12 +163,6 @@
         {{#if is_available_chart currentTemplate "accountrevenuestreams"}}
             {{> accountrevenuestreams
                     md=8 defaultPosition=2 key="accounts__revenue_streams"}}
-        {{/if}}
-
-        {{#if is_available_chart currentTemplate "accountslistchart"}}
-            {{> accountslistchart
-                    md=12 defaultPosition=29 key="accounts__account_list" }}
-
         {{/if}}
 
         {{#if is_available_chart currentTemplate "profitandlosschart"}}

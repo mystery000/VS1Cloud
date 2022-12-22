@@ -491,6 +491,8 @@ Template.newLeaveRequestModal.onRendered(() => {
 
         $('#edtLeavePayPeriod').val('Weekly');
 
+        $('#edtLeavePayPeriod').val('Weekly');
+
         $('#edtLeavePayStatus').editableSelect('add', 'Awaiting');
         $('#edtLeavePayStatus').editableSelect('add', 'Approved');
         $('#edtLeavePayStatus').editableSelect('add', 'Denied');

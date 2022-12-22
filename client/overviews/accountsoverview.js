@@ -1216,7 +1216,7 @@ Template.accountsoverview.onRendered(function() {
     $("#tblAccountOverview tbody").on(
         "click",
         "tr .colAccountName, tr .colAccountName, tr .colDescription, tr .colAccountNo, tr .colType, tr .colTaxCode, tr .colBankAccountName, tr .colBSB, tr .colBankAccountNo, tr .colExtra, tr .colAPCANumber",
-        function() {
+        function(event) {
             var listData = $(this).closest("tr").attr("id");
             var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
             var accountName = $(event.target).closest("tr").find(".colAccountName").text();

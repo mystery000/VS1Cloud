@@ -2094,9 +2094,9 @@
                                                     padding: 5px 65px 5px 15px;
                                                 }
                                             </style>
-                                            <button type="button" class="btn btn-primary btnAddNewOvertime float-right" data-toggle="modal" data-target="#btnAddNewOvertime"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New Overtime</button>
+                                            <!-- <button type="button" class="btn btn-primary btnAddNewOvertime float-right" data-toggle="modal" data-target="#btnAddNewOvertime"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New Overtime</button> -->
 
-                                            <div class="modal fade" id="btnAddNewOvertime" tabindex="-1" role="dialog" aria-labelledby="btnAddNewOvertimeLabel" aria-hidden="true">
+                                            <!-- <div class="modal fade" id="btnAddNewOvertime" tabindex="-1" role="dialog" aria-labelledby="btnAddNewOvertimeLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -2111,7 +2111,7 @@
                                                                 <div class="col-12">
                                                                     <div class="form-group">
                                                                         <label for="overtimeRateType">Rate Type</label>
-                                                                        <input class="es-input form-control overtimeRateType" id="overtimeRateType" >
+                                                                        <input class="es-input form-control overtimeRateType" id="overtimeRateType" > -->
                                                                         <!-- <select class="form-control overtimeRateType" style="cursor: pointer;" id="overtimeRateType" >
                                                                             {{#if rateTypes}}
                                                                                 {{#each rateType in rateTypes}}
@@ -2120,7 +2120,7 @@
                                                                                 {{/each}}
                                                                             {{/if}}
                                                                         </select> -->
-                                                                    </div>
+                                                                    <!-- </div>
                                                                 </div>
                                                                 <div class="col-12">
                                                                     <div class="form-group graterThenDiv">
@@ -2153,10 +2153,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <div class="col-12">
-                                            <div class="table-responsive">
+                                            {{> overtime_rules}}
+                                            <!-- <div class="table-responsive">
                                                 <style>
                                                     .btn-success.btn-sm,
                                                     .btn-sm.btn-danger {
@@ -2206,7 +2207,7 @@
                                                     </tbody>
 
                                                 </table>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>

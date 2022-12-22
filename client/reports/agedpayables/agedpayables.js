@@ -24,7 +24,7 @@ Template.agedpayables.onCreated(() => {
     templateObject.grandrecords = new ReactiveVar();
     templateObject.dateAsAt = new ReactiveVar();
     templateObject.deptrecords = new ReactiveVar();
-
+    templateObject.agedpayablesth = new ReactiveVar([]);
     // Currency related vars //
   //  templateObject.currencyList = new ReactiveVar([]);
   //  templateObject.activeCurrencyList = new ReactiveVar([]);
@@ -37,10 +37,39 @@ Template.agedpayables.onRendered(() => {
     LoadingOverlay.show();
     const templateObject = Template.instance();
 
+
+    let reset_data = [
+      { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "" },
+      { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "" },
+      { index: 3, label: 'PO Number', class: 'colPONumber', active: true, display: true, width: "" },
+      { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "" },
+      { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "" },
+      { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "" },
+      { index: 7, label: '1-30 Days', class: 'col130Days', active: true, display: true, width: "" },
+      { index: 8, label: '30-60 Days', class: 'col3060Days', active: true, display: true, width: "" },
+      { index: 9, label: '60-90 Days', class: 'col6090Days', active: true, display: true, width: "" },
+      { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "" },
+      { index: 11, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "" },
+      { index: 12, label: 'Invoice Date', class: 'colInvoiceDate', active: true, display: true, width: "" },
+      { index: 13, label: 'Original Amount', class: 'colOriginalAmount', active: true, display: true, width: "" },
+      { index: 14, label: 'Details', class: 'colDetails', active: false, display: true, width: "" },
+      { index: 15, label: 'Invoice Number', class: 'colInvoiceNumber', active: false, display: true, width: "" },
+      { index: 16, label: 'Account Name', class: 'colAccountName', active: false, display: true, width: "" },
+      { index: 17, label: 'Supplier ID', class: 'colSupplierID', active: false, display: true, width: "" },
+      { index: 18, label: 'Terms', class: 'colTerms', active: false, display: true, width: "" },
+      { index: 19, label: 'APNotes', class: 'colAPNotes', active: false, display: true, width: "" },
+      { index: 20, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "" },
+      { index: 21, label: 'PCStatus', class: 'colPCStatus', active: false, display: true, width: "" },
+      { index: 22, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "" },
+      { index: 23, label: 'POGlobalRef', class: 'colPOGlobalRef', active: false, display: true, width: "" },
+    ]
+
+    templateObject.agedpayablesth.set(reset_data);
+
     templateObject.initDate = () => {
       Datehandler.initOneMonth();
     };
-  
+
     templateObject.setDateAs = ( dateFrom = null ) => {
       templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
     };
@@ -65,7 +94,7 @@ Template.agedpayables.onRendered(() => {
             // }
             let allRecords = [];
             if (data.tapreport.length) {
-              
+
                 localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data) || '');
                 // localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data)||'');
                 let records = [];
@@ -86,7 +115,7 @@ Template.agedpayables.onRendered(() => {
                     recordObj.Id = data.tapreport[i].PurchaseOrderID;
                     recordObj.type = data.tapreport[i].Type;
                     recordObj.SupplierName = data.tapreport[i].Name;
-                    
+
                     // recordObj.dataArr = [
                     //     '',
                     //     data.tapreport[i].Type,
@@ -101,7 +130,7 @@ Template.agedpayables.onRendered(() => {
                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["90Days"]) || '-',
                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["120Days"]) || '-',
 
-                    //   
+                    //
                     // ];
 
                     recordObj.entries = data.tapreport[i];
@@ -142,9 +171,9 @@ Template.agedpayables.onRendered(() => {
                 }
 
 
-             
+
                 allRecords.forEach((record) => {
-                   
+
                     let amountduetotal = 0;
                     let Currenttotal = 0;
                     let lessTnMonth = 0;
@@ -177,7 +206,7 @@ Template.agedpayables.onRendered(() => {
                     current.push(record.total);
 
                 });
-              
+
 
 
                 // let iterator = 0;
@@ -200,12 +229,12 @@ Template.agedpayables.onRendered(() => {
                 //     }
 
                 //     // wont be used anymore
-                //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '', 
-                //     // utilityService.modifynegativeCurrencyFormat(amountduetotal), 
+                //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '',
+                //     // utilityService.modifynegativeCurrencyFormat(amountduetotal),
                 //     // utilityService.modifynegativeCurrencyFormat(Currenttotal),
-                //     //     utilityService.modifynegativeCurrencyFormat(oneMonth), 
-                //     //     utilityService.modifynegativeCurrencyFormat(twoMonth), 
-                //     //     utilityService.modifynegativeCurrencyFormat(threeMonth), 
+                //     //     utilityService.modifynegativeCurrencyFormat(oneMonth),
+                //     //     utilityService.modifynegativeCurrencyFormat(twoMonth),
+                //     //     utilityService.modifynegativeCurrencyFormat(threeMonth),
                 //     //     utilityService.modifynegativeCurrencyFormat(Older)];
 
 
@@ -300,9 +329,9 @@ Template.agedpayables.onRendered(() => {
 
                 templateObject.records.set(allRecords);
                 templateObject.grandrecords.set(grandValObj);
-               
+
                 if (templateObject.records.get()) {
-                    
+
                     setTimeout(function () {
                         $('td a').each(function () {
                             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -337,7 +366,7 @@ Template.agedpayables.onRendered(() => {
 
             }else{
                 templateObject.records.set(allRecords);
-            } 
+            }
             LoadingOverlay.hide();
 
 
@@ -359,7 +388,7 @@ Template.agedpayables.onRendered(() => {
             // }
             let allRecords = [];
             if (data.tapreport.length) {
-                
+
                 // localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data)||'');
                 let records = [];
                 let current = [];
@@ -379,7 +408,7 @@ Template.agedpayables.onRendered(() => {
                     recordObj.Id = data.tapreport[i].PurchaseOrderID;
                     recordObj.type = data.tapreport[i].Type;
                     recordObj.SupplierName = data.tapreport[i].Name;
-                    
+
                     // recordObj.dataArr = [
                     //     '',
                     //     data.tapreport[i].Type,
@@ -394,7 +423,7 @@ Template.agedpayables.onRendered(() => {
                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["90Days"]) || '-',
                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["120Days"]) || '-',
 
-                    //   
+                    //
                     // ];
 
                     recordObj.entries = data.tapreport[i];
@@ -435,9 +464,9 @@ Template.agedpayables.onRendered(() => {
                 }
 
 
-             
+
                 allRecords.forEach((record) => {
-                   
+
                     let amountduetotal = 0;
                     let Currenttotal = 0;
                     let lessTnMonth = 0;
@@ -470,7 +499,7 @@ Template.agedpayables.onRendered(() => {
                     current.push(record.total);
 
                 });
-              
+
 
 
                 // let iterator = 0;
@@ -493,12 +522,12 @@ Template.agedpayables.onRendered(() => {
                 //     }
 
                 //     // wont be used anymore
-                //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '', 
-                //     // utilityService.modifynegativeCurrencyFormat(amountduetotal), 
+                //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '',
+                //     // utilityService.modifynegativeCurrencyFormat(amountduetotal),
                 //     // utilityService.modifynegativeCurrencyFormat(Currenttotal),
-                //     //     utilityService.modifynegativeCurrencyFormat(oneMonth), 
-                //     //     utilityService.modifynegativeCurrencyFormat(twoMonth), 
-                //     //     utilityService.modifynegativeCurrencyFormat(threeMonth), 
+                //     //     utilityService.modifynegativeCurrencyFormat(oneMonth),
+                //     //     utilityService.modifynegativeCurrencyFormat(twoMonth),
+                //     //     utilityService.modifynegativeCurrencyFormat(threeMonth),
                 //     //     utilityService.modifynegativeCurrencyFormat(Older)];
 
 
@@ -593,9 +622,9 @@ Template.agedpayables.onRendered(() => {
 
                 templateObject.records.set(allRecords);
                 templateObject.grandrecords.set(grandValObj);
-               
+
                 if (templateObject.records.get()) {
-                    
+
                     setTimeout(function () {
                         $('td a').each(function () {
                             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -630,7 +659,7 @@ Template.agedpayables.onRendered(() => {
 
             }else{
                 templateObject.records.set(allRecords);
-            } 
+            }
             LoadingOverlay.hide();
     }
     };
@@ -679,7 +708,7 @@ Template.agedpayables.onRendered(() => {
 
     }
     // templateObject.getAllProductData();
-    //templateObject.getDepartments();    
+    //templateObject.getDepartments();
     templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
     LoadingOverlay.hide();
 });
@@ -688,6 +717,36 @@ Template.agedpayables.events({
     'click #btnSummary': function() {
         FlowRouter.go('/agedpayablessummary');
     },
+    'click .chkDatatable': function (event) {
+      let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+      if ($(event.target).is(':checked')) {
+        $('.' + columnDataValue).addClass('showColumn');
+        $('.' + columnDataValue).removeClass('hiddenColumn');
+      } else {
+        $('.' + columnDataValue).addClass('hiddenColumn');
+        $('.' + columnDataValue).removeClass('showColumn');
+      }
+    },
+    'click .btnOpenReportSettings': () => {
+      let templateObject = Template.instance();
+      // let currenttranstablename = templateObject.data.tablename||";
+      $(`thead tr th`).each(function (index) {
+        var $tblrow = $(this);
+        var colWidth = $tblrow.width() || 0;
+        var colthClass = $tblrow.attr('data-class') || "";
+        $('.rngRange' + colthClass).val(colWidth);
+      });
+      $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+    },
+    'change .custom-range': async function (event) {
+      //   const tableHandler = new TableHandler();
+      let range = $(event.target).val() || 0;
+      let colClassName = $(event.target).attr("valueclass");
+      await $('.' + colClassName).css('width', range);
+      //   await $('.colAccountTree').css('width', range);
+      $('.dataTable').resizable();
+    },
+
     // 'change #dateTo': function () {
     //     let templateObject = Template.instance();
     //     $('.fullScreenSpin').css('display', 'inline-block');
@@ -857,10 +916,10 @@ Template.agedpayables.events({
                           resolve();
                         }
                     }
-                } 
+                }
                 if(j == values.length -1) {resolve()}
               }
-             
+
             })
           }
 
@@ -924,7 +983,7 @@ Template.agedpayables.events({
     //     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     //     var dateTo = new Date($("#dateTo").datepicker("getDate"));
     //     await templateObject.setReportOptions(false, dateFrom, dateTo);
-       
+
     // },
     // "click #lastMonth": async function () {
     //     $(".fullScreenSpin").css("display", "inline-block");
@@ -933,7 +992,7 @@ Template.agedpayables.events({
     //     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     //     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     //     await templateObject.setReportOptions(false, fromDate, endDate);
-       
+
     // },
     // "click #lastQuarter": async function () {
     //     $(".fullScreenSpin").css("display", "inline-block");
@@ -942,7 +1001,7 @@ Template.agedpayables.events({
     //     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     //     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     //     await templateObject.setReportOptions(false, fromDate, endDate);
-       
+
     // },
     // "click #last12Months": async function () {
     //     $(".fullScreenSpin").css("display", "inline-block");
@@ -952,7 +1011,7 @@ Template.agedpayables.events({
     //     $("#dateTo").attr("readonly", false);
     //     var currentDate = new Date();
     //     var begunDate = moment(currentDate).format("DD/MM/YYYY");
-    
+
     //     let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
     //     let fromDateDay = currentDate.getDate();
     //     if (currentDate.getMonth() + 1 < 10) {
@@ -961,17 +1020,17 @@ Template.agedpayables.events({
     //     if (currentDate.getDate() < 10) {
     //       fromDateDay = "0" + currentDate.getDate();
     //     }
-    
+
     //     var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
     //     templateObject.dateAsAt.set(begunDate);
     //     $("#dateFrom").val(fromDate);
     //     $("#dateTo").val(begunDate);
-    
+
     //     var currentDate2 = new Date();
     //     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     //     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     //     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-       
+
     // },
     'keyup #myInputSearch': function (event) {
         $('.table tbody tr').show();
@@ -1030,7 +1089,7 @@ Template.agedpayables.events({
         LoadingOverlay.show();
         localStorage.setItem("VS1AgedPayables_Report", "");
         templateObject.getAgedPayableReports(
-          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
           GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
           false
         )
@@ -1100,6 +1159,9 @@ Template.agedpayables.events({
 });
 
 Template.agedpayables.helpers({
+  agedpayablesth: () => {
+    return Template.instance().agedpayablesth.get();
+  },
   records: () => {
     return Template.instance().records.get();
     //   .sort(function(a, b){
@@ -1195,9 +1257,9 @@ Template.agedpayables.helpers({
 
     // Lets remove the minus character
     const isMinus = amount < 0;
-    if (isMinus == true) 
+    if (isMinus == true)
       amount = amount * -1; // make it positive for now
-    
+
     //  get default currency symbol
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
@@ -1330,5 +1392,3 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
     return (a.indexOf(b) >= 0);
 });
-
-

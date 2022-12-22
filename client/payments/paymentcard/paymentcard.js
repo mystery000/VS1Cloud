@@ -9623,16 +9623,10 @@ Template.paymentcard.events({
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id') || 0; // table row ID
         $('#selectDeleteLineID').val(targetID);
-        
         if(targetID != undefined){
             times++;
             if (times == 1) {
-                if (targetID == 0) {
-                    $(event.target).closest('tr').remove();
-                } else {
-                    $('#deleteLineModal').modal('toggle');
-                }
-
+                $('#deleteLineModal').modal('show');
             } else {
                 if ($('#tblPaymentcard tbody>tr').length > 1) {
                     this.click;
@@ -9651,14 +9645,14 @@ Template.paymentcard.events({
                     if (targetID == 0) {
                         $(event.target).closest('tr').remove();
                     } else {
-                        $('#deleteLineModal').modal('toggle');
+                        $('#deleteLineModal').modal('show');
                     }
                 }
 
             }
         } else {
-            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
-            else $("#footerDeleteModal1").modal("toggle");
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("show");
+            else $("#footerDeleteModal1").modal("show");
         }
     },
     'click .btnDeleteFollowingPayments': async function (event) {
