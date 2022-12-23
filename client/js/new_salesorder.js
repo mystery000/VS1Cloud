@@ -4991,6 +4991,7 @@ Template.new_salesorder.onRendered(function () {
     }
 
 
+
     templateObject.getDepartments = function() {
         getVS1Data('TDeptClass').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -7568,7 +7569,11 @@ Template.new_salesorder.onRendered(function() {
 
           return product.fields.productName == productName;
         });
-        // });
+
+        if (index > -1) {
+          existBOM = true;
+        }
+
         if (existBOM == true) {
           //check if the workorder is already exists
           let workOrderIndex = workorderList.findIndex((order) => {
@@ -8828,11 +8833,7 @@ Template.new_salesorder.events({
             var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
             let lineTotalAmount = subTotal + taxTotal;
 
-                if (!isNaN(taxTotal)) {
-                    taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
-                    taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-                    document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-                }
+            let lineDiscountTotal = lineDiscountPerc / 100;
 
             var discountTotal = lineTotalAmount * lineDiscountTotal;
             var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;

@@ -82,7 +82,6 @@ Template.customerdetailsreport.onRendered(() => {
     }else{
       data = JSON.parse(localStorage.getItem('VS1CustomerDetails_Report'));
     }
-    console.log(data);
     let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
         let reportGroups = [];

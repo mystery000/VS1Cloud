@@ -1662,7 +1662,6 @@ Template.journalentrylist.events({
     var columns = $("#tblJournalList th");
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
-    console.log("-------------",columnDataValue);
     $.each(columns, function (i, v) {
       let className = v.classList;
       let replaceClass = className[1];

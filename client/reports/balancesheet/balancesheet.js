@@ -571,7 +571,6 @@ Template.balancesheetreport.events({
     "click td": async function (event) {
         let accountName = $(event.target).parent().first().text();
         let toDate = moment($("#balanceDate").val()).clone().endOf("month").format("YYYY-MM-DD");
-        console.log(toDate);
         let fromDate = "1899-01-01";
         Session.setPersistent("showHeader", true);
         await clearData('TAccountRunningBalanceReport');

@@ -475,7 +475,6 @@ Template.allChartLists.onRendered(function() {
             setTimeout(() => {
                 chartList.forEach((chart) => {
                     chart.fields._chartSlug = chart.fields.ChartGroup.toLowerCase() + "__" + chart.fields.ChartName.toLowerCase().split(" ").join("_");
-                    //console.log("=== chart.fields._chartSlug ===", chart.fields._chartSlug);
                     $(`[key='${chart.fields._chartSlug}']`).addClass("chart-visibility");
                     $(`[key='${chart.fields._chartSlug}']`).attr("pref-id", 0);
                     $(`[key='${chart.fields._chartSlug}']`).attr("chart-id",chart.fields.ID);

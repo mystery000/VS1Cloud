@@ -462,7 +462,7 @@ Template.newLeaveRequestModal.onRendered(() => {
                 }, 1000);
             });
         }, 1000);
-    }; 
+    };
 
     templateObject.getAssignLeaveTypes();
 
@@ -488,8 +488,6 @@ Template.newLeaveRequestModal.onRendered(() => {
         $('#edtLeavePayPeriod').editableSelect('add', 'Four Weekly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Monthly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Quarterly');
-        
-        $('#edtLeavePayPeriod').val('Weekly');
 
         $('#edtLeavePayPeriod').val('Weekly');
 
@@ -500,14 +498,14 @@ Template.newLeaveRequestModal.onRendered(() => {
         $('#edtLeavePayStatus').editableSelect('add', 'Denied');
         $('#edtLeavePayStatus').editableSelect('add', 'Deleted');
 
-        $('#edtLeavePayStatus').val('Awaiting'); 
+        $('#edtLeavePayStatus').val('Awaiting');
 
         $('#period').editableSelect('add', 'Weekly');
         $('#period').editableSelect('add', 'Fortnightly');
         $('#period').editableSelect('add', 'Twice Monthly');
         $('#period').editableSelect('add', 'Four Weekly');
         $('#period').editableSelect('add', 'Monthly');
-        $('#period').editableSelect('add', 'Quarterly'); 
+        $('#period').editableSelect('add', 'Quarterly');
 
         $('#edtLeaveTypeofRequest').editableSelect();
         $('#edtLeaveTypeofRequest').editableSelect()
@@ -525,7 +523,6 @@ Template.newLeaveRequestModal.onRendered(() => {
                         return false
                     }
                     let dataObject = await getVS1Data('TAssignLeaveType');
-                    console.log(dataObject, "----------dataObject");
                     if (dataObject.length > 0) {
                         data = JSON.parse(dataObject[0].data);
                         let tAssignteavetype = data.tassignleavetype.filter((item) => {
@@ -585,11 +582,11 @@ Template.newLeaveRequestModal.onRendered(() => {
 
 Template.newLeaveRequestModal.events({
     'click #btnSaveLeaveRequest': async function(event) {
-        
+
         playSaveAudio();
 
         let templateObject = Template.instance();
-        
+
         setTimeout(async function() {
 
             let currentId     = FlowRouter.current().queryParams;
@@ -666,7 +663,7 @@ Template.newLeaveRequestModal.events({
                         $('#newLeaveRequestModal').modal('hide');
                         $('#edtLeaveTypeofRequestID, #edtLeaveTypeofRequest, #edtLeaveDescription, #edtLeavePayPeriod, #edtLeaveHours, #edtLeavePayStatus').val('');
                         $('.fullScreenSpin').css('display', 'none');
-                        
+
                         swal({
                             title: 'Leave request added successfully',
                             text: '',
@@ -677,11 +674,11 @@ Template.newLeaveRequestModal.events({
                             if (result.value) {
                                 if (result.value) {}
                             }
-                        }); 
+                        });
 
                         window.open("/appointments", "_self");
-                    } 
-                    else 
+                    }
+                    else
                     {
                         $('.fullScreenSpin').css('display', 'none');
                         swal({

@@ -2708,8 +2708,6 @@ Template.newbankrecon.events({
             confirmButtonText: 'Yes',
             cancelButtonText: 'No'
         }).then((result) => {
-            console.log(result)
-            console.log(localStorage.getItem("VS1Reconcile_Info"))
             localStorage.setItem("VS1Reconcile_Info", false);
             if (result.value) {
                 $('#addAccountModal').modal('toggle');
