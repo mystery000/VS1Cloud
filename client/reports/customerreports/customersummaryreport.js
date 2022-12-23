@@ -71,7 +71,6 @@ Template.customersummaryreport.onRendered(() => {
   ]
   templateObject.customersummaryreportth.set(reset_data);
 
-  
   templateObject.setDateAs = ( dateFrom = null ) => {
     templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
   };
@@ -96,15 +95,15 @@ Template.customersummaryreport.onRendered(() => {
     if( data.tcustomersummaryreport.length > 0 ){
         let reportSummary = data.tcustomersummaryreport.map(el => {
           let resultobj = {};
-          Object.entries(el).map(([key, val]) => {      
+          Object.entries(el).map(([key, val]) => {
               resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
               return resultobj;
           })
           return resultobj;
         })
 
-      let reportGroups = []; 
-      for (const item of reportSummary ) {   
+      let reportGroups = [];
+      for (const item of reportSummary ) {
         let isExist = reportGroups.filter((subitem) => {
           if( subitem.EMAIL == item.EMAIL ){
               subitem.SubAccounts.push(item)
@@ -121,9 +120,9 @@ Template.customersummaryreport.onRendered(() => {
       $(".fullScreenSpin").css("display", "none");
 
       }
-      
+
     }
-    templateObject.records.set(reportData);    
+    templateObject.records.set(reportData);
     LoadingOverlay.hide();
   };
 
@@ -143,7 +142,6 @@ Template.customersummaryreport.events({
 
   'click .chkDatatable': function(event) {
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-    console.log(columnDataValue);
     if ($(event.target).is(':checked')) {
       $('.'+columnDataValue).addClass('showColumn');
       $('.'+columnDataValue).removeClass('hiddenColumn');
@@ -154,7 +152,6 @@ Template.customersummaryreport.events({
 },
   'click .btnOpenReportSettings': () => {
       let templateObject = Template.instance();
-      console.log("=========", templateObject.customersummaryreportth.get());
       // let currenttranstablename = templateObject.data.tablename||";
       $(`thead tr th`).each(function (index) {
         var $tblrow = $(this);
@@ -299,7 +296,7 @@ Template.customersummaryreport.events({
     localStorage.setItem("VS1CustomerSummary_Report", "");
     templateObject.getCustomerDetailsHistory(
       false,
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
       GlobalFunctions.convertYearMonthDay($('#dateTo').val())
     )
   },

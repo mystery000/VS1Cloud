@@ -140,7 +140,7 @@ templateObject.agedpayablessummaryth.set(reset_data);
     let data = await CachedHttp.get(erpObject.TAPReport, async () => {
       return await reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate, contactID);
     }, {
-      useIndexDb: true, 
+      useIndexDb: true,
       useLocalStorage: false,
       validate: (cachedResponse) => {
         return false;
@@ -301,7 +301,7 @@ templateObject.agedpayablessummaryth.set(reset_data);
           threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
           Older = Older + parseFloat(entry.entries["120Days"]);
         });
-        
+
         record.total = {
           // new
           Title: "Total " + record.title,
@@ -416,12 +416,12 @@ templateObject.agedpayablessummaryth.set(reset_data);
       if (this.records.get()) {
         setTimeout(function () {
           $("td a").each(function () {
-            if ($(this).text().indexOf("-" + Currency) >= 0) 
+            if ($(this).text().indexOf("-" + Currency) >= 0)
               $(this).addClass("text-danger");
             }
           );
           $("td").each(function () {
-            if ($(this).text().indexOf("-" + Currency) >= 0) 
+            if ($(this).text().indexOf("-" + Currency) >= 0)
               $(this).addClass("text-danger");
             }
           );
@@ -429,13 +429,13 @@ templateObject.agedpayablessummaryth.set(reset_data);
           $("td").each(function () {
             let lineValue = $(this).first().text()[0];
             if (lineValue != undefined) {
-              if (lineValue.indexOf(Currency) >= 0) 
+              if (lineValue.indexOf(Currency) >= 0)
                 $(this).addClass("text-right");
               }
             });
 
           $("td").each(function () {
-            if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+            if ($(this).first().text().indexOf("-" + Currency) >= 0)
               $(this).addClass("text-right");
             }
           );
@@ -447,7 +447,7 @@ templateObject.agedpayablessummaryth.set(reset_data);
       this.reportrecords.set([]);
       this.grandrecords.set(null);
     }
-    
+
 
     LoadingOverlay.hide();
   };
@@ -496,7 +496,6 @@ Template.agedpayablessummary.events({
   },
   'click .chkDatatable': function (event) {
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-    console.log(columnDataValue);
     if ($(event.target).is(':checked')) {
       $('.' + columnDataValue).addClass('showColumn');
       $('.' + columnDataValue).removeClass('hiddenColumn');
@@ -745,7 +744,7 @@ Template.agedpayablessummary.events({
     LoadingOverlay.show();
     localStorage.setItem("VS1AgedPayablesSummary_Report", "");
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
@@ -853,8 +852,8 @@ Template.agedpayablessummary.events({
     "change #dateTo, change #dateFrom": (e, templateObject) => {
       localStorage.setItem('VS1AgedPayablesSummary_Report', '');
       templateObject.loadReport(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
         false
       );
     },

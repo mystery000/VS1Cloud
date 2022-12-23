@@ -131,13 +131,13 @@ Template.stockvaluereport.onRendered(() => {
     //   }
     // }else{
     //   data = JSON.parse(localStorage.getItem('VS1StockValue_Report'));
-    
+
     // }
 
     let data = await CachedHttp.get(erpObject.TStockValue, async () => {
       return await reportService.getStockValueReport( dateFrom, dateTo, ignoreDate);
     }, {
-      useIndexDb: true, 
+      useIndexDb: true,
       useLocalStorage: false,
       validate: (cachedResponse) => {
         return false;
@@ -149,7 +149,7 @@ Template.stockvaluereport.onRendered(() => {
 
     let reportData = [];
     if( data.tstockvalue.length > 0 ){
-      for (const item of data.tstockvalue ) {   
+      for (const item of data.tstockvalue ) {
         let isExist = reportData.filter((subitem) => {
           if( subitem.className == item.className ){
               subitem.SubAccounts.push(item)
@@ -166,7 +166,7 @@ Template.stockvaluereport.onRendered(() => {
           });
         }
         LoadingOverlay.hide();
-      }     
+      }
     }
 
     // please add comments to explain this code.
@@ -181,7 +181,7 @@ Template.stockvaluereport.onRendered(() => {
       item.TotalOrCost = TotalOrCost;
       item.TotalCrCost = TotalCrCost;
       return item;
-    });    
+    });
 
     templateObject.records.set(useData);
     if (templateObject.records.get()) {
@@ -200,7 +200,7 @@ Template.stockvaluereport.onRendered(() => {
         });
         LoadingOverlay.hide();
       }, 1000);
-    }  
+    }
 
     LoadingOverlay.hide();
   }
@@ -209,7 +209,7 @@ Template.stockvaluereport.onRendered(() => {
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  
+
   templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
 
   // templateObject.setReportOptions();
@@ -223,7 +223,6 @@ Template.stockvaluereport.onRendered(() => {
 Template.stockvaluereport.events({
   'click .chkDatatable': function (event) {
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-    console.log(columnDataValue);
     if ($(event.target).is(':checked')) {
       $('.' + columnDataValue).addClass('showColumn');
       $('.' + columnDataValue).removeClass('hiddenColumn');
@@ -516,8 +515,8 @@ Template.stockvaluereport.events({
   "click #ignoreDate":  (e, templateObject) => {
     localStorage.setItem("VS1StockValue_Report", "");
     templateObject.loadReport(
-      null, 
-      null, 
+      null,
+      null,
       true
     )
   },
@@ -592,8 +591,8 @@ Template.stockvaluereport.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1StockValue_Report", "");
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },
@@ -610,7 +609,7 @@ Template.stockvaluereport.helpers({
   records: () => {
     return Template.instance().records.get();
   },
-  
+
   redirectionType(item) {
     if(item.type === 'PO') {
       return '#';
@@ -784,5 +783,3 @@ Template.registerHelper("notEquals", function (a, b) {
 Template.registerHelper("containsequals", function (a, b) {
   return a.indexOf(b) >= 0;
 });
-
-

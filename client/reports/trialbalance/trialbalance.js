@@ -738,8 +738,6 @@ Template.trialbalance.events({
     let range = $(event.target).val()||0;
     let colClassName = $(event.target).attr("valueclass");
     await $('.' + colClassName).css('width', range);
-    console.log($('.' + colClassName).css("width"));
-  //   await $('.colAccountTree').css('width', range);
     $('.dataTable').resizable();
   },
 
@@ -1016,9 +1014,9 @@ Template.trialbalance.events({
     //raw data tab content
 
     tables.push([]);
-    
+
     //----------------
-    
+
     wsnames.push(loggedCompany + "-Trial Balance");
     wsnames.push("Raw data");
 
