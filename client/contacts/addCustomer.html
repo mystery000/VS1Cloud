@@ -231,18 +231,17 @@
                         </div>
                     </div> -->
                     <div class="card shadow mb-4 cardSizing">
-                        {{> vs1_contact_card_header isJob=isJob record=record id="customerInfo"}}
-                        <!-- <div class="card-header d-flex justify-content-between align-items-xl-center"> -->
+                        <div class="card-header d-flex justify-content-between align-items-xl-center">
                             <!-- <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input" type="checkbox" id="activeChk" checked><label class="custom-control-label" for="activeChk"></label></div> -->
-                            <!-- {{> vs1_contact_card_header isJob=isJob record=record id="customerInfo"}} -->
+                            {{> vs1_contact_card_header isJob=isJob record=record id="customerInfo"}}
                             <!--here-->
-                            <!-- <div> -->
+                            <div>
                                 <!-- <span class="font-weight-bold m-0" style="color: #00A3D3;margin-right:14px;">
                               {{#if notEquals record.id ''}}
                                 CUS-{{record.id}}
                               {{/if}}
                              </span> -->
-                                <!-- <button type="button" class="btn btn-success btnReceiveCustomerPayment"
+                                <button type="button" class="btn btn-success btnReceiveCustomerPayment"
                                     style="margin:7px;" id="btnReceiveCustomerPayment"><i
                                         class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Receive
                                     Payment</button>
@@ -250,7 +249,7 @@
                                     data-toggle="modal" href="#myModal4"><i
                                         class="fas fa-ellipsis-v text-gray-400"></i></a>
                             </div>
-                        </div> -->
+                        </div>
                         <!-- Start {{> optionCustomFiled}} -->
                         {{> customfieldDroppop}}
                         {{> customfieldpop}}
@@ -1458,6 +1457,26 @@
                                                         <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm"
                                                             style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
                                                             <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                                            <style>
+                                                                #tblCustomerCrmList{
+                                                                    width:100% !important;
+                                                                }
+                                                                #tblCustomerCrmList .colDate{
+                                                                    width:15% !important;
+                                                                }
+                                                                #tblCustomerCrmList .colTaskName{
+                                                                    width:20% !important;
+                                                                }
+                                                                #tblCustomerCrmList .colTaskDesc{
+                                                                    width:35% !important;
+                                                                }
+                                                                #tblCustomerCrmList .colCompletedBy{
+                                                                    width:15% !important;
+                                                                }
+                                                                #tblCustomerCrmList .colCompleteTask{
+                                                                    width:15% !important;
+                                                                }
+                                                            </style>
                                                             {{> non_transactional_list tablename="tblCustomerCrmList"}}
                                                         </div>
                                                         <div class="tab-pane border rounded-0" role="tabpanel"
@@ -3842,31 +3861,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-crm"
-                                        style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
-                                        <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
-                                        <style>
-                                            #tblCustomerCrmList{
-                                                width:100% !important;
-                                            }
-                                            #tblCustomerCrmList .colDate{
-                                                width:15% !important;
-                                            }
-                                            #tblCustomerCrmList .colTaskName{
-                                                width:20% !important;
-                                            }
-                                            #tblCustomerCrmList .colTaskDesc{
-                                                width:35% !important;
-                                            }
-                                            #tblCustomerCrmList .colCompletedBy{
-                                                width:15% !important;
-                                            }
-                                            #tblCustomerCrmList .colCompleteTask{
-                                                width:15% !important;
-                                            }
-                                        </style>
-                                        {{> non_transactional_list tablename="tblCustomerCrmList"}}
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -4008,7 +4002,7 @@
                 </div>
                 <div class="modal-body mainCustomerModalBody appointmentCustomer"
                     style="padding: 0px; overflow-x: hidden;">
-                    {{> employeelistpop}}
+                    {{> employeelistpop tablename="tblEmployeelist1"}}
                 </div>
                 <div class="modal-footer">
                     <!-- <div class="custom-control custom-switch" style="cursor: pointer;">
@@ -4025,14 +4019,7 @@
     </div>
     
     {{> taskDetailModal}}
-    <!-- 
-        Edito: Vladyslav
-        Modified: 16/12/2022
-        Description: 
-        This is making infinite cycle issue because when the user open customer dropdown on the appointmentlist/frmappointmentpop,
-        It's calling same addCustomerPop modal in both place.
-    -->
-    <!-- {{> frmappointmentpop}} -->
+    {{> frmappointmentpop}}
     {{> newTaskModal}}
     
 
@@ -4069,7 +4056,7 @@
                     aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
-                {{> employeelistpop}}
+                {{> employeelistpop tablename="tblEmployeelist2"}}
             </div>
             <div class="modal-footer">
                 <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
@@ -4085,5 +4072,4 @@
     <script>
         modalDraggable();
     </script>
-    {{> init_form_page_script}}
 </template>

@@ -21,15 +21,78 @@ Template.jobsalessummary.onCreated(() => {
   templateObject.dateAsAt = new ReactiveVar();
 
   templateObject.reportRecords = new ReactiveVar([]);
+  templateObject.jobsalessummaryth = new ReactiveVar([]);
 
 
   FxGlobalFunctions.initVars(templateObject);
 });
 
 Template.jobsalessummary.onRendered(() => {
-  const templateObject = Template.instance();
-  const jobSalesApi = new JobSalesApi();
+
   LoadingOverlay.show();
+  const templateObject = Template.instance();
+  // const jobSalesApi = new JobSalesApi();
+
+  let reset_data = [] ;
+  reset_data = [
+    { index: 1, label: 'Customer ID', class:'colCustomerID', active: true, display: true, width: "85" },
+    { index: 2, label: 'Contact Name', class:'colContactName', active: true, display: true, width: "85" },
+    { index: 3, label: 'Job Customer Name', class:'colJobCustomerName', active: true, display: true, width: "85" },
+    { index: 4, label: 'Job Name', class:'colJobName', active: true, display: true, width: "85" },
+    { index: 5, label: 'Sale Date Time', class:'colSaleDateTime', active: true, display: true, width: "85" },
+    { index: 6, label: 'Sale Total Ex', class:'colSaleTotalEx', active: true, display: true, width: "85" },
+    { index: 7, label: 'Sale Amount Inc', class:'colSaleAmountInc', active: true, display: true, width: "85" },
+    { index: 8, label: 'Sale Tax', class:'colSaleTax', active: true, display: true, width: "85" },
+    { index: 9, label: 'Sale Cust Field1', class:'colSaleCustField1', active: true, display: true, width: "85" },
+    { index: 10, label: 'Sale Cust Field2', class:'colSaleCustField2', active: true, display: true, width: "85" },
+    { index: 11, label: 'Sale Cust Field3', class:'colSaleCustField3', active: true, display: true, width: "85" },
+    { index: 12, label: 'Sale Cust Field4', class:'colSaleCustField4', active: true, display: true, width: "85" },
+    { index: 13, label: 'Sale Cust Field5', class:'colSaleCustField5', active: true, display: true, width: "85" },
+    { index: 14, label: 'Sale Cust Field6', class:'colSaleCustField6', active: true, display: true, width: "85" },
+    { index: 15, label: 'Sale Cust Field7', class:'colSaleCustField7', active: true, display: true, width: "85" },
+    { index: 16, label: 'Sale Cust Field8', class:'colSaleCustField8', active: true, display: true, width: "85" },
+    { index: 17, label: 'Sale Cust Field9', class:'colSaleCustField9', active: true, display: true, width: "85" },
+    { index: 18, label: 'Sale Cust Field10', class:'colSaleCustField10', active: true, display: true, width: "85" },
+    { index: 19, label: 'Product ID', class:'colProductID', active: true, display: true, width: "85" },
+    { index: 20, label: 'Uom Qty Shipped', class:'colUomQtyShipped', active: true, display: true, width: "85" },
+    { index: 21, label: 'Uom Name', class:'colUomName', active: true, display: true, width: "85" },
+    { index: 22, label: 'Amount Ex', class:'colAmountEx', active: true, display: true, width: "85" },
+    { index: 23, label: 'Amount Inc', class:'colAmountInc', active: true, display: true, width: "85" },
+    { index: 24, label: 'Amount Tax', class:'colAmountTax', active: true, display: true, width: "85" },
+    { index: 25, label: 'Tax Code', class:'colTaxCode', active: true, display: true, width: "85" },
+    { index: 26, label: 'Amount Discount', class:'colAmountDiscount', active: true, display: true, width: "85" },
+    { index: 27, label: 'Discount Per Unit', class:'colDiscountPerUnit', active: true, display: true, width: "85" },
+    { index: 28, label: 'DetailType', class:'colDetailType', active: false, display: true, width: "85" },
+    { index: 29, label: 'CustomerID', class:'colCustomerID', active: false, display: true, width: "85" },
+    { index: 30, label: 'ClientNo', class:'colClientNo', active: false, display: true, width: "85" },
+    { index: 31, label: 'CustomerType', class:'colCustomerType', active: false, display: true, width: "85" },
+    { index: 32, label: 'CustomerStreet', class:'colCustomerStreet', active: false, display: true, width: "85" },
+    { index: 33, label: 'CustomerStreet2', class:'colCustomerStreet2', active: false, display: true, width: "85" },
+    { index: 34, label: 'CustomerStreet3', class:'colCustomerStreet3', active: false, display: true, width: "85" },
+    { index: 35, label: 'Suburb', class:'colSuburb', active: false, display: true, width: "85" },
+    { index: 36, label: 'State', class:'colState', active: false, display: true, width: "85" },
+    { index: 37, label: 'CustomerPostcode', class:'colCustomerPostcode', active: false, display: true, width: "85" },
+    { index: 39, label: 'JobID', class:'colJobID', acticve: false, display: true, width: "85" },
+    { index: 40, label: 'JobClientNo', class:'colJobClientNo', active: false, display: true, width: "85" },
+    { index: 41, label: 'JobRegistration', class:'colJobRegistration', active: false, display: true, width: "85" },
+    { index: 42, label: 'JobNumber', class:'colJobNumber', active: false, display: true, width: "85" },
+    { index: 43, label: 'JobWarrantyPeriod', class:'colJobWarrantyPeriod', active: false, display: true, width: "85" },
+    { index: 44, label: 'JobNotes', class:'colJobNotes', active: false, display: true, width: "85" },
+    { index: 45, label: 'SaleCustomerName', class:'colSaleCustomerName', active: false, display: true, width: "85" },
+    { index: 46, label: 'SaleDate', class:'colSaleDate', active: false, display: true, width: "85" },
+    { index: 47, label: 'SaleDepartment', class:'colSaleDepartment', active: false, display: true, width: "85" },
+    { index: 48, label: 'SaleComments', class:'colSaleComments', active: false, display: true, width: "85" },
+    { index: 49, label: 'SaleTerms', class:'colSaleTerms', active: false, display: true, width: "85" },
+    { index: 50, label: 'SaleCustomerName', class:'colSaleCustomerName', active: false, display: true, width: "85" },
+    { index: 51, label: 'DocketNumber', class:'colDocketNumber', active: false, display: true, width: "85" },
+    { index: 52, label: 'MemoLine', class:'colMemoLine', active: false, display: true, width: "85" },
+    { index: 53, label: 'UomQtySold', class:'colUomQtySold', active: false, display: true, width: "85" },
+    { index: 54, label: 'UomQtyBackorder ', class:'colUomQtyBackorder', active: false, display: true, width: "85" },
+  ];
+
+  templateObject.jobsalessummaryth.set(reset_data);
+
+
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
@@ -79,8 +142,8 @@ Template.jobsalessummary.onRendered(() => {
       useIndexDb: true,
       useLocalStorage: false,
       validate: (cachedResponse) => {
-        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
-        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom)
+        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
         && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
           return true;
         }
@@ -92,7 +155,7 @@ Template.jobsalessummary.onRendered(() => {
       let records = [];
       const array = data.response.tjobsalessummary;
       let customers = _.groupBy(array, 'Customer');
-    
+
       for(let key in customers) {
         records.push({
           title: key || "Other",
@@ -104,12 +167,12 @@ Template.jobsalessummary.onRendered(() => {
 
       templateObject.reportRecords.set(records);
     }
-   
-   
+
+
     LoadingOverlay.hide();
- 
+
   }
- 
+
 
 
   templateObject.initDate();
@@ -118,7 +181,7 @@ Template.jobsalessummary.onRendered(() => {
 
 
   templateObject.loadReport(
-    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val())
   );
 
@@ -130,6 +193,35 @@ Template.jobsalessummary.events({
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1JobSalesSummary_Report", "");
     Meteor._reload.reload();
+  },
+  'click .chkDatatable': function(event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.'+columnDataValue).addClass('showColumn');
+      $('.'+columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.'+columnDataValue).addClass('hiddenColumn');
+      $('.'+columnDataValue).removeClass('showColumn');
+    }
+},
+'change .custom-range': async function(event) {
+  //   const tableHandler = new TableHandler();
+    let range = $(event.target).val()||0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    $('.dataTable').resizable();
+  },
+
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
   },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -245,7 +337,7 @@ Template.jobsalessummary.events({
   },
   // "click #lastMonth": function () {
   //   let templateObject = Template.instance();
-  
+
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
   //   var currentDate = new Date();
@@ -300,7 +392,7 @@ Template.jobsalessummary.events({
   // },
   // "click #lastQuarter": function () {
   //   let templateObject = Template.instance();
-  
+
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
   //   var currentDate = new Date();
@@ -342,7 +434,7 @@ Template.jobsalessummary.events({
   // },
   // "click #last12Months": function () {
   //   let templateObject = Template.instance();
-   
+
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
   //   var currentDate = new Date();
@@ -440,7 +532,7 @@ Template.jobsalessummary.events({
 
     LoadingOverlay.hide();
   },
-  
+
   "click [href='#noInfoFound']": function () {
     swal({
         title: 'Information',
@@ -451,8 +543,8 @@ Template.jobsalessummary.events({
   },
   "click #ignoreDate":  (e, templateObject) => {
     templateObject.loadReport(
-      null, 
-      null, 
+      null,
+      null,
       true
     )
   },
@@ -460,8 +552,8 @@ Template.jobsalessummary.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1JobSalesSummary_Report", "");
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },
@@ -469,12 +561,15 @@ Template.jobsalessummary.events({
 });
 
 Template.jobsalessummary.helpers({
-  
+
   redirectionType(item) {
     return '#noInfoFound';
   },
   reportRecords: () => {
     return Template.instance().reportRecords.get();
+  },
+  jobsalessummaryth: () => {
+    return Template.instance().jobsalessummaryth.get();
   },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";

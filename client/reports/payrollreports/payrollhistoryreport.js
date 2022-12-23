@@ -21,6 +21,7 @@ Template.payrollhistoryreport.onCreated(() => {
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.reportOptions = new ReactiveVar([]);
   templateObject.records = new ReactiveVar([]);
+  templateObject.payrollhistoryth = new ReactiveVar([]);
 
   FxGlobalFunctions.initVars(templateObject);
 });
@@ -28,6 +29,44 @@ Template.payrollhistoryreport.onCreated(() => {
 Template.payrollhistoryreport.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
+
+  let reset_data = [
+    { index: 1, label: 'LastName', class: 'colLastName', active: true, display: true, width: "" },
+    { index: 2, label: 'FirstName', class: 'colFirstName', active: true, display: true, width: "" },
+    { index: 3, label: 'G/L', class: 'colGL', active: true, display: true, width: "" },
+    { index: 4, label: 'Date Paid', class: 'colDatePaid', active: true, display: true, width: "" },
+    { index: 5, label: 'Gross', class: 'colGross', active: true, display: true, width: "" },
+    { index: 6, label: 'Tax', class: 'colTax', active: true, display: true, width: "" },
+    { index: 7, label: 'Wages', class: 'colWages', active: true, display: true, width: "" },
+    { index: 8, label: 'Commission', class: 'colCommission', active: true, display: true, width: "" },
+    { index: 9, label: 'Deductions', class: 'colDeductions', active: true, display: true, width: "" },
+    { index: 10, label: 'Allowances', class: 'colAllowances', active: true, display: true, width: "" },
+    { index: 11, label: 'CDEP', class: 'colCDEP', active: true, display: true, width: "" },
+    { index: 11, label: 'Sundries', class: 'colSundries', active: true, display: true, width: "" },
+    { index: 12, label: 'Superannuation', class: 'colSuperannuation', active: true, display: true, width: "" },
+    { index: 12, label: 'ClassName', class: 'colClassName', active: true, display: true, width: "" },
+    { index: 13, label: 'PayPeriod', class: 'colPayPeriod', active: true, display: true, width: "" },
+    { index: 14, label: 'PayNo', class: 'colPayNo', active: true, display: true, width: "" },
+    { index: 15, label: 'Splits', class: 'colSplits', active: true, display: true, width: "" },
+    { index: 16, label: 'Deleted', class: 'colDeleted', active: true, display: true, width: "" },
+    { index: 17, label: 'Global Ref', class: 'colGlobalRef', active: false, display: true, width: "" },
+    { index: 18, label: 'Employee Name', class: 'colEmployeeName', active: false, display: true, width: "" },
+    { index: 19, label: 'Pay Date', class: 'PayDate', active: false, display: true, width: "" },
+    { index: 20, label: 'Pay Periods', class: 'colPayPeriods', active: false, display: true, width: "" },
+    { index: 21, label: 'Salary Sacrifice', class: 'colSalarySacrifice', active: false, display: true, width: "" },
+    { index: 22, label: 'Workplacegiving', class: 'colWorkplacegiving', active: false, display: true, width: "" },
+    { index: 23, label: 'Net Comb', class: 'colNetComb', active: false, display: true, width: "" },
+    { index: 24, label: 'Net Only', class: 'colNetOnly', active: false, display: true, width: "" },
+    { index: 25, label: 'Paid', class: 'colPaid', active: false, display: true, width: "" },
+    { index: 26, label: 'Pay', class: 'colPay', active: false, display: true, width: "" },
+    { index: 27, label: 'Test staff', class: 'colTeststaff', active: false, display: true, width: "" },
+    { index: 28, label: 'Customer ID Tax', class: 'colCustomerIDTax', active: false, display: true, width: "" },
+    { index: 29, label: 'PAYG Tax', class: 'colPaygTax', active: false, display: true, width: "" },
+    { index: 30, label: 'BSB', class: 'colBSB', active: false, display: true, width: "" },
+    { index: 31, label: 'BankAccNo', class: 'colBankAccNo', active: false, display: true, width: "" },
+    { index: 32, label: 'Employee ID', class: 'colEmployeeID', active: false, display: true, width: "" },
+  ]
+  templateObject.payrollhistoryth.set(reset_data);
 
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
@@ -93,7 +132,7 @@ Template.payrollhistoryreport.onRendered(() => {
         return false;
       }
     })
-    
+
     let paySlipReport = [];
     data = data.response;
     if( data.tpayhistory.length > 0 ){
@@ -163,6 +202,36 @@ Template.payrollhistoryreport.onRendered(() => {
 });
 
 Template.payrollhistoryreport.events({
+  'click .chkDatatable': function(event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.'+columnDataValue).addClass('showColumn');
+      $('.'+columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.'+columnDataValue).addClass('hiddenColumn');
+      $('.'+columnDataValue).removeClass('showColumn');
+    }
+},
+
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click .btnRefresh": function () {
     LoadingOverlay.hide();
     localStorage.setItem("VS1PayrollHistory_Report", "");
@@ -284,8 +353,8 @@ Template.payrollhistoryreport.events({
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
     templateObject.getPayHistory(
-      null, 
-      null, 
+      null,
+      null,
       true
     )
   },
@@ -293,8 +362,8 @@ Template.payrollhistoryreport.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1PayrollHistory_Report", "");
     templateObject.getPayHistory(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },
@@ -362,6 +431,9 @@ Template.payrollhistoryreport.events({
 });
 
 Template.payrollhistoryreport.helpers({
+  payrollhistoryth: () => {
+    return Template.instance().payrollhistoryth.get();
+  },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },

@@ -3,7 +3,7 @@
         <div class="table-responsive">
             <table class="table table-sm" id="tableExport" name="tableExport">
                 <thead>
-                    <tr class="table-active">
+                    <!-- <tr class="table-active">
                         <th>Employee</th>
                         <th>Date</th>
                         <th>Hours</th>
@@ -11,7 +11,16 @@
                         <th>Double</th>
                         <th>Additional</th>
                         <th>Tips</th>
-                    </tr>
+                    </tr> -->
+                    {{#if timesheetsummaryth}}
+                    {{#each c in timesheetsummaryth }}
+                    {{# if c.display}}
+                    <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
+                        class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                        style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
+                    {{/if}}
+                    {{/each}}
+                    {{/if}}
                 </thead>
                 <tbody>
                     {{#if records}}

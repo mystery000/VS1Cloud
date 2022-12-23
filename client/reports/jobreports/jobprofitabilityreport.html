@@ -3,7 +3,17 @@
     <div class="table-responsive">
       <table class="table table-sm" id="tableExport" name="tableExport">
         <thead>
-          <tr class="table-active customDoubleTableHeading">
+          <tr class="table-active tblAvoid customDoubleTableHeading">
+            {{#if jobprofitabilityreportth}}
+                {{#each c in jobprofitabilityreportth }}
+                    {{# if c.display}}
+                        <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}" class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
+                    {{/if}}
+                {{/each}}
+            {{/if}}
+
+        </tr>
+          <!-- <tr class="table-active customDoubleTableHeading">
             <th>Company</th>
             <th>Job Name</th>
             <th class="text-cetner">Job No</th>
@@ -15,8 +25,8 @@
             <th colspan="{{countActive currencyList}}" class="text-center">Credit</th>
             <th class="text-right">Profit %</th>
             <th class="text-right" colspan="{{countActive currencyList}}">Profit</th>
-          </tr>
-          {{#if isOnlyDefaultActive equal "false" }}
+          </tr> -->
+          <!-- {{#if isOnlyDefaultActive equal "false" }}
             <tr class="table-active tblAvoid customDoubleTableHeading">
               <th></th>
               <th></th>
@@ -69,7 +79,7 @@
           
 
             </tr>
-          {{/if}}
+          {{/if}} -->
         </thead>
         <tbody>
           {{#if records}}

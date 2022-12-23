@@ -19,11 +19,47 @@ Template.timesheetsummary.onCreated(() => {
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.reportOptions = new ReactiveVar([]);
   templateObject.records = new ReactiveVar([]);
+  templateObject.timesheetsummaryth = new ReactiveVar([]);
 });
 
 Template.timesheetsummary.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
+
+  let reset_data = [
+    { index: 1, label: 'Entry Date', class: 'colEntryDate', active: true, display: true, width: "85" },
+    { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "85" },
+    { index: 3, label: 'Entered by', class: 'colEnteredby', active: true, display: true, width: "85" },
+    { index: 4, label: 'Job', class: 'colJob', active: true, display: true, width: "85" },
+    { index: 5, label: 'Timesheet Date', class: 'colTimesheetDate', active: true, display: true, width: "85" },
+    { index: 6, label: 'Hours', class: 'colHours', active: true, display: true, width: "85" },
+    { index: 7, label: 'Active', class: 'colActive', active: true, display: true, width: "85" },
+    { index: 8, label: 'Total', class: 'colTotal', active: true, display: true, width: "85" },
+    { index: 9, label: 'Employee Name', class: 'colEmployee', active: true, display: true, width: "85" },
+    { index: 10, label: 'Labour Cost', class: 'colLabourCost', active: true, display: true, width: "85" },
+    { index: 11, label: 'Department Name', class: 'colDepartmentName', active: true, display: true, width: "85" },
+    { index: 12, label: 'Service Name', class: 'colServiceName', active: true, display: true, width: "85" },
+    { index: 13, label: 'Service Date', class: 'colServiceDate', active: true, display: true, width: "85" },
+    { index: 14, label: 'Charge Rate', class: 'colChargeRate', active: true, display: true, width: "85" },
+    { index: 15, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "85" },
+    { index: 16, label: 'Product Description', class: 'colProductDescription', active: true, display: true, width: "85" },
+    { index: 17, label: 'Use Time Cost', class: 'colUseTimeCost', active: true, display: true, width: "85" },
+    { index: 18, label: 'Tax', class: 'colTax', active: true, display: true, width: "85" },
+    { index: 19, label: 'Pay Rate Type Name', class: 'colPayRateTypeName', active: true, display: true, width: "85" },
+    { index: 20, label: 'Hourly Rate', class: 'colHourlyRate', active: true, display: true, width: "85" },
+    { index: 21, label: 'Super Inc', class: 'colSuperInc', active: true, display: true, width: "85" },
+    { index: 22, label: 'Super Amount', class: 'colSuperAmount', active: true, display: true, width: "85" },
+    { index: 23, label: 'Notes', class: 'colNotes', active: true, display: true, width: "85" },
+    { index: 24, label: 'Qty', class: 'colQty', active: true, display: true, width: "85" },
+    { index: 25, label: 'Equipment', class: 'colEquipment', active: true, display: true, width: "85" },
+    { index: 26, label: 'Total Service Charge', class: 'colTotalServiceCharge', active: true, display: true, width: "85" },
+    { index: 27, label: 'Timesheet Entry ID', class: 'colTimesheetEntryID', active: true, display: true, width: "85" },
+    { index: 28, label: 'Repair #', class: 'colRepair', active: true, display: true, width: "85" },
+    { index: 29, label: 'Area', class: 'colArea', active: false, display: true, width: "85" },
+    { index: 30, label: 'ContactName', class: 'colContactName', active: false, display: true, width: "85" },
+  ]
+  templateObject.timesheetsummaryth.set(reset_data);
+
 
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
@@ -87,6 +123,36 @@ Template.timesheetsummary.onRendered(() => {
 });
 
 Template.timesheetsummary.events({
+  'click .chkDatatable': function(event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.'+columnDataValue).addClass('showColumn');
+      $('.'+columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.'+columnDataValue).addClass('hiddenColumn');
+      $('.'+columnDataValue).removeClass('showColumn');
+    }
+},
+
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1TimesheetSummary_Report", "");
@@ -299,6 +365,9 @@ Template.timesheetsummary.events({
 });
 
 Template.timesheetsummary.helpers({
+  timesheetsummaryth: () => {
+    return Template.instance().timesheetsummaryth.get();
+  },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },

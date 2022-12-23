@@ -1,4 +1,5 @@
 import { SideBarService } from "../../js/sidebar-service";
+import { ContactService } from "../../contacts/contact-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import "jquery-ui-dist/external/jquery/jquery";
 import "jquery-ui-dist/jquery-ui";
@@ -153,8 +154,6 @@ Template.transaction_print_modal.onCreated(async function () {
           };
         });
 
-      console.log("vs1Data.length == 0", templates);
-
       return templates;
     } else {
       const vs1DataList = JSON.parse(vs1Data[0].data);
@@ -181,7 +180,6 @@ Template.transaction_print_modal.onCreated(async function () {
           };
         });
 
-      console.log("vs1Data.length != 0", templates);
 
       return templates;
     }
@@ -201,11 +199,11 @@ Template.transaction_print_modal.onRendered(function () {
     const templates = templateObject.templates.get();
     templates.forEach((templateType) => {
       templateType.templateList.forEach((template) => {
-        const templateKey = TransactionTypeTemplates[transactionType].find(
+        const templateKey = TransactionTypeData[transactionType].templates.find(
           (transation) => transation.name === template.fields.SettingName
         ).key;
         if (template.fields.Active) {
-          // console.log({ template, templateKey })
+
           $(`#${templateKey}_${template.fields.Template}`).prop(
             "checked",
             true
@@ -233,22 +231,22 @@ Template.transaction_print_modal.helpers({
     return status ? { checked: "checked" } : null;
   },
   getTemplate: (TransactionType, templateName) => {
-    return TransactionTypeTemplates[TransactionType].find(
+    return TransactionTypeData[TransactionType].templates.find(
       (template) => template.name === templateName
     );
   },
   getTemplateTitle: (TransactionType, templateName) => {
-    return TransactionTypeTemplates[TransactionType].find(
+    return TransactionTypeData[TransactionType].templates.find(
       (template) => template.name === templateName
     ).title;
   },
   getTemplateKey: (TransactionType, templateName) => {
-    return TransactionTypeTemplates[TransactionType].find(
+    return TransactionTypeData[TransactionType].templates.find(
       (template) => template.name === templateName
     ).key;
   },
   chooseTemplateHandle: (event, key) => {
-    console.log({ event, key });
+
   },
 });
 
@@ -257,137 +255,44 @@ Template.transaction_print_modal.events({
     const checked = event.currentTarget.checked;
   },
   "click #printModal .printConfirm": async function (event) {
-    // const templateObject = Template.instance();
-    // playPrintAudio();
+    const templateObject = Template.instance();
+    playPrintAudio();
     const isCheckedEmail = $("#printModal #emailSend").is(":checked");
     const isCheckedSms = $("#printModal #sms").is(":checked");
-    // const data = await Template.new_salesorder.__helpers
-    //   .get("printEmailData")
-    //   .call();
+    const data = await Template.new_salesorder.__helpers
+      .get("printEmailData")
+      .call();
 
-    // console.log({ data });
-
-    // Send Email with attachments
-    // if (isCheckedEmail && validateEmail(data.checkEmailData)) {
-    if (isCheckedEmail) {
-      $(".btnSave").trigger("click");
-      // LoadingOverlay.show();
-      // Meteor.call(
-      //   "sendEmail",
-      //   {
-      //     from: "" + data.mailFromName + " <" + data.mailFrom + ">",
-      //     to: data.checkEmailData,
-      //     subject: data.mailSubject,
-      //     text: "",
-      //     html: data.htmlmailBody,
-      //     attachments: data.attachment,
-      //   },
-      //   function (error, result) {
-      //     if (error && error.error === "error") {
-      //       console.log("Send email: ", { error, result })
-      //       if (FlowRouter.current().queryParams.trans) {
-      //         // FlowRouter.go(
-      //         //   "/customerscard?id=" +
-      //         //     FlowRouter.current().queryParams.trans +
-      //         //     "&transTab=active"
-      //         // );
-      //       } else {
-      //         // FlowRouter.go("/salesorderslist?success=true");
-      //       }
-      //     } else {
-      //     }
-      //     LoadingOverlay.hide();
-      //   }
-      // );
-    }
-
-    // Send SMS
-    if (isCheckedSms) {
-      // should set up
-      const phoneNumber = "";
-
-      const smsSettings = {
-        twilioAccountId: "",
-        twilioAccountToken: "",
-        twilioTelephoneNumber: "",
-        twilioMessagingServiceSid: "MGc1d8e049d83e164a6f206fbe73ce0e2f",
-        headerAppointmentSMSMessage: "Sent from [Company Name]",
-        startAppointmentSMSMessage:
-          "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we are on site and doing the following service [Product/Service].",
-        saveAppointmentSMSMessage:
-          "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
-        stopAppointmentSMSMessage:
-          "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service].",
-      };
-
-      const smsServiceSettings = await smsService.getSMSSettings();
-      if (smsServiceSettings.terppreference.length > 0) {
-        for (let i = 0; i < smsServiceSettings.terppreference.length; i++) {
-          switch (smsServiceSettings.terppreference[i].PrefName) {
-            case "VS1SMSID":
-              smsSettings.twilioAccountId =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1SMSToken":
-              smsSettings.twilioAccountToken =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1SMSPhone":
-              smsSettings.twilioTelephoneNumber =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1HEADERSMSMSG":
-              smsSettings.headerAppointmentSMSMessage =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1SAVESMSMSG":
-              smsSettings.saveAppointmentSMSMessage =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1STARTSMSMSG":
-              smsSettings.startAppointmentSMSMessage =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1STOPSMSMSG":
-              smsSettings.stopAppointmentSMSMessage =
-                smsServiceSettings.terppreference[i].Fieldvalue;
+    if (isCheckedEmail && validateEmail(data.checkEmailData)) {
+      LoadingOverlay.show();
+      Meteor.call(
+        "sendEmail",
+        {
+          from: "" + data.mailFromName + " <" + data.mailFrom + ">",
+          to: data.checkEmailData,
+          subject: data.mailSubject,
+          text: "",
+          html: data.htmlmailBody,
+          attachments: data.attachment,
+        },
+        function (error, result) {
+          if (error && error.error === "error") {
+            if (FlowRouter.current().queryParams.trans) {
+              // FlowRouter.go(
+              //   "/customerscard?id=" +
+              //     FlowRouter.current().queryParams.trans +
+              //     "&transTab=active"
+              // );
+            } else {
+              // FlowRouter.go("/salesorderslist?success=true");
+            }
+          } else {
           }
+          LoadingOverlay.hide();
         }
-      }
-
-      const companyName = Session.get("vs1companyName");
-      const message = smsSettings.headerAppointmentSMSMessage.replace(
-        "[Company Name]",
-        companyName
       );
-
-      console.log({companyName})
-
-      if (phoneNumber) {
-        const sendSMSResult = Meteor.call(
-          "sendSMS",
-          smsSettings.twilioAccountId,
-          smsSettings.twilioAccountToken,
-          smsSettings.twilioTelephoneNumber,
-          phoneNumber,
-          message,
-          function (error, result) {
-            if (error) rej(error);
-            res(result);
-          }
-        );
-  
-        console.log({ sendSMSResult })
-      }
-    }
-  },
-  "click #printModal .chooseTemplateBtn": function (event, key, param) {
-    const dataKey = $(event.target).attr("data-id");
-    if ($(event.target).is(":checked")) {
-      // $(`#${dataKey}-modal`).css("z-index", 1049);
-      $(`#${dataKey}-modal`).modal("show");
     } else {
-      $(`#${dataKey}-modal`).modal("hide");
+
     }
   },
 });

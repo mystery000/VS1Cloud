@@ -46,9 +46,10 @@
         recordLineItems=creditrecord.LineItems isForeignEnabled=isForeignEnabled
         canShowBackOrder=false canShowUOM=false includeBOnShippedQty=false
         isBatchSerialNoTracking=isBatchSerialNoTracking
-        getDefaultCurrency=getDefaultCurrency }} {{> deletepop
+        getDefaultCurrency=getDefaultCurrency }} 
+        <!-- {{> deletepop
         itemName1="Credit" itemName2="credit" itemName3="Credit"
-        button1="btnDeleteCredit" button2="btnDeleteFollowingCredits"}}
+        button1="btnDeleteCredit" button2="btnDeleteFollowingCredits"}} -->
       </div>
       <!-- <div class="d-xl-flex align-items-xl-start" style="padding-left: 16px; padding-right: 16px">
                     <div class="flex-grow-1">
@@ -283,19 +284,6 @@
         Total=creditrecord.Total TotalPaid=creditrecord.totalPaid
         BalanceDue=creditrecord.balanceDue }}
       </div>
-
-      <div
-        class="modal fade"
-        id="templatePreviewModal"
-        tabindex="2"
-        role="dialog"
-        aria-labelledby="templatePreviewLabel"
-        aria-hidden="true"
-      >
-        {{> custom_print_template modalId="templatePreviewModal"
-        idPrefix="html-2-pdfwrapper_quotes" namePrefix="pdfwrapper_quotes" }}
-      </div>
-
       <div
         style="
           width: 210mm;
@@ -817,12 +805,7 @@
           Page 1 of 1
         </p>
       </div>
-      <div
-        class="row justify-content-center mobileButtons"
-        style="display: none"
-      >
-        {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="credits" }}
-      </div>
+
       <div class="printID" style="display: none"></div>
       <style>
         @media screen and (max-width: 450px) {

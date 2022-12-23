@@ -69,9 +69,9 @@ Template.edismssettings.onRendered(function () {
           case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue || smsSettings.twilioAccountToken; break;
           case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue || smsSettings.twilioTelephoneNumber; break;
           case "VS1HEADERSMSMSG": smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.headerAppointmentSMSMessage; break;
-          case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.saveAppointmentSMSMessage; break;
-          case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.startAppointmentSMSMessage; break;
-          case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.stopAppointmentSMSMessage;
+          // case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.saveAppointmentSMSMessage; break;
+          // case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.startAppointmentSMSMessage; break;
+          // case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.stopAppointmentSMSMessage;
         }
       }
     }
@@ -80,9 +80,9 @@ Template.edismssettings.onRendered(function () {
     $('#twilioAccountToken').val(smsSettings.twilioAccountToken);
     $('#twilioTelephoneNumber').val(smsSettings.twilioTelephoneNumber);
     $('#headerAppointmentSMS').val(smsSettings.headerAppointmentSMSMessage);
-    $('#saveAppointmentSMS').val(smsSettings.saveAppointmentSMSMessage);
-    $('#startAppointmentSMS').val(smsSettings.startAppointmentSMSMessage);
-    $('#stopAppointmentSMS').val(smsSettings.stopAppointmentSMSMessage);
+    // $('#saveAppointmentSMS').val(smsSettings.saveAppointmentSMSMessage);
+    // $('#startAppointmentSMS').val(smsSettings.startAppointmentSMSMessage);
+    // $('#stopAppointmentSMS').val(smsSettings.stopAppointmentSMSMessage);
   }).catch((error) => {
     window.open('/settings', '_self');
   });
@@ -109,9 +109,9 @@ Template.edismssettings.events({
         case "VS1SMSToken": value = $('#twilioAccountToken').val(); tag = "sid,twilliotoken,phone"; break;
         case "VS1SMSPhone": value = $('#twilioTelephoneNumber').val(); tag = "sid,twilliotoken,phone"; break;
         case "VS1HEADERSMSMSG": value = $('#headerAppointmentSMS').val(); break;
-        case "VS1SAVESMSMSG": value = $('#saveAppointmentSMS').val(); break;
-        case "VS1STARTSMSMSG": value = $('#startAppointmentSMS').val(); break;
-        case "VS1STOPSMSMSG": value = $('#stopAppointmentSMS').val();
+        // case "VS1SAVESMSMSG": value = $('#saveAppointmentSMS').val(); break;
+        // case "VS1STARTSMSMSG": value = $('#startAppointmentSMS').val(); break;
+        // case "VS1STOPSMSMSG": value = $('#stopAppointmentSMS').val();
       }
       const data = {
         eKey,

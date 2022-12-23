@@ -20,6 +20,7 @@ Template.binlocationslist.onCreated(() => {
   templateObject.reportOptions = new ReactiveVar([]);
   FxGlobalFunctions.initVars(templateObject);
   templateObject.records = new ReactiveVar([]);
+  templateObject.binlocationslistth = new ReactiveVar([]);
 });
 function MakeNegative() {
   $('td').each(function(){
@@ -30,6 +31,20 @@ Template.binlocationslist.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
   
+  reset_data = [
+    { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
+    { index: 2, label: 'Location', class: 'colLocation', active: true, display: true, width: "" },
+    { index: 3, label: 'Bin Number', class: 'colBinNumber', active: true, display: true, width: "" },
+    { index: 4, label: 'Volume Total', class: 'colVolumeTotal', active: true, display: true, width: "" },
+    { index: 5, label: 'Volume Used', class: 'colVolumeUsed', active: true, display: true, width: "" },
+    { index: 6, label: 'Volume Available', class: 'colVolumeAvailable', active: true, display: true, width: "" },
+    { index: 7, label: 'Active', class: 'colActive', active: true, display: true, width: "" },
+    { index: 8, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "" },
+    { index: 9, label: 'BinID', class: 'colBinID', active: false, display: true, width: "" },
+    { index: 10, label: 'ClassID', class: 'colClassID', active: false, display: true, width: "" },
+  ]
+  templateObject.binlocationslistth.set(reset_data);
+
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
@@ -102,6 +117,35 @@ Template.binlocationslist.onRendered(() => {
 });
 
 Template.binlocationslist.events({
+  'click .chkDatatable': function(event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.'+columnDataValue).addClass('showColumn');
+      $('.'+columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.'+columnDataValue).addClass('hiddenColumn');
+      $('.'+columnDataValue).removeClass('showColumn');
+    }
+},
+  'click .btnOpenReportSettings': () => {
+      let templateObject = Template.instance();
+      // let currenttranstablename = templateObject.data.tablename||";
+      $(`thead tr th`).each(function (index) {
+        var $tblrow = $(this);
+        var colWidth = $tblrow.width() || 0;
+        var colthClass = $tblrow.attr('data-class') || "";
+        $('.rngRange' + colthClass).val(colWidth);
+      });
+     $('.'+templateObject.data.tablename+'_Modal').modal('toggle');
+  },
+  'change .custom-range': async function(event) {
+  //   const tableHandler = new TableHandler();
+    let range = $(event.target).val()||0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+  //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1BinLocations_Report", "");
@@ -294,6 +338,9 @@ Template.binlocationslist.events({
 Template.binlocationslist.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
+  },
+  binlocationslistth: () => {
+    return Template.instance().binlocationslistth.get();
   },
   records: () => {
     return Template.instance().records.get();
