@@ -461,7 +461,7 @@ Template.emailsettings.onRendered(function () {
 
                                     if (n.id == '1' && empData[i].fields.BeginFromOption === "S") {
                                     	formIds.push(empData[i].fields.FormID);
-                                    } 
+                                    }
                                     const startDate = empData[i].fields.StartDate.split(' ')[0];
                                     const startTime = empData[i].fields.StartDate.split(' ')[1];
 
@@ -469,7 +469,7 @@ Template.emailsettings.onRendered(function () {
 
                                     //TODO: Getting BasedOnType from localstorage
                                     let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`);
-                                    
+
                                     let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
 
                                     let basedOnTypeText = '';
@@ -542,7 +542,7 @@ Template.emailsettings.onRendered(function () {
 
                                 }
                             }
-                                
+
                             empDataCurr = {
                                 employeeid: '',
                                 recipients: '',
@@ -779,7 +779,7 @@ Template.emailsettings.onRendered(function () {
                                                         })
                                                         if (tempIndex > -1) {
                                                             basedOnType = temp[tempIndex].value.BasedOnType || ''
-                                                        } 
+                                                        }
                                                         if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
                                                             if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
                                                             if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
@@ -1075,7 +1075,7 @@ Template.emailsettings.onRendered(function () {
                                                     })
                                                     if (tempIndex > -1) {
                                                         basedOnType = temp[tempIndex].value.BasedOnType || ''
-                                                    } 
+                                                    }
 
                                                     if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
                                                         if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
@@ -1862,7 +1862,7 @@ Template.emailsettings.onRendered(function () {
                                             object.fields.EndDate = new Date();
                                             const nextDueDate = await new Promise((resolve, reject) => {
                                                 Meteor.call('calculateNextDate', object.fields, (error, result) => {
-                                                    if (error){console.log('&&&&&&&&&', error); return reject(error);}
+                                                    if (error){ return reject(error);}
                                                     resolve(result);
                                                 });
                                             });
@@ -2210,7 +2210,7 @@ Template.emailsettings.onRendered(function () {
                 let savePromise = recipientIds.map(async (recipientId, index) => {
                     const starttime = frequencyEl.attr('data-starttime');
                     const startdate = frequencyEl.attr('data-startdate');
-                    
+
                     const finishdate = frequencyEl.attr('data-finishdate');
                     const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
                     const convertedFinishDate = finishdate ? finishdate.split('/')[2] + '-' + finishdate.split('/')[1] + '-' + finishdate.split('/')[0] : '';
@@ -2315,7 +2315,7 @@ Template.emailsettings.onRendered(function () {
                         });
                     });
                     await Promise.all(promises);
-                    
+
                 });
                 await Promise.all(savePromise);
                 return { success: true };
@@ -3099,7 +3099,7 @@ Template.emailsettings.events({
         var tempHtml = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
         // let tempHtml = $("#edtTemplateContent_ifr").val();
         let tempContent = tempHtml.replace(/<[^>]+>/g, ' ');
-        
+
         if(templateObject.isAdd.get() == true) {
             if(correspondenceTemp.length > 0 ) {
                 let index = correspondenceTemp.findIndex(item=>{

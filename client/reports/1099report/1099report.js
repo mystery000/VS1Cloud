@@ -85,7 +85,7 @@ Template.report1099.onRendered(()=>{
           accountData.forEach(account => {
             records.push({Id: account.PaymentID, type: account.PaymentType, Company: account.SupplierPrintName, entries: account});
           });
-         
+
 
           //   for (let i = 0; i < accountData.length; i++) {
 
@@ -234,12 +234,12 @@ Template.report1099.onRendered(()=>{
           if (templateObject.records.get()) {
             setTimeout(function () {
               $("td a").each(function () {
-                if ($(this).text().indexOf("-" + Currency) >= 0) 
+                if ($(this).text().indexOf("-" + Currency) >= 0)
                   $(this).addClass("text-danger");
                 }
               );
               $("td").each(function () {
-                if ($(this).text().indexOf("-" + Currency) >= 0) 
+                if ($(this).text().indexOf("-" + Currency) >= 0)
                   $(this).addClass("text-danger");
                 }
               );
@@ -247,13 +247,13 @@ Template.report1099.onRendered(()=>{
               $("td").each(function () {
                 let lineValue = $(this).first().text()[0];
                 if (lineValue != undefined) {
-                  if (lineValue.indexOf(Currency) >= 0) 
+                  if (lineValue.indexOf(Currency) >= 0)
                     $(this).addClass("text-right");
                   }
                 });
 
               $("td").each(function () {
-                if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+                if ($(this).first().text().indexOf("-" + Currency) >= 0)
                   $(this).addClass("text-right");
                 }
               );
@@ -261,7 +261,7 @@ Template.report1099.onRendered(()=>{
               $(".fullScreenSpin").css("display", "none");
             }, 100);
           }
-        } 
+        }
         LoadingOverlay.hide();
       }).catch(function (err) {
         //Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -290,7 +290,7 @@ Template.report1099.onRendered(()=>{
         accountData.forEach(account => {
           records.push({Id: account.PaymentID, type: account.PaymentType, Company: account.SupplierPrintName, entries: account});
         });
-       
+
 
         //   for (let i = 0; i < accountData.length; i++) {
 
@@ -439,12 +439,12 @@ Template.report1099.onRendered(()=>{
         if (templateObject.records.get()) {
           setTimeout(function () {
             $("td a").each(function () {
-              if ($(this).text().indexOf("-" + Currency) >= 0) 
+              if ($(this).text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-danger");
               }
             );
             $("td").each(function () {
-              if ($(this).text().indexOf("-" + Currency) >= 0) 
+              if ($(this).text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-danger");
               }
             );
@@ -452,13 +452,13 @@ Template.report1099.onRendered(()=>{
             $("td").each(function () {
               let lineValue = $(this).first().text()[0];
               if (lineValue != undefined) {
-                if (lineValue.indexOf(Currency) >= 0) 
+                if (lineValue.indexOf(Currency) >= 0)
                   $(this).addClass("text-right");
                 }
               });
 
             $("td").each(function () {
-              if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+              if ($(this).first().text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-right");
               }
             );
@@ -466,11 +466,11 @@ Template.report1099.onRendered(()=>{
             $(".fullScreenSpin").css("display", "none");
           }, 100);
         }
-      } 
+      }
       LoadingOverlay.hide();
     }
       $(".fullScreenSpin").css("display", "none");
-      
+
     };
 
     templateObject.getDepartments = function(){
@@ -501,7 +501,6 @@ Template.report1099.onRendered(()=>{
   Template.report1099.events({
     'click .chkDatatable': function(event) {
       let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-      console.log(columnDataValue);
       if ($(event.target).is(':checked')) {
         $('.'+columnDataValue).addClass('showColumn');
         $('.'+columnDataValue).removeClass('hiddenColumn');
@@ -532,8 +531,8 @@ Template.report1099.onRendered(()=>{
     "click #ignoreDate":  (e, templateObject) => {
       localStorage.setItem("VS11099Contractor_Report", "");
       templateObject.ContractorPaymentSummaryReports(
-        null, 
-        null, 
+        null,
+        null,
         true
       )
     },
@@ -541,8 +540,8 @@ Template.report1099.onRendered(()=>{
       let templateObject = Template.instance();
       localStorage.setItem("VS11099Contractor_Report", "");
       templateObject.ContractorPaymentSummaryReports(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
         false
       )
     },
@@ -781,11 +780,11 @@ Template.report1099.onRendered(()=>{
     formatDate: ( date ) => {
         return ( date )? moment(date).format("DD/MM/YYYY") : '';
     },
-  
+
     // FX Module //
     convertAmount: (amount, currencyData) => {
       let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
-  
+
       if(isNaN(amount)) {
         if (!amount || amount.trim() == "") {
           return "";
@@ -796,27 +795,27 @@ Template.report1099.onRendered(()=>{
       //   // default currency
       //   return amount;
       // }
-  
-  
+
+
       // Lets remove the minus character
       const isMinus = amount < 0;
       if (isMinus == true) amount = amount * -1; // make it positive for now
-  
+
       // // get default currency symbol
       // let _defaultCurrency = currencyList.filter(
       //   (a) => a.Code == defaultCurrencyCode
       // )[0];
-  
+
       // amount = amount.replace(_defaultCurrency.symbol, "");
-  
-  
+
+
       // amount =
       //   isNaN(amount) == true
       //     ? parseFloat(amount.substring(1))
       //     : parseFloat(amount);
-  
-  
-  
+
+
+
       // Get the selected date
       let dateTo = $("#dateTo").val();
       const day = dateTo.split("/")[0];
@@ -824,57 +823,57 @@ Template.report1099.onRendered(()=>{
       const y = dateTo.split("/")[2];
       dateTo = new Date(y, m, day);
       dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-  
-  
+
+
       // Filter by currency code
       currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-  
+
       // Sort by the closest date
       currencyList = currencyList.sort((a, b) => {
         a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
         a.setHours(0);
         a.setMinutes(0);
         a.setSeconds(0);
-  
+
         b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
         b.setHours(0);
         b.setMinutes(0);
         b.setSeconds(0);
-  
+
         var distancea = Math.abs(dateTo - a);
         var distanceb = Math.abs(dateTo - b);
         return distancea - distanceb; // sort a before b when the distance is smaller
-  
+
         // const adate= new Date(a.MsTimeStamp);
         // const bdate = new Date(b.MsTimeStamp);
-  
+
         // if(adate < bdate) {
         //   return 1;
         // }
         // return -1;
       });
-  
+
       const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
-  
-  
-  
+
+
+
       let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
-  
-  
-  
-  
+
+
+
+
       amount = parseFloat(amount * rate); // Multiply by the rate
       amount = Number(amount).toLocaleString(undefined, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }); // Add commas
-  
+
       let convertedAmount =
         isMinus == true
           ? `- ${currencyData.symbol} ${amount}`
           : `${currencyData.symbol} ${amount}`;
-  
-  
+
+
       return convertedAmount;
     },
     count: (array) => {
@@ -892,7 +891,7 @@ Template.report1099.onRendered(()=>{
     },
     isNegativeAmount(amount) {
       if (Math.sign(amount) === -1) {
-  
+
         return true;
       }
       return false;
@@ -903,9 +902,9 @@ Template.report1099.onRendered(()=>{
         return false;
       }
       let activeArray = array.filter((c) => c.active == true);
-  
+
       if (activeArray.length == 1) {
-  
+
         if (activeArray[0].code == defaultCurrencyCode) {
           return !true;
         } else {
@@ -918,7 +917,7 @@ Template.report1099.onRendered(()=>{
     isCurrencyListActive() {
       const array = Template.instance().currencyList.get();
       let activeArray = array.filter((c) => c.active == true);
-  
+
       return activeArray.length > 0;
     },
     isObject(variable) {

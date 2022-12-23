@@ -38,7 +38,7 @@ Template.customerdetailsreport.onRendered(() => {
 
   let taxRateService = new TaxRateService();
   let utilityService = new UtilityService();
-  
+
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
@@ -82,21 +82,20 @@ Template.customerdetailsreport.onRendered(() => {
     }else{
       data = JSON.parse(localStorage.getItem('VS1CustomerDetails_Report'));
     }
-    console.log(data);
     let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
-        let reportGroups = []; 
-        
+        let reportGroups = [];
+
         let reportSummary = data.tcustomersummaryreport.map(el => {
           let resultobj = {};
-          Object.entries(el).map(([key, val]) => {      
+          Object.entries(el).map(([key, val]) => {
               resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
               return resultobj;
           })
           return resultobj;
         })
 
-        for (const item of reportSummary) {   
+        for (const item of reportSummary) {
             let isExist = reportGroups.filter((subitem) => {
                 if( subitem.EMAIL == item.EMAIL ){
                   subitem.SubAccounts.push(item)
@@ -128,7 +127,7 @@ Template.customerdetailsreport.onRendered(() => {
             item.TotalInc = TotalInc;
             item.TotalGrossProfit = TotalGrossProfit;
             return item;
-        });        
+        });
     }
 
     templateObject.records.set(reportData);
@@ -155,7 +154,7 @@ Template.customerdetailsreport.onRendered(() => {
   //   LoadingOverlay.hide();
   // };
 
-  
+
 
   templateObject.initDate();
   templateObject.getCustomerDetailReportData(
@@ -174,7 +173,6 @@ Template.customerdetailsreport.onRendered(() => {
 Template.customerdetailsreport.events({
   'click .chkDatatable': function(event) {
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-    console.log("111111111111", columnDataValue);
     if ($(event.target).is(':checked')) {
       $('.'+columnDataValue).addClass('showColumn');
       $('.'+columnDataValue).removeClass('hiddenColumn');
@@ -206,8 +204,8 @@ Template.customerdetailsreport.events({
   "click #ignoreDate":  (e, templateObject) => {
     localStorage.setItem("VS1CustomerDetails_Report", "");
     templateObject.getCustomerDetailReportData(
-      null, 
-      null, 
+      null,
+      null,
       true
     )
   },
@@ -215,8 +213,8 @@ Template.customerdetailsreport.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1CustomerDetails_Report", "");
     templateObject.getCustomerDetailReportData(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },

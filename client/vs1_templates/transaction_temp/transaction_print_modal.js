@@ -154,8 +154,6 @@ Template.transaction_print_modal.onCreated(async function () {
           };
         });
 
-      console.log("vs1Data.length == 0", templates);
-
       return templates;
     } else {
       const vs1DataList = JSON.parse(vs1Data[0].data);
@@ -182,7 +180,6 @@ Template.transaction_print_modal.onCreated(async function () {
           };
         });
 
-      console.log("vs1Data.length != 0", templates);
 
       return templates;
     }
@@ -206,7 +203,7 @@ Template.transaction_print_modal.onRendered(function () {
           (transation) => transation.name === template.fields.SettingName
         ).key;
         if (template.fields.Active) {
-          // console.log({ template, templateKey })
+
           $(`#${templateKey}_${template.fields.Template}`).prop(
             "checked",
             true
@@ -249,7 +246,7 @@ Template.transaction_print_modal.helpers({
     ).key;
   },
   chooseTemplateHandle: (event, key) => {
-    console.log({ event, key });
+
   },
 });
 
@@ -265,8 +262,6 @@ Template.transaction_print_modal.events({
     const data = await Template.new_salesorder.__helpers
       .get("printEmailData")
       .call();
-    
-    console.log({ data });
 
     if (isCheckedEmail && validateEmail(data.checkEmailData)) {
       LoadingOverlay.show();
@@ -282,7 +277,6 @@ Template.transaction_print_modal.events({
         },
         function (error, result) {
           if (error && error.error === "error") {
-            console.log("Send email: ", { error, result })
             if (FlowRouter.current().queryParams.trans) {
               // FlowRouter.go(
               //   "/customerscard?id=" +
@@ -298,7 +292,7 @@ Template.transaction_print_modal.events({
         }
       );
     } else {
-      console.log('Check Customer Email.');
+
     }
   },
 });

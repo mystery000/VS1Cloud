@@ -28,7 +28,7 @@ Template.jobsalessummary.onCreated(() => {
 });
 
 Template.jobsalessummary.onRendered(() => {
-  
+
   LoadingOverlay.show();
   const templateObject = Template.instance();
   // const jobSalesApi = new JobSalesApi();
@@ -142,8 +142,8 @@ Template.jobsalessummary.onRendered(() => {
       useIndexDb: true,
       useLocalStorage: false,
       validate: (cachedResponse) => {
-        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
-        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom)
+        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
         && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
           return true;
         }
@@ -155,7 +155,7 @@ Template.jobsalessummary.onRendered(() => {
       let records = [];
       const array = data.response.tjobsalessummary;
       let customers = _.groupBy(array, 'Customer');
-    
+
       for(let key in customers) {
         records.push({
           title: key || "Other",
@@ -167,12 +167,12 @@ Template.jobsalessummary.onRendered(() => {
 
       templateObject.reportRecords.set(records);
     }
-   
-   
+
+
     LoadingOverlay.hide();
- 
+
   }
- 
+
 
 
   templateObject.initDate();
@@ -181,7 +181,7 @@ Template.jobsalessummary.onRendered(() => {
 
 
   templateObject.loadReport(
-    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val())
   );
 
@@ -209,8 +209,6 @@ Template.jobsalessummary.events({
     let range = $(event.target).val()||0;
     let colClassName = $(event.target).attr("valueclass");
     await $('.' + colClassName).css('width', range);
-    console.log($('.' + colClassName).css("width"));
-  //   await $('.colAccountTree').css('width', range);
     $('.dataTable').resizable();
   },
 
@@ -339,7 +337,7 @@ Template.jobsalessummary.events({
   },
   // "click #lastMonth": function () {
   //   let templateObject = Template.instance();
-  
+
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
   //   var currentDate = new Date();
@@ -394,7 +392,7 @@ Template.jobsalessummary.events({
   // },
   // "click #lastQuarter": function () {
   //   let templateObject = Template.instance();
-  
+
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
   //   var currentDate = new Date();
@@ -436,7 +434,7 @@ Template.jobsalessummary.events({
   // },
   // "click #last12Months": function () {
   //   let templateObject = Template.instance();
-   
+
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
   //   var currentDate = new Date();
@@ -534,7 +532,7 @@ Template.jobsalessummary.events({
 
     LoadingOverlay.hide();
   },
-  
+
   "click [href='#noInfoFound']": function () {
     swal({
         title: 'Information',
@@ -545,8 +543,8 @@ Template.jobsalessummary.events({
   },
   "click #ignoreDate":  (e, templateObject) => {
     templateObject.loadReport(
-      null, 
-      null, 
+      null,
+      null,
       true
     )
   },
@@ -554,8 +552,8 @@ Template.jobsalessummary.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1JobSalesSummary_Report", "");
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },
@@ -563,7 +561,7 @@ Template.jobsalessummary.events({
 });
 
 Template.jobsalessummary.helpers({
-  
+
   redirectionType(item) {
     return '#noInfoFound';
   },
