@@ -7403,11 +7403,12 @@ Template.non_transactional_list.onRendered(function() {
     } else if (currenttablename === "tblLeadCrmList") {
         templateObject.getLeadCrmListData();
     } else if (currenttablename === "tblCustomerCrmList") {
-        $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
-        $("#dateTo").val(moment().format('DD/MM/YYYY'));
-        const datefrom = $("#dateFrom").val();
-        const dateto = $("#dateTo").val();
-        templateObject.getCustomerCrmListData(false, datefrom, dateto);
+        // $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
+        // $("#dateTo").val(moment().format('DD/MM/YYYY'));
+        // const datefrom = $("#dateFrom").val();
+        // const dateto = $("#dateTo").val();
+        templateObject.getCustomerCrmListData();
+        // templateObject.getCustomerCrmListData(false, datefrom, dateto);
     } else if (currenttablename === "tblSupplierCrmList") {
         templateObject.getSupplierCrmListData();
     }
@@ -7476,9 +7477,10 @@ Template.non_transactional_list.events({
         } else if (currenttablename === "tblLeadCrmList") {
             templateObject.getLeadCrmListData(true);
         } else if (currenttablename === "tblCustomerCrmList") {
-            const datefrom = $("#dateFrom").val();
-            const dateto = $("#dateTo").val();
-            templateObject.getCustomerCrmListData(true, datefrom, dateto);
+            // const datefrom = $("#dateFrom").val();
+            // const dateto = $("#dateTo").val();
+            templateObject.getCustomerCrmListData(true);
+            // templateObject.getCustomerCrmListData(true, datefrom, dateto);
         } else if (currenttablename === "tblSupplierCrmList") {
             templateObject.getSupplierCrmListData(true);
         }
@@ -7545,9 +7547,10 @@ Template.non_transactional_list.events({
         } else if (currenttablename === "tblLeadCrmList") {
             templateObject.getLeadCrmListData(false);
         } else if (currenttablename === "tblCustomerCrmList") {
-            const datefrom = $("#dateFrom").val();
-            const dateto = $("#dateTo").val();
-            templateObject.getCustomerCrmListData(false, datefrom, dateto);
+            // const datefrom = $("#dateFrom").val();
+            // const dateto = $("#dateTo").val();
+            templateObject.getCustomerCrmListData(false);
+            // templateObject.getCustomerCrmListData(false, datefrom, dateto);
         } else if (currenttablename === "tblSupplierCrmList") {
             templateObject.getSupplierCrmListData(false)
         }
