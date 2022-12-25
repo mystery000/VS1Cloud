@@ -223,6 +223,38 @@ Template.transaction_line.onRendered(function() {
             if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
             if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active;
       }
+      if(listType == 'tblCreditLine' || listType == 'tblBillLine') {
+        let reset_data_credit = [
+            { index: 0,  label: "Account Name",      class: "AccountName",   width: "300",   active: true,   display: true },
+            { index: 1,  label: "Memo",              class: "Memo",          width: "",      active: true,   display: true },
+            { index: 2,  label: "Amount (Ex)",       class: "AmountEx",      width: "140",   active: true,   display: true },
+            { index: 3,  label: "Amount (Inc)",      class: "AmountInc",     width: "140",   active: false,  display: true },
+            { index: 4,  label: "Fixed Asset",       class: "FixedAsset",    width: "140",   active: true,   display: true },
+            { index: 5,  label: "Tax Rate",          class: "TaxRate",       width: "95",    active: false,  display: true },
+            { index: 6,  label: "Tax Code",          class: "TaxCode",       width: "95",    active: true,   display: true },
+            { index: 7,  label: "Tax Amt",           class: "TaxAmount",     width: "95",    active: true,   display: true },
+            { index: 8,  label: "Serial/Lot No",     class: "SerialNo",      width: "124",   active: true,   display: true },
+            { index: 9,  label: "Custom Field 1",    class: "CustomField1",  width: "124",   active: false,  display: true },
+            { index: 10, label: "Custom Field 2",    class: "CustomField2",  width: "124",   active: false,  display: true },
+          ];
+          reset_data = templateObject.init_data.get().map( item => {
+                x = reset_data_credit.find( x => x.class === item.class);
+                if(x != undefined) {
+                    const checks = ["AmountEx", "AmountInc", "UnitPriceEx", "UnitPriceInc"];
+                    if(checks.includes(x.class))
+                        return {...item, active: x.active, display: x.display};
+                    else 
+                        return {...item, active: x.display, display: x.display};
+                }
+                return {...item, active: false, display: false};
+            });
+            amtEx = reset_data.find(x => x.class == "AmountEx");
+            amtInc = reset_data.find(x => x.class == "AmountInc");
+            unitPriceEx = reset_data.find(x => x.class == "UnitPriceEx");
+            unitPriceInc = reset_data.find(x => x.class == "UnitPriceInc");
+            if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
+            if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active;
+      }
       templateObject.showCustomFieldDisplaySettings(reset_data);
       try {
 
