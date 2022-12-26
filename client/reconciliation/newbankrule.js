@@ -27,8 +27,6 @@ const successSaveCb = () => {
 }
 
 const errorSaveCb = (err) => {
-    // console.log(err);
-    // LoadingOverlay.hide();
     swal("Something went wrong", "", "error");
 }
 

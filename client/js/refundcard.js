@@ -78,8 +78,6 @@ Template.refundcard.onCreated(() => {
   templateObject.statusrecords = new ReactiveVar([]);
   templateObject.productextrasellrecords = new ReactiveVar([]);
   templateObject.defaultsaleterm = new ReactiveVar();
-  templateObject.displayfields = new ReactiveVar([]);
-  templateObject.reset_data = new ReactiveVar([]);
   templateObject.subtaxcodes = new ReactiveVar([]);
   templateObject.hasFollow = new ReactiveVar(false);
   setTimeout(function () {
@@ -193,134 +191,6 @@ Template.refundcard.onRendered(() => {
     changeYear: true,
     yearRange: "-90:+10",
   });
-  // set initial table rest_data
-  function init_reset_data() {
-    let reset_data = [
-      {
-        index: 0,
-        label: "Product Name",
-        class: "ProductName",
-        width: "300",
-        active: true,
-        display: true,
-      },
-      {
-        index: 1,
-        label: "Description",
-        class: "Description",
-        width: "",
-        active: true,
-        display: true,
-      },
-      {
-        index: 2,
-        label: "Qty",
-        class: "Qty",
-        width: "55",
-        active: true,
-        display: true,
-      },
-      {
-        index: 3,
-        label: "Unit Price (Ex)",
-        class: "UnitPriceEx",
-        width: "152",
-        active: true,
-        display: true,
-      },
-      {
-        index: 4,
-        label: "Unit Price (Inc)",
-        class: "UnitPriceInc",
-        width: "152",
-        active: false,
-        display: true,
-      },
-      {
-        index: 5,
-        label: "Disc %",
-        class: "Discount",
-        width: "95",
-        active: true,
-        display: true,
-      },
-      {
-        index: 6,
-        label: "Cost Price",
-        class: "CostPrice",
-        width: "110",
-        active: false,
-        display: true,
-      },
-      {
-        index: 7,
-        label: "SalesLines CustField1",
-        class: "SalesLinesCustField1",
-        width: "110",
-        active: false,
-        display: true,
-      },
-      {
-        index: 8,
-        label: "Tax Rate",
-        class: "TaxRate",
-        width: "95",
-        active: false,
-        display: true,
-      },
-      {
-        index: 9,
-        label: "Tax Code",
-        class: "TaxCode",
-        width: "95",
-        active: true,
-        display: true,
-      },
-      {
-        index: 10,
-        label: "Tax Amt",
-        class: "TaxAmount",
-        width: "95",
-        active: true,
-        display: true,
-      },
-      {
-        index: 11,
-        label: "Serial/Lot No",
-        class: "SerialNo",
-        width: "124",
-        active: true,
-        display: true,
-      },
-      {
-        index: 12,
-        label: "Amount (Ex)",
-        class: "AmountEx",
-        width: "140",
-        active: true,
-        display: true,
-      },
-      {
-        index: 13,
-        label: "Amount (Inc)",
-        class: "AmountInc",
-        width: "140",
-        active: false,
-        display: true,
-      },
-    ];
-
-    let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-    if (isBatchSerialNoTracking) {
-      reset_data[11].display = true;
-    } else {
-      reset_data[11].display = false;
-    }
-
-    let templateObject = Template.instance();
-    templateObject.reset_data.set(reset_data);
-  }
-  init_reset_data();
 
   templateObject.generateInvoiceData = function (template_title, number) {
     object_invoce = [];
@@ -7197,61 +7067,9 @@ Template.refundcard.onRendered(function () {
   };
 
   tempObj.getSubTaxCodes();
-  // custom field displaysettings
-  tempObj.initCustomFieldDisplaySettings = function (data, listType) {
-    let templateObject = Template.instance();
-    let reset_data = templateObject.reset_data.get();
-    showCustomFieldDisplaySettings(reset_data);
 
-    try {
-      getVS1Data("VS1_Customize").then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService
-              .getNewCustomFieldsWithQuery(
-                  parseInt(Session.get("mySessionEmployeeLoggedID")),
-                  listType
-              )
-              .then(function (data) {
-                reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                showCustomFieldDisplaySettings(reset_data);
-              })
-              .catch(function (err) {});
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          if (data.ProcessLog.Obj.CustomLayout.length > 0) {
-            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-              if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
-                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                showCustomFieldDisplaySettings(reset_data);
-              }
-            }
-          }
-          // handle process here
-        }
-      });
-    } catch (error) {}
-    return;
-  };
-  function showCustomFieldDisplaySettings(reset_data) {
-    let custFields = [];
-    let customData = {};
-    let customFieldCount = reset_data.length;
 
-    for (let r = 0; r < customFieldCount; r++) {
-      customData = {
-        active: reset_data[r].active,
-        id: reset_data[r].index,
-        custfieldlabel: reset_data[r].label,
-        class: reset_data[r].class,
-        display: reset_data[r].display,
-        width: reset_data[r].width ? reset_data[r].width : "",
-      };
-      custFields.push(customData);
-    }
-    tempObj.displayfields.set(custFields);
-  }
 
-  tempObj.initCustomFieldDisplaySettings("", "tblRefundLine");
   // tempObj.getAllCustomFieldDisplaySettings = function () {
 
   //   let listType = 'ltSaleslines';   // tempcode until InvoiceLines is added on backend
@@ -7287,9 +7105,7 @@ Template.refundcard.onRendered(function () {
 Template.refundcard.helpers({
   isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
   // custom field displaysettings
-  displayfields: () => {
-    return Template.instance().displayfields.get();
-  },
+
   getTemplateList: function () {
     return template_list;
   },
@@ -7481,6 +7297,7 @@ Template.refundcard.helpers({
   getDefaultCurrency: () => {
     return defaultCurrencyCode;
   },
+<<<<<<< HEAD
   convertToForeignAmount: (amount) => {
     return convertToForeignAmount(
         amount,
@@ -7521,6 +7338,10 @@ Template.refundcard.helpers({
     }
     return false;
   },
+=======
+
+
+>>>>>>> 0517ed3399fa07024f0e72a1872321979cf9914c
 });
 
 Template.refundcard.events({
@@ -10497,6 +10318,7 @@ Template.refundcard.events({
     let columHeaderUpdate = $(event.target).attr("valueupdate");
     $("th.col" + columHeaderUpdate + "").html(columData);
   },
+<<<<<<< HEAD
 // custom field displaysettings
   "click .btnSaveGridSettings": async function (event) {
     playSaveAudio();
@@ -10624,6 +10446,9 @@ Template.refundcard.events({
       $(".rngRange" + reset_data[index].class).val("");
     });
   },
+=======
+
+>>>>>>> 0517ed3399fa07024f0e72a1872321979cf9914c
   "click .btnResetSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
       _id: Session.get("mycloudLogonID"),

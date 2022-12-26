@@ -10,6 +10,7 @@ import "../lib/global/indexdbstorage.js";
 import { OrganisationService } from "../js/organisation-service";
 import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
+import GlobalFunctions from '../GlobalFunctions';
 import TableHandler from "../js/Table/TableHandler";
 import LoadingOverlay from "../LoadingOverlay";
 
@@ -33,7 +34,7 @@ Template.invoicelist.onRendered(function () {
 
 
   // set initial table rest_data
-  function init_reset_data() {
+  templateObject.init_reset_data = function() {
     let reset_data = [
       { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: false, width: "0" },
       { index: 1, label: "Sale Date", class: "SaleDate", active: true, display: true, width: "" },
@@ -55,7 +56,7 @@ Template.invoicelist.onRendered(function () {
     let templateObject = Template.instance();
     templateObject.reset_data.set(reset_data);
   }
-  init_reset_data();
+  templateObject.init_reset_data();
   // set initial table rest_data
 
 
@@ -66,6 +67,7 @@ Template.invoicelist.onRendered(function () {
     templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
+
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
@@ -87,6 +89,7 @@ Template.invoicelist.onRendered(function () {
           // handle process here
         }
       });
+
     } catch (error) {
     }
     return;
@@ -109,6 +112,11 @@ Template.invoicelist.onRendered(function () {
         width: reset_data[r].width ? reset_data[r].width : ''
       };
       custFields.push(customData);
+      if (reset_data[r].active == true) {
+          $('#tblInvoicelist .' + reset_data[r].class).removeClass('hiddenColumn');
+      } else if (reset_data[r].active == false) {
+          $('#tblInvoicelist .' + reset_data[r].class).addClass('hiddenColumn');
+      };
     }
     templateObject.displayfields.set(custFields);
   }
@@ -228,7 +236,7 @@ Template.invoicelist.onRendered(function () {
             class: "custfield" + x,
             display: false,
             width: ""
-            
+
           };
           custFields.push(customData);
         }
@@ -353,7 +361,8 @@ Template.invoicelist.onRendered(function () {
           comments: data.tinvoicelist[i].Comments || "",
           // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
         };
-
+        /*
+        This is wrong
         let tmpObjCustFields = templateObject.custfields.get();
         if (dataList.custfield1 != "") {
           tmpObjCustFields[custfield1_index].active = true;
@@ -378,8 +387,9 @@ Template.invoicelist.onRendered(function () {
           tmpObjCustFields[custfield3_index].active = false;
           tmpObjCustFields[custfield3_index].display = false;
         }
-        
+
         templateObject.custfields.set(tmpObjCustFields);
+        */
         //if (data.tinvoiceex[i].fields.Deleted == false && data.tinvoiceex[i].fields.CustomerName.replace(/\s/g, '') != '') {
         dataTableList.push(dataList);
         //}
@@ -390,39 +400,6 @@ Template.invoicelist.onRendered(function () {
       templateObject.datatablerecords.set(dataTableList);
 
       if (templateObject.datatablerecords.get()) {
-        Meteor.call(
-          "readPrefMethod",
-          Session.get("mycloudLogonID"),
-          "tblInvoicelist",
-          function (error, result) {
-            if (error) {
-            } else {
-              if (result) {
-                for (let i = 0; i < result.customFields.length; i++) {
-                  let customcolumn = result.customFields;
-                  let columData = customcolumn[i].label;
-                  let columHeaderUpdate = customcolumn[
-                    i
-                  ].thclass.replace(/ /g, ".");
-                  let hiddenColumn = customcolumn[i].hidden;
-                  let columnClass = columHeaderUpdate.split(".")[1];
-                  let columnWidth = customcolumn[i].width;
-                  let columnindex = customcolumn[i].index + 1;
-
-                  if (hiddenColumn == true) {
-                    $("." + columnClass + "").addClass("hiddenColumn");
-                    $("." + columnClass + "").removeClass("showColumn");
-                  } else if (hiddenColumn == false) {
-                    $("." + columnClass + "").removeClass(
-                      "hiddenColumn"
-                    );
-                    $("." + columnClass + "").addClass("showColumn");
-                  }
-                }
-              }
-            }
-          }
-        );
 
         setTimeout(function () {
           MakeNegative();
@@ -430,15 +407,8 @@ Template.invoicelist.onRendered(function () {
       }
 
       setTimeout(function () {
-        $("#tblInvoicelist")
-          .DataTable({
+        $("#tblInvoicelist").DataTable({
             ...TableHandler.getDefaultTableConfiguration("tblInvoicelist"),
-            columnDefs: [
-              {
-                type: "date",
-                targets: 0,
-              },
-            ],
             //sDom: "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             buttons: [
               {
@@ -477,15 +447,17 @@ Template.invoicelist.onRendered(function () {
                 },
               },
             ],
-            // select: true,
-            // destroy: true,
-            // colReorder: true,
-            // // bStateSave: true,
-            // // rowId: 0,
+            select: true,
+            destroy: true,
+            colReorder: true,
             pageLength: initialDatatableLoad,
             bLengthChange: false,
-            // info: true,
-            // responsive: true,
+            lengthMenu: [
+              [initialDatatableLoad, -1],
+              [initialDatatableLoad, "All"],
+            ],
+            info: true,
+            responsive: true,
             order: [
               [0, "desc"],
               [2, "desc"],
@@ -708,7 +680,7 @@ Template.invoicelist.onRendered(function () {
 
         // $('#tblInvoicelist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
-      }, 0);
+      }, 300);
 
       $("#tblInvoicelist tbody").on("click", "tr", function () {
         var listData = $(this).closest("tr").attr("id");
@@ -871,39 +843,6 @@ Template.invoicelist.onRendered(function () {
               templateObject.datatablerecords.set(dataTableList);
 
               if (templateObject.datatablerecords.get()) {
-                Meteor.call(
-                  "readPrefMethod",
-                  Session.get("mycloudLogonID"),
-                  "tblInvoicelist",
-                  function (error, result) {
-                    if (error) {
-                    } else {
-                      if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                          let customcolumn = result.customFields;
-                          let columData = customcolumn[i].label;
-                          let columHeaderUpdate = customcolumn[
-                            i
-                          ].thclass.replace(/ /g, ".");
-                          let hiddenColumn = customcolumn[i].hidden;
-                          let columnClass = columHeaderUpdate.split(".")[1];
-                          let columnWidth = customcolumn[i].width;
-                          let columnindex = customcolumn[i].index + 1;
-
-                          if (hiddenColumn == true) {
-                            $("." + columnClass + "").addClass("hiddenColumn");
-                            $("." + columnClass + "").removeClass("showColumn");
-                          } else if (hiddenColumn == false) {
-                            $("." + columnClass + "").removeClass(
-                              "hiddenColumn"
-                            );
-                            $("." + columnClass + "").addClass("showColumn");
-                          }
-                        }
-                      }
-                    }
-                  }
-                );
 
                 setTimeout(function () {
                   MakeNegative();
@@ -912,8 +851,7 @@ Template.invoicelist.onRendered(function () {
 
               $(".fullScreenSpin").css("display", "none");
               setTimeout(function () {
-                $("#tblInvoicelist")
-                  .DataTable({
+                $("#tblInvoicelist").DataTable({
                     columnDefs: [
                       {
                         type: "date",
@@ -2264,12 +2202,11 @@ Template.invoicelist.onRendered(function () {
 
   templateObject.initPage = async (refresh = false) => {
     LoadingOverlay.show();
-    await templateObject.loadCustomFields();
-    await templateObject.loadInvoices(refresh);
+    //await templateObject.loadCustomFields();
+     templateObject.loadInvoices(refresh);
 
     LoadingOverlay.hide();
   }
-
   templateObject.initPage();
 });
 
@@ -3319,4 +3256,6 @@ Template.invoicelist.helpers({
   displayfields: () => {
     return Template.instance().displayfields.get();
   },
+  formatDate: (date) => GlobalFunctions.formatDate(date),
+  formatPrice: (price) => GlobalFunctions.formatPrice(price),
 });

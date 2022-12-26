@@ -60,7 +60,6 @@ Template.edismssettings.onRendered(function () {
     stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service]."
   }
   smsService.getSMSSettings().then((result) => {
-    console.log({result})
     $('.fullScreenSpin').css('display','none');
     if (result.terppreference.length > 0) {
       templateObject.smsSettingDetails.set(result.terppreference);

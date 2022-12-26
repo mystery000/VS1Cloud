@@ -469,14 +469,12 @@ Template.allChartLists.onRendered(function() {
 
         if (chartList.length > 0) {
             templateObject.chartList.set(chartList);
-            
             // Hide all charts
             $('.sortable-chart-widget-js').addClass("hideelement");
             // the goal here is to get the right names so it can be used for preferences
             setTimeout(() => {
                 chartList.forEach((chart) => {
                     chart.fields._chartSlug = chart.fields.ChartGroup.toLowerCase() + "__" + chart.fields.ChartName.toLowerCase().split(" ").join("_");
-                    //console.log("=== chart.fields._chartSlug ===", chart.fields._chartSlug);
                     $(`[key='${chart.fields._chartSlug}']`).addClass("chart-visibility");
                     $(`[key='${chart.fields._chartSlug}']`).attr("pref-id", 0);
                     $(`[key='${chart.fields._chartSlug}']`).attr("chart-id",chart.fields.ID);
@@ -792,7 +790,6 @@ Template.allChartLists.helpers({
     },
 
     is_available_chart: (current, chart) => {
-        console.log(current, chart, chartsPlaceList[current].includes(chart));
         return chartsPlaceList[current].includes(chart);
 //        return 1;
     }

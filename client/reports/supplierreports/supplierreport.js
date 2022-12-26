@@ -282,7 +282,6 @@ Template.supplierreport.onRendered(() => {
 Template.supplierreport.events({
   'click .chkDatatable': function(event) {
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-    console.log("111111111111", columnDataValue);
     if ($(event.target).is(':checked')) {
       $('.'+columnDataValue).addClass('showColumn');
       $('.'+columnDataValue).removeClass('hiddenColumn');
@@ -779,4 +778,3 @@ Template.registerHelper("notEquals", function (a, b) {
 Template.registerHelper("containsequals", function (a, b) {
   return a.indexOf(b) >= 0;
 });
-

@@ -811,10 +811,10 @@ Template.vs1login.onRendered(function () {
                     $('.loginSpinner').css('display', 'none');
                     $('.fullScreenSpin').css('display', 'none');
                 } else{
-                  // await delay(500);
-                  pausevideo();
-                  $('.myVS1Video').css('display', 'none');
-                  $('.myVS1VideoLogin').css('display', 'none');
+                  //await delay(500);
+                  //pausevideo();
+                  // $('.myVS1Video').css('display', 'none');
+                  // $('.myVS1VideoLogin').css('display', 'none');
                   $('.loginSpinner').css('display', 'none');
                   $('.fullScreenSpin').css('display', 'none');
                 }
@@ -1592,14 +1592,14 @@ Template.vs1login.onRendered(function () {
                       //   FlowRouter.go('/appointments#allocationModal');
                       //   FlowRouter.go('/appointments');
                     } else if (isAppointmentLaunch == true) {
-                      //   FlowRouter.go('/appointments');
+                       //FlowRouter.go('/appointments');
                         window.open('/appointments', '_self');
                     } else {
-                      //   FlowRouter.go('/dashboard');
+                       //FlowRouter.go('/dashboard');
                         window.open('/dashboard', '_self');
                     }
                 } else {
-                  //   FlowRouter.go('/dashboard');
+                   //FlowRouter.go('/dashboard');
                     window.open('/dashboard', '_self');
                 }
               }else{
@@ -1611,7 +1611,7 @@ Template.vs1login.onRendered(function () {
         } else {
             pausevideo();
             //$('.myVS1Video').css('display', 'none');
-            $('.myVS1VideoLogin').css('display', 'none');
+            //$('.myVS1VideoLogin').css('display', 'none');
             $('.loginSpinner').css('display', 'none');
             $('.fullScreenSpin').css('display', 'none');
         }
