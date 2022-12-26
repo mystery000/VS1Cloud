@@ -4,19 +4,24 @@
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;padding-bottom: 8px; background-color: #ededed;">
-            <h2 style="margin: 16px;margin-bottom: 0px;">Product List {{> helpbutton}}
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <h2 style="margin: 16px;margin-bottom: 0px;">Product List {{> helpbutton}}
 
-                <style>
-                    @media screen and (max-width: 376px) {
-                        .btnOpenSettings {
-                            margin-right: 0px;
-                        }
-                    }
-                    /* .dataTables_filter { display: none; } */
-                </style>
+                        <style>
+                            @media screen and (max-width: 376px) {
+                                .btnOpenSettings {
+                                    margin-right: 0px;
+                                }
+                            }
+                            /* .dataTables_filter { display: none; } */
+                        </style>
 
 
-            </h2>
+                    </h2>
+                </div>
+                <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+            </div>
 
 
         </header>

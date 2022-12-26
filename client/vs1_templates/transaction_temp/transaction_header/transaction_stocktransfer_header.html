@@ -3,10 +3,15 @@
 
 <template name="transaction_stocktransfer_header">
   <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-    <h2 class="shippingHeader" style="margin: 16px;margin-bottom: 0px;">Stock Transfer
-      {{> helpbutton}}
-    </h2>
-    <input type="text" id="SalesId" name="SalesId" style="display: none;" readonly>
+      <div class="row">
+          <div class="col-12 col-md-4">
+              <h2 class="shippingHeader" style="margin: 16px;margin-bottom: 0px;">Stock Transfer
+                  {{> helpbutton}}
+              </h2>
+              <input type="text" id="SalesId" name="SalesId" style="display: none;" readonly>
+          </div>
+          <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+      </div>
   </header>
   {{> help_modal}}
   

@@ -327,7 +327,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button class="btn btn-primary btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                        <button class="btn btn-primary btnSave btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                         <button class="btn btn-warning btnResetGridSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
                                                         <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                                     </div>
@@ -539,7 +539,7 @@
             </div>
             <!-- <div class="row no-gutters">
                 <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;">
-                    <button class="btn btn-success btnProcess" type="button" style="margin: 12px;"><i class="fa fa-check" style="margin-right: 5px;"></i>Process</button>
+                    <button class="btn btn-success btnProcess btn-auto-save" type="button" style="margin: 12px;"><i class="fa fa-check" style="margin-right: 5px;"></i>Process</button>
                     <button class="btn btn-primary btnHold" type="button" style="margin: 12px;"><i class="fa fa-clock" style="margin-right: 5px;"></i>Hold</button>
                     <button class="btn btn-danger btnRemove" type="button" style="margin: 12px;" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
 
@@ -778,4 +778,5 @@
     <script>
         modalDraggable();
     </script>
+    {{> init_form_page_script}}
 </template>

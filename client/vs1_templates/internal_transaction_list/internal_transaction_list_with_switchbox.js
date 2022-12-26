@@ -69,6 +69,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     if (pan != "") {
         currenttablename = currenttablename + "_" + pan;
     }
+
     templateObject.tablename.set(currenttablename);
 
     shareFunction = {

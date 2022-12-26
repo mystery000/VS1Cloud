@@ -5,20 +5,25 @@
         </div>
         <div style="margin-top: -24px;">
             <header style="padding: 16px; padding-bottom: 0; background-color: #ededed;">
-                <h1 style="margin: 16px; margin-bottom: 0;">Lead List
-                    {{> helpbutton}}
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <h1 style="margin: 16px; margin-bottom: 0;">Lead List
+                            {{> helpbutton}}
 
-                    <style>
-                        @media screen and (max-width: 376px) {
-                            .btnOpenSettings {
-                                margin-right: 0;
-                            }
-                        }
-                        .btn.btn-primary {
-                            font-size: 14px !important;
-                        }
-                    </style>
-                </h1>
+                            <style>
+                                @media screen and (max-width: 376px) {
+                                    .btnOpenSettings {
+                                        margin-right: 0;
+                                    }
+                                }
+                                .btn.btn-primary {
+                                    font-size: 14px !important;
+                                }
+                            </style>
+                        </h1>
+                    </div>
+                    <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+                </div>
             </header>
 
             <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0 20px 2px 20px; background-color: #ededed;">

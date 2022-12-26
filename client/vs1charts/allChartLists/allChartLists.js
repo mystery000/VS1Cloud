@@ -792,7 +792,12 @@ Template.allChartLists.helpers({
     is_available_chart: (current, chart) => {
         return chartsPlaceList[current].includes(chart);
 //        return 1;
-    }
+    },
+    
+    is_dashboard_check: (currentTemplate) => {
+        //console.log(FlowRouter.current().path, currentTemplate);
+        return FlowRouter.current().path.includes(currentTemplate);
+    },
 });
 
 Template.registerHelper('equals', function(a, b) {

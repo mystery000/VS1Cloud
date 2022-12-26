@@ -6,10 +6,15 @@
   <div style="margin-top: -24px;">
 
     <header style="padding: 16px;padding-bottom: 24px;">
-      <h2 style="margin: 14px;margin-bottom: 0px;"><span id="crm_header_title">Service Log</span>
-        {{> crm_help_modal}}
-      </h2>
-    </header> 
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <h2 style="margin: 14px;margin-bottom: 0px;"><span id="crm_header_title">Service Log</span>
+                    {{> crm_help_modal}}
+                </h2>
+            </div>
+            <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+        </div>
+    </header>
   </div> 
 
   {{> serviceloglisttable}}

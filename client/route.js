@@ -193,6 +193,7 @@ let previous_url = "";
 
 FlowRouter.triggers.enter([
     function (context, redirect, stop) {
+        localStorage.removeItem("enteredURL");
         if (previous_url !== "" && previous_url !== context.path && JSON.parse(localStorage.getItem("isFormUpdated"))) {
             stop();
             swal({
@@ -200,17 +201,20 @@ FlowRouter.triggers.enter([
                 text: 'Do you wish to save your changes?',
                 type: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
+                confirmButtonText: 'Save',
+                cancelButtonText: 'Leave'
             }).then((result) => {
                 if (result.value) {
-                    FlowRouter.go(previous_url);
+                    localStorage.setItem("enteredURL", context.path);
+                    $(document).find(".btn-auto-save").click();
+                    // FlowRouter.go(previous_url);
                 } else if (result.dismiss === 'cancel') {
                     FlowRouter.go(context.path);
                     Meteor._reload.reload();
                     //TODO need to url async
                     previous_url = "";
                     localStorage.setItem("isFormUpdated", false);
+                    FlowRouter.reload();
                 }
             });
         }
