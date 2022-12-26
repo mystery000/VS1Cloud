@@ -3099,7 +3099,6 @@ Template.emailsettings.events({
         var tempHtml = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
         // let tempHtml = $("#edtTemplateContent_ifr").val();
         let tempContent = tempHtml.replace(/<[^>]+>/g, ' ');
-
         if(templateObject.isAdd.get() == true) {
             if(correspondenceTemp.length > 0 ) {
                 let index = correspondenceTemp.findIndex(item=>{

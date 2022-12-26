@@ -509,7 +509,6 @@ Template.agedreceivables.events({
         //   await $('.colAccountTree').css('width', range);
         $('.dataTable').resizable();
       },
-
     'click td a': async function (event) {
         let id = $(event.target).closest('tr').attr('id').split("item-value-");
         var accountName = id[1].split('_').join(' ');

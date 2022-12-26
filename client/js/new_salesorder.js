@@ -3555,7 +3555,6 @@ Template.new_salesorder.onRendered(function () {
                         setTimeout(()=>{
                             templateObject.checkAbleToMakeWorkOrder()
                         }, 1000)
-
                         if (templateObject.salesorderrecord.get()) {
 
 
