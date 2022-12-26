@@ -3,10 +3,15 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <h3 class="text-dark mb-4">Foreign Exchange List
-            {{> helpbutton}}
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <h3 class="text-dark mb-4">Foreign Exchange List
+                    {{> helpbutton}}
 
-        </h3>
+                </h3>
+            </div>
+            <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+        </div>
 
         <style>
             @media screen and (max-width: 420px) {

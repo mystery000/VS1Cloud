@@ -7856,6 +7856,13 @@ Template.billcard.events({
               // return false;
             };
             purchaseService.saveBillEx(objDetails).then(function(objDetails) {
+
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
+
                 var supplierID = $('#edtSupplierEmail').attr('supplierid');
 
 

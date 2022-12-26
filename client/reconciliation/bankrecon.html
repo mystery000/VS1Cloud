@@ -3,46 +3,49 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <div class="d-sm-flex justify-content-between align-items-center mb-4">
-            <h3 class="text-dark mb-0">Bank Reconciliation 1
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <h3 class="text-dark mb-0">Bank Reconciliation 1
 
-                {{> helpbutton}}
+                    {{> helpbutton}}
 
-                <!-- Start Help View Modal -->
-                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                    <div class="modal-dialog modal-sm" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="padding-bottom: 8px;">
-                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                            <div class="modal-body">
-                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                                <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                {{> helpadvisor}}
-                                {{> helpgotoforum}}
-                            </div>
-                            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
-                    <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="title-header">Reconciliation List</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
-                                    <source src="https://erphelpes.com/vs1videos/newreconciliationvideo.mp4" type="video/mp4">
-                                </video>
+                    <!-- Start Help View Modal -->
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="padding-bottom: 8px;">
+                                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                <div class="modal-body">
+                                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                    <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                    {{> helpadvisor}}
+                                    {{> helpgotoforum}}
+                                </div>
+                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- End Help View Modal -->
 
-            </h3>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+                        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="title-header">Reconciliation List</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                                        <source src="https://erphelpes.com/vs1videos/newreconciliationvideo.mp4" type="video/mp4">
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Help View Modal -->
+
+                </h3>
+            </div>
+            <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
         </div>
 
         <script>
@@ -375,13 +378,13 @@
                         <div class="row no-gutters">
                             <hr style="width: 100%; margin: 16px; margin-top: -16px;" />
                         </div>
-                        <div class="row no-gutters" style="height:970px">
+                        <div class="row no-gutters" id="transactionarea" style="height:970px">
                             <div class="col-12">
-                                <div class="row no-gutters" id="topList" style="overflow:hidden">
-                                    <div class="col-12">
+                                <div class="row no-gutters" id="topList" style="overflow:hidden; max-height: 735px; min-height:235px">
+                                    <div class="col-12" style="height:42px !important">
                                         <h4 style="margin-left: 16px; margin-bottom: 16px;">1. Select your transactions</h4>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12" style="height:25px !important">
                                         <h5 style="margin-left: 16px; margin-bottom: 0;">Deposits</h5>
                                     </div>
                                     <div class="col-12 card-body p-3 rounded" style="height:415px; overflow-x:hidden !important; overflow-y:auto !important">
@@ -425,7 +428,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row no-gutters" id="bottomList" style="overflow:hidden">
+                                <div class="row no-gutters" id="bottomList" style="overflow:hidden; max-height: 735px; min-height:235px">
                                     <div class="col-12" style="padding-top:18px">
                                         <h5 style="margin-left: 16px; margin-bottom: 0;">Withdrawals</h5>
                                     </div>
@@ -694,7 +697,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row no-gutters d-xl-flex justify-content-xl-end">
+                        <div class="row no-gutters d-xl-flex justify-content-xl-center">
                             <button class="btn btn-primary reconbtn reconBtnBottom" type="button" style="margin: 12px;" disabled><span>Reconcile</span></button>
                             <button class="btn btn-success btnHold" type="button" style="margin: 12px;" disabled><span><i class="fa fa-clock" style="margin-right: 5px;"></i>Hold</span></button>
                             <button class="btn btn-primary printConfirm" type="button" style="margin: 12px;" autocomplete="off"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>

@@ -3555,7 +3555,6 @@ Template.new_salesorder.onRendered(function () {
                         setTimeout(()=>{
                             templateObject.checkAbleToMakeWorkOrder()
                         }, 1000)
-
                         if (templateObject.salesorderrecord.get()) {
 
 
@@ -10875,9 +10874,9 @@ Template.new_salesorder.events({
                         }, function(error, result) {
                             if (error && error.error === "error") {
                                 if(FlowRouter.current().queryParams.trans){
-                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                                 }else{
-                                FlowRouter.go('/salesorderslist?success=true');
+                                    FlowRouter.go('/salesorderslist?success=true');
                                 };
                             } else {
                                 $('#html-2-pdfwrapper').css('display', 'none');
@@ -10888,6 +10887,13 @@ Template.new_salesorder.events({
                                     showCancelButton: false,
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
+
+                                    if (localStorage.getItem("enteredURL") != null) {
+                                        FlowRouter.go(localStorage.getItem("enteredURL"));
+                                        localStorage.removeItem("enteredURL");
+                                        return;
+                                    }
+
                                     if (result.value) {
                                         if(FlowRouter.current().queryParams.trans){
                                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');

@@ -35,7 +35,7 @@
 <!--            </h3>-->
             <!-- <button class="btn btn-primary btnBatchUpdate" id="btnBatchUpdate" type="button" style=""><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button> -->
             <div class="col-12 col-md-4 form-group">
-              <button class="btn btn-primary btnBatchUpdate float-right" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>
+              <button class="btn btn-primary btnBatchUpdate float-right btn-auto-save" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>
               <span class="text-gray-600 small trans_lastupdate float-right" id="trans_lastupdate" style="width:100%;text-align: end!important;"><a href="#">Last Updated: </a>{{lastBatchUpdate}}</span>
            </div>
         </div>
@@ -2824,4 +2824,6 @@
             localStorage.setItem("accountant_detail", value);
         }
     </script>
+
+    {{> init_form_page_script}}
 </template>

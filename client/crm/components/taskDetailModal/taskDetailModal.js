@@ -273,7 +273,6 @@ Template.taskDetailModal.events({
         let templateObject = Template.instance();
         setTimeout(function() {
             let taskID = $("#txtCrmTaskID").val();
-
             let selected_lbls = [];
             let unselected_lbls = [];
             $("#detailTaskLabelWrapper input:checked").each(function() {

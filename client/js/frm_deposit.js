@@ -4163,8 +4163,14 @@ Template.depositcard.events({
                     };
 
                     purchaseService.saveBankDeposit(objDetails).then(function (objDetails) {
-                    FlowRouter.go('/depositlist?success=true');
-                    $('.modal-backdrop').css('display','none');
+                        if (localStorage.getItem("enteredURL") != null) {
+                            FlowRouter.go(localStorage.getItem("enteredURL"));
+                            localStorage.removeItem("enteredURL");
+                            return;
+                        }
+
+                        FlowRouter.go('/depositlist?success=true');
+                        $('.modal-backdrop').css('display','none');
 
 
                     }).catch(function (err) {

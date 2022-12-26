@@ -71,7 +71,6 @@ Template.customersummaryreport.onRendered(() => {
   ]
   templateObject.customersummaryreportth.set(reset_data);
 
-
   templateObject.setDateAs = ( dateFrom = null ) => {
     templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
   };

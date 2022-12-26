@@ -37,6 +37,7 @@ Template.dashboard.onCreated(function () {
 });
 
 Template.dashboard.onRendered(function () {
+
   let templateObject = Template.instance();
   let isDashboard = Session.get("CloudDashboardModule");
   if (isDashboard) {

@@ -5,9 +5,13 @@
             {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}} {{record.joblastname}}-{{record.phone}}
             {{else}}
             {{#if record.phone}}
-            {{record.company}} - {{record.phone}}
+                {{#if equals record.isLead true}}
+                    {{record.employeeName}} - {{record.phone}}
+                {{else}}
+                    {{record.company}} - {{record.phone}}
+                {{/if}}
             {{else}}
-            {{record.company}}
+                {{record.company}}
             {{/if}}
             {{/if}}
         </h6>

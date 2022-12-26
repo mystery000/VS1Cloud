@@ -292,7 +292,6 @@ Template.transaction_print_modal.events({
         }
       );
     } else {
-
     }
   },
 });

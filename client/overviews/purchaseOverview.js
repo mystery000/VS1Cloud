@@ -175,7 +175,6 @@ Template.purchasesoverview.onRendered(function () {
   $("#dateFrom").val(fromDate);
   $("#dateTo").val(begunDate);
 
-  var ctx = document.getElementById("myChartCustomer").getContext("2d");
 
   var date = new Date();
   var month = date.getMonth() + 1;
@@ -333,40 +332,7 @@ Template.purchasesoverview.onRendered(function () {
                         if ($(this).text() == "Partial Paid") $(this).addClass('text-partialPaid');
                     });
                 };
-                setTimeout(function () {
-                var myChart = new Chart(ctx, {
-                  type: "pie",
-                  data: {
-                    labels: ["Credit", "Bill", "Purchase Order"],
-                    datasets: [
-                      {
-                        label: "Credit",
-                        backgroundColor: [
-                          "#e74a3b",
-                          "#f6c23e",
-                          "#1cc88a",
-                          "#36b9cc",
-                        ],
-                        borderColor: ["#ffffff", "#ffffff", "#ffffff", "#ffffff"],
-                        data: [totCreditCount, totBillCount, totPOCount],
-                      },
-                    ],
-                  },
-                  options: {
-                    maintainAspectRatio: true,
-                    legend: {
-                      display: true,
-                      position: "right",
-                      reverse: false,
-                    },
-                    title: {
-                      display: false,
-                    },
-                  },
-                });
 
-                  MakeNegative();
-                }, 100);
               }
               setTimeout(function () {
                 $(".fullScreenSpin").css("display", "none");
@@ -991,40 +957,7 @@ Template.purchasesoverview.onRendered(function () {
                       if ($(this).text() == "Partial Paid") $(this).addClass('text-partialPaid');
                   });
               };
-              setTimeout(function () {
-              var myChart = new Chart(ctx, {
-                type: "pie",
-                data: {
-                  labels: ["Credit", "Bill", "Purchase Order"],
-                  datasets: [
-                    {
-                      label: "Credit",
-                      backgroundColor: [
-                        "#e74a3b",
-                        "#f6c23e",
-                        "#1cc88a",
-                        "#36b9cc",
-                      ],
-                      borderColor: ["#ffffff", "#ffffff", "#ffffff", "#ffffff"],
-                      data: [totCreditCount, totBillCount, totPOCount],
-                    },
-                  ],
-                },
-                options: {
-                  maintainAspectRatio: true,
-                  legend: {
-                    display: true,
-                    position: "right",
-                    reverse: false,
-                  },
-                  title: {
-                    display: false,
-                  },
-                },
-              });
 
-                MakeNegative();
-              }, 100);
             }
             setTimeout(function () {
               $(".fullScreenSpin").css("display", "none");
@@ -1275,31 +1208,6 @@ Template.purchasesoverview.onRendered(function () {
             location.reload();
           });
       }).catch(function (err) {
-        var myChart = new Chart(ctx, {
-          type: "pie",
-          data: {
-            labels: ["Credit", "Bill", "Purchase Order"],
-            datasets: [
-              {
-                label: "Credit",
-                backgroundColor: ["#e74a3b", "#f6c23e", "#1cc88a", "#36b9cc"],
-                borderColor: ["#ffffff", "#ffffff", "#ffffff", "#ffffff"],
-                data: ["7", "20", "73"],
-              },
-            ],
-          },
-          options: {
-            maintainAspectRatio: true,
-            legend: {
-              display: true,
-              position: "right",
-              reverse: false,
-            },
-            title: {
-              display: false,
-            },
-          },
-        });
         $(".fullScreenSpin").css("display", "none");
         // Meteor._reload.reload();
       });

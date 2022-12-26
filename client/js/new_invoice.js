@@ -17882,6 +17882,13 @@ Template.new_invoice.events({
                 //   objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
                 // };
                 salesService.saveInvoiceEx(objDetails).then(function(objDetails) {
+
+                    if (localStorage.getItem("enteredURL") != null) {
+                        FlowRouter.go(localStorage.getItem("enteredURL"));
+                        localStorage.removeItem("enteredURL");
+                        return;
+                    }
+
                         // add to custom field
                         // add to custom field
 

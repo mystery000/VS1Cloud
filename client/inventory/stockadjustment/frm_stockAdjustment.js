@@ -2538,6 +2538,13 @@ Template.stockadjustmentcard.events({
             }
 
             stockTransferService.saveStockAdjustment(objDetails).then(function (objDetails) {
+
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
+
                 // FlowRouter.go('/stockadjustmentoverview?success=true');
                 function generatePdfForMail(invoiceId) {
                     let file = "Invoice-" + invoiceId + ".pdf"

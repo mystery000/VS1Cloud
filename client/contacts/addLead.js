@@ -1779,6 +1779,13 @@ Template.leadscard.events({
                 }
             };
             contactService.saveProspectEx(objDetails).then(function(objDetails) {
+
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
+
                 let customerSaveID = objDetails.fields.ID;
                 if (customerSaveID) {
                     sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function(dataReload) {
@@ -2298,11 +2305,12 @@ Template.leadscard.events({
         }, delayTimeAfterSound);
     },
     'click .btnTask': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?leadid=' + customerID);
+            // FlowRouter.go('/crmoverview?leadid=' + customerID);
+            $("#btnAddLine").trigger("click");
         } else {
             $('.fullScreenSpin').css('display', 'none');
         }

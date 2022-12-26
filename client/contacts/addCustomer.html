@@ -90,10 +90,13 @@
             {{#if isModal}}
 
             {{else}}
-            <div class="d-sm-flex justify-content-between align-items-center mb-4" style="margin-left: 8px;">
-                <h2 class="text-dark mb-0">Customer Overview Dashboard
-                    {{> helpbutton}}
-                </h2>
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <h2 class="text-dark mb-0">Customer Overview Dashboard
+                        {{> helpbutton}}
+                    </h2>
+                </div>
+                <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
             </div>
             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                 <div class="modal-dialog modal-sm" role="document">
@@ -231,25 +234,25 @@
                         </div>
                     </div> -->
                     <div class="card shadow mb-4 cardSizing">
-                        <div class="card-header d-flex justify-content-between align-items-xl-center">
+                        <!-- <div class="card-header d-flex justify-content-between align-items-xl-center"> -->
                             <!-- <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input" type="checkbox" id="activeChk" checked><label class="custom-control-label" for="activeChk"></label></div> -->
                             {{> vs1_contact_card_header isJob=isJob record=record id="customerInfo"}}
                             <!--here-->
-                            <div>
+                            <!-- <div> -->
                                 <!-- <span class="font-weight-bold m-0" style="color: #00A3D3;margin-right:14px;">
                               {{#if notEquals record.id ''}}
                                 CUS-{{record.id}}
                               {{/if}}
                              </span> -->
-                                <button type="button" class="btn btn-success btnReceiveCustomerPayment"
+                                <!-- <button type="button" class="btn btn-success btnReceiveCustomerPayment"
                                     style="margin:7px;" id="btnReceiveCustomerPayment"><i
                                         class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Receive
                                     Payment</button>
                                 <a class="btn btnOpenSettings" role="button" style="margin:7px;margin-right:0px;"
                                     data-toggle="modal" href="#myModal4"><i
-                                        class="fas fa-ellipsis-v text-gray-400"></i></a>
-                            </div>
-                        </div>
+                                        class="fas fa-ellipsis-v text-gray-400"></i></a>  -->
+                            <!-- </div> -->
+                        <!-- </div> -->
                         <!-- Start {{> optionCustomFiled}} -->
                         {{> customfieldDroppop}}
                         {{> customfieldpop}}
@@ -2225,7 +2228,7 @@
                                             </div>
                                             <div class="d-xl-flex justify-content-between align-items-xl-center"
                                                 style="margin: 16px 0px 0px 0px;">
-                                                <button class="btn btn-success btnSave" type="button"><i
+                                                <button class="btn btn-success btnSave btn-auto-save" type="button"><i
                                                         class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                 <div>
                                                     <button class="btn btn-warning btnCustomerTask" type="button"><i
