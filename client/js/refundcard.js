@@ -10204,8 +10204,21 @@ Template.refundcard.events({
       $(".colSerialNo").removeClass("showColumn");
     }
   },
+  "click .chkFixedAsset": function(event) {
+    if ($(event.target).is(':checked')) {
+        $('.colFixedAsset').addClass('showColumn');
+        $('.colFixedAsset').removeClass('hiddenColumn');
+    } else {
+        $('.colFixedAsset').addClass('hiddenColumn');
+        $('.colFixedAsset').removeClass('showColumn');
+    }
+  },
   // display settings
-
+  'change .rngRangeFixedAsset': function(event) {
+    let range = $(event.target).val();
+    $(".spWidthFixedAsset").html(range);
+    $('.colFixedAsset').css('width', range);
+  },
   "change .rngRangeProductName": function (event) {
     let range = $(event.target).val();
     $(".spWidthProductName").html(range);
