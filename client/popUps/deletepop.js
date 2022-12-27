@@ -24,6 +24,14 @@ const TransactionTypeTemplates = {
       button1: 'btnDeleteCheque',
       button2: 'btnDeleteFollowingCheques'
     },
+    deposit: 
+    {
+      item1: "Deposit",
+      item2: "deposit",
+      item3: "Deposit",
+      button1: 'btnDeleteDeposit',
+      button2: 'btnDeleteFollowingDeposits'
+    },
   credits: 
     {
       item1: "Credit",
