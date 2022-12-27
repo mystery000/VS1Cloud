@@ -8103,8 +8103,6 @@ Template.payrollrules.onRendered(function() {
              }, 500);
            }
          }
-
-
       });
 
      $('#editsuperliabbankaccount').editableSelect().on('click.editable-select', function (e, li) {
