@@ -22303,9 +22303,11 @@ Template.payrollrules.events({
     //  }
     //  "show.bs.modal #select-ratetype-modal": (e, ui) => {
     // },
+
+    
     'change #overtimeRateType': (e, ui) => {
         let evalue = $(e.currentTarget).val();
-
+        console.log('evalue:',evalue)
         switch(evalue) {
             case 'Time & Half':
                 $('.graterThenDiv').css('display', 'block');
@@ -22324,21 +22326,6 @@ Template.payrollrules.events({
                 $('.weekendDiv').css('display', 'none');
         }
     },
-    "click #chkUseOverTime": (e, ui) => {
-        let elementId =  e.target.id;
-        let checked = $(event.target).is(':checked');
-        if(checked){
-            $("#edtTimeAndHalf").removeAttr("readonly");
-            $("#edtDoubleTime").removeAttr("readonly");
-            $("#edtWeekend1").removeAttr("readonly");
-            $("#edtWeekend2").removeAttr("readonly");
-        }else{
-            $('#edtTimeAndHalf').attr('readonly', true);
-            $('#edtDoubleTime').attr('readonly', true);
-            $('#edtWeekend1').attr('readonly', true);
-            $('#edtWeekend2').attr('readonly', true);
-        }
-    }
 });
 
 Template.payrollrules.helpers({
