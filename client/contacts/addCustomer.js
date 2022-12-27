@@ -3279,8 +3279,8 @@ Template.customerscard.events({
             }
             if (sltTermsName == '') {
                 $('.fullScreenSpin').css('display', 'none');
-                $('#termsListModal').modal('toggle');
-                return;
+                $("#sltTerms").click();
+                e.preventDefault();
                 // swal({
                 //     title: "Terms has not been selected!",
                 //     text: '',
@@ -3297,8 +3297,8 @@ Template.customerscard.events({
                 // return false;
             } else if (sltTaxCodeName == '') {
                 $('.fullScreenSpin').css('display', 'none');
-                $('#taxRateListModal').modal('toggle');
-                return;
+                $("#sltTaxCode").click();
+                e.preventDefault();
                 // swal({
                 //     title: "Tax Code has not been selected!",
                 //     text: '',
