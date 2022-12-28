@@ -1,3 +1,5 @@
+import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
 var activityTimeout = setTimeout(inActive, 1800000);
 var sidebarTimeout = setTimeout(closeSideBar, 3000);
 

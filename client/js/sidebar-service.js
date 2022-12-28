@@ -1,5 +1,6 @@
 import { BaseService } from "../js/base-service.js";
 import { HTTP } from "meteor/http";
+import { Session } from 'meteor/session';
 export class SideBarService extends BaseService {
 
   getRegionalOptionInfo() {

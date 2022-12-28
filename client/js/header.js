@@ -29,7 +29,7 @@ import { AccountService } from '../accounts/account-service';
 import '../Navigation/header.html';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
+import { Session } from 'meteor/session';
 let utilityService = new UtilityService();
 let productService = new ProductService();
 let organizationService = new OrganisationService();
