@@ -5680,6 +5680,7 @@ Template.non_transactional_list.onRendered(function() {
             if (dataObject.length == 0) {
                 contactService.getAllJobListByCustomer(customerName).then(function(data) {
                     templateObject.displayCustomerTransactionListData(data, customerName);
+                    addVS1Data('TJobVS1',JSON.stringify(data));
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
@@ -5698,30 +5699,30 @@ Template.non_transactional_list.onRendered(function() {
 
     templateObject.displayCustomerTransactionListData = function(data, customerName) {
         let dataTableListJob = [];
-        for (let i = 0; i < data.tjob.length; i++) {
-            let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].ARBalance) || 0.00;
-            let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditBalance) || 0.00;
-            let balance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].Balance) || 0.00;
-            let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditLimit) || 0.00;
-            let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].SalesOrderBalance) || 0.00;
+        for (let i = 0; i < data.tjobvs1.length; i++) {
+            let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.ARBalance) || 0.00;
+            let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.CreditBalance) || 0.00;
+            let balance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.Balance) || 0.00;
+            let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.CreditLimit) || 0.00;
+            let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.SalesOrderBalance) || 0.00;
             const dataListJob = {
-                id: data.tjob[i].Id || '',
-                company: data.tjob[i].ClientName || '',
-                contactname: data.tjob[i].ContactName || '',
-                phone: data.tjob[i].Phone || '',
+                id: data.tjobvs1[i].fields.Id || '',
+                company: data.tjobvs1[i].fields.ClientName || '',
+                contactname: data.tjobvs1[i].fields.ContactName || '',
+                phone: data.tjobvs1[i].fields.Phone || '',
                 arbalance: arBalance || 0.00,
                 creditbalance: creditBalance || 0.00,
                 balance: balance || 0.00,
                 creditlimit: creditLimit || 0.00,
                 salesorderbalance: salesOrderBalance || 0.00,
-                email: data.tjob[i].Email || '',
-                accountno: data.tjob[i].AccountNo || '',
-                clientno: data.tjob[i].ClientNo || '',
-                jobtitle: data.tjob[i].JobTitle || '',
-                notes: data.tjob[i].Notes || '',
-                country: data.tjob[i].Country || LoggedCountry
+                email: data.tjobvs1[i].fields.Email || '',
+                accountno: data.tjobvs1[i].fields.AccountNo || '',
+                clientno: data.tjobvs1[i].fields.ClientNo || '',
+                jobtitle: data.tjobvs1[i].fields.JobTitle || '',
+                notes: data.tjobvs1[i].fields.Notes || '',
+                country: data.tjobvs1[i].fields.Country || LoggedCountry
             };
-            if (customerName == data.tjob[i].ParentCustomerName) {
+            if (customerName == data.tjobvs1[i].fields.ParentCustomerName) {
                 dataTableListJob.push(dataListJob);
             }
         }
@@ -5951,6 +5952,7 @@ Template.non_transactional_list.onRendered(function() {
             if (dataObject.length == 0) {
                 contactService.getAllJobListByCustomer(customerName).then(function(data) {
                     templateObject.displayCustomerJobDetailsListData(data, customerName);
+                    addVS1Data('TJobVS1',JSON.stringify(data));
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
@@ -5969,30 +5971,30 @@ Template.non_transactional_list.onRendered(function() {
 
     templateObject.displayCustomerJobDetailsListData = function(data, customerName) {
         let dataTableListJob = [];
-        for (let i = 0; i < data.tjob.length; i++) {
-            let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].ARBalance) || 0.00;
-            let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditBalance) || 0.00;
-            let balance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].Balance) || 0.00;
-            let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditLimit) || 0.00;
-            let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].SalesOrderBalance) || 0.00;
+        for (let i = 0; i < data.tjobvs1.length; i++) {
+            let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.ARBalance) || 0.00;
+            let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.CreditBalance) || 0.00;
+            let balance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.Balance) || 0.00;
+            let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.CreditLimit) || 0.00;
+            let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.SalesOrderBalance) || 0.00;
             const dataListJob = {
-                id: data.tjob[i].Id || '',
-                company: data.tjob[i].ClientName || '',
-                contactname: data.tjob[i].ContactName || '',
-                phone: data.tjob[i].Phone || '',
+                id: data.tjobvs1[i].fields.ID || '',
+                company: data.tjobvs1[i].fields.ClientName || '',
+                contactname: data.tjobvs1[i].fields.ContactName || '',
+                phone: data.tjobvs1[i].fields.Phone || '',
                 arbalance: arBalance || 0.00,
                 creditbalance: creditBalance || 0.00,
                 balance: balance || 0.00,
                 creditlimit: creditLimit || 0.00,
                 salesorderbalance: salesOrderBalance || 0.00,
-                email: data.tjob[i].Email || '',
-                accountno: data.tjob[i].AccountNo || '',
-                clientno: data.tjob[i].ClientNo || '',
-                jobtitle: data.tjob[i].JobTitle || '',
-                notes: data.tjob[i].Notes || '',
-                country: data.tjob[i].Country || LoggedCountry
+                email: data.tjobvs1[i].fields.Email || '',
+                accountno: data.tjobvs1[i].fields.AccountNo || '',
+                clientno: data.tjobvs1[i].fields.ClientNo || '',
+                jobtitle: data.tjobvs1[i].fields.JobTitle || '',
+                notes: data.tjobvs1[i].fields.Notes || '',
+                country: data.tjobvs1[i].fields.Country || LoggedCountry
             };
-            if (customerName == data.tjob[i].ParentCustomerName) {
+            if (customerName == data.tjobvs1[i].fields.ParentCustomerName) {
                 dataTableListJob.push(dataListJob);
             }
         }

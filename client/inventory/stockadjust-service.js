@@ -53,6 +53,7 @@ export class StockTransferService extends BaseService {
     }
 
     getCompanyInfo() {
+        console.log("===== getCompanyInfo 222=====");
         let options = {
             PropertyList: "PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,abn,CompanyNumber,BankName,BankAccountName",
         };

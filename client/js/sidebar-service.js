@@ -4128,6 +4128,7 @@ export class SideBarService extends BaseService {
   }
 
   getVS1MenuConfig() {
+    console.log("=== hahaha getVS1MenuConfig ===");
     const data = this.GET(this.erpGet.TPreference);
     return data;
   }

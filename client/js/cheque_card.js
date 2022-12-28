@@ -77,11 +77,9 @@ Template.chequecard.onRendered(() => {
     var url = FlowRouter.current().path;
     var getso_id = url.split("?id=");
     var currentInvoice = getso_id[getso_id.length - 1];
-    console.log("=== currentInvoice ===", currentInvoice);
     if (getso_id[1]) {
       currentInvoice = parseInt(currentInvoice);
       var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
-      console.log("===ChequeData===", chequeData);
       var orderDate = chequeData.fields.OrderDate;
       var fromDate = orderDate.substring(0, 10);
       var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
@@ -256,7 +254,6 @@ Template.chequecard.onRendered(() => {
           $("#sltChequeBankAccountName").val(lastBankAccount);
           $("#ponumber").val(newChequeID);
 
-          console.log("===", newChequeID);
         }, 500);
       })
       .catch(function (err) {

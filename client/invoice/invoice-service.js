@@ -39,6 +39,7 @@ export class InvoiceService extends BaseService {
         return this.POST(this.ERPObjects.TCustomerPayment, data);
     }
     getCompanyInfo(){
+        console.log("=== getCompanyInfo ===");
         let options = {
             PropertyList: "PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,abn,CompanyNumber,BankName,BankAccountName",
         };
