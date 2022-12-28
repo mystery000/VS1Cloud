@@ -3,7 +3,9 @@ import { CoreService } from "../js/core-service";
 import { DashBoardService } from "./dashboard-service";
 import { UtilityService } from "../utility-service";
 import { VS1ChartService } from "../vs1charts/vs1charts-service";
+import { Template } from 'meteor/templating';
 
+import './dashboard.html';
 import "gauge-chart";
 
 let _ = require("lodash");
