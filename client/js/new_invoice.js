@@ -509,7 +509,7 @@ Template.new_invoice.onRendered(function() {
                             };
 
                             if (data.ttermsvs1[i].isSalesdefault == true) {
-                                Session.setPersistent(
+                                Session.set(
                                     "ERPTermsSales",
                                     data.ttermsvs1[i].TermsName || "COD"
                                 );
@@ -545,7 +545,7 @@ Template.new_invoice.onRendered(function() {
                             isSalesdefault: data.ttermsvs1[i].isSalesdefault || ""
                         };
                         if (data.ttermsvs1[i].isSalesdefault == true) {
-                            Session.setPersistent(
+                            Session.set(
                                 "ERPTermsSales",
                                 data.ttermsvs1[i].TermsName || "COD"
                             );
@@ -18864,8 +18864,21 @@ Template.new_invoice.events({
             $('.colUnits').removeClass('showColumn');
         }
     },
+    "click .chkFixedAsset": function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colFixedAsset').addClass('showColumn');
+            $('.colFixedAsset').removeClass('hiddenColumn');
+        } else {
+            $('.colFixedAsset').addClass('hiddenColumn');
+            $('.colFixedAsset').removeClass('showColumn');
+        }
+    },
     // display settings
-
+    'change .rngRangeFixedAsset': function(event) {
+        let range = $(event.target).val();
+        $(".spWidthFixedAsset").html(range);
+        $('.colFixedAsset').css('width', range);
+    },
     'change .rngRangeProductName': function(event) {
         let range = $(event.target).val();
         $(".spWidthProductName").html(range);

@@ -16,6 +16,8 @@ import { BaseService } from "../js/base-service";
 import ApiService from "../js/Api/Module/ApiService";
 import XLSX from 'xlsx';
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
+import '../lib/global/utBarcodeConst.js';
+import './setup.html';
 
 const employeeId = User.getCurrentLoggedUserId();
 let organisationService = new OrganisationService();
@@ -51,7 +53,6 @@ export const getCompanyInfo = async () => {
 }
 
 export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
-
     let ERPIPAddress = localStorage.getItem('EIPAddress');
     let ERPUsername = localStorage.getItem('EUserName');
     let ERPPassword = localStorage.getItem('EPassword');
@@ -1519,7 +1520,7 @@ Template.setup.onRendered(function () {
       organisationService
         .saveOrganisationSetting(objDetails)
         .then(function (data) {
-          Session.setPersistent("vs1companyStripeFeeMethod", feeMethod);
+          Session.set("vs1companyStripeFeeMethod", feeMethod);
           LoadingOverlay.hide();
           swal({
             title: "Default Payment Method Setting Successfully Changed",
@@ -4966,8 +4967,8 @@ Template.setup.events({
     let purchasetaxcode = $("input[name=optradioP]:checked").val() || "";
     let salestaxcode = $("input[name=optradioS]:checked").val() || "";
 
-    Session.setPersistent("ERPTaxCodePurchaseInc", purchasetaxcode || "");
-    Session.setPersistent("ERPTaxCodeSalesInc", salestaxcode || "");
+    Session.set("ERPTaxCodePurchaseInc", purchasetaxcode || "");
+    Session.set("ERPTaxCodeSalesInc", salestaxcode || "");
     getVS1Data("vscloudlogininfo")
       .then(function (dataObject) {
         if (dataObject.length == 0) {
@@ -5129,7 +5130,7 @@ Template.setup.events({
     let taxDesc = $("#edtTaxDesc").val();
     let taxRate = parseFloat($("#edtTaxRate").val() / 100);
     let regionName = Session.get('vs1companyCountry');
-    
+
     let objDetails = "";
     if (taxName === "") {
       Bert.alert(

@@ -2800,7 +2800,7 @@ Template.billcard.onRendered(() => {
                         };
 
                          if(data.ttermsvs1[i].isPurchasedefault == true){
-                           Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
+                           Session.set('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
                         purchaseDefaultTerms = data.ttermsvs1[i].TermsName || ' ';
                     }
 
@@ -2837,7 +2837,7 @@ Template.billcard.onRendered(() => {
                     };
 
                      if(data.ttermsvs1[i].isPurchasedefault == true){
-                       Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
+                       Session.set('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
                         purchaseDefaultTerms = data.ttermsvs1[i].TermsName || ' ';
                     }
 

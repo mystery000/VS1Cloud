@@ -1690,7 +1690,7 @@ Template.refundcard.onRendered(() => {
                 };
 
                 if (data.ttermsvs1[i].isSalesdefault == true) {
-                  Session.setPersistent(
+                  Session.set(
                       "ERPTermsSales",
                       data.ttermsvs1[i].TermsName || "COD"
                   );
@@ -1724,7 +1724,7 @@ Template.refundcard.onRendered(() => {
                 termsname: data.ttermsvs1[i].TermsName || " ",
               };
               if (data.ttermsvs1[i].isSalesdefault == true) {
-                Session.setPersistent(
+                Session.set(
                     "ERPTermsSales",
                     data.ttermsvs1[i].TermsName || "COD"
                 );
@@ -9210,7 +9210,7 @@ Template.refundcard.events({
       let customername = $("#edtCustomerName");
       let termname = $("#sltTerms").val() || "";
       let payMethod = $("#sltPaymentMethod").val() || "Cash";
-      Session.setPersistent("paymentmethod", payMethod);
+      Session.set("paymentmethod", payMethod);
       if (termname === "") {
         swal("Terms has not been selected!", "", "warning");
         event.preventDefault();
@@ -10204,8 +10204,21 @@ Template.refundcard.events({
       $(".colSerialNo").removeClass("showColumn");
     }
   },
+  "click .chkFixedAsset": function(event) {
+    if ($(event.target).is(':checked')) {
+        $('.colFixedAsset').addClass('showColumn');
+        $('.colFixedAsset').removeClass('hiddenColumn');
+    } else {
+        $('.colFixedAsset').addClass('hiddenColumn');
+        $('.colFixedAsset').removeClass('showColumn');
+    }
+  },
   // display settings
-
+  'change .rngRangeFixedAsset': function(event) {
+    let range = $(event.target).val();
+    $(".spWidthFixedAsset").html(range);
+    $('.colFixedAsset').css('width', range);
+  },
   "change .rngRangeProductName": function (event) {
     let range = $(event.target).val();
     $(".spWidthProductName").html(range);

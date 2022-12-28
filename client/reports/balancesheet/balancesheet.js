@@ -572,7 +572,7 @@ Template.balancesheetreport.events({
         let accountName = $(event.target).parent().first().text();
         let toDate = moment($("#balanceDate").val()).clone().endOf("month").format("YYYY-MM-DD");
         let fromDate = "1899-01-01";
-        Session.setPersistent("showHeader", true);
+        Session.set("showHeader", true);
         await clearData('TAccountRunningBalanceReport');
         window.open("/balancetransactionlist?accountName=" + accountName + "&toDate=" + toDate + "&fromDate=" + fromDate + "&isTabItem=" + false, "_self");
     },

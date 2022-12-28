@@ -5051,7 +5051,7 @@ Template.new_salesorder.onRendered(function () {
                         };
 
                         if (data.ttermsvs1[i].isSalesdefault == true) {
-                            Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                            Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                             templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                         }
 
@@ -5087,7 +5087,7 @@ Template.new_salesorder.onRendered(function () {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
                     if (data.ttermsvs1[i].isSalesdefault == true) {
-                        Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                        Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                         templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                     }
                     termrecords.push(termrecordObj);
@@ -9457,7 +9457,6 @@ Template.new_salesorder.events({
     },
     'click .printConfirm':async function (event) {
         playPrintAudio();
-        return
         setTimeout(async function(){
           var printTemplate = [];
           LoadingOverlay.show();
@@ -11445,9 +11444,22 @@ Template.new_salesorder.events({
       $('.colSerialNo').removeClass('showColumn');
     }
   },
+  "click .chkFixedAsset": function(event) {
+    if ($(event.target).is(':checked')) {
+        $('.colFixedAsset').addClass('showColumn');
+        $('.colFixedAsset').removeClass('hiddenColumn');
+    } else {
+        $('.colFixedAsset').addClass('hiddenColumn');
+        $('.colFixedAsset').removeClass('showColumn');
+    } 
+  },
   // display settings
 
-
+  'change .rngRangeFixedAsset': function(event) {
+    let range = $(event.target).val();
+    $(".spWidthFixedAsset").html(range);
+    $('.colFixedAsset').css('width', range);
+  },
   'change .rngRangeProductName': function(event) {
     let range = $(event.target).val();
     $(".spWidthProductName").html(range);

@@ -266,7 +266,6 @@ Template.purchaseorderlist.onRendered(function () {
                 // dataTableList.push(dataList);
               }
               templateObject.datatablerecords.set(dataTableList);
-
               if (templateObject.datatablerecords.get()) {
 
                 setTimeout(function () {
@@ -1592,6 +1591,7 @@ Template.purchaseorderlist.events({
             // dataTableList.push(dataList);
           }
           templateObject.datatablerecords.set(dataTableList);
+
           let item = templateObject.datatablerecords.get();
           $(".fullScreenSpin").css("display", "none");
           if (dataTableList) {
