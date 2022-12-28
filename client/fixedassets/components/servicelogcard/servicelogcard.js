@@ -22,3 +22,11 @@ Template.servicelogcard.onRendered(function () {
     yearRange: "-90:+10",
   });
 });
+Template.servicelogcard.events({
+  "click button.btnSave": function() {
+    // FlowRouter.go('/serviceloglist');
+  },
+  "click button.btnBack": function() {
+    FlowRouter.go('/serviceloglist');
+  }
+});
