@@ -51,3 +51,4 @@ force-ssl
 littledata:synced-cron
 meteorhacks:ssr
 aldeed:template-extension
+dev-error-overlay

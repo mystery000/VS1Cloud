@@ -1,3 +1,4 @@
+import { Template } from 'meteor/templating';
 import {
     ReactiveVar
 } from 'meteor/reactive-var';
@@ -24,6 +25,11 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import { AccountService } from '../accounts/account-service';
+
+import '../Navigation/header.html';
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let utilityService = new UtilityService();
 let productService = new ProductService();
 let organizationService = new OrganisationService();
@@ -100,7 +106,7 @@ Template.header.onRendered(function () {
     //     templateObject.confirmedStepCount.set(cntConfirmedSteps);
     // }
     // templateObject.getConfirmedStepCount();
-    
+
     checkSetupFinished2();
 
     let sidePanelToggle = Session.get('sidePanelToggle');

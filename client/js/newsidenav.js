@@ -1,3 +1,4 @@
+import { Template } from 'meteor/templating';
 import { EmployeeProfileService } from './profile-service';
 import { AccessLevelService } from './accesslevel-service';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -7,6 +8,9 @@ import { CoreService } from '../js/core-service';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+import '../Navigation/newsidenav.html';
 var CronJob = require('cron').CronJob;
 
 let utilityService = new UtilityService();
@@ -221,7 +225,7 @@ Template.newsidenav.onRendered(function() {
     let isAppointmentSMS = Session.get('CloudApptSMS');
 
     let isSerialNumberList = Session.get('CloudShowSerial') || false;
-
+    console.log(isSerialNumberList);
     var erpGet = erpDb();
     var LoggedDB = erpGet.ERPDatabase;
     var LoggedUser = localStorage.getItem('mySession');
