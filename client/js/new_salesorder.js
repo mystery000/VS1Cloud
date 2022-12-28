@@ -9457,7 +9457,6 @@ Template.new_salesorder.events({
     },
     'click .printConfirm':async function (event) {
         playPrintAudio();
-        return
         setTimeout(async function(){
           var printTemplate = [];
           LoadingOverlay.show();
