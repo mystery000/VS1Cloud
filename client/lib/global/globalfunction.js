@@ -695,7 +695,6 @@ playSaveAudio = function () {
   audioElement.play();
 }
 checkSetupFinished = function () {
-    console.log("===== getCompanyInfo maybe =====");
   let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
   if( setupFinished === null || setupFinished ===  "" ){
     let ERPIPAddress = localStorage.getItem('EIPAddress');
@@ -738,7 +737,6 @@ checkSetupFinished = function () {
 }
 
 checkSetupFinished2 = function () {
-    console.log("===== getCompanyInfo It can't=====");
   let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
   if( setupFinished === null || setupFinished ===  "" ){
     let ERPIPAddress = localStorage.getItem('EIPAddress');

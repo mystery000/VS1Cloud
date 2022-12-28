@@ -721,7 +721,6 @@ export class TaxRateService extends BaseService {
     }
 
     getPreferenceSettings( customSelect = [] ){
-        console.log("=== hahaha getPreferenceSettings ===");
         let options = {};
         if( customSelect.length > 0 ){
             let select = customSelect.map(function(item){

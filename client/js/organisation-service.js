@@ -2,7 +2,6 @@ import { BaseService } from "../js/base-service.js";
 export class OrganisationService extends BaseService {
 
   getOrganisationDetail() {
-    console.log("==== getOrganisationDetail =====");
     return this.GET(this.erpGet.ERPOrganisationSetting);
   }
 
@@ -42,7 +41,6 @@ export class OrganisationService extends BaseService {
   }
 
   getCompanyInfo() {
-    console.log("===== getCompanyInfo 333=====");
     let options = {
       PropertyList:"SiteCode,LastName,Firstname,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,BankName,BankAccountName,abn,CompanyName,TradingName,PhoneNumber,Address,Address2,Address3,Url,Email,Apcano,DvaABN,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,CompanyNumber,Contact",
     };
@@ -57,12 +55,10 @@ export class OrganisationService extends BaseService {
   }
 
   getChkUSRegionTaxSetting() {
-    console.log("====== getChkUSRegionTaxSetting =======");
     return this.GET(this.erpGet.ERPUSRegionTaxSetting);
   }
 
   getSetupInfo() {
-    console.log("===== it don't need =====");
     let options = {
       PropertyList:"ID,IsSetUpWizard",
     };

@@ -96,7 +96,6 @@ export class StockAdjust extends BaseService {
     }
 
     getCompanyInfo(){
-        console.log("===== getCompanyInfo 444=====");
         let options = {
             PropertyList: "PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,abn,CompanyNumber,BankName,BankAccountName",
         };

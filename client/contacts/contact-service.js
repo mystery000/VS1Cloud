@@ -348,7 +348,6 @@ export class ContactService extends BaseService {
     }
 
     getAllJobListByCustomer(customerName) {
-        console.log("===== hahaha =====");
         let options = {
             PropertyList: "ID,Active,ClientName,ContactName,Phone,ARBalance,CreditBalance,Balance,CreditLimit,SalesOrderBalance,CreditBalance,Email,AccountNo,ClientNo,JobTitle,Notes,Country,IsJob,ParentCustomerName",
             select: "[Active]=true",

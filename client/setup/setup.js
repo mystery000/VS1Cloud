@@ -51,7 +51,6 @@ export const getCompanyInfo = async () => {
 }
 
 export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
-  console.log("===== getCompanyInfo nonono=====");
     let ERPIPAddress = localStorage.getItem('EIPAddress');
     let ERPUsername = localStorage.getItem('EUserName');
     let ERPPassword = localStorage.getItem('EPassword');
