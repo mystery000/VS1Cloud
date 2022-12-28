@@ -1,6 +1,5 @@
 if (Meteor.isServer) {
    Meteor.startup( function() {
-      process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
       process.env.MAIL_URL =
          // "smtp://YOUR_DEFAULT_SMTP_LOGIN:YOUR_DEFAULT_PASSWORD@smtp.mailgun.org:587";
          "smtp://vsonecloud%40gmail.com:Jp9CvV2M5g@smtp.gmail.com:465/";

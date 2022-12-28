@@ -588,7 +588,7 @@ Template.paymentmethodpop.onRendered(function() {
                 }
             };
             organisationService.saveOrganisationSetting(objDetails).then(function(data) {
-                Session.setPersistent('vs1companyStripeFeeMethod', feeMethod);
+                Session.set('vs1companyStripeFeeMethod', feeMethod);
                 window.open('/paymentmethodSettings', '_self');
             }).catch(function(err) {
                 window.open('/paymentmethodSettings', '_self');

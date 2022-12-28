@@ -934,7 +934,7 @@ Template.supplierscard.onRendered(function() {
             terms.push(data.ttermsvs1[i].TermsName);
             if (data.ttermsvs1[i].isPurchasedefault === true) {
                 templateObject.defaultpurchaseterm.set(data.ttermsvs1[i].TermsName);
-                Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
+                Session.set('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
                 if (JSON.stringify(currentId) != '{}') {
                     if (currentId.id == "undefined") {
                         $('#sltTerms').val(data.ttermsvs1[i].TermsName);

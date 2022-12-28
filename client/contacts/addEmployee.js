@@ -136,7 +136,7 @@ Template.employeescard.onRendered(function() {
     let currentDate;
     const erpGet = erpDb();
     LoadingOverlay.show();
-    Session.setPersistent('cloudCurrentLogonName', '');
+    Session.set('cloudCurrentLogonName', '');
     //var splashArrayRepServiceList = new Array();
     let templateObject = Template.instance();
     let contactService = new ContactService();
@@ -1879,7 +1879,7 @@ Template.employeescard.onRendered(function() {
                 let emplineItemObj = {};
                 if (Array.isArray(data.fields.User)) {
                     empEmail = data.fields.User[0].fields.LogonName;
-                    Session.setPersistent('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
+                    Session.set('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
                     emplineItemObj = {
                         empID: data.fields.User[0].fields.EmployeeId || '',
                         EmployeeName: data.fields.User[0].fields.EmployeeName || '',
@@ -1888,7 +1888,7 @@ Template.employeescard.onRendered(function() {
                     };
                 } else {
                     empEmail = data.fields.User.fields.LogonName;
-                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                    Session.set('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                     emplineItemObj = {
                         empID: data.fields.User.fields.EmployeeId || '',
                         EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -1915,7 +1915,7 @@ Template.employeescard.onRendered(function() {
                 let emplineItems = [];
                 let emplineItemObj = {};
                 if (Array.isArray(data.fields.User)) {
-                    Session.setPersistent('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
+                    Session.set('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
                     emplineItemObj = {
                         empID: data.fields.User[0].fields.EmployeeId || '',
                         EmployeeName: data.fields.User[0].fields.EmployeeName || '',
@@ -1923,7 +1923,7 @@ Template.employeescard.onRendered(function() {
                         PasswordHash: data.fields.User[0].fields.LogonPassword || ''
                     };
                 } else {
-                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                    Session.set('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                     emplineItemObj = {
                         empID: data.fields.User.fields.EmployeeId || '',
                         EmployeeName: data.fields.User.fields.EmployeeName || '',

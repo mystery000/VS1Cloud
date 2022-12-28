@@ -3394,7 +3394,7 @@ Template.creditcard.onRendered(() => {
               };
 
               if (data.ttermsvs1[i].isPurchasedefault == true) {
-                Session.setPersistent(
+                Session.set(
                   "ERPTermsPurchase",
                   data.ttermsvs1[i].TermsName || "COD"
                 );
@@ -3430,7 +3430,7 @@ Template.creditcard.onRendered(() => {
             };
 
             if (data.ttermsvs1[i].isPurchasedefault == true) {
-              Session.setPersistent(
+              Session.set(
                 "ERPTermsPurchase",
                 data.ttermsvs1[i].TermsName || "COD"
               );
