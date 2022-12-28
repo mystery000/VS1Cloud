@@ -23,6 +23,7 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
 
+
 Template.payrollrules.onCreated(function() {
 
     const templateObject = Template.instance();
@@ -1482,7 +1483,6 @@ Template.payrollrules.onRendered(function() {
 
 
             }, 0);
-
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
             LoadingOverlay.hide();
 
