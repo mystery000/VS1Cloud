@@ -1,3 +1,5 @@
+import { Template } from 'meteor/templating';
+import '../Navigation/ApAlertPop.html';
 Template.appAlertPage.onCreated(function(){
 
 

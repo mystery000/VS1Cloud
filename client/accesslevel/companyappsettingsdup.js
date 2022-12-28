@@ -866,7 +866,7 @@ Template.companyappsettingsdup.events({
                                 confirmButtonText: 'OK'
                             }).then((result) => {
                                 //if (result.value) {
-                                Session.setPersistent('CloudTrueERPModule', true);
+                                Session.set('CloudTrueERPModule', true);
                                 window.open('/linktrueerp', '_self');
                                 //} else if (result.dismiss === 'cancel') {
 

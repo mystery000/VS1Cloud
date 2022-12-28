@@ -987,7 +987,7 @@ Template.newprofitandloss.events({
       .startOf("year")
       .format("YYYY-MM-DD");
     await clearData("TAccountRunningBalanceReport");
-    //Session.setPersistent('showHeader',true);
+    //Session.set('showHeader',true);
     window.open(
       "/balancetransactionlist?accountName=" +
         accountName +

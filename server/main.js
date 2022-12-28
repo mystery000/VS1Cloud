@@ -11,10 +11,9 @@ const Magento2 = require("node-magento2");
 ("use strict");
 
 let apiIndex = 0;
-const apiKeys = ["1f168b12a87398f309f7cf273ded064d", "ab54565999a9098243e68a73b15a43a0"]; //"2fa825302bd84988871ff138483a86fb", 
+const apiKeys = ["1f168b12a87398f309f7cf273ded064d", "ab54565999a9098243e68a73b15a43a0"]; //"2fa825302bd84988871ff138483a86fb",
 
 Meteor.startup(() => {
-  process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
   /* Connection to Braintree Paymentent Gateway */
   let env = braintree.Environment.Sandbox;
 

@@ -1,3 +1,6 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
+FlowRouter.decodeQueryParamsOnce = true;
 const publicRedirect = () => {
 
 };
@@ -7,13 +10,12 @@ const publicRoutes = FlowRouter.group({
     triggersEnter: [publicRedirect]
 });
 
-FlowRouter.notFound = {
-    action() {
-        BlazeLayout.render('layoutlogin', {
-            yield: 'notFound'
-        });
-    }
-};
+FlowRouter.route('*', {
+  action() {
+    // Show 404 error page using Blaze
+    this.render('notFound');
+  }
+});
 
 publicRoutes.route('/', {
     name: 'vs1login',
@@ -135,7 +137,7 @@ const authenticatedRedirect = () => {
             let sidePanelToggle = Session.get('sidePanelToggle');
             if ((sidePanelToggle === 'undefined') || (sidePanelToggle === undefined)) {
                 document.getElementById("sidebar").style.display = "block";
-                Session.setPersistent('sidePanelToggle', "toggled");
+                Session.set('sidePanelToggle', "toggled");
                 sidePanelToggle = Session.get('sidePanelToggle');
             }
             if (sidePanelToggle) {
@@ -161,11 +163,11 @@ const authenticatedRedirect = () => {
     }
 
     if (Session.get('lastUrl') == undefined) {
-        Session.setPersistent('lastUrl', window.location.pathname);
+        Session.set('lastUrl', window.location.pathname);
     } else {
         let lastUrl = Session.get('lastUrl');
     }
-    Session.setPersistent('lastUrl', window.location.pathname);
+    Session.set('lastUrl', window.location.pathname);
 
     let lastPageVisitUrl = window.location.pathname;
     if(FlowRouter.current().oldRoute != undefined){
