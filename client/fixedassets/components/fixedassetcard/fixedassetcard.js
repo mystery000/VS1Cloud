@@ -2,7 +2,7 @@ import { SideBarService } from '../../../js/sidebar-service'
 
 import { AccountService } from "../../../accounts/account-service";
 let sideBarService = new SideBarService();
-
+let accountService = new AccountService();
 Template.fixedassetcard.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -69,7 +69,7 @@ Template.fixedassetcard.onRendered(function () {
 });
 Template.fixedassetcard.events({
   "click button.btnSave": function() {
-    
+
   },
   "click button.btnBack": function() {
     FlowRouter.go('/fixedassetsoverview');
