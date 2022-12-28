@@ -248,59 +248,60 @@ Template.transaction_line.onRendered(function() {
               if (dataObject.length == 0) {
                   sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
                     reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                    if(listType == 'tblBillLine') break;
-                    resetData = templateObject.init_data.get().map((item) => {
-                        data =  reset_data.find(x => x.class == item.class);
-                        if(data != undefined) return {...item, active: data.active, display: data.display};
-                        return {...item, active: false, display: false};
-                    });
-                    amtEx = resetData.find(x => x.class == "AmountEx");
-                    amtInc = resetData.find(x => x.class == "AmountInc");
-                    unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
-                    unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
-                    if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
-                    if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active; 
+                    if(listType != 'tblBillLine'){
+                        resetData = templateObject.init_data.get().map((item) => {
+                            data =  reset_data.find(x => x.class == item.class);
+                            if(data != undefined) return {...item, active: data.active, display: data.display};
+                            return {...item, active: false, display: false};
+                        });
+                        amtEx = resetData.find(x => x.class == "AmountEx");
+                        amtInc = resetData.find(x => x.class == "AmountInc");
+                        unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
+                        unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
+                        if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
+                        if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active; 
 
-                    canShowBackOrder = templateObject.data.canShowBackOrder;
-                    canShowUOM = templateObject.data.canShowUOM;
-                    includeBOnShippedQty = templateObject.data.includeBOnShippedQty;
-                    isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking;
+                        canShowBackOrder = templateObject.data.canShowBackOrder;
+                        canShowUOM = templateObject.data.canShowUOM;
+                        includeBOnShippedQty = templateObject.data.includeBOnShippedQty;
+                        isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking;
 
 
-                    if(!canShowBackOrder || !includeBOnShippedQty) {
-                        ordered = resetData.find(x => x.class == "Ordered");
-                        shipped = resetData.find(x => x.class == "Shipped");
-                        backorder = resetData.find(x => x.class == "BackOrder");
+                        if(!canShowBackOrder || !includeBOnShippedQty) {
+                            ordered = resetData.find(x => x.class == "Ordered");
+                            shipped = resetData.find(x => x.class == "Shipped");
+                            backorder = resetData.find(x => x.class == "BackOrder");
 
-                        if(backorder != undefined){
-                            resetData.find(x => x.class == "BackOrder").display = false;
-                            resetData.find(x => x.class == "BackOrder").active = false;
+                            if(backorder != undefined){
+                                resetData.find(x => x.class == "BackOrder").display = false;
+                                resetData.find(x => x.class == "BackOrder").active = false;
+                            }
+                            if(ordered != undefined){
+                                resetData.find(x => x.class == "Ordered").display = false;
+                                resetData.find(x => x.class == "Ordered").active = false;
+                            }
+                            if(shipped != undefined){
+                                resetData.find(x => x.class == "Shipped").display = false;
+                                resetData.find(x => x.class == "Shipped").active = false;
+                            }
                         }
-                        if(ordered != undefined){
-                            resetData.find(x => x.class == "Ordered").display = false;
-                            resetData.find(x => x.class == "Ordered").active = false;
+                        if(!isBatchSerialNoTracking) {
+                            serialNo = resetData.find(x => x.class == "SerialNo");
+                            if(serialNo != undefined){
+                                resetData.find(x => x.class == "SerialNo").display = false;
+                                resetData.find(x => x.class == "SerialNo").active = false;
+                            }
                         }
-                        if(shipped != undefined){
-                            resetData.find(x => x.class == "Shipped").display = false;
-                            resetData.find(x => x.class == "Shipped").active = false;
+                        if(!canShowUOM) {
+                            units = resetData.find(x => x.class == "Units");
+                            if(units != undefined){
+                                resetData.find(x => x.class == "Units").display = false;
+                                resetData.find(x => x.class == "Units").active = false;
+                            }
                         }
+
+                        templateObject.showCustomFieldDisplaySettings(resetData);
                     }
-                    if(!isBatchSerialNoTracking) {
-                        serialNo = resetData.find(x => x.class == "SerialNo");
-                        if(serialNo != undefined){
-                            resetData.find(x => x.class == "SerialNo").display = false;
-                            resetData.find(x => x.class == "SerialNo").active = false;
-                        }
-                    }
-                    if(!canShowUOM) {
-                        units = resetData.find(x => x.class == "Units");
-                        if(units != undefined){
-                            resetData.find(x => x.class == "Units").display = false;
-                            resetData.find(x => x.class == "Units").active = false;
-                        }
-                    }
-
-                    templateObject.showCustomFieldDisplaySettings(resetData);
                   }).catch(function(err) {});
               } else {
                   let data = JSON.parse(dataObject[0].data);
