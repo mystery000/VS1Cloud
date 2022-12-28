@@ -12,6 +12,7 @@ import erpObject from '../lib/global/erp-objects';
 // import ldb from 'localdata';
 import '../vs1_templates/vs1_video/vs1_login_video.js';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { Session } from 'meteor/session';
 let smsService = new SMSService();
 
 Template.vs1login.onCreated(() => {

@@ -1,7 +1,8 @@
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../js/core-service';
 import {DashBoardService} from './dashboard-service';
-
+import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
 Template.home.onCreated(function () {
     this.loggedDb = new ReactiveVar("");
     const templateObject = Template.instance();
