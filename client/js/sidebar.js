@@ -614,7 +614,7 @@ Template.sidenav.onRendered(function() {
     }
     let sidePanelToggle = Session.get('sidePanelToggle');
     // if ((sidePanelToggle === '') || (!sidePanelToggle)) {
-    //   Session.setPersistent('sidePanelToggle', "toggled");
+    //   Session.set('sidePanelToggle', "toggled");
     //  sidePanelToggle = Session.get('sidePanelToggle');
     // }
 
@@ -1259,7 +1259,7 @@ Template.sidenav.onRendered(function() {
     job.start();
 
     setTimeout(function() {
-        Session.setPersistent('LoggedUserEventFired', false);
+        Session.set('LoggedUserEventFired', false);
     }, 2500);
 /* Start Here */
 templateObject.getFollowedAllObjectPull = function () {
@@ -2890,12 +2890,12 @@ Template.sidenav.events({
 
         if (sideBarPanel.indexOf("toggled") >= 0) {
 
-            Session.setPersistent('sidePanelToggle', "toggled");
+            Session.set('sidePanelToggle', "toggled");
             $("#sidenavbar").addClass("toggled");
 
         } else {
 
-            Session.setPersistent('sidePanelToggle', "");
+            Session.set('sidePanelToggle', "");
             ("#sidenavbar").removeClass("toggled");
 
         }
@@ -3526,7 +3526,7 @@ Template.sidenav.events({
         }
 
         accesslevelService.saveEmpAccess(data).then(function(data) {
-            Session.setPersistent('CloudSidePanelMenu', isSidePanel);
+            Session.set('CloudSidePanelMenu', isSidePanel);
 
             Meteor._reload.reload();
         }).catch(function(err) {

@@ -2056,7 +2056,7 @@ Template.overduesupplierawaiting.events({
                  });
                 let url = '/supplierpaymentcard?selectsupppo=' + allData[0].po + '&selectsuppbill=' + allData[0].bill + '&selectsuppcredit=' + allData[0].credit;
                 allData.shift();
-                Session.setPersistent('supplierpayments', JSON.stringify(allData));
+                Session.set('supplierpayments', JSON.stringify(allData));
                 window.open(url,'_self');
 
             }

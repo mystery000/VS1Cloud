@@ -52,7 +52,7 @@ Template.addemployeepop.onRendered(function () {
     var erpGet = erpDb();
 
     LoadingOverlay.show();
-    Session.setPersistent('cloudCurrentLogonName', '');
+    Session.set('cloudCurrentLogonName', '');
     let templateObject = Template.instance();
     let contactService = new ContactService();
     var countryService = new CountryService();
@@ -851,7 +851,7 @@ Template.addemployeepop.onRendered(function () {
                                     let emplineItems = [];
                                     let emplineItemObj = {};
                                     empEmail = data.fields.User.fields.LogonName;
-                                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                    Session.set('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                     emplineItemObj = {
                                         empID: data.fields.User.fields.EmployeeId || '',
                                         EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -877,7 +877,7 @@ Template.addemployeepop.onRendered(function () {
                                 if (data.fields.User != null) {
                                     let emplineItems = [];
                                     let emplineItemObj = {};
-                                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                    Session.set('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                     emplineItemObj = {
                                         empID: data.fields.User.fields.EmployeeId || '',
                                         EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -1031,7 +1031,7 @@ Template.addemployeepop.onRendered(function () {
                                         let emplineItems = [];
                                         let emplineItemObj = {};
                                         empEmail = useData[i].fields.User.fields.LogonName;
-                                        Session.setPersistent('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
+                                        Session.set('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
                                         emplineItemObj = {
                                             empID: useData[i].fields.User.fields.EmployeeId || '',
                                             EmployeeName: useData[i].fields.User.fields.EmployeeName || '',
@@ -1057,7 +1057,7 @@ Template.addemployeepop.onRendered(function () {
                                     if (useData[i].fields.User != null) {
                                         let emplineItems = [];
                                         let emplineItemObj = {};
-                                        Session.setPersistent('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
+                                        Session.set('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
                                         emplineItemObj = {
                                             empID: useData[i].fields.User.fields.EmployeeId || '',
                                             EmployeeName: useData[i].fields.User.fields.EmployeeName || '',
@@ -1217,7 +1217,7 @@ Template.addemployeepop.onRendered(function () {
                                         let emplineItems = [];
                                         let emplineItemObj = {};
                                         empEmail = data.fields.User.fields.LogonName;
-                                        Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                        Session.set('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                         emplineItemObj = {
                                             empID: data.fields.User.fields.EmployeeId || '',
                                             EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -1243,7 +1243,7 @@ Template.addemployeepop.onRendered(function () {
                                     if (data.fields.User != null) {
                                         let emplineItems = [];
                                         let emplineItemObj = {};
-                                        Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                        Session.set('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                         emplineItemObj = {
                                             empID: data.fields.User.fields.EmployeeId || '',
                                             EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -1393,7 +1393,7 @@ Template.addemployeepop.onRendered(function () {
                                 let emplineItems = [];
                                 let emplineItemObj = {};
                                 empEmail = data.fields.User.fields.LogonName;
-                                Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                Session.set('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                 emplineItemObj = {
                                     empID: data.fields.User.fields.EmployeeId || '',
                                     EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -1419,7 +1419,7 @@ Template.addemployeepop.onRendered(function () {
                             if (data.fields.User != null) {
                                 let emplineItems = [];
                                 let emplineItemObj = {};
-                                Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                Session.set('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                 emplineItemObj = {
                                     empID: data.fields.User.fields.EmployeeId || '',
                                     EmployeeName: data.fields.User.fields.EmployeeName || '',
