@@ -248,7 +248,7 @@ Template.transaction_line.onRendered(function() {
               if (dataObject.length == 0) {
                   sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
                     reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                    if(listType == 'tblBillLine') break;
+                    if(listType == 'tblBillLine') continue;
                     resetData = templateObject.init_data.get().map((item) => {
                         data =  reset_data.find(x => x.class == item.class);
                         if(data != undefined) return {...item, active: data.active, display: data.display};
