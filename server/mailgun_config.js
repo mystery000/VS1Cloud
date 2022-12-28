@@ -60,19 +60,19 @@ Meteor.methods({
         attachments: details.attachments
       });
 
-      Meteor.call('post', 'TEmailHistory',  {type: "TEmailHistory",
-      fields: {
-        Active: true,
-        DateSent: details.StartDate,
-        Memo: details.NextDueDate,
-        Subject: details.FormName,
-        RecipientEmail:  details.EmployeeEmail
-      }}, details.connectionInfo,  (error, result) => {
-        if(!error) {
-          // Meteor.call('get', 'TEmailHistory', (err, res) => {
-          // })
-        }
-      })
+      // Meteor.call('post', 'TEmailHistory',  {type: "TEmailHistory",
+      // fields: {
+      //   Active: true,
+      //   DateSent: details.StartDate,
+      //   Memo: details.NextDueDate,
+      //   Subject: details.FormName,
+      //   RecipientEmail:  details.EmployeeEmail
+      // }}, details.connectionInfo,  (error, result) => {
+      //   if(!error) {
+      //     // Meteor.call('get', 'TEmailHistory', (err, res) => {
+      //     // })
+      //   }
+      // })
     } catch(e) {
         if (e) {
             throw new Meteor.Error("error", e.response);
