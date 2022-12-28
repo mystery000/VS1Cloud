@@ -1038,7 +1038,7 @@ Template.journalentrycard.onRendered(() => {
                 }
             }
             $('#' + selectLineID + " .lineAccountName").val(lineProductName);
-            $('#' + selectLineID + " .lineMemo").text(lineProductDesc);
+            // $('#' + selectLineID + " .lineMemo").text(lineProductDesc);
             $('#' + selectLineID + " .lineCreditEx").val(utilityService.modifynegativeCurrencyFormat(0));
             $('#' + selectLineID + " .lineCreditInc").val(utilityService.modifynegativeCurrencyFormat(0));
             $('#' + selectLineID + " .lineDebitEx").val(utilityService.modifynegativeCurrencyFormat(0));
@@ -1210,12 +1210,12 @@ Template.journalentrycard.onRendered(() => {
         var customfieldlabel1 = 'Custom Field 1';
         var customfieldlabel2 = 'Custom Field 2';
         var customfieldlabel3 = 'Custom Field 3';
-        
+
         let department = $('#sltDepartment').val();
         let headMemo = $('#txaMemo').val();
         let dtSODate = $("#dtTransDate").val();
         let entryNo = $('#edtEnrtyNo').val();
-    
+
         $('#tblJournalEntryLine > tbody > tr').each(function() {
             var lineID = this.id;
             let tdaccount = $('#' + lineID + " .lineAccountName").val();
@@ -1559,7 +1559,7 @@ Template.journalentrycard.onRendered(() => {
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -1676,7 +1676,7 @@ Template.journalentrycard.onRendered(() => {
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                 // $(".btnSave").trigger("click");
             } else {
-                
+
             }
             $('#html-2-pdfwrapper').css('display', 'none');
             $("#html-2-pdfwrapper_quotes").hide();
@@ -1745,270 +1745,6 @@ Template.journalentrycard.onRendered(function() {
     var splashArrayProductList = new Array();
     var splashArrayTaxRateList = new Array();
     const taxCodesList = [];
-    tempObj.getAllProducts = function() {
-        getVS1Data('TAccountVS1').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                accountService.getAccountListVS1().then(function(data) {
-
-                    let records = [];
-                    let inventoryData = [];
-                    for (let i = 0; i < data.taccountvs1.length; i++) {
-                        var dataList = [
-                            data.taccountvs1[i].AccountName || '-',
-                            data.taccountvs1[i].Description || '',
-                            data.taccountvs1[i].AccountNumber || '',
-                            data.taccountvs1[i].AccountTypeName || '',
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].Balance * 100) / 100),
-                            data.taccountvs1[i].TaxCode || ''
-                        ];
-
-                        splashArrayProductList.push(dataList);
-                    }
-                    localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
-
-                    if (splashArrayProductList) {
-
-                        $('#tblAccount').dataTable({
-                            data: splashArrayProductList.sort(),
-
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            paging: true,
-                            "aaSorting": [],
-                            "orderMulti": true,
-                            columnDefs: [
-
-                                {
-                                    className: "productName",
-                                    "targets": [0]
-                                },
-                                {
-                                    className: "productDesc",
-                                    "targets": [1]
-                                },
-                                {
-                                    className: "accountnumber",
-                                    "targets": [2]
-                                },
-                                {
-                                    className: "salePrice",
-                                    "targets": [3]
-                                },
-                                {
-                                    className: "prdqty text-right",
-                                    "targets": [4]
-                                },
-                                {
-                                    className: "taxrate",
-                                    "targets": [5]
-                                }
-                            ],
-                            colReorder: true,
-
-
-
-                            "order": [
-                                [0, "asc"]
-                            ],
-
-
-                            pageLength: initialDatatableLoad,
-                            lengthMenu: [
-                                [initialDatatableLoad, -1],
-                                [initialDatatableLoad, "All"]
-                            ],
-                            info: true,
-                            responsive: true
-
-                        });
-
-                        $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-
-
-
-
-
-                    }
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.taccountvs1;
-
-                let records = [];
-                let inventoryData = [];
-                for (let i = 0; i < useData.length; i++) {
-                    if (!isNaN(useData[i].fields.Balance)) {
-                        accBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance) || 0.00;
-                    } else {
-                        accBalance = Currency + "0.00";
-                    }
-                    var dataList = [
-                        useData[i].fields.AccountName || '-',
-                        useData[i].fields.Description || '',
-                        useData[i].fields.AccountNumber || '',
-                        useData[i].fields.AccountTypeName || '',
-                        accBalance,
-                        useData[i].fields.TaxCode || ''
-                    ];
-
-                    splashArrayProductList.push(dataList);
-                }
-                localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
-
-                if (splashArrayProductList) {
-
-                    $('#tblAccount').dataTable({
-                        data: splashArrayProductList.sort(),
-
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: true,
-                        "aaSorting": [],
-                        "orderMulti": true,
-                        columnDefs: [
-
-                            {
-                                className: "productName",
-                                "targets": [0]
-                            },
-                            {
-                                className: "productDesc",
-                                "targets": [1]
-                            },
-                            {
-                                className: "accountnumber",
-                                "targets": [2]
-                            },
-                            {
-                                className: "salePrice",
-                                "targets": [3]
-                            },
-                            {
-                                className: "prdqty text-right",
-                                "targets": [4]
-                            },
-                            {
-                                className: "taxrate",
-                                "targets": [5]
-                            }
-                        ],
-                        colReorder: true,
-
-
-
-                        "order": [
-                            [0, "asc"]
-                        ],
-
-
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true
-
-                    });
-
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-
-
-
-
-
-                }
-            }
-        }).catch(function(err) {
-            accountService.getAccountListVS1().then(function(data) {
-
-                let records = [];
-                let inventoryData = [];
-                for (let i = 0; i < data.taccountvs1.length; i++) {
-                    var dataList = [
-                        data.taccountvs1[i].AccountName || '-',
-                        data.taccountvs1[i].Description || '',
-                        data.taccountvs1[i].AccountNumber || '',
-                        data.taccountvs1[i].AccountTypeName || '',
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].Balance * 100) / 100),
-                        data.taccountvs1[i].TaxCode || ''
-                    ];
-
-                    splashArrayProductList.push(dataList);
-                }
-                localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
-
-                if (splashArrayProductList) {
-
-                    $('#tblAccount').dataTable({
-                        data: splashArrayProductList.sort(),
-
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: true,
-                        "aaSorting": [],
-                        "orderMulti": true,
-                        columnDefs: [
-
-                            {
-                                className: "productName",
-                                "targets": [0]
-                            },
-                            {
-                                className: "productDesc",
-                                "targets": [1]
-                            },
-                            {
-                                className: "accountnumber",
-                                "targets": [2]
-                            },
-                            {
-                                className: "salePrice",
-                                "targets": [3]
-                            },
-                            {
-                                className: "prdqty text-right",
-                                "targets": [4]
-                            },
-                            {
-                                className: "taxrate",
-                                "targets": [5]
-                            }
-                        ],
-                        colReorder: true,
-
-
-
-                        "order": [
-                            [0, "asc"]
-                        ],
-
-
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true
-
-                    });
-
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-
-
-
-
-
-                }
-            });
-        });
-
-    };
-
-    setTimeout(function() {
-        //tempObj.getAllProducts();
-    }, 500);
 
     tempObj.getAllTaxCodes = function() {
         getVS1Data('TTaxcodeVS1').then(function(dataObject) {
@@ -2706,7 +2442,7 @@ Template.journalentrycard.events({
         let basedOnTypeAttr = 'F,';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -2773,7 +2509,7 @@ Template.journalentrycard.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -2824,7 +2560,7 @@ Template.journalentrycard.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -2905,17 +2641,17 @@ Template.journalentrycard.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -2992,21 +2728,21 @@ Template.journalentrycard.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             // window.open("/invoicecard", "_self");
@@ -4013,7 +3749,7 @@ Template.journalentrycard.events({
         var templateObject = Template.instance();
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-       
+
         if(targetID != undefined){
             times++;
             if (times == 1) {
@@ -4440,10 +4176,13 @@ Template.journalentrycard.events({
                 return false;
             }
             purchaseService.saveJournalEnrtry(objDetails).then(function(objDetails) {
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
                 FlowRouter.go('/journalentrylist?success=true');
                 $('.modal-backdrop').css('display', 'none');
-
-
             }).catch(function(err) {
                 if (err === 'Error: "Unable to lock object: "') {
                     swal({

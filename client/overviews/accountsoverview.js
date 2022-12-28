@@ -1041,95 +1041,6 @@ Template.accountsoverview.onRendered(function() {
                 }
             });
             // //$.fn.dataTable.moment('DD/MM/YY');
-            /*
-            $("#tblAccountOverview").DataTable({
-                    columnDefs: [
-                        // { type: 'currency', targets: 4 }
-                    ],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    buttons: [{
-                            extend: "csvHtml5",
-                            text: "",
-                            download: "open",
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "accountoverview_" + moment().format(),
-                            orientation: "portrait",
-                            exportOptions: {
-                                columns: ":visible",
-                            },
-                        },
-                        {
-                            extend: "print",
-                            download: "open",
-                            className: "btntabletopdf hiddenColumn",
-                            text: "",
-                            title: "Accounts Overview",
-                            filename: "Accounts Overview_" + moment().format(),
-                            exportOptions: {
-                                columns: ":visible",
-                            },
-                        },
-                        {
-                            extend: "excelHtml5",
-                            title: "",
-                            download: "open",
-                            className: "btntabletoexcel hiddenColumn",
-                            filename: "accountoverview_" + moment().format(),
-                            orientation: "portrait",
-                            exportOptions: {
-                                columns: ":visible",
-                            },
-                            // ,
-                            // customize: function ( win ) {
-                            //   $(win.document.body).children("h1:first").remove();
-                            // }
-                        },
-                    ],
-                    // bStateSave: true,
-                    // rowId: 0,
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [
-                        [initialDatatableLoad, -1],
-                        [initialDatatableLoad, "All"],
-                    ],
-                    info: true,
-                    responsive: true,
-                    order: [
-                        [0, "asc"]
-                    ],
-                    // "aaSorting": [[1,'desc']],
-                    action: function() {
-                        $("#tblAccountOverview").DataTable().ajax.reload();
-                    },
-                    language: { search: "",searchPlaceholder: "Search List..." },
-                    fnDrawCallback: function(oSettings) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    },
-                    fnInitComplete: function() {
-                        $(
-                            "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                        ).insertAfter("#tblAccountOverview_filter");
-                    },
-                })
-                .on("page", function() {
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                    let draftRecord = templateObject.datatablerecords.get();
-                    templateObject.datatablerecords.set(draftRecord);
-                })
-                .on("column-reorder", function() {})
-                .on("length.dt", function(e, settings, len) {
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                });
-                */
             // $('.fullScreenSpin').css('display','none');
         }, 10);
     }
@@ -1216,7 +1127,7 @@ Template.accountsoverview.onRendered(function() {
     $("#tblAccountOverview tbody").on(
         "click",
         "tr .colAccountName, tr .colAccountName, tr .colDescription, tr .colAccountNo, tr .colType, tr .colTaxCode, tr .colBankAccountName, tr .colBSB, tr .colBankAccountNo, tr .colExtra, tr .colAPCANumber",
-        function() {
+        function(event) {
             var listData = $(this).closest("tr").attr("id");
             var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
             var accountName = $(event.target).closest("tr").find(".colAccountName").text();

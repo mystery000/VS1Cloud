@@ -139,14 +139,18 @@
         {{/if}}
 
         {{#if is_available_chart currentTemplate "mytaskswidgetchart"}}
-            {{> mytaskswidgetchart
-                    md=6 defaultPosition=1 key="dashboard__my_tasks" }}
+            {{#if is_dashboard_check "dashboardsalesmanager"}}
+                {{> mytaskswidgetchart
+                        md=4 defaultPosition=2 key="dsmcharts__my_tasks" }}
 
-            {{> mytaskswidgetchart
-                    md=4 defaultPosition=2 key="dsmcharts__my_tasks" }}
+            {{else if is_dashboard_check "dashboardsales"}}
+                {{> mytaskswidgetchart
+                        md=4 defaultPosition=2 key="dscharts__my_tasks" }}
 
-            {{> mytaskswidgetchart
-                    md=4 defaultPosition=2 key="dscharts__my_tasks" }}
+            {{else}}
+                {{> mytaskswidgetchart
+                        md=6 defaultPosition=1 key="dashboard__my_tasks" }}
+            {{/if}}
 
         {{/if}}
 
@@ -186,8 +190,11 @@
         {{/if}}
 
         {{#if is_available_chart currentTemplate "resalescomparision"}}
-            {{> resalescomparision
-                    md=4 defaultPosition=13 key="dashboard__employee_sales_comparison" canvasID="employeeSalesComparisonChart"}}
+            {{#if is_dashboard_check "dashboardsales"}}
+                {{else}}
+                    {{> resalescomparision
+                        md=4 defaultPosition=13 key="dashboard__employee_sales_comparison" canvasID="employeeSalesComparisonChart"}}
+            {{/if}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "expenseschart"}}
@@ -244,7 +251,9 @@
         {{/if}}
 
         {{#if is_available_chart currentTemplate "resalescomparision"}}
-            {{> resalescomparision md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison" canvasID="dsm_employeeSalesComparisonChart"}}
+            {{#if is_dashboard_check "dashboardsalesmanager"}}
+                {{> resalescomparision md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison" canvasID="dsm_employeeSalesComparisonChart"}}
+            {{/if}}
         {{/if}}
 
         {{#if equals isaccountoverview true}}

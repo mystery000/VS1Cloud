@@ -47,7 +47,7 @@ Template.templatesettings.onRendered(function () {
 
   let templateObject = Template.instance();
   $(document).on("click", "#editPrintMore", function (e) {
-    console.log("Edit Print Settings Button Clicked!");
+
   });
   $(document).on("click", ".templateItem #btnEditTemplate", function (e) {
     title = $(this).parent().attr("data-id");

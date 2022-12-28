@@ -4,7 +4,6 @@
   uploadedFile
   isCurrencyEnable
   custfields
-  showUploadAttachment
   showTransactionButtons
   salesCloudPreferenceRec
   showCustomer
@@ -12,6 +11,7 @@
   showSalesDate
   showPONumber
   showInvoiceNumber
+  showOrderNumber
   showVia
   showTerms
   showStatus
@@ -153,33 +153,36 @@
   </style>
   <header
     style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-    <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
-      {{data.lid}}
-      {{> helpbutton}}
-      {{#if showCustomFields}}
-      <a 
-        class="btn btnSettings"
-        role="button"
-        data-toggle="modal" 
-        href="#myModal4" 
-        style="float: right;">
-        <i class="icon ion-android-more-horizontal"></i>
-      </a>
-      {{/if}}
-      {{#if equals data.isReconciled true}}
-      <h3 style="float: right; color: #e02d1b; font-weight: 600;">Reconciled</h3>
-      {{/if}}
-    </h2>
-    <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
+      <div class="row">
+          <div class="col-12 col-md-4">
+              <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
+                  {{data.lid}}
+                  {{> helpbutton}}
+              </h2>
+          </div>
+          <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+          <div class="col-12 col-md-4">
+              {{#if showCustomFields}}
+                  <a
+                          class="btn btnSettings"
+                          role="button"
+                          data-toggle="modal"
+                          href="#myModal4"
+                          style="float: right;">
+                      <i class="icon ion-android-more-horizontal"></i>
+                  </a>
+              {{/if}}
+              {{#if equals data.isReconciled true}}
+                  <h3 style="float: right; color: #e02d1b; font-weight: 600;">Reconciled</h3>
+              {{/if}}
+              <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
+          </div>
+      </div>
   </header>
 
   {{> help_modal}}
   {{> customfieldDroppop}}
   {{> customfieldpop}}
-
-  {{#if showUploadAttachment}}
-  {{> files_viewer_modal }}
-  {{/if}}
 
   <div class="row" style="background-color: #ededed;">
     {{#if data.ispaid}}
@@ -269,6 +272,16 @@
                   value=data.invoicenumber
                 }}
               </div>
+            {{/if}}
+            {{#if showOrderNumber}}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+              {{> default_input 
+                label='Order Number'
+                id='edtOrderNumber'
+                name='edtOrderNumber'
+                value=workorderrecord.salesorderid
+              }}
+            </div>
             {{/if}}
             {{#if showVia}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">

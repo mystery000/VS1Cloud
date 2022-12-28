@@ -881,8 +881,6 @@ Template.basreturn.onRendered(function() {
             let taxRateList = templateObject.taxRateList.get();
             let accountsList = templateObject.accountsList.get();
 
-            alert(3);
-
             reportService.getAllBASReturn().then(function(data) {
                 for (let i = 0; i < data.tbasreturn.length; i++) {
                     if (getid == "") {
@@ -3884,6 +3882,12 @@ Template.basreturn.events({
                     }
 
                     reportService.saveBASReturn(jsonObj).then(function(res) {
+                        if (localStorage.getItem("enteredURL") != null) {
+                            FlowRouter.go(localStorage.getItem("enteredURL"));
+                            localStorage.removeItem("enteredURL");
+                            return;
+                        }
+
                         reportService.getAllBASReturn().then(function(data) {
                             addVS1Data("TBASReturn", JSON.stringify(data)).then(function(datareturn) {
                                 window.open("basreturnlist", "_self");

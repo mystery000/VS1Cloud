@@ -28,7 +28,7 @@ Template.dsleadlistchart.onRendered(function() {
         getVS1Data('TProspectEx').then(function(dataObject) {
             if (dataObject.length === 0) {
                 sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function(data) {
-                    addVS1Data('TProspectEx', JSON.stringify(data));
+                    //addVS1Data('TProspectEx', JSON.stringify(data));
                     setAllLeads(data);
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -39,7 +39,7 @@ Template.dsleadlistchart.onRendered(function() {
             }
         }).catch(function(err) {
             sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function(data) {
-                addVS1Data('TProspectEx', JSON.stringify(data));
+                //addVS1Data('TProspectEx', JSON.stringify(data));
                 setAllLeads(data);
             }).catch(function(err) {
                 $('.fullScreenSpin').css('display', 'none');

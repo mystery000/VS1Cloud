@@ -408,85 +408,11 @@
             </div>
         </div>
 
-        <div class="row no-gutters">
-            <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">
-                <button class="btn btn-success btnSave" type="button" style="margin: 14px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                <button class="btn btn-primary" id="open_print_confirm" type="button" style="margin: 14px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                <button class="btn btn-danger btnRemove" type="button" style="margin: 14px;" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
-                <button class="btn btn-secondary btnBack" type="button" style="margin: 14px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-            </div>
-        </div>
+        {{> transaction_footer
+            TransactionType='deposit' 
+            hideAttachmentButton=true
+        }}
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="templateselection">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="padding-bottom: 8px;">
-                        <h4>Select Template</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row justify-content-center mb-3">
-
-
-                            <div class="row">
-                                {{#each title in getTemplateList}}
-                                    <div class="col-12 ">
-                                        <div class="card shadow mb-3">
-                                            <div class="card-header py-3">
-                                                <span id="{{title}}_title" class="text-primary m-0 font-weight-bold">{{title}}</span>
-                                            </div>
-                                            <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    {{#each index in getTemplateNumber}}
-                                                        <li class="list-group-item templateItem justify-content-between" data-id="{{title}}" data-template-id="{{index}}">
-                                                            <div class="custom-control custom-switch">
-
-                                                                {{#if equals index '1'}}
-                                                                    {{#if equals title 'Deposits' }}
-                                                                    <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
-                                                                    {{/if}}
-                                                                {{else}}
-                                                                    {{#if equals title 'Deposits' }}
-                                                                    <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}"  style="cursor: pointer;">
-                                                                    {{/if}}
-                                                                {{/if}}
-
-                                                                {{#if equals title 'Deposits' }}
-                                                                <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
-                                                                {{/if}}
-
-                                                                <input type="text" name="{{title}}_{{index}}" style="border: 1px solid rgb(209 211 226 / 0%);" value="Template {{index}}" />
-
-
-                                                            </div>
-
-                                                            <i id="btnPreviewTemplate" data-id="{{title}}" class="far fa-eye btnPreviewTemplate" data-toggle="modal"></i>
-                                                        </li>
-                                                    {{/each}}
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="custom-control custom-switch">
-                                                <input class="custom-control-input chkGlobalSettings" name="print_deposit" checked type="checkbox" id="print_deposit" autocomplete="off">
-                                                <label style="cursor: pointer;" class="custom-control-label" for="print_deposit">Print Deposit</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{/each}}
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="modal-footer" style="padding: 6px;">
-                        <button class="btn btn-primary printConfirm btnFooter" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Confirm Print</button>
-                        <button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                </div>
-            </div>
-
-        </div>
-        <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog" aria-labelledby="templatePreviewLabel" aria-hidden="true">
-            {{> custom_print_template modalId="templatePreviewModal" idPrefix="html-2-pdfwrapper_quotes" namePrefix="pdfwrapper_quotes" }}
-        </div>
         <!-- Start PDF -->
         <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; display: none; color: #000000; overflow-x: visible;" id="html-2-pdfwrapper" name="html-2-pdfwrapper">
             <div style="display: flex; height: 70mm;">
@@ -580,13 +506,13 @@
         {{/if}}
 
         <!-- Modal print-button -modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+        <!-- <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
             {{> accountlistpop}}
-        </div>
+        </div> -->
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
+        <!-- <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
             {{> addaccountpop}}
-        </div>
+        </div> -->
         <!-- End AccountList -->
 
         <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodModal">
@@ -597,9 +523,9 @@
             {{> newpaymentmethodpop}}
         </div>
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+        <!-- <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
             {{> copyfrequencypop}}
-        </div>
+        </div> -->
 
         <!-- Modal Payment Method -modal -->
         <!-- <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodModal">
@@ -649,7 +575,7 @@
         <!-- End Payment Method -->
 
         <!-- Modal Customer List -->
-        <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
+        <!-- <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
             <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
                 <div class="modal-content customerListContent">
                     <div class="modal-header">
@@ -664,11 +590,12 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- End Modal Customer List -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+        <!-- <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
             {{> addcustomerpop}}
-        </div>
+        </div> -->
+        {{> all_transaction_modals customerRecord=customerRecord}}
     </div>
 
     <!-- Start Help Video Modal -->
@@ -695,4 +622,5 @@
     <script>
         modalDraggable();
     </script>
+    {{> init_form_page_script}}
 </template>

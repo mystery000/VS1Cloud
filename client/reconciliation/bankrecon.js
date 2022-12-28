@@ -165,7 +165,7 @@ Template.bankrecon.onRendered(function() {
         let okrecondep = [];
         let splashArrayReconcileDepositList = [];
         let selectedTransactionsDep = [];
-        if (localStorage.getItem("SelectedTransactionsDep") != null &&
+        if (localStorage.getItem("SelectedTransactionsDep") != undefined &&
             localStorage.getItem("SelectedTransactionsDep") != null &&
             localStorage.getItem("SelectedTransactionsDep") != "") {
             selectedTransactionsDep = JSON.parse(localStorage.getItem("SelectedTransactionsDep"));
@@ -347,7 +347,7 @@ Template.bankrecon.onRendered(function() {
         let okreconwith = [];
         let splashArrayReconcileWithdrawalList = [];
         let selectedTransactionsWith = [];
-        if (localStorage.getItem("SelectedTransactionsWith") != null &&
+        if (localStorage.getItem("SelectedTransactionsWith") != undefined &&
             localStorage.getItem("SelectedTransactionsWith") != null &&
             localStorage.getItem("SelectedTransactionsWith") != "") {
             selectedTransactionsWith = JSON.parse(localStorage.getItem("SelectedTransactionsWith"));
@@ -572,14 +572,20 @@ Template.bankrecon.onRendered(function() {
                     }
                 }
                 $('.openingbalance').val(utilityService.modifynegativeCurrencyFormat(openBal) || 0);
+                $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(openBal) || Currency + "0.00");
+                $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(openBal) || Currency + "0.00");
                 $('.vs1cloudBalance').text(utilityService.modifynegativeCurrencyFormat(openBal) || 0);
             } else {
                 $('.openingbalance').val(Currency + '0');
+                $('.clearedBalance').text(Currency + "0.00");
+                $('.differenceCalc').text(Currency + "0.00");
                 $('.vs1cloudBalance').text(Currency + '0');
             }
             // $('#openingbalance2').val(utilityService.modifynegativeCurrencyFormat(openBal));
         }).catch(function(err) {
             $('.openingbalance').val(Currency + '0');
+            $('.clearedBalance').text(Currency + "0.00");
+            $('.differenceCalc').text(Currency + "0.00");
             $('.fullScreenSpin').css('display', 'none');
         });
     };
@@ -1446,19 +1452,46 @@ Template.bankrecon.onRendered(function() {
                 gutterSize: 4,
             });
 
-            $(document).on("click", ".gutter", function(e) {
+            const source = document.querySelector(".gutter-vertical");
+            source.addEventListener("pointermove", (event) => {
                 setTimeout(function() {
-                    var topHeight = parseInt($("#topList").height()) - 73;
+                    var topHeight = parseInt($("#topList").height()) - 69;
                     $("#topList .card-body").css("height", topHeight);
-                    var bottomHeight = parseInt($("#bottomList").height()) - 73;
+                    var bottomHeight = parseInt($("#bottomList").height()) - 48;
                     $("#bottomList .card-body").css("height", bottomHeight);
 
                     localStorage.setItem('topPanHeight', $("#topList").height());
                     localStorage.setItem('bottomPanHeight', $("#bottomList").height());
                     localStorage.setItem('topListHeight', topHeight);
                     localStorage.setItem('bottomListHeight', bottomHeight);
-                }, 500);
+                }, 1);
             });
+            source.addEventListener("mouseout", (event) => {
+                setTimeout(function() {
+                    var topHeight = parseInt($("#topList").height()) - 69;
+                    $("#topList .card-body").css("height", topHeight);
+                    var bottomHeight = parseInt($("#bottomList").height()) - 48;
+                    $("#bottomList .card-body").css("height", bottomHeight);
+
+                    localStorage.setItem('topPanHeight', $("#topList").height());
+                    localStorage.setItem('bottomPanHeight', $("#bottomList").height());
+                    localStorage.setItem('topListHeight', topHeight);
+                    localStorage.setItem('bottomListHeight', bottomHeight);
+                }, 10);
+            });
+            // $(document).on("click", ".gutter", function(e) {
+            //     setTimeout(function() {
+            //         var topHeight = parseInt($("#topList").height()) - 69;
+            //         $("#topList .card-body").css("height", topHeight);
+            //         var bottomHeight = parseInt($("#bottomList").height()) - 48;
+            //         $("#bottomList .card-body").css("height", bottomHeight);
+
+            //         localStorage.setItem('topPanHeight', $("#topList").height());
+            //         localStorage.setItem('bottomPanHeight', $("#bottomList").height());
+            //         localStorage.setItem('topListHeight', topHeight);
+            //         localStorage.setItem('bottomListHeight', bottomHeight);
+            //     }, 100);
+            // });
 
             if (localStorage.getItem('topListHeight')) {
                 $("#topList").css("height", parseInt(localStorage.getItem('topPanHeight')));
@@ -1527,6 +1560,12 @@ Template.bankrecon.onRendered(function() {
         let statementDate = statementDateData.getFullYear() + "-" + (statementDateData.getMonth() + 1) + "-" + statementDateData.getDate();
 
         if (accountTypeId != "") {
+            if(Session.get('bankaccountid') != accountTypeId){
+                localStorage.setItem("SelectedTransactionsDep", "");
+                localStorage.setItem("SelectedTransactionsWith", "");
+                templateObject.selectedTransdep.set([]);
+                templateObject.selectedTranswith.set([]);
+            }
             Session.setPersistent('bankaccountid', accountTypeId);
             Session.setPersistent('bankaccountname', accountname);
             templateObject.getOpenBalance(accountname);
@@ -2013,7 +2052,8 @@ Template.bankrecon.events({
         }
     },
     'blur .endingbalance': function(e) {
-        // let dataValue = event.target.value.replace(/[^0-9.-]+/g, "") || 0;
+        let dataValue = parseFloat(event.target.value) || 0;
+        $('#endingbalance, #endingbalance2').val(dataValue);
         // if (dataValue != "") {
         //     $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(dataValue));
         // }
@@ -2028,8 +2068,9 @@ Template.bankrecon.events({
     },
     'keyup .endingbalance, change .endingbalance': function(e) {
 
-        var displayEndBal2 = parseFloat(event.target.value) || 0;
-        $('#endingbalance2').val(displayEndBal2);
+        // var displayEndBal2 = parseFloat(event.target.value) || 0;
+        var displayEndBal2 = event.target.value.replace(/[^0-9.-]+/g, "") || "";
+        $('#endingbalance, #endingbalance2').val(displayEndBal2);
         $('.endingBalanceCalc').text(utilityService.modifynegativeCurrencyFormat(displayEndBal2) || Currency + "0.00");
 
         // Calc Difference

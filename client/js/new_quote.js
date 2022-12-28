@@ -6282,6 +6282,7 @@ Template.new_quote.events({
         $('.chkUnitPriceEx').prop("checked", true);
         $('.chkUnitPriceInc').prop("checked", false);
     },
+
     'click #btnCustomFileds': function(event) {
         const x = document.getElementById("divCustomFields");
         if (x.style.display === "none") {
@@ -7703,6 +7704,13 @@ Template.new_quote.events({
                             }
                         }
                         contactService.saveCustomerEx(customerData).then(function (objDetails) {
+
+                            if (localStorage.getItem("enteredURL") != null) {
+                                FlowRouter.go(localStorage.getItem("enteredURL"));
+                                localStorage.removeItem("enteredURL");
+                                return;
+                            }
+
                             let customerSaveID = objDetails.fields.ID;
                             if (customerSaveID) {
                                 sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function (dataReload) {
@@ -8503,7 +8511,21 @@ Template.new_quote.events({
             $('.colSerialNo').removeClass('showColumn');
         }
     },
+    "click .chkFixedAsset": function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colFixedAsset').addClass('showColumn');
+            $('.colFixedAsset').removeClass('hiddenColumn');
+        } else {
+            $('.colFixedAsset').addClass('hiddenColumn');
+            $('.colFixedAsset').removeClass('showColumn');
+        }
+    },
     // display settings
+    'change .rngRangeFixedAsset': function(event) {
+        let range = $(event.target).val();
+        $(".spWidthFixedAsset").html(range);
+        $('.colFixedAsset').css('width', range);
+    },
     'change .rngRangeProductName': function(event) {
         let range = $(event.target).val();
         // $(".spWidthProductName").html(range);

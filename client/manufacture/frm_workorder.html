@@ -5,62 +5,19 @@
         </div>
 
         <!-- {{#if workorderrecord}} -->
+      
             <form>
-                <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;">
-                    <h2 style="margin: 16px;" class="heading">
-                        {{workorderrecord.lid}}
-                        {{> helpbutton}}
-                    </h2>
-                    <div class="printID" id="{{workorderrecord.id}}" style="display: none;">{{workorderrecord.salesorderid}}</div>
-                </header>
-  
-                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                    <div class="modal-dialog modal-sm" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="padding-bottom: 8px;">
-                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                                <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=65" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
-                            </div>
-                            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                        </div>
-                    </div>
-                </div>
-
-
-               
-
-                <!-- View File Attachemt -->
-                <div id="files_view" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">x</button>
-                                <h4 class="modal-title">{{uploadedFile.name}}</h4>
-                            </div>
-                            <div class="modal-body">
-                                {{#if uploadedFile.image}}
-                                    <div class="image-previewer">
-                                        <img src="{{uploadedFile.link}}">
-                                    </div>
-                                {{else}}
-                                    <div class=" default-file {{uploadedFile.class}}">
-
-                                    </div>
-                                {{/if}}
-                                <div class="download_button">
-                                    <a class="new_create_btn btn btn-primary" id="downloadButton" download="{{uploadedFile.name}}" href="{{uploadedFile.link}}">Download</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End View File attachment -->
+                {{> transaction_header
+                    cardType="Sales Order"
+                    data=workorderrecord
+                    uploadedFile=uploadedFile
+                    isCurrencyEnable=isCurrencyEnable
+                    showCustomer=true
+                    showBilingAddress=true
+                    showSalesDate=true
+                    showPONumber=true
+                    showOrderNumber=true
+                }}
                 <div class="row">
                     <div class="col-12 col-xl-8">
                         <div class="row" style="margin: 8px 16px 0px 16px;">
@@ -72,17 +29,17 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 col-xl-2">
-                                    <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY">
-                                        <label>Sale Date</label>
-                                        <div class="input-group date" style="cursor: pointer;">
-                                            <input type="text" class="form-control" id="dtSODate" name="dtSODate" value="{{workorderrecord.saledate}}"/>
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {{> single_date_picker
+                                            label="Sale Date"
+                                            id="dtSODate"
+                                            name="dtSODate"
+                                            defaultValue=workorderrecord.saledate
+                                          }}
                             </div>
                         </div>
+
+
+                        
                         <div class="row" style="margin: 16px 16px 0px 16px;">
                             <div class="col-12 col-md-6 col-xl-4">
                                 <div class="form-group"><label>Billing Address</label>
@@ -502,7 +459,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button class="btn btn-success btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                <button class="btn btn-success btnSave btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                 <button class="btn btn-warning btnResetGridSettings" type="button"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
                                                 <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                             </div>
@@ -585,7 +542,7 @@
                                     vertical-align: top;
                                 }
                             </style>
-                            {{> deletepop itemName1="Sales Order" itemName2="sales order" itemName3="Sales Order" button1="btnDeleteSO" button2="btnDeleteFollowingSOs"}}
+                            <!-- {{> deletepop itemName1="Sales Order" itemName2="sales order" itemName3="Sales Order" button1="btnDeleteSO" button2="btnDeleteFollowingSOs"}} -->
                             <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -773,7 +730,7 @@
                           
                             <div class="col-12">
                                 <div class="row justify-content-center desktopButtons">
-                                    {{> transaction_footer margin="16px" AttachmentCount=attachmentCount TransactionType="workorders" }}
+                                    {{> transaction_footer AttachmentCount=attachmentCount TransactionType="workorders" }}
                                 </div>
   
                             </div>
@@ -972,4 +929,6 @@
         </div>
         <!-- END Attachments -->
     </div>
+
+    {{> init_form_page_script}}
 </template>

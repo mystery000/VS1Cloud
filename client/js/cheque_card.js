@@ -80,8 +80,25 @@ Template.chequecard.onRendered(() => {
     if (getso_id[1]) {
       currentInvoice = parseInt(currentInvoice);
       var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
-      var isRepeated = chequeData.fields.RepeatedFrom;
-      templateObject.hasFollow.set(isRepeated);
+      var orderDate = chequeData.fields.OrderDate;
+      var fromDate = orderDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingCheques = await sideBarService.getAllChequeListData(
+        fromDate,
+        toDate,
+        false,
+        initialReportLoad,
+        0
+      );
+      var chequeList = followingCheques.tchequelist;
+      if(chequeList.length > 1){
+        templateObject.hasFollow.set(true);
+      } else {
+        templateObject.hasFollow.set(false);
+      }
+      // changes between luckdev and main branch
+      // var isRepeated = chequeData.fields.RepeatedFrom;
+      // templateObject.hasFollow.set(isRepeated);
     }
   }
   templateObject.hasFollowings();
@@ -236,6 +253,7 @@ Template.chequecard.onRendered(() => {
         setTimeout(function () {
           $("#sltChequeBankAccountName").val(lastBankAccount);
           $("#ponumber").val(newChequeID);
+
         }, 500);
       })
       .catch(function (err) {
@@ -4501,7 +4519,8 @@ Template.chequecard.onRendered(() => {
       html2pdf().set(opt).from(source).toPdf().output('datauristring').then((data)=>{
         let attachment = [];
         let base64data = data.split(',')[1];
-        let chequeId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: ''
+        let chequeId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: '';
+
         pdfObject = {
             filename: 'Cheque-' + chequeId + '.pdf',
             content: base64data,
@@ -7016,6 +7035,12 @@ Template.chequecard.events({
       };
 
       purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
+
+          if (localStorage.getItem("enteredURL") != null) {
+              FlowRouter.go(localStorage.getItem("enteredURL"));
+              localStorage.removeItem("enteredURL");
+              return;
+          }
 
           const supplierID = $("#edtSupplierEmail").attr("supplierid");
           localStorage.setItem("check_acc", bankAccount);

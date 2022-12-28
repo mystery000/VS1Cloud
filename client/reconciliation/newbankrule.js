@@ -18,11 +18,15 @@ const successSaveCb = () => {
         showCancelButton: false,
         confirmButtonText: "OK",
     });
+
+  if (localStorage.getItem("enteredURL") != null) {
+    FlowRouter.go(localStorage.getItem("enteredURL"));
+    localStorage.removeItem("enteredURL");
+    return;
+  }
 }
 
 const errorSaveCb = (err) => {
-    // console.log(err);
-    // LoadingOverlay.hide();
     swal("Something went wrong", "", "error");
 }
 

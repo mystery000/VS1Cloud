@@ -437,7 +437,6 @@ addVS1Data = async function(objectName, vs1Data) {
         data: vs1Data,
         timestamp: currenctUpdateDate
     };
-
     let objectStore = transaction.objectStore(objectName);
     objectStore.put(loginInfo);
 };
@@ -596,7 +595,7 @@ getStoreToDelete = async function(email) {
 openDbCheckVersion = async function() {
     var promiseversion = new Promise((resolve, reject) => {
         var versionExists = false;
-        let dbReqVersion = indexedDB.open('TDatabaseVersion', 106);
+        let dbReqVersion = indexedDB.open('TDatabaseVersion', 107);
         dbReqVersion.onsuccess = function() {
             resolve(versionExists);
         };

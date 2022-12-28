@@ -13,7 +13,6 @@
       isCurrencyEnable=isCurrencyEnable
       custfields=custfields
       showTemplateModals=true
-      showUploadAttachment=true
       showTransactionButtons=true
       salesCloudPreferenceRec=salesCloudPreferenceRec
       abletomakeworkorder=abletomakeworkorder
@@ -46,8 +45,8 @@
         isBatchSerialNoTracking=isBatchSerialNoTracking
         getDefaultCurrency=getDefaultCurrency
         }}
-        {{> deletepop itemName1="Sales Order" itemName2="sales order" itemName3="Sales Order" button1="btnDeleteSO"
-        button2="btnDeleteFollowingSOs"}}
+        <!-- {{> deletepop itemName1="Sales Order" itemName2="sales order" itemName3="Sales Order" button1="btnDeleteSO"
+        button2="btnDeleteFollowingSOs"}} -->
       </div>
 
       <style>
@@ -130,7 +129,7 @@
             </div> -->
             <div class="col-12 col-md-12">
               <div class="row justify-content-center desktopButtons">
-                {{> transaction_footer margin="12px" AttachmentCount=attachmentCount TransactionType="sales" data=salesorderrecord cardType="Sales Order" }}
+                {{> transaction_footer margin="12px" AttachmentCount=attachmentCount TransactionType="sales" }}
               </div>
 
             </div>
@@ -1110,4 +1109,5 @@
   <script>
     modalDraggable();
   </script>
+    {{> init_form_page_script}}
 </template>

@@ -33,7 +33,7 @@
     <form>
       {{> transaction_header cardType="PO" data=purchaseorderrecord
       uploadedFile=uploadedFile isCurrencyEnable=isCurrencyEnable
-      custfields=custfields showUploadAttachment=true
+      custfields=custfields
       showTransactionButtons=true
       salesCloudPreferenceRec=salesCloudPreferenceRec showCustomer=true
       showBilingAddress=true showSalesDate=true showPONumber=false
@@ -42,21 +42,10 @@
       showShippingInfo=true showPayment=true showCopyTransaction=true
       showCopyToInvoice=false showCopyToOrder=false }}
 
-      <div
-        class="modal fade"
-        id="templatePreviewModal"
-        tabindex="2"
-        role="dialog"
-        aria-labelledby="templatePreviewLabel"
-        aria-hidden="true"
-      >
-        {{> custom_print_template modalId="templatePreviewModal"
-        idPrefix="html-2-pdfwrapper_quotes" namePrefix="pdfwrapper_quotes" }}
-      </div>
-
+<!-- 
       {{> deletepop itemName1="Purchase Order" itemName2="purchase order"
       itemName3="Purchase Order" button1="btnDeletePO"
-      button2="btnDeleteFollowingPOs"}}
+      button2="btnDeleteFollowingPOs"}} -->
       <div>
         {{> transaction_line tablename="tblPurchaseOrderLine"
         recordLineItems=purchaseorderrecord.LineItems
@@ -150,7 +139,7 @@
           <div class="row">
             <div class="col-12 col-md-11">
               <div class="row justify-content-center desktopButtons">
-                {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="purchaseorders"}}
+                {{> transaction_footer AttachmentCount=attachmentCount TransactionType="purchaseorders"}}
               </div>
             </div>
           </div>
@@ -227,30 +216,13 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-12 col-md-6 col-lg-4 col-xl-5">
-                        <button class="btn btn-primary" type="button" id="addRow" style="margin-bottom: 120px;">+ Add New Entry</button>
-                        <div class="form-group"><label>Comments</label>
-                            <textarea class="form-control" rows="4" id="txaComment" name="txaComment">{{invoicerecord.comments}}</textarea>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4 col-xl-5 colComments">
-                        <div class="form-group"><label>Picking Instructions</label>
-                            <textarea class="form-control" rows="4" id="txapickmemo" name="txapickmemo">{{invoicerecord.pickmemo}}</textarea>
-                        </div>
-                    </div> -->
+       
         {{> transaction_calculation
         isPartialPaid=purchaseorderrecord.isPartialPaid
         SubTotal=purchaseorderrecord.SubTotal
         TotalTax=purchaseorderrecord.TotalTax Total=purchaseorderrecord.Total
         TotalPaid=purchaseorderrecord.totalPaid
         BalanceDue=purchaseorderrecord.balanceDue }}
-      </div>
-
-      <div
-        class="row justify-content-center mobileButtons"
-        style="display: none"
-      >
-        {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="purchaseorders" }}
       </div>
 
       <div class="printID" style="display: none"></div>
@@ -1138,4 +1110,5 @@
   <script>
     modalDraggable();
   </script>
+    {{> init_form_page_script}}
 </template>

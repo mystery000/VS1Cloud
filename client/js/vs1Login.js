@@ -590,7 +590,7 @@ Template.vs1login.onRendered(function () {
                 // pausevideo();
                 $('.myVS1Video').css('display', 'none');
                 $('.myVS1VideoLogin').css('display', 'none');
-
+                console.log("login here");
                 window.open('/dashboard', '_self');
                 // FlowRouter.go('/dashboard');
 
@@ -811,10 +811,10 @@ Template.vs1login.onRendered(function () {
                     $('.loginSpinner').css('display', 'none');
                     $('.fullScreenSpin').css('display', 'none');
                 } else{
-                  // await delay(500);
-                  pausevideo();
-                  $('.myVS1Video').css('display', 'none');
-                  $('.myVS1VideoLogin').css('display', 'none');
+                  //await delay(500);
+                  //pausevideo();
+                  // $('.myVS1Video').css('display', 'none');
+                  // $('.myVS1VideoLogin').css('display', 'none');
                   $('.loginSpinner').css('display', 'none');
                   $('.fullScreenSpin').css('display', 'none');
                 }
@@ -1003,6 +1003,7 @@ Template.vs1login.onRendered(function () {
               localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
 
               localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated);
+              sessionStorage.setItem("pageLoaded", true);
               if (dataReturnRes.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                   localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
               } else {
@@ -1591,14 +1592,14 @@ Template.vs1login.onRendered(function () {
                       //   FlowRouter.go('/appointments#allocationModal');
                       //   FlowRouter.go('/appointments');
                     } else if (isAppointmentLaunch == true) {
-                      //   FlowRouter.go('/appointments');
+                       //FlowRouter.go('/appointments');
                         window.open('/appointments', '_self');
                     } else {
-                      //   FlowRouter.go('/dashboard');
+                       //FlowRouter.go('/dashboard');
                         window.open('/dashboard', '_self');
                     }
                 } else {
-                  //   FlowRouter.go('/dashboard');
+                   //FlowRouter.go('/dashboard');
                     window.open('/dashboard', '_self');
                 }
               }else{
@@ -1610,7 +1611,7 @@ Template.vs1login.onRendered(function () {
         } else {
             pausevideo();
             //$('.myVS1Video').css('display', 'none');
-            $('.myVS1VideoLogin').css('display', 'none');
+            //$('.myVS1VideoLogin').css('display', 'none');
             $('.loginSpinner').css('display', 'none');
             $('.fullScreenSpin').css('display', 'none');
         }

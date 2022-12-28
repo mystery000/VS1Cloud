@@ -9,22 +9,23 @@
             }
         </style> -->
         <div style="margin-top: -24px;">
-            <header style="padding: 16px; padding-bottom: 0px; background-color: #ededed;">
-                <h2 style="margin: 16px; margin-bottom: 0px;">{{formname}} List
-                    {{> helpbutton}}
+            <header class="row" style="background-color: #ededed;">
+                <div class="col-12 col-md-4">
+                    <h2>{{formname}} List
+                        {{> helpbutton}}
 
-                    <style>
-                        @media screen and (max-width: 376px) {
-                            .btnOpenSettings {
-                                margin-right: 0px;
+                        <style>
+                            @media screen and (max-width: 376px) {
+                                .btnOpenSettings {
+                                    margin-right: 0px;
+                                }
                             }
-                        }
-                    </style>
+                        </style>
 
 
-                </h2>
-
-
+                    </h2>
+                </div>
+                <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
             </header>
 
             <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">

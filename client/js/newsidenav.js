@@ -1490,6 +1490,44 @@ Template.newsidenav.onRendered(function() {
         }).catch(function(err) {
 
         });
+
+
+        sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, false).then(function(data) {
+            countObjectTimes++;
+            progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+            $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+            $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+            $(".progressName").text("Account List ");
+
+            if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+                if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                } else {
+                    $('.headerprogressbar').addClass('headerprogressbarShow');
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                }
+
+            } else if (Math.round(progressPercentage) >= 100) {
+                $('.checkmarkwrapper').removeClass("hide");
+                setTimeout(function() {
+                    if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                        $('.headerprogressbar').removeClass('headerprogressbarShow');
+                        $('.headerprogressbar').addClass('headerprogressbarHidden');
+                    } else {
+                        $('.headerprogressbar').removeClass('headerprogressbarShow');
+                        $('.headerprogressbar').addClass('headerprogressbarHidden');
+                    }
+
+                }, 1000);
+            }
+
+            //localStorage.setItem('VS1AccountList', JSON.stringify(data) || '');
+            addVS1Data('TAccountVS1List', JSON.stringify(data));
+            $("<span class='process'>Account List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+
+        }).catch(function(err) {
+
+        });
     }
 
     templateObject.getAllProductData = function() {

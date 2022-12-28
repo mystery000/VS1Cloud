@@ -2,16 +2,42 @@
     <script>
         $(document).ready(function () {
             localStorage.setItem("isFormUpdated", false);
+            // sessionStorage.setItem("pageLoaded", true);
 
             setTimeout(() => {
-                $("#form").on("change", "input, select, textarea", function () {
+                $(document).on("change", "form input, form select, form textarea, #form input, #form select, #form textarea", function() {
                     localStorage.setItem("isFormUpdated", true);
                 });
 
+                $(document).on("keyup", "form input, form textarea, #form input, #form textarea", function() {
+                    localStorage.setItem("isFormUpdated", true);
+                });
+                $(".card").on("change", "input, select, textarea", function () {
+                    localStorage.setItem("isFormUpdated", true);
+                });
+                $(".card").on("click", "checkbox", function () {
+                    localStorage.setItem("isFormUpdated", true);
+                });
                 $(".btnSave").click(function () {
                     localStorage.setItem("isFormUpdated", false);
                 });
-            }, 3000);
+
+                if (window.location.pathname == "/newbankrule" || window.location.pathname == "/customerscard"
+                        || window.location.pathname == "/employeescard" || window.location.pathname == "/leadscard"
+                        || window.location.pathname == "/supplierscard" || window.location.pathname == "/allreports") {
+                    $(document).on("change", "input, select, textarea", function() {
+                        localStorage.setItem("isFormUpdated", true);
+                    });
+
+                    $(document).on("keyup", "input, textarea, input, textarea", function() {
+                        localStorage.setItem("isFormUpdated", true);
+                    });
+                }
+            }, 1000);
+
+            $(".btn-auto-save").click(function () {
+                localStorage.setItem("isFormUpdated", false);
+            });
         });
     </script>
 </template>

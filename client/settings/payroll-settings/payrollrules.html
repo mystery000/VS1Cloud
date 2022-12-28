@@ -3,28 +3,33 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <h3 class="text-dark mb-4">Payroll Settings
-        <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-        {{> helpbutton}}
-        <!-- Start Help View Modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                <div class="modal-dialog modal-sm" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" style="padding-bottom: 8px;">
-                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <h3 class="text-dark mb-4">Payroll Settings
+                    <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
+                    {{> helpbutton}}
+                    <!-- Start Help View Modal -->
+                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="padding-bottom: 8px;">
+                                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                    <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=22" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                    {{> helpadvisor}}
+                                    {{> helpgotoforum}}
+                                </div>
+                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=22" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                            {{> helpadvisor}}
-                            {{> helpgotoforum}}
-                        </div>
-                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                     </div>
-                </div>
+                    <!-- End Help View Modal -->
+                </h3>
+            </div>
+            <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
         </div>
-        <!-- End Help View Modal -->
-        </h3>
         <div class="row justify-content-center">
             <div class="col-12 col-md-10">
                 <div class="card shadow mb-3">
@@ -2094,9 +2099,9 @@
                                                     padding: 5px 65px 5px 15px;
                                                 }
                                             </style>
-                                            <button type="button" class="btn btn-primary btnAddNewOvertime float-right" data-toggle="modal" data-target="#btnAddNewOvertime"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New Overtime</button>
+                                            <!-- <button type="button" class="btn btn-primary btnAddNewOvertime float-right" data-toggle="modal" data-target="#btnAddNewOvertime"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New Overtime</button> -->
 
-                                            <div class="modal fade" id="btnAddNewOvertime" tabindex="-1" role="dialog" aria-labelledby="btnAddNewOvertimeLabel" aria-hidden="true">
+                                            <!-- <div class="modal fade" id="btnAddNewOvertime" tabindex="-1" role="dialog" aria-labelledby="btnAddNewOvertimeLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -2111,7 +2116,7 @@
                                                                 <div class="col-12">
                                                                     <div class="form-group">
                                                                         <label for="overtimeRateType">Rate Type</label>
-                                                                        <input class="es-input form-control overtimeRateType" id="overtimeRateType" >
+                                                                        <input class="es-input form-control overtimeRateType" id="overtimeRateType" > -->
                                                                         <!-- <select class="form-control overtimeRateType" style="cursor: pointer;" id="overtimeRateType" >
                                                                             {{#if rateTypes}}
                                                                                 {{#each rateType in rateTypes}}
@@ -2120,7 +2125,7 @@
                                                                                 {{/each}}
                                                                             {{/if}}
                                                                         </select> -->
-                                                                    </div>
+                                                                    <!-- </div>
                                                                 </div>
                                                                 <div class="col-12">
                                                                     <div class="form-group graterThenDiv">
@@ -2153,10 +2158,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <div class="col-12">
-                                            <div class="table-responsive">
+                                            {{> overtime_rules}}
+                                            <!-- <div class="table-responsive">
                                                 <style>
                                                     .btn-success.btn-sm,
                                                     .btn-sm.btn-danger {
@@ -2206,7 +2212,7 @@
                                                     </tbody>
 
                                                 </table>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>

@@ -74,9 +74,6 @@ Template.new_salesorder.onCreated(function() {
     this.uploadedFile = new ReactiveVar();
     this.uploadedFiles = new ReactiveVar([]);
     this.attachmentCount = new ReactiveVar();
-    this.displayfields = new ReactiveVar([]);
-    this.reset_data = new ReactiveVar([]);
-
     this.address = new ReactiveVar();
     this.abn = new ReactiveVar();
     this.referenceNumber = new ReactiveVar();
@@ -86,18 +83,15 @@ Template.new_salesorder.onCreated(function() {
     this.defaultsaleterm = new ReactiveVar();
     this.subtaxcodes = new ReactiveVar([]);
     this.abletomakeworkorder = new ReactiveVar(false);
-
     this.saleOrders = new ReactiveVar([]);
     this.saleOrder = new ReactiveVar();
     this.products = new ReactiveVar([]);
     this.hasFollow = new ReactiveVar(false);
-
     this.customerRecord = new ReactiveVar();
 });
 
 Template.new_salesorder.onRendered(function () {
     let templateObject = Template.instance();
-
     templateObject.hasFollowings = async function() {
         var currentDate = new Date();
         let salesService = new SalesBoardService();
@@ -110,7 +104,7 @@ Template.new_salesorder.onRendered(function () {
             var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
             var isRepeated = soData.fields.RepeatedFrom;
             templateObject.hasFollow.set(isRepeated);
-        }        
+        }
     }
     templateObject.hasFollowings();
     $('#edtFrequencyDetail').css('display', 'none');
@@ -269,37 +263,6 @@ Template.new_salesorder.onRendered(function () {
         yearRange: "-90:+10",
     });
 
-    // set initial table rest_data
-    function init_reset_data() {
-      let reset_data = [
-        { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
-        { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
-        { index: 2, label: "Qty", class: "Qty", width: "55", active: true, display: true },
-        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
-        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
-        { index: 5, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
-        { index: 6, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
-        { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
-        { index: 8, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
-        { index: 9, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-        { index: 10, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
-        { index: 11, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
-        { index: 12, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
-        { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
-      ];
-
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      if(isBatchSerialNoTracking) {
-        reset_data[11].display = true;
-      } else {
-        reset_data[11].display = false;
-      }
-
-      let templateObject = Template.instance();
-      templateObject.reset_data.set(reset_data);
-    }
-    init_reset_data();
-    // set initial table rest_data
 
     templateObject.getTemplateInfoNew = function(){
         LoadingOverlay.show();
@@ -2691,7 +2654,7 @@ Template.new_salesorder.onRendered(function () {
                             templateObject.inputSelectedCurrency.set(salesorderrecord.currncy);
                             setTimeout(()=>{
                                 templateObject.checkAbleToMakeWorkOrder()
-                            }, 100)
+                            }, 1000)
                             if (templateObject.salesorderrecord.get()) {
 
 
@@ -3029,7 +2992,7 @@ Template.new_salesorder.onRendered(function () {
                                 templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                                 setTimeout(()=>{
                                     templateObject.checkAbleToMakeWorkOrder()
-                                }, 100)
+                                }, 1000)
                                 if (templateObject.salesorderrecord.get()) {
 
 
@@ -3252,7 +3215,7 @@ Template.new_salesorder.onRendered(function () {
                                     templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                                     setTimeout(()=>{
                                         templateObject.checkAbleToMakeWorkOrder()
-                                    }, 100)
+                                    }, 1000)
                                     if (templateObject.salesorderrecord.get()) {
 
 
@@ -3591,8 +3554,7 @@ Template.new_salesorder.onRendered(function () {
                         templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                         setTimeout(()=>{
                             templateObject.checkAbleToMakeWorkOrder()
-                        }, 100)
-                      
+                        }, 1000)
                         if (templateObject.salesorderrecord.get()) {
 
 
@@ -4047,7 +4009,7 @@ Template.new_salesorder.onRendered(function () {
                     templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                     setTimeout(()=>{
                         templateObject.checkAbleToMakeWorkOrder()
-                    }, 100)
+                    }, 1000)
                     if (templateObject.salesorderrecord.get()) {
 
 
@@ -4346,7 +4308,7 @@ Template.new_salesorder.onRendered(function () {
                             templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                             setTimeout(()=>{
                                 templateObject.checkAbleToMakeWorkOrder()
-                            }, 100)
+                            }, 1000)
                             if (templateObject.salesorderrecord.get()) {
 
                                 Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
@@ -4636,7 +4598,7 @@ Template.new_salesorder.onRendered(function () {
                                 templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                                 setTimeout(()=>{
                                     templateObject.checkAbleToMakeWorkOrder()
-                                }, 100)
+                                }, 1000)
                                 if (templateObject.salesorderrecord.get()) {
 
                                     Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
@@ -4853,7 +4815,7 @@ Template.new_salesorder.onRendered(function () {
                         templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
                         setTimeout(()=>{
                             templateObject.checkAbleToMakeWorkOrder()
-                        }, 100)
+                        }, 1000)
                         if (templateObject.salesorderrecord.get()) {
 
 
@@ -5028,7 +4990,7 @@ Template.new_salesorder.onRendered(function () {
         }
     }
 
-  
+
 
     templateObject.getDepartments = function() {
         getVS1Data('TDeptClass').then(function(dataObject) {
@@ -7584,60 +7546,6 @@ Template.new_salesorder.onRendered(function() {
 
     tempObj.getSubTaxCodes();
 
-    // custom field displaysettings
-     tempObj.initCustomFieldDisplaySettings = function(data, listType) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      showCustomFieldDisplaySettings(reset_data);
-
-      try {
-        getVS1Data("VS1_Customize").then(function (dataObject) {
-          if (dataObject.length == 0) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              showCustomFieldDisplaySettings(reset_data);
-            }).catch(function (err) {
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            if(data.ProcessLog.Obj.CustomLayout.length > 0){
-             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-               if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                 showCustomFieldDisplaySettings(reset_data);
-               }
-             }
-           };
-            // handle process here
-          }
-        });
-      } catch (error) {
-      }
-      return;
-    }
-
-    function showCustomFieldDisplaySettings(reset_data) {
-
-      let custFields = [];
-      let customData = {};
-      let customFieldCount = reset_data.length;
-
-      for (let r = 0; r < customFieldCount; r++) {
-        customData = {
-          active: reset_data[r].active,
-          id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label,
-          class: reset_data[r].class,
-          display: reset_data[r].display,
-          width: reset_data[r].width ? reset_data[r].width : ''
-        };
-        custFields.push(customData);
-      }
-      tempObj.displayfields.set(custFields);
-    }
-
-    tempObj.initCustomFieldDisplaySettings("", "tblSalesOrderLine");
-
     tempObj.checkAbleToMakeWorkOrder = function() {
         let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')): [];
         let workorderList = [];
@@ -7646,41 +7554,45 @@ Template.new_salesorder.onRendered(function() {
         let temp = localStorage.getItem('TWorkorders');
         workorderList = temp?JSON.parse(temp): [];
 
-        let returnvalue = false;
-        let lineTable  = $('#tblSalesOrderLine');
-        setTimeout(function() {
+    let returnvalue = false;
 
-            let orderlines = $(lineTable).find('tbody tr')
-            for(let i = 0 ; i < orderlines.length; i++) {
-                let line =  orderlines[i];
-                let productName = $(line).find('.lineProductName').val();
-                let existBOM = false;
+    setTimeout(function () {
+      let lineTable = $("#tblSalesOrderLine");
+      let orderlines = $(lineTable).find("tbody tr");
+      for (let i = 0; i < orderlines.length; i++) {
+        let line = orderlines[i];
+        let productName = $(line).find(".lineProductName").val();
 
-                let index = bomProducts.findIndex(product => {
-                    return product.fields.productName == productName
-                })
+        let existBOM = false;
 
-                if(index > -1) {
-                    existBOM = true;
-                }
+        let index = bomProducts.findIndex((product) => {
 
-                if(existBOM == true) {
-                    //check if the workorder is already exists
-                    let workOrderIndex = workorderList.findIndex(order=>{
-                        return order.SalesOrderID == tempObj.salesOrderId.get() && order.line.fields.ProductName == productName;
-                    })
-                    if(workOrderIndex == -1) {
-                        returnvalue = true
-                    }
-                }
-            }
-        }, 1000)
+          return product.fields.productName == productName;
+        });
 
-        setTimeout(()=>{
-            tempObj.abletomakeworkorder.set(returnvalue);
-        },1000)
-    }
+        if (index > -1) {
+          existBOM = true;
+        }
 
+        if (existBOM == true) {
+          //check if the workorder is already exists
+          let workOrderIndex = workorderList.findIndex((order) => {
+              return (
+                order.SalesOrderID == tempObj.SalesOrderId.get() &&
+                order.line.fields.ProductName == productName
+              );
+
+          });
+
+          if (workOrderIndex == -1) {
+            returnvalue = true;
+          }
+
+        }
+      }
+      tempObj.abletomakeworkorder.set(returnvalue);
+    }, 2000);
+  };
 
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 
@@ -8035,8 +7947,6 @@ Template.new_salesorder.helpers({
         return _saleOrder.fields.Lines;
     },
 
-
-    ////////////////////////////////////////////////////////////////
     printEmailData: async () => {
         var splashLineArray = new Array();
         var erpGet = erpDb();
@@ -8046,7 +7956,6 @@ Template.new_salesorder.helpers({
         var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
 
         let templateObject = Template.instance();
-        console.log({ templateObject })
         // let stripe_id = templateObject.accountID.get();
         // let stripe_fee_method = templateObject.stripe_fee_method.get();
         let stripe_id = '';
@@ -8154,7 +8063,7 @@ Template.new_salesorder.helpers({
 
         let customer = $('#edtCustomerName').val();
         let customerEmail = $('#edtCustomerEmail').val();
-        
+
         let departement = $('#sltDept').val();
         let total = $('#totalBalanceDue').html() || 0;
         let tax = $('#subtotal_tax').html() || 0;
@@ -8171,7 +8080,7 @@ Template.new_salesorder.helpers({
                 ForeignExchangeRate: parseFloat(ForeignExchangeRate),
             }
         }
-        
+
         const currentSalesOrderId = parseInt(currentSalesOrder);
 
         let company = Session.get('vs1companyName');
@@ -9548,7 +9457,6 @@ Template.new_salesorder.events({
     },
     'click .printConfirm':async function (event) {
         playPrintAudio();
-        return
         setTimeout(async function(){
           var printTemplate = [];
           LoadingOverlay.show();
@@ -10965,9 +10873,9 @@ Template.new_salesorder.events({
                         }, function(error, result) {
                             if (error && error.error === "error") {
                                 if(FlowRouter.current().queryParams.trans){
-                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                                 }else{
-                                FlowRouter.go('/salesorderslist?success=true');
+                                    FlowRouter.go('/salesorderslist?success=true');
                                 };
                             } else {
                                 $('#html-2-pdfwrapper').css('display', 'none');
@@ -10978,6 +10886,13 @@ Template.new_salesorder.events({
                                     showCancelButton: false,
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
+
+                                    if (localStorage.getItem("enteredURL") != null) {
+                                        FlowRouter.go(localStorage.getItem("enteredURL"));
+                                        localStorage.removeItem("enteredURL");
+                                        return;
+                                    }
+
                                     if (result.value) {
                                         if(FlowRouter.current().queryParams.trans){
                                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
@@ -11529,9 +11444,22 @@ Template.new_salesorder.events({
       $('.colSerialNo').removeClass('showColumn');
     }
   },
+  "click .chkFixedAsset": function(event) {
+    if ($(event.target).is(':checked')) {
+        $('.colFixedAsset').addClass('showColumn');
+        $('.colFixedAsset').removeClass('hiddenColumn');
+    } else {
+        $('.colFixedAsset').addClass('hiddenColumn');
+        $('.colFixedAsset').removeClass('showColumn');
+    } 
+  },
   // display settings
 
-
+  'change .rngRangeFixedAsset': function(event) {
+    let range = $(event.target).val();
+    $(".spWidthFixedAsset").html(range);
+    $('.colFixedAsset').css('width', range);
+  },
   'change .rngRangeProductName': function(event) {
     let range = $(event.target).val();
     $(".spWidthProductName").html(range);
@@ -11605,115 +11533,6 @@ Template.new_salesorder.events({
         // $("" + columHeaderUpdate + "").html(columData);
     },
 
-    // custom field displaysettings
-    'click .btnSaveGridSettings': async function(event) {
-        playSaveAudio();
-        let templateObject = Template.instance();
-        setTimeout(async function(){
-      let lineItems = [];
-      $(".fullScreenSpin").css("display", "inline-block");
-
-      $(".displaySettings").each(function (index) {
-        var $tblrow = $(this);
-        var fieldID = $tblrow.attr("custid") || 0;
-        var colTitle = $tblrow.find(".divcolumn").text() || "";
-        var colWidth = $tblrow.find(".custom-range").val() || 0;
-        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-        var colHidden = false;
-        if ($tblrow.find(".custom-control-input").is(":checked")) {
-          colHidden = true;
-        } else {
-          colHidden = false;
-        }
-        let lineItemObj = {
-          index: parseInt(fieldID),
-          label: colTitle,
-          active: colHidden,
-          width: parseInt(colWidth),
-          class: colthClass,
-          display: true
-        };
-
-        lineItems.push(lineItemObj);
-      });
-
-
-      let reset_data = templateObject.reset_data.get();
-      reset_data = reset_data.filter(redata => redata.display == false);
-      lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index);
-
-      try {
-        let erpGet = erpDb();
-        let tableName = "tblSalesOrderLine";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-        $(".fullScreenSpin").css("display", "none");
-        if(added) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-              addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-          });
-          swal({
-            title: 'SUCCESS',
-            text: "Display settings is updated!",
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'OK'
-          }).then((result) => {
-              if (result.value) {
-                 $('#myModal2').modal('hide');
-              }
-          });
-        } else {
-          swal("Something went wrong!", "", "error");
-        }
-      } catch (error) {
-        $(".fullScreenSpin").css("display", "none");
-        swal("Something went wrong!", "", "error");
-      }
-    }, delayTimeAfterSound);
-    },
-
-    // custom field displaysettings
-    'click .btnResetGridSettings': function(event) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      if(isBatchSerialNoTracking) {
-        reset_data[11].display = true;
-      } else {
-        reset_data[11].display = false;
-      }
-      reset_data = reset_data.filter(redata => redata.display);
-
-      $(".displaySettings").each(function (index) {
-        let $tblrow = $(this);
-        $tblrow.find(".divcolumn").text(reset_data[index].label);
-        $tblrow
-          .find(".custom-control-input")
-          .prop("checked", reset_data[index].active);
-
-        let title = $("#tblSalesOrderLine").find("th").eq(index);
-        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
-        } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
-        } else {
-          $(title).html(reset_data[index].label);
-        }
-
-
-        if (reset_data[index].active) {
-          $('.col' + reset_data[index].class).addClass('showColumn');
-          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
-        } else {
-          $('.col' + reset_data[index].class).addClass('hiddenColumn');
-          $('.col' + reset_data[index].class).removeClass('showColumn');
-        }
-        $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
-        $(".col" + reset_data[index].class).css('width', reset_data[index].width);
-      });
-    },
 
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({

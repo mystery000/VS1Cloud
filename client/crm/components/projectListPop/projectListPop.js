@@ -24,9 +24,10 @@ Template.projectListPop.onRendered(function() {
                 if (data.tprojectlist && data.tprojectlist.length > 0) {
                     let tprojectlist = data.tprojectlist;
                     let all_projects = data.tprojectlist;
-
+                    
                     var url = new URL(window.location.href);
-                    let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+                    // let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+                    let employeeID = '';
 
                     if (employeeID) {
                         all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
@@ -61,8 +62,7 @@ Template.projectListPop.onRendered(function() {
                         templateObject.initProjectsTable();
                     }, 100);
                 } else {
-                    templateObject.tprojectlist.set([]);
-                    $(".crm_project_count").html(0);
+                    templateObject.getTProjectList();
                 }
             }
         }).catch(function(err) {
@@ -73,7 +73,8 @@ Template.projectListPop.onRendered(function() {
     templateObject.getTProjectList = function() {
         var url = FlowRouter.current().path;
         url = new URL(window.location.href);
-        let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+        // let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+        let employeeID = '';
 
         crmService.getTProjectList(employeeID).then(function(data) {
             if (data.tprojectlist && data.tprojectlist.length > 0) {

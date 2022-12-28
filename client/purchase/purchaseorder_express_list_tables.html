@@ -10,17 +10,22 @@
         </style> -->
         <div style="margin-top: -24px;">
             <header style="padding: 16px;background-color: #ededed;">
-                <h2 style="margin: 16px; margin-bottom: 0px;">Purchase Order List {{> helpbutton}}
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <h2 style="margin: 16px; margin-bottom: 0px;">Purchase Order List {{> helpbutton}}
 
-                    <style>
-                        @media screen and (max-width: 376px) {
-                            .btnOpenSettings {
-                                margin-right: 0px;
-                            }
-                        }
-                    </style>
+                            <style>
+                                @media screen and (max-width: 376px) {
+                                    .btnOpenSettings {
+                                        margin-right: 0px;
+                                    }
+                                }
+                            </style>
 
-                </h2>
+                        </h2>
+                    </div>
+                    <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+                </div>
             </header>
 
             <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">

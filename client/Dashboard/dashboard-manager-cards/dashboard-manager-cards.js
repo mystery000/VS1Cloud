@@ -70,7 +70,6 @@ Template.dashboardManagerCards.onRendered(() => {
         //         // const lastMonthUnix = moment().subtract(1, 'months').unix();
         //         const fromDate = new Date($("#dateFrom").datepicker("getDate"));
         //         const toDate = new Date($("#dateTo").datepicker("getDate"));
-        //         alert(fromDate);
         //         const lastYearUnix = moment().subtract(12, 'months').unix();
 
         //         tinvoicelist.forEach(tinvoice => {
