@@ -22305,7 +22305,6 @@ Template.payrollrules.events({
 
     'change #overtimeRateType': (e, ui) => {
         let evalue = $(e.currentTarget).val();
-        console.log('evalue:',evalue)
         switch(evalue) {
             case 'Time & Half':
                 $('.graterThenDiv').css('display', 'block');
