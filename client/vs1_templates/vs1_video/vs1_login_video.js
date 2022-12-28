@@ -1,3 +1,5 @@
+import { Template } from 'meteor/templating';
+import './vs1_login_video.html';
 Template.vs1_login_video.onRendered(function () {
   const instance = this
   const parent = instance.find('#video-parent')

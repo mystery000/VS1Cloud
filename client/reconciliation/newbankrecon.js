@@ -807,8 +807,8 @@ Template.newbankrecon.onRendered(function() {
 
                         } else {
                             if (data.treconciliation[k].OnHold == true) {
-                                Session.setPersistent('bankaccountid', data.treconciliation[k].AccountID);
-                                Session.setPersistent('bankaccountname', data.treconciliation[k].AccountName);
+                                Session.set('bankaccountid', data.treconciliation[k].AccountID);
+                                Session.set('bankaccountname', data.treconciliation[k].AccountName);
                             }
                         }
                     }
@@ -1354,11 +1354,11 @@ Template.newbankrecon.onRendered(function() {
                 bankaccountid = accountId;
                 bankaccountname = accountname;
                 if (bankaccountid != Session.get('bankaccountid')) {
-                    Session.setPersistent('bankaccountid', accountId);
-                    Session.setPersistent('bankaccountname', accountname);
+                    Session.set('bankaccountid', accountId);
+                    Session.set('bankaccountname', accountname);
                     // setTimeout(function () {
-                    //     Session.setPersistent('bankaccountid', accountId);
-                    //     Session.setPersistent('bankaccountname', accountname);
+                    //     Session.set('bankaccountid', accountId);
+                    //     Session.set('bankaccountname', accountname);
                     //     window.open('/newbankrecon', '_self');
                     // }, 500);
                 }

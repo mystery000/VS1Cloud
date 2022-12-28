@@ -1837,7 +1837,7 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
                 selectedAwaitingPayment.push(paymentTransObj);
             }
         });
-        Session.setPersistent('paymentsArray',JSON.stringify(selectedAwaitingPayment));
+        Session.set('paymentsArray',JSON.stringify(selectedAwaitingPayment));
         templateObject.selectedAwaitingPayment.set(selectedAwaitingPayment);
 
         setTimeout(function () {
@@ -1953,7 +1953,7 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
                  });
                 let url = '/paymentcard?selectcust=' + allData[0].selectCust
                 allData.shift();
-                Session.setPersistent('customerpayments', JSON.stringify(allData));
+                Session.set('customerpayments', JSON.stringify(allData));
                 window.open(url,'_self');
             }
         }

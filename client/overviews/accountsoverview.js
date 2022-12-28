@@ -1451,18 +1451,18 @@ Template.accountsoverview.events({
                 addVS1Data("TAccountVS1", JSON.stringify(data)).then(function(datareturn) {
                   sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0,false).then(function(dataAccount) {
                           addVS1Data("TAccountVS1List", JSON.stringify(dataAccount)).then(function(datareturn) {
-                                  window.open("/accountsoverview", "_self");
+                                  //window.open("/accountsoverview", "_self");
                               }).catch(function(err) {
-                                  window.open("/accountsoverview", "_self");
+                                  //window.open("/accountsoverview", "_self");
                               });
                       }).catch(function(err) {
-                          window.open("/accountsoverview", "_self");
+                          //window.open("/accountsoverview", "_self");
                       });
                     }).catch(function(err) {
-                        window.open("/accountsoverview", "_self");
+                        //window.open("/accountsoverview", "_self");
                     });
             }).catch(function(err) {
-                window.open("/accountsoverview", "_self");
+                //window.open("/accountsoverview", "_self");
             });
     },
     "click .btnBatchUpdate": function() {

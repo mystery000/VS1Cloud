@@ -1,8 +1,36 @@
-import {
-    ReactiveVar
-} from 'meteor/reactive-var';
-// client/main.js
+import { Template } from 'meteor/templating';
+import { ReactiveVar } from 'meteor/reactive-var';
+import { Session } from 'meteor/session';
 import '../imports/startup/client/serviceWorker.js';
+// client/main.js
+import './body.html';
+import './Login/vs1_login.html';
+// import './setup/setup.html';
+import './js/vs1Login.js';
+
+import './Navigation/newsidenav.html';
+import './Navigation/header.html';
+import './popUps/supportpopup.html';
+import './vs1_templates/global_search/vs1_global_search_modal.html';
+
+
+// import './lib/global/utBarcodeConst.js';
+// import './setup/setup.html';
+// import './setup/setup.js';
+
+
+import './vs1_templates/vs1_video/vs1_login_video.html';
+import './popUps/vs1_databasepopup.html';
+import './Help_Form/help_advisor.html';
+import './Help_Form/help_gotoforum.html';
+import './route.js';
+// import '/imports/startup/client';
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+//import { FlowRouter } from 'meteor/kadira:flow-router';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
+
 Template.body.onCreated(function bodyOnCreated() {
     const templateObject = Template.instance();
     Meteor.subscribe('RegisterUsers');
@@ -59,4 +87,11 @@ Template.body.helpers({
         let checkGreenTrack = Session.get('isGreenTrack') || false;
         return checkGreenTrack;
     }
+});
+Template.registerHelper('equals', function (a, b) {
+    return a === b;
+});
+
+Template.registerHelper('notEquals', function (a, b) {
+    return a != b;
 });
