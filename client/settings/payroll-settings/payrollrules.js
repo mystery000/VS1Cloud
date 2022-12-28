@@ -5781,6 +5781,7 @@ Template.payrollrules.onRendered(function() {
 
     templateObject.loadRateTypes = async (refresh = false) => {
         let rates  = await getRateTypes(refresh);
+        console.log('rates:',rates)
         if(rates) {
             // rates = rates.length > 0 ? rates.tpayratetype.map(rate => rate.fields) : [];
             await templateObject.rateTypes.set(rates);
@@ -22279,7 +22280,7 @@ Template.payrollrules.events({
 
      "click #overtimeRateType, click #edtRateType": (e, ui) => {
         $(e.currentTarget).addClass('paste-rate');
-        $('#select-rate-type-modal').modal('show');
+        // $('#select-rate-type-modal').modal('show');
 
      },
 
@@ -22374,7 +22375,7 @@ export const getOvertimes = async () => {
     let overtimesData = await getVS1Data(erpObject.TPayrollSettingOvertimes);
     let overtimes = overtimesData.length > 0 ? JSON.parse(overtimesData[0].data) : [];
     const rateTypes = await getRateTypes();
-
+    console.log('rateTypes==========>',rateTypes)
     // This part is handling the auto add of default values in the list
     let defaultOvertimes = PayrollSettingsOvertimes.getDefaults();
     defaultOvertimes.forEach((defaultOvertime) => {
