@@ -3,6 +3,8 @@ import Tvs1chart from "../Api/Model/Tvs1Chart";
 import Tvs1ChartDashboardPreference from "../Api/Model/Tvs1ChartDashboardPreference";
 import Tvs1ChartDashboardPreferenceField from "../Api/Model/Tvs1ChartDashboardPreferenceField";
 import ApiService from "../Api/Module/ApiService";
+import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
 const employeeId = Session.get("mySessionEmployeeLoggedID");
 export default class ChartHandler {
   constructor() {}
