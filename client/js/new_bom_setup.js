@@ -235,7 +235,13 @@ Template.bom_setup.events({
             localStorage.setItem('TProcTree', JSON.stringify(bomProducts));
             $('.fullScreenSpin').css('display', 'none')
             swal('BOM Settings Successfully Saved', '', 'success');
-            
+
+            if (localStorage.getItem("enteredURL") != null) {
+                FlowRouter.go(localStorage.getItem("enteredURL"));
+                localStorage.removeItem("enteredURL");
+                return;
+            }
+
             FlowRouter.go('/bomlist?success=true')
         }
 

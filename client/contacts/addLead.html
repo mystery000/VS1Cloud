@@ -76,10 +76,13 @@
                         }
                     }
                 </style>
-                <div class="d-sm-flex justify-content-between align-items-center mb-4" style="margin-left: 8px;">
-                    <h2 class="text-dark mb-0">Lead Overview Dashboard
-                        {{> helpbutton}}
-                    </h2>
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <h2 class="text-dark mb-0">Lead Overview Dashboard
+                            {{> helpbutton}}
+                        </h2>
+                    </div>
+                    <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
                 </div>
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                     <div class="modal-dialog modal-sm" role="document">
@@ -473,26 +476,26 @@
                                                             <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
                                                                 <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
                                                                 <style>
-                                                                    #tblLeadCrmList{
+                                                                    #tblLeadCrmListWithDate{
                                                                         width:100% !important;
                                                                     }
-                                                                    #tblLeadCrmList .colDate{
+                                                                    #tblLeadCrmListWithDate .colDate{
                                                                         width:15% !important;
                                                                     }
-                                                                    #tblLeadCrmList .colTaskName{
+                                                                    #tblLeadCrmListWithDate .colTaskName{
                                                                         width:20% !important;
                                                                     }
-                                                                    #tblLeadCrmList .colTaskDesc{
+                                                                    #tblLeadCrmListWithDate .colTaskDesc{
                                                                         width:35% !important;
                                                                     }
-                                                                    #tblLeadCrmList .colCompletedBy{
+                                                                    #tblLeadCrmListWithDate .colCompletedBy{
                                                                         width:15% !important;
                                                                     }
-                                                                    #tblLeadCrmList .colCompleteTask{
+                                                                    #tblLeadCrmListWithDate .colCompleteTask{
                                                                         width:15% !important;
                                                                     }
                                                                 </style>
-                                                                {{> non_transactional_list tablename="tblLeadCrmList"}}
+                                                                {{> non_transactional_list tablename="tblLeadCrmListWithDate"}}
                                                             </div>
                                                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-4" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                                 <div class="row no-gutters flex-column" style="margin: 12px;">
@@ -820,7 +823,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="d-xl-flex justify-content-between align-items-xl-center" style="margin: 16px 0px 0px 0px;">
-                                                    <button class="btn btn-success btnSave" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                    <button class="btn btn-success btnSave btn-auto-save" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                     <div>
                                                         <button class="btn btn-warning btnTask" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Task</button>
                                                         <button class="btn btn-primary btnEmail" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Email</button>
@@ -1092,4 +1095,6 @@
     <script>
         modalDraggable();
     </script>
+    {{> init_form_page_script}}
+
 </template>

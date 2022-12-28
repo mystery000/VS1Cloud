@@ -45,12 +45,15 @@
     }
   </style>
   <div class="modal-content" style="border: none; padding: 10px">
-    <div class="modal-header justify-content-start" style="border: none;">
-      <h2 style="">
-        <div style="float: left;">Electronic Funds Transfer</div>
-      </h2>
-      {{> helpbutton}}
-    </div>
+      <div class="row">
+          <div class="col-12 col-md-4">
+              <h2 style="">
+                  <div style="float: left;">Electronic Funds Transfer</div>
+              </h2>
+              {{> helpbutton}}
+          </div>
+          <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+      </div>
 
     <div class="modal-body">
       <div class="row">

@@ -7,8 +7,13 @@
         <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: #ededed; z-index: -1;"></div>
         <div style="margin-top: 24px">
             <header style="padding: 16px; padding-bottom: 1px; background-color: #ededed;">
-                <h2 style="margin: 16px;">BOM Set up {{> helpbutton}}
-                </h2>
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <h2 style="margin: 16px;">BOM Set up {{> helpbutton}}
+                        </h2>
+                    </div>
+                    <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+                </div>
             </header>
             <div style="padding: 0px 12px;">
                 <div class="col-12 col-xl-10 col-xxl-8 mx-auto">
@@ -107,7 +112,7 @@
                         </div> -->
                         {{> bom_template}}
                         <div class="card-footer p-3 rounded d-flex align-items-center justify-content-center px-3" style="border-top-width: 0px; gap: 15px " >
-                            <button class="btn btn-success btn-save-bom" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+                            <button class="btn btn-success btn-auto-save btn-save-bom" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
                             <button class="btn btn-primary btn-print-bom" type="button"><i class="fa fa-print" style="padding-right: 8px;"></i>Print</button>
                             <button class="btn btn-secondary btn-cancel-bom" type="button"><i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel</button>
                         </div>
@@ -242,7 +247,7 @@
                                application/vnd.apple.numbers,application/zip,application/rar,
                                application/x-zip-compressed,application/x-zip,application/x-7z-compressed">
                     {{/if}}
-                    <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button>
+                    <button class="btn btn-primary btnSave btnUploadFile new_attachment_btn" type="button"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button>
                     <button class="btn btn-success closeModal" data-dismiss="modal" type="button" style="margin-right: 5px;" autocomplete="off">
                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save
                     </button>
@@ -251,5 +256,5 @@
             </div>
         </div>
     </div>
-    
+    {{> init_form_page_script}}
 </template>

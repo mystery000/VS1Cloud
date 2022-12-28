@@ -590,7 +590,7 @@ Template.vs1login.onRendered(function () {
                 // pausevideo();
                 $('.myVS1Video').css('display', 'none');
                 $('.myVS1VideoLogin').css('display', 'none');
-
+                console.log("login here");
                 window.open('/dashboard', '_self');
                 // FlowRouter.go('/dashboard');
 
@@ -1003,6 +1003,7 @@ Template.vs1login.onRendered(function () {
               localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
 
               localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated);
+              sessionStorage.setItem("pageLoaded", true);
               if (dataReturnRes.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                   localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
               } else {

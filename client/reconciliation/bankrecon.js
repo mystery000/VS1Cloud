@@ -1,5 +1,6 @@
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../js/core-service';
+import { SideBarService } from '../js/sidebar-service';
 import { ReconService } from "./recon-service";
 import { UtilityService } from "../utility-service";
 import '../lib/global/erp-objects';
@@ -10,6 +11,7 @@ import showBankInfo from "./bankInfo";
 
 let accountService = new AccountService();
 let utilityService = new UtilityService();
+let sideBarService = new SideBarService();
 
 Template.bankrecon.onCreated(function() {
     const templateObject = Template.instance();
@@ -30,6 +32,16 @@ Template.bankrecon.onCreated(function() {
 
 Template.bankrecon.onRendered(function() {
     $('.fullScreenSpin').css('display', 'inline-block');
+    // sideBarService.getAllTBankDepositListData().then(function(data) {
+    //     console.log("-----------", data);
+    //     for(var i=0; i<data.tbankdeposit.length; i++){
+    //         if(data.tbankdeposit[i].fields.Deposit == -55){
+    //             console.log("========", data.tbankdeposit[i]);
+    //         }
+    //     }
+    // }).catch(function(err) {
+    //     $('.fullScreenSpin').css('display', 'none');
+    // });
     localStorage.setItem("reconHoldState", "false");
     $('#tblVS1Dep tbody').on('click', 'tr td.depositClick', function() {
         let paymentType = $(this).closest('tr').find('td:nth-child(5)').text();
@@ -165,7 +177,7 @@ Template.bankrecon.onRendered(function() {
         let okrecondep = [];
         let splashArrayReconcileDepositList = [];
         let selectedTransactionsDep = [];
-        if (localStorage.getItem("SelectedTransactionsDep") != null &&
+        if (localStorage.getItem("SelectedTransactionsDep") != undefined &&
             localStorage.getItem("SelectedTransactionsDep") != null &&
             localStorage.getItem("SelectedTransactionsDep") != "") {
             selectedTransactionsDep = JSON.parse(localStorage.getItem("SelectedTransactionsDep"));
@@ -347,7 +359,7 @@ Template.bankrecon.onRendered(function() {
         let okreconwith = [];
         let splashArrayReconcileWithdrawalList = [];
         let selectedTransactionsWith = [];
-        if (localStorage.getItem("SelectedTransactionsWith") != null &&
+        if (localStorage.getItem("SelectedTransactionsWith") != undefined &&
             localStorage.getItem("SelectedTransactionsWith") != null &&
             localStorage.getItem("SelectedTransactionsWith") != "") {
             selectedTransactionsWith = JSON.parse(localStorage.getItem("SelectedTransactionsWith"));
@@ -572,14 +584,20 @@ Template.bankrecon.onRendered(function() {
                     }
                 }
                 $('.openingbalance').val(utilityService.modifynegativeCurrencyFormat(openBal) || 0);
+                $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(openBal) || Currency + "0.00");
+                $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(openBal) || Currency + "0.00");
                 $('.vs1cloudBalance').text(utilityService.modifynegativeCurrencyFormat(openBal) || 0);
             } else {
                 $('.openingbalance').val(Currency + '0');
+                $('.clearedBalance').text(Currency + "0.00");
+                $('.differenceCalc').text(Currency + "0.00");
                 $('.vs1cloudBalance').text(Currency + '0');
             }
             // $('#openingbalance2').val(utilityService.modifynegativeCurrencyFormat(openBal));
         }).catch(function(err) {
             $('.openingbalance').val(Currency + '0');
+            $('.clearedBalance').text(Currency + "0.00");
+            $('.differenceCalc').text(Currency + "0.00");
             $('.fullScreenSpin').css('display', 'none');
         });
     };
@@ -802,7 +820,7 @@ Template.bankrecon.onRendered(function() {
 
                     if (notrecondepflag) {
                         notrecondep.push(reconVS1dep[i]);
-                        notRecDepTotalAmount += utilityService.convertSubstringParseFloat(reconVS1dep[i].recondepamount) || 0;
+                        notRecDepTotalAmount += utilityService.convertSubstringParseFloatR(reconVS1dep[i].recondepamount) || 0;
                     }
                 }
 
@@ -819,9 +837,9 @@ Template.bankrecon.onRendered(function() {
                 $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
                 $('#print_totalokrecondepamount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
 
-                var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
-                var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
-                var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
+                var totaldepamount = utilityService.convertSubstringParseFloatR($('.depositAmount').html());
+                var totalwithamount = utilityService.convertSubstringParseFloatR($('.withdrawalAmount').html());
+                var openbalamount = utilityService.convertSubstringParseFloatR($('#openingbalance').val());
                 var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
                 $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
 
@@ -1124,7 +1142,7 @@ Template.bankrecon.onRendered(function() {
 
                         if (notreconwithflag) {
                             notreconwith.push(reconVS1with[i]);
-                            notRecWithTotalAmount += utilityService.convertSubstringParseFloat(reconVS1with[i].reconwithamount) || 0;
+                            notRecWithTotalAmount += utilityService.convertSubstringParseFloatR(reconVS1with[i].reconwithamount) || 0;
                         }
                     }
 
@@ -1139,9 +1157,9 @@ Template.bankrecon.onRendered(function() {
                     $('#originalWithdrawalAmount').val(selectedTransAmountwith);
                     $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
                     $('#print_totalokreconwithamount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
-                    var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
-                    var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
-                    var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
+                    var totaldepamount = utilityService.convertSubstringParseFloatR($('.depositAmount').html());
+                    var totalwithamount = utilityService.convertSubstringParseFloatR($('.withdrawalAmount').html());
+                    var openbalamount = utilityService.convertSubstringParseFloatR($('#openingbalance').val());
                     var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
                     $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
                 }
@@ -1446,19 +1464,46 @@ Template.bankrecon.onRendered(function() {
                 gutterSize: 4,
             });
 
-            $(document).on("click", ".gutter", function(e) {
+            const source = document.querySelector(".gutter-vertical");
+            source.addEventListener("pointermove", (event) => {
                 setTimeout(function() {
-                    var topHeight = parseInt($("#topList").height()) - 73;
+                    var topHeight = parseInt($("#topList").height()) - 69;
                     $("#topList .card-body").css("height", topHeight);
-                    var bottomHeight = parseInt($("#bottomList").height()) - 73;
+                    var bottomHeight = parseInt($("#bottomList").height()) - 48;
                     $("#bottomList .card-body").css("height", bottomHeight);
 
                     localStorage.setItem('topPanHeight', $("#topList").height());
                     localStorage.setItem('bottomPanHeight', $("#bottomList").height());
                     localStorage.setItem('topListHeight', topHeight);
                     localStorage.setItem('bottomListHeight', bottomHeight);
-                }, 500);
+                }, 1);
             });
+            source.addEventListener("mouseout", (event) => {
+                setTimeout(function() {
+                    var topHeight = parseInt($("#topList").height()) - 69;
+                    $("#topList .card-body").css("height", topHeight);
+                    var bottomHeight = parseInt($("#bottomList").height()) - 48;
+                    $("#bottomList .card-body").css("height", bottomHeight);
+
+                    localStorage.setItem('topPanHeight', $("#topList").height());
+                    localStorage.setItem('bottomPanHeight', $("#bottomList").height());
+                    localStorage.setItem('topListHeight', topHeight);
+                    localStorage.setItem('bottomListHeight', bottomHeight);
+                }, 10);
+            });
+            // $(document).on("click", ".gutter", function(e) {
+            //     setTimeout(function() {
+            //         var topHeight = parseInt($("#topList").height()) - 69;
+            //         $("#topList .card-body").css("height", topHeight);
+            //         var bottomHeight = parseInt($("#bottomList").height()) - 48;
+            //         $("#bottomList .card-body").css("height", bottomHeight);
+
+            //         localStorage.setItem('topPanHeight', $("#topList").height());
+            //         localStorage.setItem('bottomPanHeight', $("#bottomList").height());
+            //         localStorage.setItem('topListHeight', topHeight);
+            //         localStorage.setItem('bottomListHeight', bottomHeight);
+            //     }, 100);
+            // });
 
             if (localStorage.getItem('topListHeight')) {
                 $("#topList").css("height", parseInt(localStorage.getItem('topPanHeight')));
@@ -1527,6 +1572,12 @@ Template.bankrecon.onRendered(function() {
         let statementDate = statementDateData.getFullYear() + "-" + (statementDateData.getMonth() + 1) + "-" + statementDateData.getDate();
 
         if (accountTypeId != "") {
+            if(Session.get('bankaccountid') != accountTypeId){
+                localStorage.setItem("SelectedTransactionsDep", "");
+                localStorage.setItem("SelectedTransactionsWith", "");
+                templateObject.selectedTransdep.set([]);
+                templateObject.selectedTranswith.set([]);
+            }
             Session.setPersistent('bankaccountid', accountTypeId);
             Session.setPersistent('bankaccountname', accountname);
             templateObject.getOpenBalance(accountname);
@@ -1659,7 +1710,7 @@ Template.bankrecon.events({
                 };
                 selectedtransactionsdep.push(transactionObj);
             }
-            var reconamounttrimdep = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+            var reconamounttrimdep = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
             //(($('#vs1reconamount_' + checkboxIDdepLine).text()).substring(1)).replace(',', '');
             selectedTransAmountdep = selectedTransAmountdep + reconamounttrimdep;
         });
@@ -1692,7 +1743,7 @@ Template.bankrecon.events({
 
             if (notrecondepflag) {
                 notrecondep.push(reconVS1dep[i]);
-                notRecDepTotalAmount += utilityService.convertSubstringParseFloat(reconVS1dep[i].recondepamount) || 0;
+                notRecDepTotalAmount += utilityService.convertSubstringParseFloatR(reconVS1dep[i].recondepamount) || 0;
             }
         }
 
@@ -1707,11 +1758,11 @@ Template.bankrecon.events({
         $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
         $('#print_totalokrecondepamount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
 
-        var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
-        var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
-        var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
+        var totaldepamount = utilityService.convertSubstringParseFloatR($('.depositAmount').html());
+        var totalwithamount = utilityService.convertSubstringParseFloatR($('.withdrawalAmount').html());
+        var openbalamount = utilityService.convertSubstringParseFloatR($('#openingbalance').val());
         var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
-        let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+        let closebalance = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
         var differenceAmount = clearedBal - closebalance;
         $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
         $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
@@ -1746,7 +1797,7 @@ Template.bankrecon.events({
                 selectedtransactionswith.push(transactionObj);
             }
 
-            var reconamounttrim = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+            var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
             //(($('#vs1reconamountwith_' + checkboxIDwithLine).text()).substring(1)).replace(',', '');
             selectedTransAmountwith = selectedTransAmountwith + reconamounttrim;
         });
@@ -1778,7 +1829,7 @@ Template.bankrecon.events({
 
             if (notreconwithflag) {
                 notreconwith.push(reconVS1with[i]);
-                notRecWithTotalAmount += utilityService.convertSubstringParseFloat(reconVS1with[i].reconwithamount) || 0;
+                notRecWithTotalAmount += utilityService.convertSubstringParseFloatR(reconVS1with[i].reconwithamount) || 0;
             }
         }
 
@@ -1792,11 +1843,11 @@ Template.bankrecon.events({
         }, 0);
         $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
         $('#print_totalokreconwithamount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
-        var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
-        var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
-        var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
+        var totaldepamount = utilityService.convertSubstringParseFloatR($('.depositAmount').html());
+        var totalwithamount = utilityService.convertSubstringParseFloatR($('.withdrawalAmount').html());
+        var openbalamount = utilityService.convertSubstringParseFloatR($('#openingbalance').val());
         var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
-        let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+        let closebalance = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
         var differenceAmount = clearedBal - closebalance;
         $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
         $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
@@ -1831,7 +1882,7 @@ Template.bankrecon.events({
                         reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
                         depositLineID: depositLineIDDepAll || 0
                     };
-                    var reconamounttrim = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
                     selectedTransAmountdep = selectedTransAmountdep + reconamounttrim;
                     selectedtransactionsdep.push(transactionObj);
                 }
@@ -1852,11 +1903,11 @@ Template.bankrecon.events({
             // }, 0);
 
             $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
-            totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
-            totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
-            openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
+            totaldepamount = utilityService.convertSubstringParseFloatR($('.depositAmount').html());
+            totalwithamount = utilityService.convertSubstringParseFloatR($('.withdrawalAmount').html());
+            openbalamount = utilityService.convertSubstringParseFloatR($('#openingbalance').val());
             clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
-            let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+            let closebalance = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
             var differenceAmount = clearedBal - closebalance;
             $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
             $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
@@ -1884,7 +1935,7 @@ Template.bankrecon.events({
                         reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
                         depositLineID: depositLineIDDepAll || 0
                     };
-                    var reconamounttrimdep = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    var reconamounttrimdep = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
                     selectedTransAmountdep = selectedTransAmountdep + reconamounttrimdep;
                     selectedtransactionsdep.push(transactionObj);
                 }
@@ -1905,11 +1956,11 @@ Template.bankrecon.events({
             // }, 0);
 
             $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
-            totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
-            totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
-            openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
+            totaldepamount = utilityService.convertSubstringParseFloatR($('.depositAmount').html());
+            totalwithamount = utilityService.convertSubstringParseFloatR($('.withdrawalAmount').html());
+            openbalamount = utilityService.convertSubstringParseFloatR($('#openingbalance').val());
             clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
-            let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+            let closebalance = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
             var differenceAmount = clearedBal - closebalance;
             $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
             $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
@@ -1941,7 +1992,7 @@ Template.bankrecon.events({
                         reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
                         depositLineID: depositLineIDAll || 0
                     };
-                    var reconamounttrim = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
                     selectedTransAmountwith = selectedTransAmountwith + reconamounttrim;
                     selectedtransactionswith.push(transactionObj);
                 }
@@ -1962,11 +2013,11 @@ Template.bankrecon.events({
             // }, 0);
 
             $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
-            var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
-            var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
-            var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
+            var totaldepamount = utilityService.convertSubstringParseFloatR($('.depositAmount').html());
+            var totalwithamount = utilityService.convertSubstringParseFloatR($('.withdrawalAmount').html());
+            var openbalamount = utilityService.convertSubstringParseFloatR($('#openingbalance').val());
             var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
-            let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+            let closebalance = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
             var differenceAmount = clearedBal - closebalance;
             $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
             $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
@@ -1994,7 +2045,7 @@ Template.bankrecon.events({
                         reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
                         depositLineID: depositLineIDwith || 0
                     };
-                    var reconamounttrim = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
                     selectedTransAmountwith = selectedTransAmountwith + reconamounttrim;
                     selectedtransactionswith.push(transactionObj);
                 }
@@ -2015,23 +2066,24 @@ Template.bankrecon.events({
             // }, 0);
 
             $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwith) || Currency + "0.00");
-            var totaldepamount = utilityService.convertSubstringParseFloat($('.depositAmount').html());
-            var totalwithamount = utilityService.convertSubstringParseFloat($('.withdrawalAmount').html());
-            var openbalamount = utilityService.convertSubstringParseFloat($('#openingbalance').val());
+            var totaldepamount = utilityService.convertSubstringParseFloatR($('.depositAmount').html());
+            var totalwithamount = utilityService.convertSubstringParseFloatR($('.withdrawalAmount').html());
+            var openbalamount = utilityService.convertSubstringParseFloatR($('#openingbalance').val());
             var clearedBal = parseFloat(openbalamount) + parseFloat(totaldepamount) - parseFloat(totalwithamount);
-            let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+            let closebalance = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
             var differenceAmount = clearedBal - closebalance;
             $('.clearedBalance').text(utilityService.modifynegativeCurrencyFormat(clearedBal) || Currency + "0.00");
             $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(differenceAmount) || Currency + "0.00");
         }
     },
     'blur .endingbalance': function(e) {
-        // let dataValue = event.target.value.replace(/[^0-9.-]+/g, "") || 0;
+        let dataValue = parseFloat(event.target.value) || 0;
+        $('#endingbalance, #endingbalance2').val(dataValue);
         // if (dataValue != "") {
         //     $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(dataValue));
         // }
 
-        // let dataValue = utilityService.convertSubstringParseFloat(event.target.value);
+        // let dataValue = utilityService.convertSubstringParseFloatR(event.target.value);
         // if (!isNaN(dataValue)) {
         //     $('.endingbalance').val(utilityService.modifynegativeCurrencyFormat(dataValue));
         // } else {
@@ -2041,12 +2093,13 @@ Template.bankrecon.events({
     },
     'keyup .endingbalance, change .endingbalance': function(e) {
 
-        var displayEndBal2 = parseFloat(event.target.value) || 0;
-        $('#endingbalance2').val(displayEndBal2);
+        // var displayEndBal2 = parseFloat(event.target.value) || 0;
+        var displayEndBal2 = event.target.value.replace(/[^0-9.-]+/g, "") || "";
+        $('#endingbalance, #endingbalance2').val(displayEndBal2);
         $('.endingBalanceCalc').text(utilityService.modifynegativeCurrencyFormat(displayEndBal2) || Currency + "0.00");
 
         // Calc Difference
-        var clearedBalCalc2 = utilityService.convertSubstringParseFloat($('.clearedBalance').html()) || 0;
+        var clearedBalCalc2 = utilityService.convertSubstringParseFloatR($('.clearedBalance').html()) || 0;
         var differenceAmount = clearedBalCalc2 - displayEndBal2;
         $('.differenceCalc').text(utilityService.modifynegativeCurrencyFormat(Math.abs(differenceAmount)) || Currency + "0.00");
     },
@@ -2103,7 +2156,7 @@ Template.bankrecon.events({
                     type: "TReconciliationDepositLines",
                     fields: {
                         AccountName: depaccountname || '',
-                        Amount: utilityService.convertSubstringParseFloat(depamount) || 0,
+                        Amount: utilityService.convertSubstringParseFloatR(depamount) || 0,
                         BankStatementLineID: 0, //Hardcoded for now
                         ClientName: depclientname || '',
                         DepositDate: formateDepDate + " 00:00:00" || '',
@@ -2147,7 +2200,7 @@ Template.bankrecon.events({
                     type: "TReconciliationWithdrawalLines",
                     fields: {
                         AccountName: withaccountname || '',
-                        Amount: utilityService.convertSubstringParseFloat(withamount) || 0,
+                        Amount: utilityService.convertSubstringParseFloatR(withamount) || 0,
                         BankStatementLineID: 0, //Hardcoded for now
                         ClientName: withclientname || '',
                         DepositDate: formatWithDate + " 00:00:00" || '',
@@ -2172,11 +2225,11 @@ Template.bankrecon.events({
         var finished = true;
         var notes = $('#statementno').val(); //pending addition of notes field
         var onhold = false;
-        var openbalance = utilityService.convertSubstringParseFloat($('.openingbalance').val()) || 0;
+        var openbalance = utilityService.convertSubstringParseFloatR($('.openingbalance').val()) || 0;
         var statementno = $('#statementno').val();
         var recondateTime = new Date($("#dtSODate2").datepicker("getDate"));
         let recondate = recondateTime.getFullYear() + "-" + (recondateTime.getMonth() + 1) + "-" + recondateTime.getDate();
-        let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+        let closebalance = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
         // Pulling initial variables END
         let objDetails = '';
         if (FlowRouter.current().queryParams.id) {
@@ -2290,7 +2343,7 @@ Template.bankrecon.events({
                     type: "TReconciliationDepositLines",
                     fields: {
                         AccountName: depaccountname || '',
-                        Amount: utilityService.convertSubstringParseFloat(depamount) || 0,
+                        Amount: utilityService.convertSubstringParseFloatR(depamount) || 0,
                         BankStatementLineID: 0, //Hardcoded for now
                         ClientName: depclientname || '',
                         DepositDate: formateDepDate + " 00:00:00" || '',
@@ -2334,7 +2387,7 @@ Template.bankrecon.events({
                     type: "TReconciliationWithdrawalLines",
                     fields: {
                         AccountName: withaccountname || '',
-                        Amount: utilityService.convertSubstringParseFloat(withamount) || 0,
+                        Amount: utilityService.convertSubstringParseFloatR(withamount) || 0,
                         BankStatementLineID: 0, //Hardcoded for now
                         ClientName: withclientname || '',
                         DepositDate: formatWithDate + " 00:00:00" || '',
@@ -2359,11 +2412,11 @@ Template.bankrecon.events({
         var finished = true;
         var notes = $('#statementno').val(); //pending addition of notes field
         var onhold = false;
-        var openbalance = utilityService.convertSubstringParseFloat($('.openingbalance').val()) || 0;
+        var openbalance = utilityService.convertSubstringParseFloatR($('.openingbalance').val()) || 0;
         var statementno = $('#statementno').val();
         var recondateTime = new Date($("#dtSODate2").datepicker("getDate"));
         let recondate = recondateTime.getFullYear() + "-" + (recondateTime.getMonth() + 1) + "-" + recondateTime.getDate();
-        let closebalance = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
+        let closebalance = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
         // Pulling initial variables END
 
         let objDetails = '';
@@ -2508,9 +2561,9 @@ Template.bankrecon.events({
         }, delayTimeAfterSound);
     },
     'change .endingbalance': function(e) {
-        var difference = utilityService.convertSubstringParseFloat($('.differenceCalc').html()) || 0;
-        var endingbal = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
-        var clearedbal = utilityService.convertSubstringParseFloat($('.clearedBalance').html()) || 0;
+        var difference = utilityService.convertSubstringParseFloatR($('.differenceCalc').html()) || 0;
+        var endingbal = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
+        var clearedbal = utilityService.convertSubstringParseFloatR($('.clearedBalance').html()) || 0;
         var zero = 0.00;
 
         var rowCountDep = $('#tblSelectedDeposits tbody tr').length;
@@ -2550,9 +2603,9 @@ Template.bankrecon.events({
 
     },
     'change .statementno': function(e) {
-        var difference = utilityService.convertSubstringParseFloat($('.differenceCalc').html()) || 0;
-        var endingbal = utilityService.convertSubstringParseFloat($('.endingBalanceCalc').html()) || 0;
-        var clearedbal = utilityService.convertSubstringParseFloat($('.clearedBalance').html()) || 0;
+        var difference = utilityService.convertSubstringParseFloatR($('.differenceCalc').html()) || 0;
+        var endingbal = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
+        var clearedbal = utilityService.convertSubstringParseFloatR($('.clearedBalance').html()) || 0;
         var zero = 0.00;
 
         var rowCountDep = $('#tblSelectedDeposits tbody tr').length;

@@ -2542,6 +2542,13 @@ Template.supplierscard.events({
             }
 
             contactService.saveSupplierEx(objDetails).then(function(objDetails) {
+
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
+
                 let supplierSaveID = objDetails.fields.ID;
                 if (supplierSaveID) {
                     //window.open('/supplierscard?id=' + supplierSaveID,'_self');
@@ -2619,7 +2626,7 @@ Template.supplierscard.events({
         }
     },
 
-    'click .tblSupplierCrmList tbody tr': function(event) {
+    'click .tblSupplierCrmListWithDate tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
         // const taskCategory = $(event.target).parent().attr('category');
         let crmRecords = Template.instance().crmRecords.get();

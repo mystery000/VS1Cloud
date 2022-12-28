@@ -204,6 +204,13 @@ Template.new_process.events({
 
 
         manufacturingService.saveProcessData(objDetail).then(function(){
+
+            if (localStorage.getItem("enteredURL") != null) {
+                FlowRouter.go(localStorage.getItem("enteredURL"));
+                localStorage.removeItem("enteredURL");
+                return;
+            }
+
             manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(function(datareturn) {
                 addVS1Data('TProcessStep', JSON.stringify(datareturn)).then(function(){
                     $('.fullScreenSpin').css('display', 'none');

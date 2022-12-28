@@ -1680,7 +1680,6 @@ Template.journalentrylist.events({
   },
 //   'click .chkDatatable': function(event) {
 //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-
 //     if ($(event.target).is(':checked')) {
 //       $('.'+columnDataValue).addClass('showColumn');
 //       $('.'+columnDataValue).removeClass('hiddenColumn');

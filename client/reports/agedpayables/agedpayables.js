@@ -746,7 +746,6 @@ Template.agedpayables.events({
       //   await $('.colAccountTree').css('width', range);
       $('.dataTable').resizable();
     },
-
     // 'change #dateTo': function () {
     //     let templateObject = Template.instance();
     //     $('.fullScreenSpin').css('display', 'inline-block');

@@ -28,7 +28,6 @@ Template.jobsalessummary.onCreated(() => {
 });
 
 Template.jobsalessummary.onRendered(() => {
-
   LoadingOverlay.show();
   const templateObject = Template.instance();
   // const jobSalesApi = new JobSalesApi();

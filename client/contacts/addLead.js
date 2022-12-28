@@ -1779,6 +1779,13 @@ Template.leadscard.events({
                 }
             };
             contactService.saveProspectEx(objDetails).then(function(objDetails) {
+
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
+
                 let customerSaveID = objDetails.fields.ID;
                 if (customerSaveID) {
                     sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function(dataReload) {
@@ -1850,7 +1857,7 @@ Template.leadscard.events({
         const leadLineID = $(event.target).attr('id');
         window.open('/leadscard?id=' + leadLineID, '_self');
     },
-    'click .tblLeadCrmList tbody tr': function(event) {
+    'click .tblLeadCrmListWithDate tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
         // const taskCategory = $(event.target).parent().attr('category');
         let crmRecords = Template.instance().crmRecords.get();
@@ -2298,11 +2305,12 @@ Template.leadscard.events({
         }, delayTimeAfterSound);
     },
     'click .btnTask': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?leadid=' + customerID);
+            // FlowRouter.go('/crmoverview?leadid=' + customerID);
+            $("#btnAddLine").trigger("click");
         } else {
             $('.fullScreenSpin').css('display', 'none');
         }

@@ -10,117 +10,136 @@ import { SMSService } from "../../js/sms-settings-service";
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
 
-const TransactionTypeTemplates = {
-  sales: [
-    {
-      name: "Delivery Docket",
-      title: "Delivery Docket",
-      key: "delivery_docket",
-      active: true,
-    },
-    {
-      name: "Sales Orders",
-      title: "Sales Orders",
-      key: "sales_order",
-      active: true,
-    },
-  ],
-  bills: [
-    {
-      name: "bill",
-      title: "Bills",
-      key: "bill",
-      active: true,
-    },
-  ],
-  cheques: [
-    {
-      name: "Cheques",
-      title: "Cheques",
-      key: "cheque",
-      active: true,
-    },
-  ],
-  credits: [
-    {
-      name: "Credits",
-      title: "Credits",
-      key: "credit",
-      active: true,
-    },
-  ],
-  invoices: [
-    {
-      name: "Invoices",
-      title: "Invoices",
-      key: "invoice",
-      active: true,
-    },
-    {
-      name: "Invoice Back Orders",
-      title: "Invoice Back Orders",
-      key: "invoice",
-      active: false,
-    },
-    {
-      name: "Delivery Docket",
-      title: "Delivery Docket",
-      key: "delivery_docket",
-      active: true,
-    },
-  ],
-  refunds: [
-    {
-      name: "Refunds",
-      title: "Refunds",
-      key: "refund",
-      active: true,
-    },
-  ],
-  workorders: [
-    {
-      name: "Delivery Docket",
-      title: "Delivery Docket",
-      key: "delivery_docket",
-      active: true,
-    },
-    {
-      name: "Sales Orders",
-      title: "Sales Orders",
-      key: "sales_order",
-      active: true,
-    },
-  ],
-  supplierpayments: [
-    {
-      name: "Supplier Payments",
-      title: "Supplier Payments",
-      key: "supplier_payment",
-      active: true,
-    },
-  ],
-  purchaseorders: [
-    {
-      name: "Purchase Orders",
-      title: "Purchase Orders",
-      key: "purchase_order",
-      active: true,
-    },
-  ],
-  quotes: [
-    {
-      name: "Quotes",
-      title: "Quotes",
-      key: "quote",
-      active: true,
-    },
-  ],
+const TransactionTypeData = {
+  sales: {
+    templates: [
+      {
+        name: "Delivery Docket",
+        title: "Delivery Docket",
+        key: "delivery_docket",
+        active: true,
+      },
+      {
+        name: "Sales Orders",
+        title: "Sales Orders",
+        key: "sales_order",
+        active: true,
+      },
+    ],
+  },
+  bills: {
+    templates: [
+      {
+        name: "bill",
+        title: "Bills",
+        key: "bill",
+        active: true,
+      },
+    ],
+  },
+  cheques: {
+    templates: [
+      {
+        name: "Cheques",
+        title: "Cheques",
+        key: "cheque",
+        active: true,
+      },
+    ],
+  },
+  credits: {
+    templates: [
+      {
+        name: "Credits",
+        title: "Credits",
+        key: "credit",
+        active: true,
+      },
+    ],
+  },
+  invoices: {
+    templates: [
+      {
+        name: "Invoices",
+        title: "Invoices",
+        key: "invoice",
+        active: true,
+      },
+      {
+        name: "Invoice Back Orders",
+        title: "Invoice Back Orders",
+        key: "invoice",
+        active: false,
+      },
+      {
+        name: "Delivery Docket",
+        title: "Delivery Docket",
+        key: "delivery_docket",
+        active: true,
+      },
+    ],
+  },
+  refunds: {
+    templates: [
+      {
+        name: "Refunds",
+        title: "Refunds",
+        key: "refund",
+        active: true,
+      },
+    ],
+  },
+  workorders: {
+    templates: [
+      {
+        name: "Delivery Docket",
+        title: "Delivery Docket",
+        key: "delivery_docket",
+        active: true,
+      },
+      {
+        name: "Sales Orders",
+        title: "Sales Orders",
+        key: "sales_order",
+        active: true,
+      },
+    ],
+  },
+  supplierpayments: {
+    templates: [
+      {
+        name: "Supplier Payments",
+        title: "Supplier Payments",
+        key: "supplier_payment",
+        active: true,
+      },
+    ],
+  },
+  purchaseorders: {
+    templates: [
+      {
+        name: "Purchase Orders",
+        title: "Purchase Orders",
+        key: "purchase_order",
+        active: true,
+      },
+    ],
+  },
+  quotes: {
+    templates: [
+      {
+        name: "Quotes",
+        title: "Quotes",
+        key: "quote",
+        active: true,
+      },
+    ],
+  },
 };
 
 Template.transaction_print_modal.onCreated(async function () {
   const templateObject = Template.instance();
   const transactionType = templateObject.data.TransactionType;
-  const pageData = templateObject.data.data;
 
   const getTemplates = async () => {
     const vs1Data = await getVS1Data("TTemplateSettings");
@@ -133,7 +152,7 @@ Template.transaction_print_modal.onCreated(async function () {
 
       addVS1Data("TTemplateSettings", JSON.stringify(templateInfomation));
 
-      const templates = TransactionTypeTemplates[transactionType]
+      const templates = TransactionTypeData[transactionType].templates
         .filter((item) => item.active)
         .map((template) => {
           let templateList = templateInfomation.ttemplatesettings
@@ -154,10 +173,12 @@ Template.transaction_print_modal.onCreated(async function () {
           };
         });
 
+      console.log("vs1Data.length == 0", templates);
+
       return templates;
     } else {
       const vs1DataList = JSON.parse(vs1Data[0].data);
-      const templates = TransactionTypeTemplates[transactionType]
+      const templates = TransactionTypeData[transactionType].templates
         .filter((item) => item.active)
         .map((template) => {
           let templateList = vs1DataList.ttemplatesettings
@@ -180,6 +201,7 @@ Template.transaction_print_modal.onCreated(async function () {
           };
         });
 
+      console.log("vs1Data.length != 0", templates);
 
       return templates;
     }
@@ -203,7 +225,7 @@ Template.transaction_print_modal.onRendered(function () {
           (transation) => transation.name === template.fields.SettingName
         ).key;
         if (template.fields.Active) {
-
+          // console.log({ template, templateKey })
           $(`#${templateKey}_${template.fields.Template}`).prop(
             "checked",
             true
@@ -246,7 +268,7 @@ Template.transaction_print_modal.helpers({
     ).key;
   },
   chooseTemplateHandle: (event, key) => {
-
+    console.log({ event, key });
   },
 });
 
@@ -256,43 +278,157 @@ Template.transaction_print_modal.events({
   },
   "click #printModal .printConfirm": async function (event) {
     const templateObject = Template.instance();
-    playPrintAudio();
+    const transactionType = templateObject.data.TransactionType;
     const isCheckedEmail = $("#printModal #emailSend").is(":checked");
     const isCheckedSms = $("#printModal #sms").is(":checked");
-    const data = await Template.new_salesorder.__helpers
-      .get("printEmailData")
-      .call();
+    const customerElId = $("#customer_id").val();
+    const customerId = $(`#${customerElId}`).attr("custid").trim() || $(`#${customerElId}`).attr("suppid").trim();
 
-    if (isCheckedEmail && validateEmail(data.checkEmailData)) {
-      LoadingOverlay.show();
-      Meteor.call(
-        "sendEmail",
-        {
-          from: "" + data.mailFromName + " <" + data.mailFrom + ">",
-          to: data.checkEmailData,
-          subject: data.mailSubject,
-          text: "",
-          html: data.htmlmailBody,
-          attachments: data.attachment,
-        },
-        function (error, result) {
-          if (error && error.error === "error") {
-            if (FlowRouter.current().queryParams.trans) {
-              // FlowRouter.go(
-              //   "/customerscard?id=" +
-              //     FlowRouter.current().queryParams.trans +
-              //     "&transTab=active"
-              // );
-            } else {
-              // FlowRouter.go("/salesorderslist?success=true");
-            }
-          } else {
+    const contactService = new ContactService();
+
+    const customData = await getVS1Data("TCustomerVS1");
+    let contactServiceData = null;
+
+    if (customerId) {
+      if (customData.length === 0) {
+        contactServiceData = await contactService.getOneCustomerDataEx(customerId);
+      } else {
+        const data = JSON.parse(customData[0].data);
+        contactServiceData = data.tcustomervs1.find(
+          (customer) => parseInt(customer.fields.ID) === parseInt(customerId)
+        );
+      }
+    }
+
+    console.log({ customerId, contactServiceData })
+
+    // const data = await Template.new_salesorder.__helpers
+    //   .get("saleOrder")
+    //   .call();
+
+    // console.log("saleOrderLines==========>", data);
+
+    // Send Email with attachments
+    // if (isCheckedEmail && validateEmail(data.checkEmailData)) {
+    if (isCheckedEmail) {
+      $(".btnSave").trigger("click");
+      // LoadingOverlay.show();
+      // Meteor.call(
+      //   "sendEmail",
+      //   {
+      //     from: "" + data.mailFromName + " <" + data.mailFrom + ">",
+      //     to: data.checkEmailData,
+      //     subject: data.mailSubject,
+      //     text: "",
+      //     html: data.htmlmailBody,
+      //     attachments: data.attachment,
+      //   },
+      //   function (error, result) {
+      //     if (error && error.error === "error") {
+      //       console.log("Send email: ", { error, result })
+      //       if (FlowRouter.current().queryParams.trans) {
+      //         // FlowRouter.go(
+      //         //   "/customerscard?id=" +
+      //         //     FlowRouter.current().queryParams.trans +
+      //         //     "&transTab=active"
+      //         // );
+      //       } else {
+      //         // FlowRouter.go("/salesorderslist?success=true");
+      //       }
+      //     } else {
+      //     }
+      //     LoadingOverlay.hide();
+      //   }
+      // );
+    }
+
+    // Send SMS
+    if (isCheckedSms && contactServiceData) {
+      // should set up
+      const phoneNumber = contactServiceData.fields.Mobile;
+
+      const smsSettings = {
+        twilioAccountId: "",
+        twilioAccountToken: "",
+        twilioTelephoneNumber: "",
+        twilioMessagingServiceSid: "MGc1d8e049d83e164a6f206fbe73ce0e2f",
+        headerAppointmentSMSMessage: "Sent from [Company Name]",
+        startAppointmentSMSMessage:
+          "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we are on site and doing the following service [Product/Service].",
+        saveAppointmentSMSMessage:
+          "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
+        stopAppointmentSMSMessage:
+          "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service].",
+      };
+
+      const smsServiceSettings = await smsService.getSMSSettings();
+      if (smsServiceSettings.terppreference.length > 0) {
+        for (let i = 0; i < smsServiceSettings.terppreference.length; i++) {
+          switch (smsServiceSettings.terppreference[i].PrefName) {
+            case "VS1SMSID":
+              smsSettings.twilioAccountId =
+                smsServiceSettings.terppreference[i].Fieldvalue;
+              break;
+            case "VS1SMSToken":
+              smsSettings.twilioAccountToken =
+                smsServiceSettings.terppreference[i].Fieldvalue;
+              break;
+            case "VS1SMSPhone":
+              smsSettings.twilioTelephoneNumber =
+                smsServiceSettings.terppreference[i].Fieldvalue;
+              break;
+            case "VS1HEADERSMSMSG":
+              smsSettings.headerAppointmentSMSMessage =
+                smsServiceSettings.terppreference[i].Fieldvalue;
+              break;
+            case "VS1SAVESMSMSG":
+              smsSettings.saveAppointmentSMSMessage =
+                smsServiceSettings.terppreference[i].Fieldvalue;
+              break;
+            case "VS1STARTSMSMSG":
+              smsSettings.startAppointmentSMSMessage =
+                smsServiceSettings.terppreference[i].Fieldvalue;
+              break;
+            case "VS1STOPSMSMSG":
+              smsSettings.stopAppointmentSMSMessage =
+                smsServiceSettings.terppreference[i].Fieldvalue;
           }
-          LoadingOverlay.hide();
         }
-      );
-    } else {
+      }
 
+      const companyName = Session.get("vs1companyName");
+      const message = smsSettings.headerAppointmentSMSMessage.replace(
+        "[Company Name]",
+        companyName
+      );
+
+      console.log({ companyName });
+
+      if (phoneNumber) {
+        const sendSMSResult = Meteor.call(
+          "sendSMS",
+          smsSettings.twilioAccountId,
+          smsSettings.twilioAccountToken,
+          smsSettings.twilioTelephoneNumber,
+          phoneNumber,
+          message,
+          function (error, result) {
+            if (error) rej(error);
+            res(result);
+          }
+        );
+
+        console.log({ sendSMSResult });
+      }
+    }
+  },
+  "click #printModal .chooseTemplateBtn": function (event, key, param) {
+    const dataKey = $(event.target).attr("data-id");
+    if ($(event.target).is(":checked")) {
+      // $(`#${dataKey}-modal`).css("z-index", 1049);
+      $(`#${dataKey}-modal`).modal("show");
+    } else {
+      $(`#${dataKey}-modal`).modal("hide");
     }
   },
 });
