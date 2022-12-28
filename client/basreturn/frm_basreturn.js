@@ -3882,6 +3882,12 @@ Template.basreturn.events({
                     }
 
                     reportService.saveBASReturn(jsonObj).then(function(res) {
+                        if (localStorage.getItem("enteredURL") != null) {
+                            FlowRouter.go(localStorage.getItem("enteredURL"));
+                            localStorage.removeItem("enteredURL");
+                            return;
+                        }
+
                         reportService.getAllBASReturn().then(function(data) {
                             addVS1Data("TBASReturn", JSON.stringify(data)).then(function(datareturn) {
                                 window.open("basreturnlist", "_self");

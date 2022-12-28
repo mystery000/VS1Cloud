@@ -719,7 +719,6 @@ Template.agedreceivablessummary.events({
   },
   'click .chkDatatable': function (event) {
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-    console.log(columnDataValue);
     if ($(event.target).is(':checked')) {
       $('.' + columnDataValue).addClass('showColumn');
       $('.' + columnDataValue).removeClass('hiddenColumn');
@@ -752,7 +751,7 @@ Template.agedreceivablessummary.events({
     var accountName = id[1].split('_').join(' ');
     let toDate = moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
     let fromDate = moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
-    //Session.setPersistent('showHeader',true);
+    //Session.set('showHeader',true);
     await clearData('TAccountRunningBalanceReport');
     window.open('/balancetransactionlist?accountName=' + accountName + '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem=' + false, '_self');
   },
@@ -1191,5 +1190,3 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
   return (a.indexOf(b) >= 0);
 });
-
-

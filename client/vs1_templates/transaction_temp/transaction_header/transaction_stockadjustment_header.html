@@ -7,11 +7,16 @@
   <div class="row no-gutters" style="background-color: #ededed;">
     <div class="col">
       <header>
-        <h1 style="margin: 32px;margin-bottom: 0px;">{{data.lid}}
-          {{> helpbutton}}
-          {{> help_modal}}
-        </h1>
-        <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
+          <div class="row">
+              <div class="col-12 col-md-4">
+                  <h1 style="margin: 32px;margin-bottom: 0px;">{{data.lid}}
+                      {{> helpbutton}}
+                      {{> help_modal}}
+                  </h1>
+                  <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
+              </div>
+              <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+          </div>
       </header>
     </div>
   </div>

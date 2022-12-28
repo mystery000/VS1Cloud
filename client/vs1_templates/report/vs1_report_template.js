@@ -72,7 +72,7 @@ Template.vs1_report_template.onRendered(function () {
           { index: 3, label: 'Account Number', class: 'colAccountNo', active: true, display: true, width: "140" },
           { index: 4, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
           { index: 5, label: 'Amount (Ex)', class: 'colAmountEx', active: false, display: true, width: "120" },
-          { index: 6, label: 'Amount (Inc)', class: 'colAmountInc', active: false, display: true, width: "120" },      
+          { index: 6, label: 'Amount (Inc)', class: 'colAmountInc', active: false, display: true, width: "120" },
           { index: 7, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
           { index: 8, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
           { index: 9, label: 'Class ID', class: 'colClassID', active: true, display: true, width: "85" },
@@ -1000,7 +1000,6 @@ Template.vs1_report_template.onRendered(function () {
     //       sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
     //           reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
     //           templateObject.showCustomFieldDisplaySettings(reset_data);
-    //           console.log("display-1: ", templateObject.report_displayfields.get());
     //       }).catch(function (err) {
     //       });
     //     } else {
@@ -1010,7 +1009,6 @@ Template.vs1_report_template.onRendered(function () {
     //          if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
     //            reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
     //            templateObject.showCustomFieldDisplaySettings(reset_data);
-    //            console.log("display-2: ", templateObject.report_displayfields.get());
     //          }
     //        }
     //      };

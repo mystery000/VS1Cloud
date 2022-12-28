@@ -1055,7 +1055,6 @@ Template.agedpayables.events({
     },
     'click .chkDatatable': function (event) {
       let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-      console.log(columnDataValue);
       if ($(event.target).is(':checked')) {
         $('.' + columnDataValue).addClass('showColumn');
         $('.' + columnDataValue).removeClass('hiddenColumn');
@@ -1083,7 +1082,6 @@ Template.agedpayables.events({
       //   await $('.colAccountTree').css('width', range);
       $('.dataTable').resizable();
     },
-  
     // 'change #dateTo': function () {
     //     let templateObject = Template.instance();
     //     $('.fullScreenSpin').css('display', 'inline-block');
@@ -1253,10 +1251,10 @@ Template.agedpayables.events({
                           resolve();
                         }
                     }
-                } 
+                }
                 if(j == values.length -1) {resolve()}
               }
-             
+
             })
           }
 
@@ -1320,7 +1318,7 @@ Template.agedpayables.events({
     //     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     //     var dateTo = new Date($("#dateTo").datepicker("getDate"));
     //     await templateObject.setReportOptions(false, dateFrom, dateTo);
-       
+
     // },
     // "click #lastMonth": async function () {
     //     $(".fullScreenSpin").css("display", "inline-block");
@@ -1329,7 +1327,7 @@ Template.agedpayables.events({
     //     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     //     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     //     await templateObject.setReportOptions(false, fromDate, endDate);
-       
+
     // },
     // "click #lastQuarter": async function () {
     //     $(".fullScreenSpin").css("display", "inline-block");
@@ -1338,7 +1336,7 @@ Template.agedpayables.events({
     //     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     //     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     //     await templateObject.setReportOptions(false, fromDate, endDate);
-       
+
     // },
     // "click #last12Months": async function () {
     //     $(".fullScreenSpin").css("display", "inline-block");
@@ -1348,7 +1346,7 @@ Template.agedpayables.events({
     //     $("#dateTo").attr("readonly", false);
     //     var currentDate = new Date();
     //     var begunDate = moment(currentDate).format("DD/MM/YYYY");
-    
+
     //     let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
     //     let fromDateDay = currentDate.getDate();
     //     if (currentDate.getMonth() + 1 < 10) {
@@ -1357,17 +1355,17 @@ Template.agedpayables.events({
     //     if (currentDate.getDate() < 10) {
     //       fromDateDay = "0" + currentDate.getDate();
     //     }
-    
+
     //     var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
     //     templateObject.dateAsAt.set(begunDate);
     //     $("#dateFrom").val(fromDate);
     //     $("#dateTo").val(begunDate);
-    
+
     //     var currentDate2 = new Date();
     //     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     //     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     //     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-       
+
     // },
     'keyup #myInputSearch': function (event) {
         $('.table tbody tr').show();
@@ -1426,7 +1424,7 @@ Template.agedpayables.events({
         LoadingOverlay.show();
         localStorage.setItem("VS1AgedPayables_Report", "");
         templateObject.getAgedPayableReports(
-          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
           GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
           false
         )
@@ -1594,9 +1592,9 @@ Template.agedpayables.helpers({
 
     // Lets remove the minus character
     const isMinus = amount < 0;
-    if (isMinus == true) 
+    if (isMinus == true)
       amount = amount * -1; // make it positive for now
-    
+
     //  get default currency symbol
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
@@ -1729,5 +1727,3 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
     return (a.indexOf(b) >= 0);
 });
-
-

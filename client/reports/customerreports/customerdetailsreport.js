@@ -531,8 +531,8 @@ Template.customerdetailsreport.events({
   "click #ignoreDate":  (e, templateObject) => {
     localStorage.setItem("VS1CustomerDetails_Report", "");
     templateObject.getCustomerDetailReportData(
-      null, 
-      null, 
+      null,
+      null,
       true
     )
   },
@@ -540,8 +540,8 @@ Template.customerdetailsreport.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1CustomerDetails_Report", "");
     templateObject.getCustomerDetailReportData(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },

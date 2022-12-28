@@ -340,21 +340,21 @@ batchUpdateCall = function (url) {
 
                   //Dashboard API:
                   if(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields){
-                  Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
-                  Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
-                  Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
-                  Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
-                  Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
-                  Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
+                  Session.set('vs1companyName', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
+                  Session.set('vs1companyaddress1', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
+                  Session.set('vs1companyaddress2', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
+                  Session.set('vs1companyABN', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
+                  Session.set('vs1companyPhone', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
+                  Session.set('vs1companyURL', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
 
-                  Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
-                  Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
+                  Session.set('ERPDefaultDepartment', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
+                  Session.set('ERPDefaultUOM', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
 
 
-                  // Session.setPersistent('ERPCurrency', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_CurrencySymbol||'');
-                  Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
-                  Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
-                  Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
+                  // Session.set('ERPCurrency', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_CurrencySymbol||'');
+                  Session.set('ERPCountryAbbr', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
+                  Session.set('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
+                  Session.set('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
 
 
                   localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT||Currency+'0');
@@ -379,7 +379,7 @@ batchUpdateCall = function (url) {
                   localStorage.setItem('VS1ReportsDateFrom_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ReportsDateFrom||"");
                   localStorage.setItem('VS1ReportsDateTo_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ReportsDateTo||"");
                   localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated);
-
+                  sessionStorage.setItem("pageLoaded", true);
                   if(dataReturnRes.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401){
                     localStorage.setItem('vs1LoggedEmployeeImages_dash','');
                   }else{
@@ -396,6 +396,13 @@ batchUpdateCall = function (url) {
                   localStorage.setItem('VS1SalesEmpReport_dash', JSON.stringify(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_salesperemployee.items)||'');
                   getVS1Data('vscloudlogininfo').then(function (dataObject) {
                     if(dataObject.length == 0){
+
+                        if (localStorage.getItem("enteredURL") != null) {
+                            FlowRouter.go(localStorage.getItem("enteredURL"));
+                            localStorage.removeItem("enteredURL");
+                            return;
+                        }
+
                       setTimeout(function () {
                         if(url){
                           window.open(url,'_self');
@@ -426,6 +433,13 @@ batchUpdateCall = function (url) {
                       dashboardArray.ProcessLog.ClientDetails.ProcessLog.TransactionTableLastUpdated = dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated;
 
                       addLoginData(dashboardArray).then(function (datareturnCheck) {
+
+                          if (localStorage.getItem("enteredURL") != null) {
+                              FlowRouter.go(localStorage.getItem("enteredURL"));
+                              localStorage.removeItem("enteredURL");
+                              return;
+                          }
+
                         setTimeout(function () {
                         if(url){
                           window.open(url,'_self');
@@ -510,6 +524,12 @@ batchUpdateCall = function (url) {
     sideBarService.getCurrentLoggedUser().then(function (data) {
       addVS1Data('TAppUser', JSON.stringify(data));
     });
+    
+    if (localStorage.getItem("enteredURL") != null) {
+        FlowRouter.go(localStorage.getItem("enteredURL"));
+        localStorage.removeItem("enteredURL");
+        return;
+    }
 };
 
 getHour24 = function (timeString) {

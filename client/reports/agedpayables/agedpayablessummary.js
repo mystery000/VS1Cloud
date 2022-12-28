@@ -831,7 +831,6 @@ Template.agedpayablessummary.events({
   },
   'click .chkDatatable': function (event) {
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-    console.log(columnDataValue);
     if ($(event.target).is(':checked')) {
       $('.' + columnDataValue).addClass('showColumn');
       $('.' + columnDataValue).removeClass('hiddenColumn');
@@ -1080,7 +1079,7 @@ Template.agedpayablessummary.events({
     LoadingOverlay.show();
     localStorage.setItem("VS1AgedPayablesSummary_Report", "");
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
@@ -1188,8 +1187,8 @@ Template.agedpayablessummary.events({
     "change #dateTo, change #dateFrom": (e, templateObject) => {
       localStorage.setItem('VS1AgedPayablesSummary_Report', '');
       templateObject.loadReport(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
         false
       );
     },

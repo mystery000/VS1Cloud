@@ -1,3 +1,6 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
+FlowRouter.decodeQueryParamsOnce = true;
 const publicRedirect = () => {
 
 };
@@ -7,13 +10,12 @@ const publicRoutes = FlowRouter.group({
     triggersEnter: [publicRedirect]
 });
 
-FlowRouter.notFound = {
-    action() {
-        BlazeLayout.render('layoutlogin', {
-            yield: 'notFound'
-        });
-    }
-};
+FlowRouter.route('*', {
+  action() {
+    // Show 404 error page using Blaze
+    this.render('notFound');
+  }
+});
 
 publicRoutes.route('/', {
     name: 'vs1login',
@@ -135,7 +137,7 @@ const authenticatedRedirect = () => {
             let sidePanelToggle = Session.get('sidePanelToggle');
             if ((sidePanelToggle === 'undefined') || (sidePanelToggle === undefined)) {
                 document.getElementById("sidebar").style.display = "block";
-                Session.setPersistent('sidePanelToggle', "toggled");
+                Session.set('sidePanelToggle', "toggled");
                 sidePanelToggle = Session.get('sidePanelToggle');
             }
             if (sidePanelToggle) {
@@ -161,11 +163,11 @@ const authenticatedRedirect = () => {
     }
 
     if (Session.get('lastUrl') == undefined) {
-        Session.setPersistent('lastUrl', window.location.pathname);
+        Session.set('lastUrl', window.location.pathname);
     } else {
         let lastUrl = Session.get('lastUrl');
     }
-    Session.setPersistent('lastUrl', window.location.pathname);
+    Session.set('lastUrl', window.location.pathname);
 
     let lastPageVisitUrl = window.location.pathname;
     if(FlowRouter.current().oldRoute != undefined){
@@ -193,6 +195,7 @@ let previous_url = "";
 
 FlowRouter.triggers.enter([
     function (context, redirect, stop) {
+        localStorage.removeItem("enteredURL");
         if (previous_url !== "" && previous_url !== context.path && JSON.parse(localStorage.getItem("isFormUpdated"))) {
             stop();
             swal({
@@ -200,17 +203,20 @@ FlowRouter.triggers.enter([
                 text: 'Do you wish to save your changes?',
                 type: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
+                confirmButtonText: 'Save',
+                cancelButtonText: 'Leave'
             }).then((result) => {
                 if (result.value) {
-                    FlowRouter.go(previous_url);
+                    localStorage.setItem("enteredURL", context.path);
+                    $(document).find(".btn-auto-save").click();
+                    // FlowRouter.go(previous_url);
                 } else if (result.dismiss === 'cancel') {
                     FlowRouter.go(context.path);
                     Meteor._reload.reload();
                     //TODO need to url async
                     previous_url = "";
                     localStorage.setItem("isFormUpdated", false);
+                    FlowRouter.reload();
                 }
             });
         }

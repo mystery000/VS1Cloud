@@ -570,7 +570,7 @@ Template.jobsalessummary.events({
   },
   // "click #lastMonth": function () {
   //   let templateObject = Template.instance();
-  
+
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
   //   var currentDate = new Date();
@@ -625,7 +625,7 @@ Template.jobsalessummary.events({
   // },
   // "click #lastQuarter": function () {
   //   let templateObject = Template.instance();
-  
+
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
   //   var currentDate = new Date();
@@ -667,7 +667,7 @@ Template.jobsalessummary.events({
   // },
   // "click #last12Months": function () {
   //   let templateObject = Template.instance();
-   
+
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
   //   var currentDate = new Date();
@@ -765,7 +765,7 @@ Template.jobsalessummary.events({
 
     LoadingOverlay.hide();
   },
-  
+
   "click [href='#noInfoFound']": function () {
     swal({
         title: 'Information',
@@ -776,8 +776,8 @@ Template.jobsalessummary.events({
   },
   "click #ignoreDate":  (e, templateObject) => {
     templateObject.loadReport(
-      null, 
-      null, 
+      null,
+      null,
       true
     )
   },
@@ -785,8 +785,8 @@ Template.jobsalessummary.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1JobSalesSummary_Report", "");
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },
@@ -794,7 +794,7 @@ Template.jobsalessummary.events({
 });
 
 Template.jobsalessummary.helpers({
-  
+
   redirectionType(item) {
     return '#noInfoFound';
   },

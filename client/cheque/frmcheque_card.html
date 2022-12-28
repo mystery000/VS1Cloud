@@ -474,31 +474,7 @@
               }
             </style>
 
-            {{> deletepop itemName1="Cheque" itemName2="cheque" itemName3="Cheque" button1="btnDeleteCheque" button2="btnDeleteFollowingCheques"}}
-            <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID"
-                    name="selectDeleteLineID" readonly>
-                  <div class="modal-header">
-                    <h4>Delete</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">×</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <p>Please select "Delete Line" to remove row or "Delete {{formname}}" to delete the entire cheque
-                    </p>
-                    <button class="btn btn-danger float-left btnDeleteLine" type="button">
-                      <i class="fa fa-close" style="margin-right: 5px;"></i>Delete Line
-                    </button>
-                    <button class="btn btn-danger float-right btnDeleteCheque" type="button">
-                      <i class="fa fa-close" style="margin-right: 5px;"></i>Delete {{formname}}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div> -->
+            <!-- {{> deletepop itemName1="Cheque" itemName2="cheque" itemName3="Cheque" button1="btnDeleteCheque" button2="btnDeleteFollowingCheques"}} -->
 
             <style>
               .colAmountEx {
@@ -701,7 +677,7 @@
                   </div>
               </div>
             </div>
-              {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="cheques" }}
+              {{> transaction_footer AttachmentCount=attachmentCount TransactionType="cheques" }}
           </div>
         </div>
         {{> transaction_calculation
@@ -1077,4 +1053,5 @@
   <script>
     modalDraggable();
   </script>
+    {{> init_form_page_script}}
 </template>

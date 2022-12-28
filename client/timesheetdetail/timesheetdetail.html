@@ -20,33 +20,38 @@
           <div class="spinner"></div>
        </div>
        <div>
-          <header class="pt-2 pb-3 d-flex align-items-center">
-             <h2 class="mr-1">Timesheet</h2>
-             {{> helpbutton}}
-             <!-- Start Help View Modal -->
-             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                <div class="modal-dialog modal-sm" role="document">
-                   <div class="modal-content">
-                      <div class="modal-header" style="padding-bottom: 8px;">
-                         <h4>Help</h4>
-                         <button type="button" class="close" data-dismiss="modal"
-                            aria-label="Close"><span aria-hidden="true">×</span></button>
+          <div class="row">
+              <div class="col-12 col-md-4">
+                  <h2 class="mr-1">
+                      Timesheet
+                      {{> helpbutton}}
+                  </h2>
+              </div>
+              <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+              <!-- Start Help View Modal -->
+              <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                  <div class="modal-dialog modal-sm" role="document">
+                      <div class="modal-content">
+                          <div class="modal-header" style="padding-bottom: 8px;">
+                              <h4>Help</h4>
+                              <button type="button" class="close" data-dismiss="modal"
+                                      aria-label="Close"><span aria-hidden="true">×</span></button>
+                          </div>
+                          <div class="modal-body">
+                              <p class="text-center text-muted"><a role="button" data-toggle="modal"
+                                                                   href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                              <p class="text-center text-muted"><a
+                                      href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank"
+                                      class="btn btn-primary">Download Help File</a></p>
+                              {{> helpadvisor}}
+                              {{> helpgotoforum}}
+                          </div>
+                          <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
+                                                                                  data-dismiss="modal" type="button">Close</button></div>
                       </div>
-                      <div class="modal-body">
-                         <p class="text-center text-muted"><a role="button" data-toggle="modal"
-                            href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                         <p class="text-center text-muted"><a
-                            href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank"
-                            class="btn btn-primary">Download Help File</a></p>
-                         {{> helpadvisor}}
-                         {{> helpgotoforum}}
-                      </div>
-                      <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
-                         data-dismiss="modal" type="button">Close</button></div>
-                   </div>
-                </div>
-             </div>
-          </header>
+                  </div>
+              </div>
+          </div>
           <!-- All charts list -->
           <style>
              @media screen and (max-width: 450px) {

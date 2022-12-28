@@ -29,17 +29,17 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 col-xl-2">
-                                    <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY">
-                                        <label>Sale Date</label>
-                                        <div class="input-group date" style="cursor: pointer;">
-                                            <input type="text" class="form-control" id="dtSODate" name="dtSODate" value="{{workorderrecord.saledate}}"/>
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {{> single_date_picker
+                                            label="Sale Date"
+                                            id="dtSODate"
+                                            name="dtSODate"
+                                            defaultValue=workorderrecord.saledate
+                                          }}
                             </div>
                         </div>
+
+
+                        
                         <div class="row" style="margin: 16px 16px 0px 16px;">
                             <div class="col-12 col-md-6 col-xl-4">
                                 <div class="form-group"><label>Billing Address</label>
@@ -459,7 +459,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button class="btn btn-success btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                <button class="btn btn-success btnSave btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                 <button class="btn btn-warning btnResetGridSettings" type="button"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
                                                 <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                             </div>
@@ -730,7 +730,7 @@
                           
                             <div class="col-12">
                                 <div class="row justify-content-center desktopButtons">
-                                    {{> transaction_footer margin="16px" AttachmentCount=attachmentCount TransactionType="workorders" }}
+                                    {{> transaction_footer AttachmentCount=attachmentCount TransactionType="workorders" }}
                                 </div>
   
                             </div>
@@ -929,4 +929,6 @@
         </div>
         <!-- END Attachments -->
     </div>
+
+    {{> init_form_page_script}}
 </template>

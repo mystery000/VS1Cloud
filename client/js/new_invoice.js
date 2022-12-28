@@ -90,7 +90,7 @@ Template.new_invoice.onCreated(function() {
 
     templateObject.invoice_data = new ReactiveVar([]);
 
-    
+
     templateObject.subtaxcodes = new ReactiveVar([]);
 
     templateObject.isbackorderredirect = new ReactiveVar();
@@ -114,8 +114,6 @@ Template.new_invoice.onRendered(function() {
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var invData = await salesService.getOneInvoicedataEx(currentInvoice); 
-            console.log("##########################")
-            console.log(invData);
             var isRepeated = invData.fields.RepeatedFrom;
             templateObject.hasFollow.set(isRepeated);
         }
@@ -511,7 +509,7 @@ Template.new_invoice.onRendered(function() {
                             };
 
                             if (data.ttermsvs1[i].isSalesdefault == true) {
-                                Session.setPersistent(
+                                Session.set(
                                     "ERPTermsSales",
                                     data.ttermsvs1[i].TermsName || "COD"
                                 );
@@ -547,7 +545,7 @@ Template.new_invoice.onRendered(function() {
                             isSalesdefault: data.ttermsvs1[i].isSalesdefault || ""
                         };
                         if (data.ttermsvs1[i].isSalesdefault == true) {
-                            Session.setPersistent(
+                            Session.set(
                                 "ERPTermsSales",
                                 data.ttermsvs1[i].TermsName || "COD"
                             );
@@ -887,7 +885,7 @@ Template.new_invoice.onRendered(function() {
                                     TaxTotal: TaxTotalGbp || 0,
                                     TaxRate: TaxRateGbp || 0,
                                     SalesLinesCustField1: data.fields.Lines.fields.SalesLinesCustField1 || "",
-                                    
+
                                 };
                                 lineItems.push(lineItemObj);
                             }
@@ -1201,7 +1199,7 @@ Template.new_invoice.onRendered(function() {
                                                     (
                                                         data.fields.Lines[i].fields.LineTaxRate * 100
                                                     ).toFixed(2) || 0;
-                                                let SalesLinesCustField1Val = 
+                                                let SalesLinesCustField1Val =
                                                     (
                                                         data.fields.Lines[i].fields.SalesLinesCustField1
                                                     ) || "";
@@ -17155,7 +17153,7 @@ Template.new_invoice.events({
         } else {
             if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
             else $("#footerDeleteModal1").modal("toggle");
-        } 
+        }
     },
     "click .btnDeleteFollowingInvoices": async function(event) {
         playDeleteAudio();
@@ -17884,6 +17882,13 @@ Template.new_invoice.events({
                 //   objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
                 // };
                 salesService.saveInvoiceEx(objDetails).then(function(objDetails) {
+
+                    if (localStorage.getItem("enteredURL") != null) {
+                        FlowRouter.go(localStorage.getItem("enteredURL"));
+                        localStorage.removeItem("enteredURL");
+                        return;
+                    }
+
                         // add to custom field
                         // add to custom field
 
@@ -18859,8 +18864,21 @@ Template.new_invoice.events({
             $('.colUnits').removeClass('showColumn');
         }
     },
+    "click .chkFixedAsset": function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colFixedAsset').addClass('showColumn');
+            $('.colFixedAsset').removeClass('hiddenColumn');
+        } else {
+            $('.colFixedAsset').addClass('hiddenColumn');
+            $('.colFixedAsset').removeClass('showColumn');
+        }
+    },
     // display settings
-
+    'change .rngRangeFixedAsset': function(event) {
+        let range = $(event.target).val();
+        $(".spWidthFixedAsset").html(range);
+        $('.colFixedAsset').css('width', range);
+    },
     'change .rngRangeProductName': function(event) {
         let range = $(event.target).val();
         $(".spWidthProductName").html(range);

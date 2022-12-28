@@ -1846,7 +1846,7 @@ Template.customerawaitingpayments.events({
                 selectedAwaitingPayment.push(paymentTransObj);
             }
         });
-        Session.setPersistent('paymentsArray',JSON.stringify(selectedAwaitingPayment));
+        Session.set('paymentsArray',JSON.stringify(selectedAwaitingPayment));
         templateObject.selectedAwaitingPayment.set(selectedAwaitingPayment);
 
         setTimeout(function () {
@@ -1962,7 +1962,7 @@ Template.customerawaitingpayments.events({
                  });
                 let url = '/paymentcard?selectcust=' + allData[0].selectCust
                 allData.shift();
-                Session.setPersistent('customerpayments', JSON.stringify(allData));
+                Session.set('customerpayments', JSON.stringify(allData));
                 window.open(url,'_self');
             }
         }

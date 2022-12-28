@@ -53,7 +53,7 @@ Template.generalledger.onCreated(() => {
 //       { index: 11, label: 'Debits (Inc)', class: 'colDebitsInc', active: true, display: true, width: "120" },
 //       { index: 12, label: 'Credits (Inc)', class: 'colCreditInc', active: true, display: true, width: "120" },
 //       { index: 13, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "120" },
-//       { index: 14, label: 'Amount (Inc)', class: 'colAmountInc', active: true, display: true, width: "120" },      
+//       { index: 14, label: 'Amount (Inc)', class: 'colAmountInc', active: true, display: true, width: "120" },
 //       { index: 15, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
 //       { index: 16, label: 'Global Ref', class: 'colGlobalRef', active: false, display: true, width: "85" },
 //       { index: 17, label: 'Account Number', class: 'colAccountNo', active: false, display: true, width: "140" },
@@ -808,8 +808,6 @@ Template.generalledger.onRendered(() => {
         MakeNegative();
       }, 100);
     }
-    console.log(splashArrayBalanceSheetReport);
-    //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
       $('#tblgeneralledger').DataTable({

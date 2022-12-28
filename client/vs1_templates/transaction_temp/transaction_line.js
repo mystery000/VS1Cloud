@@ -22,6 +22,7 @@ Template.transaction_line.onCreated(function(){
   templateObject.isForeignEnabled = new ReactiveVar(false);
   templateObject.displayfields = new ReactiveVar([]);
   templateObject.reset_data = new ReactiveVar([]);
+  templateObject.init_data = new ReactiveVar([]); // initial reset data
   templateObject.initialTableWidth = new ReactiveVar('');
   templateObject.monthArr = new ReactiveVar();
   templateObject.plusArr = new ReactiveVar();
@@ -131,30 +132,30 @@ Template.transaction_line.onRendered(function() {
   // set initial table rest_data
   templateObject.init_reset_data = function() {
       let reset_data = [
-          { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
-          { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
-          { index: 2, label: "Account Name", class: "AccountName", width: "300", active: true, display: true },
-          { index: 3, label: "Memo", class: "Memo", width: "", active: true, display: true },
-          { index: 4, label: "Qty", class: "Qty", width: "50", active: true, display: true },
-          { index: 5, label: "Ordered", class: "Ordered", width: "75", active: true, display: true },
-          { index: 6, label: "Shipped", class: "Shipped", width: "75", active: true, display: true },
-          { index: 7, label: "BO", class: "BackOrder", width: "75", active: true, display: true },
-          { index: 8, label: "Serial/Lot No", class: "SerialNo", width: "100", active: true, display: true },
-          { index: 9, label: "Fixed Asset", class: "FixedAsset", width: "100", active: true, display: true },
-          { index: 10, label: "Customer/Job", class: "CustomerJob", width: "110", active: true, display: true },
-          { index: 11, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
-          { index: 12, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
-          { index: 13, label: "Cost Price", class: "CostPrice", width: "110", active: true, display: true },
-          { index: 14, label: "Disc %", class: "Discount", width: "75", active: true, display: true },
-          { index: 15, label: "CustField1", class: "SalesLinesCustField1", width: "110", active: true, display: true },
-          { index: 16, label: "Tax Rate", class: "TaxRate", width: "91", active: true, display: true },
-          { index: 17, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-          { index: 18, label: "Tax Amt", class: "TaxAmount", width: "75", active: true, display: true },
-          { index: 19, label: "Amount (Ex)", class: "AmountEx", width: "152", active: true, display: true },
-          { index: 20, label: "Amount (Inc)", class: "AmountInc", width: "152", active: false, display: true },
-          { index: 21, label: "Units", class: "cc", width: "95", active: true, display: true },
-          { index: 22, label: "Custom Field 1", class: "CustomField1", width: "124", active: false, display: false },
-          { index: 23, label: "Custom Field 2", class: "CustomField2", width: "124", active: false, display: false },
+          { index: 0,  label: "Product Name",       class: "ProductName",   width: "300",       active: true,   display: true },
+          { index: 1,  label: "Description",        class: "Description",   width: "",          active: true,   display: true },
+          { index: 2,  label: "Account Name",       class: "AccountName",   width: "300",       active: true,   display: true },
+          { index: 3,  label: "Memo",               class: "Memo",          width: "",          active: true,   display: true },
+          { index: 4,  label: "Qty",                class: "Qty",           width: "50",        active: true,   display: true },
+          { index: 5,  label: "Ordered",            class: "Ordered",       width: "75",        active: true,   display: true },
+          { index: 6,  label: "Shipped",            class: "Shipped",       width: "75",        active: true,   display: true },
+          { index: 7,  label: "BO",                 class: "BackOrder",     width: "75",        active: true,   display: true },
+          { index: 8,  label: "Serial/Lot No",      class: "SerialNo",      width: "100",       active: true,   display: true },
+          { index: 9,  label: "Fixed Asset",        class: "FixedAsset",    width: "100",       active: true,   display: true },
+          { index: 10, label: "Customer/Job",       class: "CustomerJob",   width: "110",       active: true,   display: true },
+          { index: 11, label: "Unit Price (Ex)",    class: "UnitPriceEx",   width: "152",       active: true,   display: true },
+          { index: 12, label: "Unit Price (Inc)",   class: "UnitPriceInc",  width: "152",       active: false,  display: true },
+          { index: 13, label: "Cost Price",         class: "CostPrice",     width: "110",       active: true,   display: true },
+          { index: 14, label: "Disc %",             class: "Discount",      width: "75",        active: true,   display: true },
+          { index: 15, label: "CustField1",         class: "SalesLinesCustField1", width: "110",active: true,   display: true },
+          { index: 16, label: "Tax Rate",           class: "TaxRate",       width: "91",        active: true,   display: true },
+          { index: 17, label: "Tax Code",           class: "TaxCode",       width: "95",        active: true,   display: true },
+          { index: 18, label: "Tax Amt",            class: "TaxAmount",     width: "75",        active: true,   display: true },
+          { index: 19, label: "Amount (Ex)",        class: "AmountEx",      width: "152",       active: true,   display: true },
+          { index: 20, label: "Amount (Inc)",       class: "AmountInc",     width: "152",       active: false,  display: true },
+          { index: 21, label: "Units",              class: "Units",            width: "95",        active: true,   display: true },
+          { index: 22, label: "Custom Field 1",     class: "CustomField1",  width: "124",       active: false,  display: false },
+          { index: 23, label: "Custom Field 2",     class: "CustomField2",  width: "124",       active: false,  display: false },
       ];
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       let isBOnShippedQty = Session.get("CloudSalesQtyOnly");
@@ -172,77 +173,73 @@ Template.transaction_line.onRendered(function() {
         x = reset_data.find(x => x.class === 'BackOrder'); if(x != undefined) x.display = true;
       }
       if (isBatchSerialNoTracking) {
-        let x = reset_data.find(x => x.class === 'TaxAmount');
-        if(x != undefined) x.display = true;
+        let x = reset_data.find(x => x.class === 'TaxAmount'); if(x != undefined) x.display = true;
       } else {
-        let x = reset_data.find(x => x.class === 'TaxAmount');
-        if(x != undefined) x.display = false;
+        let x = reset_data.find(x => x.class === 'TaxAmount'); if(x != undefined) x.display = false;
       }
       let templateObject = Template.instance();
-      templateObject.reset_data.set(reset_data);
+      templateObject.init_data.set(reset_data);
   }
   templateObject.init_reset_data();
   // custom field displaysettings
   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
 
       let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
+      let reset_data = templateObject.init_data.get();
       if(listType == "tblSalesOrderLine" || listType == "tblQuoteLine") {
         let reset_data_salesorder = [
-            { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
-            { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
-            { index: 2, label: "Qty", class: "Qty", width: "55", active: true, display: true },
-            { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
-            { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
-            { index: 5, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
-            { index: 6, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
-            { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
-            { index: 8, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
-            { index: 9, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-            { index: 10, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
-            { index: 11, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
-            { index: 12, label: "Amount (Ex)", class: "AmountEx", width: "152", active: true, display: true },
-            { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "152", active: false, display: true },
+            { index: 0,  label: "Product Name",          class: "ProductName",           width: "300",   active: true,   display: true },
+            { index: 1,  label: "Description",           class: "Description",           width: "",      active: true,   display: true },
+            { index: 2,  label: "Qty",                   class: "Qty",                   width: "55",    active: true,   display: true },
+            { index: 3,  label: "Unit Price (Ex)",       class: "UnitPriceEx",           width: "152",   active: true,   display: true },
+            { index: 4,  label: "Unit Price (Inc)",      class: "UnitPriceInc",          width: "152",   active: false,  display: true },
+            { index: 5,  label: "Disc %",                class: "Discount",              width: "95",    active: true,   display: true },
+            { index: 6,  label: "Cost Price",            class: "CostPrice",             width: "110",   active: false,  display: true },
+            { index: 7,  label: "SalesLines CustField1", class: "SalesLinesCustField1",  width: "110",   active: false,  display: true },
+            { index: 8,  label: "Tax Rate",              class: "TaxRate",               width: "95",    active: false,  display: true },
+            { index: 9,  label: "Tax Code",              class: "TaxCode",               width: "95",    active: true,   display: true },
+            { index: 10, label: "Tax Amt",               class: "TaxAmount",             width: "95",    active: true,   display: true },
+            { index: 11, label: "Serial/Lot No",         class: "SerialNo",              width: "124",   active: true,   display: true },
+            { index: 12, label: "Amount (Ex)",           class: "AmountEx",              width: "152",   active: true,   display: true },
+            { index: 13, label: "Amount (Inc)",          class: "AmountInc",             width: "152",   active: false,  display: true },
           ];
-            reset_data = reset_data.map( data => {
-            x = reset_data_salesorder.find( x => x.class === data.class);
-            if(x != undefined) {
-                x.index = data.index;
-                x.width = data.width;
-                return x;
-            } else {
-                data.active = false;
-                data.display = false;
-                return data;
-            }
+            reset_data = templateObject.init_data.get().map( item => {
+                x = reset_data_salesorder.find( x => x.class === item.class);
+                if(x != undefined) return {...item, active: x.active, display: x.display};
+                return {...item, active: false, display: false};
             });
+            amtEx = reset_data.find(x => x.class == "AmountEx");
+            amtInc = reset_data.find(x => x.class == "AmountInc");
+            unitPriceEx = reset_data.find(x => x.class == "UnitPriceEx");
+            unitPriceInc = reset_data.find(x => x.class == "UnitPriceInc");
+            if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
+            if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active;
       }
       if(listType == 'tblCreditLine' || listType == 'tblBillLine') {
         let reset_data_credit = [
-            { index: 0, label: "Account Name", class: "AccountName", width: "300", active: true, display: true },
-            { index: 1, label: "Memo", class: "Memo", width: "", active: true, display: true },
-            { index: 2, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
-            { index: 3, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
-            { index: 4, label: "Fixed Asset", class: "FixedAsset", width: "140", active: true, display: true },
-            { index: 5, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
-            { index: 6, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-            { index: 7, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
-            { index: 8, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
-            { index: 9, label: "Custom Field 1", class: "CustomField1", width: "124", active: false, display: true },
-            { index: 10, label: "Custom Field 2", class: "CustomField2", width: "124", active: false, display: true },
+            { index: 0,  label: "Account Name",      class: "AccountName",   width: "300",   active: true,   display: true },
+            { index: 1,  label: "Memo",              class: "Memo",          width: "",      active: true,   display: true },
+            { index: 2,  label: "Amount (Ex)",       class: "AmountEx",      width: "140",   active: true,   display: true },
+            { index: 3,  label: "Amount (Inc)",      class: "AmountInc",     width: "140",   active: false,  display: true },
+            { index: 4,  label: "Fixed Asset",       class: "FixedAsset",    width: "140",   active: true,   display: true },
+            { index: 5,  label: "Tax Rate",          class: "TaxRate",       width: "95",    active: false,  display: true },
+            { index: 6,  label: "Tax Code",          class: "TaxCode",       width: "95",    active: true,   display: true },
+            { index: 7,  label: "Tax Amt",           class: "TaxAmount",     width: "95",    active: true,   display: true },
+            { index: 8,  label: "Serial/Lot No",     class: "SerialNo",      width: "124",   active: true,   display: true },
+            { index: 9,  label: "Custom Field 1",    class: "CustomField1",  width: "124",   active: false,  display: true },
+            { index: 10, label: "Custom Field 2",    class: "CustomField2",  width: "124",   active: false,  display: true },
           ];
-          reset_data = reset_data.map( data => {
-            x = reset_data_credit.find( x => x.class === data.class);
-            if(x != undefined) {
-                x.index = data.index;
-                x.width = data.width;
-                return x;
-            } else {
-                data.active = false;
-                data.display = false;
-                return data;
-            }
+          reset_data = templateObject.init_data.get().map( item => {
+                x = reset_data_credit.find( x => x.class === item.class);
+                if(x != undefined) return {...item, active: x.active, display: x.display};
+                return {...item, active: false, display: false};
             });
+            amtEx = reset_data.find(x => x.class == "AmountEx");
+            amtInc = reset_data.find(x => x.class == "AmountInc");
+            unitPriceEx = reset_data.find(x => x.class == "UnitPriceEx");
+            unitPriceInc = reset_data.find(x => x.class == "UnitPriceInc");
+            if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
+            if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active;
       }
       templateObject.showCustomFieldDisplaySettings(reset_data);
       try {
@@ -250,40 +247,120 @@ Template.transaction_line.onRendered(function() {
           getVS1Data("VS1_Customize").then(function(dataObject) {
               if (dataObject.length == 0) {
                   sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
-                      reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                      reset_data = templateObject.reset_data.get().map( data => {
-                        x = reset_data.find( x => x.class === data.class);
-                        if(x != undefined) {
-                            x.index = data.index;
-                            x.width = data.width;
-                            return x;
-                        } else {
-                            data.active = false;
-                            data.display = false;
-                            return data;
+                    reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                    if(listType != 'tblBillLine'){
+                        resetData = templateObject.init_data.get().map((item) => {
+                            data =  reset_data.find(x => x.class == item.class);
+                            if(data != undefined) return {...item, active: data.active, display: data.display};
+                            return {...item, active: false, display: false};
+                        });
+                        amtEx = resetData.find(x => x.class == "AmountEx");
+                        amtInc = resetData.find(x => x.class == "AmountInc");
+                        unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
+                        unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
+                        if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
+                        if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active; 
+
+                        canShowBackOrder = templateObject.data.canShowBackOrder;
+                        canShowUOM = templateObject.data.canShowUOM;
+                        includeBOnShippedQty = templateObject.data.includeBOnShippedQty;
+                        isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking;
+
+
+                        if(!canShowBackOrder || !includeBOnShippedQty) {
+                            ordered = resetData.find(x => x.class == "Ordered");
+                            shipped = resetData.find(x => x.class == "Shipped");
+                            backorder = resetData.find(x => x.class == "BackOrder");
+
+                            if(backorder != undefined){
+                                resetData.find(x => x.class == "BackOrder").display = false;
+                                resetData.find(x => x.class == "BackOrder").active = false;
+                            }
+                            if(ordered != undefined){
+                                resetData.find(x => x.class == "Ordered").display = false;
+                                resetData.find(x => x.class == "Ordered").active = false;
+                            }
+                            if(shipped != undefined){
+                                resetData.find(x => x.class == "Shipped").display = false;
+                                resetData.find(x => x.class == "Shipped").active = false;
+                            }
                         }
-                      })
-                      templateObject.showCustomFieldDisplaySettings(reset_data);
+                        if(!isBatchSerialNoTracking) {
+                            serialNo = resetData.find(x => x.class == "SerialNo");
+                            if(serialNo != undefined){
+                                resetData.find(x => x.class == "SerialNo").display = false;
+                                resetData.find(x => x.class == "SerialNo").active = false;
+                            }
+                        }
+                        if(!canShowUOM) {
+                            units = resetData.find(x => x.class == "Units");
+                            if(units != undefined){
+                                resetData.find(x => x.class == "Units").display = false;
+                                resetData.find(x => x.class == "Units").active = false;
+                            }
+                        }
+
+                        templateObject.showCustomFieldDisplaySettings(resetData);
+                    }
                   }).catch(function(err) {});
               } else {
                   let data = JSON.parse(dataObject[0].data);
                   if (data.ProcessLog.Obj.CustomLayout.length > 0) {
                       for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                           if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
-                              reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                              reset_data = templateObject.reset_data.get().map( data => {
-                                x = reset_data.find( x => x.class === data.class);
-                                if(x != undefined) {
-                                    x.index = data.index;
-                                    x.width = data.width;
-                                    return x;
-                                } else {
-                                    data.active = false;
-                                    data.display = false;
-                                    return data;
+                                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                                if(listType == 'tblBillLine') break;
+                                resetData = templateObject.init_data.get().map((item) => {
+                                    data =  reset_data.find(x => x.class == item.class);
+                                    if(data != undefined) return {...item, active: data.active, display: data.display};
+                                    return {...item, active: false, display: false};
+                                });                                                            
+                                amtEx = resetData.find(x => x.class == "AmountEx");
+                                amtInc = resetData.find(x => x.class == "AmountInc");
+                                unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
+                                unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
+                                if(amtInc && amtEx) if(amtEx.display) amtInc.active = !amtEx.active;                                
+                                if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active;
+
+                                canShowBackOrder = templateObject.data.canShowBackOrder;
+                                canShowUOM = templateObject.data.canShowUOM;
+                                includeBOnShippedQty = templateObject.data.includeBOnShippedQty;
+                                isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking;
+
+
+                                if(!canShowBackOrder || !includeBOnShippedQty) {
+                                    ordered = resetData.find(x => x.class == "Ordered");
+                                    shipped = resetData.find(x => x.class == "Shipped");
+                                    backorder = resetData.find(x => x.class == "BackOrder");
+
+                                    if(backorder != undefined){
+                                        resetData.find(x => x.class == "BackOrder").display = false;
+                                        resetData.find(x => x.class == "BackOrder").active = false;
+                                    }
+                                    if(ordered != undefined){
+                                        resetData.find(x => x.class == "Ordered").display = false;
+                                        resetData.find(x => x.class == "Ordered").active = false;
+                                    }
+                                    if(shipped != undefined){
+                                        resetData.find(x => x.class == "Shipped").display = false;
+                                        resetData.find(x => x.class == "Shipped").active = false;
+                                    }
                                 }
-                              });
-                              templateObject.showCustomFieldDisplaySettings(reset_data);
+                                if(!isBatchSerialNoTracking) {
+                                    serialNo = resetData.find(x => x.class == "SerialNo");
+                                    if(serialNo != undefined){
+                                        resetData.find(x => x.class == "SerialNo").display = false;
+                                        resetData.find(x => x.class == "SerialNo").active = false;
+                                    }
+                                }
+                                if(!canShowUOM) {
+                                    units = resetData.find(x => x.class == "Units");
+                                    if(units != undefined){
+                                        resetData.find(x => x.class == "Units").display = false;
+                                        resetData.find(x => x.class == "Units").active = false;
+                                    }
+                                }
+                                templateObject.showCustomFieldDisplaySettings(resetData);
                           }
                       }
                   };
@@ -318,8 +395,10 @@ Template.transaction_line.onRendered(function() {
           };
           custFields.push(customData);
       }
+      
       await templateObject.displayfields.set(custFields);
       await templateObject.reset_data.set(custFields);
+
       $('.dataTable').resizable();
   }
 
@@ -335,9 +414,11 @@ Template.transaction_line.events({
       let reset_data = templateObject.reset_data.get();
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if (isBatchSerialNoTracking) {
-        reset_data.find((x) => x.class === 'TaxRate').display = true;
+        data = reset_data.find((x) => x.class === 'TaxRate');
+        if(data != undefined) data = {...data, display: true, active: true};
       } else {
-        reset_data.find((x) => x.class === 'TaxRate').display = false;
+        data = reset_data.find((x) => x.class === 'TaxRate');
+        if(data != undefined) data = {...data, display: false, active: false};
       }
       reset_data = reset_data.filter(redata => redata.display);
       $(".displaySettings").each(function(index) {
@@ -494,7 +575,6 @@ Template.transaction_line.helpers({
             serialNo.active = false;
         }
     }
-
     return data;
   },
 

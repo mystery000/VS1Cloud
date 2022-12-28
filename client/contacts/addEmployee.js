@@ -136,7 +136,7 @@ Template.employeescard.onRendered(function() {
     let currentDate;
     const erpGet = erpDb();
     LoadingOverlay.show();
-    Session.setPersistent('cloudCurrentLogonName', '');
+    Session.set('cloudCurrentLogonName', '');
     //var splashArrayRepServiceList = new Array();
     let templateObject = Template.instance();
     let contactService = new ContactService();
@@ -1879,7 +1879,7 @@ Template.employeescard.onRendered(function() {
                 let emplineItemObj = {};
                 if (Array.isArray(data.fields.User)) {
                     empEmail = data.fields.User[0].fields.LogonName;
-                    Session.setPersistent('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
+                    Session.set('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
                     emplineItemObj = {
                         empID: data.fields.User[0].fields.EmployeeId || '',
                         EmployeeName: data.fields.User[0].fields.EmployeeName || '',
@@ -1888,7 +1888,7 @@ Template.employeescard.onRendered(function() {
                     };
                 } else {
                     empEmail = data.fields.User.fields.LogonName;
-                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                    Session.set('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                     emplineItemObj = {
                         empID: data.fields.User.fields.EmployeeId || '',
                         EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -1915,7 +1915,7 @@ Template.employeescard.onRendered(function() {
                 let emplineItems = [];
                 let emplineItemObj = {};
                 if (Array.isArray(data.fields.User)) {
-                    Session.setPersistent('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
+                    Session.set('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
                     emplineItemObj = {
                         empID: data.fields.User[0].fields.EmployeeId || '',
                         EmployeeName: data.fields.User[0].fields.EmployeeName || '',
@@ -1923,7 +1923,7 @@ Template.employeescard.onRendered(function() {
                         PasswordHash: data.fields.User[0].fields.LogonPassword || ''
                     };
                 } else {
-                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                    Session.set('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                     emplineItemObj = {
                         empID: data.fields.User.fields.EmployeeId || '',
                         EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -5757,6 +5757,13 @@ Template.employeescard.events({
                 };
             }
             contactService.saveEmployeeEx(objDetails).then(function(objDetails) {
+
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
+
                 let employeeSaveID = objDetails.fields.ID;
                 sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function(dataReload) {
                     addVS1Data('TEmployee', JSON.stringify(dataReload));
@@ -11037,7 +11044,45 @@ Template.employeescard.events({
         }
         $('#earningRateSettingsModal').modal('toggle');
     },
+    "click #productCostPayRate":(e,ui)=>{
+        if($('#productCostPayRate').is(':checked')){
+            $('.fullScreenSpin').css('display', 'inline-block');
+            // let selectClient = templateObject.selectedTimesheet.get();
+            // let contactService = new ContactService();
+            // let data = {
+            //     type: "TTimeSheet",
+            //     fields: {
+            //         ID: selectClient[x].TimesheetID,
+            //         Status: "Processed"
+            //     }
 
+            // };
+            // contactService.saveClockTimeSheet(data).then(function(data) {
+            //     if ((x + 1) == selectClient.length) {
+            //         sideBarService.getAllTimeSheetList().then(function(data) {
+            //             addVS1Data('TTimeSheet', JSON.stringify(data));
+            //             setTimeout(function() {
+            //                 window.open('/timesheet', '_self');
+            //             }, 200);
+            //         })
+            //     }
+            // }).catch(function(err) {
+            //     swal({
+            //         title: 'Oooops...',
+            //         text: err,
+            //         type: 'error',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Try Again'
+            //     }).then((result) => {
+            //         if (result.value) {
+            //             // Meteor._reload.reload();
+            //         } else if (result.dismiss === 'cancel') {}
+            //     });
+            //     $('.fullScreenSpin').css('display', 'none');
+            // });
+            // $('.fullScreenSpin').css('display', 'none');
+        }
+    }
 
 });
 

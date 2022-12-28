@@ -5,11 +5,16 @@ data
 
 <template name="transaction_payment_header">
   <header style="padding: 16px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-    <h2 class="heading" style="margin: 16px;margin-bottom: 0px;">{{type}} Payment {{data.lid}}
-      {{> helpbutton}}
-      {{> help_modal}}
-    </h2>
-    <div class="printID" id="{{data.lid}}" style="display: none;">{{data.lid}}</div>
+      <div class="row">
+          <div class="col-12 col-md-4">
+              <h2 class="heading" style="margin: 16px;margin-bottom: 0px;">{{type}} Payment {{data.lid}}
+                  {{> helpbutton}}
+                  {{> help_modal}}
+              </h2>
+              <div class="printID" id="{{data.lid}}" style="display: none;">{{data.lid}}</div>
+          </div>
+          <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+      </div>
   </header>
   <div class="row" style="background-color: #ededed; padding: 16px 32px;">
     <div class="col-12 col-xl-10">

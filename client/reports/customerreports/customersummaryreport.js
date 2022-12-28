@@ -622,7 +622,7 @@ Template.customersummaryreport.events({
     localStorage.setItem("VS1CustomerSummary_Report", "");
     templateObject.getCustomerDetailsHistory(
       false,
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
       GlobalFunctions.convertYearMonthDay($('#dateTo').val())
     )
   },

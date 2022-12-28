@@ -5068,9 +5068,9 @@ Template.paymentcard.events({
         }
 
 
-        Session.setPersistent('paymentmethod', payMethod);
-        Session.setPersistent('bankaccount', bankAccount);
-        Session.setPersistent('department', department);
+        Session.set('paymentmethod', payMethod);
+        Session.set('bankaccount', bankAccount);
+        Session.set('department', department);
         var url = FlowRouter.current().path;
         if (url.indexOf('?soid=') > 0) {
             var getsale_id = url.split('?soid=');
@@ -5126,6 +5126,13 @@ Template.paymentcard.events({
                 };
 
                 paymentService.saveDepositData(objDetails).then(function (data) {
+
+                    if (localStorage.getItem("enteredURL") != null) {
+                        FlowRouter.go(localStorage.getItem("enteredURL"));
+                        localStorage.removeItem("enteredURL");
+                        return;
+                    }
+
                     var customerID = $('#edtCustomerEmail').attr('customerid');
                     // Send Email
                     $('#html-2-pdfwrapper').css('display', 'block');
@@ -7751,10 +7758,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            Session.set('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            Session.set('customerpayments', []);
                         }
 
                         // Send Email
@@ -8121,10 +8128,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            Session.set('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            Session.set('customerpayments', []);
                         }
                         swal({
                             title: 'Oooops...',
@@ -8178,10 +8185,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            Session.set('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            Session.set('customerpayments', []);
                         }
                         var customerID = $('#edtCustomerEmail').attr('customerid');
                         // Send Email
@@ -8585,10 +8592,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            Session.set('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            Session.set('customerpayments', []);
                         }
                         swal({
                             title: 'Oooops...',
@@ -9623,16 +9630,10 @@ Template.paymentcard.events({
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id') || 0; // table row ID
         $('#selectDeleteLineID').val(targetID);
-        
         if(targetID != undefined){
             times++;
             if (times == 1) {
-                if (targetID == 0) {
-                    $(event.target).closest('tr').remove();
-                } else {
-                    $('#deleteLineModal').modal('toggle');
-                }
-
+                $('#deleteLineModal').modal('show');
             } else {
                 if ($('#tblPaymentcard tbody>tr').length > 1) {
                     this.click;
@@ -9651,14 +9652,14 @@ Template.paymentcard.events({
                     if (targetID == 0) {
                         $(event.target).closest('tr').remove();
                     } else {
-                        $('#deleteLineModal').modal('toggle');
+                        $('#deleteLineModal').modal('show');
                     }
                 }
 
             }
         } else {
-            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
-            else $("#footerDeleteModal1").modal("toggle");
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("show");
+            else $("#footerDeleteModal1").modal("show");
         }
     },
     'click .btnDeleteFollowingPayments': async function (event) {

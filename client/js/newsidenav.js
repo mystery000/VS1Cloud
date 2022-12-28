@@ -1091,7 +1091,7 @@ Template.newsidenav.onRendered(function() {
     // }
     let sidePanelToggle = Session.get('sidePanelToggle');
     // if ((sidePanelToggle === '') || (!sidePanelToggle)) {
-    //   Session.setPersistent('sidePanelToggle', "toggled");
+    //   Session.set('sidePanelToggle', "toggled");
     //  sidePanelToggle = Session.get('sidePanelToggle');
     // }
 
@@ -1490,6 +1490,44 @@ Template.newsidenav.onRendered(function() {
         }).catch(function(err) {
 
         });
+
+
+        sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, false).then(function(data) {
+            countObjectTimes++;
+            progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+            $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+            $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+            $(".progressName").text("Account List ");
+
+            if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+                if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                } else {
+                    $('.headerprogressbar').addClass('headerprogressbarShow');
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                }
+
+            } else if (Math.round(progressPercentage) >= 100) {
+                $('.checkmarkwrapper').removeClass("hide");
+                setTimeout(function() {
+                    if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                        $('.headerprogressbar').removeClass('headerprogressbarShow');
+                        $('.headerprogressbar').addClass('headerprogressbarHidden');
+                    } else {
+                        $('.headerprogressbar').removeClass('headerprogressbarShow');
+                        $('.headerprogressbar').addClass('headerprogressbarHidden');
+                    }
+
+                }, 1000);
+            }
+
+            //localStorage.setItem('VS1AccountList', JSON.stringify(data) || '');
+            addVS1Data('TAccountVS1List', JSON.stringify(data));
+            $("<span class='process'>Account List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+
+        }).catch(function(err) {
+
+        });
     }
 
     templateObject.getAllProductData = function() {
@@ -1826,11 +1864,11 @@ Template.newsidenav.onRendered(function() {
             for (let i in data.ttermsvs1) {
 
                 if (data.ttermsvs1[i].isSalesdefault == true) {
-                    Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
+                    Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
                 }
 
                 if (data.ttermsvs1[i].isPurchasedefault == true) {
-                    Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
+                    Session.set('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
                 }
 
             }
@@ -4455,7 +4493,7 @@ Template.newsidenav.onRendered(function() {
     job.start();
 
     setTimeout(function() {
-        Session.setPersistent('LoggedUserEventFired', false);
+        Session.set('LoggedUserEventFired', false);
     }, 2500);
     /* Start Here */
     if (loggedUserEventFired) {
@@ -7239,12 +7277,12 @@ Template.newsidenav.events({
 
         if (sideBarPanel.indexOf("toggled") >= 0) {
 
-            Session.setPersistent('sidePanelToggle', "toggled");
+            Session.set('sidePanelToggle', "toggled");
             $("#sidenavbar").addClass("toggled");
 
         } else {
 
-            Session.setPersistent('sidePanelToggle', "");
+            Session.set('sidePanelToggle', "");
             ("#sidenavbar").removeClass("toggled");
 
         }
@@ -8441,18 +8479,6 @@ Template.newsidenav.events({
     'click #payrollrules': function(event) {
         window.open('/payrollrules', '_self');
     },
-    'click #mypayroll': function(event) {
-      event.preventDefault();
-      FlowRouter.go('/mypayroll');
-      let templateObject = Template.instance();
-      templateObject.getSetSideNavFocus();
-    },
-    'click #mypayrollleave': function(event) {
-        event.preventDefault();
-        FlowRouter.go('/mypayrollleave');
-        let templateObject = Template.instance();
-        templateObject.getSetSideNavFocus();
-    },
     'click #templatesettings': function(event) {
         window.open('/templatesettings', '_self');
     },
@@ -8665,7 +8691,7 @@ Template.newsidenav.events({
         }
 
         accesslevelService.saveEmpAccess(data).then(function(data) {
-            Session.setPersistent('CloudSidePanelMenu', isSidePanel);
+            Session.set('CloudSidePanelMenu', isSidePanel);
 
             Meteor._reload.reload();
         }).catch(function(err) {

@@ -8479,9 +8479,9 @@ Template.supplierpaymentcard.events({
       return false;
     };
 
-    Session.setPersistent("paymentmethod", payMethod);
-    Session.setPersistent("bankaccount", bankAccount);
-    Session.setPersistent("department", department);
+    Session.set("paymentmethod", payMethod);
+    Session.set("bankaccount", bankAccount);
+    Session.set("department", department);
     var currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth = currentBeginDate.getMonth() + 1;
@@ -8583,6 +8583,13 @@ Template.supplierpaymentcard.events({
       };
 
       paymentService.saveSuppDepositData(objDetails).then(function (data) {
+
+          if (localStorage.getItem("enteredURL") != null) {
+              FlowRouter.go(localStorage.getItem("enteredURL"));
+              localStorage.removeItem("enteredURL");
+              return;
+          }
+
           var customerID = $("#edtSupplierEmail").attr("customerid");
           // Start End Send Email
           $("#html-2-pdfwrapper").css("display", "block");
@@ -11203,10 +11210,10 @@ Template.supplierpaymentcard.events({
               "&selectsuppcredit=" +
               allData[0].credit;
             allData.shift();
-            Session.setPersistent("supplierpayments", JSON.stringify(allData));
+            Session.set("supplierpayments", JSON.stringify(allData));
           } else {
             newURL = "/paymentoverview?success=true";
-            Session.setPersistent("supplierpayments", JSON.stringify(allData));
+            Session.set("supplierpayments", JSON.stringify(allData));
           }
           // Start End Send Email
           $("#html-2-pdfwrapper").css("display", "block");
@@ -11543,10 +11550,10 @@ Template.supplierpaymentcard.events({
               "&selectsuppcredit=" +
               allData[0].credit;
             allData.shift();
-            Session.setPersistent("supplierpayments", JSON.stringify(allData));
+            Session.set("supplierpayments", JSON.stringify(allData));
           } else {
             newURL = "/paymentoverview?success=true";
-            Session.setPersistent("supplierpayments", JSON.stringify(allData));
+            Session.set("supplierpayments", JSON.stringify(allData));
           }
 
           //window.open('/paymentoverview','_self');
@@ -12483,11 +12490,11 @@ Template.supplierpaymentcard.events({
     if(targetID != undefined){
       times++;
       if (times == 1) {
-        if (targetID == 0) {
-          $(event.target).closest("tr").remove();
-        } else {
-          $("#deleteLineModal").modal("toggle");
-        }
+        // if (targetID == 0) {
+        //   $(event.target).closest("tr").remove();
+        // } else {
+          $("#deleteLineModal").modal("show");
+        // }
       } else {
         if ($("#tblSupplierPaymentcard tbody>tr").length > 1) {
           this.click;
@@ -12515,13 +12522,13 @@ Template.supplierpaymentcard.events({
           if (targetID == 0) {
             $(event.target).closest("tr").remove();
           } else {
-            $("#deleteLineModal").modal("toggle");
+            $("#deleteLineModal").modal("show");
           }
         }
       }
     } else {
-      if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
-      else $("#footerDeleteModal1").modal("toggle");
+      if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("show");
+      else $("#footerDeleteModal1").modal("show");
     }
   },
   "click .btnRecoverPayment": function (event) {
@@ -12732,7 +12739,7 @@ Template.supplierpaymentcard.events({
     } else {
       this.click;
     }
-    $("#deleteLineModal").modal("toggle");
+    $("#deleteLineModal").modal("show");
   }, delayTimeAfterSound);
   },
   // 'click .printConfirm': function(event) {

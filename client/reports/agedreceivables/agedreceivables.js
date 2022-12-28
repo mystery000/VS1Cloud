@@ -91,7 +91,7 @@ Template.agedreceivables.onRendered(() => {
     templateObject.setDateAs = ( dateFrom = null ) => {
         templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
     };
-    
+
     templateObject.initUploadedImage = () => {
         let imageData = localStorage.getItem("Image");
         if (imageData) {
@@ -142,17 +142,17 @@ Template.agedreceivables.onRendered(() => {
 
                     let recordObj = {
                         Id: account.SaleID,
-                        type: accountType, 
+                        type: accountType,
                         SupplierName: account.Name,
                         entries: account
                     };
 
                     if (
-                        (account.AmountDue != 0) 
+                        (account.AmountDue != 0)
                         || (daccount.Current != 0)
-                        || (account["1-30Days"] != 0) 
+                        || (account["1-30Days"] != 0)
                         || (account["30-60Days"] != 0)
-                        || (account["60-90Days"] != 0) 
+                        || (account["60-90Days"] != 0)
                         || (account[">90Days"] != 0)
                         ) {
                         if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
@@ -165,8 +165,8 @@ Template.agedreceivables.onRendered(() => {
                         }
 
                     }
-                    
-                    
+
+
 
                 });
 
@@ -199,11 +199,11 @@ Template.agedreceivables.onRendered(() => {
             //     ];
 
             //     if (
-            //         (data.tarreport[i].AmountDue != 0) 
+            //         (data.tarreport[i].AmountDue != 0)
             //         || (data.tarreport[i].Current != 0)
-            //         || (data.tarreport[i]["1-30Days"] != 0) 
+            //         || (data.tarreport[i]["1-30Days"] != 0)
             //         || (data.tarreport[i]["30-60Days"] != 0)
-            //         || (data.tarreport[i]["60-90Days"] != 0) 
+            //         || (data.tarreport[i]["60-90Days"] != 0)
             //         || (data.tarreport[i][">90Days"] != 0)
             //         ) {
             //         if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
@@ -229,7 +229,7 @@ Template.agedreceivables.onRendered(() => {
                 //             data: records[key]
                 //         }
                 //     ];
-        
+
                 let obj = {
                     title: key,
                     entries: records[key],
@@ -239,7 +239,7 @@ Template.agedreceivables.onRendered(() => {
             }
 
             allRecords.forEach((record) => {
-            
+
                 let amountduetotal = 0;
                 let Currenttotal = 0;
                 let lessTnMonth = 0;
@@ -472,8 +472,8 @@ Template.agedreceivables.onRendered(() => {
     // templateObject.getAllProductData();
     templateObject.getDepartments();
     templateObject.initDate();
-    templateObject.initUploadedImage();    
-    templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )  
+    templateObject.initUploadedImage();
+    templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
 });
 
 Template.agedreceivables.events({
@@ -482,7 +482,6 @@ Template.agedreceivables.events({
     },
     'click .chkDatatable': function (event) {
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-        console.log(columnDataValue);
         if ($(event.target).is(':checked')) {
           $('.' + columnDataValue).addClass('showColumn');
           $('.' + columnDataValue).removeClass('hiddenColumn');
@@ -510,13 +509,12 @@ Template.agedreceivables.events({
         //   await $('.colAccountTree').css('width', range);
         $('.dataTable').resizable();
       },
-  
     'click td a': async function (event) {
         let id = $(event.target).closest('tr').attr('id').split("item-value-");
         var accountName = id[1].split('_').join(' ');
         let toDate = moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
         let fromDate = moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
-        //Session.setPersistent('showHeader',true);
+        //Session.set('showHeader',true);
         await clearData('TAccountRunningBalanceReport');
         window.open('/balancetransactionlist?accountName=' + accountName + '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem=' + false, '_self');
     },
@@ -643,7 +641,7 @@ Template.agedreceivables.events({
                             if(j == values.length -1) {resolve()}
                         }
                     }
-                   
+
                 })
             }
 
@@ -711,7 +709,7 @@ Template.agedreceivables.events({
         LoadingOverlay.show();
         localStorage.setItem("VS1AgedReceivables_Report", "");
         templateObject.getAgedReceivableReports(
-          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
           GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
           false
         )
@@ -811,7 +809,7 @@ Template.agedreceivables.events({
 
     LoadingOverlay.hide();
   },
-  
+
   "click [href='#noInfoFound']": function () {
     swal({
         title: 'Information',
@@ -874,15 +872,15 @@ Template.agedreceivables.helpers({
     formatDate: ( date ) => {
     return ( date )? moment(date).format("DD/MM/YYYY") : '';
     },
-  
-  
+
+
       // FX Module
     convertAmount: (amount = 0.00, currencyData, days = null) => {
       if(days != null) {
           amount = amount[days];
       }
       let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
-  
+
       if (isNaN(amount)) {
         if (!amount || amount.trim() == "") {
           return '';
@@ -893,24 +891,24 @@ Template.agedreceivables.helpers({
       //    default currency
       //   return amount;
       // }
-  
+
       // Lets remove the minus character
       const isMinus = amount < 0;
-      if (isMinus == true) 
+      if (isMinus == true)
         amount = amount * -1; // make it positive for now
-      
+
       //  get default currency symbol
       // let _defaultCurrency = currencyList.filter(
       //   (a) => a.Code == defaultCurrencyCode
       // )[0];
-  
+
       // amount = amount.replace(_defaultCurrency.symbol, "");
-  
+
       // amount =
       //   isNaN(amount) == true
       //     ? parseFloat(amount.substring(1))
       //     : parseFloat(amount);
-  
+
       // Get the selected date
       let dateTo = $("#dateTo").val();
       const day = dateTo.split("/")[0];
@@ -918,51 +916,51 @@ Template.agedreceivables.helpers({
       const y = dateTo.split("/")[2];
       dateTo = new Date(y, m, day);
       dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-  
+
       // Filter by currency code
       currencyList = currencyList.filter(a => a.Code == currencyData.code);
-  
+
       // Sort by the closest date
       currencyList = currencyList.sort((a, b) => {
         a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
         a.setHours(0);
         a.setMinutes(0);
         a.setSeconds(0);
-  
+
         b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
         b.setHours(0);
         b.setMinutes(0);
         b.setSeconds(0);
-  
+
         var distancea = Math.abs(dateTo - a);
         var distanceb = Math.abs(dateTo - b);
         return distancea - distanceb; // sort a before b when the distance is smaller
-  
+
         // const adate= new Date(a.MsTimeStamp);
         // const bdate = new Date(b.MsTimeStamp);
-  
+
         // if(adate < bdate) {
         //   return 1;
         // }
         // return -1;
       });
-  
+
       const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
-  
+
       let rate = currencyData.code == defaultCurrencyCode
         ? 1
         : firstElem.BuyRate; // Must used from tcurrecyhistory
-  
+
       amount = parseFloat(amount * rate); // Multiply by the rate
       amount = Number(amount).toLocaleString(undefined, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       }); // Add commas
-  
+
       let convertedAmount = isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
-  
+
       return convertedAmount;
     },
     count: array => {
@@ -993,7 +991,7 @@ Template.agedreceivables.helpers({
         return false;
       }
       let activeArray = array.filter(c => c.active == true);
-  
+
       if (activeArray.length == 1) {
         if (activeArray[0].code == defaultCurrencyCode) {
           return !true;
@@ -1007,7 +1005,7 @@ Template.agedreceivables.helpers({
     isCurrencyListActive() {
       const array = Template.instance().currencyList.get();
       let activeArray = array.filter(c => c.active == true);
-  
+
       return activeArray.length > 0;
     },
     isObject(variable) {
@@ -1032,4 +1030,3 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
     return (a.indexOf(b) >= 0);
 });
-
