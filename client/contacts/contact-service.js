@@ -1,4 +1,5 @@
 import { BaseService } from "../js/base-service";
+import { Session } from 'meteor/session';
 export class ContactService extends BaseService {
     getAllCustomers() {
         let options = {

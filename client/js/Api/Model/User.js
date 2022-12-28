@@ -1,6 +1,8 @@
 /**
  * @type {{type: string, fields: UserFields}}
  */
+ import { Template } from 'meteor/templating';
+ import { Session } from 'meteor/session';
 export default class User {
   constructor({ type, fields }) {
     this.type = type;

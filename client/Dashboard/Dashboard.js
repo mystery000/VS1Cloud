@@ -4,7 +4,7 @@ import { DashBoardService } from "./dashboard-service";
 import { UtilityService } from "../utility-service";
 import { VS1ChartService } from "../vs1charts/vs1charts-service";
 import { Template } from 'meteor/templating';
-
+import { Session } from 'meteor/session';
 import './dashboard.html';
 import "gauge-chart";
 
