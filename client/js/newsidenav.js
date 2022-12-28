@@ -1091,7 +1091,7 @@ Template.newsidenav.onRendered(function() {
     // }
     let sidePanelToggle = Session.get('sidePanelToggle');
     // if ((sidePanelToggle === '') || (!sidePanelToggle)) {
-    //   Session.setPersistent('sidePanelToggle', "toggled");
+    //   Session.set('sidePanelToggle', "toggled");
     //  sidePanelToggle = Session.get('sidePanelToggle');
     // }
 
@@ -1864,11 +1864,11 @@ Template.newsidenav.onRendered(function() {
             for (let i in data.ttermsvs1) {
 
                 if (data.ttermsvs1[i].isSalesdefault == true) {
-                    Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
+                    Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
                 }
 
                 if (data.ttermsvs1[i].isPurchasedefault == true) {
-                    Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
+                    Session.set('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
                 }
 
             }
@@ -4493,7 +4493,7 @@ Template.newsidenav.onRendered(function() {
     job.start();
 
     setTimeout(function() {
-        Session.setPersistent('LoggedUserEventFired', false);
+        Session.set('LoggedUserEventFired', false);
     }, 2500);
     /* Start Here */
     if (loggedUserEventFired) {
@@ -7277,12 +7277,12 @@ Template.newsidenav.events({
 
         if (sideBarPanel.indexOf("toggled") >= 0) {
 
-            Session.setPersistent('sidePanelToggle', "toggled");
+            Session.set('sidePanelToggle', "toggled");
             $("#sidenavbar").addClass("toggled");
 
         } else {
 
-            Session.setPersistent('sidePanelToggle', "");
+            Session.set('sidePanelToggle', "");
             ("#sidenavbar").removeClass("toggled");
 
         }
@@ -8691,7 +8691,7 @@ Template.newsidenav.events({
         }
 
         accesslevelService.saveEmpAccess(data).then(function(data) {
-            Session.setPersistent('CloudSidePanelMenu', isSidePanel);
+            Session.set('CloudSidePanelMenu', isSidePanel);
 
             Meteor._reload.reload();
         }).catch(function(err) {

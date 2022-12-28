@@ -934,7 +934,7 @@ Template.supplierscard.onRendered(function() {
             terms.push(data.ttermsvs1[i].TermsName);
             if (data.ttermsvs1[i].isPurchasedefault === true) {
                 templateObject.defaultpurchaseterm.set(data.ttermsvs1[i].TermsName);
-                Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
+                Session.set('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
                 if (JSON.stringify(currentId) != '{}') {
                     if (currentId.id == "undefined") {
                         $('#sltTerms').val(data.ttermsvs1[i].TermsName);
@@ -2626,7 +2626,7 @@ Template.supplierscard.events({
         }
     },
 
-    'click .tblSupplierCrmList tbody tr': function(event) {
+    'click .tblSupplierCrmListWithDate tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
         // const taskCategory = $(event.target).parent().attr('category');
         let crmRecords = Template.instance().crmRecords.get();

@@ -763,7 +763,7 @@ overflow-y: scroll !important;
             $("html").toggleClass("openNav");
             $(".nav-toggle").toggleClass("active");
             var sideBarPanel = $("html").attr("class");
-            Session.setPersistent('sidePanelSettings', sideBarPanel);
+            Session.set('sidePanelSettings', sideBarPanel);
             if(sideBarPanel === "openNav"){
                 $(".active_page_content").css("text-align","right");
             }else{

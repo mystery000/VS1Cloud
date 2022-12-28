@@ -1531,7 +1531,7 @@ Template.customerscard.onRendered(function() {
                 } else {
                     $('#sltTerms').val(data.ttermsvs1[i].TermsName);
                 }
-                Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
+                Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
             }
         }
         terms = _.sortBy(terms);
@@ -2103,13 +2103,13 @@ Template.customerscard.onRendered(function() {
                                 $('#isEOMPlus').prop('checked', false);
                             }
                             if (data.ttermsvs1[i].isSalesdefault == true) {
-                                Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
+                                Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
                                 $('#chkCustomerDef').prop('checked', true);
                             } else {
                                 $('#chkCustomerDef').prop('checked', false);
                             }
                             if (data.ttermsvs1[i].isPurchasedefault == true) {
-                                Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
+                                Session.set('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
                                 $('#chkSupplierDef').prop('checked', true);
                             } else {
                                 $('#chkSupplierDef').prop('checked', false);
@@ -2868,7 +2868,7 @@ Template.customerscard.events({
             window.open('/customerscard?jobid=' + listData, '_self');
         }
     },
-    'click #tblCustomerCrmList tbody tr': function(event) {
+    'click #tblCustomerCrmListWithDate tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
         let crmRecords = Template.instance().crmRecords.get();
         const currentRecordIndex = crmRecords.findIndex(item => item.id == taskID);

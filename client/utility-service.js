@@ -1337,6 +1337,19 @@ export class UtilityService {
         }
     }
 
+    convertSubstringParseFloatR(value) {
+        if ((value).includes('-')) {
+            let price = value.replace(",", "");
+            price = price.substring(2).replace(",", ".");
+            price = '-' + price;
+            return (parseFloat(price));
+        } else {
+            value = value.replace(",", "");
+            value = value.substring(1).replace(",", ".");
+            return (parseFloat(value));
+        }
+    }
+
     /**
      * This function will convert a string to a float number
      *
