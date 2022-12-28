@@ -1,3 +1,4 @@
+import { Session } from 'meteor/session';
   Barcode_SepChar = '-';
 
   Barcode_Prefix_Employee     = 'EMP';
@@ -45,7 +46,7 @@
   Barcode_Prefix_Task = 'TSK';
   Barcode_Prefix_WorkOrder = 'WO';
 
-  
+
  licenceIPAddress = "login.vs1cloud.com"; //165.228.147.127
  //licenceIPAddress = "sandboxcoreedi.vs1cloud.com"; //192.168.15.124
   //Global Declaration
@@ -171,4 +172,3 @@ checkResponseError ="You have lost internet connection, please log out and log b
 
 //loggedTaxCodePurchaseInc = Session.get('ERPTaxCodePurchaseInc');
 //loggedTaxCodeSalesInc = Session.get('ERPTaxCodeSalesInc');
-
