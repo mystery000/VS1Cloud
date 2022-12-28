@@ -504,6 +504,16 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
                 { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
+        } else if (currenttablename === "tblSingleTouchPayroll") {
+            reset_data = [
+                { index: 0, label: "#ID", class: "colTaskID", active: false, display: true, width: "" },
+                { index: 1, label: "Date", class: "colDate", active: true, display: true, width: "" },
+                { index: 2, label: "Earnings", class: "colEarnings", active: true, display: true, width: "" },
+                { index: 3, label: "PAYG", class: "colPayg", active: true, display: true, width: "" },
+                { index: 4, label: "Supperannuation", class: "colSupperannuation", active: true, display: true, width: "" },
+                { index: 5, label: "Net Pay", class: "colNetPay", active: true, display: true, width: "" },
+                { index: 6, label: "Status", class: "colStatus", active: true, display: true, width: "" },
+            ]
         }
 
         templateObject.reset_data.set(reset_data);
@@ -611,6 +621,7 @@ Template.non_transactional_list.onRendered(function() {
         let isEmployee = false;
         let issupplier = false;
         let deleteFilter = false;
+        let isSingleTouchPayroll = false;
         if (data.Params.Search.replace(/\s/g, "") == "") {
             deleteFilter = true;
         } else {
@@ -7363,6 +7374,277 @@ Template.non_transactional_list.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
+    templateObject.getSTPListData = async function(deleteFilter = false) {
+        var customerpage = 0;
+        getVS1Data('TSTPayrollList').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getAllLeadDataList(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+                    await addVS1Data('TSTPayrollList', JSON.stringify(data));
+                    templateObject.displaySTPListData(data);
+                }).catch(function(err) {
+
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displaySTPListData(data);
+            }
+        }).catch(function(err) {
+            sideBarService.getAllLeadDataList(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+                await addVS1Data('TSTPayrollList', JSON.stringify(data));
+                templateObject.displaySTPListData(data);
+            }).catch(function(err) {
+
+            });
+        });
+    }
+    templateObject.displaySTPListData = async function(data) {
+        var splashArrayLeadList = new Array();
+        let lineItems = [];
+        let lineItemObj = {};
+        let deleteFilter = false;
+        if (data.Params.Search.replace(/\s/g, "") == "") {
+            deleteFilter = true;
+        } else {
+            deleteFilter = false;
+        };
+
+        for (let i = 0; i < data.tstpayrolllist.length; i++) {
+            let linestatus = '';
+            if (data.tstpayrolllist[i].Active == true) {
+                linestatus = "";
+            } else if (data.tstpayrolllist[i].Active == false) {
+                linestatus = "In-Active";
+            };
+
+            var dataList = [
+                data.tstpayrolllist[i].ClientID || '',
+                data.tstpayrolllist[i].Date || '',
+                data.tstpayrolllist[i].Earnings || '',
+                data.tstpayrolllist[i].Payg || '',
+                data.tstpayrolllist[i].Supperannuation || '',
+                data.tstpayrolllist[i].NetPay || '',
+                data.tstpayrolllist[i].Status || '',
+                linestatus,
+            ];
+            splashArrayLeadList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayLeadList);
+        }
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayLeadList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [{
+                    targets: 0,
+                    className: "colLeadId colID hiddenColumn",
+                    width: "10px",
+                    createdCell: function(td, cellData, rowData, row, col) {
+                        $(td).closest("tr").attr("id", rowData[0]);
+                    }
+                },
+                    {
+                        targets: 1,
+                        className: "colTaskID",
+                        width: "200px",
+                    },
+                    {
+                        targets: 2,
+                        className: "colDate",
+                        width: "95px",
+                    },
+                    {
+                        targets: 3,
+                        className: "colEarnings",
+                        width: "90px",
+                    },
+                    {
+                        targets: 4,
+                        className: "colPayg",
+                        width: "110px",
+                    },
+                    {
+                        targets: 5,
+                        className: "colSupperannuation",
+                        width: "80px",
+                    },
+                    {
+                        targets: 6,
+                        className: "colNetPay",
+                        width: "90px",
+                    },
+                    {
+                        targets: 7,
+                        className: "colStatus",
+                        width: "90px",
+                    },
+                ],
+                buttons: [{
+                    extend: 'csvHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "STP List",
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'STP List',
+                    filename: "STP List",
+                    exportOptions: {
+                        columns: ':visible',
+                        stripHtml: false
+                    }
+                },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        //var splashArrayCustomerListDupp = new Array();
+                        let dataLenght = oSettings._iDisplayLength;
+                        let customerSearch = $('#' + currenttablename + '_filter input').val();
+
+                        sideBarService.getAllLeadDataList(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
+
+                            for (let j = 0; j < dataObjectnew.tstpayrolllist.length; j++) {
+
+                                let linestatus = '';
+                                if (dataObjectnew.tstpayrolllist[j].Active == true) {
+                                    linestatus = "";
+                                } else if (dataObjectnew.tstpayrolllist[j].Active == false) {
+                                    linestatus = "In-Active";
+                                };
+
+                                var dataListDupp = [
+                                    data.tstpayrolllist[j].ClientID || '',
+                                    data.tstpayrolllist[j].Date || '',
+                                    data.tstpayrolllist[j].Earnings || '',
+                                    data.tstpayrolllist[j].Payg || '',
+                                    data.tstpayrolllist[j].Supperannuation || '',
+                                    data.tstpayrolllist[j].NetPay || '',
+                                    data.tstpayrolllist[j].Status || '',
+                                    linestatus,
+                                ];
+
+                                splashArrayLeadList.push(dataListDupp);
+
+                            }
+                            let uniqueChars = [...new Set(splashArrayLeadList)];
+                            templateObject.transactiondatatablerecords.set(uniqueChars);
+                            var datatable = $('#' + currenttablename).DataTable();
+                            datatable.clear();
+                            datatable.rows.add(uniqueChars);
+                            datatable.draw(false);
+                            setTimeout(function() {
+                                $('#' + currenttablename).dataTable().fnPageChange('last');
+                            }, 400);
+
+                            $('.fullScreenSpin').css('display', 'none');
+
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search ST Payroll..." },
+                // "fnInitComplete": function(oSettings) {
+                //     if (data.Params.Search.replace(/\s/g, "") == "") {
+                //         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                //     } else {
+                //         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                //     }
+                //     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                // },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
         templateObject.getContactOverviewData();
@@ -7413,6 +7695,8 @@ Template.non_transactional_list.onRendered(function() {
         // templateObject.getCustomerCrmListData(false, datefrom, dateto);
     } else if (currenttablename === "tblSupplierCrmList") {
         templateObject.getSupplierCrmListData();
+    } else if (currenttablename === "tblSingleTouchPayroll") {
+        templateObject.getSTPListData();
     }
     tableResize();
 });
@@ -7485,6 +7769,9 @@ Template.non_transactional_list.events({
             // templateObject.getCustomerCrmListData(true, datefrom, dateto);
         } else if (currenttablename === "tblSupplierCrmList") {
             templateObject.getSupplierCrmListData(true);
+        } else if (currenttablename === "tblSingleTouchPayroll") {
+            await clearData('TSTPayrollList');
+            templateObject.getSTPListData();
         }
 
     },
@@ -7555,6 +7842,9 @@ Template.non_transactional_list.events({
             // templateObject.getCustomerCrmListData(false, datefrom, dateto);
         } else if (currenttablename === "tblSupplierCrmList") {
             templateObject.getSupplierCrmListData(false)
+        } else if (currenttablename === "tblSingleTouchPayroll") {
+            await clearData('TSTPayrollList');
+            templateObject.getSTPListData();
         }
 
     },

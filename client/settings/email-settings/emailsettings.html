@@ -1675,15 +1675,23 @@
                                                 min-width: 0px !important;
                                             }
                                             .colLabel {
-                                                width: 20%!important;
+                                                width: 15%!important;
                                             }
 
                                             .colSubject {
-                                                width: 30% !important;
+                                                width: 25% !important;
+                                            }
+
+                                            .colRecipient {
+                                                width: 10% !important;
+                                            }
+
+                                            .colUsedOn {
+                                                width: 10% !important;
                                             }
 
                                             .colTemplateContent {
-                                                width: 50% !important
+                                                width: 40% !important
                                             }
                                         </style>
                                         <table id="tblCorrespondence" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblCorrespondence">
@@ -1691,6 +1699,8 @@
                                                 <tr>
                                                     <th class="th colLabel">Reference Letter Label</th>
                                                     <th class="th colSubject">Subject</th>
+                                                    <th class="th colRecipient">Recipient</th>
+                                                    <th class="th colUsedOn">Used on</th>
                                                     <th class="th colTemplateContent">Memo</th>
                                                     <th class="th colID hiddenColumn">ID</th>
                                                     <th class="th colDelete"></th>
@@ -1701,6 +1711,8 @@
                                                     <tr>
                                                         <td class="colLabel">{{correspondence.Ref_Type}}</td>
                                                         <td class="colSubject">{{correspondence.ReferenceTxt}}</td>
+                                                        <td class="colSubject">{{correspondence.MessageTo}}</td>
+                                                        <td class="colSubject"></td>
                                                         <td class="colTemplateContent">{{correspondence.MessageAsString}}</td>
                                                         <td class="colID hiddenColumn">{{correspondence.MessageId}}</td>
                                                         <td class="colDelete d-flex align-items-center justify-content-center"><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></td>
