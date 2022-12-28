@@ -1114,7 +1114,7 @@ Template.generalledger.events({
   //     "_self"
   //   );
   // },
-  
+
   "click #dropdownDateRang": function (e) {
     let dateRangeID = e.target.id;
     $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
@@ -1458,24 +1458,6 @@ Template.generalledger.events({
     //
     // });
   },
-  //   "change .edtReportDates": async function () {
-  //     $(".fullScreenSpin").css("display", "inline-block");
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     let templateObject = Template.instance();
-  //     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-  //     var dateTo = new Date($("#dateTo").datepicker("getDate"));
-  //     await templateObject.setReportOptions(false, dateFrom, dateTo);
-  // },
-  //
-  // "click #ignoreDate": async function () {
-  //     $(".fullScreenSpin").css("display", "inline-block");
-  //     $("#dateFrom").attr("readonly", true);
-  //     $("#dateTo").attr("readonly", true);
-  //     localStorage.setItem('VS1GeneralLedger_Report', '');
-  //     let templateObject = Template.instance();
-  //     templateObject.dateAsAt.set("Current Date");
-  //     await templateObject.setReportOptions(true);
-  // },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
     let searchItem = $(event.target).val();

@@ -18,7 +18,7 @@ Template.customersummaryreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.reportOptions = new ReactiveVar();
-  templateObject.records = new ReactiveVar([]);
+  templateObject.transactiondatatablerecords = new ReactiveVar([]);
   templateObject.customersummaryreportth = new ReactiveVar([]);
 
    // Currency related vars //
@@ -30,111 +30,436 @@ function MakeNegative() {
       if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
   });
 }
+
 Template.customersummaryreport.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
+
+  templateObject.init_reset_data = function () {
+    let reset_data = [];
+    reset_data = [
+      { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "200" },
+      { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "150" },
+      { index: 3, label: 'Rep', class: 'colRep', active: true, display: true, width: "100" },
+      { index: 4, label: 'Type', class: 'colType', active: true, display: true, width: "100" },
+      { index: 5, label: 'Invoice Number', class: 'colInvoiceNumber', active: true, display: true, width: "130" },
+      { index: 6, label: 'SaleDate', class: 'colSaleDate', active: true, display: true, width: "160" },
+      { index: 7, label: 'DueDate', class: 'colDueDate', active: true, display: true, width: "160" },
+      { index: 8, label: 'Total Amount (Ex)', class: 'colTotalAEX', active: true, display: true, width: "150" },
+      { index: 9, label: 'Total Amount (Inc)', class: 'colTotalAInc', active: true, display: true, width: "150" },
+      { index: 10, label: 'Gross Profit', class: 'colGrossProfit', active: true, display: true, width: "100" },
+      { index: 11, label: 'Margin', class: 'colMargin', active: false, display: true, width: "100" },
+      { index: 12, label: 'Address', class: 'colAddress', active: true, display: true, width: "200" },
+      { index: 13, label: 'Address 2', class: 'colAddress2', active: true, display: true, width: "200" },
+      { index: 14, label: 'Suburb', class: 'colSuburb', active: true, display: true, width: "100" },
+      { index: 15, label: 'Postcode', class: 'colPostcode', active: true, display: true, width: "100" },
+      { index: 16, label: 'State', class: 'colState', active: true, display: true, width: "100" },
+      { index: 17, label: 'FaxNumber', class: 'colFaxNumber', active: true, display: true, width: "100" },
+      { index: 18, label: 'Sale ID', class: 'colSaleID', active: false, display: true, width: "100" },
+      { index: 19, label: 'Customer ID', class: 'colCustomerID', active: false, display: true, width: "100" },
+      { index: 20, label: 'Address 3', class: 'colAddress3', active: false, display: true, width: "200" },
+      { index: 21, label: 'Country', class: 'colCountry', active: false, display: true, width: "100" },
+      { index: 22, label: 'Details', class: 'colDetails', active: false, display: true, width: "100" },
+      { index: 23, label: 'Client ID', class: 'colClientID', active: false, display: true, width: "100" },
+      { index: 24, label: 'Markup', class: 'colMarkup', active: false, display: true, width: "100" },
+      { index: 25, label: 'Last Sale Date', class: 'colLastSaleDate', active: false, display: true, width: "100" },
+      { index: 26, label: 'Gross Profit(Ex)', class: 'colGrossProfitEx', active: false, display: true, width: "100" },
+      { index: 27, label: 'Customer Type', class: 'colCustomerType', active: false, display: true, width: "100" },
+      { index: 28, label: 'Email', class: 'colEmail', active: false, display: true, width: "100" },
+      { index: 29, label: 'Total Cost', class: 'colTotalCost', active: false, display: true, width: "100" },
+    ];
+    templateObject.customersummaryreportth.set(reset_data);
+  }
+  templateObject.init_reset_data();
+
+  // await reportService.getBalanceSheetReport(dateAOsf) :
+
+  // --------------------------------------------------------------------------------------------------
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
-
-
-  let reset_data = [
-    { index: 1, label: 'Name', class:'colName', active: true, display: true, width: "" },
-    { index: 2, label: 'Phone', class:'colPhone', active: true, display: true, width: "" },
-    { index: 3, label: 'Rep', class:'colRep', active: true, display: true, width: "" },
-    { index: 4, label: 'Type', class:'colType', active: true, display: true, width: "" },
-    { index: 5, label: 'Invoice Number', class:'colInvoiceNumber', active: true, display: true, width: "" },
-    { index: 6, label: 'SaleDate', class:'colSaleDate', active: true, display: true, width: "" },
-    { index: 7, label: 'DueDate', class:'colDueDate', active: true, display: true, width: "" },
-    { index: 8, label: 'Total Amount (Ex)', class:'colTotalAEX', active: true, display: true, width: "" },
-    { index: 9, label: 'Total Amount (Inc)', class:'colTotalAInc', active: true, display: true, width: "" },
-    { index: 10, label: 'Gross Profit', class:'colGrossProfit', active: true, display: true, width: "" },
-    { index: 11, label: 'Margin', class:'colMargin', active: true, display: true, width: "" },
-    { index: 12, label: 'Address', class:'colAddress', active: true, display: true, width: "" },
-    { index: 13, label: 'Address 2', class:'colAddress2', active: true, display: true, width: "" },
-    { index: 14, label: 'Suburb', class:'colSuburb', active: true, display: true, width: "" },
-    { index: 15, label: 'Postcode', class:'colPostcode', active: true, display: true, width: "" },
-    { index: 16, label: 'State', class:'colState', active: true, display: true, width: "" },
-    { index: 17, label: 'FaxNumber', class:'colFaxNumber', active: true, display: true, width: "" },
-    { index: 18, label: 'Sale ID', class:'colSaleID', active: false, display: true, width: "" },
-    { index: 19, label: 'Customer ID', class:'colCustomerID', active: false, display: true, width: "" },
-    { index: 20, label: 'Address 3', class:'colAddress3', active: false, display: true, width: "" },
-    { index: 21, label: 'Country', class:'colCountry', active: false, display: true, width: "" },
-    { index: 22, label: 'Details', class:'colDetails', active: false, display: true, width: "" },
-    { index: 23, label: 'Client ID', class:'colClientID', active: false, display: true, width: "" },
-    { index: 24, label: 'Markup', class:'colMarkup', active: false, display: true, width: "" },
-    { index: 25, label: 'Last Sale Date', class:'colLastSaleDate', active: false, display: true, width: "" },
-    { index: 26, label: 'Gross Profit(Ex)', class:'colGrossProfitEx', active: false, display: true, width: "" },
-    { index: 27, label: 'Customer Type', class:'colCustomerType', active: false, display: true, width: "" },
-    { index: 28, label: 'Email', class:'colEmail', active: false, display: true, width: "" },
-    { index: 29, label: 'Total Cost', class:'colTotalCost', active: false, display: true, width: "" },
-  ]
-  templateObject.customersummaryreportth.set(reset_data);
-
-  
-  templateObject.setDateAs = ( dateFrom = null ) => {
-    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  templateObject.setDateAs = (dateFrom = null) => {
+    templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
   };
-
   templateObject.initDate();
 
+  // let date = new Date();
+  // templateObject.currentYear.set(date.getFullYear());
+  // templateObject.nextYear.set(date.getFullYear() + 1);
+  // let currentMonth = moment(date).format("DD/MM/YYYY");
+  // templateObject.currentMonth.set(currentMonth);
 
-  templateObject.getCustomerDetailsHistory = async function (dateFrom, dateTo, ignoreDate) {
+  // templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()));
+
+  templateObject.getCustomerSummaryData = async function (dateFrom, dateTo, ignoreDate) {
+
     templateObject.setDateAs(dateFrom);
-    LoadingOverlay.show();
-    let data = [];
-    if (!localStorage.getItem('VS1CustomerSummary_Report')) {
-      data = await reportService.getCustomerDetailReport( dateFrom, dateTo, ignoreDate);
-      if( data.tcustomersummaryreport.length > 0 ){
-        localStorage.setItem('VS1CustomerSummary_Report', JSON.stringify(data)||'');
-      }
-    }else{
-      data = JSON.parse(localStorage.getItem('VS1CustomerSummary_Report'));
-    }
-
-    let reportData = [];
-    if( data.tcustomersummaryreport.length > 0 ){
-        let reportSummary = data.tcustomersummaryreport.map(el => {
-          let resultobj = {};
-          Object.entries(el).map(([key, val]) => {      
-              resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
-              return resultobj;
-          })
-          return resultobj;
-        })
-
-      let reportGroups = []; 
-      for (const item of reportSummary ) {   
-        let isExist = reportGroups.filter((subitem) => {
-          if( subitem.EMAIL == item.EMAIL ){
-              subitem.SubAccounts.push(item)
-              return subitem
-          }
+    getVS1Data('TCustomerSummaryReport').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        reportService.getCustomerDetailReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+          await addVS1Data('TCustomerSummaryReport', JSON.stringify(data));
+          templateObject.displayCustomerSummaryData(data);
+        }).catch(function (err) {
         });
-
-        if( isExist.length == 0 ){
-          reportData.push({
-              Margin: 0,
-              ...item
-          });
-        }
-      $(".fullScreenSpin").css("display", "none");
-
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.displayCustomerSummaryData(data);
       }
-      
-    }
-    templateObject.records.set(reportData);    
-    LoadingOverlay.hide();
-  };
+    }).catch(function (err) {
+      reportService.getCustomerDetailReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+        await addVS1Data('TCustomerSummaryReport', JSON.stringify(data));
+        templateObject.displayCustomerSummaryData(data);
+      }).catch(function (err) {
 
-  templateObject.getCustomerDetailsHistory(
+      });
+    });
+  }
+
+  templateObject.getCustomerSummaryData(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
+  templateObject.displayCustomerSummaryData = async function (data) {
+    var splashArrayCustomerSummaryReport = new Array();
+    let deleteFilter = false;
+    if (data.Params.Search.replace(/\s/g, "") == "") {
+      deleteFilter = true;
+    } else {
+      deleteFilter = false;
+    };
+    console.log(data);
+    for (let i = 0; i < data.tcustomersummaryreport.length; i++) {
+      var dataList = [
+        data.tcustomersummaryreport[i].Name || "",
+        data.tcustomersummaryreport[i].Phone || "",
+        data.tcustomersummaryreport[i].REP || "",
+        data.tcustomersummaryreport[i].Type || "",
+        data.tcustomersummaryreport[i]["Invoice Number"] || "",
+        data.tcustomersummaryreport[i].SaleDate || "",
+        data.tcustomersummaryreport[i].DueDate || "",
+        data.tcustomersummaryreport[i]["Total Amount (Ex)"] || "",
+        data.tcustomersummaryreport[i]["Total Amount (Inc)"] || "",
+        data.tcustomersummaryreport[i]["Gross Profit"] || "",
+        data.tcustomersummaryreport[i].Margin || "",
+        data.tcustomersummaryreport[i].Address || "",
+        data.tcustomersummaryreport[i]["Address 2"] || "",
+        data.tcustomersummaryreport[i].Suburb || "",
+        data.tcustomersummaryreport[i].Postcode || "",
+        data.tcustomersummaryreport[i].State || "",
+        data.tcustomersummaryreport[i].FaxNumber || "",
+        data.tcustomersummaryreport[i].SaleID || "",
+        data.tcustomersummaryreport[i].CustomerID || "",
+        data.tcustomersummaryreport[i]["Address 3"] || "",
+        data.tcustomersummaryreport[i].Country || "",
+        data.tcustomersummaryreport[i].Details || "",
+        data.tcustomersummaryreport[i].ClientID || "",
+        data.tcustomersummaryreport[i].Markup || "",
+        data.tcustomersummaryreport[i].LastSaleDate || "",
+        data.tcustomersummaryreport[i]["Gross Profit(Ex)"] || "",
+        data.tcustomersummaryreport[i].CustomerType || "",
+        data.tcustomersummaryreport[i].EMAIL || "",
+        data.tcustomersummaryreport[i]["Total Cost"] || "",
+      ];
+      splashArrayCustomerSummaryReport.push(dataList);
+      templateObject.transactiondatatablerecords.set(splashArrayCustomerSummaryReport);
+    }
+
+
+    if (templateObject.transactiondatatablerecords.get()) {
+      setTimeout(function () {
+        MakeNegative();
+      }, 100);
+    }
+    //$('.fullScreenSpin').css('display','none');
+
+    setTimeout(function () {
+      $('#tableExport').DataTable({
+        data: splashArrayCustomerSummaryReport,
+        searching: false,
+        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        columnDefs: [
+          {
+            targets: 0,
+            className: "colName",
+          },
+          {
+            targets: 1,
+            className: "colPhone"
+          },
+          {
+            targets: 2,
+            className: "colPhone"
+          },
+          {
+            targets: 3,
+            className: "colType",
+          },
+          {
+            targets: 4,
+            className: "colInvoiceNumber",
+          },
+          {
+            targets: 5,
+            className: "colSaleDate",
+          },
+          {
+            targets: 6,
+            className: "colDueDate",
+          },
+          {
+            targets: 7,
+            className: "colTotalAEX",
+          },
+          {
+            targets: 8,
+            className: "colTotalAInc",
+          },
+          {
+            targets: 9,
+            className: "colGrossProfit",
+          },
+          {
+            targets: 10,
+            className: "colMargin hiddenColumn",
+          },
+          {
+            targets: 11,
+            className: "colAddress",
+          },
+          {
+            targets: 12,
+            className: "colAddress2",
+          },
+          {
+            targets: 13,
+            className: "colSuburb",
+          },
+          {
+            targets: 14,
+            className: "colPostcode",
+          },
+          {
+            targets: 15,
+            className: "colState",
+          },
+          {
+            targets: 16,
+            className: "colFaxNumber",
+          },
+          {
+            targets: 17,
+            className: "colSaleID hiddenColumn",
+          },
+          {
+            targets: 18,
+            className: "colCustomerID hiddenColumn",
+          },
+          {
+            targets: 19,
+            className: "colAddress3 hiddenColumn",
+          },
+          {
+            targets: 20,
+            className: "colCountry hiddenColumn",
+          },
+          {
+            targets: 21,
+            className: "colDetails hiddenColumn",
+          },
+          {
+            targets: 22,
+            className: "colClientID hiddenColumn",
+          },
+          {
+            targets: 23,
+            className: "colMarkup hiddenColumn",
+          },
+          {
+            targets: 24,
+            className: "colLastSaleDate hiddenColumn",
+          },
+          {
+            targets: 25,
+            className: "colGrossProfitEx hiddenColumn",
+          },
+          {
+            targets: 26,
+            className: "colCustomerType hiddenColumn",
+          },
+          {
+            targets: 27,
+            className: "colEmail hiddenColumn",
+          },
+          {
+            targets: 28,
+            className: "colTotalCost hiddenColumn",
+          },
+        ],
+        select: true,
+        destroy: true,
+        colReorder: true,
+        pageLength: initialDatatableLoad,
+        lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
+        info: true,
+        responsive: true,
+        "order": [[1, "asc"]],
+        action: function () {
+          $('#' + currenttablename).DataTable().ajax.reload();
+        },
+
+      }).on('page', function () {
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      }).on('column-reorder', function () {
+
+      }).on('length.dt', function (e, settings, len) {
+
+        $(".fullScreenSpin").css("display", "inline-block");
+        let dataLenght = settings._iDisplayLength;
+        if (dataLenght == -1) {
+          if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+            $(".fullScreenSpin").css("display", "none");
+          } else {
+            $(".fullScreenSpin").css("display", "none");
+          }
+        } else {
+          $(".fullScreenSpin").css("display", "none");
+        }
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      });
+      $(".fullScreenSpin").css("display", "none");
+    }, 0);
+
+    $('div.dataTables_filter input').addClass('form-control form-control-sm');
+  }
+
+
+  // ------------------------------------------------------------------------------------------------------
+  // $("#tblgeneralledger tbody").on("click", "tr", function () {
+  //   var listData = $(this).closest("tr").children('td').eq(8).text();
+  //   var checkDeleted = $(this).closest("tr").find(".colStatus").text() || "";
+
+  //   if (listData) {
+  //     if (checkDeleted == "Deleted") {
+  //       swal("You Cannot View This Transaction", "Because It Has Been Deleted", "info");
+  //     } else {
+  //       FlowRouter.go("/journalentrycard?id=" + listData);
+  //     }
+  //   }
+  // });
+
+
   LoadingOverlay.hide();
 });
+// Template.customersummaryreport.onRendered(() => {
+//   const templateObject = Template.instance();
+//   LoadingOverlay.show();
+//   templateObject.initDate = () => {
+//     Datehandler.initOneMonth();
+//   };
+
+
+//   let reset_data = [
+//     { index: 1, label: 'Name', class:'colName', active: true, display: true, width: "" },
+//     { index: 2, label: 'Phone', class:'colPhone', active: true, display: true, width: "" },
+//     { index: 3, label: 'Rep', class:'colRep', active: true, display: true, width: "" },
+//     { index: 4, label: 'Type', class:'colType', active: true, display: true, width: "" },
+//     { index: 5, label: 'Invoice Number', class:'colInvoiceNumber', active: true, display: true, width: "" },
+//     { index: 6, label: 'SaleDate', class:'colSaleDate', active: true, display: true, width: "" },
+//     { index: 7, label: 'DueDate', class:'colDueDate', active: true, display: true, width: "" },
+//     { index: 8, label: 'Total Amount (Ex)', class:'colTotalAEX', active: true, display: true, width: "" },
+//     { index: 9, label: 'Total Amount (Inc)', class:'colTotalAInc', active: true, display: true, width: "" },
+//     { index: 10, label: 'Gross Profit', class:'colGrossProfit', active: true, display: true, width: "" },
+//     { index: 11, label: 'Margin', class:'colMargin', active: true, display: true, width: "" },
+//     { index: 12, label: 'Address', class:'colAddress', active: true, display: true, width: "" },
+//     { index: 13, label: 'Address 2', class:'colAddress2', active: true, display: true, width: "" },
+//     { index: 14, label: 'Suburb', class:'colSuburb', active: true, display: true, width: "" },
+//     { index: 15, label: 'Postcode', class:'colPostcode', active: true, display: true, width: "" },
+//     { index: 16, label: 'State', class:'colState', active: true, display: true, width: "" },
+//     { index: 17, label: 'FaxNumber', class:'colFaxNumber', active: true, display: true, width: "" },
+//     { index: 18, label: 'Sale ID', class:'colSaleID', active: false, display: true, width: "" },
+//     { index: 19, label: 'Customer ID', class:'colCustomerID', active: false, display: true, width: "" },
+//     { index: 20, label: 'Address 3', class:'colAddress3', active: false, display: true, width: "" },
+//     { index: 21, label: 'Country', class:'colCountry', active: false, display: true, width: "" },
+//     { index: 22, label: 'Details', class:'colDetails', active: false, display: true, width: "" },
+//     { index: 23, label: 'Client ID', class:'colClientID', active: false, display: true, width: "" },
+//     { index: 24, label: 'Markup', class:'colMarkup', active: false, display: true, width: "" },
+//     { index: 25, label: 'Last Sale Date', class:'colLastSaleDate', active: false, display: true, width: "" },
+//     { index: 26, label: 'Gross Profit(Ex)', class:'colGrossProfitEx', active: false, display: true, width: "" },
+//     { index: 27, label: 'Customer Type', class:'colCustomerType', active: false, display: true, width: "" },
+//     { index: 28, label: 'Email', class:'colEmail', active: false, display: true, width: "" },
+//     { index: 29, label: 'Total Cost', class:'colTotalCost', active: false, display: true, width: "" },
+//   ]
+//   templateObject.customersummaryreportth.set(reset_data);
+
+  
+//   templateObject.setDateAs = ( dateFrom = null ) => {
+//     templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+//   };
+
+//   templateObject.initDate();
+
+
+//   templateObject.getCustomerDetailsHistory = async function (dateFrom, dateTo, ignoreDate) {
+//     templateObject.setDateAs(dateFrom);
+//     LoadingOverlay.show();
+//     let data = [];
+//     if (!localStorage.getItem('VS1CustomerSummary_Report')) {
+//       data = await reportService.getCustomerDetailReport( dateFrom, dateTo, ignoreDate);
+//       if( data.tcustomersummaryreport.length > 0 ){
+//         localStorage.setItem('VS1CustomerSummary_Report', JSON.stringify(data)||'');
+//       }
+//     }else{
+//       data = JSON.parse(localStorage.getItem('VS1CustomerSummary_Report'));
+//     }
+
+//     let reportData = [];
+//     if( data.tcustomersummaryreport.length > 0 ){
+//         let reportSummary = data.tcustomersummaryreport.map(el => {
+//           let resultobj = {};
+//           Object.entries(el).map(([key, val]) => {      
+//               resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+//               return resultobj;
+//           })
+//           return resultobj;
+//         })
+
+//       let reportGroups = []; 
+//       for (const item of reportSummary ) {   
+//         let isExist = reportGroups.filter((subitem) => {
+//           if( subitem.EMAIL == item.EMAIL ){
+//               subitem.SubAccounts.push(item)
+//               return subitem
+//           }
+//         });
+
+//         if( isExist.length == 0 ){
+//           reportData.push({
+//               Margin: 0,
+//               ...item
+//           });
+//         }
+//       $(".fullScreenSpin").css("display", "none");
+
+//       }
+      
+//     }
+//     templateObject.records.set(reportData);    
+//     LoadingOverlay.hide();
+//   };
+
+//   templateObject.getCustomerDetailsHistory(
+//     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+//     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+//     false
+//   );
+//   templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
+//   LoadingOverlay.hide();
+// });
 
 Template.customersummaryreport.events({
   "click #btnDetails": function () {
@@ -143,7 +468,6 @@ Template.customersummaryreport.events({
 
   'click .chkDatatable': function(event) {
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-    console.log(columnDataValue);
     if ($(event.target).is(':checked')) {
       $('.'+columnDataValue).addClass('showColumn');
       $('.'+columnDataValue).removeClass('hiddenColumn');
@@ -154,7 +478,6 @@ Template.customersummaryreport.events({
 },
   'click .btnOpenReportSettings': () => {
       let templateObject = Template.instance();
-      console.log("=========", templateObject.customersummaryreportth.get());
       // let currenttranstablename = templateObject.data.tablename||";
       $(`thead tr th`).each(function (index) {
         var $tblrow = $(this);
@@ -442,8 +765,8 @@ Template.customersummaryreport.helpers({
   getSpaceKeyData( array, key ){
     return array[key] || ''
   },
-  records: () => {
-    return Template.instance().records.get();
+  transactiondatatablerecords: () => {
+    return Template.instance().transactiondatatablerecords.get();
   },
   redirectionType(value) {
     if(value.type === 'PO') {

@@ -60,17 +60,14 @@
                 </tr>
 
             </thead>
-            <tbody>
-                {{#if records}}
+             <tbody>
+            <!--    {{#if records}}
                 {{#each arrayify records}}
                 <tr>
                     <td class="fgrtotal">{{ value.ProductName }}</td>
                     <td class="fgrtotal"></td>
                     <td class="fgrtotal text-left"></td>
                     <td class="fgrtotal text-left"></td>
-                    <!-- <td class="text-right"  class="fgrtotal">{{ value.TotalRunningQty }}</td>
-                                <td class="text-right"  class="fgrtotal">{{ value.TotalCurrentQty }}</td>
-                                <td class="text-right"  class="fgrtotal">{{ formatPrice value.TotalUnitCost }}</td> -->
                     <td class="fgrtotal"></td>
                     <td class="fgrtotal"></td>
                     <td class="fgrtotal"></td>
@@ -91,9 +88,7 @@
                         <a href="{{redirectionType item}}">{{ checkZero item.Qty }}</a></td>
                     <td class="text-right {{#if isNegativeAmount item.Qty }} text-danger {{else}} text-success {{/if}}">
                         <a href="{{redirectionType item}}">{{ checkZero item.Qty }}</a></td>
-                    <!-- <td class="text-right text-success">{{ formatPrice item.Cost }}</td>
-                                    <td class="text-right text-success">{{ formatPrice item.TotalCost }}</td> -->
-
+                    
                     {{#if isOnlyDefaultActive }}
                     {{#if currencyList}}
                     {{#each c in currencyList }}
@@ -118,9 +113,6 @@
                             }}</a></td>
                     <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.TotalCost
                             }}</a></td>
-                    <!-- <td class="text-right text-success">{{ formatPrice item.Cost }}</td>
-                                        <td class="text-right text-success">{{ formatPrice item.TotalCost }}</td> -->
-
                     {{/if}}
                 </tr>
 
@@ -130,7 +122,7 @@
                 <tr class="odd" style="text-align: center;">
                     <td valign="top" colspan="10" class="dataTables_empty">No data available in table</td>
                 </tr>
-                {{/if}}
+                {{/if}} -->
             </tbody>
         </table>
     </div>

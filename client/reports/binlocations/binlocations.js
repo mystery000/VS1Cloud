@@ -27,94 +27,510 @@ function MakeNegative() {
       if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
   });
 }
+
 Template.binlocationslist.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
-  
-  reset_data = [
-    { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
-    { index: 2, label: 'Location', class: 'colLocation', active: true, display: true, width: "" },
-    { index: 3, label: 'Bin Number', class: 'colBinNumber', active: true, display: true, width: "" },
-    { index: 4, label: 'Volume Total', class: 'colVolumeTotal', active: true, display: true, width: "" },
-    { index: 5, label: 'Volume Used', class: 'colVolumeUsed', active: true, display: true, width: "" },
-    { index: 6, label: 'Volume Available', class: 'colVolumeAvailable', active: true, display: true, width: "" },
-    { index: 7, label: 'Active', class: 'colActive', active: true, display: true, width: "" },
-    { index: 8, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "" },
-    { index: 9, label: 'BinID', class: 'colBinID', active: false, display: true, width: "" },
-    { index: 10, label: 'ClassID', class: 'colClassID', active: false, display: true, width: "" },
-  ]
-  templateObject.binlocationslistth.set(reset_data);
 
+  templateObject.init_reset_data = function () {
+    let reset_data = [];
+    reset_data = [
+      { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
+      { index: 2, label: 'Location', class: 'colLocation', active: true, display: true, width: "100" },
+      { index: 3, label: 'Bin Number', class: 'colBinNumber', active: true, display: true, width: "100" },
+      { index: 4, label: 'Volume Total', class: 'colVolumeTotal', active: true, display: true, width: "100" },
+      { index: 5, label: 'Volume Used', class: 'colVolumeUsed', active: true, display: true, width: "100" },
+      { index: 6, label: 'Volume Available', class: 'colVolumeAvailable', active: true, display: true, width: "100" },
+      { index: 7, label: 'Active', class: 'colActive', active: true, display: true, width: "100" },
+      { index: 8, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "100" },
+      { index: 9, label: 'BinID', class: 'colBinID', active: false, display: true, width: "100" },
+      { index: 10, label: 'ClassID', class: 'colClassID', active: false, display: true, width: "100" },
+    ]
+
+    templateObject.binlocationslistth.set(reset_data);
+  }
+  templateObject.init_reset_data();
+
+  // await reportService.getBalanceSheetReport(dateAOsf) :
+
+  // --------------------------------------------------------------------------------------------------
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
-  templateObject.setDateAs = ( dateFrom = null ) => {
-    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  templateObject.setDateAs = (dateFrom = null) => {
+    templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
   };
+  templateObject.initDate();
 
-  templateObject.getBinLocationReportData = async function (dateFrom, dateTo, ignoreDate) {
-    $(".fullScreenSpin").css("display", "inline-block");
-    templateObject.setDateAs(dateFrom); 
-    let data = [];
-    if (!localStorage.getItem('VS1BinLocations_Report')) {
-      const options = await templateObject.reportOptions.get();
-      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let ignoreDate = options.ignoreDate || false;
-      data = await reportService.getBinLocationReport( dateFrom, dateTo, ignoreDate);
-      if( data.tproductbin.length > 0 ){
-        localStorage.setItem('VS1BinLocations_Report', JSON.stringify(data)||'');
+  // let date = new Date();
+  // templateObject.currentYear.set(date.getFullYear());
+  // templateObject.nextYear.set(date.getFullYear() + 1);
+  // let currentMonth = moment(date).format("DD/MM/YYYY");
+  // templateObject.currentMonth.set(currentMonth);
+
+  // templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()));
+
+  templateObject.getReportData = async function (dateFrom, dateTo, ignoreDate) {
+
+    templateObject.setDateAs(dateFrom);
+    getVS1Data('TProductBin').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        reportService.getBinLocationReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+          console.log(data);
+          await addVS1Data('TProductBin', JSON.stringify(data));
+          templateObject.displayReportData(data);
+        }).catch(function (err) {
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.displayReportData(data);
       }
-    }else{
-      data = JSON.parse(localStorage.getItem('VS1BinLocations_Report'));
-    }
-    
-    let reportGroups = []; 
-    if( data.tproductbin.length > 0 ){
-        for (const item of data.tproductbin) {   
-            let isExist = reportGroups.filter((subitem) => {
-                if( subitem.BinClassName == item.fields.BinClassName ){
-                    subitem.SubAccounts.push(item)
-                    return subitem
-                }
-            });
+    }).catch(function (err) {
+      reportService.getBinLocationReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+        await addVS1Data('TProductBin', JSON.stringify(data));
+        templateObject.displayReportData(data);
+      }).catch(function (err) {
 
-            if( isExist.length == 0 ){
-                reportGroups.push({
-                    SubAccounts: [item],
-                    ...item.fields
-                });
-            }
-        }
-    }
-    templateObject.records.set(reportGroups);
-    setTimeout(function() {
-        MakeNegative();
-    }, 1000);
-    $(".fullScreenSpin").css("display", "none");
+      });
+    });
   }
-  
-  templateObject.getBinLocationReportData(
+
+  templateObject.getReportData(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  
-  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
+  templateObject.displayReportData = async function (data) {
+    console.log(data);
+    var splashArrayReport = new Array();
+    let deleteFilter = false;
+    if (data.Params.Search.replace(/\s/g, "") == "") {
+      deleteFilter = true;
+    } else {
+      deleteFilter = false;
+    };
 
-
-  templateObject.initUploadedImage = () => {
-    let imageData = localStorage.getItem("Image");
-    if (imageData) {
-      $("#uploadedImage").attr("src", imageData);
-      $("#uploadedImage").attr("width", "50%");
+    for (let i = 0; i < data.tjobprofitability.length; i++) {
+      var dataList = [
+        data.tjobprofitability[i].CompanyName || "",
+        data.tjobprofitability[i].JobName || "",
+        data.tjobprofitability[i].JobNumber || "",
+        data.tjobprofitability[i].TransactionType || "",
+        data.tjobprofitability[i].TransactionNo || "",
+        data.tjobprofitability[i].CostEx || "",
+        data.tjobprofitability[i].IncomeEx || "",
+        data.tjobprofitability[i].Quotedex || "",               
+        data.tjobprofitability[i].DiffIncome_Cost || "",
+        data.tjobprofitability[i].PercentDiffIncomebyCost || "",
+        data.tjobprofitability[i].DiffIncome_Quote || "",
+        data.tjobprofitability[i].PercentDiffIncomebyQuote || "",
+        data.tjobprofitability[i].Backorders || "",
+        data.tjobprofitability[i].AccountName || "",
+        data.tjobprofitability[i].DebitEx || "",
+        data.tjobprofitability[i].CreditEx || "",
+        data.tjobprofitability[i].ProfitPercent || "",
+        data.tjobprofitability[i].Department || "",
+        data.tjobprofitability[i].ProductID || "",
+        data.tjobprofitability[i].ProductName || "",
+        data.tjobprofitability[i].ClientID || "",
+        data.tjobprofitability[i].Details || "",
+        data.tjobprofitability[i].Area || "",
+        data.tjobprofitability[i].LandedCost || "",
+        data.tjobprofitability[i].Latestcost || "",
+        data.tjobprofitability[i].DiffIncome_Landedcost || "",
+        data.tjobprofitability[i].PercentDiffIncomebyLandedcost || "",
+        data.tjobprofitability[i].DiffIncome_Latestcost || "",
+        data.tjobprofitability[i].PercentDiffIncomebyLatestcost || "",
+        data.tjobprofitability[i].QtyOrdered || "",
+        data.tjobprofitability[i].QtyShipped || "",
+        data.tjobprofitability[i].QtyBackOrder || "",
+        data.tjobprofitability[i].CUSTFLD1 || "",
+        data.tjobprofitability[i].CUSTFLD2 || "",
+        data.tjobprofitability[i].CUSTFLD3 || "",
+        data.tjobprofitability[i].CUSTFLD4 || "",
+        data.tjobprofitability[i].CUSTFLD5 || "",
+        data.tjobprofitability[i].CUSTFLD6 || "",
+        data.tjobprofitability[i].CUSTFLD7 || "",
+        data.tjobprofitability[i].CUSTFLD8|| "",
+        data.tjobprofitability[i].CUSTFLD9 || "",
+        data.tjobprofitability[i].CUSTFLD10 || "",
+        data.tjobprofitability[i].CUSTFLD11 || "",
+        data.tjobprofitability[i].CUSTFLD12 || "",
+        data.tjobprofitability[i].CUSTFLD13 || "",
+        data.tjobprofitability[i].CUSTFLD14 || "",
+        data.tjobprofitability[i].CUSTFLD15 || "",
+        data.tjobprofitability[i].ProfitDollars || "",
+        data.tjobprofitability[i].Transdate || "",
+        data.tjobprofitability[i].SupplierName || "",
+      ];
+      splashArrayReport.push(dataList);
+      templateObject.records.set(splashArrayReport);
     }
-  };
 
-  templateObject.initDate();
-  templateObject.initUploadedImage();
+
+    if (templateObject.records.get()) {
+      setTimeout(function () {
+        MakeNegative();
+      }, 100);
+    }
+    console.log(splashArrayReport);
+    //$('.fullScreenSpin').css('display','none');
+
+    setTimeout(function () {
+      $('#tableExport').DataTable({
+        data: splashArrayReport,
+        searching: false,
+        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        columnDefs: [
+          {
+            targets: 0,
+            className: "colCompanyName",
+          },
+          {
+            targets: 1,
+            className: "colJobName"
+          },
+          {
+            targets: 2,
+            className: "colJobNumber"
+          },
+          {
+            targets: 3,
+            className: "colTxnType",
+          },
+          {
+            targets: 4,
+            className: "colTxnNo",
+          },
+          {
+            targets: 5,
+            className: "colCostEx",
+          },
+          {
+            targets: 6,
+            className: "colIncomeEx",
+          },
+          {
+            targets: 7,
+            className: "colQuotedEx",
+          },
+          {
+            targets: 8,
+            className: "colDiffIncCost",
+          },
+          {
+            targets: 9,
+            className: "colDiffIncByCost",
+          },
+          {
+            targets: 10,
+            className: "colDiffIncQuote",
+          },
+          {
+            targets: 11,
+            className: "colDiffIncByQuote",
+          },
+          {
+            targets: 12,
+            className: "colBackorders",
+          },
+          {
+            targets: 13,
+            className: "colAccountName",
+          },
+          {
+            targets: 14,
+            className: "colDebitEx"
+          },
+          {
+            targets: 15,
+            className: "colCreditEx"
+          },
+          {
+            targets: 16,
+            className: "colProfitpercent",
+          },
+          {
+            targets: 17,
+            className: "colDepartment",
+          },
+          {
+            targets: 18,
+            className: "colProduct",
+          },
+          {
+            targets: 19,
+            className: "colSubGroup",
+          },
+          {
+            targets: 20,
+            className: "colType",
+          },
+          {
+            targets: 21,
+            className: "colDept",
+          },
+          {
+            targets: 22,
+            className: "colArea",
+          },
+          {
+            targets: 23,
+            className: "colLandedCost",
+          },
+          {
+            targets: 24,
+            className: "colLatestcost",
+          },
+          {
+            targets: 25,
+            className: "colDiffIncLandedcost",
+          },
+          {
+            targets: 26,
+            className: "colDiffIncByLandedcost",
+          },
+          {
+            targets: 27,
+            className: "colDiffIncLatestcost"
+          },
+          {
+            targets: 28,
+            className: "colDiffIncByLatestcost"
+          },
+          {
+            targets: 29,
+            className: "colOrderd",
+          },
+          {
+            targets: 30,
+            className: "colShipped",
+          },
+          {
+            targets: 31,
+            className: "colBackOrdered",
+          },
+          {
+            targets: 32,
+            className: "colCUSTFLD1",
+          },
+          {
+            targets: 33,
+            className: "colCUSTFLD2",
+          },
+          {
+            targets: 34,
+            className: "colCUSTFLD3",
+          },
+          {
+            targets: 35,
+            className: "colCUSTFLD4",
+          },
+          {
+            targets: 36,
+            className: "colCUSTFLD5",
+          },
+          {
+            targets: 37,
+            className: "colCUSTFLD6",
+          },
+          {
+            targets: 38,
+            className: "colCUSTFLD7",
+          },
+          {
+            targets: 39,
+            className: "colCUSTFLD8",
+          },
+          {
+            targets: 40,
+            className: "colCUSTFLD9"
+          },
+          {
+            targets: 41,
+            className: "colCUSTFLD10"
+          },
+          {
+            targets: 42,
+            className: "colCUSTFLD11",
+          },
+          {
+            targets: 43,
+            className: "colCUSTFLD12",
+          },
+          {
+            targets: 44,
+            className: "colCUSTFLD13",
+          },
+          {
+            targets: 45,
+            className: "colCUSTFLD14",
+          },
+          {
+            targets: 46,
+            className: "colCUSTFLD15",
+          },
+          {
+            targets: 47,
+            className: "colProfitdoller",
+          },
+          {
+            targets: 48,
+            className: "colTransDate",
+          },
+          {
+            targets: 49,
+            className: "colSupplierID hiddenColumn",
+          },
+        ],
+        select: true,
+        destroy: true,
+        colReorder: true,
+        pageLength: initialDatatableLoad,
+        lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
+        info: true,
+        responsive: true,
+        "order": [[1, "asc"]],
+        action: function () {
+          $('#tableExport').DataTable().ajax.reload();
+        },
+
+      }).on('page', function () {
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      }).on('column-reorder', function () {
+
+      }).on('length.dt', function (e, settings, len) {
+
+        $(".fullScreenSpin").css("display", "inline-block");
+        let dataLenght = settings._iDisplayLength;
+        if (dataLenght == -1) {
+          if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+            $(".fullScreenSpin").css("display", "none");
+          } else {
+            $(".fullScreenSpin").css("display", "none");
+          }
+        } else {
+          $(".fullScreenSpin").css("display", "none");
+        }
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      });
+      $(".fullScreenSpin").css("display", "none");
+    }, 0);
+
+    $('div.dataTables_filter input').addClass('form-control form-control-sm');
+  }
+
+
+  // ------------------------------------------------------------------------------------------------------
+  // $("#tblgeneralledger tbody").on("click", "tr", function () {
+  //   var listData = $(this).closest("tr").children('td').eq(8).text();
+  //   var checkDeleted = $(this).closest("tr").find(".colStatus").text() || "";
+
+  //   if (listData) {
+  //     if (checkDeleted == "Deleted") {
+  //       swal("You Cannot View This Transaction", "Because It Has Been Deleted", "info");
+  //     } else {
+  //       FlowRouter.go("/journalentrycard?id=" + listData);
+  //     }
+  //   }
+  // });
+
+
   LoadingOverlay.hide();
 });
+
+// Template.binlocationslist.onRendered(() => {
+//   const templateObject = Template.instance();
+//   LoadingOverlay.show();
+  
+//   reset_data = [
+//     { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
+//     { index: 2, label: 'Location', class: 'colLocation', active: true, display: true, width: "" },
+//     { index: 3, label: 'Bin Number', class: 'colBinNumber', active: true, display: true, width: "" },
+//     { index: 4, label: 'Volume Total', class: 'colVolumeTotal', active: true, display: true, width: "" },
+//     { index: 5, label: 'Volume Used', class: 'colVolumeUsed', active: true, display: true, width: "" },
+//     { index: 6, label: 'Volume Available', class: 'colVolumeAvailable', active: true, display: true, width: "" },
+//     { index: 7, label: 'Active', class: 'colActive', active: true, display: true, width: "" },
+//     { index: 8, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "" },
+//     { index: 9, label: 'BinID', class: 'colBinID', active: false, display: true, width: "" },
+//     { index: 10, label: 'ClassID', class: 'colClassID', active: false, display: true, width: "" },
+//   ]
+//   templateObject.binlocationslistth.set(reset_data);
+
+//   templateObject.initDate = () => {
+//     Datehandler.initOneMonth();
+//   };
+//   templateObject.setDateAs = ( dateFrom = null ) => {
+//     templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+//   };
+
+//   templateObject.getBinLocationReportData = async function (dateFrom, dateTo, ignoreDate) {
+//     $(".fullScreenSpin").css("display", "inline-block");
+//     templateObject.setDateAs(dateFrom); 
+//     let data = [];
+//     if (!localStorage.getItem('VS1BinLocations_Report')) {
+//       const options = await templateObject.reportOptions.get();
+//       let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+//       let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+//       let ignoreDate = options.ignoreDate || false;
+//       data = await reportService.getBinLocationReport( dateFrom, dateTo, ignoreDate);
+//       if( data.tproductbin.length > 0 ){
+//         localStorage.setItem('VS1BinLocations_Report', JSON.stringify(data)||'');
+//       }
+//     }else{
+//       data = JSON.parse(localStorage.getItem('VS1BinLocations_Report'));
+//     }
+    
+//     let reportGroups = []; 
+//     if( data.tproductbin.length > 0 ){
+//         for (const item of data.tproductbin) {   
+//             let isExist = reportGroups.filter((subitem) => {
+//                 if( subitem.BinClassName == item.fields.BinClassName ){
+//                     subitem.SubAccounts.push(item)
+//                     return subitem
+//                 }
+//             });
+
+//             if( isExist.length == 0 ){
+//                 reportGroups.push({
+//                     SubAccounts: [item],
+//                     ...item.fields
+//                 });
+//             }
+//         }
+//     }
+//     templateObject.records.set(reportGroups);
+//     setTimeout(function() {
+//         MakeNegative();
+//     }, 1000);
+//     $(".fullScreenSpin").css("display", "none");
+//   }
+  
+//   templateObject.getBinLocationReportData(
+//     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+//     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+//     false
+//   );
+  
+//   templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
+
+
+//   templateObject.initUploadedImage = () => {
+//     let imageData = localStorage.getItem("Image");
+//     if (imageData) {
+//       $("#uploadedImage").attr("src", imageData);
+//       $("#uploadedImage").attr("width", "50%");
+//     }
+//   };
+
+//   templateObject.initDate();
+//   templateObject.initUploadedImage();
+//   LoadingOverlay.hide();
+// });
 
 Template.binlocationslist.events({
   'click .chkDatatable': function(event) {
