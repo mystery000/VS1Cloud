@@ -1857,7 +1857,7 @@ Template.leadscard.events({
         const leadLineID = $(event.target).attr('id');
         window.open('/leadscard?id=' + leadLineID, '_self');
     },
-    'click .tblLeadCrmList tbody tr': function(event) {
+    'click .tblLeadCrmListWithDate tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
         // const taskCategory = $(event.target).parent().attr('category');
         let crmRecords = Template.instance().crmRecords.get();
