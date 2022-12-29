@@ -35,15 +35,15 @@ import './js/header.js';
 import './js/Logger.js';
 import './js/mailchimp-service.js';
 // import './js/new_bill.js';
-// import './js/new_bom_temp.js';
+import './js/new_bom_temp.js';
 // import './js/new_credit.js';
 // import './js/new_invoice.js';
 // import './js/new_process.js';
-// import './js/new_processpop.js';
-// import './js/new_purchaseorder.js';
+import './js/new_processpop.js';
+import './js/new_purchaseorder.js';
 // import './js/new_quote.js';
-// import './js/new_salesorder.js';
-// import './js/new_workorder.js';
+import './js/new_salesorder.js';
+import './js/new_workorder.js';
 import './js/ocr-service.js';
 import './js/organisation-service.js';
 // import './js/packagerenewal.js';
@@ -74,12 +74,29 @@ import './vs1_templates/vs1_video/vs1_login_video.html';
 import './popUps/vs1_databasepopup.html';
 import './Help_Form/help_advisor.html';
 import './Help_Form/help_gotoforum.html';
+import './Help_Form/help_button.html';
 import './route.js';
 
 import './lib/global/globalfunction.js';
 import './lib/global/utBarcodeConst.js';
 // import '/imports/startup/client';
+import './settings/email-settings/emailsettings.js';
 
+import './vs1_templates/template_buttons/export_import_print_display_button.js';
+import './vs1_templates/non_transactional_list/non_transactional_list.js';
+import './vs1_templates/import_template/import_template.html';
+
+import './pdfTemplates/bill_pdf_temp.js';
+import './pdfTemplates/cheque_pdf_temp.js';
+import './pdfTemplates/credit_pdf_temp.js';
+import './pdf_Templates/invoice_pdf_temp.js';
+import './pdf_Templates/payments_pdf_temp.js';
+import './pdf_Templates/purchaseorder_pdf_temp.js';
+import './pdf_Templates/qutoes_pdf_temp.js';
+import './pdf_Templates/refund_pdf_temp.js';
+import './pdf_Templates/salesorder_pdf_temp.js';
+import './pdf_Templates/statement_pdf_temp';
+import './pdf_Templates/supplierpayment_pdf_temp.js';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 

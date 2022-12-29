@@ -5,6 +5,8 @@ import "../../lib/global/indexdbstorage.js";
 import {setCurrentCurrencySymbol} from "../../popUps/currnecypopup";
 import LoadingOverlay from "../../LoadingOverlay";
 import FxGlobalFunctions from "./FxGlobalFunctions";
+import { Template } from 'meteor/templating';
+import './CurrencyWidget.html';
 
 
 let sideBarService = new SideBarService();
