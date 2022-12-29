@@ -1751,16 +1751,6 @@ Template.header.onRendered(function () {
 
         }
 
-        if (Session.get('userlogged_status')) {
-
-            CloudUser.update({
-                _id: Session.get('mycloudLogonID')
-            }, {
-                $set: {
-                    userMultiLogon: true
-                }
-            });
-        }
 
     }
 
