@@ -2626,7 +2626,7 @@ Template.supplierscard.events({
         }
     },
 
-    'click .tblSupplierCrmList tbody tr': function(event) {
+    'click .tblSupplierCrmListWithDate tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
         // const taskCategory = $(event.target).parent().attr('category');
         let crmRecords = Template.instance().crmRecords.get();

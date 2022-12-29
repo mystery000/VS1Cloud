@@ -2868,7 +2868,7 @@ Template.customerscard.events({
             window.open('/customerscard?jobid=' + listData, '_self');
         }
     },
-    'click #tblCustomerCrmList tbody tr': function(event) {
+    'click #tblCustomerCrmListWithDate tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
         let crmRecords = Template.instance().crmRecords.get();
         const currentRecordIndex = crmRecords.findIndex(item => item.id == taskID);
