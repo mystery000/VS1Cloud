@@ -89,6 +89,10 @@ import './route.js';
 import './lib/global/globalfunction.js';
 import './lib/global/utBarcodeConst.js';
 // import '/imports/startup/client';
+// Transaction Header and Footer
+import "./vs1_templates/transaction_temp/transaction_header/transaction_header.js"
+import "./vs1_templates/transaction_temp/transaction_footer/index.js"
+
 import './settings/email-settings/emailsettings.js';
 import './settings/xe-currencies/xe-currencies.js';
 import './settings/payroll-settings/payrollrules.js';

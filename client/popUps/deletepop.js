@@ -104,6 +104,13 @@ const TransactionTypeTemplates = {
     button1: 'btnDeleteStock',
     button2: 'btnDeleteFollowingStocks'
   },
+  customer_payment: {
+    item1: 'Payment',
+    item2: 'payment',
+    item3: 'Payment',
+    button1: 'btnDeletePayment',
+    button2: 'btnDeleteFollowingPayments'
+  }
 };
 
 // Template.deletepop.onRendered(function () {
