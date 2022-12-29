@@ -16,6 +16,8 @@ import '../lib/global/indexdbstorage.js';
 
 import './accountlistpop.html';
 
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;

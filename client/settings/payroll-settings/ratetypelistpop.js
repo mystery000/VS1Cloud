@@ -19,6 +19,9 @@ import TableHandler from "../../js/Table/TableHandler";
 
 import './ratetypelistpop.html';
 
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let rateTypeService = new RateTypeService();
