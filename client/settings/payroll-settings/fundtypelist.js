@@ -14,6 +14,8 @@ import 'jquery-editable-select';
 import { SideBarService } from "../../js/sidebar-service";
 import '../../lib/global/indexdbstorage.js';
 
+import './fundtypelist.html';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;

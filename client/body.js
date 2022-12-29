@@ -72,6 +72,12 @@ import './js/yodlee-service.js';
 // import './setup/setup.html';
 // import './setup/setup.js';
 
+import './accounts/accountlistpop.js';
+import './accounts/addaccountpop.js';
+
+
+import './eft/bankNameModal/bankNameModal.js';
+
 
 import './vs1_templates/vs1_video/vs1_login_video.html';
 import './popUps/vs1_databasepopup.html';
@@ -85,6 +91,12 @@ import './lib/global/utBarcodeConst.js';
 // import '/imports/startup/client';
 import './settings/email-settings/emailsettings.js';
 import './settings/xe-currencies/xe-currencies.js';
+import './settings/payroll-settings/payrollrules.js';
+import './settings/payroll-settings/ratetypelistpop.js';
+import './settings/payroll-settings/grouptype.js';
+import './settings/payroll-settings/addratetype.js';
+import './settings/payroll-settings/fundtypelist.js';
+
 
 import './vs1_templates/template_buttons/export_import_print_display_button.js';
 import './vs1_templates/non_transactional_list/non_transactional_list.js';
