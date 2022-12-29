@@ -1,3 +1,4 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { SideBarService } from '../../../js/sidebar-service'
 
 import { AccountService } from "../../../accounts/account-service";
@@ -7,15 +8,14 @@ let sideBarService = new SideBarService();
 let accountService = new AccountService();
 Template.fixedassetcard.onCreated(function () {
   const templateObject = Template.instance();
-  templateObject.datatablerecords = new ReactiveVar([]);
-  templateObject.displayfields = new ReactiveVar([]);
-  templateObject.reset_data = new ReactiveVar([]);
   templateObject.current_account_type = new ReactiveVar('');
 
   templateObject.edtCostAssetAccount = new ReactiveVar([]);
   templateObject.editBankAccount = new ReactiveVar([]);
   templateObject.edtDepreciationAssetAccount = new ReactiveVar([]);
   templateObject.edtDepreciationExpenseAccount = new ReactiveVar([]);
+  templateObject.chkEnterAmount = new ReactiveVar();
+  templateObject.chkEnterAmount.set(true);
 });
 
 Template.fixedassetcard.onRendered(function () {
@@ -71,7 +71,14 @@ Template.fixedassetcard.onRendered(function () {
 });
 Template.fixedassetcard.events({
   "click button.btnSave": function() {
-
+    // const templateObject = Template.instance();
+    // let typeData = {
+    //   AssetTypeCode: "Vehicles",
+    //   AssetTypeName: "Vehicles",
+    //   Notes: "Vehicles",
+    //   Active: true
+    // };
+    // accountService.saveAssetType(typeData);
   },
   "click button.btnBack": function() {
     FlowRouter.go('/fixedassetsoverview');
@@ -95,5 +102,17 @@ Template.fixedassetcard.events({
     const templateObject = Template.instance();
     templateObject.current_account_type.set('edtDepreciationExpenseAccount');
     $('#accountListModal').modal('toggle');
+  },
+  'change input#chkEnterAmount': function(e) {
+    const templateObject = Template.instance();
+    const status = templateObject.chkEnterAmount.get();
+    console.log(status);
+    templateObject.chkEnterAmount.set(!status);
+  },
+});
+
+Template.fixedassetcard.helpers({
+  chkEnterAmount: () => {
+      return Template.instance().chkEnterAmount.get();
   },
 });

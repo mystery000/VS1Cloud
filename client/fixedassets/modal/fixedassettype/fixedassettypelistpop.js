@@ -1,3 +1,4 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ReactiveVar } from "meteor/reactive-var";
 import { FixedAssetService } from "../../fixedasset-service";
 import { SideBarService } from "../../../js/sidebar-service";
@@ -21,7 +22,7 @@ Template.fixedassettypelistpop.onRendered(function () {
     let reset_data = [
       { index: 0, label: 'ID', class: 'FixedID', active: false, display: false, width: "0" },
       { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "" },
-      { index: 2, label: 'Asset Type Name', class: 'AssetNAme', active: true, display: true, width: "" },
+      { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "" },
       { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "" },
     ];
     templateObject.reset_data.set(reset_data);
@@ -109,14 +110,14 @@ Template.fixedassettypelistpop.onRendered(function () {
   function setFixedAssetsTypeList(data) {
     addVS1Data('TFixedAssetType', JSON.stringify(data));
     const dataTableList = [];
-    console.log("[Fixed Assets Type:]", data);
+    console.log("[Fixed Assets Type:]", data.tfixedassets);
     for (const asset of data.tfixedassets) {
       const dataList = {
         id: asset.fields.ID || "",
-        assetname: asset.fields.AssetName || "",
-        color: asset.fields.Colour || "",
-        brandname: asset.fields.BrandName || "",
-        manufacture: asset.fields.Manufacture || "",
+        assetTypeCode: asset.fields.AssetTypeCode || "",
+        assetTypeName: asset.fields.AssetTypeName || "",
+        notes: asset.fields.Notes || "",
+        active: asset.fields.Active || "",
       };
       dataTableList.push(dataList);
     }

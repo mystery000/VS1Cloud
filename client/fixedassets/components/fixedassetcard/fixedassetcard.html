@@ -386,13 +386,14 @@
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>Accumulated Depreciation</label>
-                        <input type="text" class="form-control" id="edtAccumulatedDepreciation" name="edtAccumulatedDepreciation">
+                          <input type="text" class="form-control" id="edtAccumulatedDepreciation" name="edtAccumulatedDepreciation" 
+                          disabled="{{#if chkEnterAmount}}true{{/if}}">
                       </div>
                     </div>
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>For Year Ending</label>
-                        <input type="text" class="form-control" id="edtForYearEnding" name="edtForYearEnding">
+                        <input type="text" class="form-control" id="edtForYearEnding" name="edtForYearEnding" disabled="{{#if chkEnterAmount}}true{{/if}}">
                       </div>
                     </div>
                   </div>

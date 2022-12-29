@@ -140,7 +140,7 @@ Template.fixedassetlisttable.onRendered(function () {
   function setFixedAssetsList(data) {
     addVS1Data('TFixedAssets', JSON.stringify(data));
     const dataTableList = [];
-
+    console.log("TFixedAsset :", data);
     for (const asset of data.tfixedassets) {
       const dataList = {
         id: asset.fields.ID || "",
