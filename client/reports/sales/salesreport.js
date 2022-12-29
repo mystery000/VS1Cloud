@@ -19,6 +19,7 @@ import './salesreport.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 
+let _ = require('lodash');
 const reportService = new ReportService();
 const utilityService = new UtilityService();
 const taxRateService = new TaxRateService();

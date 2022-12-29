@@ -19,9 +19,15 @@ import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertime
 import GlobalFunctions from "../../GlobalFunctions";
 import TableHandler from "../../js/Table/TableHandler";
 
+import './payrollrules.html';
+import './fundtype.html';
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
+
 
 Template.payrollrules.onCreated(function() {
 
@@ -1482,7 +1488,6 @@ Template.payrollrules.onRendered(function() {
 
 
             }, 0);
-
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
             LoadingOverlay.hide();
 
@@ -8103,8 +8108,6 @@ Template.payrollrules.onRendered(function() {
              }, 500);
            }
          }
-
-
       });
 
      $('#editsuperliabbankaccount').editableSelect().on('click.editable-select', function (e, li) {
@@ -22281,8 +22284,7 @@ Template.payrollrules.events({
 
      "click #overtimeRateType, click #edtRateType": (e, ui) => {
         $(e.currentTarget).addClass('paste-rate');
-        $('#select-rate-type-modal').modal('show');
-
+        // $('#select-rate-type-modal').modal('show');
      },
 
      "click #tblratetypes tbody > tr, click  #tblratetypelist tbody > tr": (e, ui) => {
@@ -22305,7 +22307,6 @@ Template.payrollrules.events({
     // },
     'change #overtimeRateType': (e, ui) => {
         let evalue = $(e.currentTarget).val();
-
         switch(evalue) {
             case 'Time & Half':
                 $('.graterThenDiv').css('display', 'block');
@@ -22324,21 +22325,6 @@ Template.payrollrules.events({
                 $('.weekendDiv').css('display', 'none');
         }
     },
-    "click #chkUseOverTime": (e, ui) => {
-        let elementId =  e.target.id;
-        let checked = $(event.target).is(':checked');
-        if(checked){
-            $("#edtTimeAndHalf").removeAttr("readonly");
-            $("#edtDoubleTime").removeAttr("readonly");
-            $("#edtWeekend1").removeAttr("readonly");
-            $("#edtWeekend2").removeAttr("readonly");
-        }else{
-            $('#edtTimeAndHalf').attr('readonly', true);
-            $('#edtDoubleTime').attr('readonly', true);
-            $('#edtWeekend1').attr('readonly', true);
-            $('#edtWeekend2').attr('readonly', true);
-        }
-    }
 });
 
 Template.payrollrules.helpers({
@@ -22389,7 +22375,6 @@ export const getOvertimes = async () => {
     let overtimesData = await getVS1Data(erpObject.TPayrollSettingOvertimes);
     let overtimes = overtimesData.length > 0 ? JSON.parse(overtimesData[0].data) : [];
     const rateTypes = await getRateTypes();
-
     // This part is handling the auto add of default values in the list
     let defaultOvertimes = PayrollSettingsOvertimes.getDefaults();
     defaultOvertimes.forEach((defaultOvertime) => {

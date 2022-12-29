@@ -14,6 +14,8 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './purchasesummaryreport.html';
 
+let _ = require('lodash');
+
 
 const reportService = new ReportService();
 const utilityService = new UtilityService();
