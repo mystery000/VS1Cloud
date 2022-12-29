@@ -93,6 +93,40 @@ import './vs1_templates/report/vs1_report_template.js';
 import './vs1_templates/loggedcompanyoverview/loggedcompanyoverview.js';
 import './vs1_templates/date_picker/daterangedropdownoption.js';
 import './vs1_templates/date_picker/daterangefromto.js';
+import './vs1_templates/print_templates/custom_print_template.html';
+import './vs1_templates/print_templates/preview_header1.html';
+import './vs1_templates/print_templates/preview_header2.html';
+import './vs1_templates/print_templates/preview_header3.html';
+import './vs1_templates/print_templates/preview_body1.html';
+import './vs1_templates/print_templates/preview_body2.html';
+import './vs1_templates/print_templates/preview_body3.html';
+import './vs1_templates/print_templates/preview_footer1.html';
+import './vs1_templates/print_templates/preview_footer2.html';
+import './vs1_templates/print_templates/preview_footer3.html';
+import './vs1_templates/date_picker/single_date_picker.html';
+import './vs1_templates/transaction_temp/transaction_header/transaction_header.js';
+import './vs1_templates/transaction_temp/transaction_header/modals/help_modal.html';
+import './vs1_templates/transaction_temp/transaction_header/modals/files_viewer_modal.html';
+import './vs1_templates/transaction_temp/transaction_header/components/customer_selector.html';
+import './vs1_templates/transaction_temp/transaction_header/components/customer_email_input.html';
+import './vs1_templates/transaction_temp/transaction_header/components/sale_date_selector.html';
+import './vs1_templates/transaction_temp/transaction_header/components/po_number_input.html';
+import './vs1_templates/transaction_temp/transaction_header/components/default_input.html';
+import './vs1_templates/transaction_temp/transaction_button_top.html';
+import './vs1_templates/transaction_temp/transaction_footer/index.js';
+import './vs1_templates/transaction_temp/transaction_footer/template_footer_save_button.html';
+import './vs1_templates/transaction_temp/transaction_footer/template_footer_print_button.html';
+import './vs1_templates/transaction_temp/transaction_footer/template_footer_attachment_button.html';
+import './vs1_templates/transaction_temp/transaction_footer/template_footer_remove_button.html';
+import './vs1_templates/transaction_temp/transaction_footer/template_footer_cancel_button.html';
+import './vs1_templates/transaction_temp/transaction_print_modal';
+import './vs1_templates/vs1_textarea/vs1_textarea.html';
+import './vs1_templates/drop_down/vs1_dropdown.html';
+import './vs1_templates/attachments/vs1_attachments.js';
+import './vs1_templates/init_form_page_script/init_form_page_script.html'
+import './popUps/customfieldDroppop.html';
+import './popUps/customfieldpop.js';
+import './popUps/deletepop.js';
 
 import './pdfTemplates/bill_pdf_temp.js';
 import './pdfTemplates/cheque_pdf_temp.js';
@@ -120,6 +154,14 @@ import './reports/poweredby.html';
 
 import './packages/currency/FxRatesButton.js';
 import './packages/currency/modals/FxRateModal.js';
+import './salesorder/salesorderlistpop.js';
+import './inventory/productlistpop.js';
+import './manufacture/processListPopup.js';
+import './manufacture/production_planner.js';
+
+import './accounts/accountlistpop.js';
+import './accounts/expenseaccountlist.js';
+import './accounts/inventoryassetaccountpop.js';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
