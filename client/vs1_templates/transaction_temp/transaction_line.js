@@ -8,8 +8,11 @@ import { SideBarService } from '../../js/sidebar-service';
 import TableHandler from '../../js/Table/TableHandler';
 import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
 import { template } from 'lodash';
+import { Template } from 'meteor/templating';
+import './transaction_line.html';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+
 
 export const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Amount (Inc)", "Unit Price (Inc)", "Cost Price"];
 

@@ -14,7 +14,9 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import { saveCurrencyHistory } from "../../packages/currency/CurrencyWidget";
-import { EftService } from "../../eft/eft-service"
+import { EftService } from "../../eft/eft-service";
+import { Template } from 'meteor/templating';
+import './supplierPaymentCard.html';
 
 
 let sideBarService = new SideBarService();
