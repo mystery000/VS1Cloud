@@ -137,7 +137,7 @@ Template.fixedassetlisttable.onRendered(function () {
   function setFixedAssetsList(data) {
     addVS1Data('TFixedAssets', JSON.stringify(data));
     const dataTableList = [];
-    console.log("[Fixed Assets:]", data);
+
     for (const asset of data.tfixedassets) {
       const dataList = {
         id: asset.fields.ID || "",
@@ -397,10 +397,6 @@ Template.fixedassetlisttable.events({
 
   "click #btnAssetRegister": function () {
     FlowRouter.go('/assetregisteroverview');
-  },
-
-  "click #btnServiceLogs": function () {
-    FlowRouter.go('/serviceloglist');
   }
 
 });

@@ -1,4 +1,8 @@
-import { FixedAssetService } from '../../fixedasset-service'
+import { ReactiveVar } from "meteor/reactive-var";
+import { FixedAssetService } from "../../fixedasset-service";
+import { SideBarService } from "../../../js/sidebar-service";
+import "../../../lib/global/indexdbstorage.js";
+let sideBarService = new SideBarService();
 let fixedAssetService = new FixedAssetService();
 
 Template.fixedassettypelistpop.onCreated(function () {
@@ -9,101 +13,51 @@ Template.fixedassettypelistpop.onCreated(function () {
 });
 
 Template.fixedassettypelistpop.onRendered(function () {
+  // $(".fullScreenSpin").css("display", "inline-block");
   let templateObject = Template.instance();
+
   // set initial table rest_data
   templateObject.init_reset_data = function () {
     let reset_data = [
-      { index: 0, label: 'ID', class: 'fixedID', active: false, display: false, width: "0" },
-      { index: 1, label: 'Asset Type Name', class: 'assetTypeName', active: true, display: true, width: "" },
-      { index: 2, label: 'Asset Type Code', class: 'assetTypeCode', active: true, display: true, width: "" },
-      { index: 3, label: 'Notes', class: 'notes', active: true, display: true, width: "" },
+      { index: 0, label: 'ID', class: 'FixedID', active: false, display: false, width: "0" },
+      { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "" },
+      { index: 2, label: 'Asset Type Name', class: 'AssetNAme', active: true, display: true, width: "" },
+      { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "" },
     ];
     templateObject.reset_data.set(reset_data);
-    showCustomFieldDisplaySettings(reset_data);
   }
   templateObject.init_reset_data();
+  // set initial table rest_data
 
-  templateObject.getAllFixedAssetTypeList = function () {
-    getVS1Data("TFixedAssetType").then(function (dataObject) {
-      if (dataObject.length === 0) {
-        fixedAssetService.getFixedAssetTypes().then(function (data) {
-          initFixedAssetTypeTable(data);
-          return data;
-        });
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        let useData = data.tfixedassettype;
-        initFixedAssetTypeTable(useData);
-      }
-    }).catch(function (err) {
-      fixedAssetService.getFixedAssetTypes().then(function (data) {
-        initFixedAssetTypeTable(data);
-        return data;
+  // custom field displaysettings
+  templateObject.initCustomFieldDisplaySettings = function (listType) {
+    let reset_data = templateObject.reset_data.get();
+    showCustomFieldDisplaySettings(reset_data);
+
+    try {
+      getVS1Data("TFixedAssetType").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+            reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+            showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          if (data.ProcessLog.Obj.CustomLayout.length > 0) {
+            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+              if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
+                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                showCustomFieldDisplaySettings(reset_data);
+              }
+            }
+          };
+          // handle process here
+        }
       });
-    });
-  }
-  templateObject.getAllFixedAssetTypeList();
-
-  function initFixedAssetTypeTable(data) {
-    addVS1Data('TFixedAssetType', JSON.stringify(data));
-    const dataTableList = [];
-    // console.log('TFixedAssetType', data.tfixedassettype);
-    for (const assetType of data.tfixedassettype) {
-      const dataList = {
-        id: assetType.Id || "",
-        assetTypeCode: assetType.AssetTypeCode || "",
-        assetTypeName: assetType.AssetTypeName || "",
-        notes: assetType.Notes || "",
-        active: assetType.Active || "",
-      };
-      dataTableList.push(dataList);
+    } catch (error) {
     }
-    console.log(dataTableList);
-    templateObject.datatablerecords.set(dataTableList);
-
-    $(".fullScreenSpin").css("display", "none");
-
-    setTimeout(function () {
-      $("#tblFixedassettypelist").DataTable({
-        columnDefs: [
-        ],
-        select: true,
-        destroy: false,
-        colReorder: true,
-        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-        buttons: [
-        ],
-        pageLength: initialDatatableLoad,
-        lengthMenu: [
-          [initialDatatableLoad, -1],
-          [initialDatatableLoad, "All"],
-        ],
-        info: true,
-        responsive: true,
-        order: [
-          [0, "asc"]
-        ],
-        // "aaSorting": [[1,'desc']],
-        action: function () {
-          $("#tblFixedassettypelist").DataTable().ajax.reload();
-        },
-        language: { search: "", searchPlaceholder: "Search List..." },
-        fnDrawCallback: function (oSettings) {
-        },
-        fnInitComplete: function () {
-          $(
-            "<button class='btn btn-primary btnSearchFixedAssetType' type='button' id='btnSearchFixedAssetType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-          ).insertAfter("#tblFixedAssetsOverview_filter");
-        },
-      })
-      .on("page", function () {
-          let draftRecord = templateObject.datatablerecords.get();
-          templateObject.datatablerecords.set(draftRecord);
-        })
-        .on("column-reorder", function () { })
-        .on("length.dt", function (e, settings, len) {
-        });
-    }, 10);
+    return;
   }
 
   function showCustomFieldDisplaySettings(reset_data) {
@@ -124,6 +78,152 @@ Template.fixedassettypelistpop.onRendered(function () {
     }
     templateObject.displayfields.set(custFields);
   }
-  
+
+  templateObject.initCustomFieldDisplaySettings("tblFixedassettypelist");
+  // set initial table rest_data  //
+
+  templateObject.getFixedAssetsTypeList= function () {
+    getVS1Data("TFixedAssetType").then(function (dataObject) {
+      if (dataObject.length == 0) {
+        fixedAssetService.getFixedAssetTypes().then(function (data) {
+          setFixedAssetsTypeList(data);
+        }).catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        setFixedAssetsTypeList(data);
+      }
+    }).catch(function (err) {
+      fixedAssetService.getFixedAssetTypes().then(function (data) {
+        setFixedAssetsTypeList(data);
+      }).catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
+      });
+    });
+  };
+
+  $(".fullScreenSpin").css("display", "inline-block");
+  templateObject.getFixedAssetsList();
+
+  function setFixedAssetsTypeList(data) {
+    addVS1Data('TFixedAssetType', JSON.stringify(data));
+    const dataTableList = [];
+    console.log("[Fixed Assets Type:]", data);
+    for (const asset of data.tfixedassets) {
+      const dataList = {
+        id: asset.fields.ID || "",
+        assetname: asset.fields.AssetName || "",
+        color: asset.fields.Colour || "",
+        brandname: asset.fields.BrandName || "",
+        manufacture: asset.fields.Manufacture || "",
+      };
+      dataTableList.push(dataList);
+    }
+
+    templateObject.datatablerecords.set(dataTableList);
+
+    $(".fullScreenSpin").css("display", "none");
+    setTimeout(function () {
+      $("#tblFixedassettypelist").DataTable({
+        columnDefs: [
+        ],
+        select: true,
+        destroy: true,
+        colReorder: true,
+        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        buttons: [{
+          extend: "csvHtml5",
+          text: "",
+          download: "open",
+          className: "btntabletocsv hiddenColumn",
+          filename: "FixedAssetsOverview__" + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible",
+          },
+        },
+        {
+          extend: "print",
+          download: "open",
+          className: "btntabletopdf hiddenColumn",
+          text: "",
+          title: "Accounts Overview",
+          filename: "Accounts Overview_" + moment().format(),
+          exportOptions: {
+            columns: ":visible",
+          },
+        },
+        {
+          extend: "excelHtml5",
+          title: "",
+          download: "open",
+          className: "btntabletoexcel hiddenColumn",
+          filename: "FixedAssetsOverview__" + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible",
+          },
+        },
+        ],
+        pageLength: initialDatatableLoad,
+        lengthMenu: [
+          [initialDatatableLoad, -1],
+          [initialDatatableLoad, "All"],
+        ],
+        info: true,
+        responsive: true,
+        order: [
+          [0, "asc"]
+        ],
+        // "aaSorting": [[1,'desc']],
+        action: function () {
+          $("#tblFixedassettypelist").DataTable().ajax.reload();
+        },
+        language: { search: "", searchPlaceholder: "Search List..." },
+        fnDrawCallback: function (oSettings) {
+        },
+        fnInitComplete: function () {
+          $(
+            "<button class='btn btn-primary btnSearchFixedAccount' type='button' id='btnSearchFixedAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+          ).insertAfter("#tblFixedAssetsOverview_filter");
+        },
+      })
+        .on("page", function () {
+          let draftRecord = templateObject.datatablerecords.get();
+          templateObject.datatablerecords.set(draftRecord);
+        })
+        .on("column-reorder", function () { })
+        .on("length.dt", function (e, settings, len) {
+        });
+    }, 10);
+  }
   tableResize();
+});
+
+Template.fixedassettypelistpop.events({
+  "mouseover .card-header": (e) => {
+    $(e.currentTarget).parent(".card").addClass("hovered");
+  },
+  "mouseleave .card-header": (e) => {
+    $(e.currentTarget).parent(".card").removeClass("hovered");
+  },
+
+});
+
+Template.fixedassettypelistpop.helpers({
+  datatablerecords: () => {
+    return Template.instance().datatablerecords.get().sort(function (a, b) {
+      if (a.assetname === "NA") {
+        return 1;
+      } else if (b.assetname === "NA") {
+        return -1;
+      }
+      return a.assetname.toUpperCase() > b.assetname.toUpperCase() ? 1 : -1;
+    });
+  },
+  // custom fields displaysettings
+  displayfields: () => {
+    return Template.instance().displayfields.get();
+  },
 });
