@@ -11,6 +11,7 @@ import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './purchasesreport.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 
 

@@ -12,6 +12,7 @@ import TableHandler from '../../js/Table/TableHandler';
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './non_transactional_list.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();

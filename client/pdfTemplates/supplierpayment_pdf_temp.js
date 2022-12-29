@@ -10,7 +10,7 @@ import { Random } from 'meteor/random';
 import '../lib/global/indexdbstorage.js';
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
-import '.supplierpayment_pdf_temp.html';
+import './supplierpayment_pdf_temp.html';
 
 
 Template.supplierpaymentPrintTemp.onCreated(() => {

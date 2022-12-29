@@ -81,22 +81,27 @@ import './lib/global/globalfunction.js';
 import './lib/global/utBarcodeConst.js';
 // import '/imports/startup/client';
 import './settings/email-settings/emailsettings.js';
+import './settings/xe-currencies/xe-currencies.js';
 
 import './vs1_templates/template_buttons/export_import_print_display_button.js';
 import './vs1_templates/non_transactional_list/non_transactional_list.js';
 import './vs1_templates/import_template/import_template.html';
+import './vs1_templates/report/vs1_report_template.js';
+import './vs1_templates/loggedcompanyoverview/loggedcompanyoverview.js';
+import './vs1_templates/date_picker/daterangedropdownoption.js';
+import './vs1_templates/date_picker/daterangefromto.js';
 
 import './pdfTemplates/bill_pdf_temp.js';
 import './pdfTemplates/cheque_pdf_temp.js';
 import './pdfTemplates/credit_pdf_temp.js';
-import './pdf_Templates/invoice_pdf_temp.js';
-import './pdf_Templates/payments_pdf_temp.js';
-import './pdf_Templates/purchaseorder_pdf_temp.js';
-import './pdf_Templates/qutoes_pdf_temp.js';
-import './pdf_Templates/refund_pdf_temp.js';
-import './pdf_Templates/salesorder_pdf_temp.js';
-import './pdf_Templates/statement_pdf_temp';
-import './pdf_Templates/supplierpayment_pdf_temp.js';
+import './pdfTemplates/invoice_pdf_temp.js';
+import './pdfTemplates/payments_pdf_temp.js';
+import './pdfTemplates/purchaseorder_pdf_temp.js';
+import './pdfTemplates/qutoes_pdf_temp.js';
+import './pdfTemplates/refund_pdf_temp.js';
+import './pdfTemplates/salesorder_pdf_temp.js';
+import './pdfTemplates/statement_pdf_temp';
+import './pdfTemplates/supplierpayment_pdf_temp.js';
 
 import './reports/agedpayables/agedpayables.js';
 import './reports/agedreceivables/agedreceivables.js';
@@ -107,7 +112,11 @@ import './reports/purchasesreport/purchasesreport.js';
 import './reports/purchasesreport/purchasesummaryreport.js';
 import './reports/sales/salesreport.js';
 import './reports/tax/taxsummaryreport.js';
-import './reports/trialbalance/trialbalance.js'
+import './reports/trialbalance/trialbalance.js';
+import './reports/poweredby.html';
+
+import './packages/currency/FxRatesButton.js';
+import './packages/currency/modals/FxRateModal.js';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 

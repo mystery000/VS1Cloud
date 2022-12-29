@@ -16,6 +16,7 @@ import { ReactiveVar } from "meteor/reactive-var";
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './salesreport.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 
 const reportService = new ReportService();
