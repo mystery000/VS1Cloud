@@ -1,5 +1,15 @@
+import { Template } from 'meteor/templating';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
+
+import "./template_footer_attachment_button.html"
+import "./template_footer_cancel_button.html"
+import "./template_footer_hold_button.html"
+import "./template_footer_print_button.html"
+import "./template_footer_process_button.html"
+import "./template_footer_remove_button.html"
+import "./template_footer_save_button.html"
+import "./transaction_footer.html"
 
 Template.transaction_footer.onCreated( function () {
   

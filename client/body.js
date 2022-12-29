@@ -79,6 +79,10 @@ import './route.js';
 import './lib/global/globalfunction.js';
 import './lib/global/utBarcodeConst.js';
 // import '/imports/startup/client';
+// Transaction Header and Footer
+import "./vs1_templates/transaction_temp/transaction_header/transaction_header.js"
+import "./vs1_templates/transaction_temp/transaction_footer/index.js"
+
 
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
