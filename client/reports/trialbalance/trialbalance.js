@@ -13,6 +13,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './trialbalance.html';
 
+let _ = require('lodash');
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 let reportService = new ReportService();

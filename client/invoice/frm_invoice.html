@@ -171,10 +171,7 @@
           <div class="row">
             <div class="col-12 col-md-12">
               <div class="row justify-content-center desktopButtons">
-                <!-- {{# transaction_footer margin="14px" }}{{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                                    {{/transaction_footer}} -->
-                <!-- {{> transaction_footer margin="14px" AttachmentCount=attachmentCount }} -->
-                {{> transaction_footer margin="14px" AttachmentCount=attachmentCount TransactionType="invoices" }}
+                {{> transaction_footer AttachmentCount=attachmentCount TransactionType="invoices" }}
               </div>
             </div>
           </div>
@@ -1073,8 +1070,8 @@
 
   <!-- This a template with all VS1 POP Modal used for Transactions -->
   {{> all_transaction_modals customerRecord=customerRecord}}
-  {{> deletepop itemName1="Invoice" itemName2="invoice" itemName3="Invoice" button1="btnDeleteInvoice"
-  button2="btnDeleteFollowingInvoices"}}
+  <!-- {{> deletepop itemName1="Invoice" itemName2="invoice" itemName3="Invoice" button1="btnDeleteInvoice"
+  button2="btnDeleteFollowingInvoices"}} -->
   <script>
     modalDraggable();
   </script>

@@ -1,6 +1,8 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { BankNameList } from "../../lib/global/bank-names"
 
+import './bankNameModal.html';
+
 Template.bankNameModal.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.eftOptionsList = new ReactiveVar([]);

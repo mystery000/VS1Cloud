@@ -19,6 +19,11 @@ import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertime
 import GlobalFunctions from "../../GlobalFunctions";
 import TableHandler from "../../js/Table/TableHandler";
 
+import './payrollrules.html';
+import './fundtype.html';
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();

@@ -7,6 +7,8 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import { OrganisationService } from "../js/organisation-service";
 
+import './customerlist.html';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();

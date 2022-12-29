@@ -8,6 +8,12 @@ import {OrganisationService} from '../js/organisation-service';
 import {PurchaseBoardService} from '../js/purchase-service';
 import '../lib/global/indexdbstorage.js';
 import XLSX from 'xlsx';
+
+import './addaccountpop.html';
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 Template.addaccountpop.onCreated(function () {
