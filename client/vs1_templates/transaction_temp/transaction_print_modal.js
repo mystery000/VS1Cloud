@@ -6,6 +6,7 @@ import "jquery-ui-dist/jquery-ui";
 import "../../lib/global/indexdbstorage.js";
 import { SessionContext } from "twilio/lib/rest/proxy/v1/service/session";
 import { SMSService } from "../../js/sms-settings-service";
+import { template } from "lodash";
 
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
@@ -456,5 +457,17 @@ Template.transaction_print_modal.events({
     } else {
       $(`#${dataKey}-modal`).modal("hide");
     }
+  },
+  "click #printModal .btnPreview": function (event) {
+    // const templateObject = Template.instance();
+    // const transactionType = templateObject.data.TransactionType;
+    // const component = templateObject.parent().parent();
+    // const chooseTemplateCheckboxes = $("#printModal .chooseTemplateBtn:checked");
+    // const chosenTemplates = [];
+    // chooseTemplateCheckboxes.each((item) => {
+    //   chosenTemplates.push(`#${$(chooseTemplateCheckboxes[item]).attr("data-id")}-modal .chkGlobalSettings:checked`)
+    // })
+    // console.log({ component, chooseTemplateCheckboxes, chosenTemplates })
+    // component.generateInvoiceData('Sales Orders', '3')
   },
 });

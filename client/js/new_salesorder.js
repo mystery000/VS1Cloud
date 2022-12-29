@@ -11241,10 +11241,10 @@ Template.new_salesorder.events({
                     addVS1Data('TSalesOrderEx', JSON.stringify(dataUpdated)).then(function(dataReturn) {
                         saveFunc()
                     }).catch((error) => {
-                        saveFunc()
+                        // saveFunc()
                     })
                 }).catch(errroorrrr => {
-                    saveFunc()
+                    // saveFunc()
                 })
                 // salesService.saveSalesOrderEx(objDetails).then(function(objDetails) {
 
