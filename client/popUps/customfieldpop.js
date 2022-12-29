@@ -7,6 +7,9 @@ import { PurchaseBoardService } from "../js/purchase-service";
 import { SalesBoardService } from '../js/sales-service';
 import { ContactService } from "../contacts/contact-service";
 import { ProductService } from "../product/product-service";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './customfieldpop.html';
 
 
 let sideBarService = new SideBarService();

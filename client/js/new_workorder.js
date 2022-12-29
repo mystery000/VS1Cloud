@@ -18,6 +18,7 @@ import { TaxRateService } from "../settings/settings-service";
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import '../manufacture/frm_workorder.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

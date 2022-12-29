@@ -13,6 +13,7 @@ import { Template } from 'meteor/templating';
 import './purchasesreport.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
+let _ = require('lodash');
 
 
 const reportService = new ReportService();

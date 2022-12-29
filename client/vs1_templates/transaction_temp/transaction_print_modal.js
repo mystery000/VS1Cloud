@@ -7,6 +7,10 @@ import "../../lib/global/indexdbstorage.js";
 import { SessionContext } from "twilio/lib/rest/proxy/v1/service/session";
 import { SMSService } from "../../js/sms-settings-service";
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './transaction_print_modal.html';
+
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
 
