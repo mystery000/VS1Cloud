@@ -7,6 +7,10 @@ import GlobalFunctions from "../../GlobalFunctions";
 import moment from "moment";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './generalledger.html';
+
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 

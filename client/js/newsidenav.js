@@ -1,24 +1,25 @@
 import { Template } from 'meteor/templating';
-import { EmployeeProfileService } from './profile-service';
-import { AccessLevelService } from './accesslevel-service';
+
+import { EmployeeProfileService } from './profile-service.js';
+import { AccessLevelService } from './accesslevel-service.js';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { ProductService } from "../product/product-service";
-import { UtilityService } from "../utility-service";
-import { CoreService } from '../js/core-service';
-import { SideBarService } from '../js/sidebar-service';
+import { ProductService } from "../product/product-service.js";
+import { UtilityService } from "../utility-service.js";
+import { CoreService } from '../js/core-service.js';
+import { SideBarService } from '../js/sidebar-service.js';
 import '../lib/global/indexdbstorage.js';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { Session } from 'meteor/session';
 
 import '../Navigation/newsidenav.html';
-var CronJob = require('cron').CronJob;
+// var CronJob = require('cron').CronJob;
 
 let utilityService = new UtilityService();
 let productService = new ProductService();
 let sideBarService = new SideBarService();
 
 Template.newsidenav.onCreated(function() {
-
     const templateObject = Template.instance();
     templateObject.sideBarPositionClass = new ReactiveVar();
     templateObject.sideBarPositionClass.set('top');
@@ -199,7 +200,6 @@ Template.newsidenav.onRendered(function() {
     let isSeedToSale = Session.get('CloudSeedToSaleModule');
     let isBanking = Session.get('CloudBankingModule');
     let isPayroll = Session.get('CloudPayrollModule');
-
     let isTimesheetEntry = Session.get('CloudTimesheetEntry');
     let isShowTimesheet = Session.get('CloudShowTimesheet');
     let isTimesheetCreate = Session.get('CloudCreateTimesheet');
@@ -225,7 +225,6 @@ Template.newsidenav.onRendered(function() {
     let isAppointmentSMS = Session.get('CloudApptSMS');
 
     let isSerialNumberList = Session.get('CloudShowSerial') || false;
-    console.log(isSerialNumberList);
     var erpGet = erpDb();
     var LoggedDB = erpGet.ERPDatabase;
     var LoggedUser = localStorage.getItem('mySession');
@@ -1011,7 +1010,7 @@ Template.newsidenav.onRendered(function() {
         if (isSeedToSale) {
             templateObject.includeSeedToSale.set(true);
         }
-
+        console.log(isBanking);
         if (isBanking) {
             templateObject.includeBanking.set(true);
         }
@@ -4491,10 +4490,10 @@ Template.newsidenav.onRendered(function() {
         });
     }
 
-    var job = new CronJob('00 00 00 * * *', function() {
-
-    });
-    job.start();
+    // var job = new CronJob('00 00 00 * * *', function() {
+    //
+    // });
+    // job.start();
 
     setTimeout(function() {
         Session.set('LoggedUserEventFired', false);
