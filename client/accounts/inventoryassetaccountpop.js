@@ -12,6 +12,11 @@ import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jquery-editable-select';
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './inventoryassetaccountpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 Template.inventorassetaccountspop.onCreated(function(e) {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
