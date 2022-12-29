@@ -16,6 +16,8 @@ import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
 import {ManufacturingService} from '../manufacture/manufacturing-service';
+import { Template } from 'meteor/templating';
+import '../manufacture/frm_processpop.html';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

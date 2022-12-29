@@ -9,6 +9,9 @@ import '../lib/global/indexdbstorage.js';
 import { jsPDF } from 'jspdf';
 import 'jQuery.print/jQuery.print.js';
 import { autoTable } from 'jspdf-autotable';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './statement_pdf_temp.html';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 

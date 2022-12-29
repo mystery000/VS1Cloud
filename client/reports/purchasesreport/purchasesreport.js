@@ -8,6 +8,10 @@ import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
 import Datehandler from "../../DateHandler";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './purchasesreport.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 
 

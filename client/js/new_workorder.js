@@ -15,6 +15,9 @@ import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import '../manufacture/frm_workorder.html';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
