@@ -1,3 +1,4 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../js/core-service';
 import { DashBoardService } from "../Dashboard/dashboard-service";

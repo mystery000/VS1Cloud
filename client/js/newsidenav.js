@@ -9,7 +9,7 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
+import '../fixedassets/fixedassets.js';
 import '../Navigation/newsidenav.html';
 var CronJob = require('cron').CronJob;
 

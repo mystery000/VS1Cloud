@@ -1,6 +1,8 @@
 import { SideBarService } from '../../../js/sidebar-service'
 
 import { AccountService } from "../../../accounts/account-service";
+import './fixedassetcard.html';
+
 let sideBarService = new SideBarService();
 let accountService = new AccountService();
 Template.fixedassetcard.onCreated(function () {

@@ -104,7 +104,7 @@ Template.fixedassettypelistpop.onRendered(function () {
   };
 
   $(".fullScreenSpin").css("display", "inline-block");
-  templateObject.getFixedAssetsList();
+  templateObject.getFixedAssetsTypeList();
 
   function setFixedAssetsTypeList(data) {
     addVS1Data('TFixedAssetType', JSON.stringify(data));
