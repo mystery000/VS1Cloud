@@ -14,7 +14,10 @@ import dayGridStyles from '@fullcalendar/daygrid/main.css';
 import timelineStyles from '@fullcalendar/timeline/main.css';
 import resourceTimelineStyles from '@fullcalendar/resource-timeline/main.css';
 import 'jQuery.print/jQuery.print.js';
-
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './production_planner.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.production_planner.onCreated(function() {
     const templateObject = Template.instance();
