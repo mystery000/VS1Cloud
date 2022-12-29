@@ -9,6 +9,9 @@ import { SideBarService } from '../js/sidebar-service';
 import {OrganisationService} from '../js/organisation-service';
 
 import '../lib/global/indexdbstorage.js';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './salesorderlistpop.html';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 

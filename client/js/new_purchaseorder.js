@@ -23,6 +23,8 @@ import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 import { rest, template } from 'lodash';
 import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import '../purchase/frm_purchaseorder.html';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 var times = 0;
