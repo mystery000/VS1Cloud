@@ -12,6 +12,10 @@ import "jquery-ui-dist/jquery-ui";
 import { jsPDF } from "jspdf";
 import "jQuery.print/jQuery.print.js";
 import { cloneDeep, find, extend } from "lodash";
+import { Template } from 'meteor/templating';
+
+import './emailsettings.html';
+
 // import ldb from 'localdata';
 let sideBarService = new SideBarService();
 let smsService = new SMSService();

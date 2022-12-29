@@ -24,6 +24,9 @@ import CachedHttp from '../lib/global/CachedHttp';
 import erpObject from '../lib/global/erp-objects';
 import GlobalFunctions from '../GlobalFunctions';
 import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import '../salesorder/frm_salesorder.html';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
