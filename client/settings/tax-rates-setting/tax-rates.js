@@ -973,8 +973,8 @@ Template.taxRatesSettings.events({
             let purchasetaxcode = $("input[name=optradioP]:checked").val() || "";
             let salestaxcode = $("input[name=optradioS]:checked").val() || "";
 
-            Session.setPersistent("ERPTaxCodePurchaseInc", purchasetaxcode || "");
-            Session.setPersistent("ERPTaxCodeSalesInc", salestaxcode || "");
+            Session.set("ERPTaxCodePurchaseInc", purchasetaxcode || "");
+            Session.set("ERPTaxCodeSalesInc", salestaxcode || "");
             getVS1Data("vscloudlogininfo").then(function(dataObject) {
                 if (dataObject.length == 0) {
                     swal({

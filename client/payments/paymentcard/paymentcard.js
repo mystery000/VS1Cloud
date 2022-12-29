@@ -5068,9 +5068,9 @@ Template.paymentcard.events({
         }
 
 
-        Session.setPersistent('paymentmethod', payMethod);
-        Session.setPersistent('bankaccount', bankAccount);
-        Session.setPersistent('department', department);
+        Session.set('paymentmethod', payMethod);
+        Session.set('bankaccount', bankAccount);
+        Session.set('department', department);
         var url = FlowRouter.current().path;
         if (url.indexOf('?soid=') > 0) {
             var getsale_id = url.split('?soid=');
@@ -7758,10 +7758,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            Session.set('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            Session.set('customerpayments', []);
                         }
 
                         // Send Email
@@ -8128,10 +8128,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            Session.set('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            Session.set('customerpayments', []);
                         }
                         swal({
                             title: 'Oooops...',
@@ -8185,10 +8185,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            Session.set('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            Session.set('customerpayments', []);
                         }
                         var customerID = $('#edtCustomerEmail').attr('customerid');
                         // Send Email
@@ -8592,10 +8592,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            Session.set('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            Session.set('customerpayments', []);
                         }
                         swal({
                             title: 'Oooops...',

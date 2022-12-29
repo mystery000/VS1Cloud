@@ -1592,7 +1592,7 @@ Template.new_quote.onRendered(() => {
                             termsname: data.ttermsvs1[i].TermsName || ' ',
                         };
                         if (data.ttermsvs1[i].isSalesdefault == true) {
-                            Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                            Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                             templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                         }
                         termrecords.push(termrecordObj);
@@ -1620,7 +1620,7 @@ Template.new_quote.onRendered(() => {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
                     if (data.ttermsvs1[i].isSalesdefault == true) {
-                        Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                        Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                         templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                     }
                     termrecords.push(termrecordObj);

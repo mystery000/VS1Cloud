@@ -509,7 +509,7 @@ Template.new_invoice.onRendered(function() {
                             };
 
                             if (data.ttermsvs1[i].isSalesdefault == true) {
-                                Session.setPersistent(
+                                Session.set(
                                     "ERPTermsSales",
                                     data.ttermsvs1[i].TermsName || "COD"
                                 );
@@ -545,7 +545,7 @@ Template.new_invoice.onRendered(function() {
                             isSalesdefault: data.ttermsvs1[i].isSalesdefault || ""
                         };
                         if (data.ttermsvs1[i].isSalesdefault == true) {
-                            Session.setPersistent(
+                            Session.set(
                                 "ERPTermsSales",
                                 data.ttermsvs1[i].TermsName || "COD"
                             );

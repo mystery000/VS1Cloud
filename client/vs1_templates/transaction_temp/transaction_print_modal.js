@@ -6,6 +6,7 @@ import "jquery-ui-dist/jquery-ui";
 import "../../lib/global/indexdbstorage.js";
 import { SessionContext } from "twilio/lib/rest/proxy/v1/service/session";
 import { SMSService } from "../../js/sms-settings-service";
+import { template } from "lodash";
 
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
@@ -276,13 +277,18 @@ Template.transaction_print_modal.events({
   "click #deliveryDocket": function (event) {
     const checked = event.currentTarget.checked;
   },
+  "click #emailSend": function (event) {
+    $('.chkEmailCopy').prop("checked", $("#emailSend").is(":checked"));
+  },
   "click #printModal .printConfirm": async function (event) {
     const templateObject = Template.instance();
     const transactionType = templateObject.data.TransactionType;
     const isCheckedEmail = $("#printModal #emailSend").is(":checked");
     const isCheckedSms = $("#printModal #sms").is(":checked");
     const customerElId = $("#customer_id").val();
-    const customerId = $(`#${customerElId}`).attr("custid").trim() || $(`#${customerElId}`).attr("suppid").trim();
+    const customerId =
+      $(`#${customerElId}`).attr("custid").trim() ||
+      $(`#${customerElId}`).attr("suppid").trim();
 
     const contactService = new ContactService();
 
@@ -291,7 +297,9 @@ Template.transaction_print_modal.events({
 
     if (customerId) {
       if (customData.length === 0) {
-        contactServiceData = await contactService.getOneCustomerDataEx(customerId);
+        contactServiceData = await contactService.getOneCustomerDataEx(
+          customerId
+        );
       } else {
         const data = JSON.parse(customData[0].data);
         contactServiceData = data.tcustomervs1.find(
@@ -300,7 +308,7 @@ Template.transaction_print_modal.events({
       }
     }
 
-    console.log({ customerId, contactServiceData })
+    console.log({ customerId, contactServiceData });
 
     // const data = await Template.new_salesorder.__helpers
     //   .get("saleOrder")
@@ -344,8 +352,9 @@ Template.transaction_print_modal.events({
 
     // Send SMS
     if (isCheckedSms && contactServiceData) {
-      // should set up
+      LoadingOverlay.show();
       const phoneNumber = contactServiceData.fields.Mobile;
+      // const phoneNumber = "18044461901";
 
       const smsSettings = {
         twilioAccountId: "",
@@ -397,15 +406,17 @@ Template.transaction_print_modal.events({
       }
 
       const companyName = Session.get("vs1companyName");
-      const message = smsSettings.headerAppointmentSMSMessage.replace(
+      let message = smsSettings.headerAppointmentSMSMessage.replace(
         "[Company Name]",
         companyName
       );
 
+      message = `${message} - Hi ${contactServiceData.fields.FirstName} ${contactServiceData.fields.LastName}`;
+
       console.log({ companyName });
 
       if (phoneNumber) {
-        const sendSMSResult = Meteor.call(
+        Meteor.call(
           "sendSMS",
           smsSettings.twilioAccountId,
           smsSettings.twilioAccountToken,
@@ -413,12 +424,28 @@ Template.transaction_print_modal.events({
           phoneNumber,
           message,
           function (error, result) {
-            if (error) rej(error);
-            res(result);
+            console.log({ error, result });
+            LoadingOverlay.hide();
+            if (error) {
+              swal({
+                title: "Oops...",
+                text: message,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try again",
+              });
+            } else {
+              swal({
+                title: "SMS was sent successfully",
+                text: "SMS was sent successfully",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "Ok",
+              });
+              localStorage.setItem("smsId", result.sid);
+            }
           }
         );
-
-        console.log({ sendSMSResult });
       }
     }
   },
@@ -430,5 +457,17 @@ Template.transaction_print_modal.events({
     } else {
       $(`#${dataKey}-modal`).modal("hide");
     }
+  },
+  "click #printModal .btnPreview": function (event) {
+    // const templateObject = Template.instance();
+    // const transactionType = templateObject.data.TransactionType;
+    // const component = templateObject.parent().parent();
+    // const chooseTemplateCheckboxes = $("#printModal .chooseTemplateBtn:checked");
+    // const chosenTemplates = [];
+    // chooseTemplateCheckboxes.each((item) => {
+    //   chosenTemplates.push(`#${$(chooseTemplateCheckboxes[item]).attr("data-id")}-modal .chkGlobalSettings:checked`)
+    // })
+    // console.log({ component, chooseTemplateCheckboxes, chosenTemplates })
+    // component.generateInvoiceData('Sales Orders', '3')
   },
 });

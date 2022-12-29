@@ -4066,9 +4066,9 @@ Template.dsAppointmentsWidget.onRendered(function() {
 
     $(document).on("click", "#chkmyAppointments", function(e) {
         if (seeOwnAppointments == true) {
-            Session.setPersistent('CloudAppointmentSeeOwnAppointmentsOnly__', false);
+            Session.set('CloudAppointmentSeeOwnAppointmentsOnly__', false);
         } else {
-            Session.setPersistent('CloudAppointmentSeeOwnAppointmentsOnly__', true);
+            Session.set('CloudAppointmentSeeOwnAppointmentsOnly__', true);
         }
 
         // FlowRouter.go('/dashboardsalesmanager', '_self');

@@ -114,11 +114,11 @@ Template.accessleveldup.onRendered(function(){
 
             if(itemData[i].Description === "Side Panel Menu"){
                 isSidePanelFormID = itemData[i].Id;
-                Session.setPersistent('CloudSidePanelMenuFormID', isSidePanelFormID);
+                Session.set('CloudSidePanelMenuFormID', isSidePanelFormID);
             }
             if(itemData[i].Description === "Top Panel Menu"){
                 isTopPanelFormID = itemData[i].Id;
-                Session.setPersistent('CloudTopPanelMenuFormID', isTopPanelFormID);
+                Session.set('CloudTopPanelMenuFormID', isTopPanelFormID);
             }
             lineItemsForm.push(lineItemObjForm);
             splashArray.push(lineItemObjForm);
@@ -160,11 +160,11 @@ Template.accessleveldup.onRendered(function(){
 
             if(itemData[i].Description === "Side Panel Menu"){
                 isSidePanelFormID = itemData[i].Id;
-                Session.setPersistent('CloudSidePanelMenuFormID', isSidePanelFormID);
+                Session.set('CloudSidePanelMenuFormID', isSidePanelFormID);
             }
             if(itemData[i].Description === "Top Panel Menu"){
                 isTopPanelFormID = itemData[i].Id;
-                Session.setPersistent('CloudTopPanelMenuFormID', isTopPanelFormID);
+                Session.set('CloudTopPanelMenuFormID', isTopPanelFormID);
             }
             lineItemsForm.push(lineItemObjForm);
             splashArray.push(lineItemObjForm);
@@ -203,11 +203,11 @@ Template.accessleveldup.onRendered(function(){
 
           if(itemData[i].Description === "Side Panel Menu"){
               isSidePanelFormID = itemData[i].Id;
-              Session.setPersistent('CloudSidePanelMenuFormID', isSidePanelFormID);
+              Session.set('CloudSidePanelMenuFormID', isSidePanelFormID);
           }
           if(itemData[i].Description === "Top Panel Menu"){
               isTopPanelFormID = itemData[i].Id;
-              Session.setPersistent('CloudTopPanelMenuFormID', isTopPanelFormID);
+              Session.set('CloudTopPanelMenuFormID', isTopPanelFormID);
           }
           lineItemsForm.push(lineItemObjForm);
           splashArray.push(lineItemObjForm);
@@ -4053,58 +4053,58 @@ Template.accessleveldup.events({
                             if((employeeID == empLoggedID) ){
                                 if((radioValue == 1) && (accessDesc == "Print Delivery Docket")){
                                     isDocket = true;
-                                    Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
+                                    Session.set('CloudPrintDeliveryDocket', isDocket);
                                 }else if((radioValue != 1) && (accessDesc == "Print Delivery Docket")){
                                     isDocket = false;
-                                    Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
+                                    Session.set('CloudPrintDeliveryDocket', isDocket);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Print Invoice")){
                                     isInvoice = true;
-                                    Session.setPersistent('CloudPrintInvoice', isInvoice);
+                                    Session.set('CloudPrintInvoice', isInvoice);
                                 }else if((radioValue != 1) && (accessDesc == "Print Invoice")){
                                     isInvoice = false;
-                                    Session.setPersistent('CloudPrintInvoice', isInvoice);
+                                    Session.set('CloudPrintInvoice', isInvoice);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "User Password Details")){
                                     isUserPassDetail = true;
-                                    Session.setPersistent('CloudUserPass', isUserPassDetail);
+                                    Session.set('CloudUserPass', isUserPassDetail);
                                 }else if((radioValue != 1) && (accessDesc == "User Password Details")){
                                     isUserPassDetail = false;
-                                    Session.setPersistent('CloudUserPass', isUserPassDetail);
+                                    Session.set('CloudUserPass', isUserPassDetail);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "View Dockets")){
                                     isViewDockets = true;
-                                    Session.setPersistent('CloudViewDockets', isViewDockets);
+                                    Session.set('CloudViewDockets', isViewDockets);
                                 }else if((radioValue != 1) && (accessDesc == "View Dockets")){
                                     isViewDockets = false;
-                                    Session.setPersistent('CloudViewDockets', isViewDockets);
+                                    Session.set('CloudViewDockets', isViewDockets);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Qty Only on Purchase Order")){
                                     isPurchaseQtyOnly = true;
-                                    Session.setPersistent('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+                                    Session.set('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
                                 }else if((radioValue != 1) && (accessDesc == "Qty Only on Purchase Order")){
                                     isPurchaseQtyOnly = false;
-                                    Session.setPersistent('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+                                    Session.set('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Qty Only on Sales")){
                                     isSalesQtyOnly = true;
-                                    Session.setPersistent('CloudSalesQtyOnly', isSalesQtyOnly);
+                                    Session.set('CloudSalesQtyOnly', isSalesQtyOnly);
                                 }else if((radioValue != 1) && (accessDesc == "Qty Only on Sales")){
                                     isSalesQtyOnly = false;
-                                    Session.setPersistent('CloudSalesQtyOnly', isSalesQtyOnly);
+                                    Session.set('CloudSalesQtyOnly', isSalesQtyOnly);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Dashboard") && (isDashboardLicence)){
                                     isDashboard = true;
-                                    Session.setPersistent('CloudDashboardModule', isDashboard);
+                                    Session.set('CloudDashboardModule', isDashboard);
                                 }else if((radioValue != 1) && (accessDesc == "Dashboard") && (isDashboardLicence)){
                                     isDashboard = false;
-                                    Session.setPersistent('CloudDashboardModule', isDashboard);
+                                    Session.set('CloudDashboardModule', isDashboard);
                                 }
 
 
@@ -4117,113 +4117,113 @@ Template.accessleveldup.events({
 
                                 if((radioValue == 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                                     isInventory = true;
-                                    Session.setPersistent('CloudInventoryModule', isInventory);
+                                    Session.set('CloudInventoryModule', isInventory);
                                 }else if((radioValue != 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                                     isInventory = false;
-                                    Session.setPersistent('CloudInventoryModule', isInventory);
+                                    Session.set('CloudInventoryModule', isInventory);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Manufacturing") && (isManufacturingLicence)){
                                     isManufacturing = true;
-                                    Session.setPersistent('CloudManufacturingModule', isManufacturing);
+                                    Session.set('CloudManufacturingModule', isManufacturing);
                                 }else if((radioValue != 1) && (accessDesc == "Manufacturing") && (isManufacturingLicence)){
                                     isManufacturing = false;
-                                    Session.setPersistent('CloudManufacturingModule', isManufacturing);
+                                    Session.set('CloudManufacturingModule', isManufacturing);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Settings")){
                                     isAccessLevels = true;
-                                    Session.setPersistent('CloudAccessLevelsModule', isAccessLevels);
+                                    Session.set('CloudAccessLevelsModule', isAccessLevels);
                                 }else if((radioValue != 1) && (accessDesc == "Settings")){
                                     isAccessLevels = false;
-                                    Session.setPersistent('CloudAccessLevelsModule', isAccessLevels);
+                                    Session.set('CloudAccessLevelsModule', isAccessLevels);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Shipping") && (isShippingLicence)){
                                     isShipping = true;
-                                    Session.setPersistent('CloudShippingModule', isShipping);
+                                    Session.set('CloudShippingModule', isShipping);
                                 }else if((radioValue != 1) && (accessDesc == "Shipping") && (isShippingLicence)){
                                     isShipping = false;
-                                    Session.setPersistent('CloudShippingModule', isShipping);
+                                    Session.set('CloudShippingModule', isShipping);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Stock Transfer") && (isStockTransferLicence)){
                                     isStockTransfer = true;
-                                    Session.setPersistent('CloudStockTransferModule', isStockTransfer);
+                                    Session.set('CloudStockTransferModule', isStockTransfer);
                                 }else if((radioValue != 1) && (accessDesc == "Stock Transfer") && (isStockTransferLicence)){
                                     isStockTransfer = false;
-                                    Session.setPersistent('CloudStockTransferModule', isStockTransfer);
+                                    Session.set('CloudStockTransferModule', isStockTransfer);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Stock Take") && (isStockTakeLicence)){
                                     isStockTake = true;
-                                    Session.setPersistent('CloudStockTakeModule', isStockTake);
+                                    Session.set('CloudStockTakeModule', isStockTake);
                                 }else if((radioValue != 1) && (accessDesc == "Stock Take") && (isStockTakeLicence)){
                                     isStockTake = false;
-                                    Session.setPersistent('CloudStockTakeModule', isStockTake);
+                                    Session.set('CloudStockTakeModule', isStockTake);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Sales") && (isSalesLicence)){
                                     isSales = true;
-                                    Session.setPersistent('CloudSalesModule', isSales);
+                                    Session.set('CloudSalesModule', isSales);
                                 }else if((radioValue != 1) && (accessDesc == "Sales") && (isSalesLicence)){
                                     isSales = false;
-                                    Session.setPersistent('CloudSalesModule', isSales);
+                                    Session.set('CloudSalesModule', isSales);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Purchases") && (isPurchasesLicence)){
                                     isPurchases = true;
-                                    Session.setPersistent('CloudPurchasesModule', isPurchases);
+                                    Session.set('CloudPurchasesModule', isPurchases);
                                 }else if((radioValue != 1) && (accessDesc == "Purchases") && (isPurchasesLicence)){
                                     isPurchases = false;
-                                    Session.setPersistent('CloudPurchasesModule', isPurchases);
+                                    Session.set('CloudPurchasesModule', isPurchases);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Expense Claims") && (isExpenseClaimsLicence)){
                                     isExpenseClaims = true;
-                                    Session.setPersistent('CloudExpenseClaimsModule', isExpenseClaims);
+                                    Session.set('CloudExpenseClaimsModule', isExpenseClaims);
                                 }else if((radioValue != 1) && (accessDesc == "Expense Claims") && (isExpenseClaimsLicence)){
                                     isExpenseClaims = false;
-                                    Session.setPersistent('CloudExpenseClaimsModule', isExpenseClaims);
+                                    Session.set('CloudExpenseClaimsModule', isExpenseClaims);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Fixed Assets") && (isFixedAssetsLicence)){
                                     isFixedAssets = true;
-                                    Session.setPersistent('CloudFixedAssetsModule', isFixedAssets);
+                                    Session.set('CloudFixedAssetsModule', isFixedAssets);
                                 }else if((radioValue != 1) && (accessDesc == "Fixed Assets") && (isFixedAssetsLicence)){
                                     isFixedAssets = false;
-                                    Session.setPersistent('CloudFixedAssetsModule', isFixedAssets);
+                                    Session.set('CloudFixedAssetsModule', isFixedAssets);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Payments") && (isPaymentsLicence)){
                                     isPayments = true;
-                                    Session.setPersistent('CloudPaymentsModule', isPayments);
+                                    Session.set('CloudPaymentsModule', isPayments);
                                 }else if((radioValue != 1) && (accessDesc == "Payments") && (isPaymentsLicence)){
                                     isPayments = false;
-                                    Session.setPersistent('CloudPaymentsModule', isPayments);
+                                    Session.set('CloudPaymentsModule', isPayments);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Contacts") && (isContactsLicence)){
                                     isContacts = true;
-                                    Session.setPersistent('CloudContactsModule', isContacts);
+                                    Session.set('CloudContactsModule', isContacts);
                                 }else if((radioValue != 1) && (accessDesc == "Contacts") && (isContactsLicence)){
                                     isContacts = false;
-                                    Session.setPersistent('CloudContactsModule', isContacts);
+                                    Session.set('CloudContactsModule', isContacts);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Accounts") && (isAccountsLicence)){
                                     isAccounts = true;
-                                    Session.setPersistent('CloudAccountsModule', isAccounts);
+                                    Session.set('CloudAccountsModule', isAccounts);
                                 }else if((radioValue != 1) && (accessDesc == "Accounts") && (isAccountsLicence)){
                                     isAccounts = false;
-                                    Session.setPersistent('CloudAccountsModule', isAccounts);
+                                    Session.set('CloudAccountsModule', isAccounts);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Reports") && (isReportsLicence)){
                                     isReports = true;
-                                    Session.setPersistent('CloudReportsModule', isReports);
+                                    Session.set('CloudReportsModule', isReports);
                                 }else if((radioValue != 1) && (accessDesc == "Reports") && (isReportsLicence)){
                                     isReports = false;
-                                    Session.setPersistent('CloudReportsModule', isReports);
+                                    Session.set('CloudReportsModule', isReports);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Settings") && (isSettingsLicence)){
                                     isSettings = true;
-                                    Session.setPersistent('CloudSettingsModule', isSettings);
+                                    Session.set('CloudSettingsModule', isSettings);
                                 }else if((radioValue != 1) && (accessDesc == "Settings") && (isSettingsLicence)){
                                     isSettings = false;
-                                    Session.setPersistent('CloudSettingsModule', isSettings);
+                                    Session.set('CloudSettingsModule', isSettings);
                                 }
 
                             }
@@ -4257,171 +4257,171 @@ Template.accessleveldup.events({
                             if((employeeID == empLoggedID) ){
                                 if((radioValue == 1) && (accessDesc == "Print Delivery Docket")){
                                     isDocket = true;
-                                    Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
+                                    Session.set('CloudPrintDeliveryDocket', isDocket);
                                 }else if((radioValue != 1) && (accessDesc == "Print Delivery Docket")){
                                     isDocket = false;
-                                    Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
+                                    Session.set('CloudPrintDeliveryDocket', isDocket);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Print Invoice")){
                                     isInvoice = true;
-                                    Session.setPersistent('CloudPrintInvoice', isInvoice);
+                                    Session.set('CloudPrintInvoice', isInvoice);
                                 }else if((radioValue != 1) && (accessDesc == "Print Invoice")){
                                     isInvoice = false;
-                                    Session.setPersistent('CloudPrintInvoice', isInvoice);
+                                    Session.set('CloudPrintInvoice', isInvoice);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "User Password Details")){
                                     isUserPassDetail = true;
-                                    Session.setPersistent('CloudUserPass', isUserPassDetail);
+                                    Session.set('CloudUserPass', isUserPassDetail);
                                 }else if((radioValue != 1) && (accessDesc == "User Password Details")){
                                     isUserPassDetail = false;
-                                    Session.setPersistent('CloudUserPass', isUserPassDetail);
+                                    Session.set('CloudUserPass', isUserPassDetail);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "View Dockets")){
                                     isViewDockets = true;
-                                    Session.setPersistent('CloudViewDockets', isViewDockets);
+                                    Session.set('CloudViewDockets', isViewDockets);
                                 }else if((radioValue != 1) && (accessDesc == "View Dockets")){
                                     isViewDockets = false;
-                                    Session.setPersistent('CloudViewDockets', isViewDockets);
+                                    Session.set('CloudViewDockets', isViewDockets);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Qty Only on Purchase Order")){
                                     isPurchaseQtyOnly = true;
-                                    Session.setPersistent('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+                                    Session.set('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
                                 }else if((radioValue != 1) && (accessDesc == "Qty Only on Purchase Order")){
                                     isPurchaseQtyOnly = false;
-                                    Session.setPersistent('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+                                    Session.set('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Qty Only on Sales")){
                                     isSalesQtyOnly = true;
-                                    Session.setPersistent('CloudSalesQtyOnly', isSalesQtyOnly);
+                                    Session.set('CloudSalesQtyOnly', isSalesQtyOnly);
                                 }else if((radioValue != 1) && (accessDesc == "Qty Only on Sales")){
                                     isSalesQtyOnly = false;
-                                    Session.setPersistent('CloudSalesQtyOnly', isSalesQtyOnly);
+                                    Session.set('CloudSalesQtyOnly', isSalesQtyOnly);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Dashboard") && (isDashboardLicence)){
                                     isDashboard = true;
-                                    Session.setPersistent('CloudDashboardModule', isDashboard);
+                                    Session.set('CloudDashboardModule', isDashboard);
                                 }else if((radioValue != 1) && (accessDesc == "Dashboard") && (isDashboardLicence)){
                                     isDashboard = false;
-                                    Session.setPersistent('CloudDashboardModule', isDashboard);
+                                    Session.set('CloudDashboardModule', isDashboard);
                                 }
 
 
 
                                 if((radioValue == 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                                     isInventory = true;
-                                    Session.setPersistent('CloudInventoryModule', isInventory);
+                                    Session.set('CloudInventoryModule', isInventory);
                                 }else if((radioValue != 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                                     isInventory = false;
-                                    Session.setPersistent('CloudInventoryModule', isInventory);
+                                    Session.set('CloudInventoryModule', isInventory);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Manufacturing") && (isManufacturingLicence)){
                                     isManufacturing = true;
-                                    Session.setPersistent('CloudManufacturingModule', isManufacturing);
+                                    Session.set('CloudManufacturingModule', isManufacturing);
                                 }else if((radioValue != 1) && (accessDesc == "Manufacturing") && (isManufacturingLicence)){
                                     isManufacturing = false;
-                                    Session.setPersistent('CloudManufacturingModule', isManufacturing);
+                                    Session.set('CloudManufacturingModule', isManufacturing);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Settings")){
                                     isAccessLevels = true;
-                                    Session.setPersistent('CloudAccessLevelsModule', isAccessLevels);
+                                    Session.set('CloudAccessLevelsModule', isAccessLevels);
                                 }else if((radioValue != 1) && (accessDesc == "Settings")){
                                     isAccessLevels = false;
-                                    Session.setPersistent('CloudAccessLevelsModule', isAccessLevels);
+                                    Session.set('CloudAccessLevelsModule', isAccessLevels);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Shipping") && (isShippingLicence)){
                                     isShipping = true;
-                                    Session.setPersistent('CloudShippingModule', isShipping);
+                                    Session.set('CloudShippingModule', isShipping);
                                 }else if((radioValue != 1) && (accessDesc == "Shipping") && (isShippingLicence)){
                                     isShipping = false;
-                                    Session.setPersistent('CloudShippingModule', isShipping);
+                                    Session.set('CloudShippingModule', isShipping);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Stock Transfer") && (isStockTransferLicence)){
                                     isStockTransfer = true;
-                                    Session.setPersistent('CloudStockTransferModule', isStockTransfer);
+                                    Session.set('CloudStockTransferModule', isStockTransfer);
                                 }else if((radioValue != 1) && (accessDesc == "Stock Transfer") && (isStockTransferLicence)){
                                     isStockTransfer = false;
-                                    Session.setPersistent('CloudStockTransferModule', isStockTransfer);
+                                    Session.set('CloudStockTransferModule', isStockTransfer);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Stock Take") && (isStockTakeLicence)){
                                     isStockTake = true;
-                                    Session.setPersistent('CloudStockTakeModule', isStockTake);
+                                    Session.set('CloudStockTakeModule', isStockTake);
                                 }else if((radioValue != 1) && (accessDesc == "Stock Take") && (isStockTakeLicence)){
                                     isStockTake = false;
-                                    Session.setPersistent('CloudStockTakeModule', isStockTake);
+                                    Session.set('CloudStockTakeModule', isStockTake);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Sales") && (isSalesLicence)){
                                     isSales = true;
-                                    Session.setPersistent('CloudSalesModule', isSales);
+                                    Session.set('CloudSalesModule', isSales);
                                 }else if((radioValue != 1) && (accessDesc == "Sales") && (isSalesLicence)){
                                     isSales = false;
-                                    Session.setPersistent('CloudSalesModule', isSales);
+                                    Session.set('CloudSalesModule', isSales);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Purchases") && (isPurchasesLicence)){
                                     isPurchases = true;
-                                    Session.setPersistent('CloudPurchasesModule', isPurchases);
+                                    Session.set('CloudPurchasesModule', isPurchases);
                                 }else if((radioValue != 1) && (accessDesc == "Purchases") && (isPurchasesLicence)){
                                     isPurchases = false;
-                                    Session.setPersistent('CloudPurchasesModule', isPurchases);
+                                    Session.set('CloudPurchasesModule', isPurchases);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Expense Claims") && (isExpenseClaimsLicence)){
                                     isExpenseClaims = true;
-                                    Session.setPersistent('CloudExpenseClaimsModule', isExpenseClaims);
+                                    Session.set('CloudExpenseClaimsModule', isExpenseClaims);
                                 }else if((radioValue != 1) && (accessDesc == "Expense Claims") && (isExpenseClaimsLicence)){
                                     isExpenseClaims = false;
-                                    Session.setPersistent('CloudExpenseClaimsModule', isExpenseClaims);
+                                    Session.set('CloudExpenseClaimsModule', isExpenseClaims);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Fixed Assets") && (isFixedAssetsLicence)){
                                     isFixedAssets = true;
-                                    Session.setPersistent('CloudFixedAssetsModule', isFixedAssets);
+                                    Session.set('CloudFixedAssetsModule', isFixedAssets);
                                 }else if((radioValue != 1) && (accessDesc == "Fixed Assets") && (isFixedAssetsLicence)){
                                     isFixedAssets = false;
-                                    Session.setPersistent('CloudFixedAssetsModule', isFixedAssets);
+                                    Session.set('CloudFixedAssetsModule', isFixedAssets);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Payments") && (isPaymentsLicence)){
                                     isPayments = true;
-                                    Session.setPersistent('CloudPaymentsModule', isPayments);
+                                    Session.set('CloudPaymentsModule', isPayments);
                                 }else if((radioValue != 1) && (accessDesc == "Payments") && (isPaymentsLicence)){
                                     isPayments = false;
-                                    Session.setPersistent('CloudPaymentsModule', isPayments);
+                                    Session.set('CloudPaymentsModule', isPayments);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Contacts") && (isContactsLicence)){
                                     isContacts = true;
-                                    Session.setPersistent('CloudContactsModule', isContacts);
+                                    Session.set('CloudContactsModule', isContacts);
                                 }else if((radioValue != 1) && (accessDesc == "Contacts") && (isContactsLicence)){
                                     isContacts = false;
-                                    Session.setPersistent('CloudContactsModule', isContacts);
+                                    Session.set('CloudContactsModule', isContacts);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Accounts") && (isAccountsLicence)){
                                     isAccounts = true;
-                                    Session.setPersistent('CloudAccountsModule', isAccounts);
+                                    Session.set('CloudAccountsModule', isAccounts);
                                 }else if((radioValue != 1) && (accessDesc == "Accounts") && (isAccountsLicence)){
                                     isAccounts = false;
-                                    Session.setPersistent('CloudAccountsModule', isAccounts);
+                                    Session.set('CloudAccountsModule', isAccounts);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Reports") && (isReportsLicence)){
                                     isReports = true;
-                                    Session.setPersistent('CloudReportsModule', isReports);
+                                    Session.set('CloudReportsModule', isReports);
                                 }else if((radioValue != 1) && (accessDesc == "Reports") && (isReportsLicence)){
                                     isReports = false;
-                                    Session.setPersistent('CloudReportsModule', isReports);
+                                    Session.set('CloudReportsModule', isReports);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Settings") && (isSettingsLicence)){
                                     isSettings = true;
-                                    Session.setPersistent('CloudSettingsModule', isSettings);
+                                    Session.set('CloudSettingsModule', isSettings);
                                 }else if((radioValue != 1) && (accessDesc == "Settings") && (isSettingsLicence)){
                                     isSettings = false;
-                                    Session.setPersistent('CloudSettingsModule', isSettings);
+                                    Session.set('CloudSettingsModule', isSettings);
                                 }
 
 

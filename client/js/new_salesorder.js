@@ -5051,7 +5051,7 @@ Template.new_salesorder.onRendered(function () {
                         };
 
                         if (data.ttermsvs1[i].isSalesdefault == true) {
-                            Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                            Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                             templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                         }
 
@@ -5087,7 +5087,7 @@ Template.new_salesorder.onRendered(function () {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
                     if (data.ttermsvs1[i].isSalesdefault == true) {
-                        Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                        Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                         templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                     }
                     termrecords.push(termrecordObj);
@@ -10948,6 +10948,7 @@ Template.new_salesorder.events({
                             html: htmlmailBody,
                             attachments: attachment
                         }, function(error, result) {
+                            console.log("chkEmailCopy", { error, result })
                             if (error && error.error === "error") {
                                 FlowRouter.go('/salesorderslist?success=true');
 
@@ -11011,6 +11012,7 @@ Template.new_salesorder.events({
                             html: htmlmailBody,
                             attachments: attachment
                         }, function(error, result) {
+                            console.log("chkEmailRep", { error, result })
                             if (error && error.error === "error") {
                                 FlowRouter.go('/salesorderslist?success=true');
                             } else {
@@ -11239,10 +11241,10 @@ Template.new_salesorder.events({
                     addVS1Data('TSalesOrderEx', JSON.stringify(dataUpdated)).then(function(dataReturn) {
                         saveFunc()
                     }).catch((error) => {
-                        saveFunc()
+                        // saveFunc()
                     })
                 }).catch(errroorrrr => {
-                    saveFunc()
+                    // saveFunc()
                 })
                 // salesService.saveSalesOrderEx(objDetails).then(function(objDetails) {
 

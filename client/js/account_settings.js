@@ -1,6 +1,9 @@
 import {EmployeeProfileService} from './profile-service';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../js/core-service';
+import { Template } from 'meteor/templating';
+
+import '../my-account/account.html';
 Template.myAccount.onRendered(function(){
   var employeeProfileService = new EmployeeProfileService();
   getEmployeeProfiles();

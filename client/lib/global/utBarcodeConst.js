@@ -1,3 +1,4 @@
+import { Session } from 'meteor/session';
   Barcode_SepChar = '-';
 
   Barcode_Prefix_Employee     = 'EMP';
@@ -45,7 +46,7 @@
   Barcode_Prefix_Task = 'TSK';
   Barcode_Prefix_WorkOrder = 'WO';
 
-  
+
  licenceIPAddress = "login.vs1cloud.com"; //165.228.147.127
  //licenceIPAddress = "sandboxcoreedi.vs1cloud.com"; //192.168.15.124
   //Global Declaration
@@ -95,8 +96,8 @@ firstIndentLeft = 8;
 loggedTermsPurchase = Session.get('ERPTermsPurchase') || "COD";
 loggedTermsSales = Session.get('ERPTermsSales') || "COD";
 if(Session.get('ERPLoggedCountry') == "Australia"){
-  // Session.setPersistent('ERPTaxCodePurchaseInc', "NCG");
-  // Session.setPersistent('ERPTaxCodeSalesInc', "GST");
+  // Session.set('ERPTaxCodePurchaseInc', "NCG");
+  // Session.set('ERPTaxCodeSalesInc', "GST");
   loggedTaxCodePurchaseInc = Session.get('ERPTaxCodePurchaseInc') || "NCG";
   loggedTaxCodeSalesInc = Session.get('ERPTaxCodeSalesInc') || "GST";
   LoggedCountry = Session.get('ERPLoggedCountry');
@@ -107,7 +108,7 @@ if(Session.get('ERPLoggedCountry') == "Australia"){
     if(localStorage.getItem('EDatabase')){
     if(localStorage.getItem('EDatabase') == 'rapp_australia_pty_ltd'){
       addExtraUserPrice = Currency+65;
-      Session.setPersistent('VS1AdminUserName', 'roger@rappaustralia.com.au');
+      Session.set('VS1AdminUserName', 'roger@rappaustralia.com.au');
     }
    }
 
@@ -117,8 +118,8 @@ if(Session.get('ERPLoggedCountry') == "Australia"){
 
   bsbCodeName = "BSB (Branch Number)";
 }else if(Session.get('ERPLoggedCountry') == "United States of America"){
-  // Session.setPersistent('ERPTaxCodePurchaseInc', "NT");
-  // Session.setPersistent('ERPTaxCodeSalesInc', "NT");
+  // Session.set('ERPTaxCodePurchaseInc', "NT");
+  // Session.set('ERPTaxCodeSalesInc', "NT");
   LoggedCountry = "United States";
   loggedTaxCodePurchaseInc = Session.get('ERPTaxCodePurchaseInc') || "NT";
   loggedTaxCodeSalesInc = Session.get('ERPTaxCodeSalesInc') || "NT";
@@ -171,4 +172,3 @@ checkResponseError ="You have lost internet connection, please log out and log b
 
 //loggedTaxCodePurchaseInc = Session.get('ERPTaxCodePurchaseInc');
 //loggedTaxCodeSalesInc = Session.get('ERPTaxCodeSalesInc');
-

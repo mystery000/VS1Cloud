@@ -1,6 +1,6 @@
 import "../../../lib/global/indexdbstorage.js";
 import { SideBarService } from '../../../js/sidebar-service';
-
+import { Session } from 'meteor/session';
 Template.crm_top_menu.onCreated(function () {
   let templateObject = Template.instance();
   templateObject.displayfields = new ReactiveVar([]);

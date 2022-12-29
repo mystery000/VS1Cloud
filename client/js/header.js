@@ -1,3 +1,4 @@
+import { Template } from 'meteor/templating';
 import {
     ReactiveVar
 } from 'meteor/reactive-var';
@@ -24,6 +25,11 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import { AccountService } from '../accounts/account-service';
+
+import '../Navigation/header.html';
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { Session } from 'meteor/session';
 let utilityService = new UtilityService();
 let productService = new ProductService();
 let organizationService = new OrganisationService();
@@ -100,7 +106,7 @@ Template.header.onRendered(function () {
     //     templateObject.confirmedStepCount.set(cntConfirmedSteps);
     // }
     // templateObject.getConfirmedStepCount();
-    
+
     checkSetupFinished2();
 
     let sidePanelToggle = Session.get('sidePanelToggle');
@@ -1646,22 +1652,22 @@ Template.header.onRendered(function () {
             let companyAccountant = data.tcompanyinfo[0].Contact || '';
             let companyCountry = data.tcompanyinfo[0].PoCountry || '';
             let bankDetails = "Bank Name: " + bankName + "\n" + "Account Name: " + accountName + "\n Bank Account: " + accNo + "\nBSB: " + bsb + "\n Swift Code: " + swiftCode + "\n" + "Routing No: " + routingNo;
-            Session.setPersistent('vs1companyName', companyName);
-            Session.setPersistent('vs1companyaddress1', companyaddress1);
-            Session.setPersistent('vs1companyaddress2', companyaddress2);
-            Session.setPersistent('vs1companyABN', companyABN);
-            Session.setPersistent('vs1companyPhone', companyPhone);
-            Session.setPersistent('vs1companyURL', companyURL);
-            Session.setPersistent('vs1companyPOBox', poBox);
-            Session.setPersistent('vs1companyCity', companyCity);
-            Session.setPersistent('companyState', companyState);
-            Session.setPersistent('vs1companyStripeID', data.tcompanyinfo[0].Apcano);
-            Session.setPersistent('vs1companyStripeFeeMethod', data.tcompanyinfo[0].DvaABN);
-            Session.setPersistent('vs1companyBankDetails', bankDetails);
-            Session.setPersistent('vs1companyBankName1', bankDetails);
-            Session.setPersistent('vs1companyCompanyPOBox', bankDetails);
-            Session.setPersistent('vs1companyReg', companyReg);
-            Session.setPersistent('vs1companyCountry', companyCountry);
+            Session.set('vs1companyName', companyName);
+            Session.set('vs1companyaddress1', companyaddress1);
+            Session.set('vs1companyaddress2', companyaddress2);
+            Session.set('vs1companyABN', companyABN);
+            Session.set('vs1companyPhone', companyPhone);
+            Session.set('vs1companyURL', companyURL);
+            Session.set('vs1companyPOBox', poBox);
+            Session.set('vs1companyCity', companyCity);
+            Session.set('companyState', companyState);
+            Session.set('vs1companyStripeID', data.tcompanyinfo[0].Apcano);
+            Session.set('vs1companyStripeFeeMethod', data.tcompanyinfo[0].DvaABN);
+            Session.set('vs1companyBankDetails', bankDetails);
+            Session.set('vs1companyBankName1', bankDetails);
+            Session.set('vs1companyCompanyPOBox', bankDetails);
+            Session.set('vs1companyReg', companyReg);
+            Session.set('vs1companyCountry', companyCountry);
             localStorage.setItem('vs1companyBankName', bankName);
             localStorage.setItem('vs1companyBankAccountName', accountName);
             localStorage.setItem('vs1companyBankAccountNo', accNo);
@@ -2176,7 +2182,7 @@ Template.header.events({
         }
         if (confirm("Are you sure you want to close the top panel?")) {
             accesslevelService.saveEmpAccess(data).then(function (data) {
-                Session.setPersistent('CloudTopPanelMenu', isTopPanel);
+                Session.set('CloudTopPanelMenu', isTopPanel);
 
                 Meteor._reload.reload();
             }).catch(function (err) {
