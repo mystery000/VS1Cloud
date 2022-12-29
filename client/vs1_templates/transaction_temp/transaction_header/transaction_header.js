@@ -1,6 +1,3 @@
-import {Session} from 'meteor/session';
-import { Template } from 'meteor/templating';
-import './transaction_header.html';
 Template.transaction_header.helpers({
   getUserLabel: () => {
     const cardType = Template.instance().data.cardType;

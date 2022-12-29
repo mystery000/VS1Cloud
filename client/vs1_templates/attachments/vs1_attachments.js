@@ -1,7 +1,3 @@
-import {Session} from 'meteor/session';
-import { Template } from 'meteor/templating';
-import './vs1_attachments.html';
-
 Template.vs1_attachments.onCreated(function(){
 });
 

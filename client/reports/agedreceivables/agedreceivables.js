@@ -9,9 +9,6 @@ import Datehandler from "../../DateHandler";
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './agedreceivables.html';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
-let _ = require('lodash');
 
 const reportService = new ReportService();
 const utilityService = new UtilityService();

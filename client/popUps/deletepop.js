@@ -1,6 +1,4 @@
-import {Session} from 'meteor/session';
-import { Template } from 'meteor/templating';
-import './deletepop.html';
+
 const TransactionTypeTemplates = {
   sales: 
     {
