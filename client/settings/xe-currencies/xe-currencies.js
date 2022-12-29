@@ -4,6 +4,9 @@ import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './xe-currencies.html';
 
 const settingService = new TaxRateService();
 const settingFields = ["VS1XECLIENTID", "VS1XEAPIKEY"];

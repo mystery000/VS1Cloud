@@ -12,6 +12,7 @@ import erpObject from '../lib/global/erp-objects';
 // import ldb from 'localdata';
 import '../vs1_templates/vs1_video/vs1_login_video.js';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { Session } from 'meteor/session';
 let smsService = new SMSService();
 
 Template.vs1login.onCreated(() => {
@@ -592,7 +593,6 @@ Template.vs1login.onRendered(function () {
                 // pausevideo();
                 $('.myVS1Video').css('display', 'none');
                 $('.myVS1VideoLogin').css('display', 'none');
-                console.log("login here");
                 window.open('/dashboard', '_self');
                 // FlowRouter.go('/dashboard');
 
@@ -1078,6 +1078,7 @@ Template.vs1login.onRendered(function () {
    };
 
     function getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard) {
+      console.log(userAccessOptions);
         let lineItemslevel = [];
         let lineItemObjlevel = {};
         let lineItemsAccesslevel = [];
@@ -1575,6 +1576,7 @@ Template.vs1login.onRendered(function () {
                 'loggedDatabase': Session.get('EDatabase'),
                 'loggedAccessData': lineItemslevel
             };
+
             Session.set('ERPSolidCurrentUSerAccess', userSerssion);
 
             let userModuleRedirect = lineItemsAccesslevel.sort(function (a, b) {
@@ -1590,24 +1592,25 @@ Template.vs1login.onRendered(function () {
               if(isSetupWizard == true){
                 if (isAppointmentScheduling == true) {
                     if (isAllocationLaunch == true) {
-                        window.open('/appointments#allocationModal', '_self');
-                      //   FlowRouter.go('/appointments#allocationModal');
+                        //window.open('/appointments#allocationModal', '_self');
+                      FlowRouter.go('/appointments#allocationModal');
                       //   FlowRouter.go('/appointments');
                     } else if (isAppointmentLaunch == true) {
-                       //FlowRouter.go('/appointments');
-                        window.open('/appointments', '_self');
+                       FlowRouter.go('/appointments');
+                        //window.open('/appointments', '_self');
                     } else {
-                       //FlowRouter.go('/dashboard');
-                        window.open('/dashboard', '_self');
+                       FlowRouter.go('/dashboard');
+                        //window.open('/dashboard', '_self');
                     }
                 } else {
-                   //FlowRouter.go('/dashboard');
-                    window.open('/dashboard', '_self');
+                   FlowRouter.go('/dashboard');
+                    //window.open('/dashboard', '_self');
                 }
               }else{
                 handleSetupRedirection();
               };
               }, delayTimeAfterSound);
+
 
 
         } else {

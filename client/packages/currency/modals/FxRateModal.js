@@ -1,4 +1,7 @@
 import "../../../lib/global/indexdbstorage.js";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './FxRateModal.html';
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 

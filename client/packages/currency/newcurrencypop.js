@@ -6,6 +6,8 @@ import "../../lib/global/indexdbstorage.js";
 import FxApi from "../../settings/currencies-setting/FxApi";
 import { currencySymbolEmpty } from "./CurrencyGlobals";
 import LoadingOverlay from "../../LoadingOverlay";
+import { Template } from 'meteor/templating';
+import '../manufacture/newcurrencypop.html';
 let sideBarService = new SideBarService();
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"

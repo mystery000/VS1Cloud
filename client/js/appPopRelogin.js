@@ -1,5 +1,6 @@
 import { Template } from 'meteor/templating';
 import '../Navigation/ApAlertPop.html';
+import { Session } from 'meteor/session';
 Template.appAlertPage.onCreated(function(){
 
 

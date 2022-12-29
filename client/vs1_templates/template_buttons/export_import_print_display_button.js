@@ -1,4 +1,6 @@
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Template } from 'meteor/templating';
+import './export_import_print_display_button.html';
 Template.export_import_print_display_button.inheritsHelpersFrom('non_transactional_list');
 Template.export_import_print_display_button.onCreated(function(){
 
