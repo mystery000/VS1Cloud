@@ -8,6 +8,9 @@ import CachedHttp from "../../lib/global/CachedHttp";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
 import { ReactiveVar } from "meteor/reactive-var";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './productsalesreport.html';
 
 
 const reportService = new ReportService();

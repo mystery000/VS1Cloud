@@ -9,6 +9,9 @@ import erpObject from "../../lib/global/erp-objects";
 import Datehandler from "../../DateHandler";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import { template } from "lodash";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import '.trialbalance.html';
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 

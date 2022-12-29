@@ -18,6 +18,9 @@ import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import "jQuery.print/jQuery.print.js";
 import { jsPDF } from "jspdf";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './new_profit.html';
 
 let utilityService = new UtilityService();
 let reportService = new ReportService();

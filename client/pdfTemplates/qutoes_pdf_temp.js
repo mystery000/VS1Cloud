@@ -8,6 +8,9 @@ import { UtilityService } from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import {Random} from 'meteor/random';
 import '../lib/global/indexdbstorage.js';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './quotes_pdf_temp.html';
 
 Template.quotesPrintTemp.onCreated(()=>{
     const templateObject = Template.instance();

@@ -98,6 +98,17 @@ import './pdf_Templates/salesorder_pdf_temp.js';
 import './pdf_Templates/statement_pdf_temp';
 import './pdf_Templates/supplierpayment_pdf_temp.js';
 
+import './reports/agedpayables/agedpayables.js';
+import './reports/agedreceivables/agedreceivables.js';
+import './reports/profitandloss/new_profit.js';
+import './reports/generalledger/generalledger.js';
+import './reports/sales/productsalesreport.js';
+import './reports/purchasesreport/purchasesreport.js';
+import './reports/purchasesreport/purchasesummaryreport.js';
+import './reports/sales/salesreport.js';
+import './reports/tax/taxsummaryreport.js';
+import './reports/trialbalance/trialbalance.js'
+
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
