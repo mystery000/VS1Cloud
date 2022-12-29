@@ -22305,7 +22305,7 @@ Template.payrollrules.events({
     //  }
     //  "show.bs.modal #select-ratetype-modal": (e, ui) => {
     // },
-    'change #overtimeRateType': (e, ui) => {
+    'change #overtimeRate': (e, ui) => {
         let evalue = $(e.currentTarget).val();
         switch(evalue) {
             case 'Time & Half':
@@ -22377,6 +22377,9 @@ export const getOvertimes = async () => {
     const rateTypes = await getRateTypes();
     // This part is handling the auto add of default values in the list
     let defaultOvertimes = PayrollSettingsOvertimes.getDefaults();
+    console.log('rateTypes:',rateTypes);
+    console.log('overtimes:',overtimes);
+    console.log('defaultOvertimes:',defaultOvertimes);
     defaultOvertimes.forEach((defaultOvertime) => {
         // if doesnt exist, just add it
         if(!overtimes.some(overtime => overtime.rule == defaultOvertime.rule)) {
