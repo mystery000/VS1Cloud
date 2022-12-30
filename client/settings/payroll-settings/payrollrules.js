@@ -5557,7 +5557,6 @@ Template.payrollrules.onRendered(function() {
         overtimes.forEach((overtime) => {
             overtime.rateType = rateTypes.find(rate => rate.ID == overtime.rateTypeId);
         });
-
         await templateObject.overtimes.set(overtimes);
 
         await templateObject.setupOvertimeTable();
@@ -5641,7 +5640,8 @@ Template.payrollrules.onRendered(function() {
             const overtimeIdToupdate = $('#btnAddNewOvertime').attr('overtime-id');
             return templateObject.updateOvertime(overtimeIdToupdate);
         }
-
+        
+        console.log('OK...')
         $('#btnAddNewOvertime .modal-title').text('Add new Overtime');
 
         LoadingOverlay.show();
@@ -5652,24 +5652,26 @@ Template.payrollrules.onRendered(function() {
         const rateType = rateTypes.find(rate => rate.ID == $('#overtimeRateType').attr('rate-type-id'));
         const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
         const weekEndDay = $('#OvertimeWeekEndDay').val();
+        const rate = $('#overtimeRate').val();
+
+        console.log('rateType:',rateType)
 
         const object = new PayrollSettingsOvertimes({
             hours: hours,
             rateTypeId: rateType.ID,
-            //rateType: rateType,
-            //rateType: rateType.Description,
+            rate: rate,
             hourlyMultiplier: hourlyMultiplier,
-            rule: rateType.Description == "Weekend" ? `${rateType.Description} (${weekEndDay.toLowerCase()})` : `${rateType.Description}`,
-            day: rateType.Description == "Weekend" ? weekEndDay: null
+            rate,
+            rule: rate == "Weekend"? `${weekEndDay}` : `Greater than ${hours} hours`,
+            day: rate == "Weekend" ? weekEndDay: null
 
         });
-        object.setRateType(rateType);
+        // object.setRateType(rateType);
 
 
         // Add to the list of overtimes
         let overtimes = await templateObject.overtimes.get();
         overtimes.push(object);
-
         // This code has to be removed once we save on remote database
         overtimes = overtimes.map((overtime, index) => {
             return {
@@ -5714,14 +5716,16 @@ Template.payrollrules.onRendered(function() {
                     const rateTypeId =  $('#overtimeRateType').attr('rate-type-id');
                     const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
                     const weekEndDay = $('#OvertimeWeekEndDay').val();
+                    const rate = $('#overtimeRate').val();
+
                     const newOvertime = {
                         ...overtime,
                         hours: parseFloat(hours),
                         rateTypeId: parseInt(rateTypeId),
-                        rateType: rateTypes.find(rt => rt.ID == rateTypeId),
                         hourlyMultiplier: parseFloat(hourlyMultiplier),
-                        rule: rateType == "Weekend" ? `${rateType} : (${weekEndDay})` : `${rateType}`,
-                        ...(rateType == "Weekend" ? {day: weekEndDay} : {day: null}),
+                        rate,
+                        rule: rate == "Weekend"? `${weekEndDay}` : `Greater than ${hours} hours`,
+                        day: rate == "Weekend" ? weekEndDay: null
 
                     };
 
@@ -5739,7 +5743,14 @@ Template.payrollrules.onRendered(function() {
 
     }
 
+    templateObject.openAddOvertimeEditor = async (overtimeId = null)  => {
+        $('#btnAddNewOvertime').modal('show');
+        $('#btnAddNewOvertime .modal-title').text('Add Overtime');
+        $('#overtimeRateType').attr('rate-type-id', 1);
+    }
+
     templateObject.openOvertimeEditor = async (overtimeId = null)  => {
+        console.log('overtimeId:',overtimeId)
         $('#btnAddNewOvertime').modal('show');
         $('#btnAddNewOvertime .modal-title').text('Edit Overtime');
 
@@ -5748,33 +5759,21 @@ Template.payrollrules.onRendered(function() {
 
         let overtimes = await templateObject.overtimes.get();
         let overtime = overtimes.find(overtime => overtime.id == overtimeId);
-
-        $('#overtimeHours').val(overtime.hours);
-        $('#overtimeRateType').val(overtime.rateType.Description);
+        console.log('overtime.rate:',overtime)
+        if(overtime.rate == "Weekend"){
+            $('.weekendDiv').css('display', 'block');
+            $('.greaterThanDiv').css('display', 'none');
+            $('#OvertimeWeekEndDay').val(overtime.day);
+        }else{
+            $('#overtimeHours').val(overtime.hours);
+        }
+        $('#overtimeRate').val(overtime.rate);
         $('#overtimeRateType').attr('rate-type-id', overtime.rateTypeId);
         $('#overtimeHourlyMultiplier').val(overtime.hourlyMultiplier);
-        $('#OvertimeWeekEndDay').val(overtime.day);
     }
 
-    templateObject.editOverTime = async (overtimeId = null) => {
-        // $('#btnAddNewOvertime').modal('show');
-        // $('#btnAddNewOvertime .modal-title').text('Edit Overtime');
 
-        // $('#btnAddNewOvertime').attr('overtime-id', overtimeId);
-
-         let overtimes = await templateObject.overtimes.get();
-         let overtime = overtimes.find(overtime => overtime.id == overtimeId);
-
-        // $('#overtimeHours').val(overtime.hours);
-        // $('#overtimeRateType').val(overtime.rateType);
-        // $('#overtimeRateType').attr('rate-type-id', overtime.rateTypeId);
-        // $('#overtimeHourlyMultiplier').val(overtime.hourlyMultiplier);
-        // $('#OvertimeWeekEndDay').val(overtime.day);
-
-         templateObject.addOverTime(overtime.id);
-
-    }
-
+    
     templateObject.resetOvertimeModal = async () => {
         $('#overtimeHours').val('');
         $('#overtimeRateType').val('');
@@ -5961,19 +5960,19 @@ Template.payrollrules.onRendered(function() {
 
     //     switch(evalue) {
     //         case 'Time & Half':
-    //             $('.graterThenDiv').css('display', 'block');
+    //             $('.greaterThanDiv').css('display', 'block');
     //             $('.weekendDiv').css('display', 'none');
     //         break;
     //         case 'Double Time':
-    //             $('.graterThenDiv').css('display', 'block');
+    //             $('.greaterThanDiv').css('display', 'block');
     //             $('.weekendDiv').css('display', 'none');
     //         break;
     //         case 'Weekend':
     //             $('.weekendDiv').css('display', 'block');
-    //             $('.graterThenDiv').css('display', 'none');
+    //             $('.greaterThanDiv').css('display', 'none');
     //         break;
     //         default:
-    //             $('.graterThenDiv').css('display', 'block');
+    //             $('.greaterThanDiv').css('display', 'block');
     //             $('.weekendDiv').css('display', 'none');
     //     }
     // });
@@ -15026,7 +15025,18 @@ Template.payrollrules.onRendered(function() {
         }, 1000);
     });
 
-
+    $(document).on('click', '#rateList', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#ratePopModal').modal('toggle');
+        } else {
+        }
+    });
+    $(document).on("click", "#tblRatePopList tbody tr", function(e) {
+        $('#rateList').val($(this).find(".colRateName").text());
+        $('#ratePopModal').modal('toggle');
+    });
 });
 
 Template.payrollrules.events({
@@ -22278,13 +22288,17 @@ Template.payrollrules.events({
      },
      "click .edit-overtime": (e, ui) => {
         const id = $(e.currentTarget).attr('overtime-id');
+        console.log('overtime-id:',id)
         ui.openOvertimeEditor(id);
-        // ui.editOverTime(id);
+     },
+     "click .btnAddNewOvertime": (e, ui) => {
+        const id = $(e.currentTarget).attr('overtime-id');
+        ui.openAddOvertimeEditor(id);
      },
 
      "click #overtimeRateType, click #edtRateType": (e, ui) => {
         $(e.currentTarget).addClass('paste-rate');
-        // $('#select-rate-type-modal').modal('show');
+        $('#select-rate-type-modal').modal('show');
      },
 
      "click #tblratetypes tbody > tr, click  #tblratetypelist tbody > tr": (e, ui) => {
@@ -22308,22 +22322,30 @@ Template.payrollrules.events({
     'change #overtimeRate': (e, ui) => {
         let evalue = $(e.currentTarget).val();
         switch(evalue) {
+            case 'Normal':
+                $('.greaterThanDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+            break;
             case 'Time & Half':
-                $('.graterThenDiv').css('display', 'block');
+                $('.greaterThanDiv').css('display', 'block');
                 $('.weekendDiv').css('display', 'none');
             break;
             case 'Double Time':
-                $('.graterThenDiv').css('display', 'block');
+                $('.greaterThanDiv').css('display', 'block');
                 $('.weekendDiv').css('display', 'none');
             break;
             case 'Weekend':
                 $('.weekendDiv').css('display', 'block');
-                $('.graterThenDiv').css('display', 'none');
+                $('.greaterThanDiv').css('display', 'none');
             break;
             default:
-                $('.graterThenDiv').css('display', 'block');
+                $('.greaterThanDiv').css('display', 'block');
                 $('.weekendDiv').css('display', 'none');
         }
+    },
+    'click #rateList': function(event) {
+        $('#rateList').select();
+        $('#rateList').editableSelect();
     },
 });
 
@@ -22377,9 +22399,6 @@ export const getOvertimes = async () => {
     const rateTypes = await getRateTypes();
     // This part is handling the auto add of default values in the list
     let defaultOvertimes = PayrollSettingsOvertimes.getDefaults();
-    console.log('rateTypes:',rateTypes);
-    console.log('overtimes:',overtimes);
-    console.log('defaultOvertimes:',defaultOvertimes);
     defaultOvertimes.forEach((defaultOvertime) => {
         // if doesnt exist, just add it
         if(!overtimes.some(overtime => overtime.rule == defaultOvertime.rule)) {
