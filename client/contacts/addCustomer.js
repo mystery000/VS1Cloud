@@ -14,6 +14,11 @@ import { CRMService } from "../crm/crm-service";
 import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './addCustomer.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let crmService = new CRMService();
@@ -1497,7 +1502,7 @@ Template.customerscard.onRendered(function() {
         for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
             preferredPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName)
         }
-        preferredPayments = _.sortBy(preferredPayments);
+        // preferredPayments = _.sortBy(preferredPayments);
         templateObject.preferredPaymentList.set(preferredPayments);
     }
     templateObject.getPreferredPaymentList();
@@ -1534,7 +1539,7 @@ Template.customerscard.onRendered(function() {
                 Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
             }
         }
-        terms = _.sortBy(terms);
+        // terms = _.sortBy(terms);
         templateObject.termsList.set(terms);
     }
     templateObject.getTermsList();
@@ -1560,7 +1565,7 @@ Template.customerscard.onRendered(function() {
         for (let i = 0; i < data.tshippingmethod.length; i++) {
             deliveryMethods.push(data.tshippingmethod[i].ShippingMethod)
         }
-        deliveryMethods = _.sortBy(deliveryMethods);
+        // deliveryMethods = _.sortBy(deliveryMethods);
         templateObject.deliveryMethodList.set(deliveryMethods);
     }
     templateObject.getDeliveryMethodList();
@@ -1590,7 +1595,7 @@ Template.customerscard.onRendered(function() {
         for (let i = 0; i < data.tclienttype.length; i++) {
             clientType.push(data.tclienttype[i].fields.TypeName)
         }
-        clientType = _.sortBy(clientType);
+        // clientType = _.sortBy(clientType);
         templateObject.clienttypeList.set(clientType);
     }
     // templateObject.getClientTypeData();

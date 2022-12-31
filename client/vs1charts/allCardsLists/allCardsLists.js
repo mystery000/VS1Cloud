@@ -7,6 +7,10 @@ import Tvs1CardPreferenceFields from "../../js/Api/Model/Tvs1CardPreferenceField
 import ApiService from "../../js/Api/Module/ApiService";
 import '../../lib/global/indexdbstorage.js';
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './allCardsLists.html';
+
 const employeeId = Session.get("mySessionEmployeeLoggedID");
 let _chartGroup = "";
 let _tabGroup = 0;

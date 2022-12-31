@@ -42,6 +42,11 @@ import erpObject from "../lib/global/erp-objects";
 import CachedHttp from "../lib/global/CachedHttp";
 import GlobalFunctions from "../GlobalFunctions";
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './addEmployee.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 const employeePayrollServices = new EmployeePayrollService();

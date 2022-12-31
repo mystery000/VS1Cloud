@@ -9,6 +9,12 @@ import { AccountService } from "../../accounts/account-service";
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
 import { AppointmentService } from '../../appointments/appointment-service';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './internal_transaction_list_with_switchbox.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let appointmentService = new AppointmentService();
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

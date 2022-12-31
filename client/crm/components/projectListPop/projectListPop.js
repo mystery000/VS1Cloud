@@ -1,4 +1,9 @@
 import { CRMService } from '../../crm-service';
+
+import { Template } from 'meteor/templating';
+import './projectListPop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let crmService = new CRMService();
 
 Template.projectListPop.onCreated(function() {

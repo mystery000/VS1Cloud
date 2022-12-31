@@ -12,6 +12,12 @@ import Tvs1ChartDashboardPreferenceField from "../../js/Api/Model/Tvs1ChartDashb
 import ApiService from "../../js/Api/Module/ApiService";
 import '../../lib/global/indexdbstorage.js';
 import { SideBarService } from "../../js/sidebar-service";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './allChartLists.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let _ = require("lodash");
 
 let chartsPlaceList = {

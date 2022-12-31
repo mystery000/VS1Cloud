@@ -8,6 +8,12 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './newtermspopup.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 Template.newtermspop.onCreated(function() {
     const templateObject = Template.instance();
