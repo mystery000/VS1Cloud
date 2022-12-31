@@ -19922,7 +19922,7 @@ Template.new_invoice.events({
                 $(this).prop('checked', false);
             });
             $(".selectDays input[type=checkbox]").each(function() {
-                $(this).prop('checked', false);
+                $(this).prop('checked', true);
             });
             // var url = FlowRouter.current().path;
             // var getso_id = url.split("?id=");
