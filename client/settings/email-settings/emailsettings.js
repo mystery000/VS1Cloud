@@ -172,7 +172,7 @@ Template.emailsettings.onRendered(function () {
 
   Meteor.call(
     "readPrefMethod",
-    Session.get("mycloudLogonID"),
+    localStorage.getItem("mycloudLogonID"),
     "currencyLists",
     function (error, result) {
       if (error) {
@@ -1585,7 +1585,7 @@ Template.emailsettings.onRendered(function () {
     //       let data = JSON.parse(dataObject[0].data);
     //       let temp = data.tcorrespondence.filter((item) => {
     //         return (
-    //           item.fields.EmployeeId == Session.get("mySessionEmployeeLoggedID")
+    //           item.fields.EmployeeId == localStorage.getItem("mySessionEmployeeLoggedID")
     //         );
     //       });
     //       let tempArray = [];
@@ -1599,7 +1599,7 @@ Template.emailsettings.onRendered(function () {
     //       temp.map((item) => {
     //         if (
     //           item.fields.EmployeeId ==
-    //             Session.get("mySessionEmployeeLoggedID") &&
+    //             localStorage.getItem("mySessionEmployeeLoggedID") &&
     //           item.fields.MessageTo == ""
     //         ) {
     //           tempArray.push(item.fields);
@@ -1615,7 +1615,7 @@ Template.emailsettings.onRendered(function () {
     //           let temp = dataObject.tcorrespondence.filter((item) => {
     //             return (
     //               item.fields.EmployeeId ==
-    //               Session.get("mySessionEmployeeLoggedID")
+    //               localStorage.getItem("mySessionEmployeeLoggedID")
     //             );
     //           });
 
@@ -1630,7 +1630,7 @@ Template.emailsettings.onRendered(function () {
     //           temp.map((item) => {
     //             if (
     //               item.fields.EmployeeId ==
-    //                 Session.get("mySessionEmployeeLoggedID") &&
+    //                 localStorage.getItem("mySessionEmployeeLoggedID") &&
     //               item.fields.MessageTo == ""
     //             ) {
     //               tempArray.push(item.fields);
@@ -1648,7 +1648,7 @@ Template.emailsettings.onRendered(function () {
     //         let temp = dataObject.tcorrespondence.filter((item) => {
     //           return (
     //             item.fields.EmployeeId ==
-    //             Session.get("mySessionEmployeeLoggedID")
+    //             localStorage.getItem("mySessionEmployeeLoggedID")
     //           );
     //         });
 
@@ -1663,7 +1663,7 @@ Template.emailsettings.onRendered(function () {
     //         temp.map((item) => {
     //           if (
     //             item.fields.EmployeeId ==
-    //               Session.get("mySessionEmployeeLoggedID") &&
+    //               localStorage.getItem("mySessionEmployeeLoggedID") &&
     //             item.fields.MessageTo == ""
     //           ) {
     //             tempArray.push(item.fields);
@@ -1712,7 +1712,7 @@ Template.emailsettings.onRendered(function () {
             type: "TCorrespondence",
             fields: {
               Active: true,
-              EmployeeId: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeId: localStorage.getItem("mySessionEmployeeLoggedID"),
               Ref_Type: setting.Ref_Type,
               MessageAsString: setting.message,
               MessageFrom: "",
@@ -1740,7 +1740,7 @@ Template.emailsettings.onRendered(function () {
 
       const employeeCorrespondences = correspondences.tcorrespondence.filter(
         (item) =>
-          item.fields.EmployeeId == Session.get("mySessionEmployeeLoggedID") && item.fields.MessageTo == ""
+          item.fields.EmployeeId == localStorage.getItem("mySessionEmployeeLoggedID") && item.fields.MessageTo == ""
       ).map(item => item.fields);
 
       templateObject.correspondences.set(employeeCorrespondences);
@@ -3185,7 +3185,7 @@ Template.emailsettings.events({
       // let monthDays = 0;
       // let weekDay = 0;
       // let id = $('#frequencyid').val() || '';
-      // let employeeID = Session.get('mySessionEmployeeLoggedID');
+      // let employeeID = localStorage.getItem('mySessionEmployeeLoggedID');
 
       // TODO: BasedOnType saving on frequency modal
       const basedOnTypes = $("#basedOnSettings input.basedOnSettings");
@@ -4030,7 +4030,7 @@ Template.emailsettings.events({
           sideBarService.getCorrespondences().then((dObject) => {
             let temp = {
               Active: true,
-              EmployeeId: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeId: localStorage.getItem("mySessionEmployeeLoggedID"),
               Ref_Type: tempLabel,
               MessageAsString: tempContent,
               MessageFrom: "",
@@ -4096,7 +4096,7 @@ Template.emailsettings.events({
         sideBarService.getCorrespondences().then((dObject) => {
           let temp = {
             Active: true,
-            EmployeeId: Session.get("mySessionEmployeeLoggedID"),
+            EmployeeId: localStorage.getItem("mySessionEmployeeLoggedID"),
             Ref_Type: tempLabel,
             MessageAsString: tempContent,
             MessageFrom: "",
@@ -5038,36 +5038,36 @@ Template.emailsettings.helpers({
   },
 
   organizationname: () => {
-    return Session.get("vs1companyName");
+    return localStorage.getItem("vs1companyName");
   },
   organizationurl: () => {
-    return Session.get("vs1companyURL");
+    return localStorage.getItem("vs1companyURL");
   },
   companyaddress1: () => {
-    return Session.get("vs1companyaddress1");
+    return localStorage.getItem("vs1companyaddress1");
   },
   companyaddress2: () => {
-    return Session.get("vs1companyaddress2");
+    return localStorage.getItem("vs1companyaddress2");
   },
   city: () => {
-    return Session.get("vs1companyCity");
+    return localStorage.getItem("vs1companyCity");
   },
   state: () => {
-    return Session.get("companyState");
+    return localStorage.getItem("companyState");
   },
   poBox: () => {
-    return Session.get("vs1companyPOBox");
+    return localStorage.getItem("vs1companyPOBox");
   },
 
   companyphone: () => {
-    let phone = "Phone: " + Session.get("vs1companyPhone");
+    let phone = "Phone: " + localStorage.getItem("vs1companyPhone");
     return phone;
   },
   companyabn: () => {
     //Update Company ABN
-    let countryABNValue = "ABN: " + Session.get("vs1companyABN");
+    let countryABNValue = "ABN: " + localStorage.getItem("vs1companyABN");
     if (LoggedCountry == "South Africa") {
-      countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+      countryABNValue = "Vat No: " + localStorage.getItem("vs1companyABN");
     }
     return countryABNValue;
   },
@@ -5075,7 +5075,7 @@ Template.emailsettings.helpers({
     //Add Company Reg
     let countryRegValue = "";
     if (LoggedCountry == "South Africa") {
-      countryRegValue = "Reg No: " + Session.get("vs1companyReg");
+      countryRegValue = "Reg No: " + localStorage.getItem("vs1companyReg");
     }
 
     return countryRegValue;

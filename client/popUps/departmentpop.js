@@ -2,6 +2,11 @@ import {TaxRateService} from "../settings/settings-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './departmentpop.html';
+
 let sideBarService = new SideBarService();
 Template.departmentpop.onCreated(function(){
     const templateObject = Template.instance();
@@ -22,7 +27,7 @@ Template.departmentpop.onRendered(function() {
     const deptrecords = [];
     let deptprodlineItems = [];
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'departmentList', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'departmentList', function(error, result){
         if(error){
 
         }else{
@@ -213,7 +218,7 @@ Template.departmentpop.onRendered(function() {
 
               if(templateObject.datatablerecords.get()){
 
-                  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'departmentList', function(error, result){
+                  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'departmentList', function(error, result){
                       if(error){
 
                       }else{
@@ -395,7 +400,7 @@ Template.departmentpop.onRendered(function() {
 
         if(templateObject.datatablerecords.get()){
 
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'departmentList', function(error, result){
+            Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'departmentList', function(error, result){
                 if(error){
 
                 }else{
@@ -559,7 +564,7 @@ Template.departmentpop.onRendered(function() {
 
             if(templateObject.datatablerecords.get()){
 
-                Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'departmentList', function(error, result){
+                Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'departmentList', function(error, result){
                     if(error){
 
                     }else{
@@ -866,7 +871,7 @@ Template.departmentpop.events({
         });
     },
     'click .resetTable' : function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -910,7 +915,7 @@ Template.departmentpop.events({
             lineItems.push(lineItemObj);
         });
 
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1344,7 +1349,7 @@ Template.departmentpop.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'departmentList'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'departmentList'});
     },
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b){

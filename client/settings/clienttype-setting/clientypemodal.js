@@ -3,6 +3,11 @@ import { SideBarService } from '../../js/sidebar-service';
 import {TaxRateService} from "../settings-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './clientypemodal.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 Template.clienttypemodal.onCreated(function () {
     const templateObject = Template.instance();
@@ -174,7 +179,7 @@ Template.clienttypemodal.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'clienttypeList'
         });
     },

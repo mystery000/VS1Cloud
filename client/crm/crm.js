@@ -643,8 +643,8 @@ Template.crmoverview.events({
         $(".chkAddLabel").prop("checked", false);
 
         // for add modal
-        let employeeID = Session.get("mySessionEmployeeLoggedID");
-        let employeeName = Session.get("mySessionEmployee");
+        let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
+        let employeeName = localStorage.getItem("mySessionEmployee");
         $('#add_assigned_name').val(employeeName);
         $('#assignedID').val(employeeID)
 
@@ -669,8 +669,8 @@ Template.crmoverview.events({
         let projectID = $("#txtCrmProjectID").val();
         let comment = $("#txtCommentsDescription").val();
 
-        let employeeID = Session.get("mySessionEmployeeLoggedID");
-        let employeeName = Session.get("mySessionEmployee");
+        let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
+        let employeeName = localStorage.getItem("mySessionEmployee");
 
         var objDetails = {
             type: "Tprojecttask_comments",

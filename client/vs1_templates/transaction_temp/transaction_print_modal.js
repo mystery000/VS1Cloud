@@ -400,7 +400,7 @@ Template.transaction_print_modal.events({
         }
       }
 
-      const companyName = Session.get("vs1companyName");
+      const companyName = localStorage.getItem("vs1companyName");
       const message = smsSettings.headerAppointmentSMSMessage.replace(
         "[Company Name]",
         companyName

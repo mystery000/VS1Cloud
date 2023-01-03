@@ -49,7 +49,7 @@ Template.receiptsoverview.onRendered(function () {
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnSearchAlert');
     }
-    let sessionCurrency = Session.get('ERPCountryAbbr');
+    let sessionCurrency = localStorage.getItem('ERPCountryAbbr');
     let categories = [];
     let multipleRecords = [];
     for (let i = 0; i < 10; i++) {
@@ -1605,9 +1605,9 @@ Template.receiptsoverview.onRendered(function () {
             } else if (paymenttype == "visa") {
                 transactionTypeName = "VISA";
             }
-            let loggedUserName = Session.get('mySessionEmployee');
-            let loggedUserId = Session.get('mySessionEmployeeLoggedID');
-            let currency = Session.get('ERPCountryAbbr');
+            let loggedUserName = localStorage.getItem('mySessionEmployee');
+            let loggedUserId = localStorage.getItem('mySessionEmployeeLoggedID');
+            let currency = localStorage.getItem('ERPCountryAbbr');
             let parentElement;
             if (from == 'ViewReceipt') {
                 parentElement = "#viewReceiptModal";
@@ -1772,9 +1772,9 @@ Template.receiptsoverview.onRendered(function () {
             } else if (paymenttype == "visa") {
                 transactionTypeName = "VISA";
             }
-            let loggedUserName = Session.get('mySessionEmployee');
-            let loggedUserId = Session.get('mySessionEmployeeLoggedID');
-            let currency = Session.get('ERPCountryAbbr');
+            let loggedUserName = localStorage.getItem('mySessionEmployee');
+            let loggedUserId = localStorage.getItem('mySessionEmployeeLoggedID');
+            let currency = localStorage.getItem('ERPCountryAbbr');
             let parentElement;
             if (from == 'ViewReceipt') {
                 parentElement = "#viewReceiptModal";
@@ -2012,9 +2012,9 @@ Template.receiptsoverview.events({
         $('#newReceiptModal .tab-pane.show.active').removeClass('show active');
         $('#newReceiptModal .tab-pane#nav-expense').addClass('show active');
         $('#employeeListModal').attr('data-from', 'NavExpense');
-        let loggedUserName = Session.get('mySessionEmployee');
-        let loggedUserId = Session.get('mySessionEmployeeLoggedID');
-        let currency = Session.get('ERPCountryAbbr');
+        let loggedUserName = localStorage.getItem('mySessionEmployee');
+        let loggedUserId = localStorage.getItem('mySessionEmployeeLoggedID');
+        let currency = localStorage.getItem('ERPCountryAbbr');
         $('#nav-expense .employees').attr('data-id', loggedUserId);
         $('#nav-expense .employees').val(loggedUserName);
         $('#nav-expense .transactionTypes').attr('data-id', '');
@@ -2053,9 +2053,9 @@ Template.receiptsoverview.events({
         $('#newReceiptModal .tab-pane.show.active').removeClass('show active');
         $('#newReceiptModal .tab-pane#nav-time').addClass('show active');
         $('#employeeListModal').attr('data-from', 'NavTime');
-        let loggedUserName = Session.get('mySessionEmployee');
-        let loggedUserId = Session.get('mySessionEmployeeLoggedID');
-        let currency = Session.get('ERPCountryAbbr');
+        let loggedUserName = localStorage.getItem('mySessionEmployee');
+        let loggedUserId = localStorage.getItem('mySessionEmployeeLoggedID');
+        let currency = localStorage.getItem('ERPCountryAbbr');
         $('#nav-time .employees').attr('data-id', loggedUserId);
         $('#nav-time .employees').val(loggedUserName);
         $('#nav-time .transactionTypes').attr('data-id', '');
@@ -2951,8 +2951,8 @@ Template.receiptsoverview.events({
         setTimeout(function () {
             if ($('#newReceiptModal .tab-pane#nav-multiple').hasClass('active')) {
                 const receipts = [];
-                let loggedUserName = Session.get('mySessionEmployee');
-                let loggedUserId = Session.get('mySessionEmployeeLoggedID');
+                let loggedUserName = localStorage.getItem('mySessionEmployee');
+                let loggedUserId = localStorage.getItem('mySessionEmployeeLoggedID');
                 for (let i = 0; i < 10; i++) {
                     const amount = $('#multipleAmount-' + i).val().replace('$', '');
                     let numAmount = parseFloat(amount) || 0;
@@ -4015,7 +4015,7 @@ Template.receiptsoverview.helpers({
         return Template.instance().mergeReceiptSelectedIndex.get();
     },
     sessionCurrency: () => {
-        return Session.get('ERPCountryAbbr');
+        return localStorage.getItem('ERPCountryAbbr');
     },
     isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
 });

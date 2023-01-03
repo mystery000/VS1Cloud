@@ -341,21 +341,21 @@ batchUpdateCall = function (url) {
 
                   //Dashboard API:
                   if(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields){
-                  Session.set('vs1companyName', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
-                  Session.set('vs1companyaddress1', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
-                  Session.set('vs1companyaddress2', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
-                  Session.set('vs1companyABN', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
-                  Session.set('vs1companyPhone', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
-                  Session.set('vs1companyURL', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
+                  localStorage.setItem('vs1companyName', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
+                  localStorage.setItem('vs1companyaddress1', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
+                  localStorage.setItem('vs1companyaddress2', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
+                  localStorage.setItem('vs1companyABN', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
+                  localStorage.setItem('vs1companyPhone', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
+                  localStorage.setItem('vs1companyURL', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
 
-                  Session.set('ERPDefaultDepartment', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
-                  Session.set('ERPDefaultUOM', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
+                  localStorage.setItem('ERPDefaultDepartment', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
+                  localStorage.setItem('ERPDefaultUOM', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
 
 
-                  // Session.set('ERPCurrency', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_CurrencySymbol||'');
-                  Session.set('ERPCountryAbbr', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
-                  Session.set('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
-                  Session.set('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
+                  // localStorage.setItem('ERPCurrency', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_CurrencySymbol||'');
+                  localStorage.setItem('ERPCountryAbbr', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
+                  localStorage.setItem('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
+                  localStorage.setItem('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
 
 
                   localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT||Currency+'0');
@@ -607,8 +607,8 @@ tableResize = function() {
 
 //$(document).ready(function(){
 // $(window).unload(function(){
-//   if(Session.get('mycloudLogonID')){
-//     CloudUser.update({_id: Session.get('mycloudLogonID')},{ $set: {userMultiLogon: false}});
+//   if(localStorage.getItem('mycloudLogonID')){
+//     CloudUser.update({_id: localStorage.getItem('mycloudLogonID')},{ $set: {userMultiLogon: false}});
 //   }
 // });
 //});
@@ -995,8 +995,8 @@ loadTemplateHeaderFooter1 = function(object_invoce) {
       $("#templatePreviewModal .account_number").text("Account Number : " + object_invoce[0]["account"]);
       $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
 
-      let companyName = Session.get("vs1companyName");
-      let companyReg = Session.get("vs1companyReg");
+      let companyName = localStorage.getItem("vs1companyName");
+      let companyReg = localStorage.getItem("vs1companyReg");
       if (companyReg != "") {
         if (LoggedCountry == "Australia")
           $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN " + companyReg.substring(0, 3) + " " + companyReg.substring(3, 6) + " " + companyReg.substring(6, companyReg.length));
@@ -1008,15 +1008,15 @@ loadTemplateHeaderFooter1 = function(object_invoce) {
         else
           $("#templatePreviewModal .companyInfo1").text(companyName);
       }
-      let companyAddr = Session.get("vs1companyaddress1");
+      let companyAddr = localStorage.getItem("vs1companyaddress1");
       if (companyAddr == "")
-          companyAddr = Session.get("vs1companyaddress2");
-      let companyCity = Session.get("vs1companyCity");
-      let companyState = Session.get("companyState");
-      let companyPostcode = Session.get("vs1companyPOBox");
-      let companyCountry = Session.get("vs1companyCountry");
+          companyAddr = localStorage.getItem("vs1companyaddress2");
+      let companyCity = localStorage.getItem("vs1companyCity");
+      let companyState = localStorage.getItem("companyState");
+      let companyPostcode = localStorage.getItem("vs1companyPOBox");
+      let companyCountry = localStorage.getItem("vs1companyCountry");
       $("#templatePreviewModal .companyInfo2").text(companyAddr + ", " + companyCity + ", " + companyState + " " + companyPostcode + ", " + companyCountry);
-      let companyPhone = Session.get("vs1companyPhone");
+      let companyPhone = localStorage.getItem("vs1companyPhone");
       if (companyPhone != "")
           $("#templatePreviewModal .companyInfo3").text("Ph: " + companyPhone.substring(0, 2) + " " + companyPhone.substring(2, 6) + " " + companyPhone.substring(6, companyPhone.length));
 
@@ -1076,16 +1076,16 @@ loadTemplateHeaderFooter2 = function(object_invoce) {
         $("#templatePreviewModal .bsb2").text("Branch Code : " + object_invoce[0]["bsb"]);
       $("#templatePreviewModal .account_number2").text("ACC : " + object_invoce[0]["account"]);
 
-      let companyName = Session.get("vs1companyName");
-      let companyReg = Session.get("vs1companyReg");
-      let companyAddr = Session.get("vs1companyaddress1");
+      let companyName = localStorage.getItem("vs1companyName");
+      let companyReg = localStorage.getItem("vs1companyReg");
+      let companyAddr = localStorage.getItem("vs1companyaddress1");
       if (companyAddr == "")
-          companyAddr = Session.get("vs1companyaddress2");
-      let companyCity = Session.get("vs1companyCity");
-      let companyState = Session.get("companyState");
-      let companyPostcode = Session.get("vs1companyPOBox");
-      let companyCountry = Session.get("vs1companyCountry");
-      let companyPhone = Session.get("vs1companyPhone");
+          companyAddr = localStorage.getItem("vs1companyaddress2");
+      let companyCity = localStorage.getItem("vs1companyCity");
+      let companyState = localStorage.getItem("companyState");
+      let companyPostcode = localStorage.getItem("vs1companyPOBox");
+      let companyCountry = localStorage.getItem("vs1companyCountry");
+      let companyPhone = localStorage.getItem("vs1companyPhone");
 
       $("#templatePreviewModal .o_name2").text(companyName);
       $("#templatePreviewModal .o_address2").text(companyAddr);
@@ -1180,17 +1180,17 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
       $("#templatePreviewModal .swift3").text(object_invoce[0]["swift"]);
       $("#templatePreviewModal .account_number3").text(object_invoce[0]["account"]);
 
-      let companyName = Session.get("vs1companyName");
-      let companyReg = Session.get("vs1companyReg");
-      let companyAddr = Session.get("vs1companyaddress1");
+      let companyName = localStorage.getItem("vs1companyName");
+      let companyReg = localStorage.getItem("vs1companyReg");
+      let companyAddr = localStorage.getItem("vs1companyaddress1");
       if (companyAddr == "")
-          companyAddr = Session.get("vs1companyaddress2");
-      let companyCity = Session.get("vs1companyCity");
-      let companyState = Session.get("companyState");
-      let companyPostcode = Session.get("vs1companyPOBox");
-      let companyCountry = Session.get("vs1companyCountry");
-      let companyPhone = Session.get("vs1companyPhone");
-      let companyURL = Session.get("vs1companyURL");
+          companyAddr = localStorage.getItem("vs1companyaddress2");
+      let companyCity = localStorage.getItem("vs1companyCity");
+      let companyState = localStorage.getItem("companyState");
+      let companyPostcode = localStorage.getItem("vs1companyPOBox");
+      let companyCountry = localStorage.getItem("vs1companyCountry");
+      let companyPhone = localStorage.getItem("vs1companyPhone");
+      let companyURL = localStorage.getItem("vs1companyURL");
 
       $("#templatePreviewModal .o_name3").text(companyName);
       $("#templatePreviewModal .o_address3").text(companyAddr);
@@ -1223,7 +1223,7 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
       if (object_invoce[0]["duedate"] != "" && object_invoce[0]["duedate"] != "")
           $("#templatePreviewModal .due3").text(convertDateFormatForPrint2(object_invoce[0]["duedate"]));
       $("#templatePreviewModal .termdays").text($("#sltTerms").val());
-      $("#templatePreviewModal .termdesc").text(Session.get("ERPTermDesc") || "-");
+      $("#templatePreviewModal .termdesc").text(localStorage.getItem("ERPTermDesc") || "-");
 
       //   table header
       var tbl_header = $("#templatePreviewModal .tbl_header");

@@ -353,7 +353,7 @@ Template.trueerp.events({
 
 Template.trueerp.helpers({
   isCloudTrueERP: function() {
-      let checkCloudTrueERP = Session.get('CloudTrueERPModule') || false;
+      let checkCloudTrueERP = localStorage.getItem('CloudTrueERPModule') || false;
       return checkCloudTrueERP;
   }
 });

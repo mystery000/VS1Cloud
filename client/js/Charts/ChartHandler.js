@@ -5,7 +5,7 @@ import Tvs1ChartDashboardPreferenceField from "../Api/Model/Tvs1ChartDashboardPr
 import ApiService from "../Api/Module/ApiService";
 import { Template } from 'meteor/templating';
 import { Session } from 'meteor/session';
-const employeeId = Session.get("mySessionEmployeeLoggedID");
+const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 export default class ChartHandler {
   constructor() {}
 
@@ -94,7 +94,7 @@ export default class ChartHandler {
                 : true,
             ChartID: parseInt($(chart).attr("chart-id")),
             ID: parseInt($(chart).attr("pref-id")), // This is empty when it is the first time, but the next times it is filled
-            EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+            EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
             Chartname: $(chart).attr("chart-name"),
             Position: parseInt($(chart).attr("position")),
             ChartGroup: $(chart).attr("chart-group"),
@@ -146,7 +146,7 @@ export default class ChartHandler {
             : true,
         ChartID: $(chart).attr("chart-id"),
         ID: $(chart).attr("pref-id"), // This is empty when it is the first time, but the next times it is filled
-        EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+        EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
         Chartname: $(chart).attr("chart-name"),
         Position: parseInt($(chart).attr("position")),
         ChartGroup: $(chart).attr("chart-group"),

@@ -8,8 +8,17 @@ import { Random } from "meteor/random";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../LoadingOverlay";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './newproductpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { Mongo } from 'meteor/mongo';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+
+CloudPreference = new Mongo.Collection("cloudPreference");
 
 Template.newproductpop.onCreated(() => {
   const templateObject = Template.instance();
@@ -253,7 +262,7 @@ Template.newproductpop.onRendered(function () {
           for (let i = 0; i < data.tclienttype.length; i++) {
             clientType.push(data.tclienttype[i].fields.TypeName);
           }
-          clientType = _.sortBy(clientType);
+          // clientType = _.sortBy(clientType);
           templateObject.clienttypeList.set(clientType);
         });
       });
@@ -266,7 +275,7 @@ Template.newproductpop.onRendered(function () {
     templateObject.getClientTypeData();
   }, 500);
 
-  let isInventory = Session.get("CloudInventoryModule");
+  let isInventory = localStorage.getItem("CloudInventoryModule");
   if (isInventory) {
     templateObject.includeInventory.set(true);
   }
@@ -880,7 +889,7 @@ Template.newproductpop.onRendered(function () {
     //setTimeout(function () {
     Meteor.call(
       "readPrefMethod",
-      Session.get("mycloudLogonID"),
+      localStorage.getItem("mycloudLogonID"),
       "defaulttax",
       function (error, result) {
         if (error) {
@@ -1061,7 +1070,7 @@ Template.newproductpop.helpers({
   },
   productsCloudPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "productview",
     });
   },
@@ -2903,8 +2912,8 @@ Template.newproductpop.events({
   },
   "click .btnResetSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {

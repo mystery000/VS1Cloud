@@ -68,7 +68,7 @@ Template.payrollrules.onRendered(function() {
     var uleavetypearraylist = [];
     var countryService = new CountryService();
     let countries = [];
-    let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
+    let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
 
     let tabid = FlowRouter.current().queryParams.active_key;
 
@@ -16902,7 +16902,7 @@ Template.payrollrules.events({
                     showemployeebases:swtShowEmploymentBasis,
                     TimeSheetCategory:timesheetcat,
                     EmployeeGroup:employegroup,
-                    KeyStringFieldName:Session.get('mySessionEmployeeLoggedID'),
+                    KeyStringFieldName:localStorage.getItem('mySessionEmployeeLoggedID'),
                 }
             };
 
@@ -17005,7 +17005,7 @@ Template.payrollrules.events({
                                           Accountno:edtaccountnumber,
                                           ElectronicsServiceAddressAlias:edtelectronicsalias,
                                           BSB:edtbsb,
-                                          Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                          Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                           Amount:1,
                                           DepartmentName:defaultDept,
                                           Allclasses:true,
@@ -17125,7 +17125,7 @@ Template.payrollrules.events({
                                     Accountno:edtaccountnumber,
                                     ElectronicsServiceAddressAlias:edtelectronicsalias,
                                     BSB:edtbsb,
-                                    Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                    Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                     Amount:1,
                                     DepartmentName:defaultDept,
                                     Allclasses:true,
@@ -17196,7 +17196,7 @@ Template.payrollrules.events({
                                           AccountNo:edtaccountnumber,
                                           ElectronicsServiceAddressAlias:edtelectronicsalias,
                                           BSB:edtbsb,
-                                          Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                          Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                           Amount:1,
                                           DepartmentName:defaultDept,
                                           Allclasses:true,
@@ -17277,7 +17277,7 @@ Template.payrollrules.events({
                                   AccountNo:edtaccountnumber,
                                   ElectronicsServiceAddressAlias:edtelectronicsalias,
                                   BSB:edtbsb,
-                                  Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                  Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                   Amount:1,
                                   DepartmentName:defaultDept,
                                   Allclasses:true,
@@ -17349,7 +17349,7 @@ Template.payrollrules.events({
                                       AccountNo:edtaccountnumber,
                                       ElectronicsServiceAddressAlias:edtelectronicsalias,
                                       BSB:edtbsb,
-                                      Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                      Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                       Amount:1,
                                       DepartmentName:defaultDept,
                                       Allclasses:true,

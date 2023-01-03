@@ -53,7 +53,7 @@ Template.timesheettimelog.onRendered(function () {
             return time;
     }
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTimeSheet', function (error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTimeSheet', function (error, result) {
         if (error) {}
         else {
             if (result) {
@@ -305,7 +305,7 @@ Template.timesheettimelog.onRendered(function () {
 
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTimeSheet', function (error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTimeSheet', function (error, result) {
                             if (error) {}
                             else {
                                 if (result) {
@@ -669,7 +669,7 @@ Template.timesheettimelog.onRendered(function () {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTimeSheet', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTimeSheet', function (error, result) {
                         if (error) {}
                         else {
                             if (result) {
@@ -1064,8 +1064,8 @@ Template.timesheettimelog.onRendered(function () {
         },
         'click .resetTable': function (event) {
             var getcurrentCloudDetails = CloudUser.findOne({
-                _id: Session.get('mycloudLogonID'),
-                clouddatabaseID: Session.get('mycloudLogonDBID')
+                _id: localStorage.getItem('mycloudLogonID'),
+                clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
             });
             if (getcurrentCloudDetails) {
                 if (getcurrentCloudDetails._id.length > 0) {
@@ -1115,8 +1115,8 @@ Template.timesheettimelog.onRendered(function () {
                 lineItems.push(lineItemObj);
             });
             var getcurrentCloudDetails = CloudUser.findOne({
-                _id: Session.get('mycloudLogonID'),
-                clouddatabaseID: Session.get('mycloudLogonDBID')
+                _id: localStorage.getItem('mycloudLogonID'),
+                clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
             });
             if (getcurrentCloudDetails) {
                 if (getcurrentCloudDetails._id.length > 0) {
@@ -1315,7 +1315,7 @@ Template.timesheettimelog.onRendered(function () {
                             }
                         ],
                         "TypeName": "Payroll",
-                        "WhoEntered": Session.get('mySessionEmployee') || ""
+                        "WhoEntered": localStorage.getItem('mySessionEmployee') || ""
                     }
                 };
 
@@ -1360,7 +1360,7 @@ Template.timesheettimelog.onRendered(function () {
                     }
                     //  }],
                     // "TypeName":"Payroll",
-                    // "WhoEntered":Session.get('mySessionEmployee')||""
+                    // "WhoEntered":localStorage.getItem('mySessionEmployee')||""
                     //}
                 };
 
