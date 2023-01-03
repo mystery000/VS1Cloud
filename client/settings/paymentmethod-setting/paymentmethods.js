@@ -35,7 +35,7 @@ Template.paymentmethodSettings.onRendered(function() {
     const tableHeaderList = [];
     const deptrecords = [];
     let deptprodlineItems = [];
-  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblPaymentMethodList', function(error, result){
+  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblPaymentMethodList', function(error, result){
     if(error){
 
     }else{
@@ -192,7 +192,7 @@ Template.paymentmethodSettings.onRendered(function() {
           }
         };
         organisationService.saveOrganisationSetting(objDetails).then(function (data){
-          Session.set('vs1companyStripeFeeMethod', feeMethod);
+          localStorage.setItem('vs1companyStripeFeeMethod', feeMethod);
           window.open('/paymentmethodSettings','_self');
         }).catch(function (err) {
           window.open('/paymentmethodSettings','_self');
@@ -704,7 +704,7 @@ Template.paymentmethodSettings.helpers({
      return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-  return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblPaymentMethodList'});
+  return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblPaymentMethodList'});
 },
 deptrecords: () => {
     return Template.instance().deptrecords.get().sort(function(a, b){

@@ -1332,7 +1332,7 @@ Template.generalledger.events({
   //         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
   //           let employeeId = storage.split("_")[2];
   //           return (
-  //             // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
+  //             // storage.includes("BasedOnType_") && employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
   //             storage.includes("BasedOnType_")
   //           );
   //         });

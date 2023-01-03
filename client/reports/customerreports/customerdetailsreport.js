@@ -260,7 +260,7 @@ Template.customerdetailsreport.events({
       let employeeId = storage.split("_")[2];
       return (
         storage.includes("BasedOnType_") &&
-        employeeId == Session.get("mySessionEmployeeLoggedID")
+        employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
       );
     });
     let i = basedOnTypeStorages.length;

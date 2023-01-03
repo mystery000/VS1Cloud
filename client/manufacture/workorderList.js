@@ -27,7 +27,7 @@ Template.workorderlist.onRendered (function() {
         let tempArray = localStorage.getItem('TWorkorders');
         templateObject.datatablerecords.set(tempArray?JSON.parse(tempArray): []);
         if (templateObject.datatablerecords.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblWorkorderList', function (error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblWorkorderList', function (error, result) {
                 if (error) {
                 }
                 else {

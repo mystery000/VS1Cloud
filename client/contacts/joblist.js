@@ -28,7 +28,7 @@ Template.joblist.onRendered(function () {
     if(FlowRouter.current().queryParams.success){
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJoblist', function (error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJoblist', function (error, result) {
         if (error) {
 
         } else {
@@ -108,7 +108,7 @@ Template.joblist.onRendered(function () {
 
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJoblist', function (error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJoblist', function (error, result) {
                             if (error) {
 
                             } else {
@@ -314,7 +314,7 @@ Template.joblist.onRendered(function () {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJoblist', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJoblist', function (error, result) {
                         if (error) {
 
                         } else {
@@ -608,7 +608,7 @@ Template.joblist.onRendered(function () {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJoblist', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJoblist', function (error, result) {
                         if (error) {
 
                         } else {
@@ -816,7 +816,7 @@ Template.joblist.events({
         $(".btnRefresh").trigger("click");
     },
     'click .resetTable': function (event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -860,7 +860,7 @@ Template.joblist.events({
             lineItems.push(lineItemObj);
         });
 
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1196,6 +1196,6 @@ Template.joblist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblJoblist' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblJoblist' });
     }
 });

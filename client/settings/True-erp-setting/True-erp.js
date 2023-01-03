@@ -58,7 +58,7 @@ Template.trueERPSettings.events({
             Bert.alert("<strong>WARNING:</strong>" + error, "warning");
             event.preventDefault();
             // show a nice error message
-            // Session.set("errorMessage", "Please log in to delete a family.");
+            // localStorage.setItem("errorMessage", "Please log in to delete a family.");
 
           } else {
             Bert.alert("<strong>Success:</strong> Mail Sent!", "success");

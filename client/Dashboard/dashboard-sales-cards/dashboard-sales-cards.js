@@ -24,7 +24,7 @@ Template.dashboardSalesCards.onRendered(function() {
                 let teamAvgLast3Months = 0;
                 let myNewOpportunityLast3Months = 0;
                 let teamNewOpportunityLast3Months = 0;
-                let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
+                let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
                 // const momentUnix = moment().subtract(3, 'months').unix();
                 tprospect.forEach(prospect => {
                     const creationDate = new Date(prospect.fields.CreationDate);
@@ -55,7 +55,7 @@ Template.dashboardSalesCards.onRendered(function() {
                 let tinvoicelist = dataInvoice.tinvoicelist;
                 let myWonOpportunities = 0;
                 let teamWonOpportunities = 0;
-                let employeeName = Session.get('mySessionEmployee');
+                let employeeName = localStorage.getItem('mySessionEmployee');
 
                 tinvoicelist.forEach(tinvoice => {
                     const saleDate = new Date(tinvoice.SaleDate);
@@ -101,7 +101,7 @@ Template.dashboardSalesCards.onRendered(function() {
                 let [convertedQuotesCount, nonConvertedQuotesCount, convertedQuotesAmount] = [0, 0, 0, 0];
                 let [myConvertedQuotesCount, myNonConvertedQuotesCount, myConvertedQuotesAmount] = [0, 0, 0, 0];
                 let [myPipeLineAmount, teamPipeLineAmount] = [0, 0];
-                let employeeName = Session.get('mySessionEmployee');
+                let employeeName = localStorage.getItem('mySessionEmployee');
                 tquotelist.forEach(tquote => {
                     const saleDate = new Date(tquote.SaleDate);
                     if (fromDate <= saleDate && toDate >= saleDate) {
@@ -145,7 +145,7 @@ Template.dashboardSalesCards.onRendered(function() {
         //         let { tinvoicelist } = JSON.parse(dataObject[0].data);
         //         let myWonOpportunities = 0;
         //         let teamWonOpportunities = 0;
-        //         let employeeName = Session.get('mySessionEmployee');
+        //         let employeeName = localStorage.getItem('mySessionEmployee');
         //         // const momentUnix = moment().subtract(3, 'months').unix();
         //         const fromDate = new Date($("#dateFrom").datepicker("getDate"));
         //         const toDate = new Date($("#dateTo").datepicker("getDate"));
@@ -197,7 +197,7 @@ Template.dashboardSalesCards.onRendered(function() {
         //         let [convertedQuotesCount, nonConvertedQuotesCount, convertedQuotesAmount] = [0, 0, 0, 0];
         //         let [myConvertedQuotesCount, myNonConvertedQuotesCount, myConvertedQuotesAmount] = [0, 0, 0, 0];
         //         let [myPipeLineAmount, teamPipeLineAmount] = [0, 0];
-        //         let employeeName = Session.get('mySessionEmployee');
+        //         let employeeName = localStorage.getItem('mySessionEmployee');
         //         tquotelist.forEach(tquote => {
         //             const saleDate = new Date(tquote.SaleDate);
         //             if (fromDate <= saleDate && toDate >= saleDate) {

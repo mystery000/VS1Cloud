@@ -61,7 +61,7 @@ Template.invoicelistBO.onRendered(function() {
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
               // reset_data = data.ProcessLog.CustomLayout.Columns;
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
               showCustomFieldDisplaySettings(reset_data);
@@ -156,7 +156,7 @@ Template.invoicelistBO.onRendered(function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
         if(error){
 
         }else{
@@ -287,7 +287,7 @@ Template.invoicelistBO.onRendered(function() {
 
                     if(templateObject.datatablerecords.get()){
 
-                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
+                        Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
                             if(error){
 
                             }else{
@@ -614,7 +614,7 @@ Template.invoicelistBO.onRendered(function() {
 
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
                         if(error){
 
                         }else{
@@ -937,7 +937,7 @@ Template.invoicelistBO.onRendered(function() {
 
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
                         if(error){
 
                         }else{
@@ -1397,7 +1397,7 @@ Template.invoicelistBO.events({
         }
     },
     'click .resetTable' : function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1775,7 +1775,7 @@ Template.invoicelistBO.events({
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split('_')[2];
-            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
         });
         let i = basedOnTypeStorages.length;
         if (i > 0) {
@@ -1825,7 +1825,7 @@ Template.invoicelistBO.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblInvoicelistBO'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblInvoicelistBO'});
     },
     // custom fields displaysettings
     custfields: () => {

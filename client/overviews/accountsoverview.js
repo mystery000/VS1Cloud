@@ -1,13 +1,18 @@
 import { ReactiveVar } from "meteor/reactive-var";
-import { CoreService } from "../js/core-service";
-import { EmployeeProfileService } from "../js/profile-service";
-import { AccountService } from "../accounts/account-service";
-import { UtilityService } from "../utility-service";
-import { ProductService } from "../product/product-service";
-import { SideBarService } from "../js/sidebar-service";
-import { OrganisationService } from "../js/organisation-service";
+import { CoreService } from "../js/core-service.js";
+import { EmployeeProfileService } from "../js/profile-service.js";
+import { AccountService } from "../accounts/account-service.js";
+import { UtilityService } from "../utility-service.js";
+import { ProductService } from "../product/product-service.js";
+import { SideBarService } from "../js/sidebar-service.js";
+import { OrganisationService } from "../js/organisation-service.js";
 import "../lib/global/indexdbstorage.js";
 import XLSX from "xlsx";
+//Import
+import { Template } from 'meteor/templating';
+import './accountOverview.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 import { ReceiptService } from "../receipts/receipt-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -49,17 +54,17 @@ Template.accountsoverview.onRendered(function() {
 
 
 
-    if(Session.get("ERPLoggedCountry") == "United States of America"){
+    if(localStorage.getItem("ERPLoggedCountry") == "United States of America"){
         $(".btnTaxSummary").show();
         $(".btnBasReturnGroup").hide();
         $(".btnVatReturnGroup").hide();
     }
-    else if(Session.get("ERPLoggedCountry") == "Australia"){
+    else if(localStorage.getItem("ERPLoggedCountry") == "Australia"){
         $(".btnTaxSummary").hide();
         $(".btnBasReturnGroup").show();
         $(".btnVatReturnGroup").hide();
     }
-    else if(Session.get("ERPLoggedCountry") == "South Africa"){
+    else if(localStorage.getItem("ERPLoggedCountry") == "South Africa"){
         $(".btnTaxSummary").hide();
         $(".btnBasReturnGroup").hide();
         $(".btnVatReturnGroup").show();
@@ -70,7 +75,7 @@ Template.accountsoverview.onRendered(function() {
   /*
   function init_reset_data() {
     let bsbname = "Branch Code";
-    if (Session.get("ERPLoggedCountry") === "Australia") {
+    if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
         bsbname = "BSB";
     }
 
@@ -114,7 +119,7 @@ Template.accountsoverview.onRendered(function() {
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
               // reset_data = data.ProcessLog.CustomLayout.Columns;
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
               showCustomFieldDisplaySettings(reset_data);
@@ -2432,7 +2437,7 @@ Template.accountsoverview.helpers({
     },
     bsbRegionName: () => {
         let bsbname = "Branch Code";
-        if (Session.get("ERPLoggedCountry") === "Australia") {
+        if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
             bsbname = "BSB";
         }
         return bsbname;
@@ -2442,7 +2447,7 @@ Template.accountsoverview.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get("mycloudLogonID"),
+            userid: localStorage.getItem("mycloudLogonID"),
             PrefName: "tblAccountOverview",
         });
     },

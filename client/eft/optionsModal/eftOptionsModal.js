@@ -1,5 +1,8 @@
 import { ReactiveVar } from "meteor/reactive-var";
-import { AccountService } from "../../accounts/account-service"
+import { AccountService } from "../../accounts/account-service";
+
+import { Template } from 'meteor/templating';
+import './eftOptionsModal.html';
 
 Template.eftOptionsModal.onCreated(function () {
   const templateObject = Template.instance();

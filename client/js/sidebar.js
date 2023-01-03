@@ -130,42 +130,42 @@ Template.sidenav.onRendered(function() {
 
     let templateObject = Template.instance();
 
-    let employeeLoggedUserAccess = Session.get('ERPSolidCurrentUSerAccess');
+    let employeeLoggedUserAccess = localStorage.getItem('ERPSolidCurrentUSerAccess');
 
-    let isDashboard = Session.get('CloudDashboardModule');
-    let isMain = Session.get('CloudMainModule');
-    let isInventory = Session.get('CloudInventoryModule');
-    let isManufacturing = Session.get('CloudManufacturingModule');
-    let isAccessLevels = Session.get('CloudAccessLevelsModule');
-    let isShipping = Session.get('CloudShippingModule');
-    let isStockTransfer = Session.get('CloudStockTransferModule');
-    let isStockTake = Session.get('CloudStockTakeModule');
-    let isSales = Session.get('CloudSalesModule');
-    let isPurchases = Session.get('CloudPurchasesModule');
-    let isExpenseClaims = Session.get('CloudExpenseClaimsModule');
-    let isFixedAssets = Session.get('CloudFixedAssetsModule');
+    let isDashboard = localStorage.getItem('CloudDashboardModule');
+    let isMain = localStorage.getItem('CloudMainModule');
+    let isInventory = localStorage.getItem('CloudInventoryModule');
+    let isManufacturing = localStorage.getItem('CloudManufacturingModule');
+    let isAccessLevels = localStorage.getItem('CloudAccessLevelsModule');
+    let isShipping = localStorage.getItem('CloudShippingModule');
+    let isStockTransfer = localStorage.getItem('CloudStockTransferModule');
+    let isStockTake = localStorage.getItem('CloudStockTakeModule');
+    let isSales = localStorage.getItem('CloudSalesModule');
+    let isPurchases = localStorage.getItem('CloudPurchasesModule');
+    let isExpenseClaims = localStorage.getItem('CloudExpenseClaimsModule');
+    let isFixedAssets = localStorage.getItem('CloudFixedAssetsModule');
 
-    let isPayments = Session.get('CloudPaymentsModule');
-    let isContacts = Session.get('CloudContactsModule');
-    let isAccounts = Session.get('CloudAccountsModule');
-    let isReports = Session.get('CloudReportsModule');
-    let isSettings = Session.get('CloudSettingsModule');
+    let isPayments = localStorage.getItem('CloudPaymentsModule');
+    let isContacts = localStorage.getItem('CloudContactsModule');
+    let isAccounts = localStorage.getItem('CloudAccountsModule');
+    let isReports = localStorage.getItem('CloudReportsModule');
+    let isSettings = localStorage.getItem('CloudSettingsModule');
 
-    let isSeedToSale = Session.get('CloudSeedToSaleModule');
-    let isBanking = Session.get('CloudBankingModule');
-    let isPayroll = Session.get('CloudPayrollModule');
+    let isSeedToSale = localStorage.getItem('CloudSeedToSaleModule');
+    let isBanking = localStorage.getItem('CloudBankingModule');
+    let isPayroll = localStorage.getItem('CloudPayrollModule');
 
-    let isTimesheetEntry = Session.get('CloudTimesheetEntry');
-    let isClockOnOff = Session.get('CloudClockOnOff');
+    let isTimesheetEntry = localStorage.getItem('CloudTimesheetEntry');
+    let isClockOnOff = localStorage.getItem('CloudClockOnOff');
 
-    let isSidePanel = Session.get('CloudSidePanelMenu');
-    let isTopPanel = Session.get('CloudTopPanelMenu');
+    let isSidePanel = localStorage.getItem('CloudSidePanelMenu');
+    let isTopPanel = localStorage.getItem('CloudTopPanelMenu');
 
-    let isSerialNumberList = Session.get('CloudShowSerial') || false;
+    let isSerialNumberList = localStorage.getItem('CloudShowSerial') || false;
 
-    let isAppointmentScheduling = Session.get('CloudAppointmentSchedulingModule');
-    let isCurrencyEnable = Session.get('CloudUseForeignLicence');
-    let isAppointmentLaunch = Session.get('CloudAppointmentAppointmentLaunch');
+    let isAppointmentScheduling = localStorage.getItem('CloudAppointmentSchedulingModule');
+    let isCurrencyEnable = localStorage.getItem('CloudUseForeignLicence');
+    let isAppointmentLaunch = localStorage.getItem('CloudAppointmentAppointmentLaunch');
     var erpGet = erpDb();
     var LoggedDB = erpGet.ERPDatabase;
     var LoggedUser = localStorage.getItem('mySession');
@@ -479,7 +479,7 @@ Template.sidenav.onRendered(function() {
 
     templateObject.getSetSideNavFocus();
 
-    let sidePanelSettings = Session.get('sidePanelSettings');
+    let sidePanelSettings = localStorage.getItem('sidePanelSettings');
     if (sidePanelSettings === "openNav") {
         $(".active_page_content").css("text-align", "right");
     } else {
@@ -603,7 +603,7 @@ Template.sidenav.onRendered(function() {
         if (currentLoc !== '/') {
 
             CloudUser.update({
-                _id: Session.get('mycloudLogonID')
+                _id: localStorage.getItem('mycloudLogonID')
             }, {
                 $set: {
                     userMultiLogon: false
@@ -612,16 +612,16 @@ Template.sidenav.onRendered(function() {
         }
 
     }
-    let sidePanelToggle = Session.get('sidePanelToggle');
+    let sidePanelToggle = localStorage.getItem('sidePanelToggle');
     // if ((sidePanelToggle === '') || (!sidePanelToggle)) {
-    //   Session.set('sidePanelToggle', "toggled");
-    //  sidePanelToggle = Session.get('sidePanelToggle');
+    //   localStorage.setItem('sidePanelToggle', "toggled");
+    //  sidePanelToggle = localStorage.getItem('sidePanelToggle');
     // }
 
 
-    let isGreenTrack = Session.get('isGreenTrack');
-    let loggedUserEventFired = Session.get('LoggedUserEventFired');
-    if (isGreenTrack) {
+    let isGreenTrack = localStorage.getItem('isGreenTrack');
+    let loggedUserEventFired = localStorage.getItem('LoggedUserEventFired');
+    if (isGreenTrack == true) {
         $(".navbar").css("background-color", "#00a969");
 
 
@@ -647,7 +647,7 @@ Template.sidenav.onRendered(function() {
         $('.input-group-append .btn-primary').css("border-color", "#3ddc97");
 
         $(document).ready(function() {
-            let checkGreenTrack = Session.get('isGreenTrack') || false;
+            let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
             if (checkGreenTrack) {
                 document.title = 'GreenTrack';
                 $('head').append('<link rel="icon" type="image/png" sizes="16x16" href="icons/greentrackIcon.png">');
@@ -1259,7 +1259,7 @@ Template.sidenav.onRendered(function() {
     job.start();
 
     setTimeout(function() {
-        Session.set('LoggedUserEventFired', false);
+        localStorage.setItem('LoggedUserEventFired', false);
     }, 2500);
 /* Start Here */
 templateObject.getFollowedAllObjectPull = function () {
@@ -1279,7 +1279,7 @@ setTimeout(function() {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired){
+                if(loggedUserEventFired == true){
                     if(getTimeStamp[0] != currenctTodayDate){
                         templateObject.getTStatementListData();
                     }
@@ -1298,7 +1298,7 @@ if(isBanking) {
           }else{
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if(getTimeStamp){
-                  if(loggedUserEventFired){
+                  if(loggedUserEventFired == true){
                       if(getTimeStamp[0] != currenctTodayDate){
                       templateObject.getTVS1BankDepositData();
                       }
@@ -1327,7 +1327,7 @@ if(isAccounts) {
             }
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired){
+                if(loggedUserEventFired == true){
                     if(getTimeStamp[0] != currenctTodayDate){
                         templateObject.getAllJournalEntryLineData();
                     }
@@ -1369,7 +1369,7 @@ if (isInventory) {
                 }else{
                     let getTimeStamp = dataObject[0].timestamp.split(' ');
                     if(getTimeStamp){
-                        if(loggedUserEventFired){
+                        if(loggedUserEventFired == true){
                             if(getTimeStamp[0] != currenctTodayDate){
                             templateObject.getAllTStockAdjustEntryData();
                             }
@@ -1390,7 +1390,7 @@ if (isReports) {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired){
+                if(loggedUserEventFired == true){
                     if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getTARReportData();
                     }
@@ -1407,7 +1407,7 @@ if (isReports) {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired){
+                if(loggedUserEventFired == true){
                     if(getTimeStamp[0] != currenctTodayDate){
                         templateObject.getTAPReportData();
                     }
@@ -1426,7 +1426,7 @@ if (isReports) {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired){
+                if(loggedUserEventFired == true){
                     if(getTimeStamp[0] != currenctTodayDate){
                       templateObject.getTPaymentListData();
                     }
@@ -1443,7 +1443,7 @@ if (isReports) {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired){
+                if(loggedUserEventFired == true){
                     if(getTimeStamp[0] != currenctTodayDate){
                         templateObject.getTSupplierPaymentData();
                     }
@@ -1460,7 +1460,7 @@ if (isReports) {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired){
+                if(loggedUserEventFired == true){
                     if(getTimeStamp[0] != currenctTodayDate){
                         templateObject.getTCustomerPaymentData();
                     }
@@ -1488,7 +1488,7 @@ if(isContacts) {
         }else{
           let getTimeStamp = dataObject[0].timestamp.split(' ');
           if(getTimeStamp){
-              if(loggedUserEventFired){
+              if(loggedUserEventFired == true){
                   if(getTimeStamp[0] != currenctTodayDate){
                       templateObject.getAllTTransactionListReportData();
                   }
@@ -1536,7 +1536,7 @@ setTimeout(function() {
           }else{
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if(getTimeStamp){
-                  if(loggedUserEventFired){
+                  if(loggedUserEventFired == true){
                       if(getTimeStamp[0] != currenctTodayDate){
                         sideBarService.getAllPurchaseOrderList(initialDataLoad,0).then(function(data) {
                             addVS1Data('TPurchaseOrderEx',JSON.stringify(data));
@@ -1571,7 +1571,7 @@ setTimeout(function() {
               }else{
                   let getTimeStamp = dataObject[0].timestamp.split(' ');
                   if(getTimeStamp){
-                      if(loggedUserEventFired){
+                      if(loggedUserEventFired == true){
                           if(getTimeStamp[0] != currenctTodayDate){
                               templateObject.getAllTBillExData();
                           }
@@ -1597,7 +1597,7 @@ setTimeout(function() {
               }else{
                   let getTimeStamp = dataObject[0].timestamp.split(' ');
                   if(getTimeStamp){
-                      if(loggedUserEventFired){
+                      if(loggedUserEventFired == true){
                           if(getTimeStamp[0] != currenctTodayDate){
                               templateObject.getAllTCreditData();
                           }
@@ -1617,7 +1617,7 @@ setTimeout(function() {
       }else{
         let getTimeStamp = dataObject[0].timestamp.split(' ');
         if(getTimeStamp){
-            if(loggedUserEventFired){
+            if(loggedUserEventFired == true){
                 if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getAllTpurchaseOrderNonBackOrderData();
                 }
@@ -1793,7 +1793,7 @@ setTimeout(function() {
       }else{
         let getTimeStamp = dataObject[0].timestamp.split(' ');
         if(getTimeStamp){
-            if(loggedUserEventFired){
+            if(loggedUserEventFired == true){
                 if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getAllAppUserData();
                 }
@@ -1828,7 +1828,7 @@ if(isAppointmentScheduling){
     }else{
       let getTimeStamp = dataObject[0].timestamp.split(' ');
       if(getTimeStamp){
-          if(loggedUserEventFired){
+          if(loggedUserEventFired == true){
               if(getTimeStamp[0] != currenctTodayDate){
                 sideBarService.getAllAppointmentList(initialDataLoad,0).then(function(data) {
                     addVS1Data('TAppointment',JSON.stringify(data));
@@ -1863,7 +1863,7 @@ getVS1Data('TAppointmentPreferences').then(function (dataObject) {
     }else{
       let getTimeStamp = dataObject[0].timestamp.split(' ');
       if(getTimeStamp){
-          if(loggedUserEventFired){
+          if(loggedUserEventFired == true){
               if(getTimeStamp[0] != currenctTodayDate){
                   templateObject.getAllAppointmentPrefData();
               }
@@ -1880,7 +1880,7 @@ getVS1Data('TERPPreference').then(function (dataObject) {
   }else{
     let getTimeStamp = dataObject[0].timestamp.split(' ');
     if(getTimeStamp){
-        if(loggedUserEventFired){
+        if(loggedUserEventFired == true){
             if(getTimeStamp[0] != currenctTodayDate){
                 templateObject.getAllTERPPreferenceData();
             }
@@ -1897,7 +1897,7 @@ getVS1Data('TERPPreferenceExtra').then(function (dataObject) {
   }else{
     let getTimeStamp = dataObject[0].timestamp.split(' ');
     if(getTimeStamp){
-        if(loggedUserEventFired){
+        if(loggedUserEventFired == true){
             if(getTimeStamp[0] != currenctTodayDate){
                 templateObject.getAllTERPPreferenceExtraData();
             }
@@ -1925,7 +1925,7 @@ templateObject.getFollowedSalesDetailsPull = function () {
         }else{
           let getTimeStamp = dataObject[0].timestamp.split(' ');
           if(getTimeStamp){
-              if(loggedUserEventFired){
+              if(loggedUserEventFired == true){
                   if(getTimeStamp[0] != currenctTodayDate){
                       templateObject.getAllTSalesListData();
                   }
@@ -1971,7 +1971,7 @@ templateObject.getFollowedSalesDetailsPull = function () {
 
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if(getTimeStamp){
-                    if(loggedUserEventFired){
+                    if(loggedUserEventFired == true){
                         if(getTimeStamp[0] != currenctTodayDate){
                           sideBarService.getAllInvoiceList(initialDataLoad,0).then(function(data) {
                               addVS1Data('TInvoiceEx',JSON.stringify(data));
@@ -2013,7 +2013,7 @@ templateObject.getFollowedSalesDetailsPull = function () {
             }else{
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if(getTimeStamp){
-                    if(loggedUserEventFired){
+                    if(loggedUserEventFired == true){
                         if(getTimeStamp[0] != currenctTodayDate){
                           templateObject.getAllSalesOrderExListData();
                         }
@@ -2047,7 +2047,7 @@ templateObject.getFollowedSalesDetailsPull = function () {
                 }else{
                     let getTimeStamp = dataObject[0].timestamp.split(' ');
                     if(getTimeStamp){
-                        if(loggedUserEventFired){
+                        if(loggedUserEventFired == true){
                             if(getTimeStamp[0] != currenctTodayDate){
                                 templateObject.getAllTQuoteData();
                             }
@@ -2086,7 +2086,7 @@ templateObject.getFollowedSalesDetailsPull = function () {
             }else{
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if(getTimeStamp){
-                    if(loggedUserEventFired){
+                    if(loggedUserEventFired == true){
                         if(getTimeStamp[0] != currenctTodayDate){
                           templateObject.getAllBackOrderInvoicetData();
                         }
@@ -2147,7 +2147,7 @@ setTimeout(function() {
       }else{
           let getTimeStamp = dataObject[0].timestamp.split(' ');
           if(getTimeStamp){
-              if(loggedUserEventFired){
+              if(loggedUserEventFired == true){
                   if(getTimeStamp[0] != currenctTodayDate){
                   templateObject.getAllCustomersData();
                   }
@@ -2164,7 +2164,7 @@ setTimeout(function() {
       }else{
         let getTimeStamp = dataObject[0].timestamp.split(' ');
         if(getTimeStamp){
-            if(loggedUserEventFired){
+            if(loggedUserEventFired == true){
                 if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getAllTJobVS1Data();
                 }
@@ -2181,7 +2181,7 @@ setTimeout(function() {
           }else{
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if(getTimeStamp){
-                  if(loggedUserEventFired){
+                  if(loggedUserEventFired == true){
                       if(getTimeStamp[0] != currenctTodayDate){
                           templateObject.getAllSuppliersData();
                       }
@@ -2198,7 +2198,7 @@ setTimeout(function() {
           }else{
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if(getTimeStamp){
-                  if(loggedUserEventFired){
+                  if(loggedUserEventFired == true){
                       if(getTimeStamp[0] != currenctTodayDate){
                           templateObject.getAllEmployeeData();
                       }
@@ -2235,7 +2235,7 @@ if(isAppointmentLaunch){
       }else{
         let getTimeStamp = dataObject[0].timestamp.split(' ');
         if(getTimeStamp){
-            if(loggedUserEventFired){
+            if(loggedUserEventFired == true){
                 if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getAllAppointmentPrefData();
                 }
@@ -2252,7 +2252,7 @@ if(isAppointmentLaunch){
     }else{
       let getTimeStamp = dataObject[0].timestamp.split(' ');
       if(getTimeStamp){
-          if(loggedUserEventFired){
+          if(loggedUserEventFired == true){
               if(getTimeStamp[0] != currenctTodayDate){
                   templateObject.getAllTERPPreferenceData();
               }
@@ -2269,7 +2269,7 @@ if(isAppointmentLaunch){
     }else{
       let getTimeStamp = dataObject[0].timestamp.split(' ');
       if(getTimeStamp){
-          if(loggedUserEventFired){
+          if(loggedUserEventFired == true){
               if(getTimeStamp[0] != currenctTodayDate){
                   templateObject.getAllTERPPreferenceExtraData();
               }
@@ -2294,7 +2294,7 @@ getVS1Data('TAccountVS1').then(function (dataObject) {
     }else{
         let getTimeStamp = dataObject[0].timestamp.split(' ');
         if(getTimeStamp){
-            if(loggedUserEventFired){
+            if(loggedUserEventFired == true){
                 if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getAllAccountsData();
                 }
@@ -2317,7 +2317,7 @@ getVS1Data('TProductVS1').then(function (dataObject) {
       }else{
           let getTimeStamp = dataObject[0].timestamp.split(' ');
           if(getTimeStamp){
-              if(loggedUserEventFired){
+              if(loggedUserEventFired == true){
                   if(getTimeStamp[0] != currenctTodayDate){
                     sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function(data) {
                         addVS1Data('TProductVS1',JSON.stringify(data));
@@ -2344,7 +2344,7 @@ getVS1Data('TProductStocknSalePeriodReport').then(function (dataObject) {
     }else{
       let getTimeStamp = dataObject[0].timestamp.split(' ');
       if(getTimeStamp){
-          if(loggedUserEventFired){
+          if(loggedUserEventFired == true){
               if(getTimeStamp[0] != currenctTodayDate){
                 templateObject.getAllTProductStocknSalePeriodReportData();
               }
@@ -2362,22 +2362,22 @@ getVS1Data('TProductStocknSalePeriodReport').then(function (dataObject) {
 
 
 
-    let isBalanceSheet = Session.get('cloudBalanceSheet');
-    let isProfitLoss = Session.get('cloudProfitLoss');
-    let isAgedReceivables = Session.get('cloudAgedReceivables');
-    let isAgedReceivablesSummary = Session.get('cloudAgedReceivablesSummary');
-    let isProductSalesReport = Session.get('cloudProductSalesReport');
-    let isSalesReport = Session.get('cloudSalesReport');
-    let isSalesSummaryReport = Session.get('cloudSalesSummaryReport');
-    let isGeneralLedger = Session.get('cloudGeneralLedger');
-    let isTaxSummaryReport = Session.get('cloudTaxSummaryReport');
-    let isTrialBalance = Session.get('cloudTrialBalance');
-    let is1099Transaction = Session.get('cloud1099Transaction');
-    let isAgedPayables = Session.get('cloudAgedPayables');
-    let isAgedPayablesSummary = Session.get('cloudAgedPayablesSummary');
-    let isPurchaseReport = Session.get('cloudPurchaseReport');
-    let isPurchaseSummaryReport = Session.get('cloudPurchaseSummaryReport');
-    let isPrintStatement = Session.get('cloudPrintStatement');
+    let isBalanceSheet = localStorage.getItem('cloudBalanceSheet');
+    let isProfitLoss = localStorage.getItem('cloudProfitLoss');
+    let isAgedReceivables = localStorage.getItem('cloudAgedReceivables');
+    let isAgedReceivablesSummary = localStorage.getItem('cloudAgedReceivablesSummary');
+    let isProductSalesReport = localStorage.getItem('cloudProductSalesReport');
+    let isSalesReport = localStorage.getItem('cloudSalesReport');
+    let isSalesSummaryReport = localStorage.getItem('cloudSalesSummaryReport');
+    let isGeneralLedger = localStorage.getItem('cloudGeneralLedger');
+    let isTaxSummaryReport = localStorage.getItem('cloudTaxSummaryReport');
+    let isTrialBalance = localStorage.getItem('cloudTrialBalance');
+    let is1099Transaction = localStorage.getItem('cloud1099Transaction');
+    let isAgedPayables = localStorage.getItem('cloudAgedPayables');
+    let isAgedPayablesSummary = localStorage.getItem('cloudAgedPayablesSummary');
+    let isPurchaseReport = localStorage.getItem('cloudPurchaseReport');
+    let isPurchaseSummaryReport = localStorage.getItem('cloudPurchaseSummaryReport');
+    let isPrintStatement = localStorage.getItem('cloudPrintStatement');
 
     if (isProfitLoss == true) {
         templateObject.isProfitLoss.set(true);
@@ -2890,12 +2890,12 @@ Template.sidenav.events({
 
         if (sideBarPanel.indexOf("toggled") >= 0) {
 
-            Session.set('sidePanelToggle', "toggled");
+            localStorage.setItem('sidePanelToggle', "toggled");
             $("#sidenavbar").addClass("toggled");
 
         } else {
 
-            Session.set('sidePanelToggle', "");
+            localStorage.setItem('sidePanelToggle', "");
             ("#sidenavbar").removeClass("toggled");
 
         }
@@ -3509,11 +3509,11 @@ Template.sidenav.events({
     },
     'click #closeCloudSidePanelMenu': function(event) {
         let templateObject = Template.instance();
-        let empLoggedID = Session.get('mySessionEmployeeLoggedID');
+        let empLoggedID = localStorage.getItem('mySessionEmployeeLoggedID');
         let accesslevelService = new AccessLevelService();
         let isSidePanel = false;
-        let sidePanelID = Session.get('CloudSidePanelMenuID');
-        let sidePanelFormID = Session.get('CloudSidePanelMenuFormID');
+        let sidePanelID = localStorage.getItem('CloudSidePanelMenuID');
+        let sidePanelFormID = localStorage.getItem('CloudSidePanelMenuFormID');
 
         let data = {
             type: "TEmployeeFormAccess",
@@ -3526,7 +3526,7 @@ Template.sidenav.events({
         }
 
         accesslevelService.saveEmpAccess(data).then(function(data) {
-            Session.set('CloudSidePanelMenu', isSidePanel);
+            localStorage.setItem('CloudSidePanelMenu', isSidePanel);
 
             Meteor._reload.reload();
         }).catch(function(err) {
@@ -3609,9 +3609,9 @@ Template.sidenav.helpers({
     },
     formname: () => {
         let chequeSpelling = "";
-        if (Session.get('ERPLoggedCountry') == "Australia") {
+        if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
             chequeSpelling = "Cheque";
-        } else if (Session.get('ERPLoggedCountry') == "United States of America") {
+        } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
             chequeSpelling = "Check";
         } else {
             chequeSpelling = "Cheque";
@@ -3693,7 +3693,7 @@ Template.sidenav.helpers({
         return isShowFavorite;
     },
     isGreenTrack: function() {
-        let checkGreenTrack = Session.get('isGreenTrack') || false;
+        let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
         return checkGreenTrack;
     },
     includeSeedToSale: () => {
@@ -3715,6 +3715,6 @@ Template.sidenav.helpers({
         return Template.instance().includeClockOnOff.get();
     },
     checkFXCurrency: () => {
-        return Session.get('CloudUseForeignLicence');
+        return localStorage.getItem('CloudUseForeignLicence');
     }
 });

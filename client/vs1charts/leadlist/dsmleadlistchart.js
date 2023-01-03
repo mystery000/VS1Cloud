@@ -77,7 +77,7 @@ Template.dsmleadlistchart.onRendered(function() {
         }
         templateObject.datatablerecords.set(splashArrayLeadList);
         if (templateObject.datatablerecords.get()){
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblDSMLeadChartList', function(error, result){
+            Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDSMLeadChartList', function(error, result){
                 if(error){
 
                 } else {
@@ -599,7 +599,7 @@ Template.dsmleadlistchart.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblDSMLeadChartList'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblDSMLeadChartList'});
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
@@ -608,8 +608,8 @@ Template.dsmleadlistchart.helpers({
 
 function getCheckPrefDetails() {
     const getcurrentCloudDetails = CloudUser.findOne({
-        _id: Session.get('mycloudLogonID'),
-        clouddatabaseID: Session.get('mycloudLogonDBID')
+        _id: localStorage.getItem('mycloudLogonID'),
+        clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
     });
     let checkPrefDetails = null;
     if (getcurrentCloudDetails) {

@@ -11,6 +11,10 @@ import GlobalFunctions from '../GlobalFunctions';
 import { TaxRateService } from '../settings/settings-service';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './vatreturn_list.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -639,7 +643,7 @@ Template.vatreturnlist.events({
         $(".btnRefresh").trigger("click");
     },
     "click .resetTable": function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get("mycloudLogonID"), clouddatabaseID: Session.get("mycloudLogonDBID") });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID") });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -683,7 +687,7 @@ Template.vatreturnlist.events({
             lineItems.push(lineItemObj);
         });
         //datatable.state.save();
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get("mycloudLogonID"), clouddatabaseID: Session.get("mycloudLogonDBID") });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID") });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -884,7 +888,7 @@ Template.vatreturnlist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get("mycloudLogonID"), PrefName: "tblJournalList" });
+        return CloudPreference.findOne({ userid: localStorage.getItem("mycloudLogonID"), PrefName: "tblJournalList" });
     },
     currentdate: () => {
         var currentDate = new Date();

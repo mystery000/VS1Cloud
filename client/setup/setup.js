@@ -644,7 +644,7 @@ Template.setup.onRendered(function () {
     setTimeout(() => {
       Meteor.call(
         "readPrefMethod",
-        Session.get("mycloudLogonID"),
+        localStorage.getItem("mycloudLogonID"),
         "defaulttax",
         function (error, result) {
           if (error) {
@@ -707,7 +707,7 @@ Template.setup.onRendered(function () {
       if (await templateObject.taxRates.get()) {
         Meteor.call(
           "readPrefMethod",
-          Session.get("mycloudLogonID"),
+          localStorage.getItem("mycloudLogonID"),
           "taxRatesList",
           function (error, result) {
             if (error) {
@@ -816,7 +816,7 @@ Template.setup.onRendered(function () {
   templateObject.getPaymentMethods = function () {
     Meteor.call(
       "readPrefMethod",
-      Session.get("mycloudLogonID"),
+      localStorage.getItem("mycloudLogonID"),
       "paymentmethodList",
       function (error, result) {
         if (error) {
@@ -870,7 +870,7 @@ Template.setup.onRendered(function () {
               if (templateObject.paymentmethoddatatablerecords.get()) {
                 Meteor.call(
                   "readPrefMethod",
-                  Session.get("mycloudLogonID"),
+                  localStorage.getItem("mycloudLogonID"),
                   "paymentmethodList",
                   function (error, result) {
                     if (error) {
@@ -1070,7 +1070,7 @@ Template.setup.onRendered(function () {
           if (templateObject.paymentmethoddatatablerecords.get()) {
             Meteor.call(
               "readPrefMethod",
-              Session.get("mycloudLogonID"),
+              localStorage.getItem("mycloudLogonID"),
               "paymentmethodList",
               function (error, result) {
                 if (error) {
@@ -1258,7 +1258,7 @@ Template.setup.onRendered(function () {
             if (templateObject.paymentmethoddatatablerecords.get()) {
               Meteor.call(
                 "readPrefMethod",
-                Session.get("mycloudLogonID"),
+                localStorage.getItem("mycloudLogonID"),
                 "paymentmethodList",
                 function (error, result) {
                   if (error) {
@@ -1520,7 +1520,7 @@ Template.setup.onRendered(function () {
       organisationService
         .saveOrganisationSetting(objDetails)
         .then(function (data) {
-          Session.set("vs1companyStripeFeeMethod", feeMethod);
+          localStorage.setItem("vs1companyStripeFeeMethod", feeMethod);
           LoadingOverlay.hide();
           swal({
             title: "Default Payment Method Setting Successfully Changed",
@@ -1577,7 +1577,7 @@ Template.setup.onRendered(function () {
   templateObject.loadStep4Prefs = () => {
     Meteor.call(
       "readPrefMethod",
-      Session.get("mycloudLogonID"),
+      localStorage.getItem("mycloudLogonID"),
       "termsList",
       function (error, result) {
         if (error) {
@@ -1643,7 +1643,7 @@ Template.setup.onRendered(function () {
     if (await templateObject.termdatatablerecords.get()) {
       Meteor.call(
         "readPrefMethod",
-        Session.get("mycloudLogonID"),
+        localStorage.getItem("mycloudLogonID"),
         "termsList",
         function (error, result) {
           if (error) {
@@ -1839,7 +1839,7 @@ Template.setup.onRendered(function () {
               if (templateObject.termdatatablerecords.get()) {
                 Meteor.call(
                   "readPrefMethod",
-                  Session.get("mycloudLogonID"),
+                  localStorage.getItem("mycloudLogonID"),
                   "termsList",
                   function (error, result) {
                     if (error) {
@@ -2037,7 +2037,7 @@ Template.setup.onRendered(function () {
           if (templateObject.termdatatablerecords.get()) {
             Meteor.call(
               "readPrefMethod",
-              Session.get("mycloudLogonID"),
+              localStorage.getItem("mycloudLogonID"),
               "termsList",
               function (error, result) {
                 if (error) {
@@ -2231,7 +2231,7 @@ Template.setup.onRendered(function () {
             if (templateObject.termdatatablerecords.get()) {
               Meteor.call(
                 "readPrefMethod",
-                Session.get("mycloudLogonID"),
+                localStorage.getItem("mycloudLogonID"),
                 "termsList",
                 function (error, result) {
                   if (error) {
@@ -2412,7 +2412,7 @@ Template.setup.onRendered(function () {
     }
     Meteor.call(
       "readPrefMethod",
-      Session.get("mycloudLogonID"),
+      localStorage.getItem("mycloudLogonID"),
       "tblEmployeelist",
       function (error, result) {
         if (error) {
@@ -3451,7 +3451,7 @@ Template.setup.onRendered(function () {
     if (await templateObject.customerList.get()) {
       Meteor.call(
         "readPrefMethod",
-        Session.get("mycloudLogonID"),
+        localStorage.getItem("mycloudLogonID"),
         "tblCustomerlist",
         function (error, result) {
           if (error) {
@@ -3658,7 +3658,7 @@ Template.setup.onRendered(function () {
     if (await templateObject.supplierList.get()) {
       Meteor.call(
         "readPrefMethod",
-        Session.get("mycloudLogonID"),
+        localStorage.getItem("mycloudLogonID"),
         "tblSupplierlist",
         function (error, result) {
           if (error) {
@@ -4755,8 +4755,8 @@ Template.setup.events({
   },
   "click .resetTaxRateTable": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -4809,8 +4809,8 @@ Template.setup.events({
     });
 
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -4967,8 +4967,8 @@ Template.setup.events({
     let purchasetaxcode = $("input[name=optradioP]:checked").val() || "";
     let salestaxcode = $("input[name=optradioS]:checked").val() || "";
 
-    Session.set("ERPTaxCodePurchaseInc", purchasetaxcode || "");
-    Session.set("ERPTaxCodeSalesInc", salestaxcode || "");
+    localStorage.setItem("ERPTaxCodePurchaseInc", purchasetaxcode || "");
+    localStorage.setItem("ERPTaxCodeSalesInc", salestaxcode || "");
     getVS1Data("vscloudlogininfo")
       .then(function (dataObject) {
         if (dataObject.length == 0) {
@@ -5129,7 +5129,7 @@ Template.setup.events({
     let taxName = $("#edtTaxName").val();
     let taxDesc = $("#edtTaxDesc").val();
     let taxRate = parseFloat($("#edtTaxRate").val() / 100);
-    let regionName = Session.get('vs1companyCountry');
+    let regionName = localStorage.getItem('vs1companyCountry');
 
     let objDetails = "";
     if (taxName === "") {
@@ -5391,8 +5391,8 @@ Template.setup.events({
   },
   "click .resetPaymentMethodTable": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -5445,8 +5445,8 @@ Template.setup.events({
     });
 
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -5887,8 +5887,8 @@ Template.setup.events({
   },
   "click .resetTermTable": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -5940,8 +5940,8 @@ Template.setup.events({
     });
 
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -6839,8 +6839,8 @@ Template.setup.events({
   },
   "click .resetEmployeeTable": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -6893,8 +6893,8 @@ Template.setup.events({
     });
 
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -7998,7 +7998,7 @@ Template.setup.events({
 
   //             let erpInvoiceId = objDetails.fields.ID;
 
-  //             let mailFromName = Session.get("vs1companyName");
+  //             let mailFromName = localStorage.getItem("vs1companyName");
   //             let mailFrom =
   //               localStorage.getItem("VS1OrgEmail") ||
   //               localStorage.getItem("VS1AdminUserName");
@@ -8253,8 +8253,8 @@ Template.setup.events({
   //         }
 
   //         var getcurrentCloudDetails = CloudUser.findOne({
-  //           _id: Session.get("mycloudLogonID"),
-  //           clouddatabaseID: Session.get("mycloudLogonDBID"),
+  //           _id: localStorage.getItem("mycloudLogonID"),
+  //           clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
   //         });
   //         if (getcurrentCloudDetails) {
   //           if (getcurrentCloudDetails._id.length > 0) {
@@ -8478,8 +8478,8 @@ Template.setup.events({
     });
 
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -8543,8 +8543,8 @@ Template.setup.events({
   },
   "click .btnResetGridSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -8573,8 +8573,8 @@ Template.setup.events({
   },
   "click .btnResetSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -9538,8 +9538,8 @@ Template.setup.events({
           let linesave = objDetails.fields.ID;
 
           var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
+            _id: localStorage.getItem("mycloudLogonID"),
+            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
           });
           if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -10203,7 +10203,7 @@ Template.setup.helpers({
   },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "taxRatesList",
     });
   },
@@ -10250,7 +10250,7 @@ Template.setup.helpers({
   },
   salesCloudPreferenceRecPaymentMethod: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "paymentmethodList",
     });
   },
@@ -10295,7 +10295,7 @@ Template.setup.helpers({
   },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "termsList",
     });
   },
@@ -10328,7 +10328,7 @@ Template.setup.helpers({
   },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "tblEmployeelist",
     });
   },
@@ -10339,7 +10339,7 @@ Template.setup.helpers({
   // Step 6 helpers
   bsbRegionName: () => {
     let bsbname = "Branch Code";
-    if (Session.get("ERPLoggedCountry") === "Australia") {
+    if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
       bsbname = "BSB";
     }
     return bsbname;
@@ -10392,13 +10392,13 @@ Template.setup.helpers({
   },
   purchaseCloudPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "creditcard",
     });
   },
   purchaseCloudGridPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "tblCreditLine",
     });
   },
@@ -10426,22 +10426,22 @@ Template.setup.helpers({
       });
   },
   companyaddress1: () => {
-    return Session.get("vs1companyaddress1");
+    return localStorage.getItem("vs1companyaddress1");
   },
   companyaddress2: () => {
-    return Session.get("vs1companyaddress2");
+    return localStorage.getItem("vs1companyaddress2");
   },
   companyphone: () => {
-    return Session.get("vs1companyPhone");
+    return localStorage.getItem("vs1companyPhone");
   },
   companyabn: () => {
-    return Session.get("vs1companyABN");
+    return localStorage.getItem("vs1companyABN");
   },
   organizationname: () => {
-    return Session.get("vs1companyName");
+    return localStorage.getItem("vs1companyName");
   },
   organizationurl: () => {
-    return Session.get("vs1companyURL");
+    return localStorage.getItem("vs1companyURL");
   },
   isMobileDevices: () => {
     var isMobile = false;

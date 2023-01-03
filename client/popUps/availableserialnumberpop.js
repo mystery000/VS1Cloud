@@ -5,6 +5,10 @@ import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import '../lib/global/indexdbstorage.js';
+
+import { Template } from 'meteor/templating';
+import './availableserialnumberpop.html';
+
 Template.availableserialnumberpop.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.serialnumberlist = new ReactiveVar();

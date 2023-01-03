@@ -30,7 +30,7 @@ let taxRateService = new TaxRateService();
 const templateObject = Template.instance();
 const productService = new ProductService();
 const defaultPeriod = 3;
-const employeeId = Session.get("mySessionEmployeeLoggedID");
+const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 Template.newprofitandloss.onCreated(function () {
@@ -991,7 +991,7 @@ Template.newprofitandloss.events({
       .startOf("year")
       .format("YYYY-MM-DD");
     await clearData("TAccountRunningBalanceReport");
-    //Session.set('showHeader',true);
+    //localStorage.setItem('showHeader',true);
     window.open(
       "/balancetransactionlist?accountName=" +
         accountName +
@@ -1106,7 +1106,7 @@ Template.newprofitandloss.events({
             let employeeId = storage.split("_")[2];
             return (
               storage.includes("BasedOnType_")
-              // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
+              // storage.includes("BasedOnType_") && employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
             );
           });
           let i = basedOnTypeStorages.length;
@@ -2336,7 +2336,7 @@ Template.newprofitandloss.events({
     );
 
     const pSortfields = $(".pSortItems");
-    const employeeId = Session.get("mySessionEmployeeLoggedID");
+    const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
     let pSortList = [];
     pSortfields.each(function(){
       let Position = $(this).attr('position');

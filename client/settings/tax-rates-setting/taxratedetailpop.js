@@ -9,6 +9,9 @@ import {
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 
+import { Template } from 'meteor/templating';
+import './taxratedetailpop.html';
+
 Template.taxdetailpop.onCreated(function () {
 
 });

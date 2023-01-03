@@ -9,10 +9,10 @@ import {PurchaseBoardService} from '../js/purchase-service';
 import '../lib/global/indexdbstorage.js';
 import XLSX from 'xlsx';
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
 import './addaccountpop.html';
-
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -1007,7 +1007,7 @@ Template.addaccountpop.helpers({
     },
     bsbRegionName: () => {
       let bsbname = "Branch Code";
-      if(Session.get('ERPLoggedCountry') == "Australia"){
+      if(localStorage.getItem('ERPLoggedCountry') == "Australia"){
         bsbname = "BSB";
       }
         return bsbname;
@@ -1017,7 +1017,7 @@ Template.addaccountpop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblAccountOverview'
         });
     },

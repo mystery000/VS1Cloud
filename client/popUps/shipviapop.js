@@ -8,6 +8,12 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './shipviapop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 Template.shipviapop.onCreated(function() {
     const templateObject = Template.instance();
@@ -43,7 +49,7 @@ Template.shipviapop.onRendered(function() {
     const deptrecords = [];
     let deptprodlineItems = [];
     const viarecords = [];
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblShipViaPopList', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblShipViaPopList', function(error, result) {
         if (error) {
 
         } else {
@@ -455,8 +461,8 @@ Template.shipviapop.events({
     },
     'click .resetTable': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -507,8 +513,8 @@ Template.shipviapop.events({
         });
 
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -949,7 +955,7 @@ Template.shipviapop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblShipViaPopList'
         });
     },

@@ -20,7 +20,7 @@ Template.stspackages.onRendered(function() {
     const tableHeaderList = [];
 
     // For storing table headers
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblPlants', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblPlants', function(error, result){
         if(error){
 
         }else{

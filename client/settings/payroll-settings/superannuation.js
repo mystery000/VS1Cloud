@@ -458,7 +458,7 @@ Template.superannuationSettings.events({
                 Accountno:edtaccountnumber,
                 ElectronicsServiceAddressAlias:edtelectronicsalias,
                 BSB:edtbsb,
-                Clientid:Session.get('mySessionEmployeeLoggedID'),
+                Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                 Amount:1,
                 DepartmentName:defaultDept,
                 Allclasses:true,

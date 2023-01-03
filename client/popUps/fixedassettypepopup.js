@@ -41,7 +41,7 @@ Template.fixedassettypepopup.onRendered(function() {
     const tableHeaderList = [];
     const deptrecords = [];
     let deptprodlineItems = [];
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'termsList', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'termsList', function(error, result) {
         if (error) {
 
         } else {
@@ -105,7 +105,7 @@ Template.fixedassettypepopup.onRendered(function() {
 
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'termsList', function(error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'termsList', function(error, result) {
                             if (error) {
 
                             } else {
@@ -206,7 +206,7 @@ Template.fixedassettypepopup.onRendered(function() {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'termsList', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'termsList', function(error, result) {
                         if (error) {
 
                         } else {
@@ -305,7 +305,7 @@ Template.fixedassettypepopup.onRendered(function() {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'termsList', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'termsList', function(error, result) {
                         if (error) {
 
                         } else {
@@ -505,8 +505,8 @@ Template.fixedassettypepopup.events({
     },
     'click .resetTable': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -557,8 +557,8 @@ Template.fixedassettypepopup.events({
         });
 
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1009,7 +1009,7 @@ Template.fixedassettypepopup.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'termsList'
         });
     },

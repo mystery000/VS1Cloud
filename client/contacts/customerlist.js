@@ -634,7 +634,7 @@ Template.customerlist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblCustomerlist'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblCustomerlist'});
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
