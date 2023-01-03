@@ -5641,7 +5641,6 @@ Template.payrollrules.onRendered(function() {
             return templateObject.updateOvertime(overtimeIdToupdate);
         }
         
-        console.log('OK...')
         $('#btnAddNewOvertime .modal-title').text('Add new Overtime');
 
         LoadingOverlay.show();
@@ -5652,9 +5651,7 @@ Template.payrollrules.onRendered(function() {
         const rateType = rateTypes.find(rate => rate.ID == $('#overtimeRateType').attr('rate-type-id'));
         const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
         const weekEndDay = $('#OvertimeWeekEndDay').val();
-        const rate = $('#overtimeRate').val();
-
-        console.log('rateType:',rateType)
+        const rate = $('#rateList').val();
 
         const object = new PayrollSettingsOvertimes({
             hours: hours,
@@ -5716,7 +5713,7 @@ Template.payrollrules.onRendered(function() {
                     const rateTypeId =  $('#overtimeRateType').attr('rate-type-id');
                     const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
                     const weekEndDay = $('#OvertimeWeekEndDay').val();
-                    const rate = $('#overtimeRate').val();
+                    const rate = $('#rateList').val();
 
                     const newOvertime = {
                         ...overtime,
@@ -5750,7 +5747,6 @@ Template.payrollrules.onRendered(function() {
     }
 
     templateObject.openOvertimeEditor = async (overtimeId = null)  => {
-        console.log('overtimeId:',overtimeId)
         $('#btnAddNewOvertime').modal('show');
         $('#btnAddNewOvertime .modal-title').text('Edit Overtime');
 
@@ -5759,7 +5755,6 @@ Template.payrollrules.onRendered(function() {
 
         let overtimes = await templateObject.overtimes.get();
         let overtime = overtimes.find(overtime => overtime.id == overtimeId);
-        console.log('overtime.rate:',overtime)
         if(overtime.rate == "Weekend"){
             $('.weekendDiv').css('display', 'block');
             $('.greaterThanDiv').css('display', 'none');
@@ -5767,7 +5762,8 @@ Template.payrollrules.onRendered(function() {
         }else{
             $('#overtimeHours').val(overtime.hours);
         }
-        $('#overtimeRate').val(overtime.rate);
+        $('#rateList').val(overtime.rate);
+        $('#overtimeRateType').val(overtime.rate);
         $('#overtimeRateType').attr('rate-type-id', overtime.rateTypeId);
         $('#overtimeHourlyMultiplier').val(overtime.hourlyMultiplier);
     }
@@ -15034,7 +15030,29 @@ Template.payrollrules.onRendered(function() {
         }
     });
     $(document).on("click", "#tblRatePopList tbody tr", function(e) {
-        $('#rateList').val($(this).find(".colRateName").text());
+        let updatedValue = $(this).find(".colRateName").text();
+        $('#rateList').val(updatedValue);
+        switch(updatedValue) {
+            case 'Normal':
+                $('.greaterThanDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+            break;
+            case 'Time & Half':
+                $('.greaterThanDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+            break;
+            case 'Double Time':
+                $('.greaterThanDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+            break;
+            case 'Weekend':
+                $('.weekendDiv').css('display', 'block');
+                $('.greaterThanDiv').css('display', 'none');
+            break;
+            default:
+                $('.greaterThanDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+        }
         $('#ratePopModal').modal('toggle');
     });
 });
@@ -22288,7 +22306,6 @@ Template.payrollrules.events({
      },
      "click .edit-overtime": (e, ui) => {
         const id = $(e.currentTarget).attr('overtime-id');
-        console.log('overtime-id:',id)
         ui.openOvertimeEditor(id);
      },
      "click .btnAddNewOvertime": (e, ui) => {
@@ -22319,30 +22336,30 @@ Template.payrollrules.events({
     //  }
     //  "show.bs.modal #select-ratetype-modal": (e, ui) => {
     // },
-    'change #overtimeRate': (e, ui) => {
-        let evalue = $(e.currentTarget).val();
-        switch(evalue) {
-            case 'Normal':
-                $('.greaterThanDiv').css('display', 'block');
-                $('.weekendDiv').css('display', 'none');
-            break;
-            case 'Time & Half':
-                $('.greaterThanDiv').css('display', 'block');
-                $('.weekendDiv').css('display', 'none');
-            break;
-            case 'Double Time':
-                $('.greaterThanDiv').css('display', 'block');
-                $('.weekendDiv').css('display', 'none');
-            break;
-            case 'Weekend':
-                $('.weekendDiv').css('display', 'block');
-                $('.greaterThanDiv').css('display', 'none');
-            break;
-            default:
-                $('.greaterThanDiv').css('display', 'block');
-                $('.weekendDiv').css('display', 'none');
-        }
-    },
+    // 'change #rateList': (e, ui) => {
+    //     let evalue = $(e.currentTarget).val();
+    //     switch(evalue) {
+    //         case 'Normal':
+    //             $('.greaterThanDiv').css('display', 'block');
+    //             $('.weekendDiv').css('display', 'none');
+    //         break;
+    //         case 'Time & Half':
+    //             $('.greaterThanDiv').css('display', 'block');
+    //             $('.weekendDiv').css('display', 'none');
+    //         break;
+    //         case 'Double Time':
+    //             $('.greaterThanDiv').css('display', 'block');
+    //             $('.weekendDiv').css('display', 'none');
+    //         break;
+    //         case 'Weekend':
+    //             $('.weekendDiv').css('display', 'block');
+    //             $('.greaterThanDiv').css('display', 'none');
+    //         break;
+    //         default:
+    //             $('.greaterThanDiv').css('display', 'block');
+    //             $('.weekendDiv').css('display', 'none');
+    //     }
+    // },
     'click #rateList': function(event) {
         $('#rateList').select();
         $('#rateList').editableSelect();
