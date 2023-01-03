@@ -1,5 +1,9 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import '../../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import './dashboard-sales-charts.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 const highCharts = require('highcharts');
 require('highcharts/modules/exporting')(highCharts);
 require('highcharts/highcharts-more')(highCharts);

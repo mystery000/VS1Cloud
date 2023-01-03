@@ -1,6 +1,10 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from '../../js/sidebar-service';
 
+import { Template } from 'meteor/templating';
+import './dashboard-sales-cards.html'; 
+import '../../vs1_templates/kpi_card/kpi_card_multi_value_item.html'; 
+
 let sideBarService = new SideBarService();
 
 let formatDateFrom;
