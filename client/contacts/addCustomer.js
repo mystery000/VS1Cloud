@@ -108,7 +108,7 @@ Template.customerscard.onRendered(function() {
     let salestaxcode = '';
     // let currenttablename = templateObject.data||"";
     setTimeout(function() {
-        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'defaulttax', function(error, result) {
+        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'defaulttax', function(error, result) {
             if (error) {
                 salestaxcode = loggedTaxCodeSalesInc;
                 templateObject.defaultsaletaxcode.set(salestaxcode);
@@ -657,7 +657,7 @@ Template.customerscard.onRendered(function() {
                     let tempArray = [];
                     if (dataObject.tcorrespondence.length > 0) {
                         let temp = dataObject.tcorrespondence.filter(item => {
-                            return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                            return item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         })
 
                         for (let i = 0; i < temp.length; i++) {
@@ -669,7 +669,7 @@ Template.customerscard.onRendered(function() {
                         }
 
                         temp.map(item => {
-                            if (item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                            if (item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                                 tempArray.push(item.fields)
                             }
                         })
@@ -681,7 +681,7 @@ Template.customerscard.onRendered(function() {
                 let tempArray = [];
                 if (dataObj.tcorrespondence.length > 0) {
                     let temp = dataObj.tcorrespondence.filter(item => {
-                        return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                        return item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     })
 
                     for (let i = 0; i < temp.length; i++) {
@@ -692,7 +692,7 @@ Template.customerscard.onRendered(function() {
                         }
                     }
                     temp.map(item => {
-                        if (item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                        if (item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                             tempArray.push(item.fields)
                         }
                     })
@@ -705,7 +705,7 @@ Template.customerscard.onRendered(function() {
                 let tempArray = [];
                 if (dataObject.tcorrespondence.length > 0) {
                     let temp = dataObject.tcorrespondence.filter(item => {
-                        return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                        return item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     })
 
                     for (let i = 0; i < temp.length; i++) {
@@ -716,7 +716,7 @@ Template.customerscard.onRendered(function() {
                         }
                     }
                     temp.map(item => {
-                        if (item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                        if (item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                             tempArray.push(item.fields)
                         }
                     })
@@ -830,7 +830,7 @@ Template.customerscard.onRendered(function() {
         templateObject.datatablerecords.set(dataTableList);
 
         if (templateObject.datatablerecords.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTransactionlist', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTransactionlist', function(error, result) {
                 if (error) {
 
                 } else {
@@ -1066,7 +1066,7 @@ Template.customerscard.onRendered(function() {
         templateObject.datatablerecordsjob.set(dataTableListJob);
 
         if (templateObject.datatablerecordsjob.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJoblist', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJoblist', function(error, result) {
                 if (error) {
 
                 } else {
@@ -1212,7 +1212,7 @@ Template.customerscard.onRendered(function() {
 
     templateObject.getAllCrm = function(customerName) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let employeeID = Session.get("mySessionEmployeeLoggedID");
+        let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
         var url = FlowRouter.current().path;
         if (url.includes("/employeescard")) {
             url = new URL(window.location.href);
@@ -1536,7 +1536,7 @@ Template.customerscard.onRendered(function() {
                 } else {
                     $('#sltTerms').val(data.ttermsvs1[i].TermsName);
                 }
-                Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
+                localStorage.setItem('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
             }
         }
         // terms = _.sortBy(terms);
@@ -1810,7 +1810,7 @@ Template.customerscard.onRendered(function() {
             bcountry: data.fields.Billcountry || '',
             notes: data.fields.Notes || '',
             preferedpayment: data.fields.PaymentMethodName || '',
-            terms: data.fields.TermsName || Session.get('ERPTermsSales'),
+            terms: data.fields.TermsName || localStorage.getItem('ERPTermsSales'),
             deliverymethod: data.fields.ShippingMethodName || '',
             clienttype: data.fields.ClientTypeName || '',
             openingbalance: data.fields.RewardPointsOpeningBalance || 0.00,
@@ -2108,13 +2108,13 @@ Template.customerscard.onRendered(function() {
                                 $('#isEOMPlus').prop('checked', false);
                             }
                             if (data.ttermsvs1[i].isSalesdefault == true) {
-                                Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
+                                localStorage.setItem('ERPTermsSales', data.ttermsvs1[i].TermsName || "COD");
                                 $('#chkCustomerDef').prop('checked', true);
                             } else {
                                 $('#chkCustomerDef').prop('checked', false);
                             }
                             if (data.ttermsvs1[i].isPurchasedefault == true) {
-                                Session.set('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
+                                localStorage.setItem('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
                                 $('#chkSupplierDef').prop('checked', true);
                             } else {
                                 $('#chkSupplierDef').prop('checked', false);
@@ -2488,10 +2488,10 @@ Template.customerscard.onRendered(function() {
                             type: "TCorrespondence",
                             fields: {
                                 Active: true,
-                                EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeId: localStorage.getItem('mySessionEmployeeLoggedID'),
                                 Ref_Type: dataLabel,
                                 MessageAsString: dataMemo,
-                                MessageFrom: Session.get('mySessionEmployee'),
+                                MessageFrom: localStorage.getItem('mySessionEmployee'),
                                 MessageId: dataObject.tcorrespondence.length.toString(),
                                 MessageTo: email,
                                 ReferenceTxt: dataSubject,
@@ -2553,7 +2553,7 @@ Template.customerscard.onRendered(function() {
 
                     let temp = {
                         Active: true,
-                        EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeId: localStorage.getItem('mySessionEmployeeLoggedID'),
                         Ref_Type: tempLabel,
                         MessageAsString: tempContent,
                         MessageFrom: "",
@@ -2623,7 +2623,7 @@ Template.customerscard.onRendered(function() {
             sideBarService.getCorrespondences().then(dObject => {
                 let temp = {
                     Active: true,
-                    EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeId: localStorage.getItem('mySessionEmployeeLoggedID'),
                     Ref_Type: tempLabel,
                     MessageAsString: tempContent,
                     MessageFrom: "",
@@ -3753,8 +3753,8 @@ Template.customerscard.events({
         //datatable.state.save();
 
         const getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -4635,8 +4635,8 @@ Template.customerscard.events({
                 selected_lbls.push($(this).attr("name"));
             });
 
-            let employeeID = Session.get("mySessionEmployeeLoggedID");
-            let employeeName = Session.get("mySessionEmployee");
+            let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
+            let employeeName = localStorage.getItem("mySessionEmployee");
 
             let assignId = $('#assignedID').val();
             let assignName = $('#add_assigned_name').val();
@@ -4925,7 +4925,7 @@ Template.customerscard.helpers({
         return Template.instance().crmTableheaderRecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblSalesOverview' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblSalesOverview' });
     },
     currentdate: () => {
         const currentDate = new Date();
@@ -4992,7 +4992,7 @@ Template.customerscard.helpers({
         return Template.instance().currentAttachLineID.get();
     },
     contactCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'customerscard' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'customerscard' });
     },
     isSameAddress: () => {
         return Template.instance().isSameAddress.get();
@@ -5054,8 +5054,8 @@ function getPreviewFile(uploadedFiles, attachmentID) {
 
 function getCheckPrefDetails() {
     const getcurrentCloudDetails = CloudUser.findOne({
-        _id: Session.get('mycloudLogonID'),
-        clouddatabaseID: Session.get('mycloudLogonDBID')
+        _id: localStorage.getItem('mycloudLogonID'),
+        clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
     });
     let checkPrefDetails = null;
     if (getcurrentCloudDetails) {
@@ -5105,8 +5105,8 @@ function openEditTaskModals(id, type) {
             $(".editTaskDetailName").val(selected_record.TaskName);
             $(".editTaskDetailDescription").val(selected_record.TaskDescription);
             // tempcode check if AssignedName is set in selected_record
-            let employeeName = selected_record.AssignName ? selected_record.AssignName : Session.get("mySessionEmployee");
-            let assignId = selected_record.AssignID ? selected_record.AssignID : Session.get("mySessionEmployeeLoggedID");
+            let employeeName = selected_record.AssignName ? selected_record.AssignName : localStorage.getItem("mySessionEmployee");
+            let assignId = selected_record.AssignID ? selected_record.AssignID : localStorage.getItem("mySessionEmployeeLoggedID");
             $('#crmEditSelectEmployeeList').val(employeeName);
             $('#assignedID').val(assignId)
             contactService.getOneEmployeeDataEx(assignId).then(function(empDetailInfo) {

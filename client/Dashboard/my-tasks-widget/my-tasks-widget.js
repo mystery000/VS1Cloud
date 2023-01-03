@@ -48,8 +48,8 @@ Template.myTasksWidget.onRendered(function() {
         url = new URL(window.location.href);
         let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
         if (employeeID == '') {
-            // employeeID = Session.get('mySessionEmployeeLoggedID');
-            employeeID = Session.get('mySessionEmployee');
+            // employeeID = localStorage.getItem('mySessionEmployeeLoggedID');
+            employeeID = localStorage.getItem('mySessionEmployee');
         }
         let task_list = [];
 
@@ -105,8 +105,8 @@ Template.myTasksWidget.onRendered(function() {
         url = new URL(window.location.href);
         let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
         if (employeeID == '') {
-            // employeeID = Session.get('mySessionEmployeeLoggedID');
-            employeeID = Session.get('mySessionEmployee');
+            // employeeID = localStorage.getItem('mySessionEmployeeLoggedID');
+            employeeID = localStorage.getItem('mySessionEmployee');
         }
         let task_list = [];
         getVS1Data("TCRMTaskList").then(function(dataObject) {
@@ -731,8 +731,8 @@ Template.myTasksWidget.events({
             $("#addTaskLabelWrapper input:checked").each(function() {
                 selected_lbls.push($(this).attr("name"));
             });
-            let employeeID = Session.get("mySessionEmployeeLoggedID");
-            let employeeName = Session.get("mySessionEmployee");
+            let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
+            let employeeName = localStorage.getItem("mySessionEmployee");
 
             let contactID = $('#contactID').val();
             let contactType = $('#contactType').val();

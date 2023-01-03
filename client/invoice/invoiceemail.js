@@ -67,7 +67,7 @@ Template.invoiceemail.onRendered(function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInvoicelistemail', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistemail', function(error, result){
     if(error){
 
     }else{
@@ -178,7 +178,7 @@ Template.invoiceemail.onRendered(function() {
 
             if(templateObject.datatablerecords.get()){
 
-              Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInvoicelistemail', function(error, result){
+              Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistemail', function(error, result){
               if(error){
 
               }else{
@@ -369,7 +369,7 @@ templateObject.datatablerecords.set(dataTableList);
 
 if(templateObject.datatablerecords.get()){
 
-  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInvoicelistemail', function(error, result){
+  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistemail', function(error, result){
   if(error){
 
   }else{
@@ -555,7 +555,7 @@ templateObject.tableheaderrecords.set(tableHeaderList);
 
             if(templateObject.datatablerecords.get()){
 
-              Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInvoicelistemail', function(error, result){
+              Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistemail', function(error, result){
               if(error){
 
               }else{
@@ -774,7 +774,7 @@ Template.invoiceemail.events({
       });
     },
     'click .resetTable' : function(event){
-      var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+      var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
       if(getcurrentCloudDetails){
         if (getcurrentCloudDetails._id.length > 0) {
           var clientID = getcurrentCloudDetails._id;
@@ -818,7 +818,7 @@ Template.invoiceemail.events({
         lineItems.push(lineItemObj);
       });
 
-      var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+      var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
       if(getcurrentCloudDetails){
         if (getcurrentCloudDetails._id.length > 0) {
           var clientID = getcurrentCloudDetails._id;
@@ -1211,6 +1211,6 @@ Template.invoiceemail.helpers({
      return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-  return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblInvoicelistemail'});
+  return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblInvoicelistemail'});
 }
 });

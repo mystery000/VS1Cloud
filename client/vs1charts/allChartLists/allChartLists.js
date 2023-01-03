@@ -84,7 +84,7 @@ let sideBarService = new SideBarService();
 /**
  * Current User ID
  */
-const employeeId = Session.get("mySessionEmployeeLoggedID");
+const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 const _chartGroup = "";
 const _tabGroup = 0;
 const chartsEditor = new ChartsEditor(
@@ -726,7 +726,7 @@ Template.allChartLists.events({
         $(".btnchartdropdown").addClass("showelement");
         const dashboardApis = new DashboardApi(); // Load all dashboard APIS
         let _tabGroup = $("#connectedSortable").data("tabgroup");
-        let employeeId = Session.get("mySessionEmployeeLoggedID");
+        let employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
         templateObject.hideChartElements();
         const apiEndpoint = dashboardApis.collection.findByName(
             dashboardApis.collectionNames.Tvs1dashboardpreferences

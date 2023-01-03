@@ -385,7 +385,7 @@ Template.purchaseordercard.onRendered(() => {
         });
 
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -410,11 +410,11 @@ Template.purchaseordercard.onRendered(() => {
         {
             item_invoices = {
 
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -466,11 +466,11 @@ Template.purchaseordercard.onRendered(() => {
         {
             item_invoices = {
 
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -522,11 +522,11 @@ Template.purchaseordercard.onRendered(() => {
         else
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -707,7 +707,7 @@ Template.purchaseordercard.onRendered(() => {
         });
 
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -732,11 +732,11 @@ Template.purchaseordercard.onRendered(() => {
         {
             item_invoices = {
 
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -777,11 +777,11 @@ Template.purchaseordercard.onRendered(() => {
         {
             item_invoices = {
 
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -822,11 +822,11 @@ Template.purchaseordercard.onRendered(() => {
         else
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1489,7 +1489,7 @@ Template.purchaseordercard.onRendered(() => {
     const statusList = [];
     const dataTableList = [];
 
-    let isBOnShippedQty = Session.get('CloudPurchaseQtyOnly');
+    let isBOnShippedQty = localStorage.getItem('CloudPurchaseQtyOnly');
     if (isBOnShippedQty) {
         templateObject.includeBOnShippedQty.set(false);
     }
@@ -1620,8 +1620,8 @@ Template.purchaseordercard.onRendered(() => {
 
 
     templateObject.getOrganisationDetails = function() {
-        let account_id = Session.get('vs1companyStripeID') || '';
-        let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+        let account_id = localStorage.getItem('vs1companyStripeID') || '';
+        let stripe_fee = localStorage.getItem('vs1companyStripeFeeMethod') || 'apply';
         templateObject.accountID.set(account_id);
         templateObject.stripe_fee_method.set(stripe_fee);
     };
@@ -1959,7 +1959,7 @@ Template.purchaseordercard.onRendered(() => {
                             templateObject.selectedCurrency.set(purchaseorderrecord.currency);
                             templateObject.inputSelectedCurrency.set(purchaseorderrecord.currency);
                             if (templateObject.purchaseorderrecord.get()) {
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPurchaseOrderLine', function(error, result) {
+                                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblPurchaseOrderLine', function(error, result) {
                                     if (error) {
 
                                     } else {
@@ -2200,7 +2200,7 @@ Template.purchaseordercard.onRendered(() => {
                                 templateObject.selectedCurrency.set(purchaseorderrecord.currency);
                                 templateObject.inputSelectedCurrency.set(purchaseorderrecord.currency);
                                 if (templateObject.purchaseorderrecord.get()) {
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPurchaseOrderLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblPurchaseOrderLine', function(error, result) {
                                         if (error) {
 
                                         } else {
@@ -2402,7 +2402,7 @@ Template.purchaseordercard.onRendered(() => {
                                 if (templateObject.purchaseorderrecord.get()) {
 
 
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPurchaseOrderLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblPurchaseOrderLine', function(error, result) {
                                         if (error) {
 
                                         } else {
@@ -3028,7 +3028,7 @@ Template.purchaseordercard.onRendered(() => {
                         };
 
                         if(data.ttermsvs1[i].isPurchasedefault == true){
-                            Session.set('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
+                            localStorage.setItem('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
                             purchaseDefaultTerms = data.ttermsvs1[i].TermsName || ' ';
                         }
 
@@ -3065,7 +3065,7 @@ Template.purchaseordercard.onRendered(() => {
                     };
 
                     if(data.ttermsvs1[i].isPurchasedefault == true){
-                        Session.set('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
+                        localStorage.setItem('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
                         purchaseDefaultTerms = data.ttermsvs1[i].TermsName || ' ';
                     }
 
@@ -4504,7 +4504,7 @@ Template.purchaseordercard.onRendered(() => {
             let basedOnTypeStorages = Object.keys(localStorage);
             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                 let employeeId = storage.split('_')[2];
-                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                 return storage.includes('BasedOnType_');
             });
             let j = basedOnTypeStorages.length;
@@ -4663,7 +4663,7 @@ Template.purchaseordercard.onRendered(() => {
             let basedOnTypeStorages = Object.keys(localStorage);
             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                 let employeeId = storage.split('_')[2];
-                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                 return storage.includes('BasedOnType_');
             });
             let j = basedOnTypeStorages.length;
@@ -5268,8 +5268,8 @@ Template.purchaseordercard.onRendered(function() {
     tempObj.getAllTaxCodes();
 
     tempObj.getOrganisationDetails = function () {
-        let account_id = Session.get('vs1companyStripeID') || '';
-        let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+        let account_id = localStorage.getItem('vs1companyStripeID') || '';
+        let stripe_fee = localStorage.getItem('vs1companyStripeFeeMethod') || 'apply';
         tempObj.accountID.set(account_id);
         tempObj.stripe_fee_method.set(stripe_fee);
     };
@@ -5346,7 +5346,7 @@ Template.purchaseordercard.helpers({
         return template_numbers;
     },
     isBatchSerialNoTracking: () => {
-        return Session.get('CloudShowSerial') || false;
+        return localStorage.getItem('CloudShowSerial') || false;
     },
     purchaseorderrecord: () => {
         return Template.instance().purchaseorderrecord.get();
@@ -5398,13 +5398,13 @@ Template.purchaseordercard.helpers({
     },
     purchaseCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'purchaseordercard'
         });
     },
     purchaseCloudGridPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblPurchaseOrderLine'
         });
     },
@@ -5431,34 +5431,34 @@ Template.purchaseordercard.helpers({
         return Template.instance().includeBOnShippedQty.get();
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () => {
-        return "Phone: "+Session.get('vs1companyPhone');
+        return "Phone: "+localStorage.getItem('vs1companyPhone');
     },
     companyabn: () => { //Update Company ABN
-        let countryABNValue = Session.get("vs1companyABN");
+        let countryABNValue = localStorage.getItem("vs1companyABN");
         // if (LoggedCountry == "South Africa") {
-        //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+        //     countryABNValue = "Vat No: " + localStorage.getItem("vs1companyABN");
         // }
         return countryABNValue;
     },
     companyReg: () => { //Add Company Reg
         let countryRegValue = '';
         if (LoggedCountry == "South Africa") {
-            countryRegValue = "Reg No: " + Session.get('vs1companyReg');
+            countryRegValue = "Reg No: " + localStorage.getItem('vs1companyReg');
         }
 
         return countryRegValue;
@@ -5476,10 +5476,10 @@ Template.purchaseordercard.helpers({
         return localStorage.getItem('vs1companyBankSwiftCode') || '';
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
     isMobileDevices: () => {
         var isMobile = false;
@@ -5595,7 +5595,7 @@ Template.purchaseordercard.events({
                 let total = $('#balanceDue').html() || 0;
                 let tax = $('#subtotal_tax').html() || 0;
                 let customer = $('#edtSupplierFirstName').val() + ' ' + $('#edtSupplierLastName').val();
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 $('#tblPurchaseOrderLine > tbody > tr').each(function () {
                     var lineID = this.id;
                     let tdproduct = $('#' + lineID + " .lineProductName").val();
@@ -7021,7 +7021,7 @@ Template.purchaseordercard.events({
             var printTemplate = [];
             $('.fullScreenSpin').css('display', 'inline-block');
             var purchase_order = $('input[name="Purchase Orders"]:checked').val();
-            let emid = Session.get('mySessionEmployeeLoggedID');
+            let emid = localStorage.getItem('mySessionEmployeeLoggedID');
 
             sideBarService.getTemplateNameandEmployeId("Purchase Orders",emid,1).then(function (data) {
                 templateid = data.ttemplatesettings;
@@ -7030,7 +7030,7 @@ Template.purchaseordercard.events({
                     type:"TTemplateSettings",
                     fields:{
                         ID:parseInt(id),
-                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                         SettingName:"Purchase Orders",
                         GlobalRef:"Purchase Orders",
                         Description:$('input[name="Purchase Orders_1"]').val(),
@@ -7058,7 +7058,7 @@ Template.purchaseordercard.events({
                 objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                         SettingName:"Purchase Orders",
                         Description:$('input[name="Purchase Orders_1"]').val(),
                         Template:"1",
@@ -7086,7 +7086,7 @@ Template.purchaseordercard.events({
                     type:"TTemplateSettings",
                     fields:{
                         ID:parseInt(id),
-                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                         SettingName:"Purchase Orders",
                         GlobalRef:"Purchase Orders",
                         Description:$('input[name="Purchase Orders_2"]').val(),
@@ -7114,7 +7114,7 @@ Template.purchaseordercard.events({
                 objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                         SettingName:"Purchase Orders",
                         Description:$('input[name="Purchase Orders_2"]').val(),
                         Template:"2",
@@ -7146,7 +7146,7 @@ Template.purchaseordercard.events({
                     type:"TTemplateSettings",
                     fields:{
                         ID:parseInt(id),
-                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                         SettingName:"Purchase Orders",
                         GlobalRef:"Purchase Orders",
                         Description:$('input[name="Purchase Orders_3"]').val(),
@@ -7173,7 +7173,7 @@ Template.purchaseordercard.events({
                 objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                         SettingName:"Purchase Orders",
                         Description:$('input[name="Purchase Orders_3"]').val(),
                         Template:"3",
@@ -8076,7 +8076,7 @@ Template.purchaseordercard.events({
 
                             let erpInvoiceId = objDetails.fields.ID;
 
-                            let mailFromName = Session.get('vs1companyName');
+                            let mailFromName = localStorage.getItem('vs1companyName');
                             let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                             let customerEmailName = $('#edtSupplierName').val();
                             let checkEmailData = $('#edtSupplierEmail').val();
@@ -8212,7 +8212,7 @@ Template.purchaseordercard.events({
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
                                     return storage.includes('BasedOnType_')
-                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 });
                                 let i = basedOnTypeStorages.length;
                                 if (i > 0) {
@@ -8287,7 +8287,7 @@ Template.purchaseordercard.events({
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
                                     return storage.includes('BasedOnType_')
-                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 });
                                 let i = basedOnTypeStorages.length;
                                 if (i > 0) {
@@ -8361,7 +8361,7 @@ Template.purchaseordercard.events({
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
                                     return storage.includes('BasedOnType_')
-                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 });
                                 let i = basedOnTypeStorages.length;
                                 if (i > 0) {
@@ -8395,7 +8395,7 @@ Template.purchaseordercard.events({
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
                                     return storage.includes('BasedOnType_')
-                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 });
                                 let i = basedOnTypeStorages.length;
                                 if (i > 0) {
@@ -8464,8 +8464,8 @@ Template.purchaseordercard.events({
 
                     };
                     var getcurrentCloudDetails = CloudUser.findOne({
-                        _id: Session.get('mycloudLogonID'),
-                        clouddatabaseID: Session.get('mycloudLogonDBID')
+                        _id: localStorage.getItem('mycloudLogonID'),
+                        clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                     });
                     if (getcurrentCloudDetails) {
                         if (getcurrentCloudDetails._id.length > 0) {
@@ -8872,8 +8872,8 @@ Template.purchaseordercard.events({
 
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -9188,8 +9188,8 @@ Template.purchaseordercard.events({
                 let linesave = objDetails.fields.ID;
 
                 var getcurrentCloudDetails = CloudUser.findOne({
-                    _id: Session.get('mycloudLogonID'),
-                    clouddatabaseID: Session.get('mycloudLogonDBID')
+                    _id: localStorage.getItem('mycloudLogonID'),
+                    clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                 });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
@@ -9566,8 +9566,8 @@ Template.purchaseordercard.events({
         //                 let linesave = objDetails.fields.ID;
 
         //                 var getcurrentCloudDetails = CloudUser.findOne({
-        //                     _id: Session.get('mycloudLogonID'),
-        //                     clouddatabaseID: Session.get('mycloudLogonDBID')
+        //                     _id: localStorage.getItem('mycloudLogonID'),
+        //                     clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         //                 });
         //                 if (getcurrentCloudDetails) {
         //                     if (getcurrentCloudDetails._id.length > 0) {
@@ -9975,8 +9975,8 @@ Template.purchaseordercard.events({
         //             let linesave = objDetails.fields.ID;
 
         //             var getcurrentCloudDetails = CloudUser.findOne({
-        //                 _id: Session.get('mycloudLogonID'),
-        //                 clouddatabaseID: Session.get('mycloudLogonDBID')
+        //                 _id: localStorage.getItem('mycloudLogonID'),
+        //                 clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         //             });
         //             if (getcurrentCloudDetails) {
         //                 if (getcurrentCloudDetails._id.length > 0) {
@@ -10771,8 +10771,8 @@ Template.purchaseordercard.events({
                             };
                             let linesave = objDetails.fields.ID;
                             var getcurrentCloudDetails = CloudUser.findOne({
-                                _id: Session.get('mycloudLogonID'),
-                                clouddatabaseID: Session.get('mycloudLogonDBID')
+                                _id: localStorage.getItem('mycloudLogonID'),
+                                clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                             });
                             if (getcurrentCloudDetails) {
                                 if (getcurrentCloudDetails._id.length > 0) {
@@ -11083,8 +11083,8 @@ Template.purchaseordercard.events({
                                     };
                                     let linesave = objDetails.fields.ID;
                                     var getcurrentCloudDetails = CloudUser.findOne({
-                                        _id: Session.get('mycloudLogonID'),
-                                        clouddatabaseID: Session.get('mycloudLogonDBID')
+                                        _id: localStorage.getItem('mycloudLogonID'),
+                                        clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                                     });
                                     if (getcurrentCloudDetails) {
                                         if (getcurrentCloudDetails._id.length > 0) {
@@ -11402,8 +11402,8 @@ Template.purchaseordercard.events({
                             };
                             let linesave = objDetails.fields.ID;
                             var getcurrentCloudDetails = CloudUser.findOne({
-                                _id: Session.get('mycloudLogonID'),
-                                clouddatabaseID: Session.get('mycloudLogonDBID')
+                                _id: localStorage.getItem('mycloudLogonID'),
+                                clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                             });
                             if (getcurrentCloudDetails) {
                                 if (getcurrentCloudDetails._id.length > 0) {
@@ -11719,8 +11719,8 @@ Template.purchaseordercard.events({
                         };
                         let linesave = objDetails.fields.ID;
                         var getcurrentCloudDetails = CloudUser.findOne({
-                            _id: Session.get('mycloudLogonID'),
-                            clouddatabaseID: Session.get('mycloudLogonDBID')
+                            _id: localStorage.getItem('mycloudLogonID'),
+                            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                         });
                         if (getcurrentCloudDetails) {
                             if (getcurrentCloudDetails._id.length > 0) {

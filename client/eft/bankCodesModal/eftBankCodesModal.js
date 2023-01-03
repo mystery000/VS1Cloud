@@ -1,5 +1,6 @@
 import { ReactiveVar } from "meteor/reactive-var";
-
+import { Template } from 'meteor/templating';
+import './eftBankCodesModal.html';
 
 Template.eftBankCodesModal.onCreated(function () {
   const templateObject = Template.instance();
@@ -92,7 +93,7 @@ Template.eftBankCodesModal.events({
     playSaveAudio();
     let templateObject = Template.instance();
     setTimeout(function(){
-    
+
     let eftBankCodes = templateObject.eftBankCodeList.get();
 
     $('.chkEftBankCodesList').each(function (index) {

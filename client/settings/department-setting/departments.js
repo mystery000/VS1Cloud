@@ -547,7 +547,7 @@ Template.departmentSettings.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblDepartmentList'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblDepartmentList'});
     },
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b){

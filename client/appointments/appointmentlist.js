@@ -12,7 +12,7 @@ import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
 let utilityService = new UtilityService();
-let createAppointment = Session.get('CloudAppointmentCreateAppointment') || false;
+let createAppointment = localStorage.getItem('CloudAppointmentCreateAppointment') || false;
 Template.appointmentlist.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -87,7 +87,7 @@ Template.appointmentlist.onRendered(async function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblappointmentlist', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblappointmentlist', function(error, result) {
         if (error) {
 
         } else {
@@ -450,7 +450,7 @@ Template.appointmentlist.onRendered(async function() {
 
         await templateObject.getSMSSettings();
         const recentSMSLogs = await templateObject.smsMessagingLogs() || '';
-        const accessLevel = Session.get('CloudApptSMS');
+        const accessLevel = localStorage.getItem('CloudApptSMS');
 
         // getVS1Data('TAppointmentList').then(async function(dataObject) {
         //     if (dataObject.length == 0) {
@@ -714,7 +714,7 @@ Template.appointmentlist.onRendered(async function() {
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblappointmentlist', function(error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblappointmentlist', function(error, result) {
                             if (error) {
 
                             } else {
@@ -1236,7 +1236,7 @@ Template.appointmentlist.onRendered(async function() {
         //     templateObject.datatablerecords.set(dataTableList);
         //     if (templateObject.datatablerecords.get()) {
 
-        //         Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblappointmentlist', function(error, result) {
+        //         Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblappointmentlist', function(error, result) {
         //             if (error) {
 
         //             } else {
@@ -1679,7 +1679,7 @@ Template.appointmentlist.onRendered(async function() {
         //         templateObject.datatablerecords.set(dataTableList);
         //         if (templateObject.datatablerecords.get()) {
 
-        //             Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblappointmentlist', function(error, result) {
+        //             Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblappointmentlist', function(error, result) {
         //                 if (error) {
 
         //                 } else {
@@ -2120,7 +2120,7 @@ Template.appointmentlist.onRendered(async function() {
                     "";
                 document.getElementById("state").value = result[0].state;
                 document.getElementById("address").value = result[0].street;
-                if (Session.get("CloudAppointmentNotes") == true) {
+                if (localStorage.getItem("CloudAppointmentNotes") == true) {
                     document.getElementById("txtNotes").value = result[0].notes;
                     document.getElementById("txtNotes-1").value = result[0].notes;
                 }
@@ -2812,7 +2812,7 @@ Template.appointmentlist.events({
         await templateObject.getSMSSettings();
         const recentSMSLogs = await templateObject.smsMessagingLogs() || '';
 
-        const accessLevel = Session.get('CloudApptSMS');
+        const accessLevel = localStorage.getItem('CloudApptSMS');
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getTAppointmentListDataByName(dataSearchName).then(function(data) {
                 let lineItems = [];
@@ -3173,7 +3173,7 @@ Template.appointmentlist.events({
         }
     },
     'click .resetTable': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -3217,7 +3217,7 @@ Template.appointmentlist.events({
             lineItems.push(lineItemObj);
         });
 
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -3669,10 +3669,10 @@ Template.appointmentlist.helpers({
         });
     },
     purchasesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblappointmentlist' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblappointmentlist' });
     },
     includeCreateInvoice: () => {
-        let isSales = Session.get('CloudSalesModule') || false;
+        let isSales = localStorage.getItem('CloudSalesModule') || false;
         let checkCreateInvoice = false;
         if (isSales) {
             checkCreateInvoice = true;
@@ -3680,7 +3680,7 @@ Template.appointmentlist.helpers({
         return checkCreateInvoice;
     },
     createnewappointment: () => {
-        return Session.get('CloudAppointmentCreateAppointment') || false;
+        return localStorage.getItem('CloudAppointmentCreateAppointment') || false;
     },
     extraProductFees: () => {
         return Template.instance().extraProductFees.get();

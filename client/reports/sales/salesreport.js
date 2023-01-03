@@ -632,7 +632,7 @@ Template.salesreport.events({
           basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split('_')[2];
             return storage.includes('BasedOnType_')
-            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
           });
           let i = basedOnTypeStorages.length;
           if (i > 0) {

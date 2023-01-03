@@ -1817,7 +1817,7 @@ Template.productview.onRendered(function() {
         templateObject.getClientTypeData();
     }, 500);
 
-    let isInventory = Session.get('CloudInventoryModule');
+    let isInventory = localStorage.getItem('CloudInventoryModule');
     if (isInventory) {
         templateObject.includeInventory.set(true);
     }
@@ -4050,7 +4050,7 @@ Template.productview.onRendered(function() {
         lineExtaSellItems.push(lineExtaSellObj);
         templateObject.productExtraSell.set(lineExtaSellItems);
         //setTimeout(function () {
-        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'defaulttax', function(error, result) {
+        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'defaulttax', function(error, result) {
             if (error) {
                 purchasetaxcode = loggedTaxCodePurchaseInc;
                 salestaxcode = loggedTaxCodeSalesInc;
@@ -4303,7 +4303,7 @@ Template.productview.helpers({
     },
     productsCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'productview'
         });
     },
@@ -5174,8 +5174,8 @@ Template.productview.events({
     },
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {

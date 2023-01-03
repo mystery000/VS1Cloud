@@ -223,7 +223,7 @@ Template.supplierscard.onRendered(function() {
                     let tempArray = [];
                     if (dataObject.tcorrespondence.length > 0) {
                         let temp = dataObject.tcorrespondence.filter(item => {
-                            return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                            return item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         })
 
                         for (let i = 0; i < temp.length; i++) {
@@ -235,7 +235,7 @@ Template.supplierscard.onRendered(function() {
                         }
 
                         temp.map(item => {
-                            if (item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                            if (item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                                 tempArray.push(item.fields)
                             }
                         })
@@ -247,7 +247,7 @@ Template.supplierscard.onRendered(function() {
                 let tempArray = [];
                 if (dataObj.tcorrespondence.length > 0) {
                     let temp = dataObj.tcorrespondence.filter(item => {
-                        return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                        return item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     })
 
                     for (let i = 0; i < temp.length; i++) {
@@ -258,7 +258,7 @@ Template.supplierscard.onRendered(function() {
                         }
                     }
                     temp.map(item => {
-                        if (item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                        if (item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                             tempArray.push(item.fields)
                         }
                     })
@@ -271,7 +271,7 @@ Template.supplierscard.onRendered(function() {
                 let tempArray = [];
                 if (dataObject.tcorrespondence.length > 0) {
                     let temp = dataObject.tcorrespondence.filter(item => {
-                        return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                        return item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     })
 
                     for (let i = 0; i < temp.length; i++) {
@@ -282,7 +282,7 @@ Template.supplierscard.onRendered(function() {
                         }
                     }
                     temp.map(item => {
-                        if (item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                        if (item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                             tempArray.push(item.fields)
                         }
                     })
@@ -939,7 +939,7 @@ Template.supplierscard.onRendered(function() {
             terms.push(data.ttermsvs1[i].TermsName);
             if (data.ttermsvs1[i].isPurchasedefault === true) {
                 templateObject.defaultpurchaseterm.set(data.ttermsvs1[i].TermsName);
-                Session.set('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
+                localStorage.setItem('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
                 if (JSON.stringify(currentId) != '{}') {
                     if (currentId.id == "undefined") {
                         $('#sltTerms').val(data.ttermsvs1[i].TermsName);
@@ -1181,7 +1181,7 @@ Template.supplierscard.onRendered(function() {
 
     templateObject.getAllCrm = function(supplierName) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let employeeID = Session.get("mySessionEmployeeLoggedID");
+        let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
         var url = FlowRouter.current().path;
         if (url.includes("/employeescard")) {
             url = new URL(window.location.href);
@@ -1883,10 +1883,10 @@ Template.supplierscard.onRendered(function() {
                                 type: "TCorrespondence",
                                 fields: {
                                     Active: true,
-                                    EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                                    EmployeeId: localStorage.getItem('mySessionEmployeeLoggedID'),
                                     Ref_Type: dataLabel,
                                     MessageAsString: dataMemo,
-                                    MessageFrom: Session.get('mySessionEmployee'),
+                                    MessageFrom: localStorage.getItem('mySessionEmployee'),
                                     MessageId: dataObject.tcorrespondence.length.toString(),
                                     MessageTo: email,
                                     ReferenceTxt: dataSubject,
@@ -1950,7 +1950,7 @@ Template.supplierscard.onRendered(function() {
 
                             let temp = {
                                 Active: true,
-                                EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeId: localStorage.getItem('mySessionEmployeeLoggedID'),
                                 Ref_Type: tempLabel,
                                 MessageAsString: tempContent,
                                 MessageFrom: "",
@@ -2020,7 +2020,7 @@ Template.supplierscard.onRendered(function() {
                     sideBarService.getCorrespondences().then(dObject => {
                         let temp = {
                             Active: true,
-                            EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                            EmployeeId: localStorage.getItem('mySessionEmployeeLoggedID'),
                             Ref_Type: tempLabel,
                             MessageAsString: tempContent,
                             MessageFrom: "",
@@ -3218,8 +3218,8 @@ Template.supplierscard.events({
                 selected_lbls.push($(this).attr("name"));
             });
 
-            let employeeID = Session.get("mySessionEmployeeLoggedID");
-            let employeeName = Session.get("mySessionEmployee");
+            let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
+            let employeeName = localStorage.getItem("mySessionEmployee");
 
             let assignId = $('#assignedID').val();
             let assignName = $('#add_assigned_name').val();
@@ -3491,7 +3491,7 @@ Template.supplierscard.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblSalesOverview' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblSalesOverview' });
     },
     currentdate: () => {
         const currentDate = new Date();
@@ -3519,7 +3519,7 @@ Template.supplierscard.helpers({
         return Template.instance().uploadedFile.get();
     },
     contactCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'supplierscard' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'supplierscard' });
     },
     isSameAddress: () => {
         return Template.instance().isSameAddress.get();
@@ -3537,8 +3537,8 @@ Template.supplierscard.helpers({
 
 function getCheckPrefDetails(prefName) {
     const getcurrentCloudDetails = CloudUser.findOne({
-        _id: Session.get('mycloudLogonID'),
-        clouddatabaseID: Session.get('mycloudLogonDBID')
+        _id: localStorage.getItem('mycloudLogonID'),
+        clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
     });
     let checkPrefDetails = null;
     if (getcurrentCloudDetails) {
@@ -3575,8 +3575,8 @@ function openEditTaskModals(id, type) {
             $(".editTaskDetailDescription").val(selected_record.TaskDescription);
 
             // tempcode check if AssignedName is set in selected_record
-            let employeeName = selected_record.AssignName ? selected_record.AssignName : Session.get("mySessionEmployee");
-            let assignId = selected_record.AssignID ? selected_record.AssignID : Session.get("mySessionEmployeeLoggedID");
+            let employeeName = selected_record.AssignName ? selected_record.AssignName : localStorage.getItem("mySessionEmployee");
+            let assignId = selected_record.AssignID ? selected_record.AssignID : localStorage.getItem("mySessionEmployeeLoggedID");
             $('#crmEditSelectEmployeeList').val(employeeName);
             $('#assignedID').val(assignId)
             contactService.getOneEmployeeDataEx(assignId).then(function(empDetailInfo) {

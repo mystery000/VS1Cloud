@@ -43,7 +43,7 @@ Template.currencypop.onRendered(function () {
   var countryService = new CountryService();
   let countries = [];
 
-  Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyPopList", function (error, result) {
+  Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyPopList", function (error, result) {
     if (error) {} else {
       if (result) {
         for (let i = 0; i < result.customFields.length; i++) {
@@ -99,7 +99,7 @@ Template.currencypop.onRendered(function () {
     templateObject.datatablerecordscurrencypop.set(currencies);
 
     if (templateObject.datatablerecordscurrencypop.get()) {
-      Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyPopList", function (error, result) {
+      Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyPopList", function (error, result) {
         if (error) {} else {
           if (result) {
             for (let i = 0; i < result.customFields.length; i++) {
@@ -265,7 +265,7 @@ Template.currencypop.onRendered(function () {
           templateObject.datatablerecordscurrencypop.set(dataTableList);
 
           if (templateObject.datatablerecordscurrencypop.get()) {
-            Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyPopList", function (error, result) {
+            Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyPopList", function (error, result) {
               if (error) {} else {
                 if (result) {
                   for (let i = 0; i < result.customFields.length; i++) {
@@ -576,7 +576,7 @@ Template.currencypop.onRendered(function () {
         templateObject.datatablerecordscurrencypop.set(dataTableList);
 
         if (templateObject.datatablerecordscurrencypop.get()) {
-          Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyPopList", function (error, result) {
+          Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyPopList", function (error, result) {
             if (error) {} else {
               if (result) {
                 for (let i = 0; i < result.customFields.length; i++) {
@@ -827,7 +827,7 @@ Template.currencypop.events({
     });
   },
   "click .resetTable": function (event) {
-    var getcurrentCloudDetails = CloudUser.findOne({_id: Session.get("mycloudLogonID"), clouddatabaseID: Session.get("mycloudLogonDBID")});
+    var getcurrentCloudDetails = CloudUser.findOne({_id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID")});
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;
@@ -870,7 +870,7 @@ Template.currencypop.events({
       lineItems.push(lineItemObj);
     });
 
-    var getcurrentCloudDetails = CloudUser.findOne({_id: Session.get("mycloudLogonID"), clouddatabaseID: Session.get("mycloudLogonDBID")});
+    var getcurrentCloudDetails = CloudUser.findOne({_id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID")});
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;
@@ -1182,7 +1182,7 @@ Template.currencypop.helpers({
     return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-    return CloudPreference.findOne({userid: Session.get("mycloudLogonID"), PrefName: "tblCurrencyPopList"});
+    return CloudPreference.findOne({userid: localStorage.getItem("mycloudLogonID"), PrefName: "tblCurrencyPopList"});
   },
   countryList: () => {
     return Template.instance().countryData.get();

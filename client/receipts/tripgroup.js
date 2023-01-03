@@ -15,7 +15,7 @@ Template.tripgroup.onRendered(function() {
     let receiptService = new ReceiptService();
     const tripGroupList = [];
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tripGroupList', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tripGroupList', function(error, result){
         if(error){
 
         }else{
