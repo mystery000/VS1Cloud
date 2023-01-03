@@ -90,7 +90,7 @@ Template.currenciessettings.onRendered(function () {
     await templateObject.currencies.set(currencies);
 
     if (await templateObject.currencies.get()) {
-      Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyList", function (error, result) {
+      Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyList", function (error, result) {
         if (error) {} else {
           if (result) {
             for (let i = 0; i < result.customFields.length; i++) {
@@ -251,7 +251,7 @@ Template.currenciessettings.onRendered(function () {
           templateObject.currencies.set(dataTableList);
 
           if (templateObject.currencies.get()) {
-            Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyList", function (error, result) {
+            Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyList", function (error, result) {
               if (error) {} else {
                 if (result) {
                   for (let i = 0; i < result.customFields.length; i++) {
@@ -416,7 +416,7 @@ Template.currenciessettings.onRendered(function () {
         templateObject.currencies.set(dataTableList);
 
         if (templateObject.currencies.get()) {
-          Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyList", function (error, result) {
+          Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyList", function (error, result) {
             if (error) {} else {
               if (result) {
                 for (let i = 0; i < result.customFields.length; i++) {
@@ -582,7 +582,7 @@ Template.currenciessettings.onRendered(function () {
         templateObject.currencies.set(dataTableList);
 
         if (templateObject.currencies.get()) {
-          Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyList", function (error, result) {
+          Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyList", function (error, result) {
             if (error) {} else {
               if (result) {
                 for (let i = 0; i < result.customFields.length; i++) {
@@ -1578,7 +1578,7 @@ Template.currenciessettings.helpers({
     return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-    return CloudPreference.findOne({userid: Session.get("mycloudLogonID"), PrefName: "tblCurrencyList"});
+    return CloudPreference.findOne({userid: localStorage.getItem("mycloudLogonID"), PrefName: "tblCurrencyList"});
   },
   countryList: () => {
     return Template.instance().countryData.get();

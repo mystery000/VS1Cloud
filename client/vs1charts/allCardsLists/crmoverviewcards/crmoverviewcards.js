@@ -171,7 +171,7 @@ Template.crmoverviewcards.events({
   },
 
   "click .menu_today": function (e) {
-    // let employeeID = Session.get("mySessionEmployeeLoggedID");
+    // let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
     // var url = FlowRouter.current().path;
     // url = new URL(window.location.href);
     // employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
@@ -194,7 +194,7 @@ Template.crmoverviewcards.events({
   },
 
   "click .menu_upcoming": function (e) {
-    // let employeeID = Session.get("mySessionEmployeeLoggedID");
+    // let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
     // var url = FlowRouter.current().path;
     // url = new URL(window.location.href);
     // employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
@@ -217,7 +217,7 @@ Template.crmoverviewcards.events({
   },
 
   "click .menu_project": function (e) {
-    // let employeeID = Session.get("mySessionEmployeeLoggedID");
+    // let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
     // var url = FlowRouter.current().path;
     // url = new URL(window.location.href);
     // employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;

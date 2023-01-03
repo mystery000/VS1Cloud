@@ -23,7 +23,7 @@ Template.subscriptionSettings.onRendered(function() {
         url: stripeGlobalURL +'vs1_get-payment_method.php',
         //url: 'https://depot.vs1cloud.com/stripe/vs1_get-payment_method.php',
         data: {
-            'email': Session.get('VS1AdminUserName'),
+            'email': localStorage.getItem('VS1AdminUserName'),
         },
         method: 'post',
         success: function(response) {
@@ -86,7 +86,7 @@ Template.subscriptionSettings.events({
         playCancelAudio();
         setTimeout(function(){
         let loggeduserEmail = localStorage.getItem('mySession');
-        let loggeduserName = Session.get('mySessionEmployee');
+        let loggeduserName = localStorage.getItem('mySessionEmployee');
         let currentURL = FlowRouter.current().queryParams;
         swal({
             title: 'Are you sure you want to cancel this subscription?',
@@ -304,7 +304,7 @@ Template.subscriptionSettings.events({
             //url: 'https://depot.vs1cloud.com/stripe-sandbox/vs1_update-payment_method.php',
             url: 'https://depot.vs1cloud.com/stripe/vs1_update-payment_method.php',
             data: {
-                'email': Session.get('VS1AdminUserName'),
+                'email': localStorage.getItem('VS1AdminUserName'),
                 'cardnumber': cardnumber,
                 'month': month,
                 'year': year,

@@ -10,7 +10,7 @@ export default class User {
   }
 
   static getCurrentLoggedUserId() {
-    return Session.get("mySessionEmployeeLoggedID");
+    return localStorage.getItem("mySessionEmployeeLoggedID");
   }
 }
 

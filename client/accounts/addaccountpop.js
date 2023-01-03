@@ -1007,7 +1007,7 @@ Template.addaccountpop.helpers({
     },
     bsbRegionName: () => {
       let bsbname = "Branch Code";
-      if(Session.get('ERPLoggedCountry') == "Australia"){
+      if(localStorage.getItem('ERPLoggedCountry') == "Australia"){
         bsbname = "BSB";
       }
         return bsbname;
@@ -1017,7 +1017,7 @@ Template.addaccountpop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblAccountOverview'
         });
     },

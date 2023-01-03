@@ -177,7 +177,7 @@ Template.refundPrintTemp.onRendered(() => {
                         templateObject.refundrecords.set(refundData);
 
                         if (invoicerecord) {
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblInvoiceLine', function (error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblInvoiceLine', function (error, result) {
                                 if (error) { }
                                 else {
                                     if (result) {
@@ -249,31 +249,31 @@ Template.refundPrintTemp.helpers({
     },
 
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () => {
         
-     let phone = "Phone: "+ Session.get('vs1companyPhone');
+     let phone = "Phone: "+ localStorage.getItem('vs1companyPhone');
      return phone;
 
     },
 
     companyabn: () => { //Update Company ABN
-        let countryABNValue = "ABN: " + Session.get('vs1companyABN');
+        let countryABNValue = "ABN: " + localStorage.getItem('vs1companyABN');
         if (LoggedCountry == "South Africa") {
-            countryABNValue = "Vat No: " + Session.get('vs1companyABN');;
+            countryABNValue = "Vat No: " + localStorage.getItem('vs1companyABN');;
         }
 
         return countryABNValue;
@@ -283,15 +283,15 @@ Template.refundPrintTemp.helpers({
     companyReg: () => { //Add Company Reg
         let countryRegValue = '';
         if (LoggedCountry == "South Africa") {
-            countryRegValue = "Reg No: " + Session.get('vs1companyReg');
+            countryRegValue = "Reg No: " + localStorage.getItem('vs1companyReg');
         }
 
         return countryRegValue;
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
 })

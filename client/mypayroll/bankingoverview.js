@@ -82,7 +82,7 @@ Template.bankingoverview.onRendered(function() {
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
               showCustomFieldDisplaySettings(reset_data);
           }).catch(function (err) {
@@ -477,9 +477,9 @@ Template.bankingoverview.onRendered(function() {
                         } else if (data.tbankaccountreport[i].Type == "UnInvoiced SO") {
                             lineID = data.tbankaccountreport[i].SaleID;
                         } else if (data.tbankaccountreport[i].Type == "Cheque") {
-                            if (Session.get('ERPLoggedCountry') == "Australia") {
+                            if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
                                 accountType = "Cheque";
-                            } else if (Session.get('ERPLoggedCountry') == "United States of America") {
+                            } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
                                 accountType = "Check";
                             } else {
                                 accountType = "Cheque";
@@ -813,9 +813,9 @@ Template.bankingoverview.onRendered(function() {
                     } else if (useData[i].Type == "UnInvoiced SO") {
                         lineID = useData[i].SaleID;
                     } else if (data.tbankaccountreport[i].Type == "Cheque") {
-                        if (Session.get('ERPLoggedCountry') == "Australia") {
+                        if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
                             accountType = "Cheque";
-                        } else if (Session.get('ERPLoggedCountry') == "United States of America") {
+                        } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
                             accountType = "Check";
                         } else {
                             accountType = "Cheque";
@@ -1134,9 +1134,9 @@ Template.bankingoverview.onRendered(function() {
                     } else if (data.tbankaccountreport[i].Type == "UnInvoiced SO") {
                         lineID = data.tbankaccountreport[i].SaleID;
                     } else if (data.tbankaccountreport[i].Type == "Cheque") {
-                        if (Session.get('ERPLoggedCountry') == "Australia") {
+                        if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
                             accountType = "Cheque";
-                        } else if (Session.get('ERPLoggedCountry') == "United States of America") {
+                        } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
                             accountType = "Check";
                         } else {
                             accountType = "Cheque";
@@ -1806,12 +1806,12 @@ Template.bankingoverview.events({
     try {
       let erpGet = erpDb();
       let tableName = "tblBankingOverview";
-      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+      let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
 
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if(added) {
-        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
             addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
         });
           swal({
@@ -2005,7 +2005,7 @@ Template.bankingoverview.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblBankingOverview' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblBankingOverview' });
     },
     formname: () => {
         return chequeSpelling;

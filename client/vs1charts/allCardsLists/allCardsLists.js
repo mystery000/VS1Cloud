@@ -11,7 +11,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './allCardsLists.html';
 
-const employeeId = Session.get("mySessionEmployeeLoggedID");
+const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 let _chartGroup = "";
 let _tabGroup = 0;
 
@@ -26,7 +26,7 @@ Template.allCardsLists.onRendered(function () {
 
     templateObject.saveCardsLocalDB = async () => {
         const cardsApis = new ChartsApi();
-        let employeeID = Session.get("mySessionEmployeeLoggedID");
+        let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
         const cardPreferencesEndpoint = cardsApis.collection.findByName(
             cardsApis.collectionNames.Tvs1CardPreference
         );
@@ -52,7 +52,7 @@ Template.allCardsLists.onRendered(function () {
             $('.card-visibility').addClass('hideelement')
             let Tvs1CardPref = await getVS1Data('Tvs1CardPreference');
             let cardList = [];
-            let employeeID = Session.get("mySessionEmployeeLoggedID");
+            let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
             if( Tvs1CardPref.length == 0 ){
                 await templateObject.saveCardsLocalDB();
                 Tvs1CardPref = await getVS1Data('Tvs1CardPreference');
@@ -148,7 +148,7 @@ Template.allCardsLists.onRendered(function () {
                     type: "Tvs1CardPreference",
                     fields: new Tvs1CardPreferenceFields({
                         ID: parseInt($(cards[i]).attr("card-id")),
-                        EmployeeID: parseInt(Session.get("mySessionEmployeeLoggedID")),
+                        EmployeeID: parseInt(localStorage.getItem("mySessionEmployeeLoggedID")),
                         CardKey: $(cards[i]).attr("card-key"),
                         Position: parseInt($(cards[i]).attr("position")),
                         TabGroup: parseInt(_tabGroup),
@@ -290,7 +290,7 @@ Template.allCardsLists.events({
         $(".fullScreenSpin").css("display", "block");
         let templateObject = Template.instance();
         let _tabGroup = $(".connectedCardSortable").data("tabgroup");
-        let employeeId = Session.get("mySessionEmployeeLoggedID");
+        let employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 
         const cardsApis = new ChartsApi();
         // now we have to make the post request to save the data in database

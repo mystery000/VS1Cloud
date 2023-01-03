@@ -95,12 +95,12 @@ export default class TableHandler {
     // lineItems.sort((a,b) => a.index - b.index);
     try {
       let erpGet = erpDb();
-      let employeeId = parseInt(Session.get("mySessionEmployeeLoggedID")) || 0;
+      let employeeId = parseInt(localStorage.getItem("mySessionEmployeeLoggedID")) || 0;
       let sideBarService = new SideBarService();
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       //$(".fullScreenSpin").css("display", "none");
       if (added) {
-        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get("mySessionEmployeeLoggedID")), "").then(function (dataCustomize) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem("mySessionEmployeeLoggedID")), "").then(function (dataCustomize) {
           addVS1Data("VS1_Customize", JSON.stringify(dataCustomize));
         }).catch(function (err) {});
         // swal({title: "SUCCESS", text: "Display settings is updated!", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(result => {

@@ -10,11 +10,11 @@ Template.testlogin.onCreated( () => {
 Template.testlogin.helpers({
 
     currentLoginEmail: function() {
-          return Session.get('loginEmail') == this._email;
+          return localStorage.getItem('loginEmail') == this._email;
     },
     companyDatabases: function(){
-      if(Session.get('loginEmail')){
-       return RegisterUser.find({useremail: Session.get('loginEmail')}).fetch().sort(function (a, b) {
+      if(localStorage.getItem('loginEmail')){
+       return RegisterUser.find({useremail: localStorage.getItem('loginEmail')}).fetch().sort(function (a, b) {
          if (a.description.toLowerCase() == 'NA') {
            return 1;
          }
@@ -41,7 +41,7 @@ Template.testlogin.onCreated(function(){
 
 
 Template.testlogin.onRendered(function(){
-  Session.set('VS1ProductList', '');
+  localStorage.setItem('VS1ProductList', '');
   localStorage.setItem('VS1SalesProductList', '');
   localStorage.setItem('VS1PurchaseAccountList', '');
 
@@ -64,33 +64,33 @@ Template.testlogin.onRendered(function(){
 
 
 
-  Session.set('ERPCurrency', '');
-  Session.set('ERPCountryAbbr', '');
-  Session.set('ERPDefaultDepartment', '');
+  localStorage.setItem('ERPCurrency', '');
+  localStorage.setItem('ERPCountryAbbr', '');
+  localStorage.setItem('ERPDefaultDepartment', '');
 
-  Session.set('mycloudLogonPassword', '');
-  Session.set('mycloudLogonID', '');
-  Session.set('mycloudLogonRole', '');
-  Session.set('myerpPassword', '');
-  Session.set('mySessionEmployee', '');
+  localStorage.setItem('mycloudLogonPassword', '');
+  localStorage.setItem('mycloudLogonID', '');
+  localStorage.setItem('mycloudLogonRole', '');
+  localStorage.setItem('myerpPassword', '');
+  localStorage.setItem('mySessionEmployee', '');
   localStorage.setItem('EIPAddress', '');
   localStorage.setItem('EUserName', '');
   localStorage.setItem('EPassword', '');
   localStorage.setItem('EDatabase', '');
   localStorage.setItem('EPort', '');
-  Session.set('mySessionEmployeeLoggedID', '');
+  localStorage.setItem('mySessionEmployeeLoggedID', '');
   localStorage.setItem('mySession', '');
-  Session.set('mySessionEmployee', '');
-  Session.set('loginEmail', '');
+  localStorage.setItem('mySessionEmployee', '');
+  localStorage.setItem('loginEmail', '');
 
-  Session.set('mycloudLogonDBID', '');
-  Session.set('mycloudLogonID', '');
-  Session.set('mycloudLogonUsername', '');
-  Session.set('mycloudLogonUserEmail', '');
+  localStorage.setItem('mycloudLogonDBID', '');
+  localStorage.setItem('mycloudLogonID', '');
+  localStorage.setItem('mycloudLogonUsername', '');
+  localStorage.setItem('mycloudLogonUserEmail', '');
 
 
-  Session.set('mainEIPAddress', '');
-  Session.set('mainEPort', '');
+  localStorage.setItem('mainEIPAddress', '');
+  localStorage.setItem('mainEPort', '');
 
   localStorage.setItem('vs1cloudlicenselevel', '');
   if ((localStorage.getItem('sidePanelToggle') === '') || (!localStorage.getItem('sidePanelToggle'))) {
@@ -151,25 +151,25 @@ Template.testlogin.onRendered(function(){
     let isTopPanelFormID = '';
 
     /* Lincence Check for Menu Options */
-    let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
-    let isInventoryLicence = Session.get('CloudInventoryLicence');
-    let isManufacturingLicence = Session.get('CloudManufacturingLicence');
-    let isPurchasesLicence = Session.get('CloudPurchasesLicence');
-    let isSalesLicence = Session.get('CloudSalesLicence');
-    let isShippingLicence = Session.get('CloudShippingLicence');
-    let isStockTakeLicence = Session.get('CloudStockTakeLicence');
-    let isStockTransferLicence = Session.get('CloudStockTransferLicence');
-    let isMainLicence = Session.get('CloudMainLicence');
-    let isDashboardLicence = Session.get('CloudDashboardLicence');
+    let isFixedAssetsLicence = localStorage.getItem('CloudFixedAssetsLicence');
+    let isInventoryLicence = localStorage.getItem('CloudInventoryLicence');
+    let isManufacturingLicence = localStorage.getItem('CloudManufacturingLicence');
+    let isPurchasesLicence = localStorage.getItem('CloudPurchasesLicence');
+    let isSalesLicence = localStorage.getItem('CloudSalesLicence');
+    let isShippingLicence = localStorage.getItem('CloudShippingLicence');
+    let isStockTakeLicence = localStorage.getItem('CloudStockTakeLicence');
+    let isStockTransferLicence = localStorage.getItem('CloudStockTransferLicence');
+    let isMainLicence = localStorage.getItem('CloudMainLicence');
+    let isDashboardLicence = localStorage.getItem('CloudDashboardLicence');
 
 
         /*Licence Check Menu to add */
-    let isAccountsLicence = Session.get('CloudAccountsLicence');
-    let isContactsLicence = Session.get('CloudContactsLicence');
-    let isExpenseClaimsLicence = Session.get('CloudExpenseClaimsLicence');
-    let isPaymentsLicence = Session.get('CloudPaymentsLicence');
-    let isReportsLicence = Session.get('CloudReportsLicence');
-    let isSettingsLicence = Session.get('CloudSettingsLicence');
+    let isAccountsLicence = localStorage.getItem('CloudAccountsLicence');
+    let isContactsLicence = localStorage.getItem('CloudContactsLicence');
+    let isExpenseClaimsLicence = localStorage.getItem('CloudExpenseClaimsLicence');
+    let isPaymentsLicence = localStorage.getItem('CloudPaymentsLicence');
+    let isReportsLicence = localStorage.getItem('CloudReportsLicence');
+    let isSettingsLicence = localStorage.getItem('CloudSettingsLicence');
        /*End Licence Check Menu to add */
 
     /* End Licence Check for menu option */
@@ -352,47 +352,47 @@ Template.testlogin.onRendered(function(){
            isMain = false;
          }
 
-        Session.set('CloudPrintDeliveryDocket', isDocket);
-        Session.set('CloudPrintInvoice', isInvoice);
-        Session.set('CloudUserPass', isUserPassDetail);
+        localStorage.setItem('CloudPrintDeliveryDocket', isDocket);
+        localStorage.setItem('CloudPrintInvoice', isInvoice);
+        localStorage.setItem('CloudUserPass', isUserPassDetail);
 
-        Session.set('CloudViewDockets', isViewDockets);
+        localStorage.setItem('CloudViewDockets', isViewDockets);
 
-        Session.set('CloudSalesQtyOnly', isSalesQtyOnly);
-        Session.set('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+        localStorage.setItem('CloudSalesQtyOnly', isSalesQtyOnly);
+        localStorage.setItem('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
 
 
-        Session.set('CloudDashboardModule', isDashboard);
-        Session.set('CloudMainModule', isMain);
-        Session.set('CloudInventoryModule', isInventory);
-        Session.set('CloudManufacturingModule', isManufacturing);
-        Session.set('CloudAccessLevelsModule', isAccessLevels);
-        Session.set('CloudShippingModule', isShipping);
-        Session.set('CloudStockTransferModule', isStockTransfer);
-        Session.set('CloudStockTakeModule', isStockTake);
-        Session.set('CloudSalesModule', isSales);
-        Session.set('CloudPurchasesModule', isPurchases);
-        Session.set('CloudExpenseClaimsModule', isExpenseClaims);
-        Session.set('CloudFixedAssetsModule', isFixedAssets);
+        localStorage.setItem('CloudDashboardModule', isDashboard);
+        localStorage.setItem('CloudMainModule', isMain);
+        localStorage.setItem('CloudInventoryModule', isInventory);
+        localStorage.setItem('CloudManufacturingModule', isManufacturing);
+        localStorage.setItem('CloudAccessLevelsModule', isAccessLevels);
+        localStorage.setItem('CloudShippingModule', isShipping);
+        localStorage.setItem('CloudStockTransferModule', isStockTransfer);
+        localStorage.setItem('CloudStockTakeModule', isStockTake);
+        localStorage.setItem('CloudSalesModule', isSales);
+        localStorage.setItem('CloudPurchasesModule', isPurchases);
+        localStorage.setItem('CloudExpenseClaimsModule', isExpenseClaims);
+        localStorage.setItem('CloudFixedAssetsModule', isFixedAssets);
 
-        Session.set('CloudPaymentsModule', isPayments);
-        Session.set('CloudContactsModule', isContacts);
-        Session.set('CloudAccountsModule', isAccounts);
-        Session.set('CloudReportsModule', isReports);
-        Session.set('CloudSettingsModule', isSettings);
+        localStorage.setItem('CloudPaymentsModule', isPayments);
+        localStorage.setItem('CloudContactsModule', isContacts);
+        localStorage.setItem('CloudAccountsModule', isAccounts);
+        localStorage.setItem('CloudReportsModule', isReports);
+        localStorage.setItem('CloudSettingsModule', isSettings);
 
-        Session.set('CloudSidePanelMenu', isSidePanel);
-        Session.set('CloudTopPanelMenu', isTopPanel);
-        Session.set('CloudSidePanelMenuID', isSidePanelID);
-        Session.set('CloudTopPanelMenuID', isTopPanelID);
-        Session.set('CloudSidePanelMenuFormID', isSidePanelFormID);
-        Session.set('CloudTopPanelMenuFormID', isTopPanelFormID);
+        localStorage.setItem('CloudSidePanelMenu', isSidePanel);
+        localStorage.setItem('CloudTopPanelMenu', isTopPanel);
+        localStorage.setItem('CloudSidePanelMenuID', isSidePanelID);
+        localStorage.setItem('CloudTopPanelMenuID', isTopPanelID);
+        localStorage.setItem('CloudSidePanelMenuFormID', isSidePanelFormID);
+        localStorage.setItem('CloudTopPanelMenuFormID', isTopPanelFormID);
 
          let userSerssion = {'loggedEmpID':employeeID,
                              'loggedUserName':accessUserName,
                              'loggedDatabase':accessDatabase,
                              'loggedAccessData':lineItemslevel};
-        Session.set('ERPSolidCurrentUSerAccess', userSerssion);
+        localStorage.setItem('ERPSolidCurrentUSerAccess', userSerssion);
 
        let userModuleRedirect = lineItemsAccesslevel.sort(function (a, b) {
          if (a.description.toLowerCase() == 'NA') {
@@ -444,26 +444,26 @@ window.open('/dashboard','_self');
 
 /* Remove licence */
 
-    Session.set('CloudAccountsLicence', isAccountsLicence);
-    Session.set('CloudContactsLicence', isContactsLicence);
-    Session.set('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
-    Session.set('CloudPaymentsLicence', isPaymentsLicence);
-    Session.set('CloudReportsLicence', isReportsLicence);
-    Session.set('CloudSettingsLicence', isSettingsLicence);
+    localStorage.setItem('CloudAccountsLicence', isAccountsLicence);
+    localStorage.setItem('CloudContactsLicence', isContactsLicence);
+    localStorage.setItem('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
+    localStorage.setItem('CloudPaymentsLicence', isPaymentsLicence);
+    localStorage.setItem('CloudReportsLicence', isReportsLicence);
+    localStorage.setItem('CloudSettingsLicence', isSettingsLicence);
 
-    Session.set('CloudMainLicence', isMainLicence);
-    Session.set('CloudDashboardLicence', isDashboardLicence);
+    localStorage.setItem('CloudMainLicence', isMainLicence);
+    localStorage.setItem('CloudDashboardLicence', isDashboardLicence);
 
 
 
-      Session.set('CloudFixedAssetsLicence', isFixedAssetsLicence);
-      Session.set('CloudInventoryLicence', isInventoryLicence);
-      Session.set('CloudManufacturingLicence', isManufacturingLicence);
-      Session.set('CloudPurchasesLicence', isPurchasesLicence);
-      Session.set('CloudSalesLicence', isSalesLicence);
-      Session.set('CloudShippingLicence', isShippingLicence);
-      Session.set('CloudStockTakeLicence', isStockTakeLicence);
-      Session.set('CloudStockTransferLicence', isStockTransferLicence);
+      localStorage.setItem('CloudFixedAssetsLicence', isFixedAssetsLicence);
+      localStorage.setItem('CloudInventoryLicence', isInventoryLicence);
+      localStorage.setItem('CloudManufacturingLicence', isManufacturingLicence);
+      localStorage.setItem('CloudPurchasesLicence', isPurchasesLicence);
+      localStorage.setItem('CloudSalesLicence', isSalesLicence);
+      localStorage.setItem('CloudShippingLicence', isShippingLicence);
+      localStorage.setItem('CloudStockTakeLicence', isStockTakeLicence);
+      localStorage.setItem('CloudStockTransferLicence', isStockTransferLicence);
       /* End Remove licence */
 
 
@@ -516,28 +516,28 @@ window.open('/dashboard','_self');
     let isPayroll = true;
 
     /* Lincence Check for Menu Options */
-    let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
-    let isInventoryLicence = Session.get('CloudInventoryLicence');
-    let isManufacturingLicence = Session.get('CloudManufacturingLicence');
-    let isPurchasesLicence = Session.get('CloudPurchasesLicence');
-    let isSalesLicence = Session.get('CloudSalesLicence');
-    let isShippingLicence = Session.get('CloudShippingLicence');
-    let isStockTakeLicence = Session.get('CloudStockTakeLicence');
-    let isStockTransferLicence = Session.get('CloudStockTransferLicence');
-    let isMainLicence = Session.get('CloudMainLicence');
-    let isDashboardLicence = Session.get('CloudDashboardLicence');
+    let isFixedAssetsLicence = localStorage.getItem('CloudFixedAssetsLicence');
+    let isInventoryLicence = localStorage.getItem('CloudInventoryLicence');
+    let isManufacturingLicence = localStorage.getItem('CloudManufacturingLicence');
+    let isPurchasesLicence = localStorage.getItem('CloudPurchasesLicence');
+    let isSalesLicence = localStorage.getItem('CloudSalesLicence');
+    let isShippingLicence = localStorage.getItem('CloudShippingLicence');
+    let isStockTakeLicence = localStorage.getItem('CloudStockTakeLicence');
+    let isStockTransferLicence = localStorage.getItem('CloudStockTransferLicence');
+    let isMainLicence = localStorage.getItem('CloudMainLicence');
+    let isDashboardLicence = localStorage.getItem('CloudDashboardLicence');
 
-    let isSeedToSaleLicence = Session.get('CloudSeedToSaleLicence');
-    let isBankingLicence = Session.get('CloudBankingLicence');
-    let isPayrollLicence = Session.get('CloudPayrollLicence');
+    let isSeedToSaleLicence = localStorage.getItem('CloudSeedToSaleLicence');
+    let isBankingLicence = localStorage.getItem('CloudBankingLicence');
+    let isPayrollLicence = localStorage.getItem('CloudPayrollLicence');
 
         /*Licence Check Menu to add */
-    let isAccountsLicence = Session.get('CloudAccountsLicence');
-    let isContactsLicence = Session.get('CloudContactsLicence');
-    let isExpenseClaimsLicence = Session.get('CloudExpenseClaimsLicence');
-    let isPaymentsLicence = Session.get('CloudPaymentsLicence');
-    let isReportsLicence = Session.get('CloudReportsLicence');
-    let isSettingsLicence = Session.get('CloudSettingsLicence');
+    let isAccountsLicence = localStorage.getItem('CloudAccountsLicence');
+    let isContactsLicence = localStorage.getItem('CloudContactsLicence');
+    let isExpenseClaimsLicence = localStorage.getItem('CloudExpenseClaimsLicence');
+    let isPaymentsLicence = localStorage.getItem('CloudPaymentsLicence');
+    let isReportsLicence = localStorage.getItem('CloudReportsLicence');
+    let isSettingsLicence = localStorage.getItem('CloudSettingsLicence');
        /*End Licence Check Menu to add */
     /* End Licence Check for menu option */
 
@@ -721,51 +721,51 @@ window.open('/dashboard','_self');
       isPayroll = false;
     }
 
-   Session.set('CloudPrintDeliveryDocket', isDocket);
-   Session.set('CloudPrintInvoice', isInvoice);
-   Session.set('CloudUserPass', isUserPassDetail);
+   localStorage.setItem('CloudPrintDeliveryDocket', isDocket);
+   localStorage.setItem('CloudPrintInvoice', isInvoice);
+   localStorage.setItem('CloudUserPass', isUserPassDetail);
 
-   Session.set('CloudViewDockets', isViewDockets);
+   localStorage.setItem('CloudViewDockets', isViewDockets);
 
-   Session.set('CloudSalesQtyOnly', isSalesQtyOnly);
-   Session.set('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+   localStorage.setItem('CloudSalesQtyOnly', isSalesQtyOnly);
+   localStorage.setItem('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
 
 
-   Session.set('CloudDashboardModule', isDashboard);
-   Session.set('CloudMainModule', isMain);
-   Session.set('CloudInventoryModule', isInventory);
-   Session.set('CloudManufacturingModule', isManufacturing);
-   Session.set('CloudAccessLevelsModule', isAccessLevels);
-   Session.set('CloudShippingModule', isShipping);
-   Session.set('CloudStockTransferModule', isStockTransfer);
-   Session.set('CloudStockTakeModule', isStockTake);
-   Session.set('CloudSalesModule', isSales);
-   Session.set('CloudPurchasesModule', isPurchases);
-   Session.set('CloudExpenseClaimsModule', isExpenseClaims);
-   Session.set('CloudFixedAssetsModule', isFixedAssets);
+   localStorage.setItem('CloudDashboardModule', isDashboard);
+   localStorage.setItem('CloudMainModule', isMain);
+   localStorage.setItem('CloudInventoryModule', isInventory);
+   localStorage.setItem('CloudManufacturingModule', isManufacturing);
+   localStorage.setItem('CloudAccessLevelsModule', isAccessLevels);
+   localStorage.setItem('CloudShippingModule', isShipping);
+   localStorage.setItem('CloudStockTransferModule', isStockTransfer);
+   localStorage.setItem('CloudStockTakeModule', isStockTake);
+   localStorage.setItem('CloudSalesModule', isSales);
+   localStorage.setItem('CloudPurchasesModule', isPurchases);
+   localStorage.setItem('CloudExpenseClaimsModule', isExpenseClaims);
+   localStorage.setItem('CloudFixedAssetsModule', isFixedAssets);
 
-   Session.set('CloudPaymentsModule', isPayments);
-   Session.set('CloudContactsModule', isContacts);
-   Session.set('CloudAccountsModule', isAccounts);
-   Session.set('CloudReportsModule', isReports);
-   Session.set('CloudSettingsModule', isSettings);
+   localStorage.setItem('CloudPaymentsModule', isPayments);
+   localStorage.setItem('CloudContactsModule', isContacts);
+   localStorage.setItem('CloudAccountsModule', isAccounts);
+   localStorage.setItem('CloudReportsModule', isReports);
+   localStorage.setItem('CloudSettingsModule', isSettings);
 
-   Session.set('CloudSidePanelMenu', isSidePanel);
-   Session.set('CloudTopPanelMenu', isTopPanel);
-   Session.set('CloudSidePanelMenuID', isSidePanelID);
-   Session.set('CloudTopPanelMenuID', isTopPanelID);
-   Session.set('CloudSidePanelMenuFormID', isSidePanelFormID);
-   Session.set('CloudTopPanelMenuFormID', isTopPanelFormID);
+   localStorage.setItem('CloudSidePanelMenu', isSidePanel);
+   localStorage.setItem('CloudTopPanelMenu', isTopPanel);
+   localStorage.setItem('CloudSidePanelMenuID', isSidePanelID);
+   localStorage.setItem('CloudTopPanelMenuID', isTopPanelID);
+   localStorage.setItem('CloudSidePanelMenuFormID', isSidePanelFormID);
+   localStorage.setItem('CloudTopPanelMenuFormID', isTopPanelFormID);
 
-   Session.set('CloudSeedToSaleModule', isSeedToSale);
-   Session.set('CloudBankingModule', isBanking);
-   Session.set('CloudPayrollModule', isPayroll);
+   localStorage.setItem('CloudSeedToSaleModule', isSeedToSale);
+   localStorage.setItem('CloudBankingModule', isBanking);
+   localStorage.setItem('CloudPayrollModule', isPayroll);
 
     let userSerssion = {'loggedEmpID':userAccessOptions.items[0].fields.EmployeeId,
-                        'loggedUserName':Session.get('EUserName'),
-                        'loggedDatabase':Session.get('EDatabase'),
+                        'loggedUserName':localStorage.getItem('EUserName'),
+                        'loggedDatabase':localStorage.getItem('EDatabase'),
                         'loggedAccessData':lineItemslevel};
-   Session.set('ERPSolidCurrentUSerAccess', userSerssion);
+   localStorage.setItem('ERPSolidCurrentUSerAccess', userSerssion);
 
   let userModuleRedirect = lineItemsAccesslevel.sort(function (a, b) {
     if (a.description.toLowerCase() == 'NA') {
@@ -804,10 +804,10 @@ $("#login-button").click(function(e){
   let employeeUserID = '';
   let loggedUserEventFired = false;
 
-  Session.set('ERPCurrency', '$');
-  Session.set('ERPCountryAbbr', 'AUD');
-  Session.set('ERPDefaultDepartment', 'Default');
-  Session.set('ERPDefaultUOM', '');
+  localStorage.setItem('ERPCurrency', '$');
+  localStorage.setItem('ERPCountryAbbr', 'AUD');
+  localStorage.setItem('ERPDefaultDepartment', 'Default');
+  localStorage.setItem('ERPDefaultUOM', '');
 
 
   if ($('#remember_me').is(':checked')) {
@@ -869,7 +869,7 @@ $("#login-button").click(function(e){
       var cloudUserpassword = regUserDetails[i].cloudHashPassword;
 
 
-       Session.set('mycloudLogonPassword', cloudUserpassword);
+       localStorage.setItem('mycloudLogonPassword', cloudUserpassword);
 
       let erpdbname = ERPIPAdderess+','+ERPdbName+','+ERPuserName+','+ERPpassword+','+ERPport;
       getERPLicenceInfo(erpdbname);
@@ -885,13 +885,13 @@ $("#login-button").click(function(e){
         cloudLoggedUsername = regUserDetails[i].cloudUsername;
 
 
-        Session.set('mycloudLogonDBID', cloudLoggedDBID);
-        Session.set('mycloudLogonID', cloudLoggedID);
-        Session.set('mycloudLogonUsername', cloudLoggedUsername);
-        Session.set('mycloudLogonUserEmail', cloudUserEmail);
+        localStorage.setItem('mycloudLogonDBID', cloudLoggedDBID);
+        localStorage.setItem('mycloudLogonID', cloudLoggedID);
+        localStorage.setItem('mycloudLogonUsername', cloudLoggedUsername);
+        localStorage.setItem('mycloudLogonUserEmail', cloudUserEmail);
 
-        Session.set('myerpPassword', cloudUserpassword);
-        Session.set('mySessionEmployee', ERPuserName);
+        localStorage.setItem('myerpPassword', cloudUserpassword);
+        localStorage.setItem('mySessionEmployee', ERPuserName);
 
         localStorage.setItem('EIPAddress', ERPIPAdderess);
         localStorage.setItem('EUserName', ERPuserName);
@@ -913,8 +913,8 @@ $("#login-button").click(function(e){
 
         oReqCheackUserObject.onreadystatechange = function() {
         if (oReqCheackUserObject.readyState == 4 && oReqCheackUserObject.status == 200) {
-          Session.set('LoggedUserEventFired', loggedUserEventFired);
-          Session.set('userlogged_status', 'active');
+          localStorage.setItem('LoggedUserEventFired', loggedUserEventFired);
+          localStorage.setItem('userlogged_status', 'active');
           var dataListCheackUser = JSON.parse(oReqCheackUserObject.responseText)
           for (var eventCheackUser in dataListCheackUser) {
             var dataCheackUserCopy = dataListCheackUser[eventCheackUser];
@@ -925,10 +925,10 @@ $("#login-button").click(function(e){
               var employeeUserLogon = mainCheackUserData.LogonName;
               var employeeUserID = mainCheackUserData.EmployeeId;
               var employeename = mainCheackUserData.EmployeeName;
-              Session.set('mySessionEmployeeLoggedID', employeeUserID);
+              localStorage.setItem('mySessionEmployeeLoggedID', employeeUserID);
               localStorage.setItem('mySession', empusername);
               var sessionDataToLog = localStorage.getItem('mySession');
-              Session.set('mySessionEmployee', employeename);
+              localStorage.setItem('mySessionEmployee', employeename);
 
               var ERPCheackAppUserObject = "TAppUser?PropertyList=ID,DatabaseName,UserName,MultiLogon&Select=[DatabaseName]='"+ERPdbName+"' and [UserName]='"+ERPLoggeduserName+"'";
               var oReqCheackAppUserObject = new XMLHttpRequest();
@@ -1187,8 +1187,8 @@ $("#erplogin-button").click(function(e){
           let cloudLoggedUsername = regUserDetails.cloudUsername;
 
 
-          Session.set('mycloudLogonDBID', cloudLoggedDBID);
-          Session.set('mycloudLogonID', cloudLoggedID);
+          localStorage.setItem('mycloudLogonDBID', cloudLoggedDBID);
+          localStorage.setItem('mycloudLogonID', cloudLoggedID);
 
     }
     }
@@ -1214,8 +1214,8 @@ $("#erplogin-button").click(function(e){
       if (oReq.readyState == 4 && oReq.status == 200) {
         $('.loginSpinner').css('display','inline-block');
         $('.fullScreenSpin').css('display','inline-block');
-        Session.set('mainEIPAddress', '110.145.181.218');
-        Session.set('mainEPort', '4420');
+        localStorage.setItem('mainEIPAddress', '110.145.181.218');
+        localStorage.setItem('mainEPort', '4420');
         localStorage.setItem('mainEIPAddress', licenceIPAddress);
         localStorage.setItem('mainEPort', checkSSLPorts);
 
@@ -1276,7 +1276,7 @@ $("#erplogin-button").click(function(e){
             localStorage.setItem('VS1TaxSummary_Report', '');
             localStorage.setItem('VS1TrialBalance_Report', '');
             localStorage.setItem('VS1PrintStatements_Report', '');
-            Session.set('bankaccountid', '');
+            localStorage.setItem('bankaccountid', '');
 
             localStorage.setItem('VS1ProductList', '');
             localStorage.setItem('VS1CustomerList', '');
@@ -1338,44 +1338,44 @@ $("#erplogin-button").click(function(e){
 
 
               localStorage.setItem('VS1AccoountList','');
-              Session.set('bankaccountid', '');
+              localStorage.setItem('bankaccountid', '');
             }
           }
 
-          Session.set('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
+          localStorage.setItem('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
 
           var region = dataReturnRes.ProcessLog.RegionName;
-          Session.set('ERPLoggedCountry', region);
+          localStorage.setItem('ERPLoggedCountry', region);
           if(dataReturnRes.ProcessLog.RegionName === "Australia"){
-            Session.set('ERPCountryAbbr', 'AUD');
+            localStorage.setItem('ERPCountryAbbr', 'AUD');
           }else if(dataReturnRes.ProcessLog.RegionName === "Canada"){
-            Session.set('ERPCountryAbbr', 'CAD');
+            localStorage.setItem('ERPCountryAbbr', 'CAD');
           }else if(dataReturnRes.ProcessLog.RegionName === "Colombia"){
-            Session.set('ERPCountryAbbr', 'COP');
+            localStorage.setItem('ERPCountryAbbr', 'COP');
           }else if(dataReturnRes.ProcessLog.RegionName === "Kuwait"){
-            Session.set('ERPCountryAbbr', 'KYD');
+            localStorage.setItem('ERPCountryAbbr', 'KYD');
           }else if(dataReturnRes.ProcessLog.RegionName === "Mexico"){
-            Session.set('ERPCountryAbbr', 'MXN');
+            localStorage.setItem('ERPCountryAbbr', 'MXN');
           }else if(dataReturnRes.ProcessLog.RegionName === "New Zealand"){
-            Session.set('ERPCountryAbbr', 'NZD');
+            localStorage.setItem('ERPCountryAbbr', 'NZD');
           }else if(dataReturnRes.ProcessLog.RegionName === "Qatar"){
-            Session.set('ERPCountryAbbr', 'QAR');
+            localStorage.setItem('ERPCountryAbbr', 'QAR');
           }else if(dataReturnRes.ProcessLog.RegionName === "Kingdom of Saudi Arabia"){
-            Session.set('ERPCountryAbbr', 'SAR');
+            localStorage.setItem('ERPCountryAbbr', 'SAR');
           }else if(dataReturnRes.ProcessLog.RegionName === "Singapore"){
-            Session.set('ERPCountryAbbr', 'SGD');
+            localStorage.setItem('ERPCountryAbbr', 'SGD');
           }else if(dataReturnRes.ProcessLog.RegionName === "South Africa"){
-            Session.set('ERPCountryAbbr', 'ZAR');
+            localStorage.setItem('ERPCountryAbbr', 'ZAR');
           }else if(dataReturnRes.ProcessLog.RegionName === "United Arab Emirates"){
-            Session.set('ERPCountryAbbr', 'AED');
+            localStorage.setItem('ERPCountryAbbr', 'AED');
           }else if(dataReturnRes.ProcessLog.RegionName === "United Kingdom"){
-            Session.set('ERPCountryAbbr', 'GBP');
+            localStorage.setItem('ERPCountryAbbr', 'GBP');
           }else if(dataReturnRes.ProcessLog.RegionName === "United States of America"){
-            Session.set('ERPCountryAbbr', 'USD');
+            localStorage.setItem('ERPCountryAbbr', 'USD');
           }
-          Session.set('ERPDefaultDepartment', 'Default');
-          Session.set('ERPDefaultUOM', '');
-          Session.set('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
+          localStorage.setItem('ERPDefaultDepartment', 'Default');
+          localStorage.setItem('ERPDefaultUOM', '');
+          localStorage.setItem('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
 
      var ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
      var ERPdbName = dataReturnRes.ProcessLog.DatabaseName;
@@ -1383,7 +1383,7 @@ $("#erplogin-button").click(function(e){
      var ERPport = dataReturnRes.ProcessLog.APIPort;
 
 
-       Session.set('mycloudLogonUserEmail', userLoginEmail);
+       localStorage.setItem('mycloudLogonUserEmail', userLoginEmail);
 
      var ERPuserName = userLoginEmail;
       var ERPLoggeduserName = userLoginEmail;
@@ -1451,54 +1451,54 @@ $("#erplogin-button").click(function(e){
 
     /* Remove licence */
 
-        Session.set('CloudAccountsLicence', isAccountsLicence);
-        Session.set('CloudContactsLicence', isContactsLicence);
-        Session.set('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
-        Session.set('CloudPaymentsLicence', isPaymentsLicence);
-        Session.set('CloudReportsLicence', isReportsLicence);
-        Session.set('CloudSettingsLicence', isSettingsLicence);
+        localStorage.setItem('CloudAccountsLicence', isAccountsLicence);
+        localStorage.setItem('CloudContactsLicence', isContactsLicence);
+        localStorage.setItem('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
+        localStorage.setItem('CloudPaymentsLicence', isPaymentsLicence);
+        localStorage.setItem('CloudReportsLicence', isReportsLicence);
+        localStorage.setItem('CloudSettingsLicence', isSettingsLicence);
 
-        Session.set('CloudMainLicence', isMainLicence);
-        Session.set('CloudDashboardLicence', isDashboardLicence);
+        localStorage.setItem('CloudMainLicence', isMainLicence);
+        localStorage.setItem('CloudDashboardLicence', isDashboardLicence);
 
 
-        Session.set('CloudSeedToSaleLicence', isSeedToSaleLicence);
-        Session.set('CloudBankingLicence', isBankingLicence);
-        Session.set('CloudPayrollLicence', isPayrollLicence);
+        localStorage.setItem('CloudSeedToSaleLicence', isSeedToSaleLicence);
+        localStorage.setItem('CloudBankingLicence', isBankingLicence);
+        localStorage.setItem('CloudPayrollLicence', isPayrollLicence);
 
-        Session.set('CloudFixedAssetsLicence', isFixedAssetsLicence);
-        Session.set('CloudInventoryLicence', isInventoryLicence);
-        Session.set('CloudManufacturingLicence', isManufacturingLicence);
-        Session.set('CloudPurchasesLicence', isPurchasesLicence);
-        Session.set('CloudSalesLicence', isSalesLicence);
-        Session.set('CloudShippingLicence', isShippingLicence);
-        Session.set('CloudStockTakeLicence', isStockTakeLicence);
-        Session.set('CloudStockTransferLicence', isStockTransferLicence);
+        localStorage.setItem('CloudFixedAssetsLicence', isFixedAssetsLicence);
+        localStorage.setItem('CloudInventoryLicence', isInventoryLicence);
+        localStorage.setItem('CloudManufacturingLicence', isManufacturingLicence);
+        localStorage.setItem('CloudPurchasesLicence', isPurchasesLicence);
+        localStorage.setItem('CloudSalesLicence', isSalesLicence);
+        localStorage.setItem('CloudShippingLicence', isShippingLicence);
+        localStorage.setItem('CloudStockTakeLicence', isStockTakeLicence);
+        localStorage.setItem('CloudStockTransferLicence', isStockTransferLicence);
 
-        Session.set('CloudAddExtraLicence', isAddExtraUserLicence);
-        Session.set('CloudMatrixLicence', isMatrixLicence);
-        Session.set('CloudPOSLicence', isPOSLicence);
-        Session.set('CloudUseForeignLicence', isFxCurrencyLicence);
-        Session.set('CloudWMSLicence', isWMSLicence);
+        localStorage.setItem('CloudAddExtraLicence', isAddExtraUserLicence);
+        localStorage.setItem('CloudMatrixLicence', isMatrixLicence);
+        localStorage.setItem('CloudPOSLicence', isPOSLicence);
+        localStorage.setItem('CloudUseForeignLicence', isFxCurrencyLicence);
+        localStorage.setItem('CloudWMSLicence', isWMSLicence);
           /* End Remove licence */
 
 
           if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields){
-          Session.set('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
-          Session.set('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
-          Session.set('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
-          Session.set('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
-          Session.set('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
-          Session.set('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
+          localStorage.setItem('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
+          localStorage.setItem('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
+          localStorage.setItem('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
+          localStorage.setItem('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
+          localStorage.setItem('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
+          localStorage.setItem('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
 
-          Session.set('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
-          Session.set('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
+          localStorage.setItem('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
+          localStorage.setItem('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
 
 
 
-          Session.set('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
-          Session.set('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
-          Session.set('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
+          localStorage.setItem('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
+          localStorage.setItem('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
+          localStorage.setItem('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
 
 
           localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT||Currency+'0');
@@ -1520,20 +1520,20 @@ $("#erplogin-button").click(function(e){
             localStorage.setItem('vs1LoggedEmployeeImages_dash','');
           }
           }else{
-            Session.set('vs1companyName', '');
-            Session.set('vs1companyaddress1', '');
-            Session.set('vs1companyaddress2', '');
-            Session.set('vs1companyABN', '');
-            Session.set('vs1companyPhone', '');
-            Session.set('vs1companyURL', '');
+            localStorage.setItem('vs1companyName', '');
+            localStorage.setItem('vs1companyaddress1', '');
+            localStorage.setItem('vs1companyaddress2', '');
+            localStorage.setItem('vs1companyABN', '');
+            localStorage.setItem('vs1companyPhone', '');
+            localStorage.setItem('vs1companyURL', '');
 
-            Session.set('ERPDefaultDepartment', '');
-            Session.set('ERPDefaultUOM', '');
+            localStorage.setItem('ERPDefaultDepartment', '');
+            localStorage.setItem('ERPDefaultUOM', '');
 
 
 
-            Session.set('ERPTaxCodePurchaseInc', '');
-            Session.set('ERPTaxCodeSalesInc', '');
+            localStorage.setItem('ERPTaxCodePurchaseInc', '');
+            localStorage.setItem('ERPTaxCodeSalesInc', '');
 
 
             localStorage.setItem('VS1OverDueInvoiceAmt_dash', '');
@@ -1555,17 +1555,17 @@ $("#erplogin-button").click(function(e){
           localStorage.setItem('VS1SalesListReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_saleslist.items)||'');
           localStorage.setItem('VS1SalesEmpReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_salesperemployee.items)||'');
 
-            Session.set('LoggedUserEventFired', true);
-            Session.set('userlogged_status', 'active');
+            localStorage.setItem('LoggedUserEventFired', true);
+            localStorage.setItem('userlogged_status', 'active');
 
                 var empusername = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
                 var employeeUserLogon = ERPLoggeduserName;
                 var employeeUserID = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId;
                 var employeename =dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
-                Session.set('mySessionEmployeeLoggedID', employeeUserID);
+                localStorage.setItem('mySessionEmployeeLoggedID', employeeUserID);
                 localStorage.setItem('mySession', employeeUserLogon);
                 var sessionDataToLog = localStorage.getItem('mySession');
-                Session.set('mySessionEmployee', employeename);
+                localStorage.setItem('mySessionEmployee', employeename);
                 let userAccessOptions = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail || '';
                 if(userAccessOptions != ""){
 
@@ -1753,8 +1753,8 @@ $("#erplogin-buttonSimon").click(function(e){
           let cloudLoggedUsername = regUserDetails.cloudUsername;
 
 
-          Session.set('mycloudLogonDBID', cloudLoggedDBID);
-          Session.set('mycloudLogonID', cloudLoggedID);
+          localStorage.setItem('mycloudLogonDBID', cloudLoggedDBID);
+          localStorage.setItem('mycloudLogonID', cloudLoggedID);
 
     }
     }
@@ -1780,8 +1780,8 @@ $("#erplogin-buttonSimon").click(function(e){
       if (oReq.readyState == 4 && oReq.status == 200) {
         $('.loginSpinner').css('display','inline-block');
         $('.fullScreenSpin').css('display','inline-block');
-        Session.set('mainEIPAddress', '110.145.181.218');
-        Session.set('mainEPort', '4420');
+        localStorage.setItem('mainEIPAddress', '110.145.181.218');
+        localStorage.setItem('mainEPort', '4420');
 
         localStorage.setItem('mainEIPAddress', licenceIPAddress);
         localStorage.setItem('mainEPort', checkSSLPorts);
@@ -1799,14 +1799,14 @@ $("#erplogin-buttonSimon").click(function(e){
 
           localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
 
-          Session.set('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
+          localStorage.setItem('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
 
           var region = dataReturnRes.ProcessLog.RegionName;
-          Session.set('ERPLoggedCountry', region);
+          localStorage.setItem('ERPLoggedCountry', region);
 
-          Session.set('ERPCountryAbbr', 'AUD');
-          Session.set('ERPDefaultDepartment', 'Default');
-          Session.set('ERPDefaultUOM', '');
+          localStorage.setItem('ERPCountryAbbr', 'AUD');
+          localStorage.setItem('ERPDefaultDepartment', 'Default');
+          localStorage.setItem('ERPDefaultUOM', '');
 
      var ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
      var ERPdbName = dataReturnRes.ProcessLog.DatabaseName;
@@ -1814,7 +1814,7 @@ $("#erplogin-buttonSimon").click(function(e){
      var ERPport = dataReturnRes.ProcessLog.APIPort;
 
 
-       Session.set('mycloudLogonUserEmail', userLoginEmail);
+       localStorage.setItem('mycloudLogonUserEmail', userLoginEmail);
 
      var ERPuserName = userLoginEmail;
       var ERPLoggeduserName = userLoginEmail;
@@ -1862,26 +1862,26 @@ $("#erplogin-buttonSimon").click(function(e){
 
     /* Remove licence */
 
-        Session.set('CloudAccountsLicence', isAccountsLicence);
-        Session.set('CloudContactsLicence', isContactsLicence);
-        Session.set('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
-        Session.set('CloudPaymentsLicence', isPaymentsLicence);
-        Session.set('CloudReportsLicence', isReportsLicence);
-        Session.set('CloudSettingsLicence', isSettingsLicence);
+        localStorage.setItem('CloudAccountsLicence', isAccountsLicence);
+        localStorage.setItem('CloudContactsLicence', isContactsLicence);
+        localStorage.setItem('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
+        localStorage.setItem('CloudPaymentsLicence', isPaymentsLicence);
+        localStorage.setItem('CloudReportsLicence', isReportsLicence);
+        localStorage.setItem('CloudSettingsLicence', isSettingsLicence);
 
-        Session.set('CloudMainLicence', isMainLicence);
-        Session.set('CloudDashboardLicence', isDashboardLicence);
+        localStorage.setItem('CloudMainLicence', isMainLicence);
+        localStorage.setItem('CloudDashboardLicence', isDashboardLicence);
 
 
 
-          Session.set('CloudFixedAssetsLicence', isFixedAssetsLicence);
-          Session.set('CloudInventoryLicence', isInventoryLicence);
-          Session.set('CloudManufacturingLicence', isManufacturingLicence);
-          Session.set('CloudPurchasesLicence', isPurchasesLicence);
-          Session.set('CloudSalesLicence', isSalesLicence);
-          Session.set('CloudShippingLicence', isShippingLicence);
-          Session.set('CloudStockTakeLicence', isStockTakeLicence);
-          Session.set('CloudStockTransferLicence', isStockTransferLicence);
+          localStorage.setItem('CloudFixedAssetsLicence', isFixedAssetsLicence);
+          localStorage.setItem('CloudInventoryLicence', isInventoryLicence);
+          localStorage.setItem('CloudManufacturingLicence', isManufacturingLicence);
+          localStorage.setItem('CloudPurchasesLicence', isPurchasesLicence);
+          localStorage.setItem('CloudSalesLicence', isSalesLicence);
+          localStorage.setItem('CloudShippingLicence', isShippingLicence);
+          localStorage.setItem('CloudStockTakeLicence', isStockTakeLicence);
+          localStorage.setItem('CloudStockTransferLicence', isStockTransferLicence);
           /* End Remove licence */
 
           if(dataReturnRes.ProcessLog.AccessLevels == undefined){
@@ -1896,11 +1896,11 @@ $("#erplogin-buttonSimon").click(function(e){
 
 
 
-  Session.set('mycloudLogonUsername', ERPuserName);
-  Session.set('mycloudLogonUserEmail', ERPuserName);
+  localStorage.setItem('mycloudLogonUsername', ERPuserName);
+  localStorage.setItem('mycloudLogonUserEmail', ERPuserName);
 
-Session.set('myerpPassword', userLoginPassword);
-Session.set('mySessionEmployee', ERPuserName);
+localStorage.setItem('myerpPassword', userLoginPassword);
+localStorage.setItem('mySessionEmployee', ERPuserName);
 
 localStorage.setItem('EIPAddress', ERPIPAdderess);
 localStorage.setItem('EUserName', ERPuserName);
@@ -1922,8 +1922,8 @@ oReqCheackUserObject.send();
 
 oReqCheackUserObject.onreadystatechange = function() {
 if (oReqCheackUserObject.readyState == 4 && oReqCheackUserObject.status == 200) {
-  Session.set('LoggedUserEventFired', loggedUserEventFired);
-  Session.set('userlogged_status', 'active');
+  localStorage.setItem('LoggedUserEventFired', loggedUserEventFired);
+  localStorage.setItem('userlogged_status', 'active');
   var dataListCheackUser = JSON.parse(oReqCheackUserObject.responseText)
   for (var eventCheackUser in dataListCheackUser) {
     var dataCheackUserCopy = dataListCheackUser[eventCheackUser];
@@ -1934,10 +1934,10 @@ if (oReqCheackUserObject.readyState == 4 && oReqCheackUserObject.status == 200) 
       var employeeUserLogon = mainCheackUserData.LogonName;
       var employeeUserID = mainCheackUserData.EmployeeId;
       var employeename = mainCheackUserData.EmployeeName;
-      Session.set('mySessionEmployeeLoggedID', employeeUserID);
+      localStorage.setItem('mySessionEmployeeLoggedID', employeeUserID);
       localStorage.setItem('mySession', employeeUserLogon);
       var sessionDataToLog = localStorage.getItem('mySession');
-      Session.set('mySessionEmployee', employeename);
+      localStorage.setItem('mySessionEmployee', employeename);
 
       var ERPCheackAppUserObject = "TAppUser?PropertyList=ID,DatabaseName,UserName,MultiLogon&Select=[DatabaseName]='"+ERPdbName+"' and [UserName]='"+ERPLoggeduserName+"'";
       var oReqCheackAppUserObject = new XMLHttpRequest();

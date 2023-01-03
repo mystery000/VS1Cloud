@@ -644,7 +644,7 @@ Template.contactoverview.helpers({
     },
     purchasesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get("mycloudLogonID"),
+            userid: localStorage.getItem("mycloudLogonID"),
             PrefName: "tblcontactoverview",
         });
     },

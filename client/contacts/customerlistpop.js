@@ -601,7 +601,7 @@ Template.customerlistpop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblCustomerlist'
         });
     },

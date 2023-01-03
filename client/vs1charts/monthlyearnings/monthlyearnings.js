@@ -92,7 +92,7 @@ Template.monthlyearnings.onRendered(() => {
             let totalPayment6Sum = 0;
             let totalPayment7Sum = 0;
             let totalPayment8Sum = 0;
-            var sessionmyEarnings = Session.get('myMonthlyErnings');
+            var sessionmyEarnings = localStorage.getItem('myMonthlyErnings');
 
             if (sessionmyEarnings) {
                 let filterData = _.filter(sessionmyEarnings.tarreport, function (sessionmyEarnings) {
@@ -326,7 +326,7 @@ Template.monthlyearnings.onRendered(() => {
                 let totalPayment6 = 0;
                 let totalPayment7 = 0;
                 let totalPayment8 = 0;
-                var sessionmyExpenses = Session.get('myExpenses');
+                var sessionmyExpenses = localStorage.getItem('myExpenses');
                 let filterData = _.filter(sessionmyExpenses.tapreport, function (sessionmyExpenses) {
                     return sessionmyExpenses.Name
                 });

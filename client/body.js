@@ -173,7 +173,7 @@ import './packages/currency/modals/FxRateModal.js';
 import './salesorder/salesorderlistpop.js';
 import './inventory/productlistpop.js';
 import './manufacture/processListPopup.js';
-import './manufacture/production_planner.js';
+//import './manufacture/production_planner.js';
 
 import './accounts/accountlistpop.js';
 import './accounts/expenseaccountlist.js';

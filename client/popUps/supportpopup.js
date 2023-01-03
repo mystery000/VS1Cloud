@@ -16,7 +16,7 @@ Template.supportmodalpop.onCreated(function() {
 
 Template.supportmodalpop.onRendered(function() {
 
-    if (Session.get('ERPLoggedCountry') == "Australia") {
+    if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
         //document.getElementById("phoneAUS").style.display = "block";
         document.getElementById("iconAUS").style.display = "block";
 
@@ -34,7 +34,7 @@ Template.supportmodalpop.onRendered(function() {
         //     $("#phoneParentAUS").removeClass("phoneOpen");
         //     $("#phoneChildAUS").removeClass("phoneOpen");
         // }
-    } else if (Session.get('ERPLoggedCountry') == "United States of America") {
+    } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
         //document.getElementById("phoneUSA").style.display = "block";
         document.getElementById("iconUSA").style.display = "block";
 
@@ -52,7 +52,7 @@ Template.supportmodalpop.onRendered(function() {
         //     $("#phoneParentUSA").removeClass("phoneOpen");
         //     $("#phoneChildUSA").removeClass("phoneOpen");
         // }
-    } else if (Session.get('ERPLoggedCountry') == "South Africa") {
+    } else if (localStorage.getItem('ERPLoggedCountry') == "South Africa") {
         //document.getElementById("phoneSA").style.display = "block";
         document.getElementById("iconSA").style.display = "block";
 

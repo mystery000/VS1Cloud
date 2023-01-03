@@ -93,7 +93,7 @@ Template.leadstatussettings.onRendered(function() {
         addDefaultValue();
         templateObject.datatablerecords.set(dataTableList);
         if (templateObject.datatablerecords.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblLeadStatusList', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblLeadStatusList', function(error, result) {
                 if (error) {
 
                 } else {
@@ -791,7 +791,7 @@ Template.leadstatussettings.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblLeadStatusList'
         });
     },

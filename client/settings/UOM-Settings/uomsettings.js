@@ -651,7 +651,7 @@ Template.uomSettings.helpers({
        return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-    return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblUOMList'});
+    return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblUOMList'});
     },
     includeSalesDefault: () => {
       return Template.instance().includeSalesDefault.get();

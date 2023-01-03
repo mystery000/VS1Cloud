@@ -23,7 +23,7 @@ Template.supplierawaitingbills.onRendered(function() {
   const tableHeaderList = [];
 
 
-  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSupplierAwaitingBills', function(error, result){
+  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblSupplierAwaitingBills', function(error, result){
   if(error){
 
   }else{
@@ -96,7 +96,7 @@ Template.supplierawaitingbills.onRendered(function() {
       templateObject.datatablerecords.set(dataTableList);
       if(templateObject.datatablerecords.get()){
 
-        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSupplierAwaitingBills', function(error, result){
+        Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblSupplierAwaitingBills', function(error, result){
         if(error){
 
         }else{
@@ -268,7 +268,7 @@ Template.supplierawaitingbills.events({
     });
   },
   'click .resetTable' : function(event){
-    var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+    var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
     if(getcurrentCloudDetails){
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;
@@ -314,7 +314,7 @@ Template.supplierawaitingbills.events({
     });
     //datatable.state.save();
 
-    var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+    var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
     if(getcurrentCloudDetails){
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;
@@ -490,6 +490,6 @@ Template.supplierawaitingbills.events({
        return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-    return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblSupplierAwaitingBills'});
+    return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblSupplierAwaitingBills'});
   }
   });
