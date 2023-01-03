@@ -270,6 +270,9 @@ import './contacts/addLead.js';
 import './contacts/addEmployee.js';
 
 /* Tinyiko */
+import './settings/subscription-settings/subscription.js';
+import './contacts/popemployeelist.js';
+import './overviews/accountsoverview.js';
 import './settings/tax-rates-setting/taxratelistpop.js';
 import './overviews/Modal/AddAccountModal.js';
 import './eft/optionsModal/eftOptionsModal.js';
@@ -278,7 +281,6 @@ import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
 
 /* Rasheed */
 import './overviews/bankingoverview.js';
-import './overviews/accountsoverview.js';
 import { DataTable } from 'datatables.net';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 

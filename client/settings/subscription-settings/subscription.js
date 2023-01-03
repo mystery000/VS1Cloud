@@ -14,6 +14,8 @@ import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 
+import { Template } from 'meteor/templating';
+import './subscription.html';
 
 Template.subscriptionSettings.onCreated(() => {});
 
