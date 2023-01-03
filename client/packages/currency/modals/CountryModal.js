@@ -4,6 +4,10 @@ import { SideBarService } from "../../../js/sidebar-service";
 import "../../../lib/global/indexdbstorage.js";
 import { CountryService } from "../../../js/country-service";
 import FxGlobalFunctions from "../FxGlobalFunctions";
+
+import { Template } from 'meteor/templating';
+import './CountryModal.html';
+
 let sideBarService = new SideBarService();
 
 Template.CountryModal.onCreated(function () {

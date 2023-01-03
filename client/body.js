@@ -72,6 +72,12 @@ import './js/yodlee-service.js';
 // import './setup/setup.html';
 // import './setup/setup.js';
 
+import './accounts/accountlistpop.js';
+import './accounts/addaccountpop.js';
+
+
+import './eft/bankNameModal/bankNameModal.js';
+
 
 import './vs1_templates/vs1_video/vs1_login_video.html';
 import './popUps/vs1_databasepopup.html';
@@ -83,8 +89,18 @@ import './route.js';
 import './lib/global/globalfunction.js';
 import './lib/global/utBarcodeConst.js';
 // import '/imports/startup/client';
-import './settings/email-settings/emailsettings.js';
+// Transaction Header and Footer
+import "./vs1_templates/transaction_temp/transaction_header/transaction_header.js"
+import "./vs1_templates/transaction_temp/transaction_footer/index.js"
+
+//import './settings/email-settings/emailsettings.js';
 import './settings/xe-currencies/xe-currencies.js';
+import './settings/payroll-settings/payrollrules.js';
+import './settings/payroll-settings/ratetypelistpop.js';
+import './settings/payroll-settings/grouptype.js';
+import './settings/payroll-settings/addratetype.js';
+import './settings/payroll-settings/fundtypelist.js';
+
 
 import './vs1_templates/template_buttons/export_import_print_display_button.js';
 import './vs1_templates/non_transactional_list/non_transactional_list.js';
@@ -93,6 +109,40 @@ import './vs1_templates/report/vs1_report_template.js';
 import './vs1_templates/loggedcompanyoverview/loggedcompanyoverview.js';
 import './vs1_templates/date_picker/daterangedropdownoption.js';
 import './vs1_templates/date_picker/daterangefromto.js';
+import './vs1_templates/print_templates/custom_print_template.html';
+import './vs1_templates/print_templates/preview_header1.html';
+import './vs1_templates/print_templates/preview_header2.html';
+import './vs1_templates/print_templates/preview_header3.html';
+import './vs1_templates/print_templates/preview_body1.html';
+import './vs1_templates/print_templates/preview_body2.html';
+import './vs1_templates/print_templates/preview_body3.html';
+import './vs1_templates/print_templates/preview_footer1.html';
+import './vs1_templates/print_templates/preview_footer2.html';
+import './vs1_templates/print_templates/preview_footer3.html';
+import './vs1_templates/date_picker/single_date_picker.html';
+import './vs1_templates/transaction_temp/transaction_header/transaction_header.js';
+import './vs1_templates/transaction_temp/transaction_header/modals/help_modal.html';
+import './vs1_templates/transaction_temp/transaction_header/modals/files_viewer_modal.html';
+import './vs1_templates/transaction_temp/transaction_header/components/customer_selector.html';
+import './vs1_templates/transaction_temp/transaction_header/components/customer_email_input.html';
+import './vs1_templates/transaction_temp/transaction_header/components/sale_date_selector.html';
+import './vs1_templates/transaction_temp/transaction_header/components/po_number_input.html';
+import './vs1_templates/transaction_temp/transaction_header/components/default_input.html';
+import './vs1_templates/transaction_temp/transaction_button_top.html';
+import './vs1_templates/transaction_temp/transaction_footer/index.js';
+import './vs1_templates/transaction_temp/transaction_footer/template_footer_save_button.html';
+import './vs1_templates/transaction_temp/transaction_footer/template_footer_print_button.html';
+import './vs1_templates/transaction_temp/transaction_footer/template_footer_attachment_button.html';
+import './vs1_templates/transaction_temp/transaction_footer/template_footer_remove_button.html';
+import './vs1_templates/transaction_temp/transaction_footer/template_footer_cancel_button.html';
+import './vs1_templates/transaction_temp/transaction_print_modal';
+import './vs1_templates/vs1_textarea/vs1_textarea.html';
+import './vs1_templates/drop_down/vs1_dropdown.html';
+import './vs1_templates/attachments/vs1_attachments.js';
+import './vs1_templates/init_form_page_script/init_form_page_script.html'
+import './popUps/customfieldDroppop.html';
+import './popUps/customfieldpop.js';
+import './popUps/deletepop.js';
 
 import './pdfTemplates/bill_pdf_temp.js';
 import './pdfTemplates/cheque_pdf_temp.js';
@@ -120,8 +170,144 @@ import './reports/poweredby.html';
 
 import './packages/currency/FxRatesButton.js';
 import './packages/currency/modals/FxRateModal.js';
+import './salesorder/salesorderlistpop.js';
+import './inventory/productlistpop.js';
+import './manufacture/processListPopup.js';
+//import './manufacture/production_planner.js';
 
+import './accounts/accountlistpop.js';
+import './accounts/expenseaccountlist.js';
+import './accounts/inventoryassetaccountpop.js';
+
+/* edit Roverto */
+
+import './vs1_templates/init_form_page_script/init_form_page_script.html';
+import './vs1_templates/draggable_panel/draggable_panel.html';
+import './vs1_templates/title_list_pop/title_list_pop.html';
+import './vs1_templates/transaction_temp/all_transaction_modals.html';
+import './vs1_templates/kpi_card/kpi_card.html';
+import './vs1_templates/kpi_card/kpi_card_title.html';
+import './vs1_templates/kpi_card/kpi_card_body.html';
+import './vs1_templates/kpi_card/kpi_card_single_value.html';
+import './vs1_templates/contact_card_header/vs1_contact_card_header.html';
+import './vs1_templates/toggle_button/toggle_button.html';
+import './popUps/copyfrequencypop.html';
+import './Template/AppTableModal.html';
+
+import './vs1_templates/loggedcompanyoverview/loggedcompanyoverview.js';
+import './vs1_templates/internal_transaction_list/internal_transaction_list_with_switchbox.js';
+import './vs1charts/allCardsLists/allCardsLists.js';
+import './vs1charts/allChartLists/allChartLists.js';
+import './vs1charts/allCardsLists/bankingoverview/bankingoverviewcards.js';
+import './vs1charts/allCardsLists/paymentoverview/paymentoverviewcards.js';
+import './vs1charts/allCardsLists/crmoverviewcards/crmoverviewcards.js';
+import './vs1charts/allCardsLists/purchasesoverviewcards/purchasesoverviewcards.js';
+import './vs1charts/allCardsLists/stscards/stscards.js';
+import './vs1charts/allCardsLists/shippingcards/shippingcards.js';
+import './vs1charts/allCardsLists/paymentoverview/paymentoverviewcardssupplier.js';
+import './vs1charts/allCardsLists/paymentoverview/paymentoverviewcardscustomer.js';
+import './vs1charts/activeEmployees/activeEmployees.js';
+import './vs1charts/top10Customers/top10Customers.js';
+import './vs1charts/top10Suppliers/top10Suppliers.js';
+import './vs1charts/activeEmployees/activeEmployees.js';
+import './vs1charts/purchasesaleschart/purchasesaleschart.js';
+import './popUps/departmentpop.js';
+import './popUps/newdepartmentpop.js';
+import './popUps/currnecypopup.js';
+import './popUps/paymentmethodpopup.js';
+import './popUps/newpaymentmethodpop.js';
+import './popUps/termspopup.js';
+import './popUps/newtermspopup.js';
+import './popUps/clienttypepopup.js';
+import './popUps/statuspop.js';
+import './popUps/newstatuspop.js';
+import './popUps/customfieldformpop.js';
+import './popUps/serialnumberpop.js';
+import './popUps/lotnumberpop.js';
+import './popUps/availableserialnumberpop.js';
+import './popUps/availablelotnumberpop.js';
+import './popUps/shipviapop.js';
+import './popUps/newshipvia.js';
+import './popUps/dashboardoptionspopup.js';
+import './accounts/accountlistpop.js';
+import './accounts/addaccountpop.js';
+import './eft/bankNameModal/bankNameModal.js';
+import './settings/tax-rates-setting/newtaxratepop.js';
+import './settings/xe-currencies/xe-currencies.js';
+import './settings/clienttype-setting/clientypemodal.js';
+import './settings/tax-rates-setting/taxratelistpop.js';
+import './settings/tax-rates-setting/taxratedetailpop.js';
+import './settings/UOM-Settings/uomlistpop.js';
+import './packages/currency/modals/FxRateModal.js';
+import './packages/currency/modals/CountryModal.js';
+import './packages/currency/newcurrencypop.js';
+import './contacts/employeelistpop.js';
+import './contacts/customerlistpop.js';
+import './contacts/global_customerlist.js';
+import './contacts/supplierlistpop.js';
+import './contacts/contactlistpop.js';
+import './crm/components/taskDetailModal/taskDetailModal.js';
+import './crm/components/newTaskModal/newTaskModal.js';
+import './crm/components/projectListPop/projectListPop.js';
+import './appointments/frmappointmentpop.js';
+import './inventory/newproductpop.js';
+import './inventory/payrollproductlistpop.js';
+import './inventory/productlistpopwithcheckboxes.js';
+import './inventory/employeeproductlistpop.js';
+import './overviews/Modal/SelectPayCalendar.js';
+import './overviews/bankingoverview.js';
+
+import './basreturn/basreturn_list.js';
+import './basreturn/frm_basreturn.js';
+import './basreturn/basreturntransactionlist.js';
+import './vatreturn/vatreturn_list.js';
+import './vatreturn/frm_vatreturn.js';
+import './vatreturn/vatreturntransactionlist.js';
+import './overviews/contactoverview.js';
+import './contacts/addCustomer.js';
+import './contacts/addSupplier.js';
+import './contacts/addLead.js';
+import './contacts/addEmployee.js';
+
+/* Tinyiko */
+import './settings/subscription-settings/subscription.js';
+import './contacts/popemployeelist.js';
+import './overviews/accountsoverview.js';
+import './overviews/Modal/AddAccountModal.js';
+import './eft/optionsModal/eftOptionsModal.js';
+import './eft/bankCodesModal/eftBankCodesModal.js';
+import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
+/* Tinyiko */
+
+/* Rasheed */
+import { DataTable } from 'datatables.net';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+/* Rasheed */
+
+/* DevTop/Dev Pioneer */
+import './vs1_templates/report/accountant_header.js';
+import './reports/AccountantReport/accountantCompany.js';
+import './reports/AccountantReport/accountantCompanyastrustee.js';
+import './reports/AccountantReport/accountantFinancialstatement.js';
+import './reports/AccountantReport/accountantIndividual.js';
+import './reports/AccountantReport/accountantPartnershipnontrading.js';
+import './reports/AccountantReport/accountantSelfmanagedsuperfund.js';
+import './reports/AccountantReport/accountantSingledirector.js';
+import './reports/AccountantReport/accountantSoletradernontrading.js';
+import './reports/AccountantReport/accountantTrust.js';
+import './reports/AccountantReport/accountantTrustnontrading.js';
+import './reports/allreports.js';
+/* DevTop/Dev Pioneer */
+
+/* Matthias */
+import './inventory/inventory.js';
+import './inventory/inventorylist.js';
+import './inventory/productlist.js';
+import './inventory/productview.js';
+import './inventory/inventorypopups/onBackOrderPopUp.js';
+import './inventory/inventorypopups/onOrderPopUp.js';
+import './inventory/inventorypopups/onSalesOrderPopUp.js';
+/* Matthias */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';

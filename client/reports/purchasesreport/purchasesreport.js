@@ -13,6 +13,7 @@ import { Template } from 'meteor/templating';
 import './purchasesreport.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
+let _ = require('lodash');
 
 
 const reportService = new ReportService();
@@ -765,7 +766,7 @@ Template.purchasesreport.events({
                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                         let employeeId = storage.split('_')[2];
                         return storage.includes('BasedOnType_')
-                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     });
                     let i = basedOnTypeStorages.length;
                     if (i > 0) {

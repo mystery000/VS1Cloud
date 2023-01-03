@@ -7,6 +7,9 @@ import { TaxRateService } from "../../settings/settings-service";
 import { UtilityService } from "../../utility-service";
 import { bankNameList } from "../../lib/global/bank-names";
 
+import { Template } from 'meteor/templating';
+import './AddAccountModal.html';
+
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let accountService = new AccountService();
@@ -295,7 +298,7 @@ Template.addAccountModal.onRendered(function () {
               if (templateObject.taxRates.get()) {
                 Meteor.call(
                   "readPrefMethod",
-                  Session.get("mycloudLogonID"),
+                  localStorage.getItem("mycloudLogonID"),
                   "taxRatesList",
                   function (error, result) {
                     if (error) {
@@ -471,7 +474,7 @@ Template.addAccountModal.onRendered(function () {
           if (templateObject.taxRates.get()) {
             Meteor.call(
               "readPrefMethod",
-              Session.get("mycloudLogonID"),
+              localStorage.getItem("mycloudLogonID"),
               "taxRatesList",
               function (error, result) {
                 if (error) {
@@ -643,7 +646,7 @@ Template.addAccountModal.onRendered(function () {
             if (templateObject.taxRates.get()) {
               Meteor.call(
                 "readPrefMethod",
-                Session.get("mycloudLogonID"),
+                localStorage.getItem("mycloudLogonID"),
                 "taxRatesList",
                 function (error, result) {
                   if (error) {
@@ -1657,7 +1660,7 @@ Template.addAccountModal.helpers({
   },
   bsbRegionName: () => {
     let bsbname = "Branch Code";
-    if (Session.get("ERPLoggedCountry") === "Australia") {
+    if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
       bsbname = "BSB";
     }
     return bsbname;

@@ -28,7 +28,7 @@ Template.stssettings.onRendered(function() {
     const clientList = [];
 
     // For storing table headers
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblStrains', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblStrains', function(error, result){
         if(error){
 
         }else{
@@ -75,7 +75,7 @@ Template.stssettings.onRendered(function() {
 
             if(templateObject.datatablerecords.get()){
 
-                Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblStrains', function(error, result){
+                Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblStrains', function(error, result){
                     if(error){
 
                     }else{

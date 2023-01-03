@@ -11,6 +11,9 @@ import { ManufacturingService } from './manufacturing-service';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jquery-editable-select';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './processListPopup.html';
 
 let manufacturingService = new ManufacturingService();
 

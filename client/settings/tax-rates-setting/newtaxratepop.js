@@ -8,6 +8,12 @@ import {
     SideBarService
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './newtaxratepop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let taxSelected = "";
 Template.newtaxratepop.onCreated(function() {
@@ -31,7 +37,7 @@ Template.newtaxratepop.onRendered(function() {
     templateObject.defaultpurchasetaxcode.set(loggedTaxCodePurchaseInc);
     templateObject.defaultsaletaxcode.set(loggedTaxCodeSalesInc);
     setTimeout(function() {
-        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'defaulttax', function(error, result) {
+        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'defaulttax', function(error, result) {
             if (error) {
                 purchasetaxcode = loggedTaxCodePurchaseInc;
                 salestaxcode = loggedTaxCodeSalesInc;
@@ -49,7 +55,7 @@ Template.newtaxratepop.onRendered(function() {
         });
     }, 500);
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'taxRatesList', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'taxRatesList', function(error, result) {
         if (error) {
 
         } else {
@@ -102,7 +108,7 @@ Template.newtaxratepop.onRendered(function() {
 
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'taxRatesList', function(error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'taxRatesList', function(error, result) {
                             if (error) {
 
                             } else {
@@ -274,7 +280,7 @@ Template.newtaxratepop.onRendered(function() {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'taxRatesList', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'taxRatesList', function(error, result) {
                         if (error) {
 
                         } else {
@@ -440,7 +446,7 @@ Template.newtaxratepop.onRendered(function() {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'taxRatesList', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'taxRatesList', function(error, result) {
                         if (error) {
 
                         } else {
@@ -934,7 +940,7 @@ Template.newtaxratepop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'taxRatesList'
         });
     },

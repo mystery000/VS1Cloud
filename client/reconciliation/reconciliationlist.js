@@ -63,7 +63,7 @@ Template.reconciliationlist.onRendered(function() {
             try {
             getVS1Data("VS1_Customize").then(function (dataObject) {
                 if (dataObject.length == 0) {
-                sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+                sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
                     // reset_data = data.ProcessLog.CustomLayout.Columns;
                     reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
                     templateObject.showCustomFieldDisplaySettings(reset_data);
@@ -109,7 +109,7 @@ Template.reconciliationlist.onRendered(function() {
         }
         templateObject.initCustomFieldDisplaySettings("", "tblreconciliationlist");
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblreconciliationlist', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblreconciliationlist', function(error, result){
         if(error){
 
         }else{
@@ -238,7 +238,7 @@ Template.reconciliationlist.onRendered(function() {
 
                   if(templateObject.datatablerecords.get()){
 
-                      Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblreconciliationlist', function(error, result){
+                      Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblreconciliationlist', function(error, result){
                           if(error){
 
                           }else{
@@ -537,7 +537,7 @@ Template.reconciliationlist.onRendered(function() {
 
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblreconciliationlist', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblreconciliationlist', function(error, result){
                         if(error){
 
                         }else{
@@ -832,7 +832,7 @@ Template.reconciliationlist.onRendered(function() {
 
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblreconciliationlist', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblreconciliationlist', function(error, result){
                         if(error){
 
                         }else{
@@ -1152,7 +1152,7 @@ Template.reconciliationlist.events({
         });
     },
     'click .resetTable' : function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1196,7 +1196,7 @@ Template.reconciliationlist.events({
             lineItems.push(lineItemObj);
         });
 
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1589,7 +1589,7 @@ Template.reconciliationlist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     purchasesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblreconciliationlist'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblreconciliationlist'});
     },
     displayfields: () => {
         return Template.instance().displayfields.get();

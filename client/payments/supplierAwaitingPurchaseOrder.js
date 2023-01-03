@@ -199,7 +199,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSupplierAwaitingPO', function (error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSupplierAwaitingPO', function (error, result) {
                             if (error) {
 
                             } else {
@@ -558,7 +558,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSupplierAwaitingPO', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSupplierAwaitingPO', function (error, result) {
                         if (error) {
 
                         } else {
@@ -909,7 +909,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSupplierAwaitingPO', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSupplierAwaitingPO', function (error, result) {
                         if (error) {
 
                         } else {
@@ -1298,7 +1298,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSupplierAwaitingPO', function (error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSupplierAwaitingPO', function (error, result) {
                             if (error) {
 
                             } else {
@@ -1626,7 +1626,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSupplierAwaitingPO', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSupplierAwaitingPO', function (error, result) {
                         if (error) {
 
                         } else {
@@ -2642,7 +2642,7 @@ Template.supplierawaitingpurchaseorder.events({
         FlowRouter.go('/supplierpayment');
     },
     'click .resetTable': function (event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -2688,7 +2688,7 @@ Template.supplierawaitingpurchaseorder.events({
         });
         //datatable.state.save();
 
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -2898,7 +2898,7 @@ Template.supplierawaitingpurchaseorder.events({
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split('_')[2];
-            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
         });
         let i = basedOnTypeStorages.length;
         if (i > 0) {
@@ -3112,7 +3112,7 @@ Template.supplierawaitingpurchaseorder.events({
                  });
                 let url = '/supplierpaymentcard?selectsupppo=' + allData[0].po + '&selectsuppbill=' + allData[0].bill + '&selectsuppcredit=' + allData[0].credit;
                 allData.shift();
-                Session.set('supplierpayments', JSON.stringify(allData));
+                localStorage.setItem('supplierpayments', JSON.stringify(allData));
                 window.open(url,'_self');
 
             }
@@ -3170,6 +3170,6 @@ Template.supplierawaitingpurchaseorder.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblSupplierAwaitingPO' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblSupplierAwaitingPO' });
     }
 });

@@ -134,11 +134,11 @@ const authenticatedRedirect = () => {
         } else if (win.width() <= 450) {
             document.getElementById("sidebar").style.display = "none";
         } else {
-            let sidePanelToggle = Session.get('sidePanelToggle');
+            let sidePanelToggle = localStorage.getItem('sidePanelToggle');
             if ((sidePanelToggle === 'undefined') || (sidePanelToggle === undefined)) {
                 document.getElementById("sidebar").style.display = "block";
-                Session.set('sidePanelToggle', "toggled");
-                sidePanelToggle = Session.get('sidePanelToggle');
+                localStorage.setItem('sidePanelToggle', "toggled");
+                sidePanelToggle = localStorage.getItem('sidePanelToggle');
             }
             if (sidePanelToggle) {
                 if (sidePanelToggle === "toggled") {
@@ -151,23 +151,23 @@ const authenticatedRedirect = () => {
 
     });
 
-    if (Session.get('CloudSidePanelMenu')) {
+    if (localStorage.getItem('CloudSidePanelMenu')) {
         $("html").addClass("hasSideBar");
         $("body").addClass("hasSideBar");
     }
 
-    if (Session.get('sidePanelSettings') === "openNav") {
+    if (localStorage.getItem('sidePanelSettings') === "openNav") {
         $(".active_page_content").css("text-align", "right");
     } else {
         $(".active_page_content").css("text-align", "inherit");
     }
 
-    if (Session.get('lastUrl') == undefined) {
-        Session.set('lastUrl', window.location.pathname);
+    if (localStorage.getItem('lastUrl') == undefined) {
+        localStorage.setItem('lastUrl', window.location.pathname);
     } else {
-        let lastUrl = Session.get('lastUrl');
+        let lastUrl = localStorage.getItem('lastUrl');
     }
-    Session.set('lastUrl', window.location.pathname);
+    localStorage.setItem('lastUrl', window.location.pathname);
 
     let lastPageVisitUrl = window.location.pathname;
     if(FlowRouter.current().oldRoute != undefined){

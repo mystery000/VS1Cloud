@@ -193,7 +193,7 @@ Template.customerawaitingpayments.onRendered(function () {
                   templateObject.datatablerecords.set(dataTableList);
                   if (templateObject.datatablerecords.get()) {
 
-                      Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblcustomerAwaitingPayment', function (error, result) {
+                      Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblcustomerAwaitingPayment', function (error, result) {
                           if (error) {}
                           else {
                               if (result) {
@@ -524,7 +524,7 @@ Template.customerawaitingpayments.onRendered(function () {
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblcustomerAwaitingPayment', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblcustomerAwaitingPayment', function (error, result) {
                         if (error) {}
                         else {
                             if (result) {
@@ -850,7 +850,7 @@ Template.customerawaitingpayments.onRendered(function () {
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblcustomerAwaitingPayment', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblcustomerAwaitingPayment', function (error, result) {
                         if (error) {}
                         else {
                             if (result) {
@@ -1307,8 +1307,8 @@ Template.customerawaitingpayments.events({
     },
     'click .resetTable': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1359,8 +1359,8 @@ Template.customerawaitingpayments.events({
         });
         //datatable.state.save();
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1778,7 +1778,7 @@ Template.customerawaitingpayments.events({
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split('_')[2];
-            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
         });
         let i = basedOnTypeStorages.length;
         if (i > 0) {
@@ -1846,7 +1846,7 @@ Template.customerawaitingpayments.events({
                 selectedAwaitingPayment.push(paymentTransObj);
             }
         });
-        Session.set('paymentsArray',JSON.stringify(selectedAwaitingPayment));
+        localStorage.setItem('paymentsArray',JSON.stringify(selectedAwaitingPayment));
         templateObject.selectedAwaitingPayment.set(selectedAwaitingPayment);
 
         setTimeout(function () {
@@ -1962,7 +1962,7 @@ Template.customerawaitingpayments.events({
                  });
                 let url = '/paymentcard?selectcust=' + allData[0].selectCust
                 allData.shift();
-                Session.set('customerpayments', JSON.stringify(allData));
+                localStorage.setItem('customerpayments', JSON.stringify(allData));
                 window.open(url,'_self');
             }
         }
@@ -1998,7 +1998,7 @@ Template.customerawaitingpayments.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblcustomerAwaitingPayment'
         });
     }

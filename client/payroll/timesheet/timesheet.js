@@ -54,17 +54,17 @@ Template.timesheet.onRendered(function() {
 
     var splashArrayTimeSheetList = new Array();
 
-    let isAccessLevels = Session.get('CloudAccessLevelsModule');
+    let isAccessLevels = localStorage.getItem('CloudAccessLevelsModule');
     templateObject.isAccessLevels.set(isAccessLevels);
 
 
-    let seeOwnTimesheets = Session.get('CloudTimesheetSeeOwnTimesheets') || false;
-    let launchClockOnOff = Session.get('CloudTimesheetLaunch') || false;
-    let canClockOnClockOff = Session.get('CloudClockOnOff') || false;
-    let createTimesheet = Session.get('CloudCreateTimesheet') || false;
-    let timesheetStartStop = Session.get('CloudTimesheetStartStop') || false;
-    let showTimesheetEntry = Session.get('CloudTimesheetEntry') || false;
-    let showTimesheet = Session.get('CloudShowTimesheet') || false;
+    let seeOwnTimesheets = localStorage.getItem('CloudTimesheetSeeOwnTimesheets') || false;
+    let launchClockOnOff = localStorage.getItem('CloudTimesheetLaunch') || false;
+    let canClockOnClockOff = localStorage.getItem('CloudClockOnOff') || false;
+    let createTimesheet = localStorage.getItem('CloudCreateTimesheet') || false;
+    let timesheetStartStop = localStorage.getItem('CloudTimesheetStartStop') || false;
+    let showTimesheetEntry = localStorage.getItem('CloudTimesheetEntry') || false;
+    let showTimesheet = localStorage.getItem('CloudShowTimesheet') || false;
     if (launchClockOnOff == true && canClockOnClockOff == true) {
         setTimeout(function() {
             $("#btnClockOnOff").trigger("click");
@@ -109,7 +109,7 @@ Template.timesheet.onRendered(function() {
 
     let prevMonthToDate = (moment().subtract(reportsloadMonths, 'months')).format("DD/MM/YYYY");
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTimeSheet', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTimeSheet', function(error, result) {
         if (error) {} else {
             if (result) {
 
@@ -151,7 +151,7 @@ Template.timesheet.onRendered(function() {
         yearRange: "-90:+10",
     });
 
-    $("#employee_name").val(Session.get('mySessionEmployee'));
+    $("#employee_name").val(localStorage.getItem('mySessionEmployee'));
 
     $("#dateFrom").val(prevMonthToDate);
     $("#dateTo").val(begunDate);
@@ -433,7 +433,7 @@ Template.timesheet.onRendered(function() {
 
         if (templateObject.datatablerecords.get()) {
 
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTimeSheet', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTimeSheet', function(error, result) {
                 if (error) {} else {
                     if (result) {
                         for (let i = 0; i < result.customFields.length; i++) {
@@ -809,7 +809,7 @@ Template.timesheet.onRendered(function() {
 
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTimeSheet', function(error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTimeSheet', function(error, result) {
                             if (error) {} else {
                                 if (result) {
                                     for (let i = 0; i < result.customFields.length; i++) {
@@ -1162,7 +1162,7 @@ Template.timesheet.onRendered(function() {
 
 
                     } else {
-                        if (data.ttimesheet[t].fields.EmployeeName == Session.get('mySessionEmployee')) {
+                        if (data.ttimesheet[t].fields.EmployeeName == localStorage.getItem('mySessionEmployee')) {
                             let hourlyRate = utilityService.modifynegativeCurrencyFormat(data.ttimesheet[t].fields.HourlyRate) || Currency + 0.00;
                             let labourCost = utilityService.modifynegativeCurrencyFormat(data.ttimesheet[t].fields.LabourCost) || Currency + 0.00;
                             let totalAmount = utilityService.modifynegativeCurrencyFormat(data.ttimesheet[t].fields.Total) || Currency + 0.00;
@@ -1275,7 +1275,7 @@ Template.timesheet.onRendered(function() {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTimeSheet', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTimeSheet', function(error, result) {
                         if (error) {} else {
                             if (result) {
                                 for (let i = 0; i < result.customFields.length; i++) {
@@ -1637,7 +1637,7 @@ Template.timesheet.onRendered(function() {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTimeSheet', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTimeSheet', function(error, result) {
                         if (error) {} else {
                             if (result) {
                                 for (let i = 0; i < result.customFields.length; i++) {
@@ -2142,7 +2142,7 @@ Template.timesheet.onRendered(function() {
 
                 }
                 clockList = timeSheetList.filter(clkList => {
-                    return clkList.employee == Session.get('mySessionEmployee');
+                    return clkList.employee == localStorage.getItem('mySessionEmployee');
                 });
                 if (clockList.length > 0) {
                     if (clockList[clockList.length - 1].isPaused == "completed") {
@@ -2320,7 +2320,7 @@ Template.timesheet.onRendered(function() {
 
                         if (data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != '') {
                             employeeList.push(dataList);
-                            if (Session.get('mySessionEmployee') == data.temployee[i].fields.EmployeeName) {
+                            if (localStorage.getItem('mySessionEmployee') == data.temployee[i].fields.EmployeeName) {
                                 if (data.temployee[i].fields.CustFld8 == "false") {
                                     templateObject.includeAllProducts.set(false);
                                 }
@@ -2362,7 +2362,7 @@ Template.timesheet.onRendered(function() {
 
                     if (useData[i].fields.EmployeeName.replace(/\s/g, '') != '') {
                         employeeList.push(dataList);
-                        if (Session.get('mySessionEmployee') == useData[i].fields.EmployeeName) {
+                        if (localStorage.getItem('mySessionEmployee') == useData[i].fields.EmployeeName) {
                             if (useData[i].fields.CustFld8 == "false") {
                                 templateObject.includeAllProducts.set(false);
                             }
@@ -2401,7 +2401,7 @@ Template.timesheet.onRendered(function() {
 
                     if (data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != '') {
                         employeeList.push(dataList);
-                        if (Session.get('mySessionEmployee') == data.temployee[i].fields.EmployeeName) {
+                        if (localStorage.getItem('mySessionEmployee') == data.temployee[i].fields.EmployeeName) {
                             if (data.temployee[i].fields.CustFld8 == "false") {
                                 templateObject.includeAllProducts.set(false);
                             }
@@ -4399,7 +4399,7 @@ Template.timesheet.onRendered(function() {
 
 
                     } else {
-                        if (data.ttimesheet[w].fields.EmployeeName == Session.get('mySessionEmployee')) {
+                        if (data.ttimesheet[w].fields.EmployeeName == localStorage.getItem('mySessionEmployee')) {
                             let hourlyRate = utilityService.modifynegativeCurrencyFormat(data.ttimesheet[w].fields.HourlyRate) || Currency + 0.00;
                             let labourCost = utilityService.modifynegativeCurrencyFormat(data.ttimesheet[w].fields.LabourCost) || Currency + 0.00;
                             let totalAmount = utilityService.modifynegativeCurrencyFormat(data.ttimesheet[w].fields.Total) || Currency + 0.00;
@@ -4752,7 +4752,7 @@ Template.timesheet.events({
 
     },
     'click isDisabled': function(event) {
-        if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+        if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
             swal({
                 title: 'Oooops',
                 text: 'You dont have access to put Clock On / Off "On Hold"',
@@ -5076,8 +5076,8 @@ Template.timesheet.events({
     },
     'click .resetTable': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -5126,8 +5126,8 @@ Template.timesheet.events({
             lineItems.push(lineItemObj);
         });
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -5462,8 +5462,8 @@ Template.timesheet.events({
     'click #btnClockOnOff': async function(event) {
         const templateObject = Template.instance();
         let checkIncludeAllProducts = templateObject.includeAllProducts.get();
-        $("#employee_name").val(Session.get('mySessionEmployee'));
-        let getEmployeeID = Session.get('mySessionEmployeeLoggedID') || '';
+        $("#employee_name").val(localStorage.getItem('mySessionEmployee'));
+        let getEmployeeID = localStorage.getItem('mySessionEmployeeLoggedID') || '';
         $('#sltJobOne').val("");
         $('#product-listone').val("");
         $('#edtProductCost').val(0);
@@ -5996,7 +5996,7 @@ Template.timesheet.events({
                             }
                         }],
                         "TypeName": "Payroll",
-                        "WhoEntered": Session.get('mySessionEmployee') || ""
+                        "WhoEntered": localStorage.getItem('mySessionEmployee') || ""
                     }
                 };
 
@@ -6046,7 +6046,7 @@ Template.timesheet.events({
                     }
                     //  }],
                     // "TypeName":"Payroll",
-                    // "WhoEntered":Session.get('mySessionEmployee')||""
+                    // "WhoEntered":localStorage.getItem('mySessionEmployee')||""
                     //}
                 };
 
@@ -6179,12 +6179,12 @@ Template.timesheet.events({
                 type: "TTimeLog",
                 fields: {
                     TimeSheetID: updateID,
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     StartDatetime: checkStartTime,
                     EndDatetime: endTime,
                     Product: product,
                     Description: 'Timesheet Completed',
-                    EnteredBy: Session.get('mySessionEmployeeLoggedID')
+                    EnteredBy: localStorage.getItem('mySessionEmployeeLoggedID')
                 }
             };
             isPaused = "completed";
@@ -6233,12 +6233,12 @@ Template.timesheet.events({
                         type: "TTimeLog",
                         fields: {
                             TimeSheetID: updateID,
-                            EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                             StartDatetime: startTime,
                             EndDatetime: endTime,
                             Product: product,
                             Description: 'Timesheet Started',
-                            EnteredBy: Session.get('mySessionEmployeeLoggedID')
+                            EnteredBy: localStorage.getItem('mySessionEmployeeLoggedID')
                         }
                     };
                 } else if ($('#startTime').val() != "" && $('#endTime').val() != "" && checkStatus != "completed") {
@@ -6247,12 +6247,12 @@ Template.timesheet.events({
                         type: "TTimeLog",
                         fields: {
                             TimeSheetID: updateID,
-                            EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                             StartDatetime: checkStartTime,
                             EndDatetime: endTime,
                             Product: product,
                             Description: 'Timesheet Completed',
-                            EnteredBy: Session.get('mySessionEmployeeLoggedID')
+                            EnteredBy: localStorage.getItem('mySessionEmployeeLoggedID')
                         }
                     };
                     isPaused = "completed";
@@ -6264,12 +6264,12 @@ Template.timesheet.events({
                     type: "TTimeLog",
                     fields: {
                         TimeSheetID: updateID,
-                        EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                         StartDatetime: startTime,
                         EndDatetime: endTime,
                         Product: product,
                         Description: 'Timesheet Started',
-                        EnteredBy: Session.get('mySessionEmployeeLoggedID')
+                        EnteredBy: localStorage.getItem('mySessionEmployeeLoggedID')
                     }
                 };
             }
@@ -6279,12 +6279,12 @@ Template.timesheet.events({
                 obj = {
                     type: "TTimeLog",
                     fields: {
-                        EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                         StartDatetime: startTime,
                         EndDatetime: endTime,
                         Product: product,
                         Description: 'Timesheet Started & Completed',
-                        EnteredBy: Session.get('mySessionEmployeeLoggedID')
+                        EnteredBy: localStorage.getItem('mySessionEmployeeLoggedID')
                     }
                 };
                 isPaused = "completed";
@@ -6292,12 +6292,12 @@ Template.timesheet.events({
                 obj = {
                     type: "TTimeLog",
                     fields: {
-                        EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                         StartDatetime: startTime,
                         EndDatetime: endTime,
                         Product: product,
                         Description: 'Timesheet Started',
-                        EnteredBy: Session.get('mySessionEmployeeLoggedID')
+                        EnteredBy: localStorage.getItem('mySessionEmployeeLoggedID')
                     }
                 };
                 isPaused = "";
@@ -6330,7 +6330,7 @@ Template.timesheet.events({
                         }
                     }],
                     "TypeName": "Payroll",
-                    "WhoEntered": Session.get('mySessionEmployee') || ""
+                    "WhoEntered": localStorage.getItem('mySessionEmployee') || ""
                 }
             };
             contactService.saveTimeSheet(data).then(function(dataReturnRes) {
@@ -6618,12 +6618,12 @@ Template.timesheet.events({
                         type: "TTimeLog",
                         fields: {
                             TimeSheetID: updateID,
-                            EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                             StartDatetime: startTime,
                             EndDatetime: endTime,
                             Product: product,
                             Description: 'Timesheet Processed',
-                            EnteredBy: Session.get('mySessionEmployeeLoggedID')
+                            EnteredBy: localStorage.getItem('mySessionEmployeeLoggedID')
                         }
                     };
                     isPaused = "completed";
@@ -6633,12 +6633,12 @@ Template.timesheet.events({
                         type: "TTimeLog",
                         fields: {
                             TimeSheetID: updateID,
-                            EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                             StartDatetime: checkStartTime,
                             EndDatetime: endTime,
                             Product: product,
                             Description: 'Timesheet Processed',
-                            EnteredBy: Session.get('mySessionEmployeeLoggedID')
+                            EnteredBy: localStorage.getItem('mySessionEmployeeLoggedID')
                         }
                     };
                     isPaused = "completed";
@@ -6650,12 +6650,12 @@ Template.timesheet.events({
                     type: "TTimeLog",
                     fields: {
                         TimeSheetID: updateID,
-                        EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                         StartDatetime: startTime,
                         EndDatetime: endTime,
                         Product: product,
                         Description: 'Timesheet Processed',
-                        EnteredBy: Session.get('mySessionEmployeeLoggedID')
+                        EnteredBy: localStorage.getItem('mySessionEmployeeLoggedID')
                     }
                 };
                 isPaused = "completed";
@@ -6666,12 +6666,12 @@ Template.timesheet.events({
                 obj = {
                     type: "TTimeLog",
                     fields: {
-                        EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                         StartDatetime: startTime,
                         EndDatetime: endTime,
                         Product: product,
                         Description: 'Timesheet Processed',
-                        EnteredBy: Session.get('mySessionEmployeeLoggedID')
+                        EnteredBy: localStorage.getItem('mySessionEmployeeLoggedID')
                     }
                 };
                 isPaused = "completed";
@@ -6679,12 +6679,12 @@ Template.timesheet.events({
                 obj = {
                     type: "TTimeLog",
                     fields: {
-                        EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                        EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                         StartDatetime: startTime,
                         EndDatetime: endTime,
                         Product: product,
                         Description: 'Timesheet Processed',
-                        EnteredBy: Session.get('mySessionEmployeeLoggedID')
+                        EnteredBy: localStorage.getItem('mySessionEmployeeLoggedID')
                     }
                 };
 
@@ -6715,7 +6715,7 @@ Template.timesheet.events({
                         }
                     }],
                     "TypeName": "Payroll",
-                    "WhoEntered": Session.get('mySessionEmployee') || ""
+                    "WhoEntered": localStorage.getItem('mySessionEmployee') || ""
                 }
             };
             contactService.saveTimeSheet(data).then(function(data) {
@@ -7416,7 +7416,7 @@ Template.timesheet.events({
     'click #btnNewTimeSheet': function(event) {
         $('#edtTimesheetID').val('');
         $('#add-timesheet-title').text('New Timesheet');
-        $('.sltEmployee').val(Session.get('mySessionEmployee'));
+        $('.sltEmployee').val(localStorage.getItem('mySessionEmployee'));
         $('.sltJob').val('');
         $('.lineEditHourlyRate').val('');
         $('.lineEditHour').val('8');
@@ -7660,25 +7660,25 @@ Template.timesheet.helpers({
         });
     },
     edithours: () => {
-        return Session.get('CloudEditTimesheetHours') || false;
+        return localStorage.getItem('CloudEditTimesheetHours') || false;
     },
     clockOnOff: () => {
-        return Session.get('CloudClockOnOff') || false;
+        return localStorage.getItem('CloudClockOnOff') || false;
     },
     launchClockOnOff: () => {
-        return Session.get('launchClockOnOff') || false;
+        return localStorage.getItem('launchClockOnOff') || false;
     },
     seeOwnTimesheets: () => {
-        return Session.get('seeOwnTimesheets') || false;
+        return localStorage.getItem('seeOwnTimesheets') || false;
     },
     timesheetStartStop: () => {
-        return Session.get('timesheetStartStop') || false;
+        return localStorage.getItem('timesheetStartStop') || false;
     },
     showTimesheetEntries: () => {
-        return Session.get('CloudTimesheetEntry') || false;
+        return localStorage.getItem('CloudTimesheetEntry') || false;
     },
     showTimesheet: () => {
-        return Session.get('CloudShowTimesheet') || false;
+        return localStorage.getItem('CloudShowTimesheet') || false;
     },
     employeerecords: () => {
         return Template.instance().employeerecords.get().sort(function(a, b) {
@@ -7717,7 +7717,7 @@ Template.timesheet.helpers({
         return localStorage.getItem('mySession') || '';
     },
     loggedInEmployee: () => {
-        return Session.get('mySessionEmployee') || '';
+        return localStorage.getItem('mySessionEmployee') || '';
     }
 
 });

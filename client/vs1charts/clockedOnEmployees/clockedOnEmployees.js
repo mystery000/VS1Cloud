@@ -118,26 +118,26 @@ Template.clockedOnEmployees.helpers({
         });
     },
     edithours: () => {
-      return Session.get("CloudEditTimesheetHours") || false;
+      return localStorage.getItem("CloudEditTimesheetHours") || false;
     },
     clockOnOff: () => {
-      return Session.get("CloudClockOnOff") || false;
+      return localStorage.getItem("CloudClockOnOff") || false;
     },
     launchClockOnOff: () => {
-      return Session.get("launchClockOnOff") || false;
+      return localStorage.getItem("launchClockOnOff") || false;
     },
     timesheetStartStop: () => {
-      return Session.get("timesheetStartStop ") || false;
+      return localStorage.getItem("timesheetStartStop ") || false;
     },
     showTimesheet: () => {
-      return Session.get("CloudShowTimesheet") || false;
+      return localStorage.getItem("CloudShowTimesheet") || false;
     },
     tableheaderrecords: () => {
       return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
       return CloudPreference.findOne({
-        userid: Session.get("mycloudLogonID"),
+        userid: localStorage.getItem("mycloudLogonID"),
         PrefName: "tblPayHistorylist",
       });
     },

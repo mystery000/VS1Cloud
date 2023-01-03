@@ -21,7 +21,7 @@ Template.receiptcategory.onRendered(function() {
     let needAddTravel = true;
     let needAddVehicle = true;
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'receiptCategoryList', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'receiptCategoryList', function(error, result){
         if(error){
 
         }else{

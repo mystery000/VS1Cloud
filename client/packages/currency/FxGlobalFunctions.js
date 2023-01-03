@@ -120,8 +120,8 @@ export default class FxGlobalFunctions {
   static handleChangedCurrency(currency = "AUD", defaultCurrencyCode) {
     if (currency != defaultCurrencyCode) {
       $("#sltCurrency").trigger("change");
-      Session.set("tempCurrencyState", $('#sltCurrency').val());
-      Session.set("tempExchangeRateState", $('#exchange_rate').val());
+      localStorage.setItem("tempCurrencyState", $('#sltCurrency').val());
+      localStorage.setItem("tempExchangeRateState", $('#exchange_rate').val());
     }
   }
 
@@ -140,7 +140,7 @@ export default class FxGlobalFunctions {
   }
 
   static isCurrencyEnabled() {
-    return Session.get("CloudUseForeignLicence");
+    return localStorage.getItem("CloudUseForeignLicence");
   }
 
   static getCurrentCurrencySymbol(onNull = "N/A") {

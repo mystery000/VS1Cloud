@@ -62,7 +62,7 @@ Template.accounttypepop.onRendered(function () {
         yearRange: "-90:+10",
     });
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblAccountOverview', function (error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblAccountOverview', function (error, result) {
         if (error) {}
         else {
             if (result) {
@@ -906,7 +906,7 @@ Template.accounttypepop.onRendered(function () {
 
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblAccountOverview', function (error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblAccountOverview', function (error, result) {
                             if (error) {}
                             else {
                                 if (result) {
@@ -1106,7 +1106,7 @@ Template.accounttypepop.onRendered(function () {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblAccountOverview', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblAccountOverview', function (error, result) {
                         if (error) {}
                         else {
                             if (result) {
@@ -1304,7 +1304,7 @@ Template.accounttypepop.onRendered(function () {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblAccountOverview', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblAccountOverview', function (error, result) {
                         if (error) {}
                         else {
                             if (result) {
@@ -1721,8 +1721,8 @@ Template.accounttypepop.events({
     },
     'click .resetTable': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1774,8 +1774,8 @@ Template.accounttypepop.events({
         //datatable.state.save();
 
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -2582,7 +2582,7 @@ Template.accounttypepop.helpers({
     },
     bsbRegionName: () => {
       let bsbname = "Branch Code";
-      if(Session.get('ERPLoggedCountry') == "Australia"){
+      if(localStorage.getItem('ERPLoggedCountry') == "Australia"){
         bsbname = "BSB";
       }
         return bsbname;
@@ -2592,7 +2592,7 @@ Template.accounttypepop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblAccountOverview'
         });
     },

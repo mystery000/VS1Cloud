@@ -197,7 +197,7 @@ Template.employeelist.onRendered(function() {
     // set initial table rest_data
     function init_reset_data() {
         let bsbname = "Branch Code";
-        if (Session.get("ERPLoggedCountry") === "Australia") {
+        if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
             bsbname = "BSB";
         }
 
@@ -232,7 +232,7 @@ Template.employeelist.onRendered(function() {
     //     try {
     //       getVS1Data("VS1_Customize").then(function (dataObject) {
     //         if (dataObject.length == 0) {
-    //           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+    //           sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
     //               // reset_data = data.ProcessLog.CustomLayout.Columns;
     //               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
     //               showCustomFieldDisplaySettings(reset_data);
@@ -256,7 +256,7 @@ Template.employeelist.onRendered(function() {
           let dataObject = await getVS1Data("VS1_Customize");
 
             if (dataObject.length == 0) {
-              let data = await sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType);
+              let data = await sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType);
                 // reset_data = data.ProcessLog.CustomLayout.Columns;
                 reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
                 showCustomFieldDisplaySettings(reset_data);
@@ -702,7 +702,7 @@ Template.employeelist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblEmployeelist'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblEmployeelist'});
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';

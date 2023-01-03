@@ -17,6 +17,12 @@ import { autoTable } from 'jspdf-autotable';
 import 'jquery-editable-select';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './frm_basreturn.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let reportService = new ReportService();
@@ -3975,8 +3981,8 @@ Template.basreturn.events({
             });
 
             var getcurrentCloudDetails = CloudUser.findOne({
-                _id: Session.get('mycloudLogonID'),
-                clouddatabaseID: Session.get('mycloudLogonDBID')
+                _id: localStorage.getItem('mycloudLogonID'),
+                clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
             });
 
             if (getcurrentCloudDetails) {
@@ -4042,8 +4048,8 @@ Template.basreturn.events({
     },
     'click .btnResetGridSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -4071,8 +4077,8 @@ Template.basreturn.events({
     },
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {

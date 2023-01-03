@@ -78,7 +78,7 @@ stockAdjustService.getCompanyInfo().then(function(data){
 
 //currentStockAdjustId = 'newstockadjust';
 if(currentStockAdjustId !== 'newstockadjust') {
-  Session.set('updateStock', true);
+  localStorage.setItem('updateStock', true);
     templateObject.getStockAdjusts = function () {
       accountService.getOneStockAdjust(parseInt(currentStockAdjustId)).then(function (data) {
         let lineItems = [];
@@ -91,7 +91,7 @@ if(currentStockAdjustId !== 'newstockadjust') {
 
           //$("#new_create_btn :a").attr("disabled", true);
           document.getElementById("processed").innerHTML = "Processed";
-          //Session.set('proccesedStock', true);
+          //localStorage.setItem('proccesedStock', true);
         }else{
 
         }
@@ -170,7 +170,7 @@ if(currentStockAdjustId !== 'newstockadjust') {
     }
 templateObject.getStockAdjusts();
 }else{
-  Session.set('updateStock', false);
+  localStorage.setItem('updateStock', false);
   var today = moment().format('DD MMM YYYY');
   let stockAdjustrecord = {
       id:'',
@@ -804,10 +804,10 @@ Template.stockscan.helpers({
         return Template.instance().abn.get();
     },
     isShowSaveNotification: () => {
-        return Session.get('isShowSaveNotification');
+        return localStorage.getItem('isShowSaveNotification');
     },
     stockupdate: () => {
-        return Session.get('updateStock');
+        return localStorage.getItem('updateStock');
     }
 });
 
@@ -1040,15 +1040,15 @@ FlowRouter.go('/stockadjlist');
     let stockadjustId = dataReturn.fields.ID;
     if (e.target.id === "createStockAdjust") {
         notificationMessagerAfterSave = "Stock Adjust Saved - "+stockadjustId+ "Proccesed";
-        Session.set('recordSavedID',stockadjustId);
-        Session.set('isShowSaveNotification', notificationMessagerAfterSave);
+        localStorage.setItem('recordSavedID',stockadjustId);
+        localStorage.setItem('isShowSaveNotification', notificationMessagerAfterSave);
 
     }else if (e.target.id === "createHoldStockAdjust") {
       notificationMessagerAfterSave = "Stock Adjust Saved - "+stockadjustId+ "Hold";
-        Session.set('recordSavedID',stockadjustId);
-        Session.set('isShowSaveNotification', notificationMessagerAfterSave);
+        localStorage.setItem('recordSavedID',stockadjustId);
+        localStorage.setItem('isShowSaveNotification', notificationMessagerAfterSave);
         FlowRouter.go('/stockadjlist');
-        //Session.set('showApproveNotificationOnNewInvoice', true);
+        //localStorage.setItem('showApproveNotificationOnNewInvoice', true);
     }
     */
 
@@ -1182,8 +1182,8 @@ Template.stockscan.events({
     'click #close-quote-notification':function(){
         let tempObj = Template.instance();
         tempObj.$(".notify").hide();
-        Session.set('markedAsInvoiceMsg',false);
-        Session.set('validateInvoiceNo',false);
+        localStorage.setItem('markedAsInvoiceMsg',false);
+        localStorage.setItem('validateInvoiceNo',false);
     },
     'click .department-option':function(event){
       $(".select-department").val(event.currentTarget.innerText);
@@ -2106,7 +2106,7 @@ Template.stockscan.events({
     'click #close-save-notification': function () {
         let tempObj = Template.instance();
         tempObj.$(".notify").hide();
-        Session.set('isShowSaveNotification', false);
+        localStorage.setItem('isShowSaveNotification', false);
     },
     'keyup #prodBarcode':function (e) {
 

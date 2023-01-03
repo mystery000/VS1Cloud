@@ -9,6 +9,9 @@ import Datehandler from "../../DateHandler";
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './agedreceivables.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+let _ = require('lodash');
 
 const reportService = new ReportService();
 const utilityService = new UtilityService();
@@ -517,7 +520,7 @@ Template.agedreceivables.events({
         var accountName = id[1].split('_').join(' ');
         let toDate = moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
         let fromDate = moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
-        //Session.set('showHeader',true);
+        //localStorage.setItem('showHeader',true);
         await clearData('TAccountRunningBalanceReport');
         window.open('/balancetransactionlist?accountName=' + accountName + '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem=' + false, '_self');
     },
@@ -611,7 +614,7 @@ Template.agedreceivables.events({
                     let basedOnTypeStorages = Object.keys(localStorage);
                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                         let employeeId = storage.split('_')[2];
-                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         return storage.includes('BasedOnType_');
                     });
                     let i = basedOnTypeStorages.length;

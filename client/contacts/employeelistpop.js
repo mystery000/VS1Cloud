@@ -15,6 +15,12 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './employeelistpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.employeelistpop.onCreated(function () {
@@ -42,7 +48,7 @@ Template.employeelistpop.onRendered(function () {
     const dataTableList = [];
     const tableHeaderList = [];
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), currenttablename, function (error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
         if (error) {
 
         } else {
@@ -142,7 +148,7 @@ Template.employeelistpop.onRendered(function () {
 
                     if (templateObject.custdatatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), currenttablename, function (error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
                             if (error) {
 
                             } else {
@@ -557,7 +563,7 @@ Template.employeelistpop.onRendered(function () {
 
                 if (templateObject.custdatatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), currenttablename, function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
                         if (error) {
 
                         } else {
@@ -1013,7 +1019,7 @@ Template.employeelistpop.onRendered(function () {
 
                 if (templateObject.custdatatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), currenttablename, function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
                         if (error) {
 
                         } else {
@@ -1631,8 +1637,8 @@ Template.employeelistpop.events({
     },
     'click .resetTable': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1682,8 +1688,8 @@ Template.employeelistpop.events({
             lineItems.push(lineItemObj);
         });
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -2018,7 +2024,7 @@ Template.employeelistpop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblEmployeelist'
         });
     },
