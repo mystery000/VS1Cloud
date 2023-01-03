@@ -4,6 +4,11 @@ import {UtilityService} from "../../utility-service";
 import "../../lib/global/indexdbstorage.js";
 import {ReportService} from "../../reports/report-service";
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './purchasesaleschart.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let _ = require('lodash');
 let reportService = new ReportService();
 let vs1chartService = new VS1ChartService();

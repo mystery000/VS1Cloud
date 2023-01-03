@@ -1,5 +1,11 @@
 import "../../../lib/global/indexdbstorage";
 import { CRMService } from "../../../crm/crm-service";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './crmoverviewcards.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let crmService = new CRMService();
 
 Template.crmoverviewcards.onCreated(function () {

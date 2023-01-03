@@ -7,6 +7,12 @@ import { SalesBoardService } from "../js/sales-service";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import XLSX from 'xlsx';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './contactOverview.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 // Template.contactoverview.inheritsHelpersFrom('non_transactional_list');

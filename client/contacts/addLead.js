@@ -12,6 +12,11 @@ import 'jquery-editable-select';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './addLead.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let crmService = new CRMService();

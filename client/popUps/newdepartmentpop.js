@@ -8,6 +8,11 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './newdepartmentpop.html';
+
 let sideBarService = new SideBarService();
 Template.newdepartmentpop.onCreated(function() {
     const templateObject = Template.instance();
