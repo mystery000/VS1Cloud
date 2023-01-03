@@ -93,7 +93,7 @@ import './lib/global/utBarcodeConst.js';
 import "./vs1_templates/transaction_temp/transaction_header/transaction_header.js"
 import "./vs1_templates/transaction_temp/transaction_footer/index.js"
 
-import './settings/email-settings/emailsettings.js';
+//import './settings/email-settings/emailsettings.js';
 import './settings/xe-currencies/xe-currencies.js';
 import './settings/payroll-settings/payrollrules.js';
 import './settings/payroll-settings/ratetypelistpop.js';
@@ -269,6 +269,10 @@ import './contacts/addSupplier.js';
 import './contacts/addLead.js';
 import './contacts/addEmployee.js';
 
+/* Rasheed */
+
+import './overviews/bankingoverview.js';
+import { DataTable } from 'datatables.net';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';

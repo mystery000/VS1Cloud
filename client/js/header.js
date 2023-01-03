@@ -1727,7 +1727,7 @@ Template.header.onRendered(function () {
     var erpGet = erpDb();
 
     var LoggedDB = erpGet.ERPDatabase;
-    if (loggedUserEventFired) {
+    if (loggedUserEventFired == true) {
         templateObject.getBankDescription();
         templateObject.getCompanyInfo();
         $(document).ready(function () {
