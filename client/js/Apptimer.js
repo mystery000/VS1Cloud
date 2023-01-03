@@ -22,8 +22,8 @@ function inActive(){
       if ((loc != '/') && (loc != '/register') && (loc != '/registerdb')
       && (loc != '/vs1greentracklogin')&& (loc != '/registersts')
     && (loc != '/paymentmethodSettings')) {
-        CloudUser.update({_id: Session.get('mycloudLogonID')},{ $set: {userMultiLogon: false}});
-        if(Session.get('isGreenTrack')){
+        CloudUser.update({_id: localStorage.getItem('mycloudLogonID')},{ $set: {userMultiLogon: false}});
+        if(localStorage.getItem('isGreenTrack')){
           window.open('/vs1greentracklogin','_self');
         }else{
           //window.open('/','_self');

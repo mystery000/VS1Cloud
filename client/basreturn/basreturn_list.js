@@ -512,7 +512,7 @@ Template.basreturnlist.events({
         $(".btnRefresh").trigger("click");
     },
     "click .resetTable": function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get("mycloudLogonID"), clouddatabaseID: Session.get("mycloudLogonDBID") });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID") });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -556,7 +556,7 @@ Template.basreturnlist.events({
             lineItems.push(lineItemObj);
         });
         //datatable.state.save();
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get("mycloudLogonID"), clouddatabaseID: Session.get("mycloudLogonDBID") });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID") });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -757,7 +757,7 @@ Template.basreturnlist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get("mycloudLogonID"), PrefName: "tblJournalList" });
+        return CloudPreference.findOne({ userid: localStorage.getItem("mycloudLogonID"), PrefName: "tblJournalList" });
     },
     currentdate: () => {
         var currentDate = new Date();

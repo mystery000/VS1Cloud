@@ -382,7 +382,7 @@
                 $('.fullScreenSpin').css('display', 'none')
                 FlowRouter.go('/vs1greentracklogin');
                 CloudUser.update({
-                    _id: Session.get('mycloudLogonID')
+                    _id: localStorage.getItem('mycloudLogonID')
                 }, {
                     $set: {
                         userMultiLogon: false
@@ -434,7 +434,7 @@
                 $('.fullScreenSpin').css('display', 'none')
                 FlowRouter.go('/');
                 CloudUser.update({
-                    _id: Session.get('mycloudLogonID')
+                    _id: localStorage.getItem('mycloudLogonID')
                 }, {
                     $set: {
                         userMultiLogon: false

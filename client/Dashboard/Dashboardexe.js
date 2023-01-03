@@ -23,7 +23,7 @@ localStorage.setItem("arrChartActive", JSON.stringify(arrChartActive));
 /**
  * Current User ID
  */
-const employeeId = Session.get("mySessionEmployeeLoggedID");
+const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 const _chartGroup = "";
 const _tabGroup = 0;
 const chartsEditor = new ChartsEditor(
@@ -179,7 +179,7 @@ Template.dashboardexe.onCreated(function () {
 Template.dashboardexe.onRendered(function () {
   const templateObject = Template.instance();
   // fix
-  let isDashboard = Session.get("CloudDashboardModule");
+  let isDashboard = localStorage.getItem("CloudDashboardModule");
   if (isDashboard) {
     templateObject.includeDashboard.set(true);
   }
@@ -346,7 +346,7 @@ Template.dashboardexe.onRendered(function () {
   let currentAssetPerc2 = 0;
   let termAssetPerc2 = 0;
 
-  // let isDashboard = Session.get("CloudDashboardModule");
+  // let isDashboard = localStorage.getItem("CloudDashboardModule");
   if (isDashboard) {
     templateObject.includeDashboard.set(true);
   }
@@ -1422,7 +1422,7 @@ Template.dashboardexe.events({
 
     const dashboardApis = new DashboardApi(); // Load all dashboard APIS
     let _tabGroup = $("#connectedSortable2").data("tabgroup");
-    let employeeId = Session.get("mySessionEmployeeLoggedID");
+    let employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
     templateObject.hideChartElements();
     const apiEndpoint = dashboardApis.collection.findByName(
       dashboardApis.collectionNames.Tvs1dashboardpreferences

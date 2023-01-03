@@ -1039,7 +1039,7 @@ Template.vs1_report_template.onRendered(function () {
 
     //   getVS1Data("VS1_Customize").then(function (dataObject) {
     //     if (dataObject.length == 0) {
-    //       sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+    //       sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
     //           reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
     //           templateObject.showCustomFieldDisplaySettings(reset_data);
     //       }).catch(function (err) {
@@ -1177,11 +1177,11 @@ Template.vs1_report_template.events({
     lineItems.sort((a, b) => a.index - b.index);
     let erpGet = erpDb();
     let tableName = await templateObject.tablename.get() || '';
-    let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID')) || 0;
+    let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')) || 0;
     let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
 
     if (added) {
-      sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), '').then(function (dataCustomize) {
+      sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), '').then(function (dataCustomize) {
         addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
       }).catch(function (err) {
       });

@@ -34,7 +34,7 @@ Template.clienttypepopup.onRendered(function() {
     const deptrecords = [];
     let deptprodlineItems = [];
     var splashArrayClientTypeList = new Array();
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'clienttypeList', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'clienttypeList', function(error, result) {
         if (error) {
 
         } else {
@@ -498,8 +498,8 @@ Template.clienttypepopup.events({
     },
     'click .resetTable': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -550,8 +550,8 @@ Template.clienttypepopup.events({
         });
 
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -721,7 +721,7 @@ Template.clienttypepopup.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'clienttypeList'
         });
     },

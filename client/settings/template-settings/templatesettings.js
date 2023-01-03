@@ -7231,7 +7231,7 @@ Template.templatesettings.helpers({
 Template.templatesettings.events({
   "click #resetcards": function () {
     $(".fullScreenSpin").css("display", "block");
-    let emid = Session.get("mySessionEmployeeLoggedID");
+    let emid = localStorage.getItem("mySessionEmployeeLoggedID");
 
     objDetails = {
       type: "TTemplateSettings",
@@ -7302,7 +7302,7 @@ Template.templatesettings.events({
       var deposits = $('input[name="Deposits"]:checked').val();
       var cheques = $('input[name="Cheques"]:checked').val();
       $(".fullScreenSpin").css("display", "inline-block");
-      let emid = Session.get("mySessionEmployeeLoggedID");
+      let emid = localStorage.getItem("mySessionEmployeeLoggedID");
       let count = 0;
       sideBarService
         .getTemplateNameandEmployeId("bill", emid, 1)
@@ -7313,7 +7313,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "bill",
               GlobalRef: "bill",
               Description: $('input[name="Bills_1"]').val(),
@@ -7352,7 +7352,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "bill",
               Description: $('input[name="Bills_1"]').val(),
               Template: "1",
@@ -7396,7 +7396,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "bill",
               GlobalRef: "bill",
               Description: $('input[name="Bills_2"]').val(),
@@ -7435,7 +7435,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "bill",
               Description: $('input[name="Bills_2"]').val(),
               Template: "2",
@@ -7480,7 +7480,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "bill",
               GlobalRef: "bill",
               Description: $('input[name="Bills_3"]').val(),
@@ -7519,7 +7519,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "bill",
               Description: $('input[name="Bills_3"]').val(),
               Template: "3",
@@ -7566,7 +7566,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Credits",
               GlobalRef: "Credits",
               Description: $('input[name="Credits_1"]').val(),
@@ -7605,7 +7605,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Credits",
               Description: $('input[name="Credits_1"]').val(),
               Template: "1",
@@ -7649,7 +7649,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Credits",
               GlobalRef: "Credits",
               Description: $('input[name="Credits_2"]').val(),
@@ -7688,7 +7688,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Credits",
               Description: $('input[name="Credits_2"]').val(),
               Template: "2",
@@ -7733,7 +7733,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Credits",
               GlobalRef: "Credits",
               Description: $('input[name="Credits_3"]').val(),
@@ -7772,7 +7772,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Credits",
               Description: $('input[name="Credits_3"]').val(),
               Template: "3",
@@ -7816,7 +7816,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Payments",
               GlobalRef: "Customer Payments",
               Description: $('input[name="Customer Payments_1"]').val(),
@@ -7855,7 +7855,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Payments",
               Description: $('input[name="Customer Payments_1"]').val(),
               Template: "1",
@@ -7899,7 +7899,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Payments",
               GlobalRef: "Customer Payments",
               Description: $('input[name="Customer Payments_2"]').val(),
@@ -7938,7 +7938,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Payments",
               Description: $('input[name="Customer Payments_2"]').val(),
               Template: "2",
@@ -7982,7 +7982,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Payments",
               GlobalRef: "Customer Payments",
               Description: $('input[name="Customer Payments_3"]').val(),
@@ -8021,7 +8021,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Payments",
               Description: $('input[name="Customer Payments_3"]').val(),
               Template: "3",
@@ -8067,7 +8067,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Statements",
               GlobalRef: "Customer Statements",
               Description: $('input[name="Customer Statements_1"]').val(),
@@ -8105,7 +8105,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Statements",
               Description: $('input[name="Customer Statements_1"]').val(),
               Template: "1",
@@ -8149,7 +8149,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Statements",
               GlobalRef: "Customer Statements",
               Description: $('input[name="Customer Statements_2"]').val(),
@@ -8188,7 +8188,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Statements",
               Description: $('input[name="Customer Statements_2"]').val(),
               Template: "2",
@@ -8232,7 +8232,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Statements",
               GlobalRef: "Customer Statements",
               Description: $('input[name="Customer Statements_3"]').val(),
@@ -8271,7 +8271,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Customer Statements",
               Description: $('input[name="Customer Statements_3"]').val(),
               Template: "3",
@@ -8318,7 +8318,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoices",
               GlobalRef: "Invoices",
               Description: $('input[name="Invoices_1"]').val(),
@@ -8357,7 +8357,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoices",
               Description: $('input[name="Invoices_1"]').val(),
               Template: "1",
@@ -8401,7 +8401,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoices",
               GlobalRef: "Invoices",
               Description: $('input[name="Invoices_2"]').val(),
@@ -8440,7 +8440,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoices",
               Description: $('input[name="Invoices_2"]').val(),
               Template: "2",
@@ -8484,7 +8484,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoices",
               GlobalRef: "Invoices",
               Description: $('input[name="Invoices_3"]').val(),
@@ -8523,7 +8523,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoices",
               Description: $('input[name="Invoices_3"]').val(),
               Template: "3",
@@ -8569,7 +8569,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoice Back Orders",
               GlobalRef: "Invoice Back Orders",
               Description: $('input[name="Invoice Back Orders_1"]').val(),
@@ -8608,7 +8608,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoice Back Orders",
               Description: $('input[name="Invoice Back Orders_1"]').val(),
               Template: "1",
@@ -8652,7 +8652,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoice Back Orders",
               GlobalRef: "Invoice Back Orders",
               Description: $('input[name="Invoice Back Orders_2"]').val(),
@@ -8691,7 +8691,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoice Back Orders",
               Description: $('input[name="Invoice Back Orders_2"]').val(),
               Template: "2",
@@ -8735,7 +8735,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoice Back Orders",
               GlobalRef: "Invoice Back Orders",
               Description: $('input[name="Invoice Back Orders_3"]').val(),
@@ -8774,7 +8774,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Invoice Back Orders",
               Description: $('input[name="Invoice Back Orders_3"]').val(),
               Template: "3",
@@ -8819,7 +8819,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Purchase Orders",
               GlobalRef: "Purchase Orders",
               Description: $('input[name="Purchase Orders_1"]').val(),
@@ -8858,7 +8858,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Purchase Orders",
               Description: $('input[name="Purchase Orders_1"]').val(),
               Template: "1",
@@ -8902,7 +8902,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Purchase Orders",
               GlobalRef: "Purchase Orders",
               Description: $('input[name="Purchase Orders_2"]').val(),
@@ -8941,7 +8941,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Purchase Orders",
               Description: $('input[name="Purchase Orders_2"]').val(),
               Template: "2",
@@ -8985,7 +8985,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Purchase Orders",
               GlobalRef: "Purchase Orders",
               Description: $('input[name="Purchase Orders_3"]').val(),
@@ -9024,7 +9024,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Purchase Orders",
               Description: $('input[name="Purchase Orders_3"]').val(),
               Template: "3",
@@ -9070,7 +9070,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Quotes",
               GlobalRef: "Quotes",
               Description: $('input[name="Quotes_1"]').val(),
@@ -9109,7 +9109,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Quotes",
               Description: $('input[name="Quotes_1"]').val(),
               Template: "1",
@@ -9153,7 +9153,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Quotes",
               GlobalRef: "Quotes",
               Description: $('input[name="Quotes_2"]').val(),
@@ -9192,7 +9192,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Quotes",
               Description: $('input[name="Quotes_2"]').val(),
               Template: "2",
@@ -9236,7 +9236,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Quotes",
               GlobalRef: "Quotes",
               Description: $('input[name="Quotes_3"]').val(),
@@ -9275,7 +9275,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Quotes",
               Description: $('input[name="Quotes_3"]').val(),
               Template: "3",
@@ -9321,7 +9321,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Refunds",
               GlobalRef: "Refunds",
               Description: $('input[name="Refunds_1"]').val(),
@@ -9360,7 +9360,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Refunds",
               Description: $('input[name="Refunds_1"]').val(),
               Template: "1",
@@ -9404,7 +9404,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Refunds",
               GlobalRef: "Refunds",
               Description: $('input[name="Refunds_2"]').val(),
@@ -9443,7 +9443,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Refunds",
               Description: $('input[name="Refunds_2"]').val(),
               Template: "2",
@@ -9487,7 +9487,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Refunds",
               GlobalRef: "Refunds",
               Description: $('input[name="Refunds_3"]').val(),
@@ -9526,7 +9526,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Refunds",
               Description: $('input[name="Refunds_3"]').val(),
               Template: "3",
@@ -9572,7 +9572,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Sales Orders",
               GlobalRef: "Sales Orders",
               Description: $('input[name="Sales Orders_1"]').val(),
@@ -9611,7 +9611,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Sales Orders",
               Description: $('input[name="Sales Orders_1"]').val(),
               Template: "1",
@@ -9655,7 +9655,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Sales Orders",
               GlobalRef: "Sales Orders",
               Description: $('input[name="Sales Orders_2"]').val(),
@@ -9694,7 +9694,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Sales Orders",
               Description: $('input[name="Sales Orders_2"]').val(),
               Template: "2",
@@ -9738,7 +9738,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Sales Orders",
               GlobalRef: "Sales Orders",
               Description: $('input[name="Sales Orders_3"]').val(),
@@ -9777,7 +9777,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Sales Orders",
               Description: $('input[name="Sales Orders_3"]').val(),
               Template: "3",
@@ -9823,7 +9823,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Supplier Payments",
               GlobalRef: "Supplier Payments",
               Description: $('input[name="Supplier Payments_1"]').val(),
@@ -9862,7 +9862,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Supplier Payments",
               Description: $('input[name="Supplier Payments_1"]').val(),
               Template: "1",
@@ -9906,7 +9906,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Supplier Payments",
               GlobalRef: "Supplier Payments",
               Description: $('input[name="Supplier Payments_2"]').val(),
@@ -9945,7 +9945,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Supplier Payments",
               Description: $('input[name="Supplier Payments_2"]').val(),
               Template: "2",
@@ -9989,7 +9989,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Supplier Payments",
               GlobalRef: "Supplier Payments",
               Description: $('input[name="Supplier Payments_3"]').val(),
@@ -10028,7 +10028,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Supplier Payments",
               Description: $('input[name="Supplier Payments_3"]').val(),
               Template: "3",
@@ -10074,7 +10074,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Statements",
               GlobalRef: "Statements",
               Description: $('input[name="Statements_1"]').val(),
@@ -10113,7 +10113,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Statements",
               Description: $('input[name="Statements_1"]').val(),
               Template: "1",
@@ -10157,7 +10157,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Statements",
               GlobalRef: "Statements",
               Description: $('input[name="Statements_2"]').val(),
@@ -10196,7 +10196,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Statements",
               Description: $('input[name="Statements_2"]').val(),
               Template: "2",
@@ -10240,7 +10240,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Statements",
               GlobalRef: "Statements",
               Description: $('input[name="Statements_3"]').val(),
@@ -10279,7 +10279,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Statements",
               Description: $('input[name="Statements_3"]').val(),
               Template: "3",
@@ -10325,7 +10325,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Delivery Docket",
               GlobalRef: "Delivery Docket",
               Description: $('input[name="Delivery Docket_1"]').val(),
@@ -10364,7 +10364,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Delivery Docket",
               Description: $('input[name="Delivery Docket_1"]').val(),
               Template: "1",
@@ -10408,7 +10408,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Delivery Docket",
               GlobalRef: "Delivery Docket",
               Description: $('input[name="Delivery Docket_2"]').val(),
@@ -10447,7 +10447,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Delivery Docket",
               Description: $('input[name="Delivery Docket_2"]').val(),
               Template: "2",
@@ -10492,7 +10492,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Delivery Docket",
               GlobalRef: "Delivery Docket",
               Description: $('input[name="Delivery Docket_3"]').val(),
@@ -10534,7 +10534,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Delivery Docket",
               Description: $('input[name="Delivery Docket_3"]').val(),
               Template: "3",
@@ -10578,7 +10578,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Journal Entry",
               GlobalRef: "Journal Entry",
               Description: $('input[name="Journal Entry_1"]').val(),
@@ -10617,7 +10617,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Journal Entry",
               Description: $('input[name="Journal Entry_1"]').val(),
               Template: "1",
@@ -10661,7 +10661,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Journal Entry",
               GlobalRef: "Journal Entry",
               Description: $('input[name="Journal Entry_2"]').val(),
@@ -10700,7 +10700,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Journal Entry",
               Description: $('input[name="Journal Entry_2"]').val(),
               Template: "2",
@@ -10745,7 +10745,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Journal Entry",
               GlobalRef: "Journal Entry",
               Description: $('input[name="Journal Entry_3"]').val(),
@@ -10787,7 +10787,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Journal Entry",
               Description: $('input[name="Journal Entry_3"]').val(),
               Template: "3",
@@ -10831,7 +10831,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Deposits",
               GlobalRef: "Deposits",
               Description: $('input[name="Deposits_1"]').val(),
@@ -10870,7 +10870,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Deposits",
               Description: $('input[name="Deposits_1"]').val(),
               Template: "1",
@@ -10914,7 +10914,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Deposits",
               GlobalRef: "Deposits",
               Description: $('input[name="Deposits_2"]').val(),
@@ -10953,7 +10953,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Deposits",
               Description: $('input[name="Deposits_2"]').val(),
               Template: "2",
@@ -10998,7 +10998,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Deposits",
               GlobalRef: "Deposits",
               Description: $('input[name="Deposits_3"]').val(),
@@ -11040,7 +11040,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Deposits",
               Description: $('input[name="Deposits_3"]').val(),
               Template: "3",
@@ -11084,7 +11084,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Cheques",
               GlobalRef: "Cheques",
               Description: $('input[name="Cheques_1"]').val(),
@@ -11123,7 +11123,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Cheques",
               Description: $('input[name="Cheques_1"]').val(),
               Template: "1",
@@ -11167,7 +11167,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Cheques",
               GlobalRef: "Cheques",
               Description: $('input[name="Cheques_2"]').val(),
@@ -11206,7 +11206,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Cheques",
               Description: $('input[name="Cheques_2"]').val(),
               Template: "2",
@@ -11251,7 +11251,7 @@ Template.templatesettings.events({
             type: "TTemplateSettings",
             fields: {
               ID: parseInt(id),
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Cheques",
               GlobalRef: "Cheques",
               Description: $('input[name="Cheques_3"]').val(),
@@ -11293,7 +11293,7 @@ Template.templatesettings.events({
           objDetails = {
             type: "TTemplateSettings",
             fields: {
-              EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
               SettingName: "Cheques",
               Description: $('input[name="Cheques_3"]').val(),
               Template: "3",

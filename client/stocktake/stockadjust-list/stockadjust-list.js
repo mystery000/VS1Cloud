@@ -817,19 +817,19 @@ Template.stockadjlist.helpers({
       return Template.instance().stockCount.get();
   },
   selectedRecords: () => {
-      return Session.get('selectedRecords');
+      return localStorage.getItem('selectedRecords');
   },
   pendingRecordId: () => {
-      return Session.get('pendingRecordId');
+      return localStorage.getItem('pendingRecordId');
   },
   pendingDraft: () => {
       return Template.instance().deletePending.get();
   },
   pendingDeleteMsg: () => {
-      return Session.get('pendingDeleteMsg');
+      return localStorage.getItem('pendingDeleteMsg');
   },
   stockID: () => {
-      return Session.get('stockID');
+      return localStorage.getItem('stockID');
   },
   stockrecord: () => {
       return Template.instance().stockrecord.get();
@@ -838,17 +838,17 @@ Template.stockadjlist.helpers({
       return Template.instance().processedMsg.get();
   },
   pendingRecordId: () => {
-      return Session.get('pendingRecordId');
+      return localStorage.getItem('pendingRecordId');
   },
   pendingToProcessed: () => {
-      return Session.get('pendingToProcessed');
+      return localStorage.getItem('pendingToProcessed');
   }
 });
 
 Template.stockadjlist.events({
   'click .select-stock-pending, click .select-stock-processed, click .select-stock-approved, click .select-stock-deleted': function (event) {
       let templateObj = Template.instance();
-      Session.set('stockID',this.id);
+      localStorage.setItem('stockID',this.id);
       let toBeDeleted = templateObj.toBeDeleted;
       let selectedRowData = templateObj.selectedRowData;
       if (!this.id) {
@@ -1066,7 +1066,7 @@ Template.stockadjlist.events({
   },
   'click #submit-process-stock, click #submit-approved-PO':function (event) {
       let tempObj = Template.instance();
-      Session.set('selectedRecords',tempObj.selectedObj.get().length);
+      localStorage.setItem('selectedRecords',tempObj.selectedObj.get().length);
       if(event.currentTarget.id === 'submit-process-stock'){
           tempObj.processedMsg.set(true);
       }
@@ -1078,7 +1078,7 @@ Template.stockadjlist.events({
       let templateObj = Template.instance();
       let stockService = new StockAdjust();
       let objDetails;
-      Session.set('pendingToProcessed',true);
+      localStorage.setItem('pendingToProcessed',true);
       let selectedRecordsList = templateObj.selectedObj.curValue;
       for (let i = 0; i < selectedRecordsList.length; i++) {
           stockService.getOneStockAdjustData(selectedRecordsList[i]).then(function (data) {
@@ -1092,7 +1092,7 @@ Template.stockadjlist.events({
                       }
                   };
 
-              Session.set('pendingRecordId',objDetails.fields.ID);
+              localStorage.setItem('pendingRecordId',objDetails.fields.ID);
               stockService.saveStock(objDetails).then(function (data) {
                   if(i === selectedRecordsList.length-1 ){
                       setTimeout(function () {
@@ -1107,11 +1107,11 @@ Template.stockadjlist.events({
   'click #close-pending-stock-notification':function(){
       let tempObj = Template.instance();
       tempObj.$(".notify").hide();
-      Session.set('pendingToProcessed',false);
+      localStorage.setItem('pendingToProcessed',false);
   },
   'click #view-items-processed':function() {
-      if(Session.get('selectedRecords') === 1){
-          window.open('/stockscan?id=' + Session.get('pendingRecordId'), '_self');
+      if(localStorage.getItem('selectedRecords') === 1){
+          window.open('/stockscan?id=' + localStorage.getItem('pendingRecordId'), '_self');
       }
       else {
           $('#stockPending').click();
@@ -1119,7 +1119,7 @@ Template.stockadjlist.events({
   },
   'click #delete-pending-stock':function (event) {
       let tempObj = Template.instance();
-      Session.set('selectedRecords',tempObj.selectedObj.get().length);
+      localStorage.setItem('selectedRecords',tempObj.selectedObj.get().length);
      tempObj.deletePending.set(true);
   },
   'click #delete-stock-pending': function () {
@@ -1127,7 +1127,7 @@ Template.stockadjlist.events({
       let templateObj = Template.instance();
 
 
-      Session.set('pendingDeleteMsg',true);
+      localStorage.setItem('pendingDeleteMsg',true);
       for (let i = 0; i < templateObj.selectedRowData.length; i++) {
         
           let objDetails = {

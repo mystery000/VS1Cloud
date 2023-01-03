@@ -9,7 +9,7 @@ let salesService = new SalesBoardService();
 Template.newBatchDeposit.onCreated(function(){
     let templateObj = Template.instance();
     templateObj.record = new ReactiveVar({});
-    templateObj.record.set(Session.get('recordId'));
+    templateObj.record.set(localStorage.getItem('recordId'));
     templateObj.customerName = new ReactiveVar({});
     templateObj.TotalAmount = new ReactiveVar({});
     templateObj.CurrencyCode = new ReactiveVar({});
@@ -133,13 +133,13 @@ Template.newBatchDeposit.helpers({
         return Template.instance().CurrencyCode.get();
     },
     recordId: () => {
-        return Session.get('recordId');
+        return localStorage.getItem('recordId');
     },
     depositMsg: () => {
-        return Session.get('depositMsg');
+        return localStorage.getItem('depositMsg');
     },
     depositData: () => {
-        return Session.get('depositData');
+        return localStorage.getItem('depositData');
     }
 });
 Template.newBatchDeposit.events({
@@ -269,7 +269,7 @@ Template.newBatchDeposit.events({
                 invoiceService.saveInvoice(saveStatus[i]).then(function (dataInvoice) {
                 });
             }
-            Session.set('depositMsg', true);
+            localStorage.setItem('depositMsg', true);
             FlowRouter.go('/invoicelist/AwaitingPayment');
 
            }).catch(function (err) {

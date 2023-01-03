@@ -58,7 +58,7 @@ Template.quoteslist.onRendered(function() {
       try {
         getVS1Data("VS1_Customize").then(function (dataObject) {
           if (dataObject.length == 0) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+            sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
                 // reset_data = data.ProcessLog.CustomLayout.Columns;
                 reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
                 showCustomFieldDisplaySettings(reset_data);
@@ -163,7 +163,7 @@ Template.quoteslist.onRendered(function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblquotelist', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblquotelist', function(error, result){
         if(error){
 
         }else{
@@ -374,7 +374,7 @@ Template.quoteslist.onRendered(function() {
                     templateObject.datatablerecords.set(dataTableList);
                     if(templateObject.datatablerecords.get()){
 
-                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblquotelist', function(error, result){
+                        Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblquotelist', function(error, result){
                             if(error){
 
                             }else{
@@ -696,7 +696,7 @@ Template.quoteslist.onRendered(function() {
                 templateObject.datatablerecords.set(dataTableList);
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblquotelist', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblquotelist', function(error, result){
                         if(error){
 
                         }else{
@@ -1012,7 +1012,7 @@ Template.quoteslist.onRendered(function() {
               templateObject.datatablerecords.set(dataTableList);
               if(templateObject.datatablerecords.get()){
 
-                  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblquotelist', function(error, result){
+                  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblquotelist', function(error, result){
                       if(error){
 
                       }else{
@@ -1359,7 +1359,7 @@ Template.quoteslist.onRendered(function() {
                     templateObject.datatablerecords.set(dataTableList);
                     if(templateObject.datatablerecords.get()){
 
-                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblquotelist', function(error, result){
+                        Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblquotelist', function(error, result){
                             if(error){
 
                             }else{
@@ -1682,7 +1682,7 @@ Template.quoteslist.onRendered(function() {
                 templateObject.datatablerecords.set(dataTableList);
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblquotelist', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblquotelist', function(error, result){
                         if(error){
 
                         }else{
@@ -1999,7 +1999,7 @@ Template.quoteslist.onRendered(function() {
               templateObject.datatablerecords.set(dataTableList);
               if(templateObject.datatablerecords.get()){
 
-                  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblquotelist', function(error, result){
+                  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblquotelist', function(error, result){
                       if(error){
 
                       }else{
@@ -2331,7 +2331,7 @@ Template.quoteslist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblquotelist'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblquotelist'});
     },
 
 
@@ -2576,11 +2576,11 @@ Template.quoteslist.events({
       try {
         let erpGet = erpDb();
         let tableName = "tblquotelist";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+        let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
         let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
               addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
           });
             swal({
@@ -2894,7 +2894,7 @@ Template.quoteslist.events({
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split('_')[2];
-            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
         });
         let i = basedOnTypeStorages.length;
         if (i > 0) {

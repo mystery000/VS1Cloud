@@ -27,7 +27,7 @@ Template.reportsAccountantSettings123.onRendered(function() {
     let countries = [];
     let deptprodlineItems = [];
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'accountantList', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'accountantList', function(error, result){
         if(error){
 
         }else{
@@ -211,7 +211,7 @@ Template.reportsAccountantSettings123.onRendered(function() {
 
 //               if(templateObject.datatablerecords.get()){
 
-//                   Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'accountantList', function(error, result){
+//                   Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'accountantList', function(error, result){
 //                       if(error){
 
 //                       }else{
@@ -385,7 +385,7 @@ Template.reportsAccountantSettings123.onRendered(function() {
 
             templateObject.datatablerecords.set(dataTableList);
             if(templateObject.datatablerecords.get()){
-                Meteor.call('readPrefMethod',Session.get('mycloudLogonID'), 'accountantList', function(error, result){
+                Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'), 'accountantList', function(error, result){
                     if(error){
 
                     }else{
@@ -544,7 +544,7 @@ Template.reportsAccountantSettings123.onRendered(function() {
 
             if(templateObject.datatablerecords.get()){
 
-                Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'accountantList', function(error, result){
+                Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'accountantList', function(error, result){
                     if(error){
 
                     }else{
@@ -768,7 +768,7 @@ Template.reportsAccountantSettings123.events({
         });
     },
     'click .resetTable' : function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -812,7 +812,7 @@ Template.reportsAccountantSettings123.events({
             lineItems.push(lineItemObj);
         });
 
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1329,7 +1329,7 @@ Template.reportsAccountantSettings123.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'accountantList'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'accountantList'});
     },
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b){

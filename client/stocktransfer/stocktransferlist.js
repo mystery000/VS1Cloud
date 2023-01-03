@@ -27,7 +27,7 @@ Template.stocktransferlist.onRendered(function() {
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblStockTransferList', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblStockTransferList', function(error, result){
         if(error){
 
         }else{
@@ -90,7 +90,7 @@ Template.stocktransferlist.onRendered(function() {
                     templateObject.datatablerecords.set(dataTableList);
                     if(templateObject.datatablerecords.get()){
 
-                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblStockTransferList', function(error, result){
+                        Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblStockTransferList', function(error, result){
                             if(error){
 
                             }else{
@@ -293,7 +293,7 @@ Template.stocktransferlist.onRendered(function() {
                 templateObject.datatablerecords.set(dataTableList);
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblStockTransferList', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblStockTransferList', function(error, result){
                         if(error){
 
                         }else{
@@ -578,7 +578,7 @@ Template.stocktransferlist.onRendered(function() {
                 templateObject.datatablerecords.set(dataTableList);
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblStockTransferList', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblStockTransferList', function(error, result){
                         if(error){
 
                         }else{
@@ -798,7 +798,7 @@ Template.stocktransferlist.events({
         $(".btnRefresh").trigger("click");
     },
     'click .resetTable' : function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -844,7 +844,7 @@ Template.stocktransferlist.events({
         });
         //datatable.state.save();
 
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1159,7 +1159,7 @@ Template.stocktransferlist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblStockTransferList'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblStockTransferList'});
     },
     currentdate : () => {
         var currentDate = new Date();

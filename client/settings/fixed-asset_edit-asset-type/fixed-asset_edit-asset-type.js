@@ -54,8 +54,8 @@ Template.fixedAssetEditAssetType.onRendered(()=> {
     }
  /*   else {
         templateObject.AssetAction.set('Add New Asset');
-        if(Session.get('createAssetUsingCopy')){
-            let assetId = Session.get('assetIdToCopyData');
+        if(localStorage.getItem('createAssetUsingCopy')){
+            let assetId = localStorage.getItem('assetIdToCopyData');
             generateNewAssetId.then(function(result){
                 accountService.getOneAsset(assetId).then(function(data){
                     let DepreciationOptionValue;
@@ -143,8 +143,8 @@ Template.fixedAssetEditAssetType.events({
             objDetails.fields['id'] = currentReceiptId;
         }
         accountService.saveAssetType(objDetails).then(function (data){
-            Session.set('success',true);
-            Session.set('assetName',tempObj.$("#sub-asset-type").val());
+            localStorage.setItem('success',true);
+            localStorage.setItem('assetName',tempObj.$("#sub-asset-type").val());
             FlowRouter.go('/settings/fixedAssets/asset-type');
 
         }).catch(function (err) {

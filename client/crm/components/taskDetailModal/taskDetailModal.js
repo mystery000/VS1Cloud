@@ -1,4 +1,3 @@
-import { mergeEventStores } from '@fullcalendar/core';
 import { CRMService } from '../../crm-service';
 
 import { Template } from 'meteor/templating';

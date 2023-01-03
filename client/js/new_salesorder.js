@@ -641,7 +641,7 @@ Template.new_salesorder.onRendered(function () {
             lineItems.push(lineItemObj);
         });
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -660,11 +660,11 @@ Template.new_salesorder.onRendered(function () {
         {
               item_invoices = {
 
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -711,11 +711,11 @@ Template.new_salesorder.onRendered(function () {
         else if(number == 2)
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -762,11 +762,11 @@ Template.new_salesorder.onRendered(function () {
         else
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -912,7 +912,7 @@ Template.new_salesorder.onRendered(function () {
                 lineItems.push(lineItemObj);
             });
 
-                    let company = Session.get('vs1companyName');
+                    let company = localStorage.getItem('vs1companyName');
                     let vs1User = localStorage.getItem('mySession');
                     let customerEmail = $('#edtCustomerEmail').val();
                     let id = $('.printID').attr("id") || "new";
@@ -931,11 +931,11 @@ Template.new_salesorder.onRendered(function () {
                     {
                         item_invoices = {
 
-                            o_url: Session.get('vs1companyURL'),
-                            o_name: Session.get('vs1companyName'),
-                            o_address: Session.get('vs1companyaddress1'),
-                            o_city: Session.get('vs1companyCity'),
-                            o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                            o_url: localStorage.getItem('vs1companyURL'),
+                            o_name: localStorage.getItem('vs1companyName'),
+                            o_address: localStorage.getItem('vs1companyaddress1'),
+                            o_city: localStorage.getItem('vs1companyCity'),
+                            o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                             o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                             o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                             o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -979,11 +979,11 @@ Template.new_salesorder.onRendered(function () {
                     else if(number == 2)
                     {
                         item_invoices = {
-                            o_url: Session.get('vs1companyURL'),
-                            o_name: Session.get('vs1companyName'),
-                            o_address: Session.get('vs1companyaddress1'),
-                            o_city: Session.get('vs1companyCity'),
-                            o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                            o_url: localStorage.getItem('vs1companyURL'),
+                            o_name: localStorage.getItem('vs1companyName'),
+                            o_address: localStorage.getItem('vs1companyaddress1'),
+                            o_city: localStorage.getItem('vs1companyCity'),
+                            o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                             o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                             o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                             o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1027,11 +1027,11 @@ Template.new_salesorder.onRendered(function () {
                     else
                     {
                                 item_invoices = {
-                                    o_url: Session.get('vs1companyURL'),
-                                    o_name: Session.get('vs1companyName'),
-                                    o_address: Session.get('vs1companyaddress1'),
-                                    o_city: Session.get('vs1companyCity'),
-                                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                                    o_url: localStorage.getItem('vs1companyURL'),
+                                    o_name: localStorage.getItem('vs1companyName'),
+                                    o_address: localStorage.getItem('vs1companyaddress1'),
+                                    o_city: localStorage.getItem('vs1companyCity'),
+                                    o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                                     o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                                     o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                                     o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1199,7 +1199,7 @@ Template.new_salesorder.onRendered(function () {
             lineItems.push(lineItemObj);
         });
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -1217,11 +1217,11 @@ Template.new_salesorder.onRendered(function () {
         {
             item_invoices = {
 
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1261,11 +1261,11 @@ Template.new_salesorder.onRendered(function () {
         else if(number == 2)
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1304,11 +1304,11 @@ Template.new_salesorder.onRendered(function () {
         else
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1429,7 +1429,7 @@ Template.new_salesorder.onRendered(function () {
                 lineItems.push(lineItemObj);
             });
 
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let customerEmail = $('#edtCustomerEmail').val();
                 let id = $('.printID').attr("id") || "new";
@@ -1448,11 +1448,11 @@ Template.new_salesorder.onRendered(function () {
                 {
                     item_invoices = {
 
-                        o_url: Session.get('vs1companyURL'),
-                        o_name: Session.get('vs1companyName'),
-                        o_address: Session.get('vs1companyaddress1'),
-                        o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                        o_url: localStorage.getItem('vs1companyURL'),
+                        o_name: localStorage.getItem('vs1companyName'),
+                        o_address: localStorage.getItem('vs1companyaddress1'),
+                        o_city: localStorage.getItem('vs1companyCity'),
+                        o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                         o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                         o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                         o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1492,11 +1492,11 @@ Template.new_salesorder.onRendered(function () {
                 else if(number == 2)
                 {
                     item_invoices = {
-                        o_url: Session.get('vs1companyURL'),
-                        o_name: Session.get('vs1companyName'),
-                        o_address: Session.get('vs1companyaddress1'),
-                        o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                        o_url: localStorage.getItem('vs1companyURL'),
+                        o_name: localStorage.getItem('vs1companyName'),
+                        o_address: localStorage.getItem('vs1companyaddress1'),
+                        o_city: localStorage.getItem('vs1companyCity'),
+                        o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                         o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                         o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                         o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1536,11 +1536,11 @@ Template.new_salesorder.onRendered(function () {
                 else
                 {
                             item_invoices = {
-                                o_url: Session.get('vs1companyURL'),
-                                o_name: Session.get('vs1companyName'),
-                                o_address: Session.get('vs1companyaddress1'),
-                                o_city: Session.get('vs1companyCity'),
-                                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                                o_url: localStorage.getItem('vs1companyURL'),
+                                o_name: localStorage.getItem('vs1companyName'),
+                                o_address: localStorage.getItem('vs1companyaddress1'),
+                                o_city: localStorage.getItem('vs1companyCity'),
+                                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -2268,8 +2268,8 @@ Template.new_salesorder.onRendered(function () {
     templateObject.getAllClients();
 
     templateObject.getOrganisationDetails = function() {
-        let account_id = Session.get('vs1companyStripeID') || '';
-        let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+        let account_id = localStorage.getItem('vs1companyStripeID') || '';
+        let stripe_fee = localStorage.getItem('vs1companyStripeFeeMethod') || 'apply';
         templateObject.accountID.set(account_id);
         templateObject.stripe_fee_method.set(stripe_fee);
     };
@@ -2415,7 +2415,7 @@ Template.new_salesorder.onRendered(function () {
     this.loadSaleOrder();
 
     let url = FlowRouter.current().path;
-    let bankDetails = Session.get('vs1companyBankDetails') || '';
+    let bankDetails = localStorage.getItem('vs1companyBankDetails') || '';
     //$('.bankDetails').html(bankDetails.replace(/[\r\n]/g, "<br />"));
     if (url.includes("id") && url.includes("total")) {
         url = new URL(window.location.href);
@@ -2662,7 +2662,7 @@ Template.new_salesorder.onRendered(function () {
 
 
 
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                     if (error) {
 
 
@@ -3000,7 +3000,7 @@ Template.new_salesorder.onRendered(function () {
 
 
 
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                         if (error) {
 
 
@@ -3223,7 +3223,7 @@ Template.new_salesorder.onRendered(function () {
 
 
 
-                                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                             if (error) {
 
 
@@ -3562,7 +3562,7 @@ Template.new_salesorder.onRendered(function () {
 
 
 
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                 if (error) {
 
 
@@ -3643,7 +3643,7 @@ Template.new_salesorder.onRendered(function () {
                     let erpInvoiceId = getso_id;
 
 
-                    let mailFromName = Session.get('vs1companyName');
+                    let mailFromName = localStorage.getItem('vs1companyName');
                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                     let customerEmailName = $('#edtCustomerName').val();
                     let checkEmailData = url.searchParams.get("email");
@@ -4017,7 +4017,7 @@ Template.new_salesorder.onRendered(function () {
 
 
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                             if (error) {
 
                             } else {
@@ -4314,7 +4314,7 @@ Template.new_salesorder.onRendered(function () {
                             }, 1000)
                             if (templateObject.salesorderrecord.get()) {
 
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                     if (error) {
 
                                     } else {
@@ -4604,7 +4604,7 @@ Template.new_salesorder.onRendered(function () {
                                 }, 1000)
                                 if (templateObject.salesorderrecord.get()) {
 
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                         if (error) {
 
                                         } else {
@@ -4823,7 +4823,7 @@ Template.new_salesorder.onRendered(function () {
 
 
 
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                 if (error) {
 
                                 } else {
@@ -4963,7 +4963,7 @@ Template.new_salesorder.onRendered(function () {
 
         templateObject.salesorderrecord.set(salesorderrecord);
         if (templateObject.salesorderrecord.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                 if (error) {} else {
                     if (result) {
                         for (let i = 0; i < result.customFields.length; i++) {
@@ -5054,7 +5054,7 @@ Template.new_salesorder.onRendered(function () {
                         };
 
                         if (data.ttermsvs1[i].isSalesdefault == true) {
-                            Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                            localStorage.setItem('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                             templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                         }
 
@@ -5090,7 +5090,7 @@ Template.new_salesorder.onRendered(function () {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
                     if (data.ttermsvs1[i].isSalesdefault == true) {
-                        Session.set('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                        localStorage.setItem('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                         templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                     }
                     termrecords.push(termrecordObj);
@@ -6726,7 +6726,7 @@ Template.new_salesorder.onRendered(function () {
             $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
 
 
-            let company = Session.get('vs1companyName');
+            let company = localStorage.getItem('vs1companyName');
             let vs1User = localStorage.getItem('mySession');
             let customerEmail = $('#edtCustomerEmail').val();
             let id = $('.printID').attr("id");
@@ -6909,7 +6909,7 @@ Template.new_salesorder.onRendered(function () {
                     // let basedOnTypeStorages = Object.keys(localStorage);
                     // basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     //     let employeeId = storage.split('_')[2];
-                    //     // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    //     // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     //     return storage.includes('BasedOnType_');
                     // });
                     // let j = basedOnTypeStorages.length;
@@ -7740,7 +7740,7 @@ Template.new_salesorder.helpers({
    },
 
     isBatchSerialNoTracking: () => {
-        return Session.get('CloudShowSerial') || false;
+        return localStorage.getItem('CloudShowSerial') || false;
     },
     vs1companyBankName: () => {
         return localStorage.getItem('vs1companyBankName') || '';
@@ -7809,13 +7809,13 @@ Template.new_salesorder.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'new_salesorder'
         });
     },
     salesCloudGridPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblSalesOrderLine'
         });
     },
@@ -7847,44 +7847,44 @@ Template.new_salesorder.helpers({
     },
 
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () => {
-        let phone = "Phone: "+ Session.get('vs1companyPhone');
+        let phone = "Phone: "+ localStorage.getItem('vs1companyPhone');
         return phone;
     },
     companyabn: () => { //Update Company ABN
-        let countryABNValue = Session.get("vs1companyABN");
+        let countryABNValue = localStorage.getItem("vs1companyABN");
         // if (LoggedCountry == "South Africa") {
-        //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+        //     countryABNValue = "Vat No: " + localStorage.getItem("vs1companyABN");
         // }
         return countryABNValue;
     },
     companyReg: () => { //Add Company Reg
       let countryRegValue = '';
       if(LoggedCountry== "South Africa"){
-        countryRegValue = "Reg No: " + Session.get('vs1companyReg');
+        countryRegValue = "Reg No: " + localStorage.getItem('vs1companyReg');
       }
 
     return countryRegValue;
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
     isMobileDevices: () => {
         var isMobile = false; //initiate as false
@@ -8086,7 +8086,7 @@ Template.new_salesorder.helpers({
 
         const currentSalesOrderId = parseInt(currentSalesOrder);
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let currencyname = (CountryAbbr).toLowerCase();
         let stringQuery = "?";
@@ -8145,7 +8145,7 @@ Template.new_salesorder.helpers({
         let erpInvoiceId = currentSalesOrderId;
 
 
-        let mailFromName = Session.get('vs1companyName');
+        let mailFromName = localStorage.getItem('vs1companyName');
         let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
         let customerEmailName = $('#edtCustomerName').val();
         let checkEmailData = $('#edtCustomerEmail').val();
@@ -9464,7 +9464,7 @@ Template.new_salesorder.events({
           var printTemplate = [];
           LoadingOverlay.show();
           var sales_orders = $('input[name="Sales Orders"]:checked').val();
-          let emid = Session.get('mySessionEmployeeLoggedID');
+          let emid = localStorage.getItem('mySessionEmployeeLoggedID');
           var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
           sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
@@ -9473,7 +9473,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 GlobalRef:"Sales Orders",
                                 Description:$('input[name="Sales Order_1"]').val(),
@@ -9500,7 +9500,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 Description:$('input[name="Sales Order_1"]').val(),
                                 Template:"1",
@@ -9530,7 +9530,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 GlobalRef:"Sales Orders",
                                 Description:$('input[name="Sales Order_2"]').val(),
@@ -9557,7 +9557,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 Description:$('input[name="Sales Order_2"]').val(),
                                 Template:"2",
@@ -9588,7 +9588,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 GlobalRef:"Sales Orders",
                                 Description:$('input[name="Sales Order_3"]').val(),
@@ -9615,7 +9615,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 Description:$('input[name="Sales Order_3"]').val(),
                                 Template:"3",
@@ -9645,7 +9645,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 GlobalRef:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_1"]').val(),
@@ -9672,7 +9672,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_1"]').val(),
                                 Template:"1",
@@ -9704,7 +9704,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 GlobalRef:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_2"]').val(),
@@ -9731,7 +9731,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_2"]').val(),
                                 Template:"2",
@@ -9764,7 +9764,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 GlobalRef:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_3"]').val(),
@@ -9794,7 +9794,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                  EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                  EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                   SettingName:"Delivery Docket",
                                   Description:$('input[name="Delivery Docket_3"]').val(),
                                   Template:"3",
@@ -10572,7 +10572,7 @@ Template.new_salesorder.events({
 
 
             function saveFunc() {
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 var customerID = $('#edtCustomerEmail').attr('customerid');
                 let currencyname = (CountryAbbr).toLowerCase();
@@ -10606,7 +10606,7 @@ Template.new_salesorder.events({
                     let erpInvoiceId = objDetails.fields.ID;
 
 
-                    let mailFromName = Session.get('vs1companyName');
+                    let mailFromName = localStorage.getItem('vs1companyName');
                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                     let customerEmailName = $('#edtCustomerName').val();
                     let checkEmailData = $('#edtCustomerEmail').val();
@@ -10916,7 +10916,7 @@ Template.new_salesorder.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')☻
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -10980,7 +10980,7 @@ Template.new_salesorder.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -11047,7 +11047,7 @@ Template.new_salesorder.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -11080,7 +11080,7 @@ Template.new_salesorder.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -11167,8 +11167,8 @@ Template.new_salesorder.events({
                     // });
                 };
                 var getcurrentCloudDetails = CloudUser.findOne({
-                    _id: Session.get('mycloudLogonID'),
-                    clouddatabaseID: Session.get('mycloudLogonDBID')
+                    _id: localStorage.getItem('mycloudLogonID'),
+                    clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                 });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
@@ -11541,8 +11541,8 @@ Template.new_salesorder.events({
 
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -11719,7 +11719,7 @@ Template.new_salesorder.events({
                     lineItems.push(lineItemObj);
                 });
                 var erpGet = erpDb();
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let customerEmail = $('#edtCustomerEmail').val();
                 let currencyname = (CountryAbbr).toLowerCase();
@@ -11886,7 +11886,7 @@ Template.new_salesorder.events({
 
                     setTimeout(function() {
                         salesService.saveSalesOrderEx(objDetails).then(function(objDetails) {
-                            let company = Session.get('vs1companyName');
+                            let company = localStorage.getItem('vs1companyName');
                             let vs1User = localStorage.getItem('mySession');
                             var customerID = $('#edtCustomerEmail').attr('customerid');
                             let currencyname = (CountryAbbr).toLowerCase();
@@ -11923,7 +11923,7 @@ Template.new_salesorder.events({
                                     let erpInvoiceId = objDetails.fields.ID;
 
 
-                                    let mailFromName = Session.get('vs1companyName');
+                                    let mailFromName = localStorage.getItem('vs1companyName');
                                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                                     let customerEmailName = $('#edtCustomerName').val();
                                     let checkEmailData = $('#edtCustomerEmail').val();
@@ -12308,8 +12308,8 @@ Template.new_salesorder.events({
                                 // });
                             };
                             var getcurrentCloudDetails = CloudUser.findOne({
-                                _id: Session.get('mycloudLogonID'),
-                                clouddatabaseID: Session.get('mycloudLogonDBID')
+                                _id: localStorage.getItem('mycloudLogonID'),
+                                clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                             });
                             if (getcurrentCloudDetails) {
                                 if (getcurrentCloudDetails._id.length > 0) {
@@ -12600,8 +12600,8 @@ Template.new_salesorder.events({
                 let linesave = objDetails.fields.ID;
 
                 var getcurrentCloudDetails = CloudUser.findOne({
-                    _id: Session.get('mycloudLogonID'),
-                    clouddatabaseID: Session.get('mycloudLogonDBID')
+                    _id: localStorage.getItem('mycloudLogonID'),
+                    clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                 });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {

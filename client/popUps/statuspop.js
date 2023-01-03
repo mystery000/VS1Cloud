@@ -21,7 +21,7 @@ Template.statuspop.onRendered(function() {
     let templateObject = Template.instance();
     const dataTableList = [];
     const tableHeaderList = [];
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
         if (error) {
 
         } else {
@@ -81,7 +81,7 @@ Template.statuspop.onRendered(function() {
         }
         templateObject.datatablerecords.set(dataTableList);
         if (templateObject.datatablerecords.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
                 if (error) {
 
                 } else {
@@ -248,7 +248,7 @@ Template.statuspop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblStatusPopList'
         });
     },

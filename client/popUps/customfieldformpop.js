@@ -44,7 +44,7 @@ Template.customfieldformpop.onRendered(function () {
   let deptprodlineItems = [];
   Meteor.call(
     "readPrefMethod",
-    Session.get("mycloudLogonID"),
+    localStorage.getItem("mycloudLogonID"),
     "tblStatusPopList",
     function (error, result) {
       if (error) {
@@ -106,7 +106,7 @@ Template.customfieldformpop.onRendered(function () {
               if (templateObject.datatablerecords.get()) {
                 Meteor.call(
                   "readPrefMethod",
-                  Session.get("mycloudLogonID"),
+                  localStorage.getItem("mycloudLogonID"),
                   "tblStatusPopList",
                   function (error, result) {
                     if (error) {
@@ -296,7 +296,7 @@ Template.customfieldformpop.onRendered(function () {
           if (templateObject.datatablerecords.get()) {
             Meteor.call(
               "readPrefMethod",
-              Session.get("mycloudLogonID"),
+              localStorage.getItem("mycloudLogonID"),
               "tblStatusPopList",
               function (error, result) {
                 if (error) {
@@ -484,7 +484,7 @@ Template.customfieldformpop.onRendered(function () {
             if (templateObject.datatablerecords.get()) {
               Meteor.call(
                 "readPrefMethod",
-                Session.get("mycloudLogonID"),
+                localStorage.getItem("mycloudLogonID"),
                 "tblStatusPopList",
                 function (error, result) {
                   if (error) {

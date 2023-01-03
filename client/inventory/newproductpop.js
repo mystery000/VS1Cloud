@@ -275,7 +275,7 @@ Template.newproductpop.onRendered(function () {
     templateObject.getClientTypeData();
   }, 500);
 
-  let isInventory = Session.get("CloudInventoryModule");
+  let isInventory = localStorage.getItem("CloudInventoryModule");
   if (isInventory) {
     templateObject.includeInventory.set(true);
   }
@@ -889,7 +889,7 @@ Template.newproductpop.onRendered(function () {
     //setTimeout(function () {
     Meteor.call(
       "readPrefMethod",
-      Session.get("mycloudLogonID"),
+      localStorage.getItem("mycloudLogonID"),
       "defaulttax",
       function (error, result) {
         if (error) {
@@ -1070,7 +1070,7 @@ Template.newproductpop.helpers({
   },
   productsCloudPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "productview",
     });
   },
@@ -2912,8 +2912,8 @@ Template.newproductpop.events({
   },
   "click .btnResetSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {

@@ -27,7 +27,7 @@ let productService = new ProductService();
 let appointmentService = new AppointmentService();
 let contactService = new ContactService();
 let createAppointment =
-    Session.get("CloudAppointmentCreateAppointment") || false;
+    localStorage.getItem("CloudAppointmentCreateAppointment") || false;
 
 Template.frmappointmentpop.onCreated(() => {
     const templateObject = Template.instance();
@@ -176,7 +176,7 @@ Template.frmappointmentpop.onRendered(function() {
         }
     }
 
-    let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly__');
+    let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__');
     let globalSet = {};
     $('#event-modal').on('shown.bs.modal', async function(e) {
         let updateID = $("#updateID").val() || 0;
@@ -304,7 +304,7 @@ Template.frmappointmentpop.onRendered(function() {
                     "";
                 document.getElementById("state").value = result[0].state;
                 document.getElementById("address").value = result[0].street;
-                if (Session.get("CloudAppointmentNotes") == true) {
+                if (localStorage.getItem("CloudAppointmentNotes") == true) {
                     document.getElementById("txtNotes").value = result[0].notes;
                     document.getElementById("txtNotes-1").value = result[0].notes;
                 }
@@ -978,7 +978,7 @@ Template.frmappointmentpop.onRendered(function() {
                                 }
                                 let selectedColor = "#" + randomColor;
                                 if (
-                                    Session.get("mySessionEmployee") ==
+                                    localStorage.getItem("mySessionEmployee") ==
                                     data.temployee[i].fields.EmployeeName
                                 ) {
                                     if (data.temployee[i].fields.CustFld8 == "false") {
@@ -989,7 +989,7 @@ Template.frmappointmentpop.onRendered(function() {
                                 if (seeOwnAppointments == true) {
                                     if (
                                         data.temployee[i].fields.EmployeeName ==
-                                        Session.get("mySessionEmployee")
+                                        localStorage.getItem("mySessionEmployee")
                                     ) {
                                         var dataList = {
                                             id: data.temployee[i].fields.ID || "",
@@ -1075,7 +1075,7 @@ Template.frmappointmentpop.onRendered(function() {
                         }
 
                         if (
-                            Session.get("mySessionEmployee") == useData[i].fields.EmployeeName
+                            localStorage.getItem("mySessionEmployee") == useData[i].fields.EmployeeName
                         ) {
                             if (useData[i].fields.CustFld8 == "false") {
                                 templateObject.includeAllProducts.set(false);
@@ -1085,7 +1085,7 @@ Template.frmappointmentpop.onRendered(function() {
                         if (seeOwnAppointments == true) {
                             if (
                                 useData[i].fields.EmployeeName ==
-                                Session.get("mySessionEmployee")
+                                localStorage.getItem("mySessionEmployee")
                             ) {
                                 var dataList = {
                                     id: useData[i].fields.ID || "",
@@ -1150,7 +1150,7 @@ Template.frmappointmentpop.onRendered(function() {
                             }
                             let selectedColor = "#" + randomColor;
                             if (
-                                Session.get("mySessionEmployee") ==
+                                localStorage.getItem("mySessionEmployee") ==
                                 data.temployee[i].fields.EmployeeName
                             ) {
                                 if (useData[i].fields.CustFld8 == "false") {
@@ -1160,7 +1160,7 @@ Template.frmappointmentpop.onRendered(function() {
                             if (seeOwnAppointments == true) {
                                 if (
                                     data.temployee[i].fields.EmployeeName ==
-                                    Session.get("mySessionEmployee")
+                                    localStorage.getItem("mySessionEmployee")
                                 ) {
                                     var dataList = {
                                         id: data.temployee[i].fields.ID || "",
@@ -1851,7 +1851,7 @@ Template.frmappointmentpop.onRendered(function() {
     };
 
     templateObject.checkSMSSettings = function() {
-        const accessLevel = Session.get("CloudApptSMS");
+        const accessLevel = localStorage.getItem("CloudApptSMS");
         if (!accessLevel) {
             $("#chkSMSCustomer").prop("checked", false);
             $("#chkSMSUser").prop("checked", false);
@@ -3044,7 +3044,7 @@ Template.frmappointmentpop.onRendered(function() {
 
         $("#appID").val("");
         $("#updateID").val("");
-        if (Session.get("CloudAppointmentStartStopAccessLevel") == true) {
+        if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
             //$("#btnHold").prop("disabled", true);
         }
         if (overridesettings[0].override == "false") {
@@ -3213,7 +3213,7 @@ Template.frmappointmentpop.onRendered(function() {
             .find(".colStreetAddress")
             .text()
             .replace(/(?:\r\n|\r|\n)/g, ", ");
-        if (Session.get("CloudAppointmentNotes") == true) {
+        if (localStorage.getItem("CloudAppointmentNotes") == true) {
             document.getElementById("txtNotes").value = $(this)
                 .find(".colNotes")
                 .text();
@@ -3344,7 +3344,7 @@ Template.frmappointmentpop.onRendered(function() {
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise(async(resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
-            const companyName = Session.get("vs1companyName");
+            const companyName = localStorage.getItem("vs1companyName");
             const message =
                 smsSettings.headerAppointmentSMSMessage.replace(
                     "[Company Name]",
@@ -3499,13 +3499,13 @@ Template.frmappointmentpop.onRendered(function() {
 
 Template.frmappointmentpop.helpers({
     addNotes: () => {
-        return Session.get("CloudAppointmentNotes") || false;
+        return localStorage.getItem("CloudAppointmentNotes") || false;
     },
     addAttachment: () => {
-        return Session.get("CloudAppointmentAddAttachment") || false;
+        return localStorage.getItem("CloudAppointmentAddAttachment") || false;
     },
     accessStartStopOnly: () => {
-        return Session.get("CloudAppointmentStartStopAccessLevel") || false;
+        return localStorage.getItem("CloudAppointmentStartStopAccessLevel") || false;
     },
     attachmentCount: () => {
         return Template.instance().attachmentCount.get();
@@ -4922,7 +4922,7 @@ Template.frmappointmentpop.events({
                         $("#startAppointmentModal").modal("show");
                         const accountName = $("#customer").val();
                         const employeeName = $("#employee_name").val();
-                        const companyName = Session.get("vs1companyName");
+                        const companyName = localStorage.getItem("vs1companyName");
                         const productService = $("#product-list").val();
                         const startAppointmentSMS = templateObject.defaultSMSSettings
                             .get()
@@ -4993,7 +4993,7 @@ Template.frmappointmentpop.events({
                     $("#stopAppointmentModal").modal("show");
                     const accountName = $("#customer").val();
                     const employeeName = $("#employee_name").val();
-                    const companyName = Session.get("vs1companyName");
+                    const companyName = localStorage.getItem("vs1companyName");
                     const productService = $("#product-list").val();
                     const stopAppointmentSMS = templateObject.defaultSMSSettings
                         .get()
@@ -5070,7 +5070,7 @@ Template.frmappointmentpop.events({
                         $("#saveAppointmentModal").modal("show");
                         const accountName = $("#customer").val();
                         const employeeName = $("#employee_name").val();
-                        const companyName = Session.get("vs1companyName");
+                        const companyName = localStorage.getItem("vs1companyName");
                         const fullAddress =
                             $("#address").val() +
                             ", " +
@@ -5122,7 +5122,7 @@ Template.frmappointmentpop.events({
                             $("#saveAppointmentModal").modal("show");
                             const accountName = $("#customer").val();
                             const employeeName = $("#employee_name").val();
-                            const companyName = Session.get("vs1companyName");
+                            const companyName = localStorage.getItem("vs1companyName");
                             const fullAddress =
                                 $("#address").val() +
                                 ", " +
@@ -5147,7 +5147,7 @@ Template.frmappointmentpop.events({
                         $("#saveAppointmentModal").modal("show");
                         const accountName = $("#customer").val();
                         const employeeName = $("#employee_name").val();
-                        const companyName = Session.get("vs1companyName");
+                        const companyName = localStorage.getItem("vs1companyName");
                         const fullAddress =
                             $("#address").val() +
                             ", " +
@@ -5397,7 +5397,7 @@ Template.frmappointmentpop.events({
         }
     },
     "click #btnHold span": function(event) {
-        if (Session.get("CloudAppointmentStartStopAccessLevel") == true) {
+        if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
             swal({
                 title: "Oops...",
                 text: 'You do not have access to put appointments "On Hold"',
@@ -5969,7 +5969,7 @@ Template.frmappointmentpop.events({
                                                                                 },
                                                                             }, ],
                                                                             TypeName: "Payroll",
-                                                                            WhoEntered: Session.get("mySessionEmployee") || "",
+                                                                            WhoEntered: localStorage.getItem("mySessionEmployee") || "",
                                                                         },
                                                                     };
                                                                     contactService
@@ -6039,7 +6039,7 @@ Template.frmappointmentpop.events({
                                                                         },
                                                                     }, ],
                                                                     TypeName: "Payroll",
-                                                                    WhoEntered: Session.get("mySessionEmployee") || "",
+                                                                    WhoEntered: localStorage.getItem("mySessionEmployee") || "",
                                                                 },
                                                             };
                                                             contactService
@@ -6242,7 +6242,7 @@ Template.frmappointmentpop.events({
                                                         },
                                                     }, ],
                                                     TypeName: "Payroll",
-                                                    WhoEntered: Session.get("mySessionEmployee") || "",
+                                                    WhoEntered: localStorage.getItem("mySessionEmployee") || "",
                                                 },
                                             };
                                             contactService
@@ -6365,7 +6365,7 @@ Template.frmappointmentpop.events({
                                                                                 },
                                                                             }, ],
                                                                             TypeName: "Payroll",
-                                                                            WhoEntered: Session.get("mySessionEmployee") || "",
+                                                                            WhoEntered: localStorage.getItem("mySessionEmployee") || "",
                                                                         },
                                                                     };
                                                                     contactService
@@ -6435,7 +6435,7 @@ Template.frmappointmentpop.events({
                                                                         },
                                                                     }, ],
                                                                     TypeName: "Payroll",
-                                                                    WhoEntered: Session.get("mySessionEmployee") || "",
+                                                                    WhoEntered: localStorage.getItem("mySessionEmployee") || "",
                                                                 },
                                                             };
                                                             contactService
@@ -6827,7 +6827,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
             document.getElementById("employee_name").value =
-                Session.get("mySessionEmployee");
+                localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -6837,7 +6837,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 /(?:\r\n|\r|\n)/g,
                 ", "
             );
-            if (Session.get("CloudAppointmentNotes") == true) {
+            if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
                 document.getElementById("txtNotes-1").value = data.fields.Notes;
             }
@@ -6911,7 +6911,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
             document.getElementById("employee_name").value =
-                Session.get("mySessionEmployee");
+                localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -6921,7 +6921,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 /(?:\r\n|\r|\n)/g,
                 ", "
             );
-            if (Session.get("CloudAppointmentNotes") == true) {
+            if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
                 document.getElementById("txtNotes-1").value = data.fields.Notes;
             }
@@ -6995,7 +6995,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
             document.getElementById("employee_name").value =
-                Session.get("mySessionEmployee");
+                localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -7005,7 +7005,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 /(?:\r\n|\r|\n)/g,
                 ", "
             );
-            if (Session.get("CloudAppointmentNotes") == true) {
+            if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
                 document.getElementById("txtNotes-1").value = data.fields.Notes;
             }
@@ -7102,7 +7102,7 @@ async function sendAppointmentEmail() {
         }
         if (customerEmail) {
             let mailSubject = "Appointment Email";
-            let mailFromName = Session.get("vs1companyName");
+            let mailFromName = localStorage.getItem("vs1companyName");
             let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -7132,7 +7132,7 @@ async function sendAppointmentEmail() {
     }
     // Send email to the user
     if (userEmailCheck == true) {
-        let employeeID = Session.get("mySessionEmployeeLoggedID");
+        let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
         let employeeEmail = "";
         let dataObject = await getVS1Data("TEmployee");
         if (dataObject.length > 0) {
@@ -7148,7 +7148,7 @@ async function sendAppointmentEmail() {
         }
         if (employeeEmail) {
             let mailSubject = "Appointment Email";
-            let mailFromName = Session.get("vs1companyName");
+            let mailFromName = localStorage.getItem("vs1companyName");
             let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
