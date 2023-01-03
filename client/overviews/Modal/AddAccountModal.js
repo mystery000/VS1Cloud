@@ -7,6 +7,9 @@ import { TaxRateService } from "../../settings/settings-service";
 import { UtilityService } from "../../utility-service";
 import { bankNameList } from "../../lib/global/bank-names";
 
+import { Template } from 'meteor/templating';
+import './AddAccountModal.html';
+
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let accountService = new AccountService();

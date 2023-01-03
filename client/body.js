@@ -269,9 +269,16 @@ import './contacts/addSupplier.js';
 import './contacts/addLead.js';
 import './contacts/addEmployee.js';
 
-/* Rasheed */
+/* Tinyiko */
+import './settings/tax-rates-setting/taxratelistpop.js';
+import './overviews/Modal/AddAccountModal.js';
+import './eft/optionsModal/eftOptionsModal.js';
+import './eft/bankCodesModal/eftBankCodesModal.js';
+import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
 
+/* Rasheed */
 import './overviews/bankingoverview.js';
+import './overviews/accountsoverview.js';
 import { DataTable } from 'datatables.net';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
