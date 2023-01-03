@@ -2,6 +2,11 @@ import {TaxRateService} from "../settings/settings-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './departmentpop.html';
+
 let sideBarService = new SideBarService();
 Template.departmentpop.onCreated(function(){
     const templateObject = Template.instance();

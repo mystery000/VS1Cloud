@@ -2025,8 +2025,6 @@ Template.templatesettings.onRendered(function () {
         showFX: "AUD",
         comment: "Bill Template Preivew",
       };
-<<<<<<< HEAD
-=======
 
       templateObject.getTemplateInfoNew();
       $("#templatePreviewModal").on("shown.bs.modal", function () {
@@ -2051,7 +2049,7 @@ Template.templatesettings.onRendered(function () {
           $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
           $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
           $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
-    
+
           if(object_invoce[0]["applied"] == ""){
             $("#templatePreviewModal .applied").hide()
             $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
@@ -2067,7 +2065,7 @@ Template.templatesettings.onRendered(function () {
           }
           $("#templatePreviewModal .customer").empty();
           $("#templatePreviewModal .customer").append(object_invoce[0]["supplier_type"]);
-    
+
           if(object_invoce[0]["supplier_name"] == ""){
             $("#templatePreviewModal .pdfCustomerName").hide()
           }else{
@@ -2075,7 +2073,7 @@ Template.templatesettings.onRendered(function () {
           }
           $("#templatePreviewModal .pdfCustomerName").empty();
           $("#templatePreviewModal .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-    
+
           if(object_invoce[0]["supplier_addr"] == ""){
             $("#templatePreviewModal .pdfCustomerAddress").hide()
           }else{
@@ -2083,7 +2081,7 @@ Template.templatesettings.onRendered(function () {
           }
           $("#templatePreviewModal .pdfCustomerAddress").empty();
           $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-    
+
           $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " "+ " template"
@@ -2097,7 +2095,7 @@ Template.templatesettings.onRendered(function () {
             $('.print-header-value').text(object_invoce[0]["value"]);
           }
           if(object_invoce[0]["bsb"]=="")
-          { 
+          {
               $('#templatePreviewModal .field_payment').hide();
 
           }
@@ -2105,8 +2103,8 @@ Template.templatesettings.onRendered(function () {
 
               $('#templatePreviewModal .field_payment').show();
           }
-     
-    
+
+
           $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
           $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
           $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
@@ -2117,15 +2115,15 @@ Template.templatesettings.onRendered(function () {
           }else{
             $("#templatePreviewModal .dateNumber").show();
           }
-    
+
           $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
-    
+
           if(object_invoce[0]["pqnumber"] == ""){
             $("#templatePreviewModal .pdfPONumber").hide();
           }else{
             $("#templatePreviewModal .pdfPONumber").show();
           }
-    
+
           $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
           $("#templatePreviewModal #stockAdjustmentBarCode").text(object_invoce[0]["pqnumber"]);
           if(object_invoce[0]["invoicenumber"] == ""){
@@ -2133,7 +2131,7 @@ Template.templatesettings.onRendered(function () {
           }else{
             $("#templatePreviewModal .invoiceNumber").show();
           }
-        
+
           $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
 
           if(object_invoce[0]["refnumber"] == ""){
@@ -2169,28 +2167,28 @@ Template.templatesettings.onRendered(function () {
 
 
               if(object_invoce[0]["customfield1"] == "NA")
-              {   
+              {
                       $('#customfieldtablenew').css('display', 'none');
                       $('#customdatatablenew').css('display', 'none');
                       $('#templatePreviewModal .customfield1').text('');
                       $('#templatePreviewModal .customfield2').text('');
                       $('#templatePreviewModal .customfield3').text('');
-                      
-                      
+
+
                       $('#templatePreviewModal .customfield1data').text('');
                       $('#templatePreviewModal .customfield2data').text('');
                       $('#templatePreviewModal .customfield3data').text('');
-        
+
               }
               else
               {
                     $('#customfieldtablenew').css('display', 'block');
                     $('#customdatatablenew').css('display', 'block');
-                    
+
                     $('#templatePreviewModal .customfield1').text(object_invoce[0]["customfieldlabel1"]);
                     $('#templatePreviewModal .customfield2').text(object_invoce[0]["customfieldlabel2"]);
                     $('#templatePreviewModal .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-                    
+
                     if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
                     {
                       $('#templatePreviewModal .customfield1data').text('');
@@ -2220,8 +2218,8 @@ Template.templatesettings.onRendered(function () {
 
               }
                 // $('document').ready(function() {
-                //     $('#btnPreviewTemplate').on('click', function() {   
-                //      JsBarcode("#Barcode", "barcodeValue");  
+                //     $('#btnPreviewTemplate').on('click', function() {
+                //      JsBarcode("#Barcode", "barcodeValue");
                 //      });
                 //     });
               if(object_invoce[0]["customfield1"] == "NA")
@@ -2253,63 +2251,63 @@ Template.templatesettings.onRendered(function () {
           case "Bill":
             left_idx = 1;
             break;
-    
+
           case "Credit":
             left_idx = 1;
             break;
-    
+
           case "Customer Payment":
             left_idx = 2;
             break;
-    
+
           case "Customer Statement":
             left_idx = 3;
-            break;  
-    
+            break;
+
           case "Invoice":
             left_idx = 1;
             break;
-    
+
           case "Invoice Back Order":
             left_idx = 1;
             break;
-    
+
           case "Purchase Order":
             left_idx = 1;
             break;
-    
+
           case "Quote":
             left_idx = 1;
             break;
-    
+
           case "Refund":
             left_idx = 1;
             break;
-    
+
           case "Sales Order":
             left_idx = 1;
             break;
-    
+
           case "Supplier Payment":
             left_idx = 2;
             break;
-          
-          case "Statement": 
+
+          case "Statement":
             left_idx = 2;
             break;
-          
+
           case "Delivery Docket":
             left_idx = 1;
             break;
-    
+
           case "Journal Entry":
             left_idx = 1;
             break;
-    
+
           case "Deposits":
             left_idx = 3;
             break;
-    
+
           case "Cheques":
             left_idx = 1;
             break;
@@ -2359,68 +2357,68 @@ Template.templatesettings.onRendered(function () {
 
 
 
-        
+
         switch (object_invoce[0]["title"]) {
           case "Bill":
             left_idx = 1;
             break;
-    
+
           case "Credit":
             left_idx = 1;
             break;
-    
+
           case "Customer Payment":
             left_idx = 2;
             break;
-    
+
           case "Customer Statement":
             left_idx = 3;
-            break;  
-    
+            break;
+
           case "Invoice":
             left_idx = 1;
             break;
-    
+
           case "Invoice Back Order":
             left_idx = 1;
             break;
-    
+
           case "Purchase Order":
             left_idx = 1;
             break;
-    
+
           case "Quote":
             left_idx = 1;
             break;
-    
+
           case "Refund":
             left_idx = 1;
             break;
-    
+
           case "Sales Order":
             left_idx = 1;
             break;
-    
+
           case "Supplier Payment":
             left_idx = 2;
             break;
-          
-          case "Statement": 
+
+          case "Statement":
             left_idx = 2;
             break;
-          
+
           case "Delivery Docket":
             left_idx = 1;
             break;
-    
+
           case "Journal Entry":
             left_idx = 1;
             break;
-    
+
           case "Deposits":
             left_idx = 3;
             break;
-    
+
           case "Cheques":
             left_idx = 1;
             break;
@@ -2466,69 +2464,69 @@ Template.templatesettings.onRendered(function () {
         // table content
         var tbl_content = $("#templatePreviewModal .tbl_content");
         tbl_content.empty();
-        
+
         var left_idx = 0;
         switch (object_invoce[0]["title"]) {
           case "Bill":
             left_idx = 1;
             break;
-    
+
           case "Credit":
             left_idx = 1;
             break;
-    
+
           case "Customer Payment":
             left_idx = 2;
             break;
-    
+
           case "Customer Statement":
             left_idx = 3;
-            break;  
-    
+            break;
+
           case "Invoice":
             left_idx = 1;
             break;
-    
+
           case "Invoice Back Order":
             left_idx = 1;
             break;
-    
+
           case "Purchase Order":
             left_idx = 1;
             break;
-    
+
           case "Quote":
             left_idx = 1;
             break;
-    
+
           case "Refund":
             left_idx = 1;
             break;
-    
+
           case "Sales Order":
             left_idx = 1;
             break;
-    
+
           case "Supplier Payment":
             left_idx = 2;
             break;
-          
-          case "Statement": 
+
+          case "Statement":
             left_idx = 2;
             break;
-          
+
           case "Delivery Docket":
             left_idx = 1;
             break;
-    
+
           case "Journal Entry":
             left_idx = 1;
             break;
-    
+
           case "Deposits":
             left_idx = 3;
             break;
-    
+
           case "Cheques":
             left_idx = 1;
             break;
@@ -2557,7 +2555,7 @@ Template.templatesettings.onRendered(function () {
         } else {
           $(".subtotal3").show();
         }
-      
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
           object_invoce[0]["subtotal"]
         );
@@ -2569,7 +2567,7 @@ Template.templatesettings.onRendered(function () {
         );
       }
 
-      //update template with invoice type   
+      //update template with invoice type
       function updateTemplate1(object_invoce) {
         initTemplateHeaderFooter1();
         $("#html-2-pdfwrapper").show();
@@ -2612,7 +2610,7 @@ Template.templatesettings.onRendered(function () {
       ]);
 
       let item = '';
-  
+
 
       if(number == 1)
       {
@@ -2760,7 +2758,7 @@ Template.templatesettings.onRendered(function () {
         };
 
       }
-    
+
       object_invoce.push(item);
       $("#templatePreviewModal .field_payment").show();
       $("#templatePreviewModal .field_amount").show();
@@ -2793,7 +2791,7 @@ Template.templatesettings.onRendered(function () {
       ]);
 
       let item_credits = '';
-      
+
       if(number == 1)
       {
         item_credits = {
@@ -2944,7 +2942,7 @@ Template.templatesettings.onRendered(function () {
 
 
       }
-    
+
 
       object_invoce.push(item_credits);
 
@@ -3026,8 +3024,8 @@ Template.templatesettings.onRendered(function () {
               customfieldlabel3:'NA',
               showFX:'',
               comment:"Customer Payment Template Preview"
-              
-              
+
+
             };
 
       }
@@ -3132,11 +3130,11 @@ Template.templatesettings.onRendered(function () {
           customfieldlabel2:'customfield2',
           customfieldlabel3:'customfield3',
           showFX:'AUD',
-          comment:"Customer Payment Template Preview"         
+          comment:"Customer Payment Template Preview"
         };
 
       }
-    
+
 
       object_invoce.push(item_payments);
 
@@ -3187,7 +3185,7 @@ Template.templatesettings.onRendered(function () {
               "$0.00",
               "-$15,000.00",
             ]);
-        
+
           let item_statement = '';
           if(number == 1)
           {
@@ -3242,7 +3240,7 @@ Template.templatesettings.onRendered(function () {
 
           }
           else if(number == 2)
-          {  
+          {
             item_statement = {
               o_url: "vs1cloud.com",
               o_name: "Sample Company",
@@ -3347,8 +3345,8 @@ Template.templatesettings.onRendered(function () {
 
 
           }
-        
-      
+
+
           object_invoce.push(item_statement);
 
           $("#templatePreviewModal .field_payment").show();
@@ -3542,8 +3540,8 @@ Template.templatesettings.onRendered(function () {
           };
 
       }
-    
-      
+
+
 
       object_invoce.push(item_invoices);
 
@@ -3739,9 +3737,9 @@ Template.templatesettings.onRendered(function () {
           };
 
       }
-     
 
-      
+
+
 
       object_invoce.push(item_invoices);
       $("#templatePreviewModal .field_payment").show();
@@ -3821,7 +3819,7 @@ Template.templatesettings.onRendered(function () {
             applied : "",
             showFX:"",
             comment:"Purchases Order Template Preview",
-            
+
           };
 
 
@@ -3924,7 +3922,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel3:"customfieldlabel3",
             showFX:'AUD',
             comment:"Purchases Order Template Preview",
-            
+
           };
 
 
@@ -4113,7 +4111,7 @@ Template.templatesettings.onRendered(function () {
 
 
         }
-     
+
 
         object_invoce.push(item_quote);
         $("#templatePreviewModal .field_payment").show();
@@ -4295,12 +4293,12 @@ Template.templatesettings.onRendered(function () {
                 customfieldlabel3:'customfield3',
                 showFX:'AUD',
                 comment:"Refund Template Preview",
-            
+
           };
 
 
         }
-       
+
 
         object_invoce.push(item_refund);
         $("#templatePreviewModal .field_payment").show();
@@ -4379,7 +4377,7 @@ Template.templatesettings.onRendered(function () {
                 showFX:"",
                 comment:"Sales Order Template Preview",
             };
-  
+
         }
         else if(number == 2)
         {
@@ -4430,7 +4428,7 @@ Template.templatesettings.onRendered(function () {
               showFX:"",
               comment:"Sales Order Template Preview",
             };
-  
+
         }
         else
         {
@@ -4481,7 +4479,7 @@ Template.templatesettings.onRendered(function () {
               showFX:"AUD",
               comment:"Sales Order Template Preview",
             };
-  
+
         }
 
         object_invoce.push(item_invoices);

@@ -17,6 +17,12 @@ import { autoTable } from 'jspdf-autotable';
 import 'jquery-editable-select';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './frm_vatreturn.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let reportService = new ReportService();

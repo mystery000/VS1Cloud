@@ -2,6 +2,11 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {UtilityService} from "../utility-service";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './statuspop.html';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 

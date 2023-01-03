@@ -9,10 +9,10 @@ import {PurchaseBoardService} from '../js/purchase-service';
 import '../lib/global/indexdbstorage.js';
 import XLSX from 'xlsx';
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
 import './addaccountpop.html';
-
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();

@@ -7,6 +7,11 @@ import { SideBarService } from '../js/sidebar-service';
 import { CRMService } from "../crm/crm-service";
 import '../lib/global/indexdbstorage.js';
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './addSupplier.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.supplierscard.onCreated(function() {
@@ -907,7 +912,7 @@ Template.supplierscard.onRendered(function() {
         for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
             preferredPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName)
         }
-        preferredPayments = _.sortBy(preferredPayments);
+        // preferredPayments = _.sortBy(preferredPayments);
         templateObject.preferredPaymentList.set(preferredPayments);
     }
     templateObject.getPreferredPaymentList();
@@ -944,7 +949,7 @@ Template.supplierscard.onRendered(function() {
                 }
             }
         }
-        terms = _.sortBy(terms);
+        // terms = _.sortBy(terms);
         templateObject.termsList.set(terms);
     }
     templateObject.getTermsList();
@@ -971,7 +976,7 @@ Template.supplierscard.onRendered(function() {
         for (let i = 0; i < data.tshippingmethod.length; i++) {
             deliveryMethods.push(data.tshippingmethod[i].ShippingMethod)
         }
-        deliveryMethods = _.sortBy(deliveryMethods);
+        // deliveryMethods = _.sortBy(deliveryMethods);
         templateObject.deliveryMethodList.set(deliveryMethods);
     }
     templateObject.getDeliveryMethodList();
@@ -998,7 +1003,7 @@ Template.supplierscard.onRendered(function() {
         for (let i = 0; i < data.ttaxcodevs1.length; i++) {
             taxCodes.push(data.ttaxcodevs1[i].CodeName)
         }
-        taxCodes = _.sortBy(taxCodes);
+        // taxCodes = _.sortBy(taxCodes);
         templateObject.taxCodeList.set(taxCodes);
     }
     templateObject.getTaxCodesList();

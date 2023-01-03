@@ -14,6 +14,12 @@ import { SideBarService } from "../js/sidebar-service";
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import "../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../LoadingOverlay";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './frmappointmentpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let smsService = new SMSService();

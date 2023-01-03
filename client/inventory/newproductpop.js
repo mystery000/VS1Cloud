@@ -8,8 +8,17 @@ import { Random } from "meteor/random";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../LoadingOverlay";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './newproductpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { Mongo } from 'meteor/mongo';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+
+CloudPreference = new Mongo.Collection("cloudPreference");
 
 Template.newproductpop.onCreated(() => {
   const templateObject = Template.instance();
@@ -253,7 +262,7 @@ Template.newproductpop.onRendered(function () {
           for (let i = 0; i < data.tclienttype.length; i++) {
             clientType.push(data.tclienttype[i].fields.TypeName);
           }
-          clientType = _.sortBy(clientType);
+          // clientType = _.sortBy(clientType);
           templateObject.clienttypeList.set(clientType);
         });
       });

@@ -14,7 +14,7 @@ import "./template_footer_save_button.html"
 import "./transaction_footer.html"
 
 Template.transaction_footer.onCreated( function () {
-  
+
 });
 Template.transaction_footer.onRendered( function () {});
 // Template.transaction_footer.helpers({

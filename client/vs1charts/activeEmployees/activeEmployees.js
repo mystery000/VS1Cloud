@@ -2,6 +2,11 @@ import "jQuery.print/jQuery.print.js";
 import { ReactiveVar } from "meteor/reactive-var";
 import { ContactService } from "../../contacts/contact-service";
 import User from "./User";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './activeEmployees.html';
+
 let _ = require("lodash");
 
 Template.activeEmployees.onCreated(() => {
