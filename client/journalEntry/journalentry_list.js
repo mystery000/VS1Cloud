@@ -102,18 +102,18 @@ Template.journalentrylist.onRendered(function() {
   // set initial table rest_data
   function init_reset_data() {
     let reset_data = [
-      { index: 0, label: 'Transaction Date', class:'colAccountName', active: true, display: true, width: "85" },
+      { index: 0, label: 'Transaction Date', class:'colTransactionDate', active: true, display: true, width: "85" },
       { index: 1, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 2, label: 'Department Name', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 3, label: 'Entry No', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 4, label: 'Debit Amount', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 5, label: 'Credit Amount', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 6, label: 'Tax Amount', class:'colAccountName', active: true, display: true, width: "" },
-      { index: 7, label: 'Account No', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 8, label: 'Employee Name', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 9, label: 'Approved', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 10, label: 'Journal Memo', class:'colAccountName', active: false, display: true, width: "" },
-      { index: 11, label: 'Memo', class:'colAccountName', active: false, display: true, width: "" },
+      { index: 2, label: 'Department Name', class:'colDepartmentName', active: true, display: true, width: "" },
+      { index: 3, label: 'Entry No', class:'colEntryNo', active: true, display: true, width: "" },
+      { index: 4, label: 'Debit Amount', class:'colDebitAmount', active: true, display: true, width: "" },
+      { index: 5, label: 'Credit Amount', class:'colCreditAmount', active: true, display: true, width: "" },
+      { index: 6, label: 'Tax Amount', class:'colTaxAmount', active: true, display: true, width: "" },
+      { index: 7, label: 'Account No', class:'colAccountNo', active: false, display: true, width: "" },
+      { index: 8, label: 'Employee Name', class:'colemployeeName', active: false, display: true, width: "" },
+      { index: 9, label: 'Approved', class:'colApproved', active: false, display: true, width: "" },
+      { index: 10, label: 'Journal Memo', class:'colJournalMemo', active: false, display: true, width: "" },
+      { index: 11, label: 'Memo', class:'colMemo', active: false, display: true, width: "" },
     ];
 
     let templateObject = Template.instance();
@@ -132,7 +132,7 @@ Template.journalentrylist.onRendered(function() {
     try {
       // getVS1Data("VS1_Customize").then(function (dataObject) {
       //   if (dataObject.length == 0) {
-      //     sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+      //     sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
       //         // reset_data = data.ProcessLog.CustomLayout.Columns;
       //         reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
       //         templateObject.showCustomFieldDisplaySettings(reset_data);
@@ -1666,7 +1666,8 @@ Template.journalentrylist.events({
       let className = v.classList;
       let replaceClass = className[1];
 
-      if (v.innerText == columnDataValue) {
+      if (v.innerText.trim() == columnDataValue) {
+
         if ($(event.target).is(":checked")) {
           $("." + replaceClass + "").css("display", "table-cell");
           $("." + replaceClass + "").css("padding", ".75rem");
@@ -1677,6 +1678,17 @@ Template.journalentrylist.events({
       }
     });
   },
+//   'click .chkDatatable': function(event) {
+//     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+//     if ($(event.target).is(':checked')) {
+//       $('.'+columnDataValue).addClass('showColumn');
+//       $('.'+columnDataValue).removeClass('hiddenColumn');
+//     } else {
+//       $('.'+columnDataValue).addClass('hiddenColumn');
+//       $('.'+columnDataValue).removeClass('showColumn');
+//     }
+// },
+
   "keyup #tblJournalList_filter input": function (event) {
     if ($(event.target).val() != "") {
       $(".btnRefreshJournalEntry").addClass("btnSearchAlert");
@@ -1691,7 +1703,7 @@ Template.journalentrylist.events({
     $(".btnRefresh").trigger("click");
   },
   "click .resetTable": function (event) {
-    var getcurrentCloudDetails = CloudUser.findOne({_id: Session.get("mycloudLogonID"), clouddatabaseID: Session.get("mycloudLogonDBID")});
+    var getcurrentCloudDetails = CloudUser.findOne({_id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID")});
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;
@@ -1735,7 +1747,7 @@ Template.journalentrylist.events({
       lineItems.push(lineItemObj);
     });
     //datatable.state.save();
-    var getcurrentCloudDetails = CloudUser.findOne({_id: Session.get("mycloudLogonID"), clouddatabaseID: Session.get("mycloudLogonDBID")});
+    var getcurrentCloudDetails = CloudUser.findOne({_id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID")});
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;
@@ -1935,7 +1947,7 @@ Template.journalentrylist.helpers({
     return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-    return CloudPreference.findOne({userid: Session.get("mycloudLogonID"), PrefName: "tblJournalList"});
+    return CloudPreference.findOne({userid: localStorage.getItem("mycloudLogonID"), PrefName: "tblJournalList"});
   },
   currentdate: () => {
     var currentDate = new Date();

@@ -62,7 +62,7 @@ Template.taxRatesSettings.onRendered(function() {
     templateObject.defaultsaletaxcode.set(loggedTaxCodeSalesInc);
 
     setTimeout(function() {
-        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'defaulttax', function(error, result) {
+        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'defaulttax', function(error, result) {
             if (error) {
                 purchasetaxcode = loggedTaxCodePurchaseInc;
                 salestaxcode = loggedTaxCodeSalesInc;
@@ -80,7 +80,7 @@ Template.taxRatesSettings.onRendered(function() {
         });
     }, 500);
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'taxRatesList', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'taxRatesList', function(error, result) {
         if (error) {
 
         } else {
@@ -132,7 +132,7 @@ Template.taxRatesSettings.onRendered(function() {
                     if (templateObject.datatablerecords.get()) {
                         Meteor.call(
                             "readPrefMethod",
-                            Session.get("mycloudLogonID"),
+                            localStorage.getItem("mycloudLogonID"),
                             "taxRatesList",
                             function(error, result) {
                                 if (error) {} else {
@@ -319,7 +319,7 @@ Template.taxRatesSettings.onRendered(function() {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'taxRatesList', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'taxRatesList', function(error, result) {
                         if (error) {
 
                         } else {
@@ -472,7 +472,7 @@ Template.taxRatesSettings.onRendered(function() {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'taxRatesList', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'taxRatesList', function(error, result) {
                         if (error) {
 
                         } else {
@@ -774,8 +774,8 @@ Template.taxRatesSettings.events({
     },
     "click .resetTable": function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
+            _id: localStorage.getItem("mycloudLogonID"),
+            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -823,8 +823,8 @@ Template.taxRatesSettings.events({
         });
 
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
+            _id: localStorage.getItem("mycloudLogonID"),
+            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -973,8 +973,8 @@ Template.taxRatesSettings.events({
             let purchasetaxcode = $("input[name=optradioP]:checked").val() || "";
             let salestaxcode = $("input[name=optradioS]:checked").val() || "";
 
-            Session.setPersistent("ERPTaxCodePurchaseInc", purchasetaxcode || "");
-            Session.setPersistent("ERPTaxCodeSalesInc", salestaxcode || "");
+            localStorage.setItem("ERPTaxCodePurchaseInc", purchasetaxcode || "");
+            localStorage.setItem("ERPTaxCodeSalesInc", salestaxcode || "");
             getVS1Data("vscloudlogininfo").then(function(dataObject) {
                 if (dataObject.length == 0) {
                     swal({
@@ -1503,7 +1503,7 @@ Template.taxRatesSettings.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'taxRatesList' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'taxRatesList' });
     },
     defaultpurchasetaxcode: () => {
         return Template.instance().defaultpurchasetaxcode.get();

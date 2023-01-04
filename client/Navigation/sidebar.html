@@ -749,7 +749,7 @@ overflow-y: scroll !important;
     </nav>
 
     <script>
-        let sidePanelSettings = Session.get('sidePanelSettings');
+        let sidePanelSettings = localStorage.getItem('sidePanelSettings');
         if(sidePanelSettings){
             $("html").toggleClass(sidePanelSettings);
             if(sidePanelSettings === "openNav"){
@@ -763,7 +763,7 @@ overflow-y: scroll !important;
             $("html").toggleClass("openNav");
             $(".nav-toggle").toggleClass("active");
             var sideBarPanel = $("html").attr("class");
-            Session.setPersistent('sidePanelSettings', sideBarPanel);
+            localStorage.setItem('sidePanelSettings', sideBarPanel);
             if(sideBarPanel === "openNav"){
                 $(".active_page_content").css("text-align","right");
             }else{
@@ -781,7 +781,7 @@ overflow-y: scroll !important;
             let basedOnTypeStorages = Object.keys(localStorage);
             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                 let employeeId = storage.split('_')[2];
-                return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
             });
             let i = basedOnTypeStorages.length;
             if (i > 0) {
@@ -796,7 +796,7 @@ overflow-y: scroll !important;
                     Meteor.call('sendNormalEmail', reportData);
             });
             window.open('/vs1greentracklogin','_self');
-            CloudUser.update({_id: Session.get('mycloudLogonID')},{ $set: {userMultiLogon: false}});
+            CloudUser.update({_id: localStorage.getItem('mycloudLogonID')},{ $set: {userMultiLogon: false}});
         };
     </script>
     {{else}}
@@ -806,7 +806,7 @@ overflow-y: scroll !important;
             let basedOnTypeStorages = Object.keys(localStorage);
             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                 let employeeId = storage.split('_')[2];
-                return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
             });
             let i = basedOnTypeStorages.length;
             if (i > 0) {
@@ -821,7 +821,7 @@ overflow-y: scroll !important;
                     Meteor.call('sendNormalEmail', reportData);
             });
             window.open('/','_self');
-            CloudUser.update({_id: Session.get('mycloudLogonID')},{ $set: {userMultiLogon: false}});
+            CloudUser.update({_id: localStorage.getItem('mycloudLogonID')},{ $set: {userMultiLogon: false}});
         };
     </script>
     {{/if}}

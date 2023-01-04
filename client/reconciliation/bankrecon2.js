@@ -98,8 +98,8 @@ Template.bankrecon2.onRendered(function() {
             }
             // Session - set account dropdown BEGIN
             setTimeout(function() {
-                let bankaccountid = Session.get('bankaccountid') || '';
-                let bankaccountname = Session.get('bankaccountname') || '';
+                let bankaccountid = localStorage.getItem('bankaccountid') || '';
+                let bankaccountname = localStorage.getItem('bankaccountname') || '';
                 let statementDate = localStorage.getItem('statementdate')|| '';
 
                 if(statementDate !== ''){
@@ -395,8 +395,8 @@ Template.bankrecon2.onRendered(function() {
                         dataArray.push(objData);
                         if (FlowRouter.current().queryParams.id) {} else {
                             if (data.treconciliation[k].OnHold == true) {
-                                Session.setPersistent('bankaccountid', data.treconciliation[k].AccountID);
-                                Session.setPersistent('bankaccountname', data.treconciliation[k].AccountName);
+                                localStorage.setItem('bankaccountid', data.treconciliation[k].AccountID);
+                                localStorage.setItem('bankaccountname', data.treconciliation[k].AccountName);
                                 window.open('/bankrecon?id=' + data.treconciliation[k].Id, '_self');
                             }
                         }
@@ -875,8 +875,8 @@ Template.bankrecon2.onRendered(function() {
         }
         //$('#hideSelectionToggle').css('pointer-events', 'none');
         if (data.fields.OnHold == true) {
-            Session.setPersistent('bankaccountid', data.fields.AccountID);
-            Session.setPersistent('bankaccountname', data.fields.AccountName);
+            localStorage.setItem('bankaccountid', data.fields.AccountID);
+            localStorage.setItem('bankaccountname', data.fields.AccountName);
             templateObject.getAccountNames();
         }
         $('.fullScreenSpin').css('display', 'none');
@@ -1342,8 +1342,8 @@ Template.bankrecon2.onRendered(function() {
         let statementDate = statementDateData.getFullYear() + "-" + (statementDateData.getMonth() + 1) + "-" + statementDateData.getDate();
 
         if (accountTypeId != "") {
-            Session.setPersistent('bankaccountid', accountTypeId);
-            Session.setPersistent('bankaccountname', accountname);
+            localStorage.setItem('bankaccountid', accountTypeId);
+            localStorage.setItem('bankaccountname', accountname);
             templateObject.getReconcileDeposit(accountTypeId, statementDate, false);
             templateObject.getReconcileWithdrawal(accountTypeId, statementDate, false);
             setTimeout(function() {
@@ -1375,7 +1375,7 @@ Template.bankrecon2.events({
         let statementDate = statementDateData.getFullYear() + "-" + (statementDateData.getMonth() + 1) + "-" + statementDateData.getDate();
 
         if (accountTypeId != "") {
-            Session.setPersistent('bankaccountid', accountTypeId);
+            localStorage.setItem('bankaccountid', accountTypeId);
             templateObject.getReconcileDeposit(accountTypeId, statementDate, false);
             templateObject.getReconcileWithdrawal(accountTypeId, statementDate, false);
             setTimeout(function() {
@@ -1395,8 +1395,8 @@ Template.bankrecon2.events({
             localStorage.setItem('statementdate', $(".statementDate").val());
 
             if (accountTypeId != "") {
-                Session.setPersistent('bankaccountid', accountTypeId);
-                Session.setPersistent('bankaccountname', accountTypename);
+                localStorage.setItem('bankaccountid', accountTypeId);
+                localStorage.setItem('bankaccountname', accountTypename);
                 templateObject.getReconcileDeposit(accountTypeId, statementDate, false);
                 templateObject.getReconcileWithdrawal(accountTypeId, statementDate, false);
                 setTimeout(function() {
@@ -1810,7 +1810,7 @@ Template.bankrecon2.events({
         // Pulling initial variables BEGIN
         var accountname = $('#bankAccountName').val()||'';
         var deptname = "Default"; //Set to Default as it isn't used for recons
-        var employeename = Session.get('mySessionEmployee');
+        var employeename = localStorage.getItem('mySessionEmployee');
         var deleted = false;
         var finished = true;
         var notes = $('#statementno').val(); //pending addition of notes field
@@ -1991,7 +1991,7 @@ Template.bankrecon2.events({
         // Pulling initial variables BEGIN
         var accountname = $('#bankAccountName').val()||'';
         var deptname = "Default"; //Set to Default as it isn't used for recons
-        var employeename = Session.get('mySessionEmployee');
+        var employeename = localStorage.getItem('mySessionEmployee');
         var deleted = false;
         var finished = true;
         var notes = $('#statementno').val(); //pending addition of notes field

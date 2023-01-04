@@ -1,10 +1,12 @@
 <!-- Customer Email input -->
 <!-- Params
 label
+hideEmailUser
+hideEmailCustomer
 -->
 <template name="customer_email_input">
   <div class="formgoup">
-    <div class="form-group">
+    <div class="form-group" style="margin-bottom: 0">
       <label>{{label}} Email</label>
       <input 
         class="form-control form-control" 
@@ -18,6 +20,7 @@ label
     <div 
       class="custom-control custom-control-inline custom-switch d-xl-flex align-items-xl-center divEmailSelect"
       style="margin: 0px 16px;padding: -2px;padding-left: 24px;width: 110%;">
+      {{#unless hideEmailCustomer}}
       <div class="form-group" style="margin-right: 35px; Width:50%; font-size: 15px;">
         <input 
           class="custom-control-input chkEmailCopy" 
@@ -28,7 +31,9 @@ label
           Email {{label}}
         </label>
       </div>
-      <div class="form-group" style="margin-left: 35px; Width:50%; font-size: 15px;">
+      {{/unless}}
+      {{#unless hideEmailUser}}
+ <!--      <div class="form-group" style="margin-left: 35px; Width:50%; font-size: 15px;">
         <input 
           class="custom-control-input chkEmailRep" 
           type="checkbox" 
@@ -37,7 +42,8 @@ label
         <label class="custom-control-label" for="formCheck-2">
           Email User
         </label>
-      </div>
+      </div> -->
+      {{/unless}}
     </div>
   </div>
 </template>

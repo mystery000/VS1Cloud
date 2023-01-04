@@ -398,7 +398,7 @@ Template.supplierlist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblSupplierlist' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblSupplierlist' });
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();

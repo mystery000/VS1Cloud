@@ -61,9 +61,9 @@ Template.balancetransactionlist.onRendered(function() {
           }
 
           if(childArray.Type === "Cheque"){
-            if (Session.get('ERPLoggedCountry') == "Australia") {
+            if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
                 accountType = "Cheque";
-            } else if (Session.get('ERPLoggedCountry') == "United States of America") {
+            } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
                 accountType = "Check";
             } else {
                 accountType = "Cheque";
@@ -233,9 +233,9 @@ Template.balancetransactionlist.onRendered(function() {
         }
 
         if(childArray.Type === "Cheque"){
-          if (Session.get('ERPLoggedCountry') == "Australia") {
+          if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
               accountType = "Cheque";
-          } else if (Session.get('ERPLoggedCountry') == "United States of America") {
+          } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
               accountType = "Check";
           } else {
               accountType = "Cheque";
@@ -265,7 +265,7 @@ Template.balancetransactionlist.onRendered(function() {
 
       if(templateObject.datatablerecords.get()){
 
-        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblBalanceTransactionList', function(error, result){
+        Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblBalanceTransactionList', function(error, result){
         if(error){
 
         }else{
@@ -440,9 +440,9 @@ Template.balancetransactionlist.onRendered(function() {
                   transactionNo = childArray.PrepaymentID;
                 }
                 if(childArray.Type === "Cheque"){
-                  if (Session.get('ERPLoggedCountry') == "Australia") {
+                  if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
                       accountType = "Cheque";
-                  } else if (Session.get('ERPLoggedCountry') == "United States of America") {
+                  } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
                       accountType = "Check";
                   } else {
                       accountType = "Cheque";
@@ -672,9 +672,9 @@ Template.balancetransactionlist.onRendered(function() {
               }
 
               if(childArray.Type === "Cheque"){
-                if (Session.get('ERPLoggedCountry') == "Australia") {
+                if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
                     accountType = "Cheque";
-                } else if (Session.get('ERPLoggedCountry') == "United States of America") {
+                } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
                     accountType = "Check";
                 } else {
                     accountType = "Cheque";
@@ -910,9 +910,9 @@ Template.balancetransactionlist.onRendered(function() {
             }
 
             if(childArray.Type === "Cheque"){
-              if (Session.get('ERPLoggedCountry') == "Australia") {
+              if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
                   accountType = "Cheque";
-              } else if (Session.get('ERPLoggedCountry') == "United States of America") {
+              } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
                   accountType = "Check";
               } else {
                   accountType = "Cheque";
@@ -1198,7 +1198,7 @@ Template.balancetransactionlist.events({
       });
     },
     'click .resetTable' : function(event){
-      var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+      var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
       if(getcurrentCloudDetails){
         if (getcurrentCloudDetails._id.length > 0) {
           var clientID = getcurrentCloudDetails._id;
@@ -1242,7 +1242,7 @@ Template.balancetransactionlist.events({
         lineItems.push(lineItemObj);
       });
 
-      var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+      var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
       if(getcurrentCloudDetails){
         if (getcurrentCloudDetails._id.length > 0) {
           var clientID = getcurrentCloudDetails._id;
@@ -1390,6 +1390,6 @@ Template.balancetransactionlist.helpers({
      return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-  return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblBalanceTransactionList'});
+  return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblBalanceTransactionList'});
 }
 });

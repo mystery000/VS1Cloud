@@ -13,6 +13,10 @@ import { autoTable } from 'jspdf-autotable';
 import 'jquery-editable-select';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './productlistpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -167,6 +171,8 @@ Template.productlistpop.onRendered(function () {
                                     "targets": [8]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
                             lengthMenu: [ [initialBaseDataLoad, -1], [initialBaseDataLoad, "All"] ],
                             info: true,
@@ -507,6 +513,8 @@ Template.productlistpop.onRendered(function () {
                                 "targets": [8]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
                         lengthMenu: [ [initialBaseDataLoad, -1], [initialBaseDataLoad, "All"] ],
                         info: true,

@@ -24,7 +24,7 @@ Template.agedpayablessummary.onCreated(() => {
   templateObject.dateAsAt = new ReactiveVar();
   // templateObject.departments = new ReactiveVar();
   templateObject.departments = new ReactiveVar();
-
+  templateObject.agedpayablessummaryth = new ReactiveVar([]);
 
 
   // Currency related vars //
@@ -36,6 +36,34 @@ Template.agedpayablessummary.onRendered(function() {
   LoadingOverlay.show();
  const templateObject = Template.instance();
 
+
+ let reset_data = [
+  { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "" },
+  { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "" },
+  { index: 3, label: 'PO Number', class: 'colPONumber', active: true, display: true, width: "" },
+  { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "" },
+  { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "" },
+  { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "" },
+  { index: 7, label: '1-30 Days', class: 'col130Days', active: true, display: true, width: "" },
+  { index: 8, label: '30-60 Days', class: 'col3060Days', active: true, display: true, width: "" },
+  { index: 9, label: '60-90 Days', class: 'col6090Days', active: true, display: true, width: "" },
+  { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "" },
+  { index: 11, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "" },
+  { index: 12, label: 'Invoice Date', class: 'colInvoiceDate', active: true, display: true, width: "" },
+  { index: 13, label: 'Original Amount', class: 'colOriginalAmount', active: true, display: true, width: "" },
+  { index: 14, label: 'Details', class: 'colDetails', active: false, display: true, width: "" },
+  { index: 15, label: 'Invoice Number', class: 'colInvoiceNumber', active: false, display: true, width: "" },
+  { index: 16, label: 'Account Name', class: 'colAccountName', active: false, display: true, width: "" },
+  { index: 17, label: 'Supplier ID', class: 'colSupplierID', active: false, display: true, width: "" },
+  { index: 18, label: 'Terms', class: 'colTerms', active: false, display: true, width: "" },
+  { index: 19, label: 'APNotes', class: 'colAPNotes', active: false, display: true, width: "" },
+  { index: 20, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "" },
+  { index: 21, label: 'PCStatus', class: 'colPCStatus', active: false, display: true, width: "" },
+  { index: 22, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "" },
+  { index: 23, label: 'POGlobalRef', class: 'colPOGlobalRef', active: false, display: true, width: "" },
+]
+
+templateObject.agedpayablessummaryth.set(reset_data);
 //   let salesOrderTable;
 //   var splashArray = new Array();
 //   var today = moment().format('DD/MM/YYYY');
@@ -112,7 +140,7 @@ Template.agedpayablessummary.onRendered(function() {
     let data = await CachedHttp.get(erpObject.TAPReport, async () => {
       return await reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate, contactID);
     }, {
-      useIndexDb: true, 
+      useIndexDb: true,
       useLocalStorage: false,
       validate: (cachedResponse) => {
         return false;
@@ -273,7 +301,7 @@ Template.agedpayablessummary.onRendered(function() {
           threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
           Older = Older + parseFloat(entry.entries["120Days"]);
         });
-        
+
         record.total = {
           // new
           Title: "Total " + record.title,
@@ -388,12 +416,12 @@ Template.agedpayablessummary.onRendered(function() {
       if (this.records.get()) {
         setTimeout(function () {
           $("td a").each(function () {
-            if ($(this).text().indexOf("-" + Currency) >= 0) 
+            if ($(this).text().indexOf("-" + Currency) >= 0)
               $(this).addClass("text-danger");
             }
           );
           $("td").each(function () {
-            if ($(this).text().indexOf("-" + Currency) >= 0) 
+            if ($(this).text().indexOf("-" + Currency) >= 0)
               $(this).addClass("text-danger");
             }
           );
@@ -401,13 +429,13 @@ Template.agedpayablessummary.onRendered(function() {
           $("td").each(function () {
             let lineValue = $(this).first().text()[0];
             if (lineValue != undefined) {
-              if (lineValue.indexOf(Currency) >= 0) 
+              if (lineValue.indexOf(Currency) >= 0)
                 $(this).addClass("text-right");
               }
             });
 
           $("td").each(function () {
-            if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+            if ($(this).first().text().indexOf("-" + Currency) >= 0)
               $(this).addClass("text-right");
             }
           );
@@ -419,7 +447,7 @@ Template.agedpayablessummary.onRendered(function() {
       this.reportrecords.set([]);
       this.grandrecords.set(null);
     }
-    
+
 
     LoadingOverlay.hide();
   };
@@ -465,6 +493,35 @@ Template.agedpayablessummary.onRendered(function() {
 Template.agedpayablessummary.events({
   "click #btnDetails": function () {
     FlowRouter.go("/agedpayables");
+  },
+  'click .chkDatatable': function (event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.' + columnDataValue).addClass('showColumn');
+      $('.' + columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.' + columnDataValue).addClass('hiddenColumn');
+      $('.' + columnDataValue).removeClass('showColumn');
+    }
+  },
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
   },
   // "change #dateTo": function () {
   //   let templateObject = Template.instance();
@@ -554,7 +611,7 @@ Template.agedpayablessummary.events({
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter(storage => {
       let employeeId = storage.split("_")[2];
-      return (storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID"));
+      return (storage.includes("BasedOnType_") && employeeId == localStorage.getItem("mySessionEmployeeLoggedID"));
     });
     let i = basedOnTypeStorages.length;
     if (i > 0) {
@@ -687,7 +744,7 @@ Template.agedpayablessummary.events({
     LoadingOverlay.show();
     localStorage.setItem("VS1AgedPayablesSummary_Report", "");
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
@@ -795,8 +852,8 @@ Template.agedpayablessummary.events({
     "change #dateTo, change #dateFrom": (e, templateObject) => {
       localStorage.setItem('VS1AgedPayablesSummary_Report', '');
       templateObject.loadReport(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
         false
       );
     },
@@ -804,6 +861,9 @@ Template.agedpayablessummary.events({
 });
 
 Template.agedpayablessummary.helpers({
+  agedpayablessummaryth: () => {
+    return Template.instance().agedpayablessummaryth.get();
+  },
     records : () => {
        return Template.instance().records.get();
      //   .sort(function(a, b){

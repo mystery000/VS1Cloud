@@ -111,22 +111,8 @@ Template.journalentrycard.onRendered(() => {
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var journalData = await purchaseService.getOneJournalEnrtyData(currentInvoice);
-            var transactionDate = journalData.fields.TransactionDate;
-            var fromDate = transactionDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingJournals = await sideBarService.getTJournalEntryListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var journalList = followingJournals.tjournalentrylist;
-            if (journalList.length > 1) {
-                templateObject.hasFollow.set(true);
-            } else {
-                templateObject.hasFollow.set(false);
-            }
+            var isRepeated = journalData.fields.RepeatedFrom;
+            templateObject.hasFollow.set(isRepeated);
         }
     }
     templateObject.hasFollowings();
@@ -462,7 +448,7 @@ Template.journalentrycard.onRendered(() => {
                             templateObject.totalDebitInc.set(utilityService.modifynegativeCurrencyFormat(totalDebitInc));
 
                             if (templateObject.record.get()) {
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJournalEntryLine', function(error, result) {
+                                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJournalEntryLine', function(error, result) {
                                     if (error) {
 
                                     } else {
@@ -620,7 +606,7 @@ Template.journalentrycard.onRendered(() => {
                                 templateObject.totalCreditInc.set(utilityService.modifynegativeCurrencyFormat(totalCreditInc));
                                 templateObject.totalDebitInc.set(utilityService.modifynegativeCurrencyFormat(totalDebitInc));
                                 if (templateObject.record.get()) {
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJournalEntryLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJournalEntryLine', function(error, result) {
                                         if (error) {
 
                                         } else {
@@ -730,7 +716,7 @@ Template.journalentrycard.onRendered(() => {
                                 templateObject.totalDebit.set(utilityService.modifynegativeCurrencyFormat(totalDebit));
 
                                 if (templateObject.record.get()) {
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJournalEntryLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJournalEntryLine', function(error, result) {
                                         if (error) {
 
                                         } else {
@@ -858,7 +844,7 @@ Template.journalentrycard.onRendered(() => {
                         templateObject.totalDebit.set(utilityService.modifynegativeCurrencyFormat(totalDebit));
 
                         if (templateObject.record.get()) {
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJournalEntryLine', function(error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJournalEntryLine', function(error, result) {
                                 if (error) {
 
                                 } else {
@@ -963,7 +949,7 @@ Template.journalentrycard.onRendered(() => {
         }, 200);
         templateObject.record.set(record);
         if (templateObject.record.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblJournalEntryLine', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJournalEntryLine', function(error, result) {
                 if (error) {
 
                 } else {
@@ -1052,7 +1038,7 @@ Template.journalentrycard.onRendered(() => {
                 }
             }
             $('#' + selectLineID + " .lineAccountName").val(lineProductName);
-            $('#' + selectLineID + " .lineMemo").text(lineProductDesc);
+            // $('#' + selectLineID + " .lineMemo").text(lineProductDesc);
             $('#' + selectLineID + " .lineCreditEx").val(utilityService.modifynegativeCurrencyFormat(0));
             $('#' + selectLineID + " .lineCreditInc").val(utilityService.modifynegativeCurrencyFormat(0));
             $('#' + selectLineID + " .lineDebitEx").val(utilityService.modifynegativeCurrencyFormat(0));
@@ -1224,12 +1210,12 @@ Template.journalentrycard.onRendered(() => {
         var customfieldlabel1 = 'Custom Field 1';
         var customfieldlabel2 = 'Custom Field 2';
         var customfieldlabel3 = 'Custom Field 3';
-        
+
         let department = $('#sltDepartment').val();
         let headMemo = $('#txaMemo').val();
         let dtSODate = $("#dtTransDate").val();
         let entryNo = $('#edtEnrtyNo').val();
-    
+
         $('#tblJournalEntryLine > tbody > tr').each(function() {
             var lineID = this.id;
             let tdaccount = $('#' + lineID + " .lineAccountName").val();
@@ -1258,7 +1244,7 @@ Template.journalentrycard.onRendered(() => {
         let surname = '';
         let dept = '';
         let tax = '';
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = '';
         let id = $('.printID').attr("id") || "new";
@@ -1274,11 +1260,11 @@ Template.journalentrycard.onRendered(() => {
         {
               item_invoices = {
 
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1327,11 +1313,11 @@ Template.journalentrycard.onRendered(() => {
         else if(number == 2)
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1380,11 +1366,11 @@ Template.journalentrycard.onRendered(() => {
         else
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1471,9 +1457,9 @@ Template.journalentrycard.onRendered(() => {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1514,9 +1500,9 @@ Template.journalentrycard.onRendered(() => {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1557,9 +1543,9 @@ Template.journalentrycard.onRendered(() => {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1573,7 +1559,7 @@ Template.journalentrycard.onRendered(() => {
         } else {
             $(".subtotal3").show();
         }
-        
+
         $("#templatePreviewModal #subtotal_totalPrint3").text(
             object_invoce[0]["subtotal"]
         );
@@ -1690,7 +1676,7 @@ Template.journalentrycard.onRendered(() => {
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                 // $(".btnSave").trigger("click");
             } else {
-                
+
             }
             $('#html-2-pdfwrapper').css('display', 'none');
             $("#html-2-pdfwrapper_quotes").hide();
@@ -1759,270 +1745,6 @@ Template.journalentrycard.onRendered(function() {
     var splashArrayProductList = new Array();
     var splashArrayTaxRateList = new Array();
     const taxCodesList = [];
-    tempObj.getAllProducts = function() {
-        getVS1Data('TAccountVS1').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                accountService.getAccountListVS1().then(function(data) {
-
-                    let records = [];
-                    let inventoryData = [];
-                    for (let i = 0; i < data.taccountvs1.length; i++) {
-                        var dataList = [
-                            data.taccountvs1[i].AccountName || '-',
-                            data.taccountvs1[i].Description || '',
-                            data.taccountvs1[i].AccountNumber || '',
-                            data.taccountvs1[i].AccountTypeName || '',
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].Balance * 100) / 100),
-                            data.taccountvs1[i].TaxCode || ''
-                        ];
-
-                        splashArrayProductList.push(dataList);
-                    }
-                    localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
-
-                    if (splashArrayProductList) {
-
-                        $('#tblAccount').dataTable({
-                            data: splashArrayProductList.sort(),
-
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            paging: true,
-                            "aaSorting": [],
-                            "orderMulti": true,
-                            columnDefs: [
-
-                                {
-                                    className: "productName",
-                                    "targets": [0]
-                                },
-                                {
-                                    className: "productDesc",
-                                    "targets": [1]
-                                },
-                                {
-                                    className: "accountnumber",
-                                    "targets": [2]
-                                },
-                                {
-                                    className: "salePrice",
-                                    "targets": [3]
-                                },
-                                {
-                                    className: "prdqty text-right",
-                                    "targets": [4]
-                                },
-                                {
-                                    className: "taxrate",
-                                    "targets": [5]
-                                }
-                            ],
-                            colReorder: true,
-
-
-
-                            "order": [
-                                [0, "asc"]
-                            ],
-
-
-                            pageLength: initialDatatableLoad,
-                            lengthMenu: [
-                                [initialDatatableLoad, -1],
-                                [initialDatatableLoad, "All"]
-                            ],
-                            info: true,
-                            responsive: true
-
-                        });
-
-                        $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-
-
-
-
-
-                    }
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.taccountvs1;
-
-                let records = [];
-                let inventoryData = [];
-                for (let i = 0; i < useData.length; i++) {
-                    if (!isNaN(useData[i].fields.Balance)) {
-                        accBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance) || 0.00;
-                    } else {
-                        accBalance = Currency + "0.00";
-                    }
-                    var dataList = [
-                        useData[i].fields.AccountName || '-',
-                        useData[i].fields.Description || '',
-                        useData[i].fields.AccountNumber || '',
-                        useData[i].fields.AccountTypeName || '',
-                        accBalance,
-                        useData[i].fields.TaxCode || ''
-                    ];
-
-                    splashArrayProductList.push(dataList);
-                }
-                localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
-
-                if (splashArrayProductList) {
-
-                    $('#tblAccount').dataTable({
-                        data: splashArrayProductList.sort(),
-
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: true,
-                        "aaSorting": [],
-                        "orderMulti": true,
-                        columnDefs: [
-
-                            {
-                                className: "productName",
-                                "targets": [0]
-                            },
-                            {
-                                className: "productDesc",
-                                "targets": [1]
-                            },
-                            {
-                                className: "accountnumber",
-                                "targets": [2]
-                            },
-                            {
-                                className: "salePrice",
-                                "targets": [3]
-                            },
-                            {
-                                className: "prdqty text-right",
-                                "targets": [4]
-                            },
-                            {
-                                className: "taxrate",
-                                "targets": [5]
-                            }
-                        ],
-                        colReorder: true,
-
-
-
-                        "order": [
-                            [0, "asc"]
-                        ],
-
-
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true
-
-                    });
-
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-
-
-
-
-
-                }
-            }
-        }).catch(function(err) {
-            accountService.getAccountListVS1().then(function(data) {
-
-                let records = [];
-                let inventoryData = [];
-                for (let i = 0; i < data.taccountvs1.length; i++) {
-                    var dataList = [
-                        data.taccountvs1[i].AccountName || '-',
-                        data.taccountvs1[i].Description || '',
-                        data.taccountvs1[i].AccountNumber || '',
-                        data.taccountvs1[i].AccountTypeName || '',
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].Balance * 100) / 100),
-                        data.taccountvs1[i].TaxCode || ''
-                    ];
-
-                    splashArrayProductList.push(dataList);
-                }
-                localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
-
-                if (splashArrayProductList) {
-
-                    $('#tblAccount').dataTable({
-                        data: splashArrayProductList.sort(),
-
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: true,
-                        "aaSorting": [],
-                        "orderMulti": true,
-                        columnDefs: [
-
-                            {
-                                className: "productName",
-                                "targets": [0]
-                            },
-                            {
-                                className: "productDesc",
-                                "targets": [1]
-                            },
-                            {
-                                className: "accountnumber",
-                                "targets": [2]
-                            },
-                            {
-                                className: "salePrice",
-                                "targets": [3]
-                            },
-                            {
-                                className: "prdqty text-right",
-                                "targets": [4]
-                            },
-                            {
-                                className: "taxrate",
-                                "targets": [5]
-                            }
-                        ],
-                        colReorder: true,
-
-
-
-                        "order": [
-                            [0, "asc"]
-                        ],
-
-
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true
-
-                    });
-
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-
-
-
-
-
-                }
-            });
-        });
-
-    };
-
-    setTimeout(function() {
-        //tempObj.getAllProducts();
-    }, 500);
 
     tempObj.getAllTaxCodes = function() {
         getVS1Data('TTaxcodeVS1').then(function(dataObject) {
@@ -2385,13 +2107,13 @@ Template.journalentrycard.helpers({
     },
     purchaseCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'journalentrycard'
         });
     },
     purchaseCloudGridPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblJournalEntryLine'
         });
     },
@@ -2427,31 +2149,31 @@ Template.journalentrycard.helpers({
         return Template.instance().totalDebitInc.get();
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
      poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () => {
-        return Session.get('vs1companyPhone');
+        return localStorage.getItem('vs1companyPhone');
     },
     companyabn: () => {
-        return Session.get('vs1companyABN');
+        return localStorage.getItem('vs1companyABN');
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
     isMobileDevices: () => {
         var isMobile = false;
@@ -2464,7 +2186,7 @@ Template.journalentrycard.helpers({
         return isMobile;
     },
     isCurrencyEnable: () => {
-        return Session.get('CloudUseForeignLicence');
+        return localStorage.getItem('CloudUseForeignLicence');
     },
 
 
@@ -2720,7 +2442,7 @@ Template.journalentrycard.events({
         let basedOnTypeAttr = 'F,';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -2787,7 +2509,7 @@ Template.journalentrycard.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -2838,7 +2560,7 @@ Template.journalentrycard.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -2919,17 +2641,17 @@ Template.journalentrycard.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -3006,21 +2728,21 @@ Template.journalentrycard.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             // window.open("/invoicecard", "_self");
@@ -4024,10 +3746,10 @@ Template.journalentrycard.events({
         }
     },
     'click .btnRemove': async function(event) {
-
+        var templateObject = Template.instance();
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-       
+
         if(targetID != undefined){
             times++;
             if (times == 1) {
@@ -4378,7 +4100,7 @@ Template.journalentrycard.events({
 
                                 DeptName: department || defaultDept,
 
-                                EmployeeName: Session.get('mySessionEmployee')
+                                EmployeeName: localStorage.getItem('mySessionEmployee')
                             }
                         };
                         lineItemsForm.push(lineItemObjForm);
@@ -4426,7 +4148,7 @@ Template.journalentrycard.events({
                                 DeptName: department || defaultDept,
 
                                 ClientName: '',
-                                EmployeeName: Session.get('mySessionEmployee')
+                                EmployeeName: localStorage.getItem('mySessionEmployee')
                             }
                         };
                         lineItemsForm.push(lineItemObjForm);
@@ -4454,10 +4176,13 @@ Template.journalentrycard.events({
                 return false;
             }
             purchaseService.saveJournalEnrtry(objDetails).then(function(objDetails) {
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
                 FlowRouter.go('/journalentrylist?success=true');
                 $('.modal-backdrop').css('display', 'none');
-
-
             }).catch(function(err) {
                 if (err === 'Error: "Unable to lock object: "') {
                     swal({
@@ -4612,8 +4337,8 @@ Template.journalentrycard.events({
 
 
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -4678,8 +4403,8 @@ Template.journalentrycard.events({
     },
     'click .btnResetGridSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -4707,8 +4432,8 @@ Template.journalentrycard.events({
     },
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {

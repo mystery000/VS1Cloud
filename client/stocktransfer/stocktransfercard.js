@@ -74,8 +74,8 @@ Template.stocktransfercard.onRendered(function() {
     let stockTransferService = new StockTransferService();
     $('.fullScreenSpin').css('display', 'inline-block');
     const templateObject = Template.instance();
-    let printDeliveryDocket = Session.get('CloudPrintDeliveryDocket');
-    let printInvoice = Session.get('CloudPrintInvoice');
+    let printDeliveryDocket = localStorage.getItem('CloudPrintDeliveryDocket');
+    let printInvoice = localStorage.getItem('CloudPrintInvoice');
     const records = [];
     const viarecords = [];
 
@@ -171,7 +171,7 @@ Template.stocktransfercard.onRendered(function() {
             templateObject.availserialrecord.set(dataSerialNumber);
         });
     }
-    if (Session.get('CloudShowSerial')) {
+    if (localStorage.getItem('CloudShowSerial')) {
         templateObject.getAllAvailableSerialNumber();
     }
     stockTransferService.getProductClassQuantitys().then(function(dataProductQty) {
@@ -538,7 +538,7 @@ Template.stocktransfercard.onRendered(function() {
                             if (templateObject.stocktransferrecord.get()) {
 
 
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStocktransfer', function(error, result) {
+                                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStocktransfer', function(error, result) {
                                     if (error) {
 
                                         //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
@@ -810,7 +810,7 @@ Template.stocktransfercard.onRendered(function() {
                                 $(".btnDeleteProduct").prop("disabled", false);
                                 $(".close").prop("disabled", false);
                                 if (templateObject.stocktransferrecord.get()) {
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStocktransfer', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStocktransfer', function(error, result) {
                                         if (error) {} else {
                                             if (result) {
                                                 for (let i = 0; i < result.customFields.length; i++) {
@@ -973,7 +973,7 @@ Template.stocktransfercard.onRendered(function() {
                                 if (templateObject.stocktransferrecord.get()) {
 
 
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStocktransfer', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStocktransfer', function(error, result) {
                                         if (error) {
 
                                             //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
@@ -1147,7 +1147,7 @@ Template.stocktransfercard.onRendered(function() {
                         if (templateObject.stocktransferrecord.get()) {
 
 
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStocktransfer', function(error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStocktransfer', function(error, result) {
                                 if (error) {
 
                                     //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
@@ -3360,7 +3360,7 @@ Template.stocktransfercard.events({
                     Transfertype: "Gen",
                     EnforceUOM: false,
                     Lines: splashLineArray,
-                    EmployeeName: Session.get('mySessionEmployee'),
+                    EmployeeName: localStorage.getItem('mySessionEmployee'),
                     Shipping: shipVia,
                     Notes: notes,
                     Description: reason
@@ -3378,7 +3378,7 @@ Template.stocktransfercard.events({
                     Transfertype: "Gen",
                     EnforceUOM: false,
                     Lines: splashLineArray,
-                    EmployeeName: Session.get('mySessionEmployee'),
+                    EmployeeName: localStorage.getItem('mySessionEmployee'),
                     Shipping: shipVia,
                     Notes: notes,
                     Description: reason
@@ -3431,7 +3431,7 @@ Template.stocktransfercard.events({
                 attachment.push(pdfObject);
                 let erpInvoiceId = objDetails.fields.ID;
 
-                let mailFromName = Session.get('vs1companyName');
+                let mailFromName = localStorage.getItem('vs1companyName');
                 let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                 //let customerEmailName = $('#edtCustomerName').val();
                 let checkEmailData = $('#edtCustomerEmail').val();
@@ -3691,7 +3691,7 @@ Template.stocktransfercard.events({
                   // Approved: false,
                   CreationDate: creationDate,
                   //Deleted: false,
-                  EmployeeName: Session.get('mySessionEmployee'),
+                  EmployeeName: localStorage.getItem('mySessionEmployee'),
                   EnforceUOM: false,
                   //ISEmpty:false,
                   //IsStockTake:false,
@@ -3717,7 +3717,7 @@ Template.stocktransfercard.events({
                   // Approved: false,
                   CreationDate: creationDate,
                   //Deleted: false,
-                  EmployeeName: Session.get('mySessionEmployee'),
+                  EmployeeName: localStorage.getItem('mySessionEmployee'),
                   EnforceUOM: false,
                   //ISEmpty:false,
                   //IsStockTake:false,
@@ -3778,7 +3778,7 @@ Template.stocktransfercard.events({
               attachment.push(pdfObject);
               let erpInvoiceId = objDetails.fields.ID;
 
-              let mailFromName = Session.get('vs1companyName');
+              let mailFromName = localStorage.getItem('vs1companyName');
               let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
               //let customerEmailName = $('#edtCustomerName').val();
               let checkEmailData = $('#edtCustomerEmail').val();
@@ -4042,7 +4042,7 @@ Template.stocktransfercard.events({
                     // Approved: false,
                     CreationDate: creationDate,
                     //Deleted: false,
-                    EmployeeName: Session.get('mySessionEmployee'),
+                    EmployeeName: localStorage.getItem('mySessionEmployee'),
                     EnforceUOM: false,
                     //ISEmpty:false,
                     //IsStockTake:false,
@@ -4068,7 +4068,7 @@ Template.stocktransfercard.events({
                     // Approved: false,
                     CreationDate: creationDate,
                     //Deleted: false,
-                    EmployeeName: Session.get('mySessionEmployee'),
+                    EmployeeName: localStorage.getItem('mySessionEmployee'),
                     EnforceUOM: false,
                     //ISEmpty:false,
                     //IsStockTake:false,
@@ -4129,7 +4129,7 @@ Template.stocktransfercard.events({
                 attachment.push(pdfObject);
                 let erpInvoiceId = objDetails.fields.ID;
 
-                let mailFromName = Session.get('vs1companyName');
+                let mailFromName = localStorage.getItem('vs1companyName');
                 let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                 //let customerEmailName = $('#edtCustomerName').val();
                 let checkEmailData = $('#edtCustomerEmail').val();
@@ -4465,26 +4465,29 @@ Template.stocktransfercard.events({
         $('#deleteLineModal').modal('toggle');
     }, delayTimeAfterSound);
     },
-    'click .removebutton': function(event) {
+    'click .btnRemove': function(event) {
         let templateObject = Template.instance();
         var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-
-        times++;
-        if (times == 1) {
-            $('#deleteLineModal').modal('toggle');
-        } else {
-            if ($('#tblStocktransfer tbody>tr').length > 1) {
-                this.click;
-                $(event.target).closest('tr').remove();
-                event.preventDefault();
-                return false;
-
-            } else {
+        if(targetID != undefined) {       
+            times++;
+            if (times == 1) {
                 $('#deleteLineModal').modal('toggle');
-            }
+            } else {
+                    if ($('#tblStocktransfer tbody>tr').length > 1) {
+                        this.click;
+                        $(event.target).closest('tr').remove();
+                        event.preventDefault();
+                        return false;
 
+                    } else {
+                        $('#deleteLineModal').modal('toggle');
+                    }
+
+                }
+        }else {
+            $('#footerDeleteModal1').modal('toggle'); 
         }
     },
     'click #tdBarcodeScannerMobile': function(event) {
@@ -4640,7 +4643,7 @@ Template.stocktransfercard.events({
 
 Template.stocktransfercard.helpers({
     isBatchSerialNoTracking: () => {
-        return Session.get('CloudShowSerial') || false;
+        return localStorage.getItem('CloudShowSerial') || false;
     },
     isPrintInvoice: () => {
         return Template.instance().includeIsPrintInvoice.get();
@@ -4671,7 +4674,7 @@ Template.stocktransfercard.helpers({
         return Template.instance().availableserialnumberlist.get();
     },
     showSerial: () => {
-        return Session.get('CloudShowSerial') || false;
+        return localStorage.getItem('CloudShowSerial') || false;
     },
     availableserialnumberqty: () => {
         let availaLegnt = false;
@@ -4681,30 +4684,30 @@ Template.stocktransfercard.helpers({
         return availaLegnt;
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () => {
-        return Session.get('vs1companyPhone');
+        return localStorage.getItem('vs1companyPhone');
     },
     companyabn: () => {
-        return Session.get('vs1companyABN');
+        return localStorage.getItem('vs1companyABN');
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
 });

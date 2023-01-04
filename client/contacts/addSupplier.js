@@ -7,6 +7,11 @@ import { SideBarService } from '../js/sidebar-service';
 import { CRMService } from "../crm/crm-service";
 import '../lib/global/indexdbstorage.js';
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './addSupplier.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.supplierscard.onCreated(function() {
@@ -17,6 +22,8 @@ Template.supplierscard.onCreated(function() {
     templateObject.recentTrasactions = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.crmRecords = new ReactiveVar([]);
+    templateObject.crmTableheaderRecords = new ReactiveVar([]);
     templateObject.preferredPaymentList = new ReactiveVar();
     templateObject.termsList = new ReactiveVar();
     templateObject.deliveryMethodList = new ReactiveVar();
@@ -33,6 +40,13 @@ Template.supplierscard.onCreated(function() {
     templateObject.currentAttachLineID = new ReactiveVar();
     templateObject.correspondences = new ReactiveVar([]);
     templateObject.crmRecords = new ReactiveVar([]);
+
+    templateObject.active_projects = new ReactiveVar([]);
+    templateObject.deleted_projects = new ReactiveVar([]);
+    templateObject.favorite_projects = new ReactiveVar([]);
+    templateObject.tprojectlist = new ReactiveVar([]);
+    templateObject.all_projects = new ReactiveVar([]);
+    templateObject.subTasks = new ReactiveVar([]);
 });
 
 Template.supplierscard.onRendered(function() {
@@ -50,6 +64,9 @@ Template.supplierscard.onRendered(function() {
     let deliveryMethods = [];
     let taxCodes = [];
     let currentId = FlowRouter.current().queryParams;
+    if (FlowRouter.current().route.name != "supplierscard") {
+        currentId = "";
+    }
     let supplierID = '';
     let totAmount = 0;
     let totAmountOverDue = 0;
@@ -60,59 +77,86 @@ Template.supplierscard.onRendered(function() {
     templateObject.defaultpurchasetaxcode.set(loggedTaxCodeSalesInc);
 
     setTimeout(() => {
-      $("#edtBankName").editableSelect();
-      $("#edtBankName")
-        .editableSelect()
-        .on("click.editable-select", function (e, li) {
-          var $earch = $(this);
-          var offset = $earch.offset();
-          var bankName = e.target.value || "";
+        $("#edtBankName").editableSelect();
+        $("#edtBankName")
+            .editableSelect()
+            .on("click.editable-select", function(e, li) {
+                var $earch = $(this);
+                var offset = $earch.offset();
+                var bankName = e.target.value || "";
 
-          if (e.pageX > offset.left + $earch.width() - 8) {
-            $("#bankNameModal").modal();
-            $(".fullScreenSpin").css("display", "none");
+                if (e.pageX > offset.left + $earch.width() - 8) {
+                    $("#bankNameModal").modal();
+                    $(".fullScreenSpin").css("display", "none");
 
-          } else {
-            if (bankName.replace(/\s/g, "") != "") {
-              $("#bankNameModal").modal("toggle");
-            } else {
-              $("#bankNameModal").modal();
-            }
-          }
-        });
-      
+                } else {
+                    if (bankName.replace(/\s/g, "") != "") {
+                        $("#bankNameModal").modal("toggle");
+                    } else {
+                        $("#bankNameModal").modal();
+                    }
+                }
+            });
+
     }, 2500);
 
-    $(document).on("click", "#tblBankName tbody tr", function (e) {
-      var table = $(this);
-      let BankName = table.find(".bankName").text();
-      $('#bankNameModal').modal('toggle');
-      $('#edtBankName').val(BankName);
-    }); 
-    
-    templateObject.fillBankInfoFromUrl = function () {
-      var queryParams = FlowRouter.current().queryParams;
-      if(queryParams.bank) {
-        let edtBankName = queryParams.edtBankName;
-        let edtBankAccountName = queryParams.edtBankAccountName;
-        let edtBSB = queryParams.edtBSB;
-        let edtBankAccountNo = queryParams.edtBankAccountNo;
-        let swiftCode = queryParams.swiftCode;
-        let apcaNo = queryParams.apcaNo;
-        let routingNo = queryParams.routingNo;
-        let sltBankCodes = queryParams.sltBankCodes;
-        $('.bilingTab').click();
-        $('#edtBankName').val(edtBankName)
-        $('#edtBankAccountName').val(edtBankAccountName)
-        $('#edtBsb').val(edtBSB)
-        $('#edtBankAccountNumber').val(edtBankAccountNo)
-        $('#edtSwiftCode').val(swiftCode)
-        $('#edtRoutingNumber').val(routingNo)
-        // $('#sltCurrency').val()
-      }
+    templateObject.updateTaskSchedule = function(id, date) {
+        let due_date = "";
+        let due_date_display = "No Date";
+        if (date) {
+            due_date = moment(date).format("YYYY-MM-DD hh:mm:ss");
+            due_date_display = moment(due_date).format("dddd, Do MMMM");
+        }
+        $('#edit_task_modal_due_date').html(due_date_display)
+
+        var objDetails = {
+            type: "Tprojecttasks",
+            fields: {
+                ID: id,
+                due_date: due_date,
+            },
+        };
+
+        if (id) {
+            $(".fullScreenSpin").css("display", "inline-block");
+            crmService.saveNewTask(objDetails).then(function(data) {
+                templateObject.getAllTaskList();
+                $(".fullScreenSpin").css("display", "none");
+                $(".btnRefresh").addClass('btnSearchAlert');
+            });
+        }
+    };
+
+    $(document).on("click", "#tblBankName tbody tr", function(e) {
+        var table = $(this);
+        let BankName = table.find(".bankName").text();
+        $('#bankNameModal').modal('toggle');
+        $('#edtBankName').val(BankName);
+    });
+
+    templateObject.fillBankInfoFromUrl = function() {
+        var queryParams = FlowRouter.current().queryParams;
+        if (queryParams.bank) {
+            let edtBankName = queryParams.edtBankName;
+            let edtBankAccountName = queryParams.edtBankAccountName;
+            let edtBSB = queryParams.edtBSB;
+            let edtBankAccountNo = queryParams.edtBankAccountNo;
+            let swiftCode = queryParams.swiftCode;
+            let apcaNo = queryParams.apcaNo;
+            let routingNo = queryParams.routingNo;
+            let sltBankCodes = queryParams.sltBankCodes;
+            $('.bilingTab').click();
+            $('#edtBankName').val(edtBankName)
+            $('#edtBankAccountName').val(edtBankAccountName)
+            $('#edtBsb').val(edtBSB)
+            $('#edtBankAccountNumber').val(edtBankAccountNo)
+            $('#edtSwiftCode').val(swiftCode)
+            $('#edtRoutingNumber').val(routingNo)
+                // $('#sltCurrency').val()
+        }
     }
     setTimeout(() => {
-      templateObject.fillBankInfoFromUrl();
+        templateObject.fillBankInfoFromUrl();
     }, 3500);
 
     // $(document).ready(function () {
@@ -179,7 +223,7 @@ Template.supplierscard.onRendered(function() {
                     let tempArray = [];
                     if (dataObject.tcorrespondence.length > 0) {
                         let temp = dataObject.tcorrespondence.filter(item => {
-                            return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                            return item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         })
 
                         for (let i = 0; i < temp.length; i++) {
@@ -191,7 +235,7 @@ Template.supplierscard.onRendered(function() {
                         }
 
                         temp.map(item => {
-                            if (item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                            if (item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                                 tempArray.push(item.fields)
                             }
                         })
@@ -203,7 +247,7 @@ Template.supplierscard.onRendered(function() {
                 let tempArray = [];
                 if (dataObj.tcorrespondence.length > 0) {
                     let temp = dataObj.tcorrespondence.filter(item => {
-                        return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                        return item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     })
 
                     for (let i = 0; i < temp.length; i++) {
@@ -214,7 +258,7 @@ Template.supplierscard.onRendered(function() {
                         }
                     }
                     temp.map(item => {
-                        if (item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                        if (item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                             tempArray.push(item.fields)
                         }
                     })
@@ -227,7 +271,7 @@ Template.supplierscard.onRendered(function() {
                 let tempArray = [];
                 if (dataObject.tcorrespondence.length > 0) {
                     let temp = dataObject.tcorrespondence.filter(item => {
-                        return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                        return item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     })
 
                     for (let i = 0; i < temp.length; i++) {
@@ -238,7 +282,7 @@ Template.supplierscard.onRendered(function() {
                         }
                     }
                     temp.map(item => {
-                        if (item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                        if (item.fields.EmployeeId == localStorage.getItem('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                             tempArray.push(item.fields)
                         }
                     })
@@ -246,6 +290,373 @@ Template.supplierscard.onRendered(function() {
                 templateObject.correspondences.set(tempArray)
             })
         })
+    }
+
+    templateObject.makeTaskTableRows = function(task_array) {
+        let taskRows = new Array();
+        let td0, td1, tflag, td11, td2, td3, td4, td5, td6 = "",
+            tcontact = "";
+        let projectName = "";
+        let labelsForExcel = "";
+        let color_num = '100';
+
+        let todayDate = moment().format("ddd");
+        let tomorrowDay = moment().add(1, "day").format("ddd");
+        let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
+
+        let chk_complete, completed = "";
+        let completed_style = "";
+        task_array.forEach((item) => {
+            if (item.fields.Completed) {
+                completed = "checked";
+                chk_complete = "chk_uncomplete";
+                // completed_style = "display:none;"
+            } else {
+                completed = "";
+                chk_complete = "chk_complete";
+            }
+            td0 = `
+        <div class="custom-control custom-checkbox chkBox pointer no-modal "
+          style="width:15px;margin-right: -6px;">
+          <input class="custom-control-input chkBox chkComplete pointer ${chk_complete}" type="checkbox"
+            id="formCheck-${item.fields.ID}" ${completed}>
+          <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
+            for="formCheck-${item.fields.ID}"></label>
+        </div>`;
+
+            tflag = `<i class="fas fa-flag task_modal_priority_${item.fields.priority}" data-id="${item.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
+
+            // tempcode  need to add ContactName, AssignName fields to Tprojecttasks
+            tcontact = item.fields.ContactName;
+            // if (item.fields.LeadID) {
+            //   let cData = getContactDetailById(item.fields.LeadID, 'Lead');
+            //   tcontact = cData ? cData.fields.ClientName : "";
+            // } else if (item.fields.SupplierID) {
+            //   let cData = getContactDetailById(item.fields.SupplierID, 'Supplier');
+            //   tcontact = cData ? cData.fields.ClientName : "";
+            // } else if (item.fields.JobID) {
+            //   let cData = getContactDetailById(item.fields.LeadID, 'Job');
+            //   tcontact = cData ? cData.fields.ClientName : "";
+            // } else {
+
+            // }
+
+            if (item.fields.due_date == "" || item.fields.due_date == null) {
+                td1 = "";
+                td11 = "";
+            } else {
+                td11 = moment(item.fields.due_date).format("DD/MM/YYYY");
+                td1 = `<label style="display:none;">${item.fields.due_date}</label>` + td11;
+
+                let tdue_date = moment(item.fields.due_date).format("YYYY-MM-DD");
+                if (tdue_date <= moment().format("YYYY-MM-DD")) {
+                    color_num = 3; // Red
+                } else if (tdue_date > moment().format("YYYY-MM-DD") && tdue_date <= moment().add(2, "day").format("YYYY-MM-DD")) {
+                    color_num = 2; // Orange
+                } else if (tdue_date > moment().add(2, "day").format("YYYY-MM-DD") && tdue_date <= moment().add(7, "day").format("YYYY-MM-DD")) {
+                    color_num = 0; // Green
+                }
+
+                td0 = `
+        <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${color_num}"
+          style="width:15px;margin-right: -6px;${completed_style}">
+          <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
+            id="formCheck-${item.fields.ID}" ${completed}>
+          <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
+            for="formCheck-${item.fields.ID}"></label>
+        </div>`;
+            }
+
+            td2 = item.fields.TaskName;
+            td3 = item.fields.TaskDescription.length < 80 ? item.fields.TaskDescription : item.fields.TaskDescription.substring(0, 79) + "...";
+
+            if (item.fields.TaskLabel) {
+                if (item.fields.TaskLabel.fields) {
+                    td4 = `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${item.fields.TaskLabel.fields.ID}"><i class="fas fa-tag"
+          style="margin-right: 5px; color:${item.fields.TaskLabel.fields.Color}" data-id="${item.fields.TaskLabel.fields.ID}"></i>${item.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
+                    labelsForExcel = item.fields.TaskLabel.fields.TaskLabelName;
+                } else {
+                    item.fields.TaskLabel.forEach((lbl) => {
+                        td4 += `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}"><i class="fas fa-tag"
+            style="margin-right: 5px; color:${lbl.fields.Color}" data-id="${lbl.fields.ID}"></i>${lbl.fields.TaskLabelName}</a></span>`;
+                        labelsForExcel += lbl.fields.TaskLabelName + " ";
+                    });
+                }
+            } else {
+                td4 = "";
+            }
+
+            projectName = item.fields.ProjectName;
+            if (item.fields.ProjectName == "" || item.fields.ProjectName == "Default") {
+                projectName = "";
+            }
+
+            let all_projects = templateObject.all_projects.get();
+            let projectColor = 'transparent';
+            if (item.fields.ProjectID != 0) {
+                let projects = all_projects.filter(project => project.fields.ID == item.fields.ProjectID);
+                if (projects.length && projects[0].fields.ProjectColour) {
+                    projectColor = projects[0].fields.ProjectColour;
+                }
+            }
+
+            td5 = `
+      <div style="display:flex; justify-content:center;">
+        <div class="dropdown btnTaskTableAction">
+          <button type="button" class="btn btn-success" data-toggle="dropdown"><i
+              class="far fa-calendar" title="Reschedule Task"></i></button>
+          <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
+            aria-labelledby="dropdownMenuButton" style="width: 275px;">
+            <a class="dropdown-item no-modal setScheduleToday" href="#" data-id="${item.fields.ID}">
+              <i class="fas fa-calendar-day text-success no-modal"
+                style="margin-right: 8px;"></i>Today
+              <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                ${todayDate}</div>
+            </a>
+            <a class="dropdown-item no-modal setScheduleTomorrow" href="#"
+              data-id="${item.fields.ID}">
+              <i class="fas fa-sun text-warning no-modal" style="margin-right: 8px;"></i>Tomorrow
+              <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                ${tomorrowDay}</div>
+            </a>
+            <a class="dropdown-item no-modal setScheduleWeekend" href="#"
+              data-id="${item.fields.ID}">
+              <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>This Weekend
+              <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                Sat</div>
+            </a>
+            <a class="dropdown-item no-modal setScheduleNexweek" href="#"
+              data-id="${item.fields.ID}">
+              <i class="fas fa-calendar-alt text-danger no-modal" style="margin-right: 8px;"></i>Next Week
+              <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                ${nextMonday}
+              </div>
+            </a>
+            <a class="dropdown-item no-modal setScheduleNodate" href="#" data-id="${item.fields.ID}">
+              <i class="fas fa-ban text-secondary no-modal" style="margin-right: 8px;"></i>
+              No Date</a>
+            <div class="dropdown-divider no-modal"></div>
+            <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
+              title="Date format: DD/MM/YYYY" style="display:flex; margin: 6px 20px; margin-top: 0px; z-index: 99999;">
+              <label style="margin-top: 6px; margin-right: 16px; width: 146px;">Select Date</label>
+              <div class="input-group date no-modal" style="cursor: pointer;">
+                <input type="text" id="${item.fields.ID}" class="form-control crmDatepicker no-modal"
+                  autocomplete="off">
+                <div class="input-group-addon no-modal">
+                  <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer;"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown btnTaskTableAction">
+          <button type="button" class="btn btn-warning openEditTaskModal" data-id="${item.fields.ID}"
+            data-ttype="comment" data-catg="${projectName}"
+            title="Add a Comment"><i class="far fa-comment-alt" data-id="${item.fields.ID}"
+              data-ttype="comment"
+              data-catg="${projectName}"></i></button>
+        </div>
+
+        <div class="dropdown btnTaskTableAction">
+          <button type="button" class="btn btn-secondary" data-toggle="dropdown"
+            data-placement="bottom" title="More Options"><i class="fas fa-ellipsis-h"></i></button>
+          <div class="dropdown-menu dropdown-menu-right crmtaskdrop" id="">
+            <a class="dropdown-item openEditTaskModal" data-id="${item.fields.ID}"
+              data-catg="${projectName}">
+              <i class="far fa-edit" style="margin-right: 8px;" data-id="${item.fields.ID}"
+                data-catg="${projectName}"></i>Edit
+              Task</a>
+
+            <div class="dropdown-divider"></div>
+
+            <div class="dropdown-item-wrap no-modal">
+              <div class="no-modal">
+                <div class="no-modal">
+                  <span class="no-modal">Priority</span>
+                </div>
+                <div class="no-modal" style="display: inline-flex;">
+                  <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_3" style="padding-left: 8px;" data-toggle="tooltip"
+                    data-placement="bottom" title="Priority 1" data-priority="3"
+                    data-id="${item.fields.ID}"></i>
+                  <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_2"
+                    data-toggle="tooltip" data-placement="bottom" title="Priority 2" data-priority="2"
+                    data-id="${item.fields.ID}"></i>
+                  <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_1"
+                    data-toggle="tooltip" data-placement="bottom" title="Priority 3" data-priority="1"
+                    data-id="${item.fields.ID}"></i>
+                  <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_0" data-toggle="tooltip"
+                    data-placement="bottom" title="Priority 4" data-priority="0"
+                    data-id="${item.fields.ID}"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item no-modal movetoproject" data-id="${item.fields.ID}"
+              data-projectid="${item.fields.ProjectID}">
+              <i class="fa fa-arrow-circle-right" style="margin-right: 8px;"
+                data-id="${item.fields.ID}" data-projectid="${item.fields.ProjectID}"></i>Move to
+              Project</a>
+            <a class="dropdown-item duplicate-task no-modal" data-id="${item.fields.ID}">
+              <i class="fa fa-plus-square-o" style="margin-right: 8px;"
+                data-id="${item.fields.ID}"></i>Duplicate</a>
+
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item delete-task no-modal" data-id="${item.fields.ID}">
+              <i class="fas fa-trash-alt" style="margin-right: 8px;"
+                data-id="${item.fields.ID}"></i>Delete
+              Task</a>
+          </div>
+        </div>
+      </div>`;
+
+            td6 = ``;
+            if (item.fields.Active) {
+                td6 = "";
+            } else {
+                td6 = "In-Active";
+            }
+            taskRows.push([
+                // td0,
+                tflag,
+                tcontact,
+                td1,
+                td2,
+                td3,
+                td4,
+                projectName,
+                td6,
+                item.fields.ID,
+                color_num,
+                labelsForExcel,
+                item.fields.Completed,
+                projectColor
+            ]);
+        });
+        return taskRows;
+    };
+
+    templateObject.initSubtaskDatatable = function() {
+
+        let splashArrayTaskList = templateObject.makeTaskTableRows(templateObject.subTasks.get());
+
+        try {
+            $("#tblSubtaskDatatable").DataTable({
+                data: splashArrayTaskList,
+                columnDefs: [
+                    // {
+                    //   orderable: false,
+                    //   targets: 0,
+                    //   className: "colCompleteTask colSubComplete",
+                    //   createdCell: function (td, cellData, rowData, row, col) {
+                    //     $(td).closest("tr").attr("data-id", rowData[8]);
+                    //     $(td).attr("data-id", rowData[8]);
+                    //     $(td).addClass("task_priority_" + rowData[10]);
+                    //     if (rowData[12]) {
+                    //       $(td).addClass("taskCompleted");
+                    //     }
+                    //   },
+                    //   width: "18px",
+                    // },
+                    {
+                        orderable: false,
+                        targets: 0,
+                        className: "colPriority openEditSubTaskModal hiddenColumn",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("data-id", rowData[8]);
+                            $(td).attr("data-id", rowData[8]);
+                        },
+                        width: "100px",
+                    },
+                    {
+                        orderable: false,
+                        targets: 1,
+                        className: "colContact openEditSubTaskModal hiddenColumn",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                        },
+                        width: "100px",
+                    },
+                    {
+                        targets: 2,
+                        className: "colSubDate openEditSubTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                        },
+                        width: "120px",
+                    },
+                    {
+                        targets: 3,
+                        className: "colSubTaskName openEditSubTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[9]);
+                        },
+                    },
+                    {
+                        targets: 4,
+                        className: "colTaskDesc openEditSubTaskModal hiddenColumn",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                        },
+                    },
+                    {
+                        targets: 5,
+                        className: "colTaskLabels openEditSubTaskModal hiddenColumn",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                        },
+                    },
+                    {
+                        targets: 6,
+                        className: "colTaskProjects openEditSubTaskModal hiddenColumn",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                        },
+                    },
+                    {
+                        orderable: false,
+                        targets: 7,
+                        className: "colStatus openEditSubTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                        },
+                    },
+                    // {
+                    //   orderable: false,
+                    //   targets: 8,
+                    //   className: "colTaskActions",
+                    //   createdCell: function (td, cellData, rowData, row, col) {
+                    //     $(td).attr("data-id", rowData[8]);
+                    //   },
+                    //   width: "150px",
+                    // },
+                ],
+                colReorder: {
+                    fixedColumnsLeft: 0,
+                },
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                select: true,
+                destroy: true,
+                // colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"],
+                ],
+                info: true,
+                responsive: true,
+                order: [
+                    [1, "desc"],
+                ],
+                action: function() {
+                    $("#tblSubtaskDatatable").DataTable().ajax.reload();
+                },
+            });
+
+        } catch (error) {}
     }
 
     templateObject.getOverviewAPData = function(supplierName, supplierID) {
@@ -501,7 +912,7 @@ Template.supplierscard.onRendered(function() {
         for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
             preferredPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName)
         }
-        preferredPayments = _.sortBy(preferredPayments);
+        // preferredPayments = _.sortBy(preferredPayments);
         templateObject.preferredPaymentList.set(preferredPayments);
     }
     templateObject.getPreferredPaymentList();
@@ -528,7 +939,7 @@ Template.supplierscard.onRendered(function() {
             terms.push(data.ttermsvs1[i].TermsName);
             if (data.ttermsvs1[i].isPurchasedefault === true) {
                 templateObject.defaultpurchaseterm.set(data.ttermsvs1[i].TermsName);
-                Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
+                localStorage.setItem('ERPTermsPurchase', data.ttermsvs1[i].TermsName || "COD");
                 if (JSON.stringify(currentId) != '{}') {
                     if (currentId.id == "undefined") {
                         $('#sltTerms').val(data.ttermsvs1[i].TermsName);
@@ -538,7 +949,7 @@ Template.supplierscard.onRendered(function() {
                 }
             }
         }
-        terms = _.sortBy(terms);
+        // terms = _.sortBy(terms);
         templateObject.termsList.set(terms);
     }
     templateObject.getTermsList();
@@ -565,7 +976,7 @@ Template.supplierscard.onRendered(function() {
         for (let i = 0; i < data.tshippingmethod.length; i++) {
             deliveryMethods.push(data.tshippingmethod[i].ShippingMethod)
         }
-        deliveryMethods = _.sortBy(deliveryMethods);
+        // deliveryMethods = _.sortBy(deliveryMethods);
         templateObject.deliveryMethodList.set(deliveryMethods);
     }
     templateObject.getDeliveryMethodList();
@@ -592,7 +1003,7 @@ Template.supplierscard.onRendered(function() {
         for (let i = 0; i < data.ttaxcodevs1.length; i++) {
             taxCodes.push(data.ttaxcodevs1[i].CodeName)
         }
-        taxCodes = _.sortBy(taxCodes);
+        // taxCodes = _.sortBy(taxCodes);
         templateObject.taxCodeList.set(taxCodes);
     }
     templateObject.getTaxCodesList();
@@ -726,7 +1137,7 @@ Template.supplierscard.onRendered(function() {
             bankAccountName: data.fields.BankAccountName || '',
             bankAccountBSB: data.fields.BankAccountBSB || '',
             bankAccountNo: data.fields.BankAccountNo || '',
-            foreignExchangeCode:data.fields.ForeignExchangeCode || CountryAbbr,
+            foreignExchangeCode: data.fields.ForeignExchangeCode || CountryAbbr,
             // openingbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
             // taxcode:data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
         };
@@ -770,7 +1181,7 @@ Template.supplierscard.onRendered(function() {
 
     templateObject.getAllCrm = function(supplierName) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let employeeID = Session.get("mySessionEmployeeLoggedID");
+        let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
         var url = FlowRouter.current().path;
         if (url.includes("/employeescard")) {
             url = new URL(window.location.href);
@@ -802,7 +1213,9 @@ Template.supplierscard.onRendered(function() {
                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
                         description: taskDescription,
                         labels: taskLabelArray,
-                        category: 'task'
+                        category: 'task',
+                        completed: data.tprojecttasks[i].fields.Completed,
+                        completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                     };
                     dataTableList.push(dataList);
                 }
@@ -825,8 +1238,9 @@ Template.supplierscard.onRendered(function() {
                             projectName: '',
                             description: '',
                             labels: '',
-                            category: 'appointment'
-
+                            category: 'appointment',
+                            completed: data.fields.Actual_EndTime ? true : false,
+                            completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                         }
 
                         dataTableList.push(obj);
@@ -857,7 +1271,9 @@ Template.supplierscard.onRendered(function() {
                                 projectName: '',
                                 description: '',
                                 labels: '',
-                                category: 'email'
+                                category: 'email',
+                                completed: false,
+                                completedby: "",
                             }
                             dataTableList.push(obj)
                         })
@@ -1146,32 +1562,32 @@ Template.supplierscard.onRendered(function() {
         $('#paymentMethodModal').modal('toggle');
     });
 
-    $(document).on('click', '#edtSupplierTitle', function(e, li) {
+    $(document).on('click', '#editSupplierTitle', function(e, li) {
         const $earch = $(this);
         const offset = $earch.offset();
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
             $('#supplierTitlePopModal').modal('toggle');
         } else {
             $('#supplierTitlePopModal').modal();
-            setTimeout(function() {
-                $('#tblSupplierTitlePopList_filter .form-control-sm').focus();
-                $('#tblSupplierTitlePopList_filter .form-control-sm').val('');
-                $('#tblSupplierTitlePopList_filter .form-control-sm').trigger("input");
-                const datatable = $('#tblSupplierTitlePopList').DataTable();
-                datatable.draw();
-                $('#tblSupplierTitlePopList_filter .form-control-sm').trigger("input");
-            }, 500);
+            // setTimeout(function() {
+            //     $('#tblSupplierTitlePopList_filter .form-control-sm').focus();
+            //     $('#tblSupplierTitlePopList_filter .form-control-sm').val('');
+            //     $('#tblSupplierTitlePopList_filter .form-control-sm').trigger("input");
+            //     const datatable = $('#tblSupplierTitlePopList').DataTable();
+            //     datatable.draw();
+            //     $('#tblSupplierTitlePopList_filter .form-control-sm').trigger("input");
+            // }, 500);
         }
     });
 
-    $(document).on("click", "#tblSupplierTitlePopList tbody tr", function(e) {
-        $('#edtSupplierTitle').val($(this).find(".colTitleName").text());
-        $('#supplierTitlePopModal').modal('toggle');
-        $('#tblSupplierTitlePopList_filter .form-control-sm').val('');
-        setTimeout(function() {
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
+    // $(document).on("click", "#tblSupplierTitlePopList tbody tr", function(e) {
+    //     $('#editSupplierTitle').val($(this).find(".colTitleName").text());
+    //     $('#supplierTitlePopModal').modal('toggle');
+    //     $('#tblSupplierTitlePopList_filter .form-control-sm').val('');
+    //     setTimeout(function() {
+    //         $('.fullScreenSpin').css('display', 'none');
+    //     }, 1000);
+    // });
 
     function setTab() {
         if (currentId.crmTab === 'active') {
@@ -1190,7 +1606,7 @@ Template.supplierscard.onRendered(function() {
         setTimeout(function() {
             $('#sltTerms').editableSelect();
             $('#sltPreferredPayment').editableSelect();
-            $('#edtSupplierTitle').editableSelect();
+            $('#editSupplierTitle').editableSelect();
             $('#sltTerms').editableSelect()
                 .on('click.editable-select', function(e, li) {
                     var $earch = $(this);
@@ -1467,10 +1883,10 @@ Template.supplierscard.onRendered(function() {
                                 type: "TCorrespondence",
                                 fields: {
                                     Active: true,
-                                    EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                                    EmployeeId: localStorage.getItem('mySessionEmployeeLoggedID'),
                                     Ref_Type: dataLabel,
                                     MessageAsString: dataMemo,
-                                    MessageFrom: Session.get('mySessionEmployee'),
+                                    MessageFrom: localStorage.getItem('mySessionEmployee'),
                                     MessageId: dataObject.tcorrespondence.length.toString(),
                                     MessageTo: email,
                                     ReferenceTxt: dataSubject,
@@ -1534,7 +1950,7 @@ Template.supplierscard.onRendered(function() {
 
                             let temp = {
                                 Active: true,
-                                EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeId: localStorage.getItem('mySessionEmployeeLoggedID'),
                                 Ref_Type: tempLabel,
                                 MessageAsString: tempContent,
                                 MessageFrom: "",
@@ -1604,7 +2020,7 @@ Template.supplierscard.onRendered(function() {
                     sideBarService.getCorrespondences().then(dObject => {
                         let temp = {
                             Active: true,
-                            EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                            EmployeeId: localStorage.getItem('mySessionEmployeeLoggedID'),
                             Ref_Type: tempLabel,
                             MessageAsString: tempContent,
                             MessageFrom: "",
@@ -1680,6 +2096,11 @@ Template.supplierscard.onRendered(function() {
                 $('#termsListModal').modal('toggle');
             });
 
+            $(document).on("click", "#tblTitleList tbody tr", function (e) {
+                $('#editSupplierTitle').val($(this).find(".colTypeName").text());
+                $('#supplierTitlePopModal').modal('toggle');
+            });
+
         }, 1000);
     });
 });
@@ -1695,10 +2116,7 @@ Template.supplierscard.events({
             $(".btnRefreshSuppliers").trigger("click");
         }
     },
-    // 'click #edtSupplierTitle': function(event) {
-    //     $('#edtSupplierTitle').select();
-    //     $('#edtSupplierTitle').editableSelect();
-    // },
+  
     'click .btnRefreshSuppliers': async function(event) {
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
@@ -1830,7 +2248,7 @@ Template.supplierscard.events({
 
             let company = $('#edtSupplierCompany').val() || '';
             let email = $('#edtSupplierCompanyEmail').val() || '';
-            let title = $('#edtSupplierTitle').val() || '';
+            let title = $('#editSupplierTitle').val() || '';
             let firstname = $('#edtSupplierFirstName').val() || '';
             let middlename = $('#edtSupplierMiddleName').val() || '';
             let lastname = $('#edtSupplierLastName').val() || '';
@@ -2129,6 +2547,13 @@ Template.supplierscard.events({
             }
 
             contactService.saveSupplierEx(objDetails).then(function(objDetails) {
+
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
+
                 let supplierSaveID = objDetails.fields.ID;
                 if (supplierSaveID) {
                     //window.open('/supplierscard?id=' + supplierSaveID,'_self');
@@ -2206,15 +2631,23 @@ Template.supplierscard.events({
         }
     },
 
-    'click .tblCrmList tbody tr': function(event) {
+    'click .tblSupplierCrmListWithDate tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
-        const taskCategory = $(event.target).parent().attr('category');
+        // const taskCategory = $(event.target).parent().attr('category');
+        let crmRecords = Template.instance().crmRecords.get();
+        const currentRecordIndex = crmRecords.findIndex(item => item.id == taskID);
+        let taskCategory = "";
+        if (currentRecordIndex > -1) {
+            taskCategory = crmRecords[currentRecordIndex].category;
+        }
         if (taskID !== undefined) {
             if (taskCategory == 'task') {
-                FlowRouter.go('/crmoverview?taskid=' + taskID);
+                // FlowRouter.go('/crmoverview?taskid=' + taskID);
+                openEditTaskModals(taskID, "");
             } else if (taskCategory == 'appointment') {
-                FlowRouter.go('/appointments?id=' + taskID);
-
+                // FlowRouter.go('/appointments?id=' + taskID);
+                document.getElementById("updateID").value = taskID || 0;
+                $("#event-modal").modal("toggle");
             }
         }
     },
@@ -2677,11 +3110,12 @@ Template.supplierscard.events({
         }, delayTimeAfterSound);
     },
     'click .btnTask': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let supplierID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?supplierid=' + supplierID);
+            // FlowRouter.go('/crmoverview?supplierid=' + supplierID);
+            $("#btnAddLine").trigger("click");
         } else {
 
         }
@@ -2757,16 +3191,260 @@ Template.supplierscard.events({
         $("#clickedControl").val("three");
     },
 
+    "click .btnSaveAddTask": function(e) {
+        playSaveAudio();
+        let templateObject = Template.instance();
+        setTimeout(function() {
+            let task_name = $("#add_task_name").val();
+            let task_description = $("#add_task_description").val();
+            let subTaskID = $("#txtCrmSubTaskID").val();
+
+            let due_date = $(".crmEditDatepicker").val();
+            due_date = due_date ? moment(due_date.split('/')[2] + '-' + due_date.split('/')[1] + '-' + due_date.split('/')[0]).format("YYYY-MM-DD hh:mm:ss") : moment().format("YYYY-MM-DD hh:mm:ss");
+
+            let priority = 0;
+            priority = $("#chkPriorityAdd1").prop("checked") ? 1 : $("#chkPriorityAdd2").prop("checked") ? 2 : $("#chkPriorityAdd3").prop("checked") ? 3 : 0;
+
+            if (task_name === "") {
+                swal("Task name is not entered!", "", "warning");
+                return;
+            }
+            $(".fullScreenSpin").css("display", "inline-block");
+            let projectID = $("#addProjectID").val() ? $("#addProjectID").val() : 11;
+            projectID = $("#editProjectID").val() ? $("#editProjectID").val() : projectID;
+
+            let selected_lbls = [];
+            $("#addTaskLabelWrapper input:checked").each(function() {
+                selected_lbls.push($(this).attr("name"));
+            });
+
+            let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
+            let employeeName = localStorage.getItem("mySessionEmployee");
+
+            let assignId = $('#assignedID').val();
+            let assignName = $('#add_assigned_name').val();
+
+            let contactID = $('#contactID').val();
+            let contactName = $('#add_contact_name').val();
+            let contactType = $('#contactType').val();
+            let customerID = 0;
+            let leadID = 0;
+            let supplierID = 0;
+            if (contactType == 'Customer') {
+                customerID = contactID
+            } else if (contactType == 'Lead') {
+                leadID = contactID
+            } else if (contactType == 'Supplier') {
+                supplierID = contactID
+            }
+
+            let addObject = {
+                TaskName: task_name,
+                TaskDescription: task_description,
+                Completed: false,
+                ProjectID: projectID,
+                due_date: due_date,
+                priority: priority,
+                EnteredByID: parseInt(employeeID),
+                EnteredBy: employeeName,
+                CustomerID: customerID,
+                LeadID: leadID,
+                SupplierID: supplierID,
+                AssignID: assignId,
+                AssignName: assignName,
+                ContactName: contactName
+            }
+
+            if (subTaskID) {
+                var objDetails = {
+                    type: "Tprojecttasks",
+                    fields: {
+                        ID: subTaskID,
+                        subtasks: [{
+                            type: "Tprojecttask_subtasks",
+                            fields: addObject,
+                        }]
+                    },
+                };
+            } else {
+                var objDetails = {
+                    type: "Tprojecttasks",
+                    fields: addObject,
+                };
+            }
+
+            crmService.saveNewTask(objDetails).then(function(res) {
+                if (res.fields.ID) {
+                    if (moment(due_date).format("YYYY-MM-DD") == moment().format("YYYY-MM-DD")) {}
+
+                    $(".btnAddSubTask").css("display", "block");
+                    $(".newTaskRow").css("display", "none");
+                    $(".addTaskModal").css("display", "none");
+
+                    $("#chkPriorityAdd0").prop("checked", false);
+                    $("#chkPriorityAdd1").prop("checked", false);
+                    $("#chkPriorityAdd2").prop("checked", false);
+                    $("#chkPriorityAdd3").prop("checked", false);
+
+
+                    //////////////////////////////
+                    // setTimeout(() => {
+                    //   templateObject.getAllTaskList();
+                    //   templateObject.getTProjectList();
+                    // }, 500);
+                    $("#newTaskModal").modal("hide");
+                    // $("#newProjectTasksModal").modal("hide");
+                    if (subTaskID) {
+                        crmService.getTaskDetail(subTaskID).then(function(data) {
+                            $(".fullScreenSpin").css("display", "none");
+                            if (data.fields.ID == subTaskID) {
+                                let selected_record = data.fields;
+
+                                if (selected_record.subtasks) {
+
+                                    let newSubTaskID = 0;
+                                    if (Array.isArray(selected_record.subtasks)) {
+                                        templateObject.subTasks.set(selected_record.subtasks)
+                                        templateObject.initSubtaskDatatable();
+                                        newSubTaskID = selected_record.subtasks[selected_record.subtasks.length - 1].fields.ID
+                                    }
+
+                                    if (typeof selected_record.subtasks == 'object') {
+                                        let arr = [];
+                                        arr.push(selected_record.subtasks)
+                                        templateObject.subTasks.set(arr)
+                                        templateObject.initSubtaskDatatable();
+                                        newSubTaskID = selected_record.subtasks.fields.ID
+
+                                    }
+
+                                    try {
+                                        // add labels to New task
+                                        // tempcode until api is updated
+                                        // current label and task is 1:1 relationship
+                                        selected_lbls.forEach((lbl) => {
+                                            crmService.updateLabel({
+                                                type: "Tprojecttask_TaskLabel",
+                                                fields: {
+                                                    ID: lbl,
+                                                    TaskID: newSubTaskID,
+                                                },
+                                            }).then(function(data) {
+                                                // templateObject.getAllTaskList();
+                                                templateObject.getTProjectList();
+                                            });
+                                        });
+                                        // tempcode until api is updated
+                                    } catch (error) {
+                                        swal(error, "", "error");
+                                    }
+                                } else {
+                                    let sutTaskTable = $('#tblSubtaskDatatable').DataTable();
+                                    sutTaskTable.clear().draw();
+                                }
+
+                            }
+
+                        }).catch(function(err) {
+                            $(".fullScreenSpin").css("display", "none");
+                            swal(err, "", "error");
+                            return;
+                        });
+                    }
+
+                }
+
+                // templateObject.getAllTaskList();
+                templateObject.getTProjectList();
+
+                $(".btnRefresh").addClass('btnSearchAlert');
+
+                $(".fullScreenSpin").css("display", "none");
+
+                // $("#add_task_name").val("");
+                // $("#add_task_description").val("");
+
+                // $('#assignedID').val("");
+                // $('#add_assigned_name').val("");
+
+                // $('#contactID').val("");
+                // $('#add_contact_name').val("");
+
+            }).catch(function(err) {
+                swal({
+                    title: "Oooops...",
+                    text: err,
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: "Try Again",
+                }).then((result) => {});
+                $(".fullScreenSpin").css("display", "none");
+            });
+        }, delayTimeAfterSound);
+    },
+
+    "click #btnAddLine, click #btnAddLineTask": function(e) {
+        // let tokenid = Random.id();
+        // var rowData = `<tr class="dnd-moved" id="${tokenid}">
+        //     <td class="thProductName">
+        //         <input class="es-input highlightSelect lineProductName" type="search">
+        //     </td>
+        //     <td class="lineProductDesc colDescription"></td>
+        //     <td class="thCostPrice hiddenColumn" style="text-align: left!important;"></td>
+        //     <td class="thSalesPrice lineSalesPrice" style="text-align: left!important;"></td>
+        //     <td class="thQty hiddenColumn">Quantity</td>
+        //     <td class="thTax hiddenColumn" style="text-align: left!important;">Tax Rate</td>
+        //     <td>
+        //         <span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
+        //         class="fa fa-remove"></i></button></span>
+        //     </td>
+        //     <td class="thExtraSellPrice hiddenColumn">Prouct ID</td>
+        // </tr>`;
+
+        // $("#tblExtraProducts tbody").append(rowData);
+        // setTimeout(function() {
+        //     $("#" + tokenid + " .lineProductName").trigger("click");
+        // }, 200);
+
+        $("#frmEditTaskModal")[0].reset();
+        $("#txtCrmTaskID").val("");
+        $("#txtCrmProjectID").val("");
+        $("#txtCrmSubTaskID").val("");
+        $("#addProjectID").val("");
+        $("#contactID").val("");
+        $('#assignedID').val("");
+
+        const url = FlowRouter.current().path;
+        const getemp_id = url.split('?id=');
+        let currentEmployee = getemp_id[getemp_id.length - 1];
+        let TCustomerID = 0;
+        if (getemp_id[1]) {
+            TCustomerID = parseInt(currentEmployee);
+        }
+        
+        $("#contactID").val(TCustomerID);
+        $('#contactType').val('Supplier')
+        $('#crmEditSelectLeadList').val($('#edtSupplierCompany').val());
+        $('#contactEmailClient').val($('#edtSupplierCompanyEmail').val());
+        $('#contactPhoneClient').val($('#edtSupplierPhone').val());
+        $('#taskmodalDuedate').val(moment().format("DD/MM/YYYY"));
+
+        $("#taskDetailModal").modal("toggle");
+    },
 });
 
 Template.supplierscard.helpers({
     record: () => {
-        let temp = Template.instance().records.get();
-        if (temp && temp.mobile) {
-            temp.mobile = temp.mobile.replace('+61', '0')
+        let parentRecord = Template.parentData(0).record;
+        if (parentRecord) {
+            return parentRecord;
+        } else {
+            let temp = Template.instance().records.get();
+            if (temp && temp.mobile) {
+                temp.mobile = temp.mobile.replace('+61', '0')
+            }
+            return temp;
         }
-
-        return temp;
     },
     countryList: () => {
         return Template.instance().countryData.get();
@@ -2813,7 +3491,7 @@ Template.supplierscard.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblSalesOverview' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblSalesOverview' });
     },
     currentdate: () => {
         const currentDate = new Date();
@@ -2841,7 +3519,7 @@ Template.supplierscard.helpers({
         return Template.instance().uploadedFile.get();
     },
     contactCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'supplierscard' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'supplierscard' });
     },
     isSameAddress: () => {
         return Template.instance().isSameAddress.get();
@@ -2859,8 +3537,8 @@ Template.supplierscard.helpers({
 
 function getCheckPrefDetails(prefName) {
     const getcurrentCloudDetails = CloudUser.findOne({
-        _id: Session.get('mycloudLogonID'),
-        clouddatabaseID: Session.get('mycloudLogonDBID')
+        _id: localStorage.getItem('mycloudLogonID'),
+        clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
     });
     let checkPrefDetails = null;
     if (getcurrentCloudDetails) {
@@ -2873,3 +3551,507 @@ function getCheckPrefDetails(prefName) {
     }
     return checkPrefDetails;
 }
+
+function openEditTaskModals(id, type) {
+    const crmService = new CRMService();
+    const contactService = new ContactService();
+    // let catg = e.target.dataset.catg;
+    let templateObject = Template.instance();
+    // $("#editProjectID").val("");
+
+    $("#txtCrmSubTaskID").val(id);
+
+    $(".fullScreenSpin").css("display", "inline-block");
+    // get selected task detail via api
+    crmService.getTaskDetail(id).then(function(data) {
+        $(".fullScreenSpin").css("display", "none");
+        if (data.fields.ID == id) {
+            let selected_record = data.fields;
+            $("#txtCrmTaskID").val(selected_record.ID);
+            $("#txtCrmProjectID").val(selected_record.ProjectID);
+            $("#txtCommentsDescription").val("");
+
+            $(".editTaskDetailName").val(selected_record.TaskName);
+            $(".editTaskDetailDescription").val(selected_record.TaskDescription);
+
+            // tempcode check if AssignedName is set in selected_record
+            let employeeName = selected_record.AssignName ? selected_record.AssignName : localStorage.getItem("mySessionEmployee");
+            let assignId = selected_record.AssignID ? selected_record.AssignID : localStorage.getItem("mySessionEmployeeLoggedID");
+            $('#crmEditSelectEmployeeList').val(employeeName);
+            $('#assignedID').val(assignId)
+            contactService.getOneEmployeeDataEx(assignId).then(function(empDetailInfo) {
+                $('#contactEmailUser').val(empDetailInfo.fields.Email);
+                $('#contactPhoneUser').val(empDetailInfo.fields.Phone);
+            }).catch(function(err) {
+
+            });
+
+            // $('#contactEmailClient').val(selected_record.ClientEmail);
+            // $('#contactPhoneClient').val(selected_record.ClientPhone);
+
+            $("#contactEmailClient").val(selected_record.ContactEmail);
+            $("#contactPhoneClient").val(selected_record.ContactPhone);
+            $("#contactEmailUser").val(selected_record.AssignEmail);
+            $("#contactPhoneUser").val(selected_record.AssignPhone);
+
+            let colClientName = selected_record.ContactName;
+            $('#crmEditSelectLeadList').val(colClientName);
+            if (selected_record.CustomerID) {
+                $('#contactID').val(selected_record.CustomerID)
+                $('#contactType').val('Customer')
+
+                if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
+                    contactService.getOneEmployeeDataEx(selected_record.CustomerID).then(function(empDetailInfo) {
+                        $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                        $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                    }).catch(function(err) {
+
+                    });
+                }
+            } else if (selected_record.LeadID) {
+                $('#contactID').val(selected_record.LeadID)
+                $('#contactType').val('Lead')
+
+                if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
+                    contactService.getOneLeadDataEx(selected_record.LeadID).then(function(empDetailInfo) {
+                        $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                        $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                    }).catch(function(err) {
+
+                    });
+                }
+            } else {
+                $('#contactID').val(selected_record.SupplierID)
+                $('#contactType').val('Supplier')
+                if (selected_record.SupplierID) {
+                    if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
+                        contactService.getOneSupplierDataEx(selected_record.SupplierID).then(function(empDetailInfo) {
+                            $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                            $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                        }).catch(function(err) {
+
+                        });
+                    }
+                }
+            }
+
+            let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
+
+            if (selected_record.Completed) {
+                // $('#lblComplete_taskEditLabel').removeClass('chk_complete');
+                // $('#lblComplete_taskEditLabel').addClass('chk_uncomplete');
+                // $('#chkComplete_taskEdit').removeClass('chk_complete');
+                // $('#chkComplete_taskEdit').addClass('chk_uncomplete');
+                $('#chkComplete_taskEdit').prop("checked", true);
+            } else {
+                // $('#lblComplete_taskEditLabel').removeClass('chk_uncomplete');
+                // $('#lblComplete_taskEditLabel').addClass('chk_complete');
+                // $('#chkComplete_taskEdit').removeClass('chk_uncomplete');
+                // $('#chkComplete_taskEdit').addClass('chk_complete');
+                $('#chkComplete_taskEdit').prop("checked", false);
+            }
+
+            let all_projects = templateObject.all_projects.get();
+            let projectColorStyle = '';
+            if (selected_record.ProjectID != 0) {
+                let projects = all_projects.filter(project => project.fields.ID == selected_record.ProjectID);
+                if (projects.length && projects[0].fields.ProjectColour) {
+                    projectColorStyle = 'color: ' + projects[0].fields.ProjectColour + ' !important';
+                }
+            }
+
+            let catg = "";
+            let today = moment().format("YYYY-MM-DD");
+            // if (selected_record.due_date) {
+            //     if (selected_record.due_date.substring(0, 10) == today) {
+            //         catg =
+            //             `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            //             "<span class='text-primary' style='" + projectColorStyle + "'>" +
+            //             projectName +
+            //             "</span>";
+            //         $(".taskDueDate").css("color", "#00a3d3");
+            //     } else if (selected_record.due_date.substring(0, 10) > today) {
+            //         catg =
+            //             `<i class="fas fa-calendar-alt text-danger" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            //             "<span class='text-danger' style='" + projectColorStyle + "'>" +
+            //             projectName +
+            //             "</span>";
+            //         $(".taskDueDate").css("color", "#1cc88a");
+            //     } else if (selected_record.due_date.substring(0, 10) < today) {
+            //         // catg =
+            //         //   `<i class="fas fa-inbox text-warning" style="margin-right: 5px;"></i>` +
+            //         //   "<span class='text-warning'>Overdue</span>";
+            //         // $(".taskDueDate").css("color", "#e74a3b");
+            //         catg =
+            //             `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            //             "<span class='text-success' style='" + projectColorStyle + "'>" +
+            //             projectName +
+            //             "</span>";
+            //         $(".taskDueDate").css("color", "#1cc88a");
+            //     } else {
+            //         catg =
+            //             `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            //             "<span class='text-success' style='" + projectColorStyle + "'>" +
+            //             projectName +
+            //             "</span>";
+            //         $(".taskDueDate").css("color", "#1cc88a");
+            //     }
+            // } else {
+            //     catg =
+            //         `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            //         "<span class='text-success' style='" + projectColorStyle + "'>" +
+            //         projectName +
+            //         "</span>";
+            //     $(".taskDueDate").css("color", "#1cc88a");
+            // }
+
+            // $(".taskLocation").html(
+            //     `<a class="taganchor">
+            //     ${catg}
+            //   </a>`
+            // );
+
+            // if (projectName) {
+            //     $('.taskDetailProjectName').show();
+            // } else {
+            //     $('.taskDetailProjectName').hide();
+            // }
+
+            $("#addProjectID").val(selected_record.ProjectID);
+            $("#taskDetailModalCategoryLabel").val(projectName);
+
+            $("#taskmodalNameLabel").html(selected_record.TaskName);
+            $(".activityAdded").html("Added on " + moment(selected_record.MsTimeStamp).format("MMM D h:mm A"));
+            // let due_date = selected_record.due_date ? moment(selected_record.due_date).format("D MMM") : "No Date";
+            let due_date = selected_record.due_date ? moment(selected_record.due_date).format("DD/MM/YYYY") : "";
+
+
+            let todayDate = moment().format("ddd");
+            let tomorrowDay = moment().add(1, "day").format("ddd");
+            let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
+            let date_component = due_date;
+            // let date_component = ` <div class="dropdown btnTaskTableAction">
+            //   <div data-toggle="dropdown" title="Reschedule Task" style="cursor:pointer;">
+            //     <i class="far fa-calendar-plus" style="margin-right: 5px;"></i>
+            //     <span id="edit_task_modal_due_date">${due_date}</span>
+            //   </div>
+            //   <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
+            //     aria-labelledby="dropdownMenuButton" style="width: 275px;">
+            //     <a class="dropdown-item no-modal setScheduleToday" href="#" data-id="${selected_record.ID}">
+            //       <i class="fas fa-calendar-day text-success no-modal"
+            //         style="margin-right: 8px;"></i>Today
+            //       <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+            //         ${todayDate}</div>
+            //     </a>
+            //     <a class="dropdown-item no-modal setScheduleTomorrow" href="#"
+            //       data-id="${selected_record.ID}">
+            //       <i class="fas fa-sun text-warning no-modal" style="margin-right: 8px;"></i>Tomorrow
+            //       <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+            //         ${tomorrowDay}</div>
+            //     </a>
+            //     <a class="dropdown-item no-modal setScheduleWeekend" href="#"
+            //       data-id="${selected_record.ID}">
+            //       <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>This Weekend
+            //       <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+            //         Sat</div>
+            //     </a>
+            //     <a class="dropdown-item no-modal setScheduleNexweek" href="#"
+            //       data-id="${selected_record.ID}">
+            //       <i class="fas fa-calendar-alt text-danger no-modal" style="margin-right: 8px;"></i>Next Week
+            //       <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+            //         ${nextMonday}
+            //       </div>
+            //     </a>
+            //     <a class="dropdown-item no-modal setScheduleNodate" href="#" data-id="${selected_record.ID}">
+            //       <i class="fas fa-ban text-secondary no-modal" style="margin-right: 8px;"></i>
+            //       No Date</a>
+            //     <div class="dropdown-divider no-modal"></div>
+            //     <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
+            //       title="Date format: DD/MM/YYYY" style="display:flex; margin: 6px 20px; margin-top: 0px; z-index: 99999;">
+            //       <label style="margin-top: 6px; margin-right: 16px; width: 146px;">Select Date</label>
+            //       <div class="input-group date no-modal" style="cursor: pointer;">
+            //         <input type="text" id="${selected_record.ID}" class="form-control crmDatepicker no-modal"
+            //           autocomplete="off">
+            //         <div class="input-group-addon no-modal">
+            //           <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer;"></span>
+            //         </div>
+            //       </div>
+            //     </div>
+            //   </div>
+            // </div>`;
+
+            // $("#taskmodalDuedate").html(due_date);
+            $("#taskmodalDuedate").val(date_component);
+            $("#taskmodalDescription").html(selected_record.TaskDescription);
+
+            $("#chkComplete_taskEditLabel").removeClass("task_priority_0");
+            $("#chkComplete_taskEditLabel").removeClass("task_priority_1");
+            $("#chkComplete_taskEditLabel").removeClass("task_priority_2");
+            $("#chkComplete_taskEditLabel").removeClass("task_priority_3");
+            $("#chkComplete_taskEditLabel").addClass("task_priority_" + selected_record.priority);
+
+            let taskmodalLabels = "";
+            $(".chkDetailLabel").prop("checked", false);
+            if (selected_record.TaskLabel) {
+                if (selected_record.TaskLabel.fields != undefined) {
+                    taskmodalLabels =
+                        `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
+                        selected_record.TaskLabel.fields.TaskLabelName +
+                        "</a></span>";
+                    $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
+                        "checked",
+                        true
+                    );
+                } else {
+                    selected_record.TaskLabel.forEach((lbl) => {
+                        taskmodalLabels +=
+                            `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
+                            lbl.fields.TaskLabelName +
+                            "</a></span> ";
+                        $("#detail_label_" + lbl.fields.ID).prop("checked", true);
+                    });
+                    taskmodalLabels = taskmodalLabels.slice(0, -2);
+                }
+            }
+            // if (taskmodalLabels != "") {
+            //   taskmodalLabels =
+            //     '<span class="taskTag"><i class="fas fa-tag"></i>' +
+            //     taskmodalLabels +
+            //     "</span>";
+            // }
+            $("#taskmodalLabels").html(taskmodalLabels);
+            let subtasks = "";
+            if (selected_record.subtasks) {
+                if (Array.isArray(selected_record.subtasks)) {
+                    templateObject.subTasks.set(selected_record.subtasks)
+                    templateObject.initSubtaskDatatable();
+                }
+
+                if (typeof selected_record.subtasks == 'object') {
+                    let arr = [];
+                    arr.push(selected_record.subtasks)
+                    templateObject.subTasks.set(arr)
+                    templateObject.initSubtaskDatatable();
+                }
+            } else {
+                let sutTaskTable = $('#tblSubtaskDatatable').DataTable();
+                sutTaskTable.clear().draw();
+            }
+
+            let comments = "";
+            if (selected_record.comments) {
+                if (selected_record.comments.fields != undefined) {
+                    let comment = selected_record.comments.fields;
+                    let comment_date = comment.CommentsDate ? moment(comment.CommentsDate).format("MMM D h:mm A") : "";
+                    let commentUserArry = comment.EnteredBy.toUpperCase().split(" ");
+                    let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
+                    comments = `
+                <div class="col-12 taskComment" style="padding: 16px 32px;" id="taskComment_${comment.ID}">
+                  <div class="row commentRow">
+                    <div class="col-1">
+                      <div class="commentUser">${commentUser}</div>
+                    </div>
+                    <div class="col-11" style="padding-top:4px; padding-left: 24px;">
+                      <div class="row">
+                        <div>
+                          <span class="commenterName">${comment.EnteredBy}</span>
+                          <span class="commentDateTime">${comment_date}</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <span class="commentText">${comment.CommentsDescription}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                `;
+                } else {
+                    selected_record.comments.forEach((item) => {
+                        let comment = item.fields;
+                        let comment_date = comment.CommentsDate ? moment(comment.CommentsDate).format("MMM D h:mm A") : "";
+                        let commentUserArry = comment.EnteredBy.toUpperCase().split(" ");
+                        let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
+                        comments += `
+                  <div class="col-12 taskComment" style="padding: 16px 32px;" id="taskComment_${comment.ID}">
+                    <div class="row commentRow">
+                      <div class="col-1">
+                        <div class="commentUser">${commentUser}</div>
+                      </div>
+                      <div class="col-11" style="padding-top:4px; padding-left: 24px;">
+                        <div class="row">
+                          <div>
+                            <span class="commenterName">${comment.EnteredBy}</span>
+                            <span class="commentDateTime">${comment_date}</span>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <span class="commentText">${comment.CommentsDescription}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  `;
+                    });
+                }
+            }
+            $(".task-comment-row").html(comments);
+
+            let activities = "";
+            if (selected_record.activity) {
+                if (selected_record.activity.fields != undefined) {
+                    let activity = selected_record.activity.fields;
+                    let day = "";
+                    if (moment().format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
+                        day = " ‧ Today";
+                    } else if (moment().add(-1, "day").format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
+                        day = " . Yesterday";
+                    }
+                    let activityDate = moment(activity.ActivityDateStartd).format("MMM D") + day + " . " + moment(activity.ActivityDateStartd).format("ddd");
+
+                    let commentUserArry = activity.EnteredBy.toUpperCase().split(" ");
+                    let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
+
+                    activities = `
+                <div class="row" style="padding: 16px;">
+                  <div class="col-12">
+                    <span class="activityDate">${activityDate}</span>
+                  </div>
+                  <hr style="width: 100%; margin: 8px 16px;" />
+                  <div class="col-1">
+                    <div class="commentUser">${commentUser}</div>
+                  </div>
+                  <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
+                    <div class="row">
+                      <span class="activityName">${activity.EnteredBy
+            } </span> <span class="activityAction">${activity.ActivityName
+            } </span>
+                    </div>
+                    <div class="row">
+                      <span class="activityComment">${activity.ActivityDescription
+            }</span>
+                    </div>
+                    <div class="row">
+                      <span class="activityTime">${moment(
+              activity.ActivityDateStartd
+            ).format("h:mm A")}</span>
+                    </div>
+                  </div>
+                  <hr style="width: 100%; margin: 16px;" />
+                </div>
+                `;
+                } else {
+                    selected_record.activity.forEach((item) => {
+                        let activity = item.fields;
+                        let day = "";
+                        if (moment().format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
+                            day = " ‧ Today";
+                        } else if (moment().add(-1, "day").format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
+                            day = " . Yesterday";
+                        }
+                        let activityDate = moment(activity.ActivityDateStartd).format("MMM D") + day + " . " + moment(activity.ActivityDateStartd).format("ddd");
+
+                        let commentUserArry = activity.EnteredBy.toUpperCase().split(" ");
+                        let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
+
+                        activities = `
+                  <div class="row" style="padding: 16px;">
+                    <div class="col-12">
+                      <span class="activityDate">${activityDate}</span>
+                    </div>
+                    <hr style="width: 100%; margin: 8px 16px;" />
+                    <div class="col-1">
+                      <div class="commentUser">${commentUser}</div>
+                    </div>
+                    <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
+                      <div class="row">
+                        <span class="activityName">${activity.EnteredBy
+              } </span> <span class="activityAction">${activity.ActivityName
+              } </span>
+                      </div>
+                      <div class="row">
+                        <span class="activityComment">${activity.ActivityDescription
+              }</span>
+                      </div>
+                      <div class="row">
+                        <span class="activityTime">${moment(
+                activity.ActivityDateStartd
+              ).format("h:mm A")}</span>
+                      </div>
+                    </div>
+                    <hr style="width: 100%; margin: 16px;" />
+                  </div>
+                  `;
+                    });
+                }
+            }
+            $(".task-activity-row").html(activities);
+
+            if (type == "comment") {
+                $("#nav-comments-tab").click();
+            } else {
+                $("#nav-subtasks-tab").click();
+            }
+
+            $("#chkPriority0").prop("checked", false);
+            $("#chkPriority1").prop("checked", false);
+            $("#chkPriority2").prop("checked", false);
+            $("#chkPriority3").prop("checked", false);
+            $("#chkPriority" + selected_record.priority).prop("checked", true);
+
+            $(".taskModalActionFlagDropdown").removeClass(
+                "task_modal_priority_3"
+            );
+            $(".taskModalActionFlagDropdown").removeClass(
+                "task_modal_priority_2"
+            );
+            $(".taskModalActionFlagDropdown").removeClass(
+                "task_modal_priority_1"
+            );
+            $(".taskModalActionFlagDropdown").removeClass(
+                "task_modal_priority_0"
+            );
+            $(".taskModalActionFlagDropdown").addClass(
+                "task_modal_priority_" + selected_record.priority
+            );
+
+            $("#taskDetailModal").modal("toggle");
+
+            $(".crmDatepicker").datepicker({
+                showOn: "button",
+                buttonText: "Show Date",
+                buttonImageOnly: true,
+                buttonImage: "/img/imgCal2.png",
+                constrainInput: false,
+                dateFormat: "dd/mm/yy",
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-90:+10",
+                onSelect: function(dateText, inst) {
+                    let task_id = inst.id;
+                    $(".crmDatepicker").val(dateText);
+
+                    templateObject.updateTaskSchedule(task_id, new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
+                },
+                onChangeMonthYear: function(year, month, inst) {
+                    // Set date to picker
+                    $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+                }
+            });
+            let currentDate = selected_record.due_date ? new Date(selected_record.due_date) : new Date();
+            let begunDate = moment(currentDate).format("DD/MM/YYYY");
+            $(".crmDatepicker").val(begunDate);
+
+        } else {
+            swal("Cannot edit this task", "", "warning");
+            return;
+        }
+    }).catch(function(err) {
+        $(".fullScreenSpin").css("display", "none");
+
+        swal(err, "", "error");
+        return;
+    });
+}
+

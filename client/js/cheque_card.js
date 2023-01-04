@@ -64,6 +64,9 @@ Template.chequecard.onCreated(() => {
   // templateObject.custfields = new ReactiveVar([]);
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.hasFollow = new ReactiveVar(false);
+
+  templateObject.supplierRecord = new ReactiveVar();
+
 });
 Template.chequecard.onRendered(() => {
   
@@ -93,6 +96,9 @@ Template.chequecard.onRendered(() => {
       } else {
         templateObject.hasFollow.set(false);
       }
+      // changes between luckdev and main branch
+      // var isRepeated = chequeData.fields.RepeatedFrom;
+      // templateObject.hasFollow.set(isRepeated);
     }
   }
   templateObject.hasFollowings();
@@ -247,6 +253,7 @@ Template.chequecard.onRendered(() => {
         setTimeout(function () {
           $("#sltChequeBankAccountName").val(lastBankAccount);
           $("#ponumber").val(newChequeID);
+
         }, 500);
       })
       .catch(function (err) {
@@ -797,7 +804,7 @@ Template.chequecard.onRendered(() => {
                   if (templateObject.chequerecord.get()) {
                     Meteor.call(
                       "readPrefMethod",
-                      Session.get("mycloudLogonID"),
+                      localStorage.getItem("mycloudLogonID"),
                       "tblChequeLine",
                       function (error, result) {
                         if (error) {
@@ -1175,7 +1182,7 @@ Template.chequecard.onRendered(() => {
                   if (templateObject.chequerecord.get()) {
                     Meteor.call(
                       "readPrefMethod",
-                      Session.get("mycloudLogonID"),
+                      localStorage.getItem("mycloudLogonID"),
                       "tblChequeLine",
                       function (error, result) {
                         if (error) {
@@ -1530,7 +1537,7 @@ Template.chequecard.onRendered(() => {
                     if (templateObject.chequerecord.get()) {
                       Meteor.call(
                         "readPrefMethod",
-                        Session.get("mycloudLogonID"),
+                        localStorage.getItem("mycloudLogonID"),
                         "tblChequeLine",
                         function (error, result) {
                           if (error) {
@@ -1889,7 +1896,7 @@ Template.chequecard.onRendered(() => {
                 if (templateObject.chequerecord.get()) {
                   Meteor.call(
                     "readPrefMethod",
-                    Session.get("mycloudLogonID"),
+                    localStorage.getItem("mycloudLogonID"),
                     "tblChequeLine",
                     function (error, result) {
                       if (error) {
@@ -2049,7 +2056,7 @@ Template.chequecard.onRendered(() => {
     if (templateObject.chequerecord.get()) {
       Meteor.call(
         "readPrefMethod",
-        Session.get("mycloudLogonID"),
+        localStorage.getItem("mycloudLogonID"),
         "tblChequeLine",
         function (error, result) {
           if (error) {
@@ -2788,9 +2795,7 @@ Template.chequecard.onRendered(() => {
       }
     });
 
-  $("#edtSupplierName")
-    .editableSelect()
-    .on("click.editable-select", function (e, li) {
+    $('#edtSupplierName').editableSelect().on('click.editable-select', function(e, li) {
       var $earch = $(this);
       var offset = $earch.offset();
       $("#edtSupplierPOPID").val("");
@@ -2935,6 +2940,53 @@ Template.chequecard.onRendered(() => {
                     }
 
                     setTimeout(function () {
+                      let supplierRecord = {
+                        id: popSupplierID,
+                        company: popSupplierName,
+                        email: popSupplierEmail,
+                        title: popSupplierTitle,
+                        firstname: popSupplierFirstName,
+                        middlename: popSupplierMiddleName,
+                        lastname: popSupplierLastName,
+                        tfn: '' || '',
+                        phone: popSupplierPhone,
+                        mobile: popSupplierMobile,
+                        fax: popSupplierFaxnumber,
+                        skype: popSupplierSkypeName,
+                        website: popSupplierURL,
+                        shippingaddress: popSupplierStreet,
+                        scity: popSupplierStreet2,
+                        sstate: popSupplierState,
+                        spostalcode: popSupplierPostcode,
+                        scountry: popSupplierCountry,
+                        billingaddress: popSupplierbillingaddress,
+                        bcity: popSupplierbcity,
+                        bstate: popSupplierbstate,
+                        bpostalcode: popSupplierbpostalcode,
+                        bcountry: popSupplierbcountry,
+                        custfield1: popSuppliercustfield1,
+                        custfield2: popSuppliercustfield2,
+                        custfield3: popSuppliercustfield3,
+                        custfield4: popSuppliercustfield4,
+                        notes: popSuppliernotes,
+                        preferedpayment: popSupplierpreferedpayment,
+                        terms: popSupplierterms,
+                        deliverymethod: popSupplierdeliverymethod,
+                        accountnumber: popSupplieraccountnumber,
+                        isContractor: popSupplierisContractor,
+                        issupplier: popSupplierissupplier,
+                        iscustomer: popSupplieriscustomer,
+                        bankName: data.tsuppliervs1[0].fields.BankName || '',
+                        swiftCode: data.tsuppliervs1[0].fields.SwiftCode || '',
+                        routingNumber: data.tsuppliervs1[0].fields.RoutingNumber || '',
+                        bankAccountName: data.tsuppliervs1[0].fields.BankAccountName || '',
+                        bankAccountBSB: data.tsuppliervs1[0].fields.BankAccountBSB || '',
+                        bankAccountNo: data.tsuppliervs1[0].fields.BankAccountNo || '',
+                        foreignExchangeCode:data.tsuppliervs1[0].fields.ForeignExchangeCode || CountryAbbr,
+                        // openingbalancedate: data.tsuppliervs1[0].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[0].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                        // taxcode:data.tsuppliervs1[0].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                    };
+                    templateObject.supplierRecord.set(supplierRecord);
                       $("#addSupplierModal").modal("show");
                     }, 200);
                   })
@@ -3070,6 +3122,53 @@ Template.chequecard.onRendered(() => {
                     }
 
                     setTimeout(function () {
+                      let supplierRecord = {
+                        id: popSupplierID,
+                        company: popSupplierName,
+                        email: popSupplierEmail,
+                        title: popSupplierTitle,
+                        firstname: popSupplierFirstName,
+                        middlename: popSupplierMiddleName,
+                        lastname: popSupplierLastName,
+                        tfn: '' || '',
+                        phone: popSupplierPhone,
+                        mobile: popSupplierMobile,
+                        fax: popSupplierFaxnumber,
+                        skype: popSupplierSkypeName,
+                        website: popSupplierURL,
+                        shippingaddress: popSupplierStreet,
+                        scity: popSupplierStreet2,
+                        sstate: popSupplierState,
+                        spostalcode: popSupplierPostcode,
+                        scountry: popSupplierCountry,
+                        billingaddress: popSupplierbillingaddress,
+                        bcity: popSupplierbcity,
+                        bstate: popSupplierbstate,
+                        bpostalcode: popSupplierbpostalcode,
+                        bcountry: popSupplierbcountry,
+                        custfield1: popSuppliercustfield1,
+                        custfield2: popSuppliercustfield2,
+                        custfield3: popSuppliercustfield3,
+                        custfield4: popSuppliercustfield4,
+                        notes: popSuppliernotes,
+                        preferedpayment: popSupplierpreferedpayment,
+                        terms: popSupplierterms,
+                        deliverymethod: popSupplierdeliverymethod,
+                        accountnumber: popSupplieraccountnumber,
+                        isContractor: popSupplierisContractor,
+                        issupplier: popSupplierissupplier,
+                        iscustomer: popSupplieriscustomer,
+                        bankName: data.tsuppliervs1[i].fields.BankName || '',
+                        swiftCode: data.tsuppliervs1[i].fields.SwiftCode || '',
+                        routingNumber: data.tsuppliervs1[i].fields.RoutingNumber || '',
+                        bankAccountName: data.tsuppliervs1[i].fields.BankAccountName || '',
+                        bankAccountBSB: data.tsuppliervs1[i].fields.BankAccountBSB || '',
+                        bankAccountNo: data.tsuppliervs1[i].fields.BankAccountNo || '',
+                        foreignExchangeCode:data.tsuppliervs1[i].fields.ForeignExchangeCode || CountryAbbr,
+                        // openingbalancedate: data.tsuppliervs1[i].fields.RewardPointsOpeningDate ? moment(data.tsuppliervs1[i].fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                        // taxcode:data.tsuppliervs1[i].fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
+                    };
+                    templateObject.supplierRecord.set(supplierRecord);
                       $("#addSupplierModal").modal("show");
                     }, 200);
                   }
@@ -3989,7 +4088,7 @@ Template.chequecard.onRendered(() => {
       let surname = '';
       let dept = '';
       let tax = '';
-      let company = Session.get('vs1companyName');
+      let company = localStorage.getItem('vs1companyName');
       let vs1User = localStorage.getItem('mySession');
       let customerEmail = '';
       let id = $('.printID').attr("id") || "new";
@@ -4005,11 +4104,11 @@ Template.chequecard.onRendered(() => {
       {
             item_invoices = {
 
-              o_url: Session.get('vs1companyURL'),
-              o_name: Session.get('vs1companyName'),
-              o_address: Session.get('vs1companyaddress1'),
-              o_city: Session.get('vs1companyCity'),
-              o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+              o_url: localStorage.getItem('vs1companyURL'),
+              o_name: localStorage.getItem('vs1companyName'),
+              o_address: localStorage.getItem('vs1companyaddress1'),
+              o_city: localStorage.getItem('vs1companyCity'),
+              o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
               o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
               o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
               o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -4058,11 +4157,11 @@ Template.chequecard.onRendered(() => {
       else if(number == 2)
       {
           item_invoices = {
-              o_url: Session.get('vs1companyURL'),
-              o_name: Session.get('vs1companyName'),
-              o_address: Session.get('vs1companyaddress1'),
-              o_city: Session.get('vs1companyCity'),
-              o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+              o_url: localStorage.getItem('vs1companyURL'),
+              o_name: localStorage.getItem('vs1companyName'),
+              o_address: localStorage.getItem('vs1companyaddress1'),
+              o_city: localStorage.getItem('vs1companyCity'),
+              o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
               o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
               o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
               o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -4111,11 +4210,11 @@ Template.chequecard.onRendered(() => {
       else
       {
           item_invoices = {
-              o_url: Session.get('vs1companyURL'),
-              o_name: Session.get('vs1companyName'),
-              o_address: Session.get('vs1companyaddress1'),
-              o_city: Session.get('vs1companyCity'),
-              o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+              o_url: localStorage.getItem('vs1companyURL'),
+              o_name: localStorage.getItem('vs1companyName'),
+              o_address: localStorage.getItem('vs1companyaddress1'),
+              o_city: localStorage.getItem('vs1companyCity'),
+              o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
               o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
               o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
               o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -4202,9 +4301,9 @@ Template.chequecard.onRendered(() => {
           html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
           for(item_temp of item){
               if (idx > 1)
-                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
               else
-                  html = html + "<td>" + item_temp + "</td>";
+                html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
               idx++;
           }
 
@@ -4244,11 +4343,11 @@ Template.chequecard.onRendered(() => {
           var html = '';
           html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
           for(item_temp of item){
-              if (idx > 1)
-                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-              else
-                  html = html + "<td>" + item_temp + "</td>";
-              idx++;
+            if (idx > 1)
+              html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            else
+              html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            idx++;
           }
 
           html +="</tr>";
@@ -4287,11 +4386,11 @@ Template.chequecard.onRendered(() => {
           var html = '';
           html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
           for(item_temp of item){
-              if (idx > 1)
-                  html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-              else
-                  html = html + "<td>" + item_temp + "</td>";
-              idx++;
+            if (idx > 1)
+              html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            else
+              html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+            idx++;
           }
 
           html +="</tr>";
@@ -4420,7 +4519,8 @@ Template.chequecard.onRendered(() => {
       html2pdf().set(opt).from(source).toPdf().output('datauristring').then((data)=>{
         let attachment = [];
         let base64data = data.split(',')[1];
-        let chequeId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: ''
+        let chequeId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: '';
+
         pdfObject = {
             filename: 'Cheque-' + chequeId + '.pdf',
             content: base64data,
@@ -4431,7 +4531,7 @@ Template.chequecard.onRendered(() => {
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split('_')[2];
-            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
             return storage.includes('BasedOnType_');
         });
         let j = basedOnTypeStorages.length;
@@ -4738,6 +4838,11 @@ Template.chequecard.helpers({
   chequerecord: () => {
     return Template.instance().chequerecord.get();
   },
+
+  supplierRecord: () => {
+    return Template.instance().supplierRecord.get();
+  },
+
   deptrecords: () => {
     return Template.instance()
       .deptrecords.get()
@@ -4766,13 +4871,13 @@ Template.chequecard.helpers({
   },
   purchaseCloudPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "chequecard",
     });
   },
   purchaseCloudGridPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "tblChequeLine",
     });
   },
@@ -4825,28 +4930,28 @@ Template.chequecard.helpers({
       });
   },
   companyaddress1: () => {
-    return Session.get("vs1companyaddress1");
+    return localStorage.getItem("vs1companyaddress1");
   },
   companyaddress2: () => {
-    return Session.get("vs1companyaddress2");
+    return localStorage.getItem("vs1companyaddress2");
   },
   city: () => {
-    return Session.get("vs1companyCity");
+    return localStorage.getItem("vs1companyCity");
   },
   state: () => {
-    return Session.get("companyState");
+    return localStorage.getItem("companyState");
   },
   poBox: () => {
-    return Session.get("vs1companyPOBox");
+    return localStorage.getItem("vs1companyPOBox");
   },
   companyphone: () => {
-    return Session.get("vs1companyPhone");
+    return localStorage.getItem("vs1companyPhone");
   },
   companyabn: () => {
     //Update Company ABN
-    let countryABNValue = "ABN: " + Session.get("vs1companyABN");
+    let countryABNValue = "ABN: " + localStorage.getItem("vs1companyABN");
     if (LoggedCountry == "South Africa") {
-      countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+      countryABNValue = "Vat No: " + localStorage.getItem("vs1companyABN");
     }
 
     return countryABNValue;
@@ -4855,16 +4960,16 @@ Template.chequecard.helpers({
     //Add Company Reg
     let countryRegValue = "";
     if (LoggedCountry == "South Africa") {
-      countryRegValue = "Reg No: " + Session.get("vs1companyReg");
+      countryRegValue = "Reg No: " + localStorage.getItem("vs1companyReg");
     }
 
     return countryRegValue;
   },
   organizationname: () => {
-    return Session.get("vs1companyName");
+    return localStorage.getItem("vs1companyName");
   },
   organizationurl: () => {
-    return Session.get("vs1companyURL");
+    return localStorage.getItem("vs1companyURL");
   },
   formname: () => {
     return chequeSpelling;
@@ -6331,12 +6436,7 @@ Template.chequecard.events({
       }
     }
   },
-  'click #open_print_confirm' : function(event) {
-    playPrintAudio();
-    setTimeout(function(){
-        $('#templateselection').modal('toggle');
-    }, delayTimeAfterSound);
-  },
+  'click #open_print_confirm' : function(event) {},
   "click .printConfirm": async function (event) {
     playPrintAudio();
     setTimeout(async function(){
@@ -6360,6 +6460,8 @@ Template.chequecard.events({
 
               }
           }
+      } else {
+        // LoadingOverlay.hide();
       }
     }, delayTimeAfterSound);
   },
@@ -6934,6 +7036,12 @@ Template.chequecard.events({
 
       purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
 
+          if (localStorage.getItem("enteredURL") != null) {
+              FlowRouter.go(localStorage.getItem("enteredURL"));
+              localStorage.removeItem("enteredURL");
+              return;
+          }
+
           const supplierID = $("#edtSupplierEmail").attr("supplierid");
           localStorage.setItem("check_acc", bankAccount);
           $("#html-2-pdfwrapper").css("display", "block");
@@ -6968,7 +7076,7 @@ Template.chequecard.events({
               };
               attachment.push(pdfObject);
               let erpInvoiceId = objDetails.fields.ID;
-              let mailFromName = Session.get("vs1companyName");
+              let mailFromName = localStorage.getItem("vs1companyName");
               let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -7137,7 +7245,7 @@ Template.chequecard.events({
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     return storage.includes('BasedOnType_');
                 });
                 let i = basedOnTypeStorages.length;
@@ -7211,7 +7319,7 @@ Template.chequecard.events({
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     return storage.includes('BasedOnType_');
                 });
                 let i = basedOnTypeStorages.length;
@@ -7286,7 +7394,7 @@ Template.chequecard.events({
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     return storage.includes('BasedOnType_');
                 });
                 let i = basedOnTypeStorages.length;
@@ -7321,7 +7429,7 @@ Template.chequecard.events({
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     return storage.includes('BasedOnType_');
                 });
                 let i = basedOnTypeStorages.length;
@@ -7384,8 +7492,8 @@ Template.chequecard.events({
             };
           }
           const getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
+            _id: localStorage.getItem("mycloudLogonID"),
+            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
           });
           if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -7643,8 +7751,8 @@ Template.chequecard.events({
     });
 
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -7706,8 +7814,8 @@ Template.chequecard.events({
   },
   "click .btnResetGridSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -7734,8 +7842,8 @@ Template.chequecard.events({
   },
   "click .btnResetSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {

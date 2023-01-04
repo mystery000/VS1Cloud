@@ -6,6 +6,8 @@ import "../../lib/global/indexdbstorage.js";
 import FxApi from "../../settings/currencies-setting/FxApi";
 import { currencySymbolEmpty } from "./CurrencyGlobals";
 import LoadingOverlay from "../../LoadingOverlay";
+import { Template } from 'meteor/templating';
+import './newcurrencypop.html';
 let sideBarService = new SideBarService();
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
@@ -120,7 +122,7 @@ Template.newcurrencypop.onRendered(function () {
               if (templateObject.datatablerecordscurrencypop.get()) {
                 Meteor.call(
                   "readPrefMethod",
-                  Session.get("mycloudLogonID"),
+                  localStorage.getItem("mycloudLogonID"),
                   "tblCurrencyList",
                   function (error, result) {
                     if (error) {
@@ -440,7 +442,7 @@ Template.newcurrencypop.onRendered(function () {
             if (templateObject.datatablerecordscurrencypop.get()) {
               Meteor.call(
                 "readPrefMethod",
-                Session.get("mycloudLogonID"),
+                localStorage.getItem("mycloudLogonID"),
                 "tblCurrencyList",
                 function (error, result) {
                   if (error) {
@@ -777,8 +779,8 @@ Template.newcurrencypop.events({
   },
   "click .resetTable": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -830,8 +832,8 @@ Template.newcurrencypop.events({
     });
 
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -1188,7 +1190,7 @@ Template.newcurrencypop.helpers({
   },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "tblCurrencyList",
     });
   },

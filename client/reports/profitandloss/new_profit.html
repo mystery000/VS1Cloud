@@ -4,8 +4,13 @@
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Profit and Loss {{daterange}} {{> helpbutton}}
-            </h2>
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <h2 style="margin: 16px;">Profit and Loss {{daterange}} {{> helpbutton}}
+                    </h2>
+                </div>
+                <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+            </div>
         </header>
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
             <div class="modal-dialog modal-sm" role="document">
@@ -448,6 +453,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <button class="btn btn-primary btnSpreadSheetLink" type="button" style="margin: 8px;"><i class="fas fa-link" style="margin-right: 5px;"></i>SpreadSheet Link</button>
                                     <button class="btn btn-primary btnExportReportProfit" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
                                     <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
                                 </div>

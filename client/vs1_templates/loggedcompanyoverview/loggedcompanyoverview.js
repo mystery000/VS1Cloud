@@ -1,4 +1,7 @@
 import { ReactiveVar } from 'meteor/reactive-var';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './loggedcompanyoverview.html';
 
 
 Template.loggedcompanyoverview.helpers({

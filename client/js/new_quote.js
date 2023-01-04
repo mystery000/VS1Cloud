@@ -4,7 +4,7 @@ import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
 import {ProductService} from "../product/product-service";
 import {OrganisationService} from '../js/organisation-service';
-import '../lib/global/erp-objects';
+import '../lib/global/erp-objects.js';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import {Random} from 'meteor/random';
@@ -16,11 +16,11 @@ import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
 import LoadingOverlay from '../LoadingOverlay';
-import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
-import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
-import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
-import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
-import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line';
+import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget.js';
+import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard.js';
+import { getCurrentCurrencySymbol } from '../popUps/currnecypopup.js';
+import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions.js';
+import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line.js';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -80,8 +80,6 @@ Template.new_quote.onCreated(() => {
     templateObject.productextrasellrecords = new ReactiveVar([]);
 
     templateObject.defaultsaleterm = new ReactiveVar();
-    templateObject.displayfields = new ReactiveVar([]);
-    templateObject.reset_data = new ReactiveVar([]);
     templateObject.subtaxcodes = new ReactiveVar([]);
     templateObject.hasFollow = new ReactiveVar(false);
 
@@ -100,22 +98,8 @@ Template.new_quote.onRendered(() => {
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
-            var saleDate = quoteData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingQuotes = await sideBarService.getAllTQuoteListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var quoteList = followingQuotes.tquotelist;
-            if (quoteList.length > 1) {
-                templateObject.hasFollow.set(true);
-            } else {
-                templateObject.hasFollow.set(false);
-            }
+            var isRepeated = quoteData.fields.RepeatedFrom;
+            templateObject.hasFollow.set(isRepeated);
         }
     }
     templateObject.hasFollowings();
@@ -238,34 +222,6 @@ Template.new_quote.onRendered(() => {
         $('.uploadedImage').attr('src', imageData);
     }
 
-    // set initial table rest_data
-    function init_reset_data() {
-
-      let reset_data = [
-        { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
-        { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
-        { index: 2, label: "Qty", class: "Qty", width: "55", active: true, display: true },
-        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
-        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
-        { index: 5, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
-        { index: 6, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
-        { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
-        { index: 8, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
-        { index: 9, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-        { index: 10, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
-        { index: 11, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
-        { index: 12, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
-        { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
-      ];
-
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      reset_data[11].display = !!isBatchSerialNoTracking;
-
-      let templateObject = Template.instance();
-      templateObject.reset_data.set(reset_data);
-    }
-    init_reset_data();
-    // set initial table rest_data
 
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
         let title = $(this).parent().attr("data-id");
@@ -293,147 +249,6 @@ Template.new_quote.onRendered(() => {
             break;
         }
     };
-
-    templateObject.getTemplateInfoNew = function(){
-       LoadingOverlay.show();
-        getVS1Data('TTemplateSettings').then(function(dataObject) {
-          if (dataObject.length == 0) {
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Quotes_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Quotes_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Quotes_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-                 }
-
-
-                  LoadingOverlay.hide();
-              }).catch(function (err) {
-                LoadingOverlay.hide();
-              });
-          }else{
-                  let data = JSON.parse(dataObject[0].data);
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
-                    {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
-                                   $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Quotes_1').attr('checked','checked');
-                                   }
-
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Quotes_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Quotes_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Quotes_3').attr('checked','checked');
-                                 }
-                           }
-
-
-                    }
-
-
-
-                 }
-                  LoadingOverlay.hide();
-          }
-        }).catch(function(err) {
-        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-                     if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
-                     {
-                            if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
-                                    $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                      $('#Quotes_1').attr('checked','checked');
-                                    }
-
-                            }
-                            if(data.ttemplatesettings[i].fields.Template == 2)
-                            {
-                                  $('input[name="Quotes_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Quotes_2').attr('checked','checked');
-                                  }
-                            }
-
-                            if(data.ttemplatesettings[i].fields.Template == 3)
-                            {
-                                  $('input[name="Quotes_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Quotes_3').attr('checked','checked');
-                                  }
-                            }
-
-
-                     }
-                  }
-
-
-                  LoadingOverlay.hide();
-        }).catch(function (err) {
-          LoadingOverlay.hide();
-        });
-      });
-
-    };
-
-    templateObject.getTemplateInfoNew();
 
     templateObject.getLastQuoteData = async function() {
         let lastBankAccount = "Bank";
@@ -550,7 +365,7 @@ Template.new_quote.onRendered(() => {
             lineItems.push(lineItemObj);
         });
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -565,11 +380,11 @@ Template.new_quote.onRendered(() => {
         let item_quote = '';
         if (number == 1) {
             item_quote = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                 o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                 o_phone: Template.new_quote.__helpers.get('companyphone').call(),
@@ -614,11 +429,11 @@ Template.new_quote.onRendered(() => {
             };
         } else if (number == 2) {
             item_quote = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                 o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                 o_phone: Template.new_quote.__helpers.get('companyphone').call(),
@@ -663,11 +478,11 @@ Template.new_quote.onRendered(() => {
             };
         } else {
             item_quote = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                 o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                 o_phone: Template.new_quote.__helpers.get('companyphone').call(),
@@ -827,7 +642,7 @@ Template.new_quote.onRendered(() => {
             lineItems.push(lineItemObj);
         });
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -844,11 +659,11 @@ Template.new_quote.onRendered(() => {
 
         if (number == 1) {
             item_quote = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name:  Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                    o_url: localStorage.getItem('vs1companyURL'),
+                    o_name:  localStorage.getItem('vs1companyName'),
+                    o_address: localStorage.getItem('vs1companyaddress1'),
+                    o_city: localStorage.getItem('vs1companyCity'),
+                    o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                     o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                     o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                     o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
@@ -887,11 +702,11 @@ Template.new_quote.onRendered(() => {
 
         } else if(number == 2) {
             item_quote = {
-                    o_url: Session.get('vs1companyURL'),
-                        o_name:  Session.get('vs1companyName'),
-                        o_address: Session.get('vs1companyaddress1'),
-                        o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                    o_url: localStorage.getItem('vs1companyURL'),
+                        o_name:  localStorage.getItem('vs1companyName'),
+                        o_address: localStorage.getItem('vs1companyaddress1'),
+                        o_city: localStorage.getItem('vs1companyCity'),
+                        o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                         o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                         o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                         o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
@@ -929,11 +744,11 @@ Template.new_quote.onRendered(() => {
                 };
         } else {
             item_quote = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name:  Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                    o_url: localStorage.getItem('vs1companyURL'),
+                    o_name:  localStorage.getItem('vs1companyName'),
+                    o_address: localStorage.getItem('vs1companyaddress1'),
+                    o_city: localStorage.getItem('vs1companyCity'),
+                    o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                     o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                     o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                     o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
@@ -1006,7 +821,7 @@ Template.new_quote.onRendered(() => {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1019,9 +834,9 @@ Template.new_quote.onRendered(() => {
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
              }
 
@@ -1073,7 +888,7 @@ Template.new_quote.onRendered(() => {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1086,9 +901,9 @@ Template.new_quote.onRendered(() => {
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
              }
 
@@ -1142,7 +957,7 @@ Template.new_quote.onRendered(() => {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1155,9 +970,9 @@ Template.new_quote.onRendered(() => {
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
              }
 
@@ -1478,7 +1293,7 @@ Template.new_quote.onRendered(() => {
             }
         }
 
-        
+
 
         }
 
@@ -1631,8 +1446,8 @@ Template.new_quote.onRendered(() => {
     templateObject.getAllClients();
 
     templateObject.getOrganisationDetails = function() {
-        let account_id = Session.get('vs1companyStripeID') || '';
-        let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+        let account_id = localStorage.getItem('vs1companyStripeID') || '';
+        let stripe_fee = localStorage.getItem('vs1companyStripeFeeMethod') || 'apply';
         templateObject.accountID.set(account_id);
         templateObject.stripe_fee_method.set(stripe_fee);
     };
@@ -1777,7 +1592,7 @@ Template.new_quote.onRendered(() => {
                             termsname: data.ttermsvs1[i].TermsName || ' ',
                         };
                         if (data.ttermsvs1[i].isSalesdefault == true) {
-                            Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                            localStorage.setItem('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                             templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                         }
                         termrecords.push(termrecordObj);
@@ -1805,7 +1620,7 @@ Template.new_quote.onRendered(() => {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
                     if (data.ttermsvs1[i].isSalesdefault == true) {
-                        Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                        localStorage.setItem('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                         templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                     }
                     termrecords.push(termrecordObj);
@@ -1819,7 +1634,7 @@ Template.new_quote.onRendered(() => {
     let url = FlowRouter.current().path;
     let getso_id = url.split('?id=');
     let invoiceId = getso_id[getso_id.length - 1];
-    let bankDetails = Session.get('vs1companyBankDetails') || '';
+    let bankDetails = localStorage.getItem('vs1companyBankDetails') || '';
     //$('.bankDetails').html(bankDetails.replace(/[\r\n]/g, "<br />"));
     if (url.includes("id") && url.includes("total")) {
         url = new URL(window.location.href);
@@ -2080,7 +1895,7 @@ Template.new_quote.onRendered(() => {
 
 
 
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+                                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                                     if (error) {
 
 
@@ -2425,7 +2240,7 @@ Template.new_quote.onRendered(() => {
 
 
 
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                                         if (error) {
 
 
@@ -2650,7 +2465,7 @@ Template.new_quote.onRendered(() => {
 
 
 
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                                         if (error) {
 
 
@@ -2991,7 +2806,7 @@ Template.new_quote.onRendered(() => {
 
 
 
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                                 if (error) {
 
 
@@ -3074,7 +2889,7 @@ Template.new_quote.onRendered(() => {
                     let erpInvoiceId = getso_id;
 
 
-                    let mailFromName = Session.get('vs1companyName');
+                    let mailFromName = localStorage.getItem('vs1companyName');
                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                     let customerEmailName = $('#edtCustomerName').val();
                     let checkEmailData = url.searchParams.get("email");
@@ -3378,7 +3193,7 @@ Template.new_quote.onRendered(() => {
         }, 200);
         templateObject.quoterecord.set(quoterecord);
         if (templateObject.quoterecord.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                 if (error) {
 
                 } else {
@@ -3639,7 +3454,7 @@ Template.new_quote.onRendered(() => {
         templateObject.selectedCurrency.set(quoterecord.currency);
         templateObject.inputSelectedCurrency.set(quoterecord.currency);
         if (templateObject.quoterecord.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                 if (error) {
 
                 } else {
@@ -4727,7 +4542,7 @@ Template.new_quote.onRendered(() => {
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     return storage.includes('BasedOnType_');
                 });
                 let j = basedOnTypeStorages.length;
@@ -4851,7 +4666,7 @@ Template.new_quote.onRendered(() => {
         });
         let id = $('.printID').attr("id") || "new";
         const erpGet = erpDb();
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let currencyname = (CountryAbbr).toLowerCase();
@@ -5055,13 +4870,9 @@ Template.new_quote.onRendered(function() {
                                     "targets": [5]
                                 }
                             ],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-
-
-
-                            bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5157,8 +4968,9 @@ Template.new_quote.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-                        bStateSave: true,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5242,13 +5054,9 @@ Template.new_quote.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -5544,57 +5352,6 @@ Template.new_quote.onRendered(function() {
     };
     tempObj.getSubTaxCodes();
 
-    tempObj.initCustomFieldDisplaySettings = function(data, listType) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      showCustomFieldDisplaySettings(reset_data);
-
-      try {
-        getVS1Data("VS1_Customize").then(function (dataObject) {
-          if (dataObject.length == 0) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              showCustomFieldDisplaySettings(reset_data);
-            }).catch(function (err) {
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            if(data.ProcessLog.Obj.CustomLayout.length > 0){
-             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-               if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                 showCustomFieldDisplaySettings(reset_data);
-               }
-             }
-           };
-            // handle process here
-          }
-        });
-      } catch (error) {
-      }
-      return;
-    }
-
-    function showCustomFieldDisplaySettings(reset_data) {
-
-      let custFields = [];
-      let customData = {};
-      let customFieldCount = reset_data.length;
-
-      for (let r = 0; r < customFieldCount; r++) {
-        customData = {
-          active: reset_data[r].active,
-          id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label,
-          class: reset_data[r].class,
-          display: reset_data[r].display,
-          width: reset_data[r].width ? reset_data[r].width : ''
-        };
-        custFields.push(customData);
-      }
-      tempObj.displayfields.set(custFields);
-    }
-    tempObj.initCustomFieldDisplaySettings("", "tblQuoteLine");
 
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 
@@ -5638,7 +5395,7 @@ Template.new_quote.helpers({
         return template_numbers;
     },
     isBatchSerialNoTracking: () => {
-        return Session.get('CloudShowSerial') || false;
+        return localStorage.getItem('CloudShowSerial') || false;
     },
     vs1companyBankName: () => {
         return localStorage.getItem('vs1companyBankName') || '';
@@ -5661,10 +5418,7 @@ Template.new_quote.helpers({
     vs1companyBankRoutingNo: () => {
         return localStorage.getItem('vs1companyBankRoutingNo') || '';
     },
-    // custom field displaysettings
-    displayfields: () => {
-      return Template.instance().displayfields.get();
-    },
+
     custfields: () => {
         return Template.instance().custfields.get();
     },
@@ -5726,13 +5480,13 @@ Template.new_quote.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'new_quote'
         });
     },
     salesCloudGridPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblQuoteLine'
         });
     },
@@ -5756,43 +5510,43 @@ Template.new_quote.helpers({
         });
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () => {
-         let phone = "Phone: "+ Session.get('vs1companyPhone');
+         let phone = "Phone: "+ localStorage.getItem('vs1companyPhone');
          return phone;
     },
     companyabn: () => { //Update Company ABN
-        let countryABNValue = Session.get("vs1companyABN");
+        let countryABNValue = localStorage.getItem("vs1companyABN");
         // if (LoggedCountry == "South Africa") {
-        //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+        //     countryABNValue = "Vat No: " + localStorage.getItem("vs1companyABN");
         // }
         return countryABNValue;
     },
     companyReg: () => { //Add Company Reg
         let countryRegValue = '';
         if(LoggedCountry== "South Africa"){
-            countryRegValue = "Reg No: " + Session.get('vs1companyReg');
+            countryRegValue = "Reg No: " + localStorage.getItem('vs1companyReg');
         }
         return countryRegValue;
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
     isMobileDevices: () => {
         let isMobile = false;
@@ -5804,7 +5558,7 @@ Template.new_quote.helpers({
     },
     loggedInCountryVAT: () => {
         let countryVatLabel ="GST";
-        if(Session.get('ERPLoggedCountry') == "South Africa"){
+        if(localStorage.getItem('ERPLoggedCountry') == "South Africa"){
             countryVatLabel = "VAT";
         }
         return countryVatLabel;
@@ -5816,28 +5570,6 @@ Template.new_quote.helpers({
     },
     getDefaultCurrency: () => {
         return defaultCurrencyCode;
-    },
-    convertToForeignAmount: (amount) => {
-        return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-    },
-
-    displayFieldColspan: (displayfield) => {
-        if(foreignCols.includes(displayfield.custfieldlabel))
-        {
-            if(Template.instance().isForeignEnabled.get() == true) {
-                return 2
-            }
-            return 1;
-        }
-        return 1;
-    },
-
-    subHeaderForeign: (displayfield) => {
-
-        if(foreignCols.includes(displayfield.custfieldlabel)) {
-            return true;
-        }
-        return false;
     },
 
     isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
@@ -5942,28 +5674,7 @@ Template.new_quote.events({
         clickedInput = "three";
         $('#clickedControl').val(clickedInput);
     },
-    'click  #open_print_confirm': function(event) {
-        playPrintAudio();
-        setTimeout(async function(){
-        if($('#choosetemplate').is(':checked')) {
-            $('#templateselection').modal('show');
-        } else {
-           LoadingOverlay.show();
-            // $('#html-2-pdfwrapper').css('display', 'block');
-            let result = await exportSalesToPdf(template_list[0], 1);
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            //     exportSalesToPdf1();
-            // }
-            // $('#confirmprint').modal('hide');
-        }
-    }, delayTimeAfterSound);
-    },
+    'click  #open_print_confirm': function(event) {},
     'click #choosetemplate':function(event) {
         if($('#choosetemplate').is(':checked'))
         {
@@ -6571,6 +6282,7 @@ Template.new_quote.events({
         $('.chkUnitPriceEx').prop("checked", true);
         $('.chkUnitPriceInc').prop("checked", false);
     },
+
     'click #btnCustomFileds': function(event) {
         const x = document.getElementById("divCustomFields");
         if (x.style.display === "none") {
@@ -6923,6 +6635,8 @@ Template.new_quote.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -7083,7 +6797,7 @@ Template.new_quote.events({
         const printTemplate = [];
         LoadingOverlay.show();
         const quotes = $('input[name="Quotes"]:checked').val();
-        let emid = Session.get('mySessionEmployeeLoggedID');
+        let emid = localStorage.getItem('mySessionEmployeeLoggedID');
         sideBarService.getTemplateNameandEmployeId("Quotes",emid,1).then(function (data) {
             let templateid = data.ttemplatesettings;
             const id = templateid[0].fields.ID;
@@ -7091,7 +6805,7 @@ Template.new_quote.events({
                 type: "TTemplateSettings",
                 fields: {
                     ID: parseInt(id),
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     GlobalRef: "Quotes",
                     Description: $('input[name="Quotes_1"]').val(),
@@ -7110,7 +6824,7 @@ Template.new_quote.events({
             let objDetails = {
                 type: "TTemplateSettings",
                 fields: {
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     Description: $('input[name="Quotes_1"]').val(),
                     Template: "1",
@@ -7133,7 +6847,7 @@ Template.new_quote.events({
                 type: "TTemplateSettings",
                 fields: {
                     ID: parseInt(id),
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     GlobalRef: "Quotes",
                     Description: $('input[name="Quotes_2"]').val(),
@@ -7152,7 +6866,7 @@ Template.new_quote.events({
             let objDetails = {
                 type: "TTemplateSettings",
                 fields: {
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     Description: $('input[name="Quotes_2"]').val(),
                     Template: "2",
@@ -7174,7 +6888,7 @@ Template.new_quote.events({
                 type: "TTemplateSettings",
                 fields: {
                     ID: parseInt(id),
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     GlobalRef: "Quotes",
                     Description: $('input[name="Quotes_3"]').val(),
@@ -7194,7 +6908,7 @@ Template.new_quote.events({
             let objDetails = {
                 type: "TTemplateSettings",
                 fields: {
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     Description: $('input[name="Quotes_3"]').val(),
                     Template: "3",
@@ -7488,7 +7202,7 @@ Template.new_quote.events({
         let salesService = new SalesBoardService();
         setTimeout(function(){
         LoadingOverlay.show();
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -7532,7 +7246,7 @@ Template.new_quote.events({
           }
         }
     }, delayTimeAfterSound);
-    },    
+    },
     'click .btnDeleteQuote': function(event) {
         playDeleteAudio();
         let templateObject = Template.instance();
@@ -7882,7 +7596,7 @@ Template.new_quote.events({
             }
             let customer = $('#edtCustomerName').val();
             const customerID = $('#edtCustomerEmail').attr('customerid');
-            let company = Session.get('vs1companyName');
+            let company = localStorage.getItem('vs1companyName');
             let vs1User = localStorage.getItem('mySession');
             let customerEmail = $('#edtCustomerEmail').val();
             let currencyname = (CountryAbbr).toLowerCase();
@@ -7990,6 +7704,13 @@ Template.new_quote.events({
                             }
                         }
                         contactService.saveCustomerEx(customerData).then(function (objDetails) {
+
+                            if (localStorage.getItem("enteredURL") != null) {
+                                FlowRouter.go(localStorage.getItem("enteredURL"));
+                                localStorage.removeItem("enteredURL");
+                                return;
+                            }
+
                             let customerSaveID = objDetails.fields.ID;
                             if (customerSaveID) {
                                 sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function (dataReload) {
@@ -8064,7 +7785,7 @@ Template.new_quote.events({
                     };
                     attachment.push(pdfObject);
                     let erpInvoiceId = objDetails.fields.ID;
-                    let mailFromName = Session.get('vs1companyName');
+                    let mailFromName = localStorage.getItem('vs1companyName');
                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                     let customerEmailName = $('#edtCustomerName').val();
                     let checkEmailData = $('#edtCustomerEmail').val();
@@ -8345,7 +8066,7 @@ Template.new_quote.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -8409,7 +8130,7 @@ Template.new_quote.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_')
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -8474,7 +8195,7 @@ Template.new_quote.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')☻
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -8505,7 +8226,7 @@ Template.new_quote.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')☻
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -8540,8 +8261,8 @@ Template.new_quote.events({
                 addAttachment();
 
                 const getcurrentCloudDetails = CloudUser.findOne({
-                    _id: Session.get('mycloudLogonID'),
-                    clouddatabaseID: Session.get('mycloudLogonDBID')
+                    _id: localStorage.getItem('mycloudLogonID'),
+                    clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                 });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
@@ -8790,7 +8511,21 @@ Template.new_quote.events({
             $('.colSerialNo').removeClass('showColumn');
         }
     },
+    "click .chkFixedAsset": function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colFixedAsset').addClass('showColumn');
+            $('.colFixedAsset').removeClass('hiddenColumn');
+        } else {
+            $('.colFixedAsset').addClass('hiddenColumn');
+            $('.colFixedAsset').removeClass('showColumn');
+        }
+    },
     // display settings
+    'change .rngRangeFixedAsset': function(event) {
+        let range = $(event.target).val();
+        $(".spWidthFixedAsset").html(range);
+        $('.colFixedAsset').css('width', range);
+    },
     'change .rngRangeProductName': function(event) {
         let range = $(event.target).val();
         // $(".spWidthProductName").html(range);
@@ -8863,111 +8598,11 @@ Template.new_quote.events({
         // $("" + columHeaderUpdate + "").html(columData);
         $("th.col" + columHeaderUpdate + "").html(columData);
     },
-    // custom field displaysettings
-    'click .btnSaveGridSettings': async function(event) {
-        playSaveAudio();
-        let templateObject = Template.instance();
-        setTimeout(async function(){
-        let lineItems = [];
-        $(".fullScreenSpin").css("display", "inline-block");
-        $(".displaySettings").each(function (index) {
-            const $tblrow = $(this);
-            const fieldID = $tblrow.attr("custid") || 0;
-            const colTitle = $tblrow.find(".divcolumn").text() || "";
-            const colWidth = $tblrow.find(".custom-range").val() || 0;
-            const colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-            let colHidden = false;
-            colHidden = !!$tblrow.find(".custom-control-input").is(":checked");
-            let lineItemObj = {
-                index: parseInt(fieldID),
-                label: colTitle,
-                active: colHidden,
-                width: parseInt(colWidth),
-                class: colthClass,
-                display: true
-            };
-            lineItems.push(lineItemObj);
-        });
 
-        let reset_data = templateObject.reset_data.get();
-        reset_data = reset_data.filter(redata => redata.display == false);
-        lineItems.push(...reset_data);
-        lineItems.sort((a,b) => a.index - b.index);
-
-        try {
-            let erpGet = erpDb();
-            let tableName = "tblQuoteLine";
-            let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-            let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-            $(".fullScreenSpin").css("display", "none");
-            if(added) {
-              sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-                  addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-              });
-                swal({
-                    title: 'SUCCESS',
-                    text: "Display settings is updated!",
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.value) {
-                        $('#myModal2').modal('hide');
-                    }
-                });
-            } else {
-                swal("Something went wrong!", "", "error");
-            }
-        } catch (error) {
-            $(".fullScreenSpin").css("display", "none");
-            swal("Something went wrong!", "", "error");
-        }
-    }, delayTimeAfterSound);
-    },
-    // custom field displaysettings
-    'click .btnResetGridSettings': function(event) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      reset_data[11].display = !!isBatchSerialNoTracking;
-      reset_data = reset_data.filter(redata => redata.display);
-
-      $(".displaySettings").each(function (index) {
-        let $tblrow = $(this);
-        $tblrow.find(".divcolumn").text(reset_data[index].label);
-        $tblrow
-          .find(".custom-control-input")
-          .prop("checked", reset_data[index].active);
-
-        let title = $("#tblQuoteLine").find("th").eq(index);
-        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
-        } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
-        } else {
-          $(title).html(reset_data[index].label);
-        }
-
-
-        if (reset_data[index].active) {
-          // $(".col" + reset_data[index].class).css("display", "table-cell");
-          // $(".col" + reset_data[index].class).css("padding", ".75rem");
-          // $(".col" + reset_data[index].class).css("vertical-align", "top");
-          $('.col' + reset_data[index].class).addClass('showColumn');
-          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
-        } else {
-          // $(".col" + reset_data[index].class).css("display", "none");
-          $('.col' + reset_data[index].class).addClass('hiddenColumn');
-          $('.col' + reset_data[index].class).removeClass('showColumn');
-        }
-        $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
-        $(".col" + reset_data[index].class).css('width', reset_data[index].width);
-      });
-    },
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -9137,7 +8772,7 @@ Template.new_quote.events({
                     lineItems.push(lineItemObj);
                 });
                 const erpGet = erpDb();
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let customerEmail = $('#edtCustomerEmail').val();
                 let currencyname = (CountryAbbr).toLowerCase();
@@ -9155,7 +8790,7 @@ Template.new_quote.events({
                 let customername = $('#edtCustomerName');
                 let name = $('#edtCustomerEmail').attr('customerfirstname');
                 let surname = $('#edtCustomerEmail').attr('customerlastname');
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let customerEmail = $('#edtCustomerEmail').val();
                 let customer = $('#edtCustomerName').val();
@@ -9389,7 +9024,7 @@ Template.new_quote.events({
                             let erpInvoiceId = objDetails.fields.ID;
 
 
-                            let mailFromName = Session.get('vs1companyName');
+                            let mailFromName = localStorage.getItem('vs1companyName');
                             let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                             let customerEmailName = $('#edtCustomerName').val();
                             let checkEmailData = $('#edtCustomerEmail').val();
@@ -9849,7 +9484,7 @@ Template.new_quote.events({
 
             let customer = $('#edtCustomerName').val();
             let customerEmail = $('#edtCustomerEmail').val();
-            let company = Session.get('vs1companyName');
+            let company = localStorage.getItem('vs1companyName');
             let vs1User = localStorage.getItem('mySession');
             let currencyname = (CountryAbbr).toLowerCase();
             const customerID = $('#edtCustomerEmail').attr('customerid');
@@ -9954,8 +9589,8 @@ Template.new_quote.events({
                 let linesave = objDetails.fields.ID;
 
                 var getcurrentCloudDetails = CloudUser.findOne({
-                    _id: Session.get('mycloudLogonID'),
-                    clouddatabaseID: Session.get('mycloudLogonDBID')
+                    _id: localStorage.getItem('mycloudLogonID'),
+                    clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                 });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
@@ -10226,7 +9861,7 @@ Template.new_quote.events({
     //             }
     //             let customer = $('#edtCustomerName').val();
     //             let customerEmail = $('#edtCustomerEmail').val();
-    //             let company = Session.get('vs1companyName');
+    //             let company = localStorage.getItem('vs1companyName');
     //             let vs1User = localStorage.getItem('mySession');
     //             let currencyname = (CountryAbbr).toLowerCase();
     //             const customerID = $('#edtCustomerEmail').attr('customerid');
@@ -10330,8 +9965,8 @@ Template.new_quote.events({
     //                 let linesave = objDetails.fields.ID;
 
     //                 const getcurrentCloudDetails = CloudUser.findOne({
-    //                     _id: Session.get('mycloudLogonID'),
-    //                     clouddatabaseID: Session.get('mycloudLogonDBID')
+    //                     _id: localStorage.getItem('mycloudLogonID'),
+    //                     clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
     //                 });
     //                 if (getcurrentCloudDetails) {
     //                     if (getcurrentCloudDetails._id.length > 0) {
@@ -10594,7 +10229,7 @@ Template.new_quote.events({
     //                 getchkcustomField2 = false;
     //             }
 
-    //             let company = Session.get('vs1companyName');
+    //             let company = localStorage.getItem('vs1companyName');
     //             let vs1User = localStorage.getItem('mySession');
     //             let customerEmail = $('#edtCustomerEmail').val();
     //             let customer = $('#edtCustomerName').val();
@@ -10703,8 +10338,8 @@ Template.new_quote.events({
     //                 let linesave = objDetails.fields.ID;
 
     //                 var getcurrentCloudDetails = CloudUser.findOne({
-    //                     _id: Session.get('mycloudLogonID'),
-    //                     clouddatabaseID: Session.get('mycloudLogonDBID')
+    //                     _id: localStorage.getItem('mycloudLogonID'),
+    //                     clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
     //                 });
     //                 if (getcurrentCloudDetails) {
     //                     if (getcurrentCloudDetails._id.length > 0) {
@@ -10826,7 +10461,7 @@ Template.new_quote.events({
         let basedOnTypeAttr = 'F,';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -10893,7 +10528,7 @@ Template.new_quote.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -10946,7 +10581,7 @@ Template.new_quote.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -11027,17 +10662,17 @@ Template.new_quote.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -11114,21 +10749,21 @@ Template.new_quote.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             window.open("/invoicecard", "_self");

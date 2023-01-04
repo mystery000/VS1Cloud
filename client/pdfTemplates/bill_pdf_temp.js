@@ -8,6 +8,9 @@ import { UtilityService } from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import {Random} from 'meteor/random';
 import '../lib/global/indexdbstorage.js';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './bill_pdf_temp.html';
 
 
 Template.billPrintTemp.onCreated(()=>{
@@ -141,8 +144,8 @@ Template.billPrintTemp.onRendered(()=>{
                             ispaid: useData[d].fields.IsPaid,
                             isPartialPaid: isPartialPaid,
                             department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept,
-                            unformattedSaleDate: useData[d].fields.OrderDate?useData[d].fields.OrderDate:'',
-                            unformattedDueDate: useData[d].fields.DueDate?useData[d].fields.DueDate:''
+                            unformattedSaleDate: new Date(useData[d].fields.OrderDate),
+                            unformattedDueDate: new Date(useData[d].fields.DueDate),
                         };
 
                         // templateObject.CleintName.set(useData[d].fields.SupplierName);
@@ -183,7 +186,7 @@ Template.billPrintTemp.onRendered(()=>{
                         if (billrecord) {
                             billData.push(billrecord);
                             templateObject.billrecords.set(billData);
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblBillLine', function(error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblBillLine', function(error, result) {
                                 if (error) {
                                 } else {
                                     if (result) {
@@ -223,27 +226,27 @@ Template.billPrintTemp.helpers({
         return  Template.instance().billrecords.get()
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () => {
-        return "Phone: "+ Session.get('vs1companyPhone');
+        return "Phone: "+ localStorage.getItem('vs1companyPhone');
     },
    companyabn: () => { //Update Company ABN
-        let countryABNValue = "ABN: " + Session.get('vs1companyABN');
+        let countryABNValue = "ABN: " + localStorage.getItem('vs1companyABN');
         if(LoggedCountry== "South Africa"){
-            countryABNValue = "Vat No: " + Session.get('vs1companyABN');;
+            countryABNValue = "Vat No: " + localStorage.getItem('vs1companyABN');;
         }
 
         return countryABNValue;
@@ -251,15 +254,15 @@ Template.billPrintTemp.helpers({
     companyReg: () => { //Add Company Reg
         let countryRegValue = '';
         if(LoggedCountry== "South Africa"){
-        countryRegValue = "Reg No: " + Session.get('vs1companyReg');
+        countryRegValue = "Reg No: " + localStorage.getItem('vs1companyReg');
         }
 
         return countryRegValue;
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
 })

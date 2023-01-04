@@ -19,9 +19,15 @@ import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertime
 import GlobalFunctions from "../../GlobalFunctions";
 import TableHandler from "../../js/Table/TableHandler";
 
+import './payrollrules.html';
+import './fundtype.html';
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
+
 
 Template.payrollrules.onCreated(function() {
 
@@ -62,7 +68,7 @@ Template.payrollrules.onRendered(function() {
     var uleavetypearraylist = [];
     var countryService = new CountryService();
     let countries = [];
-    let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
+    let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
 
     let tabid = FlowRouter.current().queryParams.active_key;
 
@@ -1482,7 +1488,6 @@ Template.payrollrules.onRendered(function() {
 
 
             }, 0);
-
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
             LoadingOverlay.hide();
 
@@ -8103,8 +8108,6 @@ Template.payrollrules.onRendered(function() {
              }, 500);
            }
          }
-
-
       });
 
      $('#editsuperliabbankaccount').editableSelect().on('click.editable-select', function (e, li) {
@@ -16889,7 +16892,7 @@ Template.payrollrules.events({
                     showemployeebases:swtShowEmploymentBasis,
                     TimeSheetCategory:timesheetcat,
                     EmployeeGroup:employegroup,
-                    KeyStringFieldName:Session.get('mySessionEmployeeLoggedID'),
+                    KeyStringFieldName:localStorage.getItem('mySessionEmployeeLoggedID'),
                 }
             };
 
@@ -16992,7 +16995,7 @@ Template.payrollrules.events({
                                           Accountno:edtaccountnumber,
                                           ElectronicsServiceAddressAlias:edtelectronicsalias,
                                           BSB:edtbsb,
-                                          Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                          Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                           Amount:1,
                                           DepartmentName:defaultDept,
                                           Allclasses:true,
@@ -17112,7 +17115,7 @@ Template.payrollrules.events({
                                     Accountno:edtaccountnumber,
                                     ElectronicsServiceAddressAlias:edtelectronicsalias,
                                     BSB:edtbsb,
-                                    Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                    Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                     Amount:1,
                                     DepartmentName:defaultDept,
                                     Allclasses:true,
@@ -17183,7 +17186,7 @@ Template.payrollrules.events({
                                           AccountNo:edtaccountnumber,
                                           ElectronicsServiceAddressAlias:edtelectronicsalias,
                                           BSB:edtbsb,
-                                          Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                          Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                           Amount:1,
                                           DepartmentName:defaultDept,
                                           Allclasses:true,
@@ -17264,7 +17267,7 @@ Template.payrollrules.events({
                                   AccountNo:edtaccountnumber,
                                   ElectronicsServiceAddressAlias:edtelectronicsalias,
                                   BSB:edtbsb,
-                                  Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                  Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                   Amount:1,
                                   DepartmentName:defaultDept,
                                   Allclasses:true,
@@ -17336,7 +17339,7 @@ Template.payrollrules.events({
                                       AccountNo:edtaccountnumber,
                                       ElectronicsServiceAddressAlias:edtelectronicsalias,
                                       BSB:edtbsb,
-                                      Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                      Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                       Amount:1,
                                       DepartmentName:defaultDept,
                                       Allclasses:true,
@@ -22281,8 +22284,7 @@ Template.payrollrules.events({
 
      "click #overtimeRateType, click #edtRateType": (e, ui) => {
         $(e.currentTarget).addClass('paste-rate');
-        $('#select-rate-type-modal').modal('show');
-
+        // $('#select-rate-type-modal').modal('show');
      },
 
      "click #tblratetypes tbody > tr, click  #tblratetypelist tbody > tr": (e, ui) => {
@@ -22305,7 +22307,6 @@ Template.payrollrules.events({
     // },
     'change #overtimeRateType': (e, ui) => {
         let evalue = $(e.currentTarget).val();
-
         switch(evalue) {
             case 'Time & Half':
                 $('.graterThenDiv').css('display', 'block');
@@ -22323,9 +22324,7 @@ Template.payrollrules.events({
                 $('.graterThenDiv').css('display', 'block');
                 $('.weekendDiv').css('display', 'none');
         }
-    }
-
-
+    },
 });
 
 Template.payrollrules.helpers({
@@ -22376,7 +22375,6 @@ export const getOvertimes = async () => {
     let overtimesData = await getVS1Data(erpObject.TPayrollSettingOvertimes);
     let overtimes = overtimesData.length > 0 ? JSON.parse(overtimesData[0].data) : [];
     const rateTypes = await getRateTypes();
-
     // This part is handling the auto add of default values in the list
     let defaultOvertimes = PayrollSettingsOvertimes.getDefaults();
     defaultOvertimes.forEach((defaultOvertime) => {

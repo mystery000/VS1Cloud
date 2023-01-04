@@ -3,7 +3,7 @@
         <div class="table-responsive">
             <table class="table table-sm" id="tableExport" name="tableExport">
                 <thead>
-                    <tr class="table-active customDoubleTableHeading">
+                    <!-- <tr class="table-active customDoubleTableHeading">
                         <th>Customer</th>
                         <th>Job Customer</th>
                         <th>Job No</th>
@@ -14,9 +14,9 @@
                         <th class="text-right">Tax</th>
                         <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount (ex)</th>
                         <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount (inc)</th>
-                    </tr>
+                    </tr> -->
 
-                    {{#if isOnlyDefaultActive equal "false" }}
+                    <!-- {{#if isOnlyDefaultActive equal "false" }}
                         <tr class="table-active tblAvoid customDoubleTableHeading">
                             <th></th>
                             <th></th>
@@ -53,7 +53,17 @@
                             {{/if}}
                         
                         </tr>
-                    {{/if}}
+                    {{/if}} -->
+                    <tr class="table-active tblAvoid customDoubleTableHeading">
+                        {{#if jobsalessummaryth}}
+                            {{#each c in jobsalessummaryth }}
+                                {{# if c.display}}
+                                    <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}" class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
+                                {{/if}}
+                            {{/each}}
+                        {{/if}}
+
+                    </tr>
                 </thead>
                 <tbody>
                     {{#if reportRecords}}

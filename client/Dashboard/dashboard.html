@@ -73,9 +73,7 @@
                         <h2 class="mr-1">Accounts Dashboard {{> helpbutton}}</h2>
                     </header>
                 </div>
-                <div class="col-12 col-md-4 divLogged">
-                    {{> loggedcompanyoverview}}
-                </div>
+                <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
                 <div class="col-12 col-md-4 justify-content-end">
                     <!-- <button class="btn btn-primary btnBatchUpdate float-right" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button> -->
                     <div class="form-group">
@@ -129,12 +127,17 @@
                     left: 0;
                 }
             </style>
+
+            <!-- Fix 2022/12/21 -->
+
+            {{> dashboardCardCharts tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}}
+
             <!-- All Cards List -->
-            {{> allCardsLists tabGroupID="1" chartGroup="Dashboard"}}
+            <!-- {{> allCardsLists tabGroupID="1" chartGroup="Dashboard"}} -->
 
             <!-- All charts list -->
-            {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" }}
-
+            <!-- {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}} -->
+            <!-- {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}} -->
             <!-- <div class="row">
                 <ul class="col-area col-sm-6" id="col1">
                     <li>{{> monthlyprofitandloss}}</li>

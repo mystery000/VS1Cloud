@@ -1,13 +1,18 @@
 import { ReactiveVar } from "meteor/reactive-var";
-import { CoreService } from "../js/core-service";
-import { EmployeeProfileService } from "../js/profile-service";
-import { AccountService } from "../accounts/account-service";
-import { UtilityService } from "../utility-service";
-import { ProductService } from "../product/product-service";
-import { SideBarService } from "../js/sidebar-service";
-import { OrganisationService } from "../js/organisation-service";
+import { CoreService } from "../js/core-service.js";
+import { EmployeeProfileService } from "../js/profile-service.js";
+import { AccountService } from "../accounts/account-service.js";
+import { UtilityService } from "../utility-service.js";
+import { ProductService } from "../product/product-service.js";
+import { SideBarService } from "../js/sidebar-service.js";
+import { OrganisationService } from "../js/organisation-service.js";
 import "../lib/global/indexdbstorage.js";
 import XLSX from "xlsx";
+//Import
+import { Template } from 'meteor/templating';
+import './accountOverview.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 import { ReceiptService } from "../receipts/receipt-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -49,17 +54,17 @@ Template.accountsoverview.onRendered(function() {
 
 
 
-    if(Session.get("ERPLoggedCountry") == "United States of America"){
+    if(localStorage.getItem("ERPLoggedCountry") == "United States of America"){
         $(".btnTaxSummary").show();
         $(".btnBasReturnGroup").hide();
         $(".btnVatReturnGroup").hide();
     }
-    else if(Session.get("ERPLoggedCountry") == "Australia"){
+    else if(localStorage.getItem("ERPLoggedCountry") == "Australia"){
         $(".btnTaxSummary").hide();
         $(".btnBasReturnGroup").show();
         $(".btnVatReturnGroup").hide();
     }
-    else if(Session.get("ERPLoggedCountry") == "South Africa"){
+    else if(localStorage.getItem("ERPLoggedCountry") == "South Africa"){
         $(".btnTaxSummary").hide();
         $(".btnBasReturnGroup").hide();
         $(".btnVatReturnGroup").show();
@@ -70,7 +75,7 @@ Template.accountsoverview.onRendered(function() {
   /*
   function init_reset_data() {
     let bsbname = "Branch Code";
-    if (Session.get("ERPLoggedCountry") === "Australia") {
+    if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
         bsbname = "BSB";
     }
 
@@ -114,7 +119,7 @@ Template.accountsoverview.onRendered(function() {
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
               // reset_data = data.ProcessLog.CustomLayout.Columns;
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
               showCustomFieldDisplaySettings(reset_data);
@@ -1041,95 +1046,6 @@ Template.accountsoverview.onRendered(function() {
                 }
             });
             // //$.fn.dataTable.moment('DD/MM/YY');
-            /*
-            $("#tblAccountOverview").DataTable({
-                    columnDefs: [
-                        // { type: 'currency', targets: 4 }
-                    ],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    buttons: [{
-                            extend: "csvHtml5",
-                            text: "",
-                            download: "open",
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "accountoverview_" + moment().format(),
-                            orientation: "portrait",
-                            exportOptions: {
-                                columns: ":visible",
-                            },
-                        },
-                        {
-                            extend: "print",
-                            download: "open",
-                            className: "btntabletopdf hiddenColumn",
-                            text: "",
-                            title: "Accounts Overview",
-                            filename: "Accounts Overview_" + moment().format(),
-                            exportOptions: {
-                                columns: ":visible",
-                            },
-                        },
-                        {
-                            extend: "excelHtml5",
-                            title: "",
-                            download: "open",
-                            className: "btntabletoexcel hiddenColumn",
-                            filename: "accountoverview_" + moment().format(),
-                            orientation: "portrait",
-                            exportOptions: {
-                                columns: ":visible",
-                            },
-                            // ,
-                            // customize: function ( win ) {
-                            //   $(win.document.body).children("h1:first").remove();
-                            // }
-                        },
-                    ],
-                    // bStateSave: true,
-                    // rowId: 0,
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [
-                        [initialDatatableLoad, -1],
-                        [initialDatatableLoad, "All"],
-                    ],
-                    info: true,
-                    responsive: true,
-                    order: [
-                        [0, "asc"]
-                    ],
-                    // "aaSorting": [[1,'desc']],
-                    action: function() {
-                        $("#tblAccountOverview").DataTable().ajax.reload();
-                    },
-                    language: { search: "",searchPlaceholder: "Search List..." },
-                    fnDrawCallback: function(oSettings) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    },
-                    fnInitComplete: function() {
-                        $(
-                            "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                        ).insertAfter("#tblAccountOverview_filter");
-                    },
-                })
-                .on("page", function() {
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                    let draftRecord = templateObject.datatablerecords.get();
-                    templateObject.datatablerecords.set(draftRecord);
-                })
-                .on("column-reorder", function() {})
-                .on("length.dt", function(e, settings, len) {
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                });
-                */
             // $('.fullScreenSpin').css('display','none');
         }, 10);
     }
@@ -1216,7 +1132,7 @@ Template.accountsoverview.onRendered(function() {
     $("#tblAccountOverview tbody").on(
         "click",
         "tr .colAccountName, tr .colAccountName, tr .colDescription, tr .colAccountNo, tr .colType, tr .colTaxCode, tr .colBankAccountName, tr .colBSB, tr .colBankAccountNo, tr .colExtra, tr .colAPCANumber",
-        function() {
+        function(event) {
             var listData = $(this).closest("tr").attr("id");
             var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
             var accountName = $(event.target).closest("tr").find(".colAccountName").text();
@@ -1248,7 +1164,7 @@ Template.accountsoverview.onRendered(function() {
                     //accountService.getOneAccount(listData).then(function (data) {
 
                     var accountid = listData || "";
-                    var accounttype = $(event.target).closest("tr").find(".colType").attr("accounttype") || "";
+                    var accounttype = $(event.target).closest("tr").find(".colType").text() || "";
                     var accountname = $(event.target).closest("tr").find(".colAccountName").text() || "";
                     var accountno = $(event.target).closest("tr").find(".colAccountNo").text() || "";
                     var taxcode = $(event.target).closest("tr").find(".colTaxCode").text() || "";
@@ -1280,7 +1196,6 @@ Template.accountsoverview.onRendered(function() {
                         $(".isBankAccount").addClass("isNotBankAccount");
                         $(".isCreditAccount").addClass("isNotCreditAccount");
                     }
-
                     $("#edtAccountID").val(accountid);
                     $("#sltAccountType").val(accounttype);
                     $("#edtAccountName").val(accountname);
@@ -1541,18 +1456,18 @@ Template.accountsoverview.events({
                 addVS1Data("TAccountVS1", JSON.stringify(data)).then(function(datareturn) {
                   sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0,false).then(function(dataAccount) {
                           addVS1Data("TAccountVS1List", JSON.stringify(dataAccount)).then(function(datareturn) {
-                                  window.open("/accountsoverview", "_self");
+                                  //window.open("/accountsoverview", "_self");
                               }).catch(function(err) {
-                                  window.open("/accountsoverview", "_self");
+                                  //window.open("/accountsoverview", "_self");
                               });
                       }).catch(function(err) {
-                          window.open("/accountsoverview", "_self");
+                          //window.open("/accountsoverview", "_self");
                       });
                     }).catch(function(err) {
-                        window.open("/accountsoverview", "_self");
+                        //window.open("/accountsoverview", "_self");
                     });
             }).catch(function(err) {
-                window.open("/accountsoverview", "_self");
+                //window.open("/accountsoverview", "_self");
             });
     },
     "click .btnBatchUpdate": function() {
@@ -2522,7 +2437,7 @@ Template.accountsoverview.helpers({
     },
     bsbRegionName: () => {
         let bsbname = "Branch Code";
-        if (Session.get("ERPLoggedCountry") === "Australia") {
+        if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
             bsbname = "BSB";
         }
         return bsbname;
@@ -2532,7 +2447,7 @@ Template.accountsoverview.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get("mycloudLogonID"),
+            userid: localStorage.getItem("mycloudLogonID"),
             PrefName: "tblAccountOverview",
         });
     },

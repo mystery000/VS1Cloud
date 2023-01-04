@@ -66,7 +66,7 @@ Template.addsupplierpop.onRendered(function() {
     setTimeout(function() {
         Meteor.call(
             "readPrefMethod",
-            Session.get("mycloudLogonID"),
+            localStorage.getItem("mycloudLogonID"),
             "defaulttax",
             function(error, result) {
                 if (error) {
@@ -199,7 +199,7 @@ Template.addsupplierpop.onRendered(function() {
                         for (let i = 0; i < data.ttermsvs1.length; i++) {
                             terms.push(data.ttermsvs1[i].TermsName);
                             if (data.ttermsvs1[i].isPurchasedefault == true) {
-                                Session.setPersistent(
+                                localStorage.setItem(
                                     "ERPTermsPurchase",
                                     data.ttermsvs1[i].TermsName || "COD"
                                 );
@@ -229,7 +229,7 @@ Template.addsupplierpop.onRendered(function() {
                     for (let i = 0; i < data.ttermsvs1.length; i++) {
                         terms.push(data.ttermsvs1[i].TermsName);
                         if (data.ttermsvs1[i].isPurchasedefault == true) {
-                            Session.setPersistent(
+                            localStorage.setItem(
                                 "ERPTermsPurchase",
                                 data.ttermsvs1[i].TermsName || "COD"
                             );
@@ -968,8 +968,8 @@ Template.addsupplierpop.events({
     },
     "click .addsupplierpop .resetTable": function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
+            _id: localStorage.getItem("mycloudLogonID"),
+            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1018,8 +1018,8 @@ Template.addsupplierpop.events({
         });
         //datatable.state.save();
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
+            _id: localStorage.getItem("mycloudLogonID"),
+            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1241,8 +1241,8 @@ Template.addsupplierpop.events({
     },
     "click .addsupplierpop .btnResetSettings": function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
+            _id: localStorage.getItem("mycloudLogonID"),
+            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1442,7 +1442,7 @@ Template.addsupplierpop.events({
     "click .addsupplierpop .transTab": function(event) {
         let templateObject = Template.instance();
         let supplierName = $("#edtSupplierCompany").val();
-        templateObject.getAllProductRecentTransactions(supplierName);
+        // templateObject.getAllProductRecentTransactions(supplierName);
     },
     "click .addsupplierpop .btnDeleteSupplier": function(event) {
         playDeleteAudio();
@@ -1529,7 +1529,7 @@ Template.addsupplierpop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get("mycloudLogonID"),
+            userid: localStorage.getItem("mycloudLogonID"),
             PrefName: "tblSalesOverview",
         });
     },
@@ -1561,7 +1561,7 @@ Template.addsupplierpop.helpers({
     },
     contactCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get("mycloudLogonID"),
+            userid: localStorage.getItem("mycloudLogonID"),
             PrefName: "supplierscard",
         });
     },

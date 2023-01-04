@@ -21,15 +21,16 @@ Template.stockmovementreport.onCreated(() => {
   templateObject.reportOptions = new ReactiveVar([]);
   templateObject.records = new ReactiveVar([]);
 
-   // Currency related vars //
-   templateObject.currencyList = new ReactiveVar([]);
-   templateObject.activeCurrencyList = new ReactiveVar([]);
-   templateObject.tcurrencyratehistory = new ReactiveVar([]);
+  // Currency related vars //
+  templateObject.currencyList = new ReactiveVar([]);
+  templateObject.activeCurrencyList = new ReactiveVar([]);
+  templateObject.tcurrencyratehistory = new ReactiveVar([]);
+  templateObject.stockmovementreportth = new ReactiveVar([]);
 });
 
 function MakeNegative() {
-  $('td').each(function(){
-      if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+  $('td').each(function () {
+    if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
   });
 }
 
@@ -37,13 +38,33 @@ Template.stockmovementreport.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
 
+  let reset_data = [
+    { index: 1, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "" },
+    { index: 2, label: 'Transaction Type', class: 'colTrType', active: true, display: true, width: "" },
+    { index: 3, label: 'Transaction No', class: 'colTrNo', active: true, display: true, width: "" },
+    { index: 4, label: 'Quantity Opening', class: 'colOpening', active: true, display: true, width: "" },
+    { index: 5, label: 'Quantity Current', class: 'colCurrent', active: true, display: true, width: "" },
+    { index: 6, label: 'Quantity Running', class: 'colRunning', active: true, display: true, width: "" },
+    { index: 7, label: 'Average Unit Cost', class: 'colAvUnitCost', active: true, display: true, width: "" },
+    { index: 8, label: 'Average Total Cost', class: 'colAvTotalCost', active: true, display: true, width: "" },
+    { index: 9, label: 'Amount(Ex) Unit Cost', class: 'colAmUnitCost', active: true, display: true, width: "" },
+    { index: 10, label: 'Amount(Ex) Total Cost', class: 'colAmTotalCost', active: true, display: true, width: "" },
+    { index: 11, label: 'Department Name', class: 'colDepartmentName', active: false, display: true, width: "" },
+    { index: 12, label: 'TransDate', class: 'colTransDate', active: false, display: true, width: "" },
+    { index: 13, label: 'Actual Date', class: 'colActualDate', active: false, display: true, width: "" },
+    { index: 14, label: 'Sub Group', class: 'colSubGroup', active: false, display: true, width: "" },
+    { index: 15, label: 'Type', class: 'colType', active: false, display: true, width: "" },
+    { index: 16, label: 'Dept', class: 'colDept', active: false, display: true, width: "" },
+  ]
+  templateObject.stockmovementreportth.set(reset_data);
+
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
 
 
-  templateObject.setDateAs = ( dateFrom = null ) => {
-    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  templateObject.setDateAs = (dateFrom = null) => {
+    templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
   };
   templateObject.getStockMovementReportData = async function (dateFrom, dateTo, ignoreDate) {
     templateObject.setDateAs(dateFrom);
@@ -54,59 +75,59 @@ Template.stockmovementreport.onRendered(() => {
       let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
       let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
       let ignoreDate = options.ignoreDate || false;
-      data = await reportService.getStockMovementReport( dateFrom, dateTo, ignoreDate);
-      if( data.tproductmovementlist.length > 0 ){
-        localStorage.setItem('VS1StockMovement_Report', JSON.stringify(data)||'');
+      data = await reportService.getStockMovementReport(dateFrom, dateTo, ignoreDate);
+      if (data.tproductmovementlist.length > 0) {
+        localStorage.setItem('VS1StockMovement_Report', JSON.stringify(data) || '');
       }
-    }else{
+    } else {
       data = JSON.parse(localStorage.getItem('VS1StockMovement_Report'));
     }
     let movementReport = [];
-    if( data.tproductmovementlist.length > 0 ){
-        let reportGroups = [];
-        for (const item of data.tproductmovementlist) {
-            let isExist = reportGroups.filter((subitem) => {
-                if( subitem.ID == item.ProductID ){
-                    subitem.SubAccounts.push(item)
-                    return subitem
-                }
-            });
-
-            if( isExist.length == 0 ){
-              if(item.TranstypeDesc != 'Opening Balance'){
-                reportGroups.push({
-                    ID: item.ProductID,
-                    ProductName: item.ProductName,
-                    SubAccounts: [item],
-                    TotalRunningQty: 0,
-                    TotalCurrentQty: 0,
-                    TotalUnitCost: 0
-                });
-              }
-            }
-        }
-
-        movementReport = reportGroups.filter((item) => {
-            let TotalRunningQty = 0;
-            let TotalCurrentQty = 0;
-            let TotalUnitCost = 0;
-            item.SubAccounts.map((subitem) => {
-              TotalRunningQty += subitem.Qty;
-              TotalCurrentQty += subitem.Qty;
-              TotalUnitCost += subitem.Cost;
-            });
-            item.SubAccounts.sort(function(a,b){
-              return new Date(b.TransactionDate) - new Date(a.TransactionDate);
-            });
-            item.TotalRunningQty = TotalRunningQty;
-            item.TotalCurrentQty = TotalCurrentQty;
-            item.TotalUnitCost = TotalUnitCost;
-            return item;
+    if (data.tproductmovementlist.length > 0) {
+      let reportGroups = [];
+      for (const item of data.tproductmovementlist) {
+        let isExist = reportGroups.filter((subitem) => {
+          if (subitem.ID == item.ProductID) {
+            subitem.SubAccounts.push(item)
+            return subitem
+          }
         });
+
+        if (isExist.length == 0) {
+          if (item.TranstypeDesc != 'Opening Balance') {
+            reportGroups.push({
+              ID: item.ProductID,
+              ProductName: item.ProductName,
+              SubAccounts: [item],
+              TotalRunningQty: 0,
+              TotalCurrentQty: 0,
+              TotalUnitCost: 0
+            });
+          }
+        }
+      }
+
+      movementReport = reportGroups.filter((item) => {
+        let TotalRunningQty = 0;
+        let TotalCurrentQty = 0;
+        let TotalUnitCost = 0;
+        item.SubAccounts.map((subitem) => {
+          TotalRunningQty += subitem.Qty;
+          TotalCurrentQty += subitem.Qty;
+          TotalUnitCost += subitem.Cost;
+        });
+        item.SubAccounts.sort(function (a, b) {
+          return new Date(b.TransactionDate) - new Date(a.TransactionDate);
+        });
+        item.TotalRunningQty = TotalRunningQty;
+        item.TotalCurrentQty = TotalCurrentQty;
+        item.TotalUnitCost = TotalUnitCost;
+        return item;
+      });
     }
     templateObject.records.set(movementReport);
-    setTimeout(function() {
-        MakeNegative();
+    setTimeout(function () {
+      MakeNegative();
     }, 1000);
     $(".fullScreenSpin").css("display", "none");
   }
@@ -125,8 +146,8 @@ Template.stockmovementreport.onRendered(() => {
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  
-  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
+
+  templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()))
 
 
   templateObject.initDate();
@@ -135,6 +156,35 @@ Template.stockmovementreport.onRendered(() => {
 });
 
 Template.stockmovementreport.events({
+  'click .chkDatatable': function (event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.' + columnDataValue).addClass('showColumn');
+      $('.' + columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.' + columnDataValue).addClass('hiddenColumn');
+      $('.' + columnDataValue).removeClass('showColumn');
+    }
+  },
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click .btnRefresh": async function () {
     // $(".fullScreenSpin").css("display", "inline-block");
     // localStorage.setItem("VS1StockMovement_Report", "");
@@ -174,47 +224,47 @@ Template.stockmovementreport.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
-    setTimeout(function(){
-    let values = [];
-    let basedOnTypeStorages = Object.keys(localStorage);
-    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-      let employeeId = storage.split("_")[2];
-      return (
-        storage.includes("BasedOnType_") &&
-        employeeId == Session.get("mySessionEmployeeLoggedID")
-      );
-    });
-    let i = basedOnTypeStorages.length;
-    if (i > 0) {
-      while (i--) {
-        values.push(localStorage.getItem(basedOnTypeStorages[i]));
-      }
-    }
-    values.forEach((value) => {
-      let reportData = JSON.parse(value);
-      reportData.HostURL = $(location).attr("protocal")
-        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-        : "http://" + $(location).attr("hostname");
-      if (reportData.BasedOnType.includes("P")) {
-        if (reportData.FormID == 1) {
-          let formIds = reportData.FormIDs.split(",");
-          if (formIds.includes("225")) {
-            reportData.FormID = 225;
-            Meteor.call("sendNormalEmail", reportData);
-          }
-        } else {
-          if (reportData.FormID == 225)
-            Meteor.call("sendNormalEmail", reportData);
+    setTimeout(function () {
+      let values = [];
+      let basedOnTypeStorages = Object.keys(localStorage);
+      basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+        let employeeId = storage.split("_")[2];
+        return (
+          storage.includes("BasedOnType_") &&
+          employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
+        );
+      });
+      let i = basedOnTypeStorages.length;
+      if (i > 0) {
+        while (i--) {
+          values.push(localStorage.getItem(basedOnTypeStorages[i]));
         }
       }
-    });
+      values.forEach((value) => {
+        let reportData = JSON.parse(value);
+        reportData.HostURL = $(location).attr("protocal")
+          ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+          : "http://" + $(location).attr("hostname");
+        if (reportData.BasedOnType.includes("P")) {
+          if (reportData.FormID == 1) {
+            let formIds = reportData.FormIDs.split(",");
+            if (formIds.includes("225")) {
+              reportData.FormID = 225;
+              Meteor.call("sendNormalEmail", reportData);
+            }
+          } else {
+            if (reportData.FormID == 225)
+              Meteor.call("sendNormalEmail", reportData);
+          }
+        }
+      });
 
-    document.title = "Stock Movement Report";
-    $(".printReport").print({
-      title: "Stock Movement Report | " + loggedCompany,
-      noPrintSelector: ".addSummaryEditor",
-    });
-  }, delayTimeAfterSound);
+      document.title = "Stock Movement Report";
+      $(".printReport").print({
+        title: "Stock Movement Report | " + loggedCompany,
+        noPrintSelector: ".addSummaryEditor",
+      });
+    }, delayTimeAfterSound);
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
@@ -322,11 +372,11 @@ Template.stockmovementreport.events({
   //   localStorage.setItem('VS1StockMovement_Report', '');
   //   await templateObject.setReportOptions(true);
   // },
-  "click #ignoreDate":  (e, templateObject) => {
+  "click #ignoreDate": (e, templateObject) => {
     localStorage.setItem("VS1StockMovement_Report", "");
     templateObject.getStockMovementReportData(
-      null, 
-      null, 
+      null,
+      null,
       true
     )
   },
@@ -334,8 +384,8 @@ Template.stockmovementreport.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1StockMovement_Report", "");
     templateObject.getStockMovementReportData(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },
@@ -395,11 +445,11 @@ Template.stockmovementreport.events({
 
   "click [href='#noInfoFound']": function () {
     swal({
-        title: 'Information',
-        text: "No further information available on this column",
-        type: 'warning',
-        confirmButtonText: 'Ok'
-      })
+      title: 'Information',
+      text: "No further information available on this column",
+      type: 'warning',
+      confirmButtonText: 'Ok'
+    })
   }
 });
 
@@ -407,11 +457,14 @@ Template.stockmovementreport.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
+  stockmovementreportth: () => {
+    return Template.instance().stockmovementreportth.get();
+  },
   records: () => {
     return Template.instance().records.get();
   },
   redirectionType(item) {
-    if(item.TranstypeDesc === 'Purchase Order') {
+    if (item.TranstypeDesc === 'Purchase Order') {
       return '/purchaseordercard?id=' + item.TransactionNo;
     } else if (item.TranstypeDesc === 'Invoice') {
       return '/invoicecard?id=' + item.TransactionNo;
@@ -446,26 +499,26 @@ Template.stockmovementreport.helpers({
       return '#noInfoFound';
     }
   },
-  formatPrice( amount ){
+  formatPrice(amount) {
     let utilityService = new UtilityService();
-    if( isNaN( amount ) ){
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    if (isNaN(amount)) {
+      amount = (amount === undefined || amount === null || amount.length === 0) ? 0 : amount;
+      amount = (amount) ? Number(amount.replace(/[^0-9.-]+/g, "")) : 0;
     }
-      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    return utilityService.modifynegativeCurrencyFormat(amount) || 0.00;
   },
-  checkZero( value ){
-     return ( value == 0 )? '': value;
+  checkZero(value) {
+    return (value == 0) ? '' : value;
   },
-  formatDate: ( date ) => {
-    return ( date )? moment(date).format("YYYY/MM/DD") : '';
+  formatDate: (date) => {
+    return (date) ? moment(date).format("YYYY/MM/DD") : '';
   },
 
   // FX Module //
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    if(isNaN(amount)) {
+    if (isNaN(amount)) {
       if (!amount || amount.trim() == "") {
         return "";
       }

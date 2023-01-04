@@ -93,7 +93,7 @@ Template.employeetimeclock.onRendered(function () {
 
       if (templateObject.datatablerecords.get()) {
 
-        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTimeSheet', function (error, result) {
+        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTimeSheet', function (error, result) {
           if (error) {
 
           } else {
@@ -397,7 +397,7 @@ Template.employeetimeclock.onRendered(function () {
     $('select', container).select2();
   }
 
-$("#employee_name").val(Session.get('mySessionEmployee'));
+$("#employee_name").val(localStorage.getItem('mySessionEmployee'));
 const employeeList = [];
 const jobsList = [];
 const timesheetList = [];
@@ -430,7 +430,7 @@ templateObject.dateFormat = function (date) {
   var dateObject = dateParts[2] + '/' + ('0' + (dateParts[1] - 1)).toString().slice(-2) + '/' + dateParts[0];
   return dateObject;
 }
-Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTimeSheet', function (error, result) {
+Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTimeSheet', function (error, result) {
   if (error) {
 
   } else {
@@ -540,7 +540,7 @@ Template.employeetimeclock.events({
     }
   },
   'click .resetTable': function (event) {
-    var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+    var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;
@@ -584,7 +584,7 @@ Template.employeetimeclock.events({
 
       lineItems.push(lineItemObj);
     });
-    var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+    var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;
@@ -742,7 +742,7 @@ Template.employeetimeclock.events({
             }
           }],
           "TypeName": "Payroll",
-          "WhoEntered": Session.get('mySessionEmployee') || ""
+          "WhoEntered": localStorage.getItem('mySessionEmployee') || ""
         }
       };
       contactService.saveTimeSheet(data).then(function (data) {

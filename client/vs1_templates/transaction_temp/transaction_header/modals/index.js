@@ -1,3 +1,9 @@
+import { Template } from 'meteor/templating';
+import "./files_viewer_modal.html"
+import "./help_modal.html"
+import "./template_selection_modal.html"
+import "./upload_attachment_modal.html"
+
 let template_list = ["Invoices", "Invoice Back Orders", "Delivery Docket", "Credits", "Bills"];
 
 Template.template_selection_modal.helpers({

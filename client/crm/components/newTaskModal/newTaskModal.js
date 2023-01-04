@@ -1,3 +1,6 @@
+import { Template } from 'meteor/templating';
+import './newTaskModal.html';
+
 Template.newTaskModal.inheritsHelpersFrom('alltaskdatatable');
 Template.newTaskModal.inheritsEventsFrom('alltaskdatatable');
 Template.newTaskModal.inheritsHooksFrom('alltaskdatatable');

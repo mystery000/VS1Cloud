@@ -18,6 +18,10 @@ import {
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import { ProductService } from "../product/product-service";
+
+import { Template } from 'meteor/templating';
+import './serialnumberpop.html';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var autofilled = false;

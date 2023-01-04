@@ -14,6 +14,11 @@ import 'jquery-editable-select';
 import { SideBarService } from "../../js/sidebar-service";
 import '../../lib/global/indexdbstorage.js';
 
+import './grouptypelist.html';
+import './grouptype.html';
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;

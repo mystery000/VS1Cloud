@@ -1,0 +1,17 @@
+<!-- Transaction Footer Attachment button -->
+<!--  
+  count
+-->
+<template name="template_footer_attachment_button">
+  <button
+    class="btn btn-primary btn_Attachment btnFooter" 
+    id="btn_Attachment"
+    type="button">
+    {{#if count}}
+    <span id="attachment-count">{{count}}</span>
+    {{/if}} 
+    <i class="fa fa-paperclip"></i>
+    Add Attachments
+</button>
+{{> files_viewer_modal }}
+</template>

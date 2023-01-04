@@ -12,13 +12,91 @@ import Tvs1ChartDashboardPreferenceField from "../../js/Api/Model/Tvs1ChartDashb
 import ApiService from "../../js/Api/Module/ApiService";
 import '../../lib/global/indexdbstorage.js';
 import { SideBarService } from "../../js/sidebar-service";
+
+import { Session } from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './allChartLists.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+import '../bankaccountschart/bankaccountschart.html'
+import '../monthlyprofitandloss/monthlyprofitandloss.html'
+import '../profitandlosschart/profitandlosschart.html'
+import '../resalescomparision/resalescomparision.html'
+import '../expenses/expenseschart.html'
+import '../accountslist/accountslistchart.html'
+import '../mytaskswdiget/mytaskswidgetchart.html'
+
+import '../top10Customers/dsm_top10Customers.html'
+import '../../Dashboard/appointments-widget/dsm-appointments-widget.html'
+
+
 let _ = require("lodash");
+
+let chartsPlaceList = {
+    "Accounts_Overview": [
+        "accountrevenuestreams",
+        "profitandlosschart",
+    ],
+
+    "Contacts_Overview": [
+        "top10Customers",
+        "top10Suppliers",
+        "activeEmployees",
+    ],
+
+    "Dashboard_Overview": [
+        "bankaccountschart",
+        "monthlyprofitandloss",
+        "profitandlosschart",
+        "resalescomparision",
+        "expenseschart",
+        "accountslistchart",
+        "mytaskswidgetchart",
+    ],
+
+    "DSMCharts_Overview": [
+        "mytaskswidgetchart",
+        "dsmTop10Customers",
+        "dsmAppointmentsWidget",
+        "resalescomparision",
+        "opportunitiesStatus",
+        "dsmleadlistchart",
+    ],
+
+    "DSCharts_Overview": [
+        "dashboardSalesCharts",
+        "dsAppointmentsWidget",
+        "dsleadlistchart",
+        "mytaskswidgetchart",
+    ],
+
+    "Inventory_Overview": [
+        "invstockonhandanddemand",
+        "top10Suppliers",
+    ],
+
+    "Payroll_Overview": [
+        "employeecompletedjobs",
+        "clockedOnEmployees",
+    ],
+
+    "Purchases_Overview": [
+        "monthllyexpenses",
+        "expensebreakdown",
+    ],
+
+    "Sales_Overview": [
+        "quotedsalesorderinvoicedamounts",
+        "top10Customers",
+        "resalescomparision",
+    ],
+};
 
 let sideBarService = new SideBarService();
 /**
  * Current User ID
  */
-const employeeId = Session.get("mySessionEmployeeLoggedID");
+const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 const _chartGroup = "";
 const _tabGroup = 0;
 const chartsEditor = new ChartsEditor(
@@ -417,7 +495,7 @@ Template.allChartLists.onRendered(function() {
                     chart.fields._chartSlug = chart.fields.ChartGroup.toLowerCase() + "__" + chart.fields.ChartName.toLowerCase().split(" ").join("_");
                     $(`[key='${chart.fields._chartSlug}']`).addClass("chart-visibility");
                     $(`[key='${chart.fields._chartSlug}']`).attr("pref-id", 0);
-                    $(`[key='${chart.fields._chartSlug}']`).attr("chart-id",chart.fields.ID);
+                    $(`[key='${chart.fields._chartSlug}']`).attr("chart-id", chart.fields.ID);
                     // Default charts
                     let defaultClass = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-class');
                     let defaultPosition = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-position');
@@ -660,7 +738,7 @@ Template.allChartLists.events({
         $(".btnchartdropdown").addClass("showelement");
         const dashboardApis = new DashboardApi(); // Load all dashboard APIS
         let _tabGroup = $("#connectedSortable").data("tabgroup");
-        let employeeId = Session.get("mySessionEmployeeLoggedID");
+        let employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
         templateObject.hideChartElements();
         const apiEndpoint = dashboardApis.collection.findByName(
             dashboardApis.collectionNames.Tvs1dashboardpreferences
@@ -727,7 +805,17 @@ Template.allChartLists.helpers({
             isAccountOverviewPage = true;
         }
         return isAccountOverviewPage;
-    }
+    },
+
+    is_available_chart: (current, chart) => {
+        return chartsPlaceList[current].includes(chart);
+        // return 1;
+    },
+
+    is_dashboard_check: (currentTemplate) => {
+        //console.log(FlowRouter.current().path, currentTemplate);
+        return FlowRouter.current().path.includes(currentTemplate);
+    },
 });
 
 Template.registerHelper('equals', function(a, b) {

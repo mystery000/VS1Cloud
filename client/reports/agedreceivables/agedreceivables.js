@@ -6,6 +6,12 @@ import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './agedreceivables.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+let _ = require('lodash');
 
 const reportService = new ReportService();
 const utilityService = new UtilityService();
@@ -20,7 +26,7 @@ Template.agedreceivables.onCreated(() => {
     templateObject.grandrecords = new ReactiveVar();
     templateObject.dateAsAt = new ReactiveVar();
     templateObject.deptrecords = new ReactiveVar();
-
+    templateObject.agedreceivablesth = new ReactiveVar([]);
 
       // Currency related vars //
   FxGlobalFunctions.initVars(templateObject);
@@ -31,13 +37,67 @@ Template.agedreceivables.onRendered(() => {
     const deptrecords = [];
     const templateObject = Template.instance();
 
+    let reset_data = [
+        { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "" },
+        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "" },
+        { index: 3, label: 'AR Notes', class: 'colARNotes', active: true, display: true, width: "" },
+        { index: 4, label: 'Amount~Due', class: 'colAmountDue', active: true, display: true, width: "" },
+        { index: 5, label: 'Current', class: 'colCurrent', active: true, display: true, width: "" },
+        { index: 6, label: '1-30 Days', class: 'col1-30Days', active: true, display: true, width: "" },
+        { index: 7, label: '30-60 Days', class: 'col30-60Days', active: true, display: true, width: "" },
+        { index: 8, label: '60-90 Days', class: 'col60-90Days', active: true, display: true, width: "" },
+        { index: 9, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "" },
+        { index: 10, label: 'Avg Days Customer~Takes to pay', class: 'colAvgDaysCustomer', active: false, display: true, width: "" },
+        { index: 11, label: 'Invoice#', class: 'colInvoice', active: true, display: true, width: "" },
+        { index: 12, label: 'Rep Name', class: 'colRepName', active: true, display: true, width: "" },
+        { index: 13, label: 'FaxNumber', class: 'colFaxNumber', active: true, display: true, width: "" },
+        { index: 14, label: 'Mobile', class: 'colMobile', active: true, display: true, width: "" },
+        { index: 15, label: 'AltPhone', class: 'colAltPhone', active: true, display: true, width: "" },
+        { index: 16, label: 'StopCredit', class: 'colStopCredit', active: true, display: true, width: "" },
+        { index: 17, label: 'CreditLimit', class: 'colCreditLimit', active: true, display: true, width: "" },
+        { index: 18, label: 'Cust Type', class: 'colCustType', active: false, display: true, width: "" },
+        { index: 19, label: 'P.O. No#', class: 'colPONo', active: false, display: true, width: "" },
+        { index: 20, label: 'Sale Date', class: 'colSaleDate', active: false, display: true, width: "" },
+        { index: 21, label: 'Due Date', class: 'colDueDate', active: false, display: true, width: "" },
+        { index: 22, label: 'Type', class: 'colType', active: false, display: true, width: "" },
+        { index: 23, label: 'Pre-pay#', class: 'colPre-pay', active: false, display: true, width: "" },
+        { index: 24, label: 'Original Amount', class: 'colOriginalAmount', active: false, display: true, width: "" },
+        { index: 25, label: '1-7 Days', class: 'col1-7Days', active: false, display: true, width: "" },
+        { index: 26, label: '7-14 Days', class: 'col7-14Days', active: false, display: true, width: "" },
+        { index: 27, label: '14-21 Days', class: 'col14-21Days', active: false, display: true, width: "" },
+        { index: 28, label: '>21 Days', class: 'col21Days', active: false, display: true, width: "" },
+        { index: 29, label: 'Expiration Date', class: 'colExpirationDate', active: false, display: true, width: "" },
+        { index: 30, label: 'Reg NY', class: 'colRegNY', active: false, display: true, width: "" },
+        { index: 31, label: 'adv emails', class: 'coladvemails', active: false, display: true, width: "" },
+        { index: 32, label: 'Length', class: 'colLength', active: false, display: true, width: "" },
+        { index: 33, label: 'Width', class: 'colWidth', active: false, display: true, width: "" },
+        { index: 34, label: 'Height', class: 'colHeight', active: false, display: true, width: "" },
+        { index: 35, label: 'Region', class: 'colRegion', active: false, display: true, width: "" },
+        { index: 36, label: 'Account~ Name', class: 'colAccountName', active: false, display: true, width: "" },
+        { index: 37, label: 'Overdue~ Surcharge', class: 'colOverdueSurcharge', active: false, display: true, width: "" },
+        { index: 38, label: 'Shipping', class: 'colShipping', active: false, display: true, width: "" },
+        { index: 39, label: 'Terms', class: 'colTerms', active: false, display: true, width: "" },
+        { index: 40, label: 'Related Name', class: 'colRelatedName', active: false, display: true, width: "" },
+        { index: 41, label: 'Department', class: 'colDepartment', active: false, display: true, width: "" },
+        { index: 42, label: 'Status', class: 'colStatus', active: false, display: true, width: "" },
+        { index: 43, label: 'Customer Account No', class: 'colCustomerAccountNo', active: false, display: true, width: "" },
+        { index: 44, label: 'Email', class: 'colEmail', active: false, display: true, width: "" },
+        { index: 45, label: 'Overdue~ Surcharge~ Desc', class: 'colOverdueSurchargeDesc', active: false, display: true, width: "" },
+        { index: 46, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "" },
+        { index: 47, label: 'TransactionName', class: 'colTransactionName', active: false, display: true, width: "" },
+        { index: 48, label: 'Customer ID', class: 'colCustomerID', active: false, display: true, width: "" },
+        { index: 49, label: 'ConNote', class: 'colConNote', active: false, display: true, width: "" },
+        { index: 50, label: 'CheckNo', class: 'colCheckNo', active: false, display: true, width: "" },
+      ];
+      templateObject.agedreceivablesth.set(reset_data);
+
     templateObject.initDate = () => {
         Datehandler.initOneMonth();
     };
     templateObject.setDateAs = ( dateFrom = null ) => {
         templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
     };
-    
+
     templateObject.initUploadedImage = () => {
         let imageData = localStorage.getItem("Image");
         if (imageData) {
@@ -88,17 +148,17 @@ Template.agedreceivables.onRendered(() => {
 
                     let recordObj = {
                         Id: account.SaleID,
-                        type: accountType, 
+                        type: accountType,
                         SupplierName: account.Name,
                         entries: account
                     };
 
                     if (
-                        (account.AmountDue != 0) 
+                        (account.AmountDue != 0)
                         || (daccount.Current != 0)
-                        || (account["1-30Days"] != 0) 
+                        || (account["1-30Days"] != 0)
                         || (account["30-60Days"] != 0)
-                        || (account["60-90Days"] != 0) 
+                        || (account["60-90Days"] != 0)
                         || (account[">90Days"] != 0)
                         ) {
                         if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
@@ -111,8 +171,8 @@ Template.agedreceivables.onRendered(() => {
                         }
 
                     }
-                    
-                    
+
+
 
                 });
 
@@ -145,11 +205,11 @@ Template.agedreceivables.onRendered(() => {
             //     ];
 
             //     if (
-            //         (data.tarreport[i].AmountDue != 0) 
+            //         (data.tarreport[i].AmountDue != 0)
             //         || (data.tarreport[i].Current != 0)
-            //         || (data.tarreport[i]["1-30Days"] != 0) 
+            //         || (data.tarreport[i]["1-30Days"] != 0)
             //         || (data.tarreport[i]["30-60Days"] != 0)
-            //         || (data.tarreport[i]["60-90Days"] != 0) 
+            //         || (data.tarreport[i]["60-90Days"] != 0)
             //         || (data.tarreport[i][">90Days"] != 0)
             //         ) {
             //         if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
@@ -175,7 +235,7 @@ Template.agedreceivables.onRendered(() => {
                 //             data: records[key]
                 //         }
                 //     ];
-        
+
                 let obj = {
                     title: key,
                     entries: records[key],
@@ -185,7 +245,7 @@ Template.agedreceivables.onRendered(() => {
             }
 
             allRecords.forEach((record) => {
-            
+
                 let amountduetotal = 0;
                 let Currenttotal = 0;
                 let lessTnMonth = 0;
@@ -418,20 +478,49 @@ Template.agedreceivables.onRendered(() => {
     // templateObject.getAllProductData();
     templateObject.getDepartments();
     templateObject.initDate();
-    templateObject.initUploadedImage();    
-    templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )  
+    templateObject.initUploadedImage();
+    templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
 });
 
 Template.agedreceivables.events({
     'click #btnSummary': function() {
         FlowRouter.go('/agedreceivablessummary');
     },
+    'click .chkDatatable': function (event) {
+        let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+        if ($(event.target).is(':checked')) {
+          $('.' + columnDataValue).addClass('showColumn');
+          $('.' + columnDataValue).removeClass('hiddenColumn');
+        } else {
+          $('.' + columnDataValue).addClass('hiddenColumn');
+          $('.' + columnDataValue).removeClass('showColumn');
+        }
+      },
+      'click .btnOpenReportSettings': () => {
+        let templateObject = Template.instance();
+        // let currenttranstablename = templateObject.data.tablename||";
+        $(`thead tr th`).each(function (index) {
+          var $tblrow = $(this);
+          var colWidth = $tblrow.width() || 0;
+          var colthClass = $tblrow.attr('data-class') || "";
+          $('.rngRange' + colthClass).val(colWidth);
+        });
+        $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+      },
+      'change .custom-range': async function (event) {
+        //   const tableHandler = new TableHandler();
+        let range = $(event.target).val() || 0;
+        let colClassName = $(event.target).attr("valueclass");
+        await $('.' + colClassName).css('width', range);
+        //   await $('.colAccountTree').css('width', range);
+        $('.dataTable').resizable();
+      },
     'click td a': async function (event) {
         let id = $(event.target).closest('tr').attr('id').split("item-value-");
         var accountName = id[1].split('_').join(' ');
         let toDate = moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
         let fromDate = moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
-        //Session.setPersistent('showHeader',true);
+        //localStorage.setItem('showHeader',true);
         await clearData('TAccountRunningBalanceReport');
         window.open('/balancetransactionlist?accountName=' + accountName + '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem=' + false, '_self');
     },
@@ -525,7 +614,7 @@ Template.agedreceivables.events({
                     let basedOnTypeStorages = Object.keys(localStorage);
                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                         let employeeId = storage.split('_')[2];
-                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         return storage.includes('BasedOnType_');
                     });
                     let i = basedOnTypeStorages.length;
@@ -558,7 +647,7 @@ Template.agedreceivables.events({
                             if(j == values.length -1) {resolve()}
                         }
                     }
-                   
+
                 })
             }
 
@@ -626,7 +715,7 @@ Template.agedreceivables.events({
         LoadingOverlay.show();
         localStorage.setItem("VS1AgedReceivables_Report", "");
         templateObject.getAgedReceivableReports(
-          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
           GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
           false
         )
@@ -726,7 +815,7 @@ Template.agedreceivables.events({
 
     LoadingOverlay.hide();
   },
-  
+
   "click [href='#noInfoFound']": function () {
     swal({
         title: 'Information',
@@ -741,7 +830,9 @@ Template.agedreceivables.helpers({
     records: () => {
         return Template.instance().records.get();
     },
-
+    agedreceivablesth: () => {
+        return Template.instance().agedreceivablesth.get();
+    },
     redirectionType(item) {
        if (item.type === 'Invoice') {
           return '/invoicecard?id=' + item.entries.InvoiceNumber;
@@ -787,15 +878,15 @@ Template.agedreceivables.helpers({
     formatDate: ( date ) => {
     return ( date )? moment(date).format("DD/MM/YYYY") : '';
     },
-  
-  
+
+
       // FX Module
     convertAmount: (amount = 0.00, currencyData, days = null) => {
       if(days != null) {
           amount = amount[days];
       }
       let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
-  
+
       if (isNaN(amount)) {
         if (!amount || amount.trim() == "") {
           return '';
@@ -806,24 +897,24 @@ Template.agedreceivables.helpers({
       //    default currency
       //   return amount;
       // }
-  
+
       // Lets remove the minus character
       const isMinus = amount < 0;
-      if (isMinus == true) 
+      if (isMinus == true)
         amount = amount * -1; // make it positive for now
-      
+
       //  get default currency symbol
       // let _defaultCurrency = currencyList.filter(
       //   (a) => a.Code == defaultCurrencyCode
       // )[0];
-  
+
       // amount = amount.replace(_defaultCurrency.symbol, "");
-  
+
       // amount =
       //   isNaN(amount) == true
       //     ? parseFloat(amount.substring(1))
       //     : parseFloat(amount);
-  
+
       // Get the selected date
       let dateTo = $("#dateTo").val();
       const day = dateTo.split("/")[0];
@@ -831,51 +922,51 @@ Template.agedreceivables.helpers({
       const y = dateTo.split("/")[2];
       dateTo = new Date(y, m, day);
       dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-  
+
       // Filter by currency code
       currencyList = currencyList.filter(a => a.Code == currencyData.code);
-  
+
       // Sort by the closest date
       currencyList = currencyList.sort((a, b) => {
         a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
         a.setHours(0);
         a.setMinutes(0);
         a.setSeconds(0);
-  
+
         b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
         b.setHours(0);
         b.setMinutes(0);
         b.setSeconds(0);
-  
+
         var distancea = Math.abs(dateTo - a);
         var distanceb = Math.abs(dateTo - b);
         return distancea - distanceb; // sort a before b when the distance is smaller
-  
+
         // const adate= new Date(a.MsTimeStamp);
         // const bdate = new Date(b.MsTimeStamp);
-  
+
         // if(adate < bdate) {
         //   return 1;
         // }
         // return -1;
       });
-  
+
       const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
-  
+
       let rate = currencyData.code == defaultCurrencyCode
         ? 1
         : firstElem.BuyRate; // Must used from tcurrecyhistory
-  
+
       amount = parseFloat(amount * rate); // Multiply by the rate
       amount = Number(amount).toLocaleString(undefined, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       }); // Add commas
-  
+
       let convertedAmount = isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
-  
+
       return convertedAmount;
     },
     count: array => {
@@ -906,7 +997,7 @@ Template.agedreceivables.helpers({
         return false;
       }
       let activeArray = array.filter(c => c.active == true);
-  
+
       if (activeArray.length == 1) {
         if (activeArray[0].code == defaultCurrencyCode) {
           return !true;
@@ -920,7 +1011,7 @@ Template.agedreceivables.helpers({
     isCurrencyListActive() {
       const array = Template.instance().currencyList.get();
       let activeArray = array.filter(c => c.active == true);
-  
+
       return activeArray.length > 0;
     },
     isObject(variable) {
@@ -945,4 +1036,3 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
     return (a.indexOf(b) >= 0);
 });
-

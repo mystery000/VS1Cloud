@@ -90,7 +90,7 @@ Template.currenciessettings.onRendered(function () {
     await templateObject.currencies.set(currencies);
 
     if (await templateObject.currencies.get()) {
-      Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyList", function (error, result) {
+      Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyList", function (error, result) {
         if (error) {} else {
           if (result) {
             for (let i = 0; i < result.customFields.length; i++) {
@@ -251,7 +251,7 @@ Template.currenciessettings.onRendered(function () {
           templateObject.currencies.set(dataTableList);
 
           if (templateObject.currencies.get()) {
-            Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyList", function (error, result) {
+            Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyList", function (error, result) {
               if (error) {} else {
                 if (result) {
                   for (let i = 0; i < result.customFields.length; i++) {
@@ -416,7 +416,7 @@ Template.currenciessettings.onRendered(function () {
         templateObject.currencies.set(dataTableList);
 
         if (templateObject.currencies.get()) {
-          Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyList", function (error, result) {
+          Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyList", function (error, result) {
             if (error) {} else {
               if (result) {
                 for (let i = 0; i < result.customFields.length; i++) {
@@ -582,7 +582,7 @@ Template.currenciessettings.onRendered(function () {
         templateObject.currencies.set(dataTableList);
 
         if (templateObject.currencies.get()) {
-          Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "tblCurrencyList", function (error, result) {
+          Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyList", function (error, result) {
             if (error) {} else {
               if (result) {
                 for (let i = 0; i < result.customFields.length; i++) {
@@ -804,6 +804,43 @@ Template.currenciessettings.onRendered(function () {
 });
 
 Template.currenciessettings.events({
+//   "change input[type='checkbox']": (event) => {
+//     // This should be global
+//     $(event.currentTarget).attr(
+//       "checked",
+//       $(event.currentTarget).prop("checked")
+//     );
+//   },
+//   'click .chkDatatable': function(event) {
+//     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+//     if ($(event.target).is(':checked')) {
+//       $('.'+columnDataValue).addClass('showColumn');
+//       $('.'+columnDataValue).removeClass('hiddenColumn');
+//     } else {
+//       $('.'+columnDataValue).addClass('hiddenColumn');
+//       $('.'+columnDataValue).removeClass('showColumn');
+//     }
+// },
+// 'change .custom-range': async function(event) {
+//   //   const tableHandler = new TableHandler();
+//     let range = $(event.target).val()||0;
+//     let colClassName = $(event.target).attr("valueclass");
+//     await $('.' + colClassName).css('width', range);
+//   //   await $('.colAccountTree').css('width', range);
+//     $('.dataTable').resizable();
+//   },
+
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
   "click .btn-fx-history": e => {
     window.location.href = `/fx-currency-history`;
     // FlowRouter.go(`/fx-currency-history`);
@@ -1541,7 +1578,7 @@ Template.currenciessettings.helpers({
     return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-    return CloudPreference.findOne({userid: Session.get("mycloudLogonID"), PrefName: "tblCurrencyList"});
+    return CloudPreference.findOne({userid: localStorage.getItem("mycloudLogonID"), PrefName: "tblCurrencyList"});
   },
   countryList: () => {
     return Template.instance().countryData.get();

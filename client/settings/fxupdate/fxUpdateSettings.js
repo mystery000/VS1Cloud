@@ -160,7 +160,7 @@ Template.fixUpdates.onRendered(function() {
 
 
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'currencyLists', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'currencyLists', function(error, result) {
         if (error) {
 
         } else {
@@ -450,7 +450,7 @@ Template.fixUpdates.onRendered(function() {
     templateObject.getScheduleInfo = function() {
         taxRateService.getScheduleSettings().then(function(data) {
             let empData = data.treportschedules;
-            var employeeID = Session.get('mySessionEmployeeLoggedID');
+            var employeeID = localStorage.getItem('mySessionEmployeeLoggedID');
             var empDataCurr = '';
             let frequencyFormat = "";
             $.grep(formsData, function(n) {
@@ -751,7 +751,7 @@ Template.fixUpdates.events({
         let monthDays = 0;
         let weekDay = 0;
         let id = $('#frequencyid').val() || '';
-        let employeeID = Session.get('mySessionEmployeeLoggedID');
+        let employeeID = localStorage.getItem('mySessionEmployeeLoggedID');
         let formId = parseInt($("#formid").val());
 
         var startdateTimeMonthly = new Date($("#edtMonthlyStartDate").datepicker("getDate"));

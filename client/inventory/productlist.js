@@ -49,7 +49,7 @@ var splashArrayProductList = new Array();
   var splashArray = new Array();
   var splashArrayProd = new Array();
   var splashArrayProdDept = new Array();
-  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInventory', function(error, result){
+  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInventory', function(error, result){
   if(error){
 
   }else{
@@ -71,7 +71,7 @@ var splashArrayProductList = new Array();
   }
   });
 
-  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'productview', function(error, resultPref){
+  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'productview', function(error, resultPref){
   if(error){
 
   }else{
@@ -170,11 +170,11 @@ var splashArrayProductList = new Array();
               if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
              });
           };
-          // Session.set('VS1ProductList', splashArrayProd);
+          // localStorage.setItem('VS1ProductList', splashArrayProd);
 
           if(templateObject.datatablerecords.get()){
 
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInventory', function(error, result){
+            Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInventory', function(error, result){
             if(error){
 
             }else{
@@ -251,6 +251,8 @@ var splashArrayProductList = new Array();
                             "targets": [10]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                     buttons: [
@@ -428,11 +430,11 @@ function MakeNegative() {
     if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
    });
 };
-// Session.set('VS1ProductList', splashArrayProd);
+// localStorage.setItem('VS1ProductList', splashArrayProd);
 
 if(templateObject.datatablerecords.get()){
 
-  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInventory', function(error, result){
+  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInventory', function(error, result){
   if(error){
 
   }else{
@@ -509,6 +511,8 @@ setTimeout(function () {
                   "targets": [10]
               }
           ],
+          select: true,
+          destroy: true,
           colReorder: true,
           "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
           buttons: [
@@ -682,11 +686,11 @@ setTimeout(function () {
             if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
            });
         };
-        // Session.set('VS1ProductList', splashArrayProd);
+        // localStorage.setItem('VS1ProductList', splashArrayProd);
 
         if(templateObject.datatablerecords.get()){
 
-          Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInventory', function(error, result){
+          Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInventory', function(error, result){
           if(error){
 
           }else{
@@ -763,6 +767,8 @@ setTimeout(function () {
                         "targets": [10]
                     }
                   ],
+                  select: true,
+                  destroy: true,
                   colReorder: true,
                   "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                   buttons: [
@@ -1216,7 +1222,7 @@ Template.productlist.helpers({
      return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-  return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblInventory'});
+  return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblInventory'});
   },
   taxraterecords :() => {
      return Template.instance().taxraterecords.get();
@@ -1251,7 +1257,7 @@ Template.productlist.helpers({
           });
         },
         'click .resetTable' : function(event){
-          var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+          var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
           if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
               var clientID = getcurrentCloudDetails._id;
@@ -1295,7 +1301,7 @@ Template.productlist.helpers({
             lineItems.push(lineItemObj);
           });
 
-          var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+          var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
           if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
               var clientID = getcurrentCloudDetails._id;
@@ -1610,7 +1616,7 @@ Template.productlist.helpers({
         playSaveAudio();
         let productService = new ProductService();
         setTimeout(function(){
-        
+
         let productCode = $("#edtproductvs1code").val();
         let productName = $("#edtproductvs1name").val();
           if(productName == ''){

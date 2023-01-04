@@ -1,6 +1,6 @@
-import {ReportService} from "../report-service";
+import { ReportService } from "../report-service";
 import 'jQuery.print/jQuery.print.js';
-import {UtilityService} from "../../utility-service";
+import { UtilityService } from "../../utility-service";
 import { TaxRateService } from "../../settings/settings-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
@@ -12,28 +12,84 @@ const taxRateService = new TaxRateService();
 
 let defaultCurrencyCode = CountryAbbr;
 
-Template.agedreceivablessummary.onCreated(()=>{
-const templateObject = Template.instance();
+Template.agedreceivablessummary.onCreated(() => {
+  const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
   templateObject.reportrecords = new ReactiveVar([]);
   templateObject.grandrecords = new ReactiveVar();
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.deptrecords = new ReactiveVar();
+  templateObject.agedreceivablessummaryth = new ReactiveVar([]);
 
   // Currency related vars //
   FxGlobalFunctions.initVars(templateObject);
 });
 
-Template.agedreceivablessummary.onRendered(()=>{
+Template.agedreceivablessummary.onRendered(() => {
   LoadingOverlay.show();
   const templateObject = Template.instance();
+
+  let reset_data = [
+    { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "" },
+    { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "" },
+    { index: 3, label: 'AR Notes', class: 'colARNotes', active: true, display: true, width: "" },
+    { index: 4, label: 'Amount~Due', class: 'colAmountDue', active: true, display: true, width: "" },
+    { index: 5, label: 'Current', class: 'colCurrent', active: true, display: true, width: "" },
+    { index: 6, label: '1-30 Days', class: 'col1-30Days', active: true, display: true, width: "" },
+    { index: 7, label: '30-60 Days', class: 'col30-60Days', active: true, display: true, width: "" },
+    { index: 8, label: '60-90 Days', class: 'col60-90Days', active: true, display: true, width: "" },
+    { index: 9, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "" },
+    { index: 10, label: 'Avg Days Customer~Takes to pay', class: 'colAvgDaysCustomer', active: false, display: true, width: "" },
+    { index: 11, label: 'Invoice#', class: 'colInvoice', active: true, display: true, width: "" },
+    { index: 12, label: 'Rep Name', class: 'colRepName', active: true, display: true, width: "" },
+    { index: 13, label: 'FaxNumber', class: 'colFaxNumber', active: true, display: true, width: "" },
+    { index: 14, label: 'Mobile', class: 'colMobile', active: true, display: true, width: "" },
+    { index: 15, label: 'AltPhone', class: 'colAltPhone', active: true, display: true, width: "" },
+    { index: 16, label: 'StopCredit', class: 'colStopCredit', active: true, display: true, width: "" },
+    { index: 17, label: 'CreditLimit', class: 'colCreditLimit', active: true, display: true, width: "" },
+    { index: 18, label: 'Cust Type', class: 'colCustType', active: false, display: true, width: "" },
+    { index: 19, label: 'P.O. No#', class: 'colPONo', active: false, display: true, width: "" },
+    { index: 20, label: 'Sale Date', class: 'colSaleDate', active: false, display: true, width: "" },
+    { index: 21, label: 'Due Date', class: 'colDueDate', active: false, display: true, width: "" },
+    { index: 22, label: 'Type', class: 'colType', active: false, display: true, width: "" },
+    { index: 23, label: 'Pre-pay#', class: 'colPre-pay', active: false, display: true, width: "" },
+    { index: 24, label: 'Original Amount', class: 'colOriginalAmount', active: false, display: true, width: "" },
+    { index: 25, label: '1-7 Days', class: 'col1-7Days', active: false, display: true, width: "" },
+    { index: 26, label: '7-14 Days', class: 'col7-14Days', active: false, display: true, width: "" },
+    { index: 27, label: '14-21 Days', class: 'col14-21Days', active: false, display: true, width: "" },
+    { index: 28, label: '>21 Days', class: 'col21Days', active: false, display: true, width: "" },
+    { index: 29, label: 'Expiration Date', class: 'colExpirationDate', active: false, display: true, width: "" },
+    { index: 30, label: 'Reg NY', class: 'colRegNY', active: false, display: true, width: "" },
+    { index: 31, label: 'adv emails', class: 'coladvemails', active: false, display: true, width: "" },
+    { index: 32, label: 'Length', class: 'colLength', active: false, display: true, width: "" },
+    { index: 33, label: 'Width', class: 'colWidth', active: false, display: true, width: "" },
+    { index: 34, label: 'Height', class: 'colHeight', active: false, display: true, width: "" },
+    { index: 35, label: 'Region', class: 'colRegion', active: false, display: true, width: "" },
+    { index: 36, label: 'Account~ Name', class: 'colAccountName', active: false, display: true, width: "" },
+    { index: 37, label: 'Overdue~ Surcharge', class: 'colOverdueSurcharge', active: false, display: true, width: "" },
+    { index: 38, label: 'Shipping', class: 'colShipping', active: false, display: true, width: "" },
+    { index: 39, label: 'Terms', class: 'colTerms', active: false, display: true, width: "" },
+    { index: 40, label: 'Related Name', class: 'colRelatedName', active: false, display: true, width: "" },
+    { index: 41, label: 'Department', class: 'colDepartment', active: false, display: true, width: "" },
+    { index: 42, label: 'Status', class: 'colStatus', active: false, display: true, width: "" },
+    { index: 43, label: 'Customer Account No', class: 'colCustomerAccountNo', active: false, display: true, width: "" },
+    { index: 44, label: 'Email', class: 'colEmail', active: false, display: true, width: "" },
+    { index: 45, label: 'Overdue~ Surcharge~ Desc', class: 'colOverdueSurchargeDesc', active: false, display: true, width: "" },
+    { index: 46, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "" },
+    { index: 47, label: 'TransactionName', class: 'colTransactionName', active: false, display: true, width: "" },
+    { index: 48, label: 'Customer ID', class: 'colCustomerID', active: false, display: true, width: "" },
+    { index: 49, label: 'ConNote', class: 'colConNote', active: false, display: true, width: "" },
+    { index: 50, label: 'CheckNo', class: 'colCheckNo', active: false, display: true, width: "" },
+  ];
+  templateObject.agedreceivablessummaryth.set(reset_data);
+
 
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
 
-  templateObject.setDateAs = ( dateFrom = null ) => {
-    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  templateObject.setDateAs = (dateFrom = null) => {
+    templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
   };
 
   templateObject.initUploadedImage = () => {
@@ -43,320 +99,320 @@ Template.agedreceivablessummary.onRendered(()=>{
       $("#uploadedImage").attr("width", "50%");
     }
   };
-    const deptrecords = [];
-    let contactName = FlowRouter.current().queryParams.contact ||'';
-    let contactID = FlowRouter.current().queryParams.contactid ||'';
-    if(FlowRouter.current().queryParams.contact){
-      localStorage.setItem('VS1AgedReceivableSummary_Report','');
-    }
+  const deptrecords = [];
+  let contactName = FlowRouter.current().queryParams.contact || '';
+  let contactID = FlowRouter.current().queryParams.contactid || '';
+  if (FlowRouter.current().queryParams.contact) {
+    localStorage.setItem('VS1AgedReceivableSummary_Report', '');
+  }
 
-    templateObject.getAgedReceivableReports = (dateFrom, dateTo, ignoreDate) => {
-     LoadingOverlay.show();
-     templateObject.setDateAs( dateFrom );
-     if (!localStorage.getItem('VS1AgedReceivableSummary_Report')) {
+  templateObject.getAgedReceivableReports = (dateFrom, dateTo, ignoreDate) => {
+    LoadingOverlay.show();
+    templateObject.setDateAs(dateFrom);
+    if (!localStorage.getItem('VS1AgedReceivableSummary_Report')) {
       reportService.getAgedReceivableDetailsSummaryData(dateFrom, dateTo, ignoreDate, contactID)
-      .then(function (data) {
-        if (data.tarreport.length) {
-          localStorage.setItem("VS1AgedReceivableSummary_Report", JSON.stringify(data) || "");
-          if (data.Params.IgnoreDates == true) {
+        .then(function (data) {
+          if (data.tarreport.length) {
+            localStorage.setItem("VS1AgedReceivableSummary_Report", JSON.stringify(data) || "");
+            if (data.Params.IgnoreDates == true) {
               $('#dateFrom').attr('readonly', true);
               $('#dateTo').attr('readonly', true);
 
-          } else {
-            $('#dateFrom').attr('readonly', false);
-            $('#dateTo').attr('readonly', false);
+            } else {
+              $('#dateFrom').attr('readonly', false);
+              $('#dateTo').attr('readonly', false);
               $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
               $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
-          };
-          let records = [];
-          let reportrecords = [];
-          let allRecords = [];
-          let current = [];
-
-          let totalNetAssets = 0;
-          let GrandTotalLiability = 0;
-          let GrandTotalAsset = 0;
-          let incArr = [];
-          let cogsArr = [];
-          let expArr = [];
-          let accountData = data.tarreport;
-          let accountType = "";
-
-          accountData.forEach(account => {
-            let amountdue = utilityService.modifynegativeCurrencyFormat(account.AmountDue) || 0;
-            let current = utilityService.modifynegativeCurrencyFormat(account.Current) || 0;
-            let day30 = utilityService.modifynegativeCurrencyFormat(account["1-30Days"]) || 0;
-            let day60 = utilityService.modifynegativeCurrencyFormat(account["30-60Days"]) || 0;
-            let day90 = utilityService.modifynegativeCurrencyFormat(account["60-90Days"]) || 0;
-            let dayabove90 = utilityService.modifynegativeCurrencyFormat(account[">90Days"]) || 0;
-            var dataList = {
-              id: account.SaleID || "",
-              contact: account.Printname || "",
-              clientid: account.ClientID || "",
-              type: "",
-              invoiceno: "",
-              duedate: "",
-              amountdue: amountdue || 0.0,
-              current: current || 0.0,
-              day30: day30 || 0.0,
-              day60: day60 || 0.0,
-              day90: day90 || 0.0,
-              dayabove90: dayabove90 || 0.0
             };
+            let records = [];
+            let reportrecords = [];
+            let allRecords = [];
+            let current = [];
 
-            reportrecords.push(dataList);
+            let totalNetAssets = 0;
+            let GrandTotalLiability = 0;
+            let GrandTotalAsset = 0;
+            let incArr = [];
+            let cogsArr = [];
+            let expArr = [];
+            let accountData = data.tarreport;
+            let accountType = "";
 
-            let recordObj = {
-              Id: account.SaleID,
-              Type: accountType,
-              SupplierName: account.Printname,
-              entries: account
-            };
+            accountData.forEach(account => {
+              let amountdue = utilityService.modifynegativeCurrencyFormat(account.AmountDue) || 0;
+              let current = utilityService.modifynegativeCurrencyFormat(account.Current) || 0;
+              let day30 = utilityService.modifynegativeCurrencyFormat(account["1-30Days"]) || 0;
+              let day60 = utilityService.modifynegativeCurrencyFormat(account["30-60Days"]) || 0;
+              let day90 = utilityService.modifynegativeCurrencyFormat(account["60-90Days"]) || 0;
+              let dayabove90 = utilityService.modifynegativeCurrencyFormat(account[">90Days"]) || 0;
+              var dataList = {
+                id: account.SaleID || "",
+                contact: account.Printname || "",
+                clientid: account.ClientID || "",
+                type: "",
+                invoiceno: "",
+                duedate: "",
+                amountdue: amountdue || 0.0,
+                current: current || 0.0,
+                day30: day30 || 0.0,
+                day60: day60 || 0.0,
+                day90: day90 || 0.0,
+                dayabove90: dayabove90 || 0.0
+              };
 
-            records.push(recordObj);
-          });
+              reportrecords.push(dataList);
 
-          //   for (let i = 0; i < accountData.length; i++) {
-          //     let amountdue = utilityService.modifynegativeCurrencyFormat(data.tarreport[i].AmountDue) || 0;
-          //     let current = utilityService.modifynegativeCurrencyFormat(data.tarreport[i].Current) || 0;
-          //     let day30 = utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["1-30Days"]) || 0;
-          //     let day60 = utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["30-60Days"]) || 0;
-          //     let day90 = utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["60-90Days"]) || 0;
-          //     let dayabove90 = utilityService.modifynegativeCurrencyFormat(data.tarreport[i][">90Days"]) || 0;
-          //     var dataList = {
-          //       id: data.tarreport[i].SaleID || '',
-          //       contact:data.tarreport[i].Printname || '',
-          //       clientid:data.tarreport[i].ClientID || '',
-          //       type: '',
-          //       invoiceno: '',
-          //       duedate:'',
-          //       amountdue: amountdue || 0.00,
-          //       current: current || 0.00,
-          //       day30: day30 || 0.00,
-          //       day60: day60 || 0.00,
-          //       day90: day90 || 0.00,
-          //       dayabove90: dayabove90 || 0.00
-          //   };
+              let recordObj = {
+                Id: account.SaleID,
+                Type: accountType,
+                SupplierName: account.Printname,
+                entries: account
+              };
 
-          //   reportrecords.push(dataList);
-
-          //     let recordObj = {};
-          //   recordObj.Id = data.tarreport[i].SaleID;
-          //   recordObj.type = data.tarreport[i].Type;
-          //   recordObj.SupplierName = data.tarreport[i].Printname;
-          //   recordObj.dataArr = [
-          //       '',
-          //       data.tarreport[i].Type,
-          //       data.tarreport[i].InvoiceNumber,
-          //        moment(data.tarreport[i].InvoiceDate).format("DD MMM YYYY") || '-',
-          //       data.tarreport[i].DueDate !=''? moment(data.tarreport[i].DueDate).format("DD/MM/YYYY"): data.tarreport[i].DueDate,
-          //        data.tarreport[i].InvoiceNumber || '-',
-          //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i].AmountDue) || '-',
-          //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i].Current) || '-',
-          //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["1-30Days"]) || '-',
-          //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["30-60Days"]) || '-',
-          //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["60-90Days"]) || '-',
-          //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i][">90Days"]) || '-',
-
-          //
-          //   ];
-
-          //    if((data.tarreport[i].AmountDue != 0) || (data.tarreport[i].Current != 0)
-          //    || (data.tarreport[i]["1-30Days"] != 0) || (data.tarreport[i]["30-60Days"] != 0)
-          //  || (data.tarreport[i]["60-90Days"] != 0) || (data.tarreport[i][">90Days"] != 0)){
-          //     records.push(recordObj);
-          //    }
-
-          // }
-
-          reportrecords = _.sortBy(reportrecords, "contact");
-          templateObject.reportrecords.set(reportrecords);
-
-          records = _.sortBy(records, "SupplierName");
-          records = _.groupBy(records, "SupplierName");
-
-          for (let key in records) {
-            //  let obj = [{key: key}, {data: records[key]}];
-            let obj = {
-              title: key,
-              entries: records[key],
-              total: {}
-            };
-            allRecords.push(obj);
-          }
-
-          allRecords.forEach(record => {
-            let amountduetotal = 0;
-            let Currenttotal = 0;
-            let lessTnMonth = 0;
-            let oneMonth = 0;
-            let twoMonth = 0;
-            let threeMonth = 0;
-            let Older = 0;
-
-            record.entries.forEach(entry => {
-              amountduetotal = amountduetotal + parseFloat(entry.entries.AmountDue);
-              Currenttotal = Currenttotal + parseFloat(entry.entries.Current);
-              oneMonth = oneMonth + parseFloat(entry.entries["1-30Days"]);
-              twoMonth = twoMonth + parseFloat(entry.entries["30-60Days"]);
-              threeMonth = threeMonth + parseFloat(entry.entries["60-90Days"]);
-              Older = Older + parseFloat(entry.entries[">90Days"]);
+              records.push(recordObj);
             });
 
-            record.total = {
-              // new
-              Title: "Total " + record.title,
-              TotalAmountDue: amountduetotal,
-              TotalCurrent: Currenttotal,
-              OneMonth: oneMonth,
-              TwoMonth: twoMonth,
-              ThreeMonth: threeMonth,
-              OlderMonth: Older
+            //   for (let i = 0; i < accountData.length; i++) {
+            //     let amountdue = utilityService.modifynegativeCurrencyFormat(data.tarreport[i].AmountDue) || 0;
+            //     let current = utilityService.modifynegativeCurrencyFormat(data.tarreport[i].Current) || 0;
+            //     let day30 = utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["1-30Days"]) || 0;
+            //     let day60 = utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["30-60Days"]) || 0;
+            //     let day90 = utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["60-90Days"]) || 0;
+            //     let dayabove90 = utilityService.modifynegativeCurrencyFormat(data.tarreport[i][">90Days"]) || 0;
+            //     var dataList = {
+            //       id: data.tarreport[i].SaleID || '',
+            //       contact:data.tarreport[i].Printname || '',
+            //       clientid:data.tarreport[i].ClientID || '',
+            //       type: '',
+            //       invoiceno: '',
+            //       duedate:'',
+            //       amountdue: amountdue || 0.00,
+            //       current: current || 0.00,
+            //       day30: day30 || 0.00,
+            //       day60: day60 || 0.00,
+            //       day90: day90 || 0.00,
+            //       dayabove90: dayabove90 || 0.00
+            //   };
+
+            //   reportrecords.push(dataList);
+
+            //     let recordObj = {};
+            //   recordObj.Id = data.tarreport[i].SaleID;
+            //   recordObj.type = data.tarreport[i].Type;
+            //   recordObj.SupplierName = data.tarreport[i].Printname;
+            //   recordObj.dataArr = [
+            //       '',
+            //       data.tarreport[i].Type,
+            //       data.tarreport[i].InvoiceNumber,
+            //        moment(data.tarreport[i].InvoiceDate).format("DD MMM YYYY") || '-',
+            //       data.tarreport[i].DueDate !=''? moment(data.tarreport[i].DueDate).format("DD/MM/YYYY"): data.tarreport[i].DueDate,
+            //        data.tarreport[i].InvoiceNumber || '-',
+            //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i].AmountDue) || '-',
+            //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i].Current) || '-',
+            //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["1-30Days"]) || '-',
+            //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["30-60Days"]) || '-',
+            //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["60-90Days"]) || '-',
+            //       utilityService.modifynegativeCurrencyFormat(data.tarreport[i][">90Days"]) || '-',
+
+            //
+            //   ];
+
+            //    if((data.tarreport[i].AmountDue != 0) || (data.tarreport[i].Current != 0)
+            //    || (data.tarreport[i]["1-30Days"] != 0) || (data.tarreport[i]["30-60Days"] != 0)
+            //  || (data.tarreport[i]["60-90Days"] != 0) || (data.tarreport[i][">90Days"] != 0)){
+            //     records.push(recordObj);
+            //    }
+
+            // }
+
+            reportrecords = _.sortBy(reportrecords, "contact");
+            templateObject.reportrecords.set(reportrecords);
+
+            records = _.sortBy(records, "SupplierName");
+            records = _.groupBy(records, "SupplierName");
+
+            for (let key in records) {
+              //  let obj = [{key: key}, {data: records[key]}];
+              let obj = {
+                title: key,
+                entries: records[key],
+                total: {}
+              };
+              allRecords.push(obj);
+            }
+
+            allRecords.forEach(record => {
+              let amountduetotal = 0;
+              let Currenttotal = 0;
+              let lessTnMonth = 0;
+              let oneMonth = 0;
+              let twoMonth = 0;
+              let threeMonth = 0;
+              let Older = 0;
+
+              record.entries.forEach(entry => {
+                amountduetotal = amountduetotal + parseFloat(entry.entries.AmountDue);
+                Currenttotal = Currenttotal + parseFloat(entry.entries.Current);
+                oneMonth = oneMonth + parseFloat(entry.entries["1-30Days"]);
+                twoMonth = twoMonth + parseFloat(entry.entries["30-60Days"]);
+                threeMonth = threeMonth + parseFloat(entry.entries["60-90Days"]);
+                Older = Older + parseFloat(entry.entries[">90Days"]);
+              });
+
+              record.total = {
+                // new
+                Title: "Total " + record.title,
+                TotalAmountDue: amountduetotal,
+                TotalCurrent: Currenttotal,
+                OneMonth: oneMonth,
+                TwoMonth: twoMonth,
+                ThreeMonth: threeMonth,
+                OlderMonth: Older
+              };
+
+              // Used for grand total later
+              current.push(record.total);
+            });
+
+            //   let iterator = 0;
+            // for (let i = 0; i < allRecords.length; i++) {
+            //     let amountduetotal = 0;
+            //     let Currenttotal = 0;
+            //     let lessTnMonth = 0;
+            //     let oneMonth = 0;
+            //     let twoMonth = 0;
+            //     let threeMonth = 0;
+            //     let Older = 0;
+            //     const currencyLength = Currency.length;
+            //     for (let k = 0; k < allRecords[i][1].data.length; k++) {
+            //         amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
+            //         Currenttotal = Currenttotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
+            //         oneMonth = oneMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
+            //         twoMonth = twoMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
+            //         threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
+            //         Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
+            //     }
+            //     let val = [allRecords[i][0].key+'', '', '', '', utilityService.modifynegativeCurrencyFormat(amountduetotal), utilityService.modifynegativeCurrencyFormat(Currenttotal),
+            //         utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
+            //     current.push(val);
+
+            // }
+
+            //grandtotalRecord
+            let grandamountduetotal = 0;
+            let grandCurrenttotal = 0;
+            let grandlessTnMonth = 0;
+            let grandoneMonth = 0;
+            let grandtwoMonth = 0;
+            let grandthreeMonth = 0;
+            let grandOlder = 0;
+
+            current.forEach(total => {
+              grandamountduetotal = grandamountduetotal + parseFloat(total.TotalAmountDue);
+              grandCurrenttotal = grandCurrenttotal + parseFloat(total.TotalCurrent);
+              // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
+              grandoneMonth = grandoneMonth + parseFloat(total.OneMonth);
+              grandtwoMonth = grandtwoMonth + parseFloat(total.TwoMonth);
+              grandthreeMonth = grandthreeMonth + parseFloat(total.ThreeMonth);
+              grandOlder = grandOlder + parseFloat(total.OlderMonth);
+            });
+
+            // for (let n = 0; n < current.length; n++) {
+
+            //     const grandcurrencyLength = Currency.length;
+
+            //     for (let m = 0; m < current[n].data.length; m++) {
+            //          grandamountduetotal = grandamountduetotal + utilityService.convertSubstringParseFloat(current[n][4]);
+            //         grandCurrenttotal = grandCurrenttotal + utilityService.convertSubstringParseFloat(current[n][5]);
+            //          grandoneMonth = grandoneMonth + utilityService.convertSubstringParseFloat(current[n][6]);
+            //          grandtwoMonth = grandtwoMonth + utilityService.convertSubstringParseFloat(current[n][7]);
+            //          grandthreeMonth = grandthreeMonth + utilityService.convertSubstringParseFloat(current[n][8]);
+            //          grandOlder = grandOlder + utilityService.convertSubstringParseFloat(current[n][9]);
+            //     }
+            //      let val = ['Total ' + allRecords[i][0].key+'', '', '', '', utilityService.modifynegativeCurrencyFormat(Currenttotal), utilityService.modifynegativeCurrencyFormat(lessTnMonth),
+            //          utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
+            //      current.push(val);
+
+            // }
+
+            // let grandval = ['Grand Total ' +  '', '', '', '', utilityService.modifynegativeCurrencyFormat(grandamountduetotal), utilityService.modifynegativeCurrencyFormat(grandCurrenttotal),
+            //     utilityService.modifynegativeCurrencyFormat(grandoneMonth), utilityService.modifynegativeCurrencyFormat(grandtwoMonth), utilityService.modifynegativeCurrencyFormat(grandthreeMonth), utilityService.modifynegativeCurrencyFormat(grandOlder)];
+
+            // for (let key in records) {
+            //     let dataArr = current[iterator]
+            //     let obj = [{key: key}, {data: records[key]},{total:[{dataArr:dataArr}]}];
+            //     totalRecord.push(obj);
+            //     iterator += 1;
+            // }
+
+            let grandValObj = {
+              Title: "Grand Total ",
+              TotalAmountDue: grandamountduetotal,
+              TotalCurrent: grandCurrenttotal,
+              OneMonth: grandoneMonth,
+              TwoMonth: grandtwoMonth,
+              ThreeMonth: grandthreeMonth,
+              OlderMonth: grandOlder
             };
 
-            // Used for grand total later
-            current.push(record.total);
-          });
+            // templateObject.records.set(totalRecord);
+            // templateObject.grandrecords.set(grandval);
 
-          //   let iterator = 0;
-          // for (let i = 0; i < allRecords.length; i++) {
-          //     let amountduetotal = 0;
-          //     let Currenttotal = 0;
-          //     let lessTnMonth = 0;
-          //     let oneMonth = 0;
-          //     let twoMonth = 0;
-          //     let threeMonth = 0;
-          //     let Older = 0;
-          //     const currencyLength = Currency.length;
-          //     for (let k = 0; k < allRecords[i][1].data.length; k++) {
-          //         amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
-          //         Currenttotal = Currenttotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
-          //         oneMonth = oneMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
-          //         twoMonth = twoMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
-          //         threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
-          //         Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
-          //     }
-          //     let val = [allRecords[i][0].key+'', '', '', '', utilityService.modifynegativeCurrencyFormat(amountduetotal), utilityService.modifynegativeCurrencyFormat(Currenttotal),
-          //         utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
-          //     current.push(val);
+            templateObject.records.set(allRecords);
+            templateObject.grandrecords.set(grandValObj);
 
-          // }
-
-          //grandtotalRecord
-          let grandamountduetotal = 0;
-          let grandCurrenttotal = 0;
-          let grandlessTnMonth = 0;
-          let grandoneMonth = 0;
-          let grandtwoMonth = 0;
-          let grandthreeMonth = 0;
-          let grandOlder = 0;
-
-          current.forEach(total => {
-            grandamountduetotal = grandamountduetotal + parseFloat(total.TotalAmountDue);
-            grandCurrenttotal = grandCurrenttotal + parseFloat(total.TotalCurrent);
-            // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
-            grandoneMonth = grandoneMonth + parseFloat(total.OneMonth);
-            grandtwoMonth = grandtwoMonth + parseFloat(total.TwoMonth);
-            grandthreeMonth = grandthreeMonth + parseFloat(total.ThreeMonth);
-            grandOlder = grandOlder + parseFloat(total.OlderMonth);
-          });
-
-          // for (let n = 0; n < current.length; n++) {
-
-          //     const grandcurrencyLength = Currency.length;
-
-          //     for (let m = 0; m < current[n].data.length; m++) {
-          //          grandamountduetotal = grandamountduetotal + utilityService.convertSubstringParseFloat(current[n][4]);
-          //         grandCurrenttotal = grandCurrenttotal + utilityService.convertSubstringParseFloat(current[n][5]);
-          //          grandoneMonth = grandoneMonth + utilityService.convertSubstringParseFloat(current[n][6]);
-          //          grandtwoMonth = grandtwoMonth + utilityService.convertSubstringParseFloat(current[n][7]);
-          //          grandthreeMonth = grandthreeMonth + utilityService.convertSubstringParseFloat(current[n][8]);
-          //          grandOlder = grandOlder + utilityService.convertSubstringParseFloat(current[n][9]);
-          //     }
-          //      let val = ['Total ' + allRecords[i][0].key+'', '', '', '', utilityService.modifynegativeCurrencyFormat(Currenttotal), utilityService.modifynegativeCurrencyFormat(lessTnMonth),
-          //          utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
-          //      current.push(val);
-
-          // }
-
-          // let grandval = ['Grand Total ' +  '', '', '', '', utilityService.modifynegativeCurrencyFormat(grandamountduetotal), utilityService.modifynegativeCurrencyFormat(grandCurrenttotal),
-          //     utilityService.modifynegativeCurrencyFormat(grandoneMonth), utilityService.modifynegativeCurrencyFormat(grandtwoMonth), utilityService.modifynegativeCurrencyFormat(grandthreeMonth), utilityService.modifynegativeCurrencyFormat(grandOlder)];
-
-          // for (let key in records) {
-          //     let dataArr = current[iterator]
-          //     let obj = [{key: key}, {data: records[key]},{total:[{dataArr:dataArr}]}];
-          //     totalRecord.push(obj);
-          //     iterator += 1;
-          // }
-
-          let grandValObj = {
-            Title: "Grand Total ",
-            TotalAmountDue: grandamountduetotal,
-            TotalCurrent: grandCurrenttotal,
-            OneMonth: grandoneMonth,
-            TwoMonth: grandtwoMonth,
-            ThreeMonth: grandthreeMonth,
-            OlderMonth: grandOlder
-          };
-
-          // templateObject.records.set(totalRecord);
-          // templateObject.grandrecords.set(grandval);
-
-          templateObject.records.set(allRecords);
-          templateObject.grandrecords.set(grandValObj);
-
-          if (templateObject.records.get()) {
-            setTimeout(function () {
-              $("td a").each(function () {
-                if ($(this).text().indexOf("-" + Currency) >= 0)
-                  $(this).addClass("text-danger");
+            if (templateObject.records.get()) {
+              setTimeout(function () {
+                $("td a").each(function () {
+                  if ($(this).text().indexOf("-" + Currency) >= 0)
+                    $(this).addClass("text-danger");
                 }
-              );
-              $("td").each(function () {
-                if ($(this).text().indexOf("-" + Currency) >= 0)
-                  $(this).addClass("text-danger");
+                );
+                $("td").each(function () {
+                  if ($(this).text().indexOf("-" + Currency) >= 0)
+                    $(this).addClass("text-danger");
                 }
-              );
+                );
 
-              $("td").each(function () {
-                let lineValue = $(this).first().text()[0];
-                if (lineValue != undefined) {
-                  if (lineValue.indexOf(Currency) >= 0)
-                    $(this).addClass("text-right");
+                $("td").each(function () {
+                  let lineValue = $(this).first().text()[0];
+                  if (lineValue != undefined) {
+                    if (lineValue.indexOf(Currency) >= 0)
+                      $(this).addClass("text-right");
                   }
                 });
 
-              $("td").each(function () {
-                if ($(this).first().text().indexOf("-" + Currency) >= 0)
-                  $(this).addClass("text-right");
+                $("td").each(function () {
+                  if ($(this).first().text().indexOf("-" + Currency) >= 0)
+                    $(this).addClass("text-right");
                 }
-              );
+                );
 
-              $(".fullScreenSpin").css("display", "none");
-            }, 100);
+                $(".fullScreenSpin").css("display", "none");
+              }, 100);
+            }
           }
-        }
-        LoadingOverlay.hide();
-      }).catch(function (err) {
-        //Bert.alert('<strong>' + err + '</strong>!', 'danger');
+          LoadingOverlay.hide();
+        }).catch(function (err) {
+          //Bert.alert('<strong>' + err + '</strong>!', 'danger');
 
-        LoadingOverlay.hide();
-      });
+          LoadingOverlay.hide();
+        });
     } else {
       let data = JSON.parse(localStorage.getItem('VS1AgedReceivableSummary_Report'));
       if (data.tarreport.length) {
 
         if (data.Params.IgnoreDates == true) {
-            $('#dateFrom').attr('readonly', true);
-            $('#dateTo').attr('readonly', true);
+          $('#dateFrom').attr('readonly', true);
+          $('#dateTo').attr('readonly', true);
 
         } else {
           $('#dateFrom').attr('readonly', false);
           $('#dateTo').attr('readonly', false);
-            $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
-            $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+          $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+          $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
         }
-        
+
         let records = [];
         let reportrecords = [];
         let allRecords = [];
@@ -599,12 +655,12 @@ Template.agedreceivablessummary.onRendered(()=>{
             $("td a").each(function () {
               if ($(this).text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-danger");
-              }
+            }
             );
             $("td").each(function () {
               if ($(this).text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-danger");
-              }
+            }
             );
 
             $("td").each(function () {
@@ -612,13 +668,13 @@ Template.agedreceivablessummary.onRendered(()=>{
               if (lineValue != undefined) {
                 if (lineValue.indexOf(Currency) >= 0)
                   $(this).addClass("text-right");
-                }
-              });
+              }
+            });
 
             $("td").each(function () {
               if ($(this).first().text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-right");
-              }
+            }
             );
 
             $(".fullScreenSpin").css("display", "none");
@@ -626,236 +682,259 @@ Template.agedreceivablessummary.onRendered(()=>{
         }
       }
     }
-    };
-    
-    // $('.ignoreDate').trigger('click');
-    templateObject.getDepartments = function(){
-      reportService.getDepartment().then(function(data){
-          for(let i in data.tdeptclass){
+  };
 
-            let deptrecordObj = {
-              id: data.tdeptclass[i].Id || ' ',
-              department: data.tdeptclass[i].DeptClassName || ' ',
-            };
+  // $('.ignoreDate').trigger('click');
+  templateObject.getDepartments = function () {
+    reportService.getDepartment().then(function (data) {
+      for (let i in data.tdeptclass) {
 
-            deptrecords.push(deptrecordObj);
-            templateObject.deptrecords.set(deptrecords);
+        let deptrecordObj = {
+          id: data.tdeptclass[i].Id || ' ',
+          department: data.tdeptclass[i].DeptClassName || ' ',
+        };
 
-          }
-      });
+        deptrecords.push(deptrecordObj);
+        templateObject.deptrecords.set(deptrecords);
+
+      }
+    });
+  }
+  // templateObject.getAllProductData();
+  templateObject.getDepartments();
+  templateObject.initDate();
+  templateObject.initUploadedImage();
+  templateObject.getAgedReceivableReports(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+    false
+  );
+  templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()))
+  LoadingOverlay.hide();
+});
+
+Template.agedreceivablessummary.events({
+  'click #btnDetails': function () {
+    FlowRouter.go('/agedreceivables');
+  },
+  'click .chkDatatable': function (event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.' + columnDataValue).addClass('showColumn');
+      $('.' + columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.' + columnDataValue).addClass('hiddenColumn');
+      $('.' + columnDataValue).removeClass('showColumn');
     }
-    // templateObject.getAllProductData();
-    templateObject.getDepartments();
-    templateObject.initDate();
-    templateObject.initUploadedImage();
-    templateObject.getAgedReceivableReports(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-      false
-    );
-    templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
-    LoadingOverlay.hide();
-  });
+  },
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
+  'click td a': async function (event) {
+    let id = $(event.target).closest('tr').attr('id').split("item-value-");
+    var accountName = id[1].split('_').join(' ');
+    let toDate = moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
+    let fromDate = moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
+    //localStorage.setItem('showHeader',true);
+    await clearData('TAccountRunningBalanceReport');
+    window.open('/balancetransactionlist?accountName=' + accountName + '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem=' + false, '_self');
+  },
+  'click .btnRefresh': function () {
+    $('.fullScreenSpin').css('display', 'inline-block');
+    localStorage.setItem('VS1AgedReceivableSummary_Report', '');
+    Meteor._reload.reload();
+  },
+  'click td a': function (event) {
+    let redirectid = $(event.target).closest('tr').attr('id');
 
-  Template.agedreceivablessummary.events({
-    'click #btnDetails': function() {
-        FlowRouter.go('/agedreceivables');
-    },
-    'click td a':async function (event) {
-        let id= $(event.target).closest('tr').attr('id').split("item-value-");
-        var accountName =id[1].split('_').join(' ');
-        let toDate= moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
-        let fromDate= moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
-        //Session.setPersistent('showHeader',true);
-        await clearData('TAccountRunningBalanceReport');
-        window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
-    },    
-    'click .btnRefresh': function () {
-      $('.fullScreenSpin').css('display','inline-block');
-      localStorage.setItem('VS1AgedReceivableSummary_Report', '');
-      Meteor._reload.reload();
-    },
-    'click td a':function (event) {
-        let redirectid = $(event.target).closest('tr').attr('id');
+    let transactiontype = $(event.target).closest('tr').attr('class');
 
-        let transactiontype = $(event.target).closest('tr').attr('class');
-
-        if(redirectid && transactiontype){
-          if(transactiontype === 'Quote' ){
-            window.open('/quotecard?id=' + redirectid,'_self');
-          }else if(transactiontype === 'Sales Order'){
-            window.open('/salesordercard?id=' + redirectid,'_self');
-          }else if(transactiontype === 'Invoice'){
-            window.open('/invoicecard?id=' + redirectid,'_self');
-          }else if(transactiontype === 'Customer Payment'){
-            // window.open('/paymentcard?id=' + redirectid,'_self');
-          }
-        }
-        // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
-    },
-    'click .btnPrintReport':function (event) {
-      playPrintAudio();
-      setTimeout(function(){
+    if (redirectid && transactiontype) {
+      if (transactiontype === 'Quote') {
+        window.open('/quotecard?id=' + redirectid, '_self');
+      } else if (transactiontype === 'Sales Order') {
+        window.open('/salesordercard?id=' + redirectid, '_self');
+      } else if (transactiontype === 'Invoice') {
+        window.open('/invoicecard?id=' + redirectid, '_self');
+      } else if (transactiontype === 'Customer Payment') {
+        // window.open('/paymentcard?id=' + redirectid,'_self');
+      }
+    }
+    // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
+  },
+  'click .btnPrintReport': function (event) {
+    playPrintAudio();
+    setTimeout(function () {
       let values = [];
       let basedOnTypeStorages = Object.keys(localStorage);
       basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-          let employeeId = storage.split('_')[2];
-          return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+        let employeeId = storage.split('_')[2];
+        return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
       });
       let i = basedOnTypeStorages.length;
       if (i > 0) {
-          while (i--) {
-              values.push(localStorage.getItem(basedOnTypeStorages[i]));
-          }
+        while (i--) {
+          values.push(localStorage.getItem(basedOnTypeStorages[i]));
+        }
       }
       values.forEach(value => {
-          let reportData = JSON.parse(value);
-          reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-          if (reportData.BasedOnType.includes("P")) {
-              if (reportData.FormID == 1) {
-                  let formIds = reportData.FormIDs.split(',');
-                  if (formIds.includes("134")) {
-                      reportData.FormID = 134;
-                      Meteor.call('sendNormalEmail', reportData);
-                  }
-              } else {
-                  if (reportData.FormID == 134)
-                      Meteor.call('sendNormalEmail', reportData);
-              }
+        let reportData = JSON.parse(value);
+        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+        if (reportData.BasedOnType.includes("P")) {
+          if (reportData.FormID == 1) {
+            let formIds = reportData.FormIDs.split(',');
+            if (formIds.includes("134")) {
+              reportData.FormID = 134;
+              Meteor.call('sendNormalEmail', reportData);
+            }
+          } else {
+            if (reportData.FormID == 134)
+              Meteor.call('sendNormalEmail', reportData);
           }
+        }
       });
 
       document.title = 'Aged Receivables Summary Report';
       $(".printReport").print({
-          title   :  document.title +" | Aged Receivables | "+loggedCompany,
-          noPrintSelector : ".addSummaryEditor",
+        title: document.title + " | Aged Receivables | " + loggedCompany,
+        noPrintSelector: ".addSummaryEditor",
       });
     }, delayTimeAfterSound);
-    },
-    'click .btnExportReport':function() {
-      $('.fullScreenSpin').css('display','inline-block');
-        let utilityService = new UtilityService();
-        let templateObject = Template.instance();
-        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        var dateTo = new Date($("#dateTo").datepicker("getDate"));
+  },
+  'click .btnExportReport': function () {
+    $('.fullScreenSpin').css('display', 'inline-block');
+    let utilityService = new UtilityService();
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth()+1) + "-" + dateFrom.getDate();
-        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth()+1) + "-" + dateTo.getDate();
+    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
-        const filename = loggedCompany + '-Aged Receivables Summary' + '.csv';
-        utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
-        let rows = [];
-        // reportService.getAgedReceivableDetailsSummaryData(formatDateFrom,formatDateTo,false).then(function (data) {
-        //     if(data.tarreport){
-        //         rows[0] = ['Contact','Type', 'Invoice No', 'Due Date', 'Amount Due', 'Currenct', '1 - 30 Days', '30 - 60 Days', '60 - 90 Days', '> 90 Days'];
-        //         data.tarreport.forEach(function (e, i) {
-        //             rows.push([
-        //               data.tarreport[i].Printname,
-        //               '',
-        //               '',
-        //               '',
-        //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i].AmountDue) || '-',
-        //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i].Current) || '0.00',
-        //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["1-30Days"]) || '0.00',
-        //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["30-60Days"]) || '0.00',
-        //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["60-90Days"]) || '0.00',
-        //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i][">90Days"]) || '0.00']);
-        //               // rows = _.sortBy(rows, data.tarreport[i].Name);
-        //         });
-        //         setTimeout(function () {
-        //
-        //             utilityService.exportReportToCsv(rows, filename, 'xls');
-        //             $('.fullScreenSpin').css('display','none');
-        //         }, 1000);
-        //     }
-        //
-        // });
-    },
-    "click #ignoreDate": function () {
-      let templateObject = Template.instance();
-      LoadingOverlay.show();
-      localStorage.setItem("VS1AgedReceivableSummary_Report", "");
-      localStorage.setItem('VS1AgedReceivableSummary_Card', '');
-      $("#dateFrom").attr("readonly", true);
-      $("#dateTo").attr("readonly", true);
-      templateObject.getAgedReceivableReports(null, null, true);
-    },
-    "change #dateTo, change #dateFrom": (e) => {
-      let templateObject = Template.instance();
-      LoadingOverlay.show();
-      localStorage.setItem("VS1AgedReceivableSummary_Report", "");
-      localStorage.setItem('VS1AgedReceivableSummary_Card', '');
-      templateObject.getAgedReceivableReports(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-        false
-      )
-    },
-    "click [href='#noInfoFound']": function () {
-      swal({
-          title: 'Information',
-          text: "No further information available on this column",
-          type: 'warning',
-          confirmButtonText: 'Ok'
-        })
-    },
-    ...Datehandler.getDateRangeEvents(),
-    'keyup #myInputSearch':function(event){
+    const filename = loggedCompany + '-Aged Receivables Summary' + '.csv';
+    utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
+    let rows = [];
+    // reportService.getAgedReceivableDetailsSummaryData(formatDateFrom,formatDateTo,false).then(function (data) {
+    //     if(data.tarreport){
+    //         rows[0] = ['Contact','Type', 'Invoice No', 'Due Date', 'Amount Due', 'Currenct', '1 - 30 Days', '30 - 60 Days', '60 - 90 Days', '> 90 Days'];
+    //         data.tarreport.forEach(function (e, i) {
+    //             rows.push([
+    //               data.tarreport[i].Printname,
+    //               '',
+    //               '',
+    //               '',
+    //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i].AmountDue) || '-',
+    //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i].Current) || '0.00',
+    //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["1-30Days"]) || '0.00',
+    //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["30-60Days"]) || '0.00',
+    //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i]["60-90Days"]) || '0.00',
+    //               utilityService.modifynegativeCurrencyFormat(data.tarreport[i][">90Days"]) || '0.00']);
+    //               // rows = _.sortBy(rows, data.tarreport[i].Name);
+    //         });
+    //         setTimeout(function () {
+    //
+    //             utilityService.exportReportToCsv(rows, filename, 'xls');
+    //             $('.fullScreenSpin').css('display','none');
+    //         }, 1000);
+    //     }
+    //
+    // });
+  },
+  "click #ignoreDate": function () {
+    let templateObject = Template.instance();
+    LoadingOverlay.show();
+    localStorage.setItem("VS1AgedReceivableSummary_Report", "");
+    localStorage.setItem('VS1AgedReceivableSummary_Card', '');
+    $("#dateFrom").attr("readonly", true);
+    $("#dateTo").attr("readonly", true);
+    templateObject.getAgedReceivableReports(null, null, true);
+  },
+  "change #dateTo, change #dateFrom": (e) => {
+    let templateObject = Template.instance();
+    LoadingOverlay.show();
+    localStorage.setItem("VS1AgedReceivableSummary_Report", "");
+    localStorage.setItem('VS1AgedReceivableSummary_Card', '');
+    templateObject.getAgedReceivableReports(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
+    )
+  },
+  "click [href='#noInfoFound']": function () {
+    swal({
+      title: 'Information',
+      text: "No further information available on this column",
+      type: 'warning',
+      confirmButtonText: 'Ok'
+    })
+  },
+  ...Datehandler.getDateRangeEvents(),
+  'keyup #myInputSearch': function (event) {
+    $('.table tbody tr').show();
+    let searchItem = $(event.target).val();
+    if (searchItem != '') {
+      var value = searchItem.toLowerCase();
+      $('.table tbody tr').each(function () {
+        var found = 'false';
+        $(this).each(function () {
+          if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            found = 'true';
+          }
+        });
+        if (found == 'true') {
+          $(this).show();
+        }
+        else {
+          $(this).hide();
+        }
+      });
+    } else {
       $('.table tbody tr').show();
-      let searchItem = $(event.target).val();
-      if(searchItem != ''){
-        var value = searchItem.toLowerCase();
-        $('.table tbody tr').each(function(){
-         var found = 'false';
-         $(this).each(function(){
-              if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
-              {
-                   found = 'true';
-              }
-         });
-         if(found == 'true')
-         {
-              $(this).show();
-         }
-         else
-         {
-              $(this).hide();
-         }
-    });
-      }else{
-        $('.table tbody tr').show();
-      }
-    },
-    'blur #myInputSearch':function(event){
+    }
+  },
+  'blur #myInputSearch': function (event) {
+    $('.table tbody tr').show();
+    let searchItem = $(event.target).val();
+    if (searchItem != '') {
+      var value = searchItem.toLowerCase();
+      $('.table tbody tr').each(function () {
+        var found = 'false';
+        $(this).each(function () {
+          if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            found = 'true';
+          }
+        });
+        if (found == 'true') {
+          $(this).show();
+        }
+        else {
+          $(this).hide();
+        }
+      });
+    } else {
       $('.table tbody tr').show();
-      let searchItem = $(event.target).val();
-      if(searchItem != ''){
-        var value = searchItem.toLowerCase();
-        $('.table tbody tr').each(function(){
-         var found = 'false';
-         $(this).each(function(){
-              if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
-              {
-                   found = 'true';
-              }
-         });
-         if(found == 'true')
-         {
-              $(this).show();
-         }
-         else
-         {
-              $(this).hide();
-         }
-    });
-      }else{
-        $('.table tbody tr').show();
-      }
-    },
+    }
+  },
 
 
-    // CURRENCY MODULE
-    ...FxGlobalFunctions.getEvents(),
+  // CURRENCY MODULE
+  ...FxGlobalFunctions.getEvents(),
   "click .currency-modal-save": e => {
     //$(e.currentTarget).parentsUntil(".modal").modal("hide");
     LoadingOverlay.show();
@@ -905,57 +984,60 @@ Template.agedreceivablessummary.onRendered(()=>{
     LoadingOverlay.hide();
   }
 
-  });
+});
 
-  Template.agedreceivablessummary.helpers({
-    records : () => {
-       return Template.instance().records.get();
-    },
-    reportrecords : () => {
-       return Template.instance().reportrecords.get();
-    },
-    grandrecords: () => {
-       return Template.instance().grandrecords.get();
-   },
-    dateAsAt: () =>{
-        return Template.instance().dateAsAt.get() || '-';
-    },
-    companyname: () =>{
-        return loggedCompany;
-    },
-    deptrecords: () => {
-        return Template.instance().deptrecords.get().sort(function(a, b){
-          if (a.department == 'NA') {
+Template.agedreceivablessummary.helpers({
+  records: () => {
+    return Template.instance().records.get();
+  },
+  agedreceivablessummaryth: () => {
+    return Template.instance().agedreceivablessummaryth.get();
+  },
+  reportrecords: () => {
+    return Template.instance().reportrecords.get();
+  },
+  grandrecords: () => {
+    return Template.instance().grandrecords.get();
+  },
+  dateAsAt: () => {
+    return Template.instance().dateAsAt.get() || '-';
+  },
+  companyname: () => {
+    return loggedCompany;
+  },
+  deptrecords: () => {
+    return Template.instance().deptrecords.get().sort(function (a, b) {
+      if (a.department == 'NA') {
         return 1;
-            }
-        else if (b.department == 'NA') {
-          return -1;
-        }
-      return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
-      });
-    },
-
-    formatPrice(amount) {
-      let utilityService = new UtilityService();
-      if (isNaN(amount)) {
-        amount = amount === undefined || amount === null || amount.length === 0
-          ? 0
-          : amount;
-        amount = amount
-          ? Number(amount.replace(/[^0-9.-]+/g, ""))
-          : 0;
       }
-      return utilityService.modifynegativeCurrencyFormat(amount) || 0.0;
-    },
-    formatDate: ( date ) => {
-      return ( date )? moment(date).format("DD/MM/YYYY") : '';
-    },
+      else if (b.department == 'NA') {
+        return -1;
+      }
+      return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
+    });
+  },
+
+  formatPrice(amount) {
+    let utilityService = new UtilityService();
+    if (isNaN(amount)) {
+      amount = amount === undefined || amount === null || amount.length === 0
+        ? 0
+        : amount;
+      amount = amount
+        ? Number(amount.replace(/[^0-9.-]+/g, ""))
+        : 0;
+    }
+    return utilityService.modifynegativeCurrencyFormat(amount) || 0.0;
+  },
+  formatDate: (date) => {
+    return (date) ? moment(date).format("DD/MM/YYYY") : '';
+  },
 
 
-    // FX Module
+  // FX Module
   convertAmount: (amount = 0.00, currencyData, days = null) => {
-    if(days != null) {
-        amount = amount[days + 'Days'];
+    if (days != null) {
+      amount = amount[days + 'Days'];
     }
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
@@ -1055,8 +1137,8 @@ Template.agedreceivablessummary.onRendered(()=>{
     return Template.instance().currencyList.get();
   },
   isNegativeAmount(amount, days = null) {
-    if(days != null) {
-        amount = amount[days + 'Days'];
+    if (days != null) {
+      amount = amount[days + 'Days'];
     }
     if (Math.sign(amount) === -1) {
       return true;
@@ -1095,18 +1177,16 @@ Template.agedreceivablessummary.onRendered(()=>{
   getDays: (object, number = 30) => {
     return object[number + 'Days'];
   }
-  });
+});
 
-  Template.registerHelper('equals', function (a, b) {
-      return a === b;
-  });
+Template.registerHelper('equals', function (a, b) {
+  return a === b;
+});
 
-  Template.registerHelper('notEquals', function (a, b) {
-      return a != b;
-  });
+Template.registerHelper('notEquals', function (a, b) {
+  return a != b;
+});
 
-  Template.registerHelper('containsequals', function (a, b) {
-      return (a.indexOf(b) >= 0 );
-  });
-
-
+Template.registerHelper('containsequals', function (a, b) {
+  return (a.indexOf(b) >= 0);
+});

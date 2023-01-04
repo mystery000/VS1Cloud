@@ -15,6 +15,12 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './contactlistpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.contactlistpop.onCreated(function () {
@@ -38,7 +44,7 @@ Template.contactlistpop.onRendered(function () {
     const dataTableList = [];
     const tableHeaderList = [];
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblContactlist', function (error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblContactlist', function (error, result) {
         if (error) {
 
         } else {
@@ -165,7 +171,7 @@ Template.contactlistpop.onRendered(function () {
 
                     if (templateObject.custdatatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblContactlist', function (error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblContactlist', function (error, result) {
                             if (error) {
 
                             } else {
@@ -201,7 +207,7 @@ Template.contactlistpop.onRendered(function () {
                     }
 
                     setTimeout(function () {
-                        $('#tblContactlist').DataTable({
+                        $('.tblContactlist').DataTable({
                             data: splashArrayContactList,
                             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                             columnDefs: [
@@ -264,7 +270,7 @@ Template.contactlistpop.onRendered(function () {
                             responsive: true,
                             "order": [[1, "asc"]],
                             action: function () {
-                                $('#tblContactlist').DataTable().ajax.reload();
+                                $('.tblContactlist').DataTable().ajax.reload();
                             },
                             language: { search: "",searchPlaceholder: "Search List..." },
                             "fnDrawCallback": function (oSettings) {
@@ -367,12 +373,12 @@ Template.contactlistpop.onRendered(function () {
                                                     }
 
                                                     let uniqueChars = [...new Set(splashArrayContactList)];
-                                                    var datatable = $('#tblContactlist').DataTable();
+                                                    var datatable = $('.tblContactlist').DataTable();
                                                     datatable.clear();
                                                     datatable.rows.add(uniqueChars);
                                                     datatable.draw(false);
                                                     setTimeout(function () {
-                                                      $("#tblContactlist").dataTable().fnPageChange('last');
+                                                      $(".tblContactlist").dataTable().fnPageChange('last');
                                                     }, 400);
 
                                                     $('.fullScreenSpin').css('display', 'none');
@@ -564,7 +570,7 @@ Template.contactlistpop.onRendered(function () {
 
                 if (templateObject.custdatatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblContactlist', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblContactlist', function (error, result) {
                         if (error) {
 
                         } else {
@@ -600,7 +606,7 @@ Template.contactlistpop.onRendered(function () {
                 }
 
                 setTimeout(function () {
-                    $('#tblContactlist').DataTable({
+                    $('.tblContactlist').DataTable({
                         data: splashArrayContactList,
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         columnDefs: [
@@ -663,7 +669,7 @@ Template.contactlistpop.onRendered(function () {
                         responsive: true,
                         "order": [[1, "asc"]],
                         action: function () {
-                            $('#tblContactlist').DataTable().ajax.reload();
+                            $('.tblContactlist').DataTable().ajax.reload();
                         },
                         "fnDrawCallback": function (oSettings) {
                             $('.paginate_button.page-item').removeClass('disabled');
@@ -765,12 +771,12 @@ Template.contactlistpop.onRendered(function () {
                                                 }
 
                                                 let uniqueChars = [...new Set(splashArrayContactList)];
-                                                var datatable = $('#tblContactlist').DataTable();
+                                                var datatable = $('.tblContactlist').DataTable();
                                                 datatable.clear();
                                                 datatable.rows.add(uniqueChars);
                                                 datatable.draw(false);
                                                 setTimeout(function () {
-                                                  $("#tblContactlist").dataTable().fnPageChange('last');
+                                                  $(".tblContactlist").dataTable().fnPageChange('last');
                                                 }, 400);
 
                                                 $('.fullScreenSpin').css('display', 'none');
@@ -959,7 +965,7 @@ Template.contactlistpop.onRendered(function () {
 
                 if (templateObject.custdatatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblContactlist', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblContactlist', function (error, result) {
                         if (error) {
 
                         } else {
@@ -1058,7 +1064,7 @@ Template.contactlistpop.onRendered(function () {
                         responsive: true,
                         "order": [[1, "asc"]],
                         action: function () {
-                            $('#tblContactlist').DataTable().ajax.reload();
+                            $('.tblContactlist').DataTable().ajax.reload();
                         },
                         "fnDrawCallback": function (oSettings) {
                             $('.paginate_button.page-item').removeClass('disabled');
@@ -1160,7 +1166,7 @@ Template.contactlistpop.onRendered(function () {
                                                 }
 
                                                 let uniqueChars = [...new Set(splashArrayContactList)];
-                                                var datatable = $('#tblContactlist').DataTable();
+                                                var datatable = $('.tblContactlist').DataTable();
                                                 datatable.clear();
                                                 datatable.rows.add(uniqueChars);
                                                 datatable.draw(false);
@@ -1411,7 +1417,7 @@ Template.contactlistpop.events({
                         //}
                     }
 
-                    var datatable = $('#tblContactlist').DataTable();
+                    var datatable = $('.tblContactlist').DataTable();
                     datatable.clear();
                     datatable.rows.add(splashArrayContactList);
                     datatable.draw(false);
@@ -1529,7 +1535,7 @@ Template.contactlistpop.events({
             //         // clientList.push(customerrecordObj);
             //         //}
             //     }
-            //     var datatable = $('#tblContactlist').DataTable();
+            //     var datatable = $('.tblContactlist').DataTable();
             //     datatable.clear();
             //     datatable.rows.add(splashArrayContactList);
             //     datatable.draw(false);
@@ -1574,8 +1580,8 @@ Template.contactlistpop.events({
     },
     'click .resetTable': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1625,8 +1631,8 @@ Template.contactlistpop.events({
             lineItems.push(lineItemObj);
         });
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1686,7 +1692,7 @@ Template.contactlistpop.events({
         let columData = $(event.target).text();
 
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('#tblContactlist').DataTable();
+        var datable = $('.tblContactlist').DataTable();
         var title = datable.column(columnDatanIndex).header();
         $(title).html(columData);
 
@@ -1972,7 +1978,7 @@ Template.contactlistpop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblContactlist'
         });
     },

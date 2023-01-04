@@ -3,6 +3,10 @@ import {ReactiveVar} from 'meteor/reactive-var';
 import {SideBarService} from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 
+import { Template } from 'meteor/templating';
+import './uomlistpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 Template.uomlistpop.inheritsHooksFrom('non_transactional_list');
 Template.uomlistpop.onCreated(function() {

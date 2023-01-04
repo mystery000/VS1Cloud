@@ -24,6 +24,9 @@ import CachedHttp from '../lib/global/CachedHttp';
 import erpObject from '../lib/global/erp-objects';
 import GlobalFunctions from '../GlobalFunctions';
 import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import '../salesorder/frm_salesorder.html';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -74,9 +77,6 @@ Template.new_salesorder.onCreated(function() {
     this.uploadedFile = new ReactiveVar();
     this.uploadedFiles = new ReactiveVar([]);
     this.attachmentCount = new ReactiveVar();
-    this.displayfields = new ReactiveVar([]);
-    this.reset_data = new ReactiveVar([]);
-
     this.address = new ReactiveVar();
     this.abn = new ReactiveVar();
     this.referenceNumber = new ReactiveVar();
@@ -86,11 +86,11 @@ Template.new_salesorder.onCreated(function() {
     this.defaultsaleterm = new ReactiveVar();
     this.subtaxcodes = new ReactiveVar([]);
     this.abletomakeworkorder = new ReactiveVar(false);
-
     this.saleOrders = new ReactiveVar([]);
     this.saleOrder = new ReactiveVar();
     this.products = new ReactiveVar([]);
     this.hasFollow = new ReactiveVar(false);
+    this.customerRecord = new ReactiveVar();
 });
 
 Template.new_salesorder.onRendered(function () {
@@ -101,25 +101,12 @@ Template.new_salesorder.onRendered(function () {
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
-            var saleDate = soData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingSOs = await sideBarService.getAllTSalesOrderListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var soList = followingSOs.tsalesorderlist;
-            if (soList.length > 1) {
-                templateObject.hasFollow.set(true);
-            } else {
-                templateObject.hasFollow.set(false);
-            }
+            var isRepeated = soData.fields.RepeatedFrom;
+            templateObject.hasFollow.set(isRepeated);
         }
     }
     templateObject.hasFollowings();
@@ -226,6 +213,7 @@ Template.new_salesorder.onRendered(function () {
       }
     }
 
+
     $('#choosetemplate').attr('checked', true);
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
 
@@ -278,37 +266,6 @@ Template.new_salesorder.onRendered(function () {
         yearRange: "-90:+10",
     });
 
-    // set initial table rest_data
-    function init_reset_data() {
-      let reset_data = [
-        { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
-        { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
-        { index: 2, label: "Qty", class: "Qty", width: "55", active: true, display: true },
-        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
-        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
-        { index: 5, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
-        { index: 6, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
-        { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
-        { index: 8, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
-        { index: 9, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-        { index: 10, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
-        { index: 11, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
-        { index: 12, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
-        { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
-      ];
-
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      if(isBatchSerialNoTracking) {
-        reset_data[11].display = true;
-      } else {
-        reset_data[11].display = false;
-      }
-
-      let templateObject = Template.instance();
-      templateObject.reset_data.set(reset_data);
-    }
-    init_reset_data();
-    // set initial table rest_data
 
     templateObject.getTemplateInfoNew = function(){
         LoadingOverlay.show();
@@ -352,36 +309,36 @@ Template.new_salesorder.onRendered(function () {
 
                     }
 
-                    if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
-                    {
-                            if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
-                                    $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                        $('#Delivery_Docket_1').attr('checked','checked');
-                                    }
+                    // if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
+                    // {
+                    //         if(data.ttemplatesettings[i].fields.Template == 1)
+                    //         {
+                    //                 $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
+                    //                 if(data.ttemplatesettings[i].fields.Active == true)
+                    //                 {
+                    //                     $('#Delivery_Docket_1').attr('checked','checked');
+                    //                 }
 
-                            }
-                            if(data.ttemplatesettings[i].fields.Template == 2)
-                            {
-                                    $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                    $('#Delivery_Docket_2').attr('checked','checked');
-                                    }
-                            }
+                    //         }
+                    //         if(data.ttemplatesettings[i].fields.Template == 2)
+                    //         {
+                    //                 $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
+                    //                 if(data.ttemplatesettings[i].fields.Active == true)
+                    //                 {
+                    //                 $('#Delivery_Docket_2').attr('checked','checked');
+                    //                 }
+                    //         }
 
-                            if(data.ttemplatesettings[i].fields.Template == 3)
-                            {
-                                    $('input[name="Delivery Docket_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                    $('#Delivery_Docket_3').attr('checked','checked');
-                                    }
-                            }
+                    //         if(data.ttemplatesettings[i].fields.Template == 3)
+                    //         {
+                    //                 $('input[name="Delivery Docket_3"]').val(data.ttemplatesettings[i].fields.Description);
+                    //                 if(data.ttemplatesettings[i].fields.Active == true)
+                    //                 {
+                    //                 $('#Delivery_Docket_3').attr('checked','checked');
+                    //                 }
+                    //         }
 
-                    }
+                    // }
 
 
                  }
@@ -432,36 +389,36 @@ Template.new_salesorder.onRendered(function () {
 
 
 
-                        if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
-                        {
-                                if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
-                                        $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                        if(data.ttemplatesettings[i].fields.Active == true)
-                                        {
-                                            $('#Delivery_Docket_1').attr('checked','checked');
-                                        }
+                        // if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
+                        // {
+                        //         if(data.ttemplatesettings[i].fields.Template == 1)
+                        //         {
+                        //                 $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
+                        //                 if(data.ttemplatesettings[i].fields.Active == true)
+                        //                 {
+                        //                     $('#Delivery_Docket_1').attr('checked','checked');
+                        //                 }
 
-                                }
-                                if(data.ttemplatesettings[i].fields.Template == 2)
-                                {
-                                        $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                        if(data.ttemplatesettings[i].fields.Active == true)
-                                        {
-                                        $('#Delivery_Docket_2').attr('checked','checked');
-                                        }
-                                }
+                        //         }
+                        //         if(data.ttemplatesettings[i].fields.Template == 2)
+                        //         {
+                        //                 $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
+                        //                 if(data.ttemplatesettings[i].fields.Active == true)
+                        //                 {
+                        //                 $('#Delivery_Docket_2').attr('checked','checked');
+                        //                 }
+                        //         }
 
-                                if(data.ttemplatesettings[i].fields.Template == 3)
-                                {
-                                        $('input[name="Delivery Docket_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                        if(data.ttemplatesettings[i].fields.Active == true)
-                                        {
-                                        $('#Delivery_Docket_3').attr('checked','checked');
-                                        }
-                                }
+                        //         if(data.ttemplatesettings[i].fields.Template == 3)
+                        //         {
+                        //                 $('input[name="Delivery Docket_3"]').val(data.ttemplatesettings[i].fields.Description);
+                        //                 if(data.ttemplatesettings[i].fields.Active == true)
+                        //                 {
+                        //                 $('#Delivery_Docket_3').attr('checked','checked');
+                        //                 }
+                        //         }
 
-                        }
+                        // }
 
 
                   }
@@ -509,29 +466,29 @@ Template.new_salesorder.onRendered(function () {
 
 
 
-                     if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
-                     {
-                                if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
-                                        $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                        if(data.ttemplatesettings[i].fields.Active == true)
-                                        {
-                                          $('#Delivery_Docket_1').attr('checked','checked');
-                                        }
+//                      if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
+//                      {
+//                                 if(data.ttemplatesettings[i].fields.Template == 1)
+//                                 {
+//                                         $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
+//                                         if(data.ttemplatesettings[i].fields.Active == true)
+//                                         {
+//                                           $('#Delivery_Docket_1').attr('checked','checked');
+//                                         }
 
-                                }
-                                if(data.ttemplatesettings[i].fields.Template == 2)
-                                {
-                                      $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                      if(data.ttemplatesettings[i].fields.Active == true)
-                                      {
-                                        $('#Delivery_Docket_2').attr('checked','checked');
-                                      }
-                                }
+//                                 }
+//                                 if(data.ttemplatesettings[i].fields.Template == 2)
+//                                 {
+//                                       $('input[name="Delivery Docket_2"]').val(data.ttemplatesettings[i].fields.Description);
+//                                       if(data.ttemplatesettings[i].fields.Active == true)
+//                                       {
+//                                         $('#Delivery_Docket_2').attr('checked','checked');
+//                                       }
+//                                 }
 
-   templateObject.getTemplateInfo();
+//    templateObject.getTemplateInfo();
 
-                     }
+//                      }
 
 
 
@@ -571,10 +528,10 @@ Template.new_salesorder.onRendered(function () {
        });
    };
 
-    templateObject.generateInvoiceData = function (template_title,number) {
+    templateObject.generateInvoiceData = function (template_title, number) {
         object_invoce = [];
         switch (template_title) {
-            case "Sales Order":
+            case "Sales Orders":
                 showSealsOrder1(template_title, number, false);
             break;
             case "Delivery Docket":
@@ -684,7 +641,7 @@ Template.new_salesorder.onRendered(function () {
             lineItems.push(lineItemObj);
         });
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -703,11 +660,11 @@ Template.new_salesorder.onRendered(function () {
         {
               item_invoices = {
 
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -754,11 +711,11 @@ Template.new_salesorder.onRendered(function () {
         else if(number == 2)
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -805,11 +762,11 @@ Template.new_salesorder.onRendered(function () {
         else
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -955,7 +912,7 @@ Template.new_salesorder.onRendered(function () {
                 lineItems.push(lineItemObj);
             });
 
-                    let company = Session.get('vs1companyName');
+                    let company = localStorage.getItem('vs1companyName');
                     let vs1User = localStorage.getItem('mySession');
                     let customerEmail = $('#edtCustomerEmail').val();
                     let id = $('.printID').attr("id") || "new";
@@ -974,11 +931,11 @@ Template.new_salesorder.onRendered(function () {
                     {
                         item_invoices = {
 
-                            o_url: Session.get('vs1companyURL'),
-                            o_name: Session.get('vs1companyName'),
-                            o_address: Session.get('vs1companyaddress1'),
-                            o_city: Session.get('vs1companyCity'),
-                            o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                            o_url: localStorage.getItem('vs1companyURL'),
+                            o_name: localStorage.getItem('vs1companyName'),
+                            o_address: localStorage.getItem('vs1companyaddress1'),
+                            o_city: localStorage.getItem('vs1companyCity'),
+                            o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                             o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                             o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                             o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1022,11 +979,11 @@ Template.new_salesorder.onRendered(function () {
                     else if(number == 2)
                     {
                         item_invoices = {
-                            o_url: Session.get('vs1companyURL'),
-                            o_name: Session.get('vs1companyName'),
-                            o_address: Session.get('vs1companyaddress1'),
-                            o_city: Session.get('vs1companyCity'),
-                            o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                            o_url: localStorage.getItem('vs1companyURL'),
+                            o_name: localStorage.getItem('vs1companyName'),
+                            o_address: localStorage.getItem('vs1companyaddress1'),
+                            o_city: localStorage.getItem('vs1companyCity'),
+                            o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                             o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                             o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                             o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1070,11 +1027,11 @@ Template.new_salesorder.onRendered(function () {
                     else
                     {
                                 item_invoices = {
-                                    o_url: Session.get('vs1companyURL'),
-                                    o_name: Session.get('vs1companyName'),
-                                    o_address: Session.get('vs1companyaddress1'),
-                                    o_city: Session.get('vs1companyCity'),
-                                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                                    o_url: localStorage.getItem('vs1companyURL'),
+                                    o_name: localStorage.getItem('vs1companyName'),
+                                    o_address: localStorage.getItem('vs1companyaddress1'),
+                                    o_city: localStorage.getItem('vs1companyCity'),
+                                    o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                                     o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                                     o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                                     o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1242,7 +1199,7 @@ Template.new_salesorder.onRendered(function () {
             lineItems.push(lineItemObj);
         });
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -1260,11 +1217,11 @@ Template.new_salesorder.onRendered(function () {
         {
             item_invoices = {
 
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1304,11 +1261,11 @@ Template.new_salesorder.onRendered(function () {
         else if(number == 2)
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1347,11 +1304,11 @@ Template.new_salesorder.onRendered(function () {
         else
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1472,7 +1429,7 @@ Template.new_salesorder.onRendered(function () {
                 lineItems.push(lineItemObj);
             });
 
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let customerEmail = $('#edtCustomerEmail').val();
                 let id = $('.printID').attr("id") || "new";
@@ -1491,11 +1448,11 @@ Template.new_salesorder.onRendered(function () {
                 {
                     item_invoices = {
 
-                        o_url: Session.get('vs1companyURL'),
-                        o_name: Session.get('vs1companyName'),
-                        o_address: Session.get('vs1companyaddress1'),
-                        o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                        o_url: localStorage.getItem('vs1companyURL'),
+                        o_name: localStorage.getItem('vs1companyName'),
+                        o_address: localStorage.getItem('vs1companyaddress1'),
+                        o_city: localStorage.getItem('vs1companyCity'),
+                        o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                         o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                         o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                         o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1535,11 +1492,11 @@ Template.new_salesorder.onRendered(function () {
                 else if(number == 2)
                 {
                     item_invoices = {
-                        o_url: Session.get('vs1companyURL'),
-                        o_name: Session.get('vs1companyName'),
-                        o_address: Session.get('vs1companyaddress1'),
-                        o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                        o_url: localStorage.getItem('vs1companyURL'),
+                        o_name: localStorage.getItem('vs1companyName'),
+                        o_address: localStorage.getItem('vs1companyaddress1'),
+                        o_city: localStorage.getItem('vs1companyCity'),
+                        o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                         o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                         o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                         o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1579,11 +1536,11 @@ Template.new_salesorder.onRendered(function () {
                 else
                 {
                             item_invoices = {
-                                o_url: Session.get('vs1companyURL'),
-                                o_name: Session.get('vs1companyName'),
-                                o_address: Session.get('vs1companyaddress1'),
-                                o_city: Session.get('vs1companyCity'),
-                                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                                o_url: localStorage.getItem('vs1companyURL'),
+                                o_name: localStorage.getItem('vs1companyName'),
+                                o_address: localStorage.getItem('vs1companyaddress1'),
+                                o_city: localStorage.getItem('vs1companyCity'),
+                                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1657,7 +1614,7 @@ Template.new_salesorder.onRendered(function () {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1671,9 +1628,9 @@ Template.new_salesorder.onRendered(function () {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1726,7 +1683,7 @@ Template.new_salesorder.onRendered(function () {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1740,9 +1697,9 @@ Template.new_salesorder.onRendered(function () {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -1798,7 +1755,7 @@ Template.new_salesorder.onRendered(function () {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1812,9 +1769,9 @@ Template.new_salesorder.onRendered(function () {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 1)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -2143,7 +2100,7 @@ Template.new_salesorder.onRendered(function () {
                     $("#html-2-pdfwrapper_new #tax_list_print").remove();
                 }
             }
-            
+
             }
 
         // table content
@@ -2311,8 +2268,8 @@ Template.new_salesorder.onRendered(function () {
     templateObject.getAllClients();
 
     templateObject.getOrganisationDetails = function() {
-        let account_id = Session.get('vs1companyStripeID') || '';
-        let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+        let account_id = localStorage.getItem('vs1companyStripeID') || '';
+        let stripe_fee = localStorage.getItem('vs1companyStripeFeeMethod') || 'apply';
         templateObject.accountID.set(account_id);
         templateObject.stripe_fee_method.set(stripe_fee);
     };
@@ -2458,7 +2415,7 @@ Template.new_salesorder.onRendered(function () {
     this.loadSaleOrder();
 
     let url = FlowRouter.current().path;
-    let bankDetails = Session.get('vs1companyBankDetails') || '';
+    let bankDetails = localStorage.getItem('vs1companyBankDetails') || '';
     //$('.bankDetails').html(bankDetails.replace(/[\r\n]/g, "<br />"));
     if (url.includes("id") && url.includes("total")) {
         url = new URL(window.location.href);
@@ -2616,7 +2573,6 @@ Template.new_salesorder.onRendered(function () {
                             $('#sltStatus').val(data.fields.SalesStatus);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(data.fields.SaleClassName);
-                            FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -2698,12 +2654,15 @@ Template.new_salesorder.onRendered(function () {
                             templateObject.lineitems.set(lineItems);
 
                             templateObject.selectedCurrency.set(salesorderrecord.currency);
-                            templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                            templateObject.inputSelectedCurrency.set(salesorderrecord.currncy);
+                            setTimeout(()=>{
+                                templateObject.checkAbleToMakeWorkOrder()
+                            }, 1000)
                             if (templateObject.salesorderrecord.get()) {
 
 
 
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                     if (error) {
 
 
@@ -2953,7 +2912,6 @@ Template.new_salesorder.onRendered(function () {
                                 $('#sltStatus').val(useData[d].fields.SalesStatus);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(useData[d].fields.SaleClassName);
-                                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -3035,11 +2993,14 @@ Template.new_salesorder.onRendered(function () {
 
                                 templateObject.selectedCurrency.set(salesorderrecord.currency);
                                 templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                                setTimeout(()=>{
+                                    templateObject.checkAbleToMakeWorkOrder()
+                                }, 1000)
                                 if (templateObject.salesorderrecord.get()) {
 
 
 
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                         if (error) {
 
 
@@ -3228,7 +3189,6 @@ Template.new_salesorder.onRendered(function () {
                                     $('#sltStatus').val(data.fields.SalesStatus);
                                     $('#sltTerms').val(data.fields.TermsName);
                                     $('#sltDept').val(data.fields.SaleClassName);
-                                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                                     templateObject.attachmentCount.set(0);
                                     if (data.fields.Attachments) {
@@ -3256,11 +3216,14 @@ Template.new_salesorder.onRendered(function () {
 
                                     templateObject.selectedCurrency.set(salesorderrecord.currency);
                                     templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                                    setTimeout(()=>{
+                                        templateObject.checkAbleToMakeWorkOrder()
+                                    }, 1000)
                                     if (templateObject.salesorderrecord.get()) {
 
 
 
-                                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                             if (error) {
 
 
@@ -3511,7 +3474,6 @@ Template.new_salesorder.onRendered(function () {
                         $('#sltStatus').val(data.fields.SalesStatus);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(data.fields.SaleClassName);
-                        FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -3593,11 +3555,14 @@ Template.new_salesorder.onRendered(function () {
 
                         templateObject.selectedCurrency.set(salesorderrecord.currency);
                         templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                        setTimeout(()=>{
+                            templateObject.checkAbleToMakeWorkOrder()
+                        }, 1000)
                         if (templateObject.salesorderrecord.get()) {
 
 
 
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                 if (error) {
 
 
@@ -3678,7 +3643,7 @@ Template.new_salesorder.onRendered(function () {
                     let erpInvoiceId = getso_id;
 
 
-                    let mailFromName = Session.get('vs1companyName');
+                    let mailFromName = localStorage.getItem('vs1companyName');
                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                     let customerEmailName = $('#edtCustomerName').val();
                     let checkEmailData = url.searchParams.get("email");
@@ -3963,7 +3928,7 @@ Template.new_salesorder.onRendered(function () {
                     $('#sltStatus').val(data.fields.SalesStatus);
                     $('#sltTerms').val(data.fields.TermsName);
                     $('#sltDept').val(data.fields.SaleClassName);
-                    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+
 
                     templateObject.attachmentCount.set(0);
                     if (data.fields.Attachments) {
@@ -4045,11 +4010,14 @@ Template.new_salesorder.onRendered(function () {
                     templateObject.salesorderrecord.set(salesorderrecord);
                     templateObject.selectedCurrency.set(salesorderrecord.currency);
                     templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                    setTimeout(()=>{
+                        templateObject.checkAbleToMakeWorkOrder()
+                    }, 1000)
                     if (templateObject.salesorderrecord.get()) {
 
 
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                             if (error) {
 
                             } else {
@@ -4259,7 +4227,6 @@ Template.new_salesorder.onRendered(function () {
                             $('#sltStatus').val(data.fields.SalesStatus);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(data.fields.SaleClassName);
-                            FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                             /* START attachment */
                             templateObject.attachmentCount.set(0);
@@ -4342,9 +4309,12 @@ Template.new_salesorder.onRendered(function () {
                             templateObject.salesorderrecord.set(salesorderrecord);
                             templateObject.selectedCurrency.set(salesorderrecord.currency);
                             templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                            setTimeout(()=>{
+                                templateObject.checkAbleToMakeWorkOrder()
+                            }, 1000)
                             if (templateObject.salesorderrecord.get()) {
 
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                     if (error) {
 
                                     } else {
@@ -4547,7 +4517,6 @@ Template.new_salesorder.onRendered(function () {
                                 $('#sltStatus').val(useData[d].fields.SalesStatus);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(useData[d].fields.SaleClassName);
-                                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                                 /* START attachment */
                                 templateObject.attachmentCount.set(0);
@@ -4630,9 +4599,12 @@ Template.new_salesorder.onRendered(function () {
                                 templateObject.salesorderrecord.set(salesorderrecord);
                                 templateObject.selectedCurrency.set(salesorderrecord.currency);
                                 templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                                setTimeout(()=>{
+                                    templateObject.checkAbleToMakeWorkOrder()
+                                }, 1000)
                                 if (templateObject.salesorderrecord.get()) {
 
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                         if (error) {
 
                                         } else {
@@ -4819,7 +4791,6 @@ Template.new_salesorder.onRendered(function () {
                         $('#sltStatus').val(data.fields.SalesStatus);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(data.fields.SaleClassName);
-                        FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -4845,11 +4816,14 @@ Template.new_salesorder.onRendered(function () {
                         templateObject.salesorderrecord.set(salesorderrecord);
                         templateObject.selectedCurrency.set(salesorderrecord.currency);
                         templateObject.inputSelectedCurrency.set(salesorderrecord.currency);
+                        setTimeout(()=>{
+                            templateObject.checkAbleToMakeWorkOrder()
+                        }, 1000)
                         if (templateObject.salesorderrecord.get()) {
 
 
 
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                                 if (error) {
 
                                 } else {
@@ -4989,7 +4963,7 @@ Template.new_salesorder.onRendered(function () {
 
         templateObject.salesorderrecord.set(salesorderrecord);
         if (templateObject.salesorderrecord.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSalesOrderLine', function(error, result) {
                 if (error) {} else {
                     if (result) {
                         for (let i = 0; i < result.customFields.length; i++) {
@@ -5019,9 +4993,7 @@ Template.new_salesorder.onRendered(function () {
         }
     }
 
-    setTimeout(()=>{
-        templateObject.checkAbleToMakeWorkOrder();
-    }, 1500)
+
 
     templateObject.getDepartments = function() {
         getVS1Data('TDeptClass').then(function(dataObject) {
@@ -5082,7 +5054,7 @@ Template.new_salesorder.onRendered(function () {
                         };
 
                         if (data.ttermsvs1[i].isSalesdefault == true) {
-                            Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                            localStorage.setItem('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                             templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                         }
 
@@ -5118,7 +5090,7 @@ Template.new_salesorder.onRendered(function () {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
                     if (data.ttermsvs1[i].isSalesdefault == true) {
-                        Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                        localStorage.setItem('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                         templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                     }
                     termrecords.push(termrecordObj);
@@ -6300,6 +6272,36 @@ Template.new_salesorder.onRendered(function () {
                                 }
 
                                 setTimeout(function() {
+                                    let customerRecord = {
+                                        id:popCustomerID,
+                                        phone:popCustomerPhone,
+                                        firstname:popCustomerFirstName,
+                                        middlename: popCustomerMiddleName,
+                                        lastname:popCustomerLastName,
+                                        company:data.tcustomervs1[0].fields.Companyname || '',
+                                        email: popCustomerEmail,
+                                        title: popCustomerTitle,
+                                        tfn: popCustomertfn,
+                                        mobile: popCustomerMobile,
+                                        fax: popCustomerFaxnumber,
+                                        shippingaddress: popCustomerStreet,
+                                        scity: popCustomerStreet2,
+                                        sstate: popCustomerCountry,
+                                        terms: '',
+                                        spostalcode: popCustomerPostcode,
+                                        scountry: popCustomerState,
+                                        billingaddress: popCustomerbillingaddress,
+                                        bcity: popCustomerbcity,
+                                        bstate: popCustomerbstate,
+                                        bpostalcode: popCustomerbpostalcode,
+                                        bcountry: popCustomerCountry,
+                                        custFld1: popCustomercustfield1,
+                                        custFld2: popCustomercustfield2,
+                                        jobbcountry: '',
+                                        jobscountry: '',
+                                        discount:0
+                                    }
+                                    templateObject.customerRecord.set(customerRecord);
                                     $('#addCustomerModal').modal('show');
                                 }, 200);
                             }).catch(function(err) {
@@ -6397,6 +6399,36 @@ Template.new_salesorder.onRendered(function () {
                                     }
 
                                     setTimeout(function() {
+                                        let customerRecord = {
+                                            id:popCustomerID,
+                                            phone:popCustomerPhone,
+                                            firstname:popCustomerFirstName,
+                                            middlename: popCustomerMiddleName,
+                                            lastname:popCustomerLastName,
+                                            company:data.tcustomervs1[i].fields.Companyname || '',
+                                            email: popCustomerEmail,
+                                            title: popCustomerTitle,
+                                            tfn: popCustomertfn,
+                                            mobile: popCustomerMobile,
+                                            fax: popCustomerFaxnumber,
+                                            shippingaddress: popCustomerStreet,
+                                            scity: popCustomerStreet2,
+                                            sstate: popCustomerCountry,
+                                            terms: '',
+                                            spostalcode: popCustomerPostcode,
+                                            scountry: popCustomerState,
+                                            billingaddress: popCustomerbillingaddress,
+                                            bcity: popCustomerbcity,
+                                            bstate: popCustomerbstate,
+                                            bpostalcode: popCustomerbpostalcode,
+                                            bcountry: popCustomerCountry,
+                                            custFld1: popCustomercustfield1,
+                                            custFld2: popCustomercustfield2,
+                                            jobbcountry: '',
+                                            jobscountry: '',
+                                            discount:0
+                                        }
+                                        templateObject.customerRecord.set(customerRecord);
                                         $('#addCustomerModal').modal('show');
                                     }, 200);
 
@@ -6694,7 +6726,7 @@ Template.new_salesorder.onRendered(function () {
             $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
 
 
-            let company = Session.get('vs1companyName');
+            let company = localStorage.getItem('vs1companyName');
             let vs1User = localStorage.getItem('mySession');
             let customerEmail = $('#edtCustomerEmail').val();
             let id = $('.printID').attr("id");
@@ -6877,7 +6909,7 @@ Template.new_salesorder.onRendered(function () {
                     // let basedOnTypeStorages = Object.keys(localStorage);
                     // basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     //     let employeeId = storage.split('_')[2];
-                    //     // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    //     // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     //     return storage.includes('BasedOnType_');
                     // });
                     // let j = basedOnTypeStorages.length;
@@ -7046,10 +7078,10 @@ Template.new_salesorder.onRendered(function() {
                                 className: "taxrate",
                                 "targets": [5]
                             }],
+                            select: true,
+                            destroy: true,
                             colReorder: true,
-
                             bStateSave: true,
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -7132,10 +7164,10 @@ Template.new_salesorder.onRendered(function() {
                                 "targets": [5]
                             }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
                         bStateSave: true,
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7201,10 +7233,10 @@ Template.new_salesorder.onRendered(function() {
                             className: "taxrate",
                             "targets": [5]
                         }],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
-
                         bStateSave: true,
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7282,12 +7314,7 @@ Template.new_salesorder.onRendered(function() {
                             select: true,
                             destroy: true,
                             colReorder: true,
-                            // colReorder: {
-                            //   fixedColumnsLeft: 1
-                            // },
                             bStateSave: true,
-                            //scrollX: 1000,
-                            //rowId: 0,
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -7363,12 +7390,7 @@ Template.new_salesorder.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-                        // colReorder: {
-                        //   fixedColumnsLeft: 1
-                        // },
                         bStateSave: true,
-                        //scrollX: 1000,
-                        //rowId: 0,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7443,12 +7465,7 @@ Template.new_salesorder.onRendered(function() {
                         select: true,
                         destroy: true,
                         colReorder: true,
-                        // colReorder: {
-                        //   fixedColumnsLeft: 1
-                        // },
                         bStateSave: true,
-                        //scrollX: 1000,
-                        //rowId: 0,
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -7532,60 +7549,6 @@ Template.new_salesorder.onRendered(function() {
 
     tempObj.getSubTaxCodes();
 
-    // custom field displaysettings
-     tempObj.initCustomFieldDisplaySettings = function(data, listType) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      showCustomFieldDisplaySettings(reset_data);
-
-      try {
-        getVS1Data("VS1_Customize").then(function (dataObject) {
-          if (dataObject.length == 0) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              showCustomFieldDisplaySettings(reset_data);
-            }).catch(function (err) {
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            if(data.ProcessLog.Obj.CustomLayout.length > 0){
-             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-               if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                 showCustomFieldDisplaySettings(reset_data);
-               }
-             }
-           };
-            // handle process here
-          }
-        });
-      } catch (error) {
-      }
-      return;
-    }
-
-    function showCustomFieldDisplaySettings(reset_data) {
-
-      let custFields = [];
-      let customData = {};
-      let customFieldCount = reset_data.length;
-
-      for (let r = 0; r < customFieldCount; r++) {
-        customData = {
-          active: reset_data[r].active,
-          id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label,
-          class: reset_data[r].class,
-          display: reset_data[r].display,
-          width: reset_data[r].width ? reset_data[r].width : ''
-        };
-        custFields.push(customData);
-      }
-      tempObj.displayfields.set(custFields);
-    }
-
-    tempObj.initCustomFieldDisplaySettings("", "tblSalesOrderLine");
-
     tempObj.checkAbleToMakeWorkOrder = function() {
         let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')): [];
         let workorderList = [];
@@ -7594,41 +7557,45 @@ Template.new_salesorder.onRendered(function() {
         let temp = localStorage.getItem('TWorkorders');
         workorderList = temp?JSON.parse(temp): [];
 
-        let returnvalue = false;
-        let lineTable  = $('#tblSalesOrderLine');
-        setTimeout(function() {
+    let returnvalue = false;
 
-            let orderlines = $(lineTable).find('tbody tr')
-            for(let i = 0 ; i < orderlines.length; i++) {
-                let line =  orderlines[i];
-                let productName = $(line).find('.lineProductName').val();
-                let existBOM = false;
+    setTimeout(function () {
+      let lineTable = $("#tblSalesOrderLine");
+      let orderlines = $(lineTable).find("tbody tr");
+      for (let i = 0; i < orderlines.length; i++) {
+        let line = orderlines[i];
+        let productName = $(line).find(".lineProductName").val();
 
-                let index = bomProducts.findIndex(product => {
-                    return product.fields.productName == productName
-                })
+        let existBOM = false;
 
-                if(index > -1) {
-                    existBOM = true;
-                }
+        let index = bomProducts.findIndex((product) => {
 
-                if(existBOM == true) {
-                    //check if the workorder is already exists
-                    let workOrderIndex = workorderList.findIndex(order=>{
-                        return order.SalesOrderID == tempObj.salesOrderId.get() && order.line.fields.ProductName == productName;
-                    })
-                    if(workOrderIndex == -1) {
-                        returnvalue = true
-                    }
-                }
-            }
-        }, 1000)
+          return product.fields.productName == productName;
+        });
 
-        setTimeout(()=>{
-            tempObj.abletomakeworkorder.set(returnvalue);
-        },1000)
-    }
+        if (index > -1) {
+          existBOM = true;
+        }
 
+        if (existBOM == true) {
+          //check if the workorder is already exists
+          let workOrderIndex = workorderList.findIndex((order) => {
+              return (
+                order.SalesOrderID == tempObj.SalesOrderId.get() &&
+                order.line.fields.ProductName == productName
+              );
+
+          });
+
+          if (workOrderIndex == -1) {
+            returnvalue = true;
+          }
+
+        }
+      }
+      tempObj.abletomakeworkorder.set(returnvalue);
+    }, 2000);
+  };
 
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 
@@ -7773,7 +7740,7 @@ Template.new_salesorder.helpers({
    },
 
     isBatchSerialNoTracking: () => {
-        return Session.get('CloudShowSerial') || false;
+        return localStorage.getItem('CloudShowSerial') || false;
     },
     vs1companyBankName: () => {
         return localStorage.getItem('vs1companyBankName') || '';
@@ -7797,10 +7764,6 @@ Template.new_salesorder.helpers({
         return localStorage.getItem('vs1companyBankRoutingNo') || '';
     },
 
-    // custom field displaysettings
-    displayfields: () => {
-      return Template.instance().displayfields.get();
-    },
 
     custfield1: () => {
         return localStorage.getItem('custfield1salesorder') || 'Custom Field 1';
@@ -7846,13 +7809,13 @@ Template.new_salesorder.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'new_salesorder'
         });
     },
     salesCloudGridPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblSalesOrderLine'
         });
     },
@@ -7878,45 +7841,50 @@ Template.new_salesorder.helpers({
     record: () => {
         return Template.instance().record.get();
     },
+
+    customerRecord: () => {
+        return Template.instance().customerRecord.get();
+    },
+
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () => {
-        let phone = "Phone: "+ Session.get('vs1companyPhone');
+        let phone = "Phone: "+ localStorage.getItem('vs1companyPhone');
         return phone;
     },
     companyabn: () => { //Update Company ABN
-        let countryABNValue = Session.get("vs1companyABN");
+        let countryABNValue = localStorage.getItem("vs1companyABN");
         // if (LoggedCountry == "South Africa") {
-        //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+        //     countryABNValue = "Vat No: " + localStorage.getItem("vs1companyABN");
         // }
         return countryABNValue;
     },
     companyReg: () => { //Add Company Reg
       let countryRegValue = '';
       if(LoggedCountry== "South Africa"){
-        countryRegValue = "Reg No: " + Session.get('vs1companyReg');
+        countryRegValue = "Reg No: " + localStorage.getItem('vs1companyReg');
       }
 
     return countryRegValue;
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
     isMobileDevices: () => {
         var isMobile = false; //initiate as false
@@ -7980,6 +7948,391 @@ Template.new_salesorder.helpers({
 
 
         return _saleOrder.fields.Lines;
+    },
+
+    printEmailData: async () => {
+        var splashLineArray = new Array();
+        var erpGet = erpDb();
+        let lineItemsForm = [];
+        let lineItemObjForm = {};
+        var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+        var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
+
+        let templateObject = Template.instance();
+        // let stripe_id = templateObject.accountID.get();
+        // let stripe_fee_method = templateObject.stripe_fee_method.get();
+        let stripe_id = '';
+        let stripe_fee_method = '';
+        let name = $('#edtCustomerEmail').attr('customerfirstname');
+        let surname = $('#edtCustomerEmail').attr('customerlastname');
+        let termname = $('#sltTerms').val() || '';
+        if (!termname) return null;
+        let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
+        let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
+        $('#tblSalesOrderLine > tbody > tr').each(function() {
+            var lineID = this.id;
+            let tdproduct = $('#' + lineID + " .lineProductName").val();
+            let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdQty = $('#' + lineID + " .lineQty").val();
+            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
+            let tdlineamt = $('#' + lineID + " .lineAmt").text();
+            let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
+            let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumbers');
+            let tdExpiryDates = $('#' + lineID + " .colSerialNo").attr('data-expirydates');
+
+            if (tdproduct != "") {
+
+                lineItemObjForm = {
+                    type: "TSalesOrderLine",
+                    fields: {
+                        ProductName: tdproduct || '',
+                        ProductDescription: tddescription || '',
+                        UOMQtySold: parseFloat(tdQty) || 0,
+                        UOMQtyShipped: parseFloat(tdQty) || 0,
+                        LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                        Headershipdate: saleDate,
+                        LineTaxCode: tdtaxCode || '',
+                        DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                    }
+                };
+
+                // Feature/ser-lot number tracking: Save Serial Numbers
+                if (tdSerialNumber) {
+                    const serialNumbers = tdSerialNumber.split(',');
+                    let tpqaList = [];
+                    for (let i = 0; i < serialNumbers.length; i++) {
+                        const tpqaObject = {
+                            type: "TPQASN",
+                            fields: {
+                                Active: true,
+                                Qty: 1,
+                                SerialNumber: serialNumbers[i],
+                            }
+                        };
+                        tpqaList.push(tpqaObject);
+                    }
+                    const pqaObject = {
+                        type: "TPQA",
+                        fields: {
+                            Active: true,
+                            PQASN: tpqaList,
+                            Qty: serialNumbers.length,
+                        }
+                    }
+                    lineItemObjForm.fields.PQA = pqaObject;
+                }
+
+                // Feature/ser-lot number tracking: Save Lot Number
+                if (tdLotNumber) {
+                    const lotNumbers = tdLotNumber.split(',');
+                    const expiryDates = tdExpiryDates.split(',');
+                    let tpqaList = [];
+                    for (let i = 0; i < lotNumbers.length; i++) {
+                        const dates = expiryDates[i].split('/');
+                        const tpqaObject = {
+                            type: "PQABatch",
+                            fields: {
+                                Active: true,
+                                BatchExpiryDate: new Date(parseInt(dates[2]), parseInt(dates[1]) - 1, parseInt(dates[0])).toISOString(),
+                                Qty: 1,
+                                BatchNo: lotNumbers[i],
+                            }
+                        };
+                        tpqaList.push(tpqaObject);
+                    }
+                    const pqaObject = {
+                        type: "TPQA",
+                        fields: {
+                            Active: true,
+                            PQABatch: tpqaList,
+                            Qty: lotNumbers.length,
+                        }
+                    }
+                    lineItemObjForm.fields.PQA = pqaObject;
+                }
+
+                lineItemsForm.push(lineItemObjForm);
+                splashLineArray.push(lineItemObjForm);
+            }
+        });
+        if ($('#formCheck-one').is(':checked')) {
+            getchkcustomField1 = false;
+        }
+        if ($('#formCheck-two').is(':checked')) {
+            getchkcustomField2 = false;
+        }
+
+        let customer = $('#edtCustomerName').val();
+        let customerEmail = $('#edtCustomerEmail').val();
+
+        let departement = $('#sltDept').val();
+        let total = $('#totalBalanceDue').html() || 0;
+        let tax = $('#subtotal_tax').html() || 0;
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentSalesOrder = getso_id[getso_id.length - 1];
+
+        var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+        let ForeignExchangeRate = $('#exchange_rate').val()||0;
+        let foreignCurrencyFields = {}
+        if( FxGlobalFunctions.isCurrencyEnabled() ){
+            foreignCurrencyFields = {
+                ForeignExchangeCode: currencyCode,
+                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            }
+        }
+
+        const currentSalesOrderId = parseInt(currentSalesOrder);
+
+        let company = localStorage.getItem('vs1companyName');
+        let vs1User = localStorage.getItem('mySession');
+        let currencyname = (CountryAbbr).toLowerCase();
+        let stringQuery = "?";
+        for (let l = 0; l < lineItemsForm.length; l++) {
+            stringQuery = stringQuery + "product" + l + "=" + lineItemsForm[l].fields.ProductName + "&price" + l + "=" + lineItemsForm[l].fields.LinePrice + "&qty" + l + "=" + lineItemsForm[l].fields.UOMQtySold + "&";
+        }
+        stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + currentSalesOrderId + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Sales Order&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + departement + "&currency=" + currencyname;
+
+        let attachment = [];
+        let invoiceId = currentSalesOrderId;
+        let encodedPdf = await generatePdfForMail(invoiceId);
+        let pdfObject = "";
+
+        function generatePdfForMail(invoiceId) {
+            let file = "Sales Order-" + invoiceId + ".pdf"
+            return new Promise((resolve, reject) => {
+                $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+                let templateObject = Template.instance();
+                let completeTabRecord;
+                let doc = new jsPDF('p', 'pt', 'a4');
+                var source = document.getElementById('html-2-pdfwrapper');
+                var opt = {
+                    margin: 0,
+                    filename: file,
+                    image: {
+                        type: 'jpeg',
+                        quality: 0.98
+                    },
+                    html2canvas: {
+                        scale: 2
+                    },
+                    jsPDF: {
+                        unit: 'in',
+                        format: 'a4',
+                        orientation: 'portrait'
+                    }
+                }
+                resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
+                // doc.addHTML(source, function () {
+                //     doc.setFontSize(10);
+                //     doc.setTextColor(255, 255, 255);
+                //     doc.textWithLink('Pay Now', 482, 113, { url: 'https://www.depot.vs1cloud.com/stripe/' + stringQuery });
+                //     resolve(doc.output('blob'));
+                //     $('#html-2-pdfwrapper').css('display', 'none');
+                // });
+            });
+        }
+
+        let base64data = encodedPdf.split(',')[1];
+        pdfObject = {
+            filename: 'Sales Order-' + invoiceId + '.pdf',
+            content: base64data,
+            encoding: 'base64'
+        };
+        attachment.push(pdfObject);
+        let erpInvoiceId = currentSalesOrderId;
+
+
+        let mailFromName = localStorage.getItem('vs1companyName');
+        let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
+        let customerEmailName = $('#edtCustomerName').val();
+        let checkEmailData = $('#edtCustomerEmail').val();
+        let grandtotal = $('#grandTotal').html();
+        let amountDueEmail = $('#totalBalanceDue').html();
+        let emailDueDate = $("#dtDueDate").val();
+        let customerBillingAddress = $('#txabillingAddress').val();
+        let customerTerms = $('#sltTerms').val();
+        let customerSubtotal = $('#subtotal_total').html();
+        let customerTax = $('#subtotal_tax').html();
+        let customerNett = $('#subtotal_nett').html();
+        let customerTotal = $('#grandTotal').html();
+        let mailSubject = 'Sales Order ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
+        let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
+            "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
+            "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
+
+        var htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+            '        <tr>' +
+            '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+            '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+            '                    <table class="main">' +
+            '                        <tr>' +
+            '                            <td class="wrapper">' +
+            '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+            '                                    <tr>' +
+            '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+            '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Sales Order No. ' + erpInvoiceId + ' Details</span>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr style="height: 16px;"></tr>' +
+            '                                    <tr>' +
+            '                                        <td>' +
+            '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr style="height: 48px;"></tr>' +
+            '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+            '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+            '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal +'</p>' +
+            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+            '                                                <tbody>' +
+            '                                                    <tr>' +
+            '                                                        <td align="center" style="padding-bottom: 15px;">' +
+            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+            '                                                                <tbody>' +
+            '                                                                    <tr>' +
+            '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+            '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+            '                                                                    </tr>' +
+            '                                                                </tbody>' +
+            '                                                            </table>' +
+            '                                                        </td>' +
+            '                                                    </tr>' +
+            '                                                </tbody>' +
+            '                                            </table>' +
+            '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr>' +
+            '                                        <td class="content-block" style="padding: 16px 32px;">' +
+            '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
+            '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+            '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+            '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr style="background-color: #ededed;">' +
+            '                                        <td class="content-block" style="padding: 16px 32px;">' +
+            '                                            <div style="width: 100%; padding: 16px 0px;">' +
+            '                                                <div style="width: 50%; float: left;">' +
+            '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+            '                                                </div>' +
+            '                                                <div style="width: 50%; float: right;">' +
+            '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
+            '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress +'</p>' +
+            '                                                </div>' +
+            '                                            </div>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr style="background-color: #ededed;">' +
+            '                                        <td class="content-block" style="padding: 16px 32px;">' +
+            '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+            '                                            <div style="width: 100%; padding: 16px 0px;">' +
+            '                                                <div style="width: 50%; float: left;">' +
+            '                                                    <p style="font-size: 18px;">Terms</p>' +
+            '                                                </div>' +
+            '                                                <div style="width: 50%; float: right;">' +
+            '                                                    <p style="font-size: 16px;">' + customerTerms +'</p>' +
+            '                                                </div>' +
+            '                                            </div>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr>' +
+            '                                        <td class="content-block" style="padding: 16px 32px;">' +
+            '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+            '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+            '                                                <div style="width: 50%; float: left;">' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+            '                                                </div>' +
+            '                                                <div style="width: 50%; float: right; text-align: right;">' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
+            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
+            '                                                </div>' +
+            '                                            </div>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr>' +
+            '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+            '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+            '                                                <tbody>' +
+            '                                                    <tr>' +
+            '                                                        <td align="center">' +
+            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+            '                                                                <tbody>' +
+            '                                                                    <tr>' +
+            '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+            '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+            '                                                                    </tr>' +
+            '                                                                </tbody>' +
+            '                                                            </table>' +
+            '                                                        </td>' +
+            '                                                    </tr>' +
+            '                                                </tbody>' +
+            '                                            </table>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr>' +
+            '                                        <td class="content-block" style="padding: 16px 32px;">' +
+            '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                    <tr>' +
+            '                                        <td>' +
+            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+            '                                                <tbody>' +
+            '                                                    <tr>' +
+            '                                                        <td align="center">' +
+            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+            '                                                                <tbody>' +
+            '                                                                    <tr>' +
+            '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+            '                                                                    </tr>' +
+            '                                                                </tbody>' +
+            '                                                            </table>' +
+            '                                                        </td>' +
+            '                                                    </tr>' +
+            '                                                </tbody>' +
+            '                                            </table>' +
+            '                                        </td>' +
+            '                                    </tr>' +
+            '                                </table>' +
+            '                            </td>' +
+            '                        </tr>' +
+            '                    </table>' +
+            '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+            '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+            '                            <tr>' +
+            '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+            '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
+            '                                    <br>' +
+            '                                    <a href="mailto:' + mailFrom + '" style="color: #999999; font-size: 12px; text-align: center;">Contact Us</a>' +
+            '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+            '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+            '                                </td>' +
+            '                            </tr>' +
+            '                        </table>' +
+            '                    </div>' +
+            '                </div>' +
+            '            </td>' +
+            '        </tr>' +
+            '    </table>';
+
+        return {
+            mailFromName,
+            mailFrom,
+            checkEmailData,
+            mailSubject,
+            htmlmailBody,
+            attachment
+        }
     }
 });
 
@@ -8056,31 +8409,7 @@ Template.new_salesorder.events({
           }
       },
         'click  #open_print_confirm':function(event)
-        {
-            playPrintAudio();
-            setTimeout(async function(){
-            if($('#choosetemplate').is(':checked'))
-            {
-                $('#templateselection').modal('show');
-            }
-            else
-            {
-                LoadingOverlay.show();
-                // $('#html-2-pdfwrapper').css('display', 'block');
-                let result = await exportSalesToPdf(template_list[0], 1);
-                // if ($('.edtCustomerEmail').val() != "") {
-                //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-                //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-                //     var ponumber = $('#ponumber').val() || '.';
-                //     $('.po').text(ponumber);
-                //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-                //     exportSalesToPdf1();
-                // }
-                // $('#confirmprint').modal('hide');                
-            }
-        }, delayTimeAfterSound);
-        },
+        {},
 
         'click #choosetemplate':function(event)
         {
@@ -8974,6 +9303,8 @@ Template.new_salesorder.events({
                             "targets": [7]
                         }
                     ],
+                    select: true,
+                    destroy: true,
                     colReorder: true,
                     pageLength: initialDatatableLoad,
                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
@@ -9132,8 +9463,8 @@ Template.new_salesorder.events({
         setTimeout(async function(){
           var printTemplate = [];
           LoadingOverlay.show();
-          var sales_orders = $('input[name="Sales Order"]:checked').val();
-          let emid = Session.get('mySessionEmployeeLoggedID');
+          var sales_orders = $('input[name="Sales Orders"]:checked').val();
+          let emid = localStorage.getItem('mySessionEmployeeLoggedID');
           var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
           sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
@@ -9142,7 +9473,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 GlobalRef:"Sales Orders",
                                 Description:$('input[name="Sales Order_1"]').val(),
@@ -9169,7 +9500,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 Description:$('input[name="Sales Order_1"]').val(),
                                 Template:"1",
@@ -9199,7 +9530,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 GlobalRef:"Sales Orders",
                                 Description:$('input[name="Sales Order_2"]').val(),
@@ -9226,7 +9557,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 Description:$('input[name="Sales Order_2"]').val(),
                                 Template:"2",
@@ -9257,7 +9588,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 GlobalRef:"Sales Orders",
                                 Description:$('input[name="Sales Order_3"]').val(),
@@ -9284,7 +9615,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 Description:$('input[name="Sales Order_3"]').val(),
                                 Template:"3",
@@ -9314,7 +9645,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 GlobalRef:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_1"]').val(),
@@ -9341,7 +9672,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_1"]').val(),
                                 Template:"1",
@@ -9373,7 +9704,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 GlobalRef:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_2"]').val(),
@@ -9400,7 +9731,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_2"]').val(),
                                 Template:"2",
@@ -9433,7 +9764,7 @@ Template.new_salesorder.events({
             type:"TTemplateSettings",
             fields:{
                                 ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 GlobalRef:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_3"]').val(),
@@ -9463,7 +9794,7 @@ Template.new_salesorder.events({
                     objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                  EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                  EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                                   SettingName:"Delivery Docket",
                                   Description:$('input[name="Delivery Docket_3"]').val(),
                                   Template:"3",
@@ -9501,7 +9832,7 @@ Template.new_salesorder.events({
               {
                 if(printTemplate[i] == 'Sales Order')
                 {
-                    var template_number = $('input[name="Sales Order"]:checked').val();
+                    var template_number = $('input[name="Sales Orders"]:checked').val();
                 }
                 else if(printTemplate[i] == 'Delivery Docket')
                 {
@@ -9578,7 +9909,7 @@ Template.new_salesorder.events({
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
-        if(targetID != undefined) {            
+        if(targetID != undefined) {
             times++;
             if (times == 1) {
                 $('#deleteLineModal').modal('toggle');
@@ -9719,8 +10050,8 @@ Template.new_salesorder.events({
     'click .btnDeleteFollowingSOs': async function(event) {
         playDeleteAudio();
         var currentDate = new Date();
-        let salesService = new SalesBoardService();
         let templateObject = Template.instance();
+        let salesService = new SalesBoardService();
         setTimeout(async function(){
 
         swal({
@@ -9774,7 +10105,7 @@ Template.new_salesorder.events({
         let salesService = new SalesBoardService();
         setTimeout(function(){
         LoadingOverlay.show();
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -9811,7 +10142,7 @@ Template.new_salesorder.events({
         }
     }, delayTimeAfterSound);
     },
-    'click .btnDeleteSO': function(event) {
+    "click .btnDeleteSO": function(event) {
         playDeleteAudio();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
@@ -9853,7 +10184,6 @@ Template.new_salesorder.events({
             FlowRouter.go('/salesorderslist?success=true');
         }
         $('#deleteLineModal').modal('toggle');
-        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
@@ -10242,7 +10572,7 @@ Template.new_salesorder.events({
 
 
             function saveFunc() {
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 var customerID = $('#edtCustomerEmail').attr('customerid');
                 let currencyname = (CountryAbbr).toLowerCase();
@@ -10276,7 +10606,7 @@ Template.new_salesorder.events({
                     let erpInvoiceId = objDetails.fields.ID;
 
 
-                    let mailFromName = Session.get('vs1companyName');
+                    let mailFromName = localStorage.getItem('vs1companyName');
                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                     let customerEmailName = $('#edtCustomerName').val();
                     let checkEmailData = $('#edtCustomerEmail').val();
@@ -10546,9 +10876,9 @@ Template.new_salesorder.events({
                         }, function(error, result) {
                             if (error && error.error === "error") {
                                 if(FlowRouter.current().queryParams.trans){
-                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                                 }else{
-                                FlowRouter.go('/salesorderslist?success=true');
+                                    FlowRouter.go('/salesorderslist?success=true');
                                 };
                             } else {
                                 $('#html-2-pdfwrapper').css('display', 'none');
@@ -10559,6 +10889,13 @@ Template.new_salesorder.events({
                                     showCancelButton: false,
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
+
+                                    if (localStorage.getItem("enteredURL") != null) {
+                                        FlowRouter.go(localStorage.getItem("enteredURL"));
+                                        localStorage.removeItem("enteredURL");
+                                        return;
+                                    }
+
                                     if (result.value) {
                                         if(FlowRouter.current().queryParams.trans){
                                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
@@ -10579,7 +10916,7 @@ Template.new_salesorder.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')☻
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -10642,7 +10979,7 @@ Template.new_salesorder.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -10708,7 +11045,7 @@ Template.new_salesorder.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -10741,7 +11078,7 @@ Template.new_salesorder.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -10828,8 +11165,8 @@ Template.new_salesorder.events({
                     // });
                 };
                 var getcurrentCloudDetails = CloudUser.findOne({
-                    _id: Session.get('mycloudLogonID'),
-                    clouddatabaseID: Session.get('mycloudLogonDBID')
+                    _id: localStorage.getItem('mycloudLogonID'),
+                    clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                 });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
@@ -11110,9 +11447,22 @@ Template.new_salesorder.events({
       $('.colSerialNo').removeClass('showColumn');
     }
   },
+  "click .chkFixedAsset": function(event) {
+    if ($(event.target).is(':checked')) {
+        $('.colFixedAsset').addClass('showColumn');
+        $('.colFixedAsset').removeClass('hiddenColumn');
+    } else {
+        $('.colFixedAsset').addClass('hiddenColumn');
+        $('.colFixedAsset').removeClass('showColumn');
+    } 
+  },
   // display settings
 
-
+  'change .rngRangeFixedAsset': function(event) {
+    let range = $(event.target).val();
+    $(".spWidthFixedAsset").html(range);
+    $('.colFixedAsset').css('width', range);
+  },
   'change .rngRangeProductName': function(event) {
     let range = $(event.target).val();
     $(".spWidthProductName").html(range);
@@ -11186,120 +11536,11 @@ Template.new_salesorder.events({
         // $("" + columHeaderUpdate + "").html(columData);
     },
 
-    // custom field displaysettings
-    'click .btnSaveGridSettings': async function(event) {
-        playSaveAudio();
-        let templateObject = Template.instance();
-        setTimeout(async function(){
-      let lineItems = [];
-      $(".fullScreenSpin").css("display", "inline-block");
-
-      $(".displaySettings").each(function (index) {
-        var $tblrow = $(this);
-        var fieldID = $tblrow.attr("custid") || 0;
-        var colTitle = $tblrow.find(".divcolumn").text() || "";
-        var colWidth = $tblrow.find(".custom-range").val() || 0;
-        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-        var colHidden = false;
-        if ($tblrow.find(".custom-control-input").is(":checked")) {
-          colHidden = true;
-        } else {
-          colHidden = false;
-        }
-        let lineItemObj = {
-          index: parseInt(fieldID),
-          label: colTitle,
-          active: colHidden,
-          width: parseInt(colWidth),
-          class: colthClass,
-          display: true
-        };
-
-        lineItems.push(lineItemObj);
-      });
-
-
-      let reset_data = templateObject.reset_data.get();
-      reset_data = reset_data.filter(redata => redata.display == false);
-      lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index);
-
-      try {
-        let erpGet = erpDb();
-        let tableName = "tblSalesOrderLine";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-        $(".fullScreenSpin").css("display", "none");
-        if(added) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-              addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-          });
-          swal({
-            title: 'SUCCESS',
-            text: "Display settings is updated!",
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'OK'
-          }).then((result) => {
-              if (result.value) {
-                 $('#myModal2').modal('hide');
-              }
-          });
-        } else {
-          swal("Something went wrong!", "", "error");
-        }
-      } catch (error) {
-        $(".fullScreenSpin").css("display", "none");
-        swal("Something went wrong!", "", "error");
-      }
-    }, delayTimeAfterSound);
-    },
-
-    // custom field displaysettings
-    'click .btnResetGridSettings': function(event) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      if(isBatchSerialNoTracking) {
-        reset_data[11].display = true;
-      } else {
-        reset_data[11].display = false;
-      }
-      reset_data = reset_data.filter(redata => redata.display);
-
-      $(".displaySettings").each(function (index) {
-        let $tblrow = $(this);
-        $tblrow.find(".divcolumn").text(reset_data[index].label);
-        $tblrow
-          .find(".custom-control-input")
-          .prop("checked", reset_data[index].active);
-
-        let title = $("#tblSalesOrderLine").find("th").eq(index);
-        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
-        } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
-          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
-        } else {
-          $(title).html(reset_data[index].label);
-        }
-
-
-        if (reset_data[index].active) {
-          $('.col' + reset_data[index].class).addClass('showColumn');
-          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
-        } else {
-          $('.col' + reset_data[index].class).addClass('hiddenColumn');
-          $('.col' + reset_data[index].class).removeClass('showColumn');
-        }
-        $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
-        $(".col" + reset_data[index].class).css('width', reset_data[index].width);
-      });
-    },
 
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -11476,7 +11717,7 @@ Template.new_salesorder.events({
                     lineItems.push(lineItemObj);
                 });
                 var erpGet = erpDb();
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let customerEmail = $('#edtCustomerEmail').val();
                 let currencyname = (CountryAbbr).toLowerCase();
@@ -11643,7 +11884,7 @@ Template.new_salesorder.events({
 
                     setTimeout(function() {
                         salesService.saveSalesOrderEx(objDetails).then(function(objDetails) {
-                            let company = Session.get('vs1companyName');
+                            let company = localStorage.getItem('vs1companyName');
                             let vs1User = localStorage.getItem('mySession');
                             var customerID = $('#edtCustomerEmail').attr('customerid');
                             let currencyname = (CountryAbbr).toLowerCase();
@@ -11680,7 +11921,7 @@ Template.new_salesorder.events({
                                     let erpInvoiceId = objDetails.fields.ID;
 
 
-                                    let mailFromName = Session.get('vs1companyName');
+                                    let mailFromName = localStorage.getItem('vs1companyName');
                                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                                     let customerEmailName = $('#edtCustomerName').val();
                                     let checkEmailData = $('#edtCustomerEmail').val();
@@ -12065,8 +12306,8 @@ Template.new_salesorder.events({
                                 // });
                             };
                             var getcurrentCloudDetails = CloudUser.findOne({
-                                _id: Session.get('mycloudLogonID'),
-                                clouddatabaseID: Session.get('mycloudLogonDBID')
+                                _id: localStorage.getItem('mycloudLogonID'),
+                                clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                             });
                             if (getcurrentCloudDetails) {
                                 if (getcurrentCloudDetails._id.length > 0) {
@@ -12357,8 +12598,8 @@ Template.new_salesorder.events({
                 let linesave = objDetails.fields.ID;
 
                 var getcurrentCloudDetails = CloudUser.findOne({
-                    _id: Session.get('mycloudLogonID'),
-                    clouddatabaseID: Session.get('mycloudLogonDBID')
+                    _id: localStorage.getItem('mycloudLogonID'),
+                    clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                 });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
@@ -12466,94 +12707,94 @@ Template.new_salesorder.events({
         setTimeout(async function(){
             $("#basedOnFrequency").prop('checked', true);
             $('#edtFrequencyDetail').css('display', 'flex');
-            $(".ofMonthList input[type=checkbox]").each(function() {
-                $(this).prop('checked', false);
-            });
-            $(".selectDays input[type=checkbox]").each(function (){
-                $(this).prop('checked', false);
-            });
-            var url = FlowRouter.current().path;
-            var getso_id = url.split("?id=");
-            var currentInvoice = getso_id[getso_id.length - 1];
-            if (getso_id[1]) {
-                currentInvoice = parseInt(currentInvoice);
-                var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
-                var selectedType = soData.fields.SaleTypeOfBasedOn;
-                var frequencyVal = soData.fields.SaleFrequenctyValues;
-                var startDate = soData.fields.CopyStartDate;
-                var finishDate = soData.fields.CopyFinishDate;
-                var subStartDate = startDate.substring(0, 10);
-                var subFinishDate = finishDate.substring(0, 10);
-                var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
-                var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
-                var arrFrequencyVal = frequencyVal.split("@");
-                var radioFrequency = arrFrequencyVal[0];
-                $("#" + radioFrequency).prop('checked', true);
-                if (radioFrequency == "frequencyMonthly") {
-                document.getElementById("monthlySettings").style.display = "block";
-                document.getElementById("weeklySettings").style.display = "none";
-                document.getElementById("dailySettings").style.display = "none";
-                document.getElementById("oneTimeOnlySettings").style.display = "none";
-                var monthDate = arrFrequencyVal[1];
-                $("#sltDay").val('day' + monthDate);
-                var arrOfMonths = [];
-                if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
-                    arrOfMonths = ofMonths.split(",");
-                var arrOfMonths = ofMonths.split(",");
-                for (i=0; i<arrOfMonths.length; i++) {
-                    $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
-                }
-                $('#edtMonthlyStartDate').val(convertedStartDate);
-                $('#edtMonthlyFinishDate').val(convertedFinishDate);
-                } else if (radioFrequency == "frequencyWeekly") {
-                document.getElementById("weeklySettings").style.display = "block";
-                document.getElementById("monthlySettings").style.display = "none";
-                document.getElementById("dailySettings").style.display = "none";
-                document.getElementById("oneTimeOnlySettings").style.display = "none";
-                var everyWeeks = arrFrequencyVal[1];
-                $("#weeklyEveryXWeeks").val(everyWeeks);
-                var selectDays = arrFrequencyVal[2];
-                var arrSelectDays = selectDays.split(",");
-                for (i=0; i<arrSelectDays.length; i++) {
-                    if (parseInt(arrSelectDays[i]) == 0)
-                    $("#formCheck-sunday").prop('checked', true);
-                    if (parseInt(arrSelectDays[i]) == 1)
-                    $("#formCheck-monday").prop('checked', true);
-                    if (parseInt(arrSelectDays[i]) == 2)
-                    $("#formCheck-tuesday").prop('checked', true);
-                    if (parseInt(arrSelectDays[i]) == 3)
-                    $("#formCheck-wednesday").prop('checked', true);
-                    if (parseInt(arrSelectDays[i]) == 4)
-                    $("#formCheck-thursday").prop('checked', true);
-                    if (parseInt(arrSelectDays[i]) == 5)
-                    $("#formCheck-friday").prop('checked', true);
-                    if (parseInt(arrSelectDays[i]) == 6)
-                    $("#formCheck-saturday").prop('checked', true);
-                }
-                $('#edtWeeklyStartDate').val(convertedStartDate);
-                $('#edtWeeklyFinishDate').val(convertedFinishDate);
-                } else if (radioFrequency == "frequencyDaily") {
-                document.getElementById("dailySettings").style.display = "block";
-                document.getElementById("monthlySettings").style.display = "none";
-                document.getElementById("weeklySettings").style.display = "none";
-                document.getElementById("oneTimeOnlySettings").style.display = "none";
-                var dailyRadioOption = arrFrequencyVal[1];
-                $("#" + dailyRadioOption).prop('checked', true);
-                var everyDays = arrFrequencyVal[2];
-                $("#dailyEveryXDays").val(everyDays);
-                $('#edtDailyStartDate').val(convertedStartDate);
-                $('#edtDailyFinishDate').val(convertedFinishDate);
-                } else if (radioFrequency == "frequencyOnetimeonly") {
-                document.getElementById("oneTimeOnlySettings").style.display = "block";
-                document.getElementById("monthlySettings").style.display = "none";
-                document.getElementById("weeklySettings").style.display = "none";
-                document.getElementById("dailySettings").style.display = "none";
-                $('#edtOneTimeOnlyDate').val(convertedStartDate);
-                $('#edtOneTimeOnlyTimeError').css('display', 'none');
-                $('#edtOneTimeOnlyDateError').css('display', 'none');
-                }
+          $(".ofMonthList input[type=checkbox]").each(function() {
+            $(this).prop('checked', false);
+          });
+          $(".selectDays input[type=checkbox]").each(function (){
+            $(this).prop('checked', false);
+          });
+          var url = FlowRouter.current().path;
+          var getso_id = url.split("?id=");
+          var currentInvoice = getso_id[getso_id.length - 1];
+          if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
+            var selectedType = soData.fields.SaleCustField7;
+            var frequencyVal = soData.fields.SaleCustField8;
+            var startDate = soData.fields.SaleCustField9;
+            var finishDate = soData.fields.SaleCustField10;
+            var subStartDate = startDate.substring(0, 10);
+            var subFinishDate = finishDate.substring(0, 10);
+            var convertedStartDate = subStartDate ? subStartDate.split('-')[2] + '/' + subStartDate.split('-')[1] + '/' + subStartDate.split('-')[0] : '';
+            var convertedFinishDate = subFinishDate ? subFinishDate.split('-')[2] + '/' + subFinishDate.split('-')[1] + '/' + subFinishDate.split('-')[0] : '';
+            var arrFrequencyVal = frequencyVal.split("@");
+            var radioFrequency = arrFrequencyVal[0];
+            $("#" + radioFrequency).prop('checked', true);
+            if (radioFrequency == "frequencyMonthly") {
+              document.getElementById("monthlySettings").style.display = "block";
+              document.getElementById("weeklySettings").style.display = "none";
+              document.getElementById("dailySettings").style.display = "none";
+              document.getElementById("oneTimeOnlySettings").style.display = "none";
+              var monthDate = arrFrequencyVal[1];
+              $("#sltDay").val('day' + monthDate);
+              var arrOfMonths = [];
+              if (ofMonths != "" && ofMonths != undefined && ofMonths != null)
+                arrOfMonths = ofMonths.split(",");
+              var arrOfMonths = ofMonths.split(",");
+              for (i=0; i<arrOfMonths.length; i++) {
+                $("#formCheck-" + arrOfMonths[i]).prop('checked', true);
+              }
+              $('#edtMonthlyStartDate').val(convertedStartDate);
+              $('#edtMonthlyFinishDate').val(convertedFinishDate);
+            } else if (radioFrequency == "frequencyWeekly") {
+              document.getElementById("weeklySettings").style.display = "block";
+              document.getElementById("monthlySettings").style.display = "none";
+              document.getElementById("dailySettings").style.display = "none";
+              document.getElementById("oneTimeOnlySettings").style.display = "none";
+              var everyWeeks = arrFrequencyVal[1];
+              $("#weeklyEveryXWeeks").val(everyWeeks);
+              var selectDays = arrFrequencyVal[2];
+              var arrSelectDays = selectDays.split(",");
+              for (i=0; i<arrSelectDays.length; i++) {
+                if (parseInt(arrSelectDays[i]) == 0)
+                  $("#formCheck-sunday").prop('checked', true);
+                if (parseInt(arrSelectDays[i]) == 1)
+                  $("#formCheck-monday").prop('checked', true);
+                if (parseInt(arrSelectDays[i]) == 2)
+                  $("#formCheck-tuesday").prop('checked', true);
+                if (parseInt(arrSelectDays[i]) == 3)
+                  $("#formCheck-wednesday").prop('checked', true);
+                if (parseInt(arrSelectDays[i]) == 4)
+                  $("#formCheck-thursday").prop('checked', true);
+                if (parseInt(arrSelectDays[i]) == 5)
+                  $("#formCheck-friday").prop('checked', true);
+                if (parseInt(arrSelectDays[i]) == 6)
+                  $("#formCheck-saturday").prop('checked', true);
+              }
+              $('#edtWeeklyStartDate').val(convertedStartDate);
+              $('#edtWeeklyFinishDate').val(convertedFinishDate);
+            } else if (radioFrequency == "frequencyDaily") {
+              document.getElementById("dailySettings").style.display = "block";
+              document.getElementById("monthlySettings").style.display = "none";
+              document.getElementById("weeklySettings").style.display = "none";
+              document.getElementById("oneTimeOnlySettings").style.display = "none";
+              var dailyRadioOption = arrFrequencyVal[1];
+              $("#" + dailyRadioOption).prop('checked', true);
+              var everyDays = arrFrequencyVal[2];
+              $("#dailyEveryXDays").val(everyDays);
+              $('#edtDailyStartDate').val(convertedStartDate);
+              $('#edtDailyFinishDate').val(convertedFinishDate);
+            } else if (radioFrequency == "frequencyOnetimeonly") {
+              document.getElementById("oneTimeOnlySettings").style.display = "block";
+              document.getElementById("monthlySettings").style.display = "none";
+              document.getElementById("weeklySettings").style.display = "none";
+              document.getElementById("dailySettings").style.display = "none";
+              $('#edtOneTimeOnlyDate').val(convertedStartDate);
+              $('#edtOneTimeOnlyTimeError').css('display', 'none');
+              $('#edtOneTimeOnlyDateError').css('display', 'none');
             }
-            $("#copyFrequencyModal").modal("toggle");
+          }
+          $("#copyFrequencyModal").modal("toggle");
         }, delayTimeAfterSound);
         //Commented Original Code
     //         let uploadedItems = templateObject.uploadedFiles.get();
@@ -12782,7 +13023,7 @@ Template.new_salesorder.events({
         let basedOnTypeAttr = 'F,';
         var erpGet = erpDb();
         let sDate2 = '';
-        let fDate2 = '';        
+        let fDate2 = '';
         setTimeout(async function(){
         //   basedOnTypes.each(function () {
         //     if ($(this).prop('checked')) {
@@ -12849,7 +13090,7 @@ Template.new_salesorder.events({
           sDate = convertedStartDate ? moment(convertedStartDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           fDate = convertedFinishDate ? moment(convertedFinishDate + ' ' + copyStartTime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
           sDate2 = convertedStartDate ? moment(convertedStartDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
-          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");    
+          fDate2 = convertedFinishDate ? moment(convertedFinishDate).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
           $(".fullScreenSpin").css("display", "inline-block");
           var url = FlowRouter.current().path;
           if (
@@ -12861,17 +13102,17 @@ Template.new_salesorder.events({
             var currentInvoice = getso_id[getso_id.length - 1];
             if (getso_id[1]) {
               currentInvoice = parseInt(currentInvoice);
-            //   objDetails = {
-            //     type: "TSalesOrderEx",
-            //     fields: {
-            //       ID: currentInvoice,
-            //       SaleTypeOfBasedOn: selectedType,
-            //       SaleFrequenctyValues: frequencyVal,
-            //       CopyStartDate: sDate2,
-            //       CopyFinishDate: fDate2,
-            //     }
-            //   };
-            //   var result = await salesService.saveSalesOrderEx(objDetails);
+              objDetails = {
+                type: "TSalesOrderEx",
+                fields: {
+                  ID: currentInvoice,
+                  SaleCustField7: selectedType,
+                  SaleCustField8: frequencyVal,
+                  SaleCustField9: sDate,
+                  SaleCustField10: fDate,
+                }
+              };
+              var result = await salesService.saveSalesOrderEx(objDetails);
               let period = ""; // 0
               let days = [];
               let i = 0;
@@ -12902,7 +13143,7 @@ Template.new_salesorder.events({
                           }
                       }
                       if (dailyRadioOption == "dailyEvery") {
-              
+
                       }
                   } else {
                       repeatDates.push({
@@ -12941,29 +13182,29 @@ Template.new_salesorder.events({
               }
               if (days.length > 0) {
                   for (let x = 0; x < days.length; x++) {
-                    let dayObj = {
-                        Name: "VS1_RepeatTrans",
-                        Params: {
-                            CloudUserName: erpGet.ERPUsername,
-                            CloudPassword: erpGet.ERPPassword,
-                            TransID: currentInvoice,
-                            TransType: "SalesOrder",
-                            Repeat_Frequency: frequency2,
-                            Repeat_Period: period,
-                            Repeat_BaseDate: sDate2,
-                            Repeat_finalDateDate: fDate2,
-                            Repeat_Saturday: weekdayObj.saturday,
-                            Repeat_Sunday: weekdayObj.sunday,
-                            Repeat_Monday: weekdayObj.monday,
-                            Repeat_Tuesday: weekdayObj.tuesday,
-                            Repeat_Wednesday: weekdayObj.wednesday,
-                            Repeat_Thursday: weekdayObj.thursday,
-                            Repeat_Friday: weekdayObj.friday,
-                            Repeat_Holiday: 0,
-                            Repeat_Weekday: parseInt(days[x].toString()),
-                            Repeat_MonthOffset: 0,
-                        },
-                    };
+                      let dayObj = {
+                          Name: "VS1_RepeatTrans",
+                          Params: {
+                              CloudUserName: erpGet.ERPUsername,
+                              CloudPassword: erpGet.ERPPassword,
+                              TransID: currentInvoice,
+                              TransType: "Cheque",
+                              Repeat_Frequency: frequency2,
+                              Repeat_Period: period,
+                              Repeat_BaseDate: sDate2,
+                              Repeat_finalDateDate: fDate2,
+                              Repeat_Saturday: weekdayObj.saturday,
+                              Repeat_Sunday: weekdayObj.sunday,
+                              Repeat_Monday: weekdayObj.monday,
+                              Repeat_Tuesday: weekdayObj.tuesday,
+                              Repeat_Wednesday: weekdayObj.wednesday,
+                              Repeat_Thursday: weekdayObj.thursday,
+                              Repeat_Friday: weekdayObj.friday,
+                              Repeat_Holiday: 0,
+                              Repeat_Weekday: parseInt(days[x].toString()),
+                              Repeat_MonthOffset: 0,
+                          },
+                      };
                       var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
                       var oPost = new XMLHttpRequest();
                       oPost.open(
@@ -12983,17 +13224,17 @@ Template.new_salesorder.events({
                       oPost.setRequestHeader("Accept", "application/html");
                       oPost.setRequestHeader("Content-type", "application/json");
                       oPost.send(myString);
-              
+
                       oPost.onreadystatechange = function() {
                           if (oPost.readyState == 4 && oPost.status == 200) {
                               var myArrResponse = JSON.parse(oPost.responseText);
                               var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                           } else if (oPost.readyState == 4 && oPost.status == 403) {
-                              
+
                           } else if (oPost.readyState == 4 && oPost.status == 406) {
-                              
+
                           } else if (oPost.readyState == "") {
-                              
+
                           }
                           $(".fullScreenSpin").css("display", "none");
                       };
@@ -13001,54 +13242,54 @@ Template.new_salesorder.events({
               } else {
                   let dayObj = {};
                   if (radioFrequency == "frequencyOnetimeonly" || radioFrequency == "frequencyMonthly") {
-                    dayObj = {
-                        Name: "VS1_RepeatTrans",
-                        Params: {
-                            CloudUserName: erpGet.ERPUsername,
-                            CloudPassword: erpGet.ERPPassword,
-                            TransID: currentInvoice,
-                            TransType: "SalesOrder",
-                            Repeat_Dates: repeatDates,
-                            Repeat_Frequency: frequency2,
-                            Repeat_Period: period,
-                            Repeat_BaseDate: sDate2,
-                            Repeat_finalDateDate: fDate2,
-                            Repeat_Saturday: weekdayObj.saturday,
-                            Repeat_Sunday: weekdayObj.sunday,
-                            Repeat_Monday: weekdayObj.monday,
-                            Repeat_Tuesday: weekdayObj.tuesday,
-                            Repeat_Wednesday: weekdayObj.wednesday,
-                            Repeat_Thursday: weekdayObj.thursday,
-                            Repeat_Friday: weekdayObj.friday,
-                            Repeat_Holiday: 0,
-                            Repeat_Weekday: 0,
-                            Repeat_MonthOffset: 0,
-                        },
-                    };
+                      dayObj = {
+                          Name: "VS1_RepeatTrans",
+                          Params: {
+                              CloudUserName: erpGet.ERPUsername,
+                              CloudPassword: erpGet.ERPPassword,
+                              TransID: currentInvoice,
+                              TransType: "Cheque",
+                              Repeat_Dates: repeatDates,
+                              Repeat_Frequency: frequency2,
+                              Repeat_Period: period,
+                              Repeat_BaseDate: sDate2,
+                              Repeat_finalDateDate: fDate2,
+                              Repeat_Saturday: weekdayObj.saturday,
+                              Repeat_Sunday: weekdayObj.sunday,
+                              Repeat_Monday: weekdayObj.monday,
+                              Repeat_Tuesday: weekdayObj.tuesday,
+                              Repeat_Wednesday: weekdayObj.wednesday,
+                              Repeat_Thursday: weekdayObj.thursday,
+                              Repeat_Friday: weekdayObj.friday,
+                              Repeat_Holiday: 0,
+                              Repeat_Weekday: 0,
+                              Repeat_MonthOffset: 0,
+                          },
+                      };
                   } else {
-                    dayObj = {
-                        Name: "VS1_RepeatTrans",
-                        Params: {
-                            CloudUserName: erpGet.ERPUsername,
-                            CloudPassword: erpGet.ERPPassword,
-                            TransID: currentInvoice,
-                            TransType: "SalesOrder",
-                            Repeat_Frequency: frequency2,
-                            Repeat_Period: period,
-                            Repeat_BaseDate: sDate2,
-                            Repeat_finalDateDate: fDate2,
-                            Repeat_Saturday: weekdayObj.saturday,
-                            Repeat_Sunday: weekdayObj.sunday,
-                            Repeat_Monday: weekdayObj.monday,
-                            Repeat_Tuesday: weekdayObj.tuesday,
-                            Repeat_Wednesday: weekdayObj.wednesday,
-                            Repeat_Thursday: weekdayObj.thursday,
-                            Repeat_Friday: weekdayObj.friday,
-                            Repeat_Holiday: 0,
-                            Repeat_Weekday: 0,
-                            Repeat_MonthOffset: 0,
-                        },
-                    };
+                      dayObj = {
+                          Name: "VS1_RepeatTrans",
+                          Params: {
+                              CloudUserName: erpGet.ERPUsername,
+                              CloudPassword: erpGet.ERPPassword,
+                              TransID: currentInvoice,
+                              TransType: "Cheque",
+                              Repeat_Frequency: frequency2,
+                              Repeat_Period: period,
+                              Repeat_BaseDate: sDate2,
+                              Repeat_finalDateDate: fDate2,
+                              Repeat_Saturday: weekdayObj.saturday,
+                              Repeat_Sunday: weekdayObj.sunday,
+                              Repeat_Monday: weekdayObj.monday,
+                              Repeat_Tuesday: weekdayObj.tuesday,
+                              Repeat_Wednesday: weekdayObj.wednesday,
+                              Repeat_Thursday: weekdayObj.thursday,
+                              Repeat_Friday: weekdayObj.friday,
+                              Repeat_Holiday: 0,
+                              Repeat_Weekday: 0,
+                              Repeat_MonthOffset: 0,
+                          },
+                      };
                   }
                   var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
                   var oPost = new XMLHttpRequest();
@@ -13070,21 +13311,21 @@ Template.new_salesorder.events({
                   oPost.setRequestHeader("Content-type", "application/json");
                   // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
                   oPost.send(myString);
-              
+
                   oPost.onreadystatechange = function() {
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         var success = myArrResponse.ProcessLog.ResponseStatus.includes("OK");
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        
+
                     } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        
+
                     } else if (oPost.readyState == "") {
-                        
+
                     }
                     $(".fullScreenSpin").css("display", "none");
                 };
-              }              
+              }
             }
           } else {
             window.open("/invoicecard", "_self");

@@ -22,11 +22,58 @@ Template.stockquantitybylocation.onCreated(() => {
   templateObject.reportOptions = new ReactiveVar();
   FxGlobalFunctions.initVars(templateObject);
   templateObject.records = new ReactiveVar([]);
+  templateObject.stockquantitybylocationth = new ReactiveVar([]);
 });
 
 Template.stockquantitybylocation.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
+
+  let reset_data = [
+    { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
+    { index: 2, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "" },
+    { index: 3, label: 'Parts Description', class: 'colDescription', active: true, display: true, width: "" },
+    { index: 4, label: 'UOM', class: 'colUOM', active: true, display: true, width: "" },
+    { index: 5, label: 'Manufacture', class: 'colManufacture', active: true, display: true, width: "" },
+    { index: 6, label: 'Products Type', class: 'colProductsType', active: true, display: true, width: "" },
+    { index: 7, label: 'Products Dept', class: 'colProductsDept', active: true, display: true, width: "" },
+    { index: 8, label: 'Batch No', class: 'colBatchNo', active: true, display: true, width: "" },
+    { index: 9, label: 'Expiry Date', class: 'colExpiryDate', active: true, display: true, width: "" },
+    { index: 10, label: 'Location', class: 'colLocation', active: true, display: true, width: "" },
+    { index: 11, label: 'No', class: 'colNo', active: false, display: true, width: "" },
+    { index: 11, label: 'Serial~No', class: 'colSerialNo', active: false, display: true, width: "" },
+    { index: 12, label: 'Cost', class: 'colCost', active: false, display: true, width: "" },
+    { index: 13, label: 'Value', class: 'colValue', active: false, display: true, width: "" },
+    { index: 14, label: 'Sales Order', class: 'colSalesOrder', active: false, display: true, width: "" },
+    { index: 15, label: 'In-Stock', class: 'colInStock', active: false, display: true, width: "" },
+    { index: 16, label: 'If read as UOM', class: 'colIfreadasUOM', active: false, display: true, width: "" },
+    { index: 17, label: 'Multiplier', class: 'colMultiplier', active: false, display: true, width: "" },
+    { index: 18, label: 'If read as Units', class: 'colIfreadasUnits1', active: false, display: true, width: "" },
+    { index: 19, label: 'If read as Units', class: 'colIfreadasUnits2', active: false, display: true, width: "" },
+    { index: 20, label: 'Multiplier', class: 'colMultiplier', active: false, display: true, width: "" },
+    { index: 21, label: 'If read as UOM', class: 'colIfreadasUOM2', active: true, display: true, width: "" },
+    { index: 22, label: 'In-Stock', class: 'colIn-stock', active: false, display: true, width: "" },
+    { index: 23, label: 'Sales Order', class: 'colSalesOrder', active: false, display: true, width: "" },
+    { index: 24, label: 'Available', class: 'colAvailable', active: false, display: true, width: "" },
+    { index: 25, label: 'UOMMultiplier', class: 'colUOMMultiplier', active: false, display: true, width: "" },
+    { index: 26, label: 'Unit Volume', class: 'colUnitVolume', active: false, display: true, width: "" },
+    { index: 27, label: 'Volume~ Available Qty', class: 'colVolumeAvailableQty', active: false, display: true, width: "" },
+    { index: 28, label: 'Volume~ Instock Qty', class: 'colVolumeINstockQty', active: false, display: true, width: "" },
+    { index: 29, label: 'Part Type', class: 'colPartType', active: false, display: true, width: "" },
+    { index: 30, label: 'Truck Load No', class: 'colTruckLoadNo', active: false, display: true, width: "" },
+    { index: 31, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "" },
+    { index: 32, label: 'SOQty', class: 'colSQQty', active: false, display: true, width: "" },
+    { index: 33, label: 'Instock Qty', class: 'colInstockQty2', active: false, display: true, width: "" },
+    { index: 34, label: 'Allocated UOMQty', class: 'colAllocatedUOMQty', active: false, display: true, width: "" },
+    { index: 35, label: 'Allocated SOUOMQty', class: 'colAllocatedSOUOMQty', active: false, display: true, width: "" },
+    { index: 36, label: 'Allocated In Stock UOMQty', class: 'colAllocatedInStockUOMQty', active: false, display: true, width: "" },
+    { index: 37, label: 'Bin', class: 'colBin', active: false, display: true, width: "" },
+    { index: 39, label: 'Batch', class: 'colBatch', acticve: false, display: true, width: "" },
+    { index: 39, label: 'SN', class: 'colSn', acticve: false, display: true, width: "" },
+    { index: 40, label: 'Preferred Supplier', class: 'colPreferredsupplier', active: false, display: true, width: "" },
+    { index: 41, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "" },
+  ]
+  templateObject.stockquantitybylocationth.set(reset_data);
 
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
@@ -83,12 +130,12 @@ Template.stockquantitybylocation.onRendered(() => {
     // //--------- END OF DATE ---------------//
   };
 
-  templateObject.setDateAs = ( dateFrom = null ) => {
-    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  templateObject.setDateAs = (dateFrom = null) => {
+    templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
   };
 
 
-  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function (ignoreDate = false, formatDateFrom = new Date(), formatDateTo = new Date()) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.fromDate = formatDateFrom;
@@ -104,7 +151,7 @@ Template.stockquantitybylocation.onRendered(() => {
     let begunDate = moment(formatDateTo).format("DD/MM/YYYY");
     templateObject.dateAsAt.set(begunDate);
     $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
+    if (ignoreDate == true) {
       $('.edtReportDates').attr('disabled', true);
       templateObject.dateAsAt.set("Current Date");
     }
@@ -117,7 +164,7 @@ Template.stockquantitybylocation.onRendered(() => {
 
   templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate) => {
     LoadingOverlay.show();
-    templateObject.setDateAs( dateFrom );
+    templateObject.setDateAs(dateFrom);
     // let data = [];
     // if (!localStorage.getItem('VS1StockQuantityLocation_Report')) {
     //   const options = await templateObject.reportOptions.get();
@@ -133,11 +180,11 @@ Template.stockquantitybylocation.onRendered(() => {
     // }
 
     let data = await CachedHttp.get(erpObject.TStockQuantityLocation, async () => {
-      return await reportService.getStockQuantityLocationReport( dateFrom, dateTo, ignoreDate);
+      return await reportService.getStockQuantityLocationReport(dateFrom, dateTo, ignoreDate);
     }, {
       useIndexDb: true,
       useLocalStorage: false,
-      validate : (cachedResponse) => {
+      validate: (cachedResponse) => {
         return false;
       }
     });
@@ -147,25 +194,25 @@ Template.stockquantitybylocation.onRendered(() => {
 
 
     let reportData = [];
-    if( data.tstockquantitylocation.length > 0 ){
-      for (const item of data.tstockquantitylocation ) {   
+    if (data.tstockquantitylocation.length > 0) {
+      for (const item of data.tstockquantitylocation) {
         let isExist = reportData.filter((subitem) => {
-          if( subitem.DepartmentID == item.DepartmentID ){
-              subitem.SubAccounts.push(item)
-              return subitem
+          if (subitem.DepartmentID == item.DepartmentID) {
+            subitem.SubAccounts.push(item)
+            return subitem
           }
         });
 
-        if( isExist.length == 0 ){
+        if (isExist.length == 0) {
           reportData.push({
-              TotalCost: 0,
-              TotalValue: 0,
-              SubAccounts: [item],
-              ...item
+            TotalCost: 0,
+            TotalValue: 0,
+            SubAccounts: [item],
+            ...item
           });
         }
         $(".fullScreenSpin").css("display", "none");
-      }       
+      }
     }
     let useData = reportData.filter((item) => {
       let TotalCost = 0;
@@ -177,12 +224,12 @@ Template.stockquantitybylocation.onRendered(() => {
       item.TotalCost = TotalCost;
       item.TotalValue = TotalValue;
       return item;
-    });    
+    });
     templateObject.records.set(useData);
     if (templateObject.records.get()) {
       setTimeout(function () {
         $("td a").each(function () {
-          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+          if ($(this).text().indexOf("-" + Currency) >= 0) {
             $(this).addClass("text-danger");
             $(this).removeClass("fgrblue");
           }
@@ -195,7 +242,7 @@ Template.stockquantitybylocation.onRendered(() => {
         });
         $(".fullScreenSpin").css("display", "none");
       }, 1000);
-    }    
+    }
 
     LoadingOverlay.hide();
   }
@@ -203,14 +250,43 @@ Template.stockquantitybylocation.onRendered(() => {
   templateObject.initDate();
 
   templateObject.loadReport(
-    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-    GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
+  templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()))
 });
 
 Template.stockquantitybylocation.events({
+  'click .chkDatatable': function (event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.' + columnDataValue).addClass('showColumn');
+      $('.' + columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.' + columnDataValue).addClass('hiddenColumn');
+      $('.' + columnDataValue).removeClass('showColumn');
+    }
+  },
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1StockQuantityByLocation_Report", "");
@@ -245,47 +321,47 @@ Template.stockquantitybylocation.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
-    setTimeout(function(){
-    let values = [];
-    let basedOnTypeStorages = Object.keys(localStorage);
-    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-      let employeeId = storage.split("_")[2];
-      return (
-        storage.includes("BasedOnType_") &&
-        employeeId == Session.get("mySessionEmployeeLoggedID")
-      );
-    });
-    let i = basedOnTypeStorages.length;
-    if (i > 0) {
-      while (i--) {
-        values.push(localStorage.getItem(basedOnTypeStorages[i]));
-      }
-    }
-    values.forEach((value) => {
-      let reportData = JSON.parse(value);
-      reportData.HostURL = $(location).attr("protocal")
-        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-        : "http://" + $(location).attr("hostname");
-      if (reportData.BasedOnType.includes("P")) {
-        if (reportData.FormID == 1) {
-          let formIds = reportData.FormIDs.split(",");
-          if (formIds.includes("225")) {
-            reportData.FormID = 225;
-            Meteor.call("sendNormalEmail", reportData);
-          }
-        } else {
-          if (reportData.FormID == 225)
-            Meteor.call("sendNormalEmail", reportData);
+    setTimeout(function () {
+      let values = [];
+      let basedOnTypeStorages = Object.keys(localStorage);
+      basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+        let employeeId = storage.split("_")[2];
+        return (
+          storage.includes("BasedOnType_") &&
+          employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
+        );
+      });
+      let i = basedOnTypeStorages.length;
+      if (i > 0) {
+        while (i--) {
+          values.push(localStorage.getItem(basedOnTypeStorages[i]));
         }
       }
-    });
+      values.forEach((value) => {
+        let reportData = JSON.parse(value);
+        reportData.HostURL = $(location).attr("protocal")
+          ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+          : "http://" + $(location).attr("hostname");
+        if (reportData.BasedOnType.includes("P")) {
+          if (reportData.FormID == 1) {
+            let formIds = reportData.FormIDs.split(",");
+            if (formIds.includes("225")) {
+              reportData.FormID = 225;
+              Meteor.call("sendNormalEmail", reportData);
+            }
+          } else {
+            if (reportData.FormID == 225)
+              Meteor.call("sendNormalEmail", reportData);
+          }
+        }
+      });
 
-    document.title = "Stock Quantity by Location Report";
-    $(".printReport").print({
-      title: "Stock Quantity by Location Report | " + loggedCompany,
-      noPrintSelector: ".addSummaryEditor",
-    });
-  }, delayTimeAfterSound);
+      document.title = "Stock Quantity by Location Report";
+      $(".printReport").print({
+        title: "Stock Quantity by Location Report | " + loggedCompany,
+        noPrintSelector: ".addSummaryEditor",
+      });
+    }, delayTimeAfterSound);
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
@@ -466,20 +542,20 @@ Template.stockquantitybylocation.events({
   //     currentDate2.getDate();
   //   templateObject.setReportOptions(false, getDateFrom, getLoadDate);
   // },
-  "click #ignoreDate":  (e, templateObject) => {
+  "click #ignoreDate": (e, templateObject) => {
     //localStorage.setItem("VS1StockQuantityLocation_Report", "");
     // $("#dateFrom").attr("readonly", true);
     // $("#dateTo").attr("readonly", true);
     //templateObject.setReportOptions(true);
     templateObject.loadReport(
-      null, 
-      null, 
+      null,
+      null,
       true
     );
   },
 
-   // CURRENCY MODULE //
-   ...FxGlobalFunctions.getEvents(),
+  // CURRENCY MODULE //
+  ...FxGlobalFunctions.getEvents(),
   "click .currency-modal-save": (e) => {
     //$(e.currentTarget).parentsUntil(".modal").modal("hide");
     LoadingOverlay.show();
@@ -530,31 +606,34 @@ Template.stockquantitybylocation.events({
 
     LoadingOverlay.hide();
   },
-  
+
   "click [href='#noInfoFound']": function () {
     swal({
-        title: 'Information',
-        text: "No further information available on this column",
-        type: 'warning',
-        confirmButtonText: 'Ok'
-      })
+      title: 'Information',
+      text: "No further information available on this column",
+      type: 'warning',
+      confirmButtonText: 'Ok'
+    })
   },
 
 
-   /**
-   * This is the new way to handle any modification on the date fields
-   */
-    "change #dateTo, change #dateFrom": (e, templateObject) => {
-      templateObject.loadReport(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
-        false
-      );
-    },
-    ...Datehandler.getDateRangeEvents()
+  /**
+  * This is the new way to handle any modification on the date fields
+  */
+  "change #dateTo, change #dateFrom": (e, templateObject) => {
+    templateObject.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
+    );
+  },
+  ...Datehandler.getDateRangeEvents()
 });
 
 Template.stockquantitybylocation.helpers({
+  stockquantitybylocationth: () => {
+    return Template.instance().stockquantitybylocationth.get();
+  },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
@@ -563,23 +642,23 @@ Template.stockquantitybylocation.helpers({
   },
   redirectionType(item) {
     return 'productview?id=' + item.PartsId;
-    if(item.type === 'PO') {
+    if (item.type === 'PO') {
       return '#';
-      
+
     } else {
       return '#';
       return '#noInfoFound';
     }
   },
-  checkZero( value ){
-    return ( value == 0 )? '': value;
+  checkZero(value) {
+    return (value == 0) ? '' : value;
   },
-  formatDate: ( date ) => GlobalFunctions.formatDate(date),
- // FX Module //
+  formatDate: (date) => GlobalFunctions.formatDate(date),
+  // FX Module //
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    if(isNaN(amount)) {
+    if (isNaN(amount)) {
       if (!amount || amount.trim() == "") {
         return "";
       }
@@ -721,22 +800,22 @@ Template.stockquantitybylocation.helpers({
     return Currency;
   },
 
-  formatPrice( amount){
+  formatPrice(amount) {
 
     let utilityService = new UtilityService();
-    if( isNaN( amount ) ){
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    if (isNaN(amount)) {
+      amount = (amount === undefined || amount === null || amount.length === 0) ? 0 : amount;
+      amount = (amount) ? Number(amount.replace(/[^0-9.-]+/g, "")) : 0;
     }
-      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    return utilityService.modifynegativeCurrencyFormat(amount) || 0.00;
   },
-  formatTax( amount){
+  formatTax(amount) {
 
-    if( isNaN( amount ) ){
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    if (isNaN(amount)) {
+      amount = (amount === undefined || amount === null || amount.length === 0) ? 0 : amount;
+      amount = (amount) ? Number(amount.replace(/[^0-9.-]+/g, "")) : 0;
     }
-      return amount + "%" || "0.00 %";
+    return amount + "%" || "0.00 %";
   },
 
 });
@@ -752,4 +831,3 @@ Template.registerHelper("notEquals", function (a, b) {
 Template.registerHelper("containsequals", function (a, b) {
   return a.indexOf(b) >= 0;
 });
-

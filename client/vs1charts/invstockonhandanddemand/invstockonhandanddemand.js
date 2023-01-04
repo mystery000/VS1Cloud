@@ -6,6 +6,11 @@ import { CoreService } from '../../js/core-service';
 let _ = require('lodash');
 import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
+
+import { Template } from 'meteor/templating';
+import './invstockonhandanddemand.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();

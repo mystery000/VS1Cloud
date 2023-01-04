@@ -46,7 +46,7 @@ Template.statementlist.onRendered(function () {
     const dataTableList = [];
     const tableHeaderList = [];
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
         if (error) {}
         else {
             if (result) {
@@ -107,8 +107,8 @@ Template.statementlist.onRendered(function () {
     $("#dtSODate").val(begunDate);
     templateObject.getOrganisationDetails = function () {
 
-        let account_id = Session.get('vs1companyStripeID') || '';
-        let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+        let account_id = localStorage.getItem('vs1companyStripeID') || '';
+        let stripe_fee = localStorage.getItem('vs1companyStripeFeeMethod') || 'apply';
         templateObject.accountID.set(account_id);
         templateObject.stripe_fee_method.set(stripe_fee);
     }
@@ -127,7 +127,7 @@ Template.statementlist.onRendered(function () {
             let stripe_id = templateObject.accountID.get();
             let stripe_fee_method = templateObject.stripe_fee_method.get();
             var erpGet = erpDb();
-            let company = Session.get('vs1companyName');
+            let company = localStorage.getItem('vs1companyName');
             let vs1User = localStorage.getItem('mySession');
             let dept = "Head Office";
 
@@ -228,7 +228,7 @@ Template.statementlist.onRendered(function () {
                 let stripe_id = templateObject.accountID.get();
                 let stripe_fee_method = templateObject.stripe_fee_method.get();
                 var erpGet = erpDb();
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let dept = "Head Office";
 
@@ -366,7 +366,7 @@ Template.statementlist.onRendered(function () {
                 let stripe_id = templateObject.accountID.get();
                 let stripe_fee_method = templateObject.stripe_fee_method.get();
                 var erpGet = erpDb();
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let dept = "Head Office";
                 if (data.tstatementforcustomer.length) {
@@ -562,7 +562,7 @@ Template.statementlist.onRendered(function () {
 
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
                             if (error) {}
                             else {
                                 if (result) {
@@ -774,7 +774,7 @@ Template.statementlist.onRendered(function () {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
                         if (error) {}
                         else {
                             if (result) {
@@ -969,7 +969,7 @@ Template.statementlist.onRendered(function () {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
                         if (error) {}
                         else {
                             if (result) {
@@ -1174,7 +1174,7 @@ Template.statementlist.onRendered(function () {
 
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
                             if (error) {}
                             else {
                                 if (result) {
@@ -1385,7 +1385,7 @@ Template.statementlist.onRendered(function () {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
                         if (error) {}
                         else {
                             if (result) {
@@ -1579,7 +1579,7 @@ Template.statementlist.onRendered(function () {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblCustomerlist', function (error, result) {
                         if (error) {}
                         else {
                             if (result) {
@@ -1838,23 +1838,29 @@ Template.statementlist.onRendered(function () {
         let taxItems = {};
         object_invoce = [];
         let item_invoices = '';
+        let i = 0;
 
         let invoice_data =  templateObject.statmentprintrecords.get();
-        lineItems = invoice_data.LineItems;
-        let i = 0;
-        for (i=0; i<lineItems.length; i++) {
-            array_data.push([
-                lineItems[i].lineID,
-                lineItems[i].date,
-                lineItems[i].type,
-                lineItems[i].duedate,
-                lineItems[i].total,
-                lineItems[i].paidamt,
-                lineItems[i].balance
-            ]);
+        if (invoice_data != undefined && invoice_data.length > 0) {
+            lineItems = invoice_data.LineItems;
+            if (lineItems != undefined) {
+                for (i=0; i<lineItems.length; i++) {
+                    array_data.push([
+                        lineItems[i].lineID,
+                        lineItems[i].date,
+                        lineItems[i].type,
+                        lineItems[i].duedate,
+                        lineItems[i].total,
+                        lineItems[i].paidamt,
+                        lineItems[i].balance
+                    ]);
+                }
+            }
         }
 
         let dtSODate = invoice_data.printdate;
+        if (dtSODate == undefined)
+            dtSODate = "";
         let subtotal_total = "$0.00";
         let subtotal_tax = "$0.00";
         let grandTotal = invoice_data.closingBalance;
@@ -1866,11 +1872,11 @@ Template.statementlist.onRendered(function () {
         {
               item_invoices = {
 
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1922,11 +1928,11 @@ Template.statementlist.onRendered(function () {
         else if(number == 2)
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1978,11 +1984,11 @@ Template.statementlist.onRendered(function () {
         else
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -2072,9 +2078,9 @@ Template.statementlist.onRendered(function () {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 3)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -2115,9 +2121,9 @@ Template.statementlist.onRendered(function () {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 3)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -2158,9 +2164,9 @@ Template.statementlist.onRendered(function () {
             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             for(item_temp of item){
                 if (idx > 3)
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 else
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 idx++;
             }
 
@@ -2347,8 +2353,8 @@ Template.statementlist.events({
     },
     'click .resetTable': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -2398,8 +2404,8 @@ Template.statementlist.events({
         });
 
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -2798,7 +2804,7 @@ Template.statementlist.events({
                             encoding: 'base64'
                         };
                         attachment.push(pdfObject);
-                        let mailFromName = Session.get('vs1companyName');
+                        let mailFromName = localStorage.getItem('vs1companyName');
                         let mailFrom = localStorage.getItem('EUserName');
                         let customerEmailName = data[x].customer_name;
                         // let mailCC = templateObject.mailCopyToUsr.get();
@@ -2984,7 +2990,7 @@ Template.statementlist.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblCustomerlist'
         });
     },
@@ -2998,22 +3004,22 @@ Template.statementlist.helpers({
         return loggedCompany;
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     companyphone: () => {
-        return Session.get('vs1companyPhone');
+        return localStorage.getItem('vs1companyPhone');
     },
     companyabn: () => {
-        return Session.get('vs1companyABN');
+        return localStorage.getItem('vs1companyABN');
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
 
 });

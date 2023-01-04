@@ -1,0 +1,65 @@
+<!-- Transaction Footer -->
+<!-- Params 
+    hideSaveButton
+    hidePrintButton
+    hideAttachmentButton
+    hideRemoveButton
+    hideCancelButton
+    AttachmentCount
+    TransactionType
+-->
+<template name="transaction_footer">
+  <style>
+    .btnFooter{
+      /* margin: {{margin}}; */
+      margin: 12px;
+      margin-top: 0px;
+      min-width: 100px;
+    }
+    .btnFooter .fa {
+      padding-right: 8px;
+    }
+  </style>
+  <div class="row no-gutters">
+    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">
+
+      {{#unless hideSaveButton}}
+        {{> template_footer_save_button }}
+      {{/unless}}
+
+       <!-- for Stock Adjustment -->
+       {{#if showProcessButton}}
+        {{> template_footer_process_button }}
+      {{/if}}
+
+      <!-- for Stock Adjustment -->
+      {{#if showHoldButton}}
+        {{> template_footer_hold_button }}
+      {{/if}}
+
+      {{#unless hidePrintButton}}
+        {{> template_footer_print_button
+          type=TransactionType
+        }}
+      {{/unless}}
+
+      {{#unless hideAttachmentButton}}
+        {{> template_footer_attachment_button
+          count=AttachmentCount
+        }}
+      {{/unless}}
+
+      {{#unless hideRemoveButton}}
+        {{> template_footer_remove_button 
+          type=TransactionType}}
+      {{/unless}}
+
+      {{#unless hideCancelButton}}
+        {{> template_footer_cancel_button}}
+      {{/unless}}
+    </div>
+  </div>
+  {{#unless hidePrintButton}}
+    {{> transaction_print_modal TransactionType=TransactionType }}
+  {{/unless}}
+</template>

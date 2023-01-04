@@ -24,9 +24,9 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let smsService = new SMSService();
 let createAppointment =
-    Session.get("CloudAppointmentCreateAppointment") || false;
+    localStorage.getItem("CloudAppointmentCreateAppointment") || false;
 let startAndStopAppointmentOnly =
-    Session.get("CloudAppointmentStartStopAccessLevel") || false;
+    localStorage.getItem("CloudAppointmentStartStopAccessLevel") || false;
 
 Template.appointments.onCreated(function() {
     const templateObject = Template.instance();
@@ -78,6 +78,9 @@ Template.appointments.onCreated(function() {
     templateObject.productFees = new ReactiveVar();
     templateObject.extraProductFees = new ReactiveVar([]);
     templateObject.leaveemployeerecords = new ReactiveVar([]);
+
+    // templateObject.customerRecord = new ReactiveVar();
+
 });
 
 async function sendAppointmentEmail() {
@@ -101,7 +104,7 @@ async function sendAppointmentEmail() {
         }
         if (customerEmail) {
             let mailSubject = "Appointment Email";
-            let mailFromName = Session.get("vs1companyName");
+            let mailFromName = localStorage.getItem("vs1companyName");
             let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -131,7 +134,7 @@ async function sendAppointmentEmail() {
     }
     // Send email to the user
     if (userEmailCheck == true) {
-        let employeeID = Session.get("mySessionEmployeeLoggedID");
+        let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
         let employeeEmail = "";
         let dataObject = await getVS1Data("TEmployee");
         if (dataObject.length > 0) {
@@ -147,7 +150,7 @@ async function sendAppointmentEmail() {
         }
         if (employeeEmail) {
             let mailSubject = "Appointment Email";
-            let mailFromName = Session.get("vs1companyName");
+            let mailFromName = localStorage.getItem("vs1companyName");
             let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -178,7 +181,7 @@ async function sendAppointmentEmail() {
 }
 
 Template.appointments.onRendered(function() {
-    let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly__');
+    let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__');
     let templateObject = Template.instance();
     let tempObj = Template.instance();
     let contactService = new ContactService();
@@ -196,7 +199,7 @@ Template.appointments.onRendered(function() {
     let calendarSettings = [];
     let prefObject = {};
     let globalSet = {};
-    let launchAllocations = Session.get("CloudAppointmentAllocationLaunch");
+    let launchAllocations = localStorage.getItem("CloudAppointmentAllocationLaunch");
 
     $('#edtFrequencyDetail').css('display', 'none');
     $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
@@ -319,7 +322,7 @@ Template.appointments.onRendered(function() {
         }
     }
     templateObject.hasFollowings();
-        
+
     // $("#employeeListModal").modal("show");
 
     let currentId = FlowRouter.current().context.hash;
@@ -334,7 +337,7 @@ Template.appointments.onRendered(function() {
             }, 900);
         }
     }
-    if (Session.get("CloudAppointmentStartStopAccessLevel") == true) {
+    if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
         //$("#btnHold").prop("disabled", true);
     }
 
@@ -1019,7 +1022,7 @@ Template.appointments.onRendered(function() {
                 document.getElementById("startTime").value = startTime;
                 document.getElementById("endTime").value = dateStartForEndTime;
                 document.getElementById("employee_name").value =
-                    Session.get("mySessionEmployee");
+                    localStorage.getItem("mySessionEmployee");
                 if (calendarSet.DefaultApptDuration) {
                     let hoursFormattedStartTime =
                         templateObject.timeFormat(calendarSet.DefaultApptDuration) || "";
@@ -1081,7 +1084,7 @@ Template.appointments.onRendered(function() {
                         $("#btnHold").prop("disabled", false);
                     }
 
-                    if (Session.get("CloudAppointmentStartStopAccessLevel") == true) {
+                    if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
                         //$("#btnHold").prop("disabled", true);
                     }
 
@@ -1132,7 +1135,7 @@ Template.appointments.onRendered(function() {
                         "";
                     document.getElementById("state").value = result[0].state || "";
                     document.getElementById("address").value = result[0].street || "";
-                    if (Session.get("CloudAppointmentNotes") == true) {
+                    if (localStorage.getItem("CloudAppointmentNotes") == true) {
                         document.getElementById("txtNotes").value = result[0].notes;
                         document.getElementById("txtNotes-1").value = result[0].notes;
                     }
@@ -1373,7 +1376,7 @@ Template.appointments.onRendered(function() {
                 $("#tActualEndTime").prop("disabled", false);
                 $("#txtActualHoursSpent").prop("disabled", false);
 
-                if (Session.get("CloudAppointmentStartStopAccessLevel") == true) {
+                if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
                 document.getElementById("employee_name").value =
@@ -1688,7 +1691,7 @@ Template.appointments.onRendered(function() {
                 //templateObject.getAllProductData();
                 let calendarData = templateObject.employeeOptions.get();
                 let calendarSet = templateObject.globalSettings.get();
-                templateObject.empID.set(Session.get("mySessionEmployeeLoggedID"));
+                templateObject.empID.set(localStorage.getItem("mySessionEmployeeLoggedID"));
 
                 let empData = calendarData.filter((calendarOpt) => {
                     return calendarOpt.EmployeeID == parseInt(templateObject.empID.get());
@@ -1725,7 +1728,7 @@ Template.appointments.onRendered(function() {
                 document.getElementById("startTime").value = startTime;
                 document.getElementById("endTime").value = endTime;
                 document.getElementById("employee_name").value =
-                    Session.get("mySessionEmployee");
+                    localStorage.getItem("mySessionEmployee");
                 if (calendarSet.DefaultApptDuration) {
                     let hoursFormattedStartTime =
                         templateObject.timeFormat(calendarSet.DefaultApptDuration) || "";
@@ -1817,7 +1820,7 @@ Template.appointments.onRendered(function() {
                         $("#btnHold").prop("disabled", false);
                     }
 
-                    if (Session.get("CloudAppointmentStartStopAccessLevel") == true) {
+                    if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
                         //$("#btnHold").prop("disabled", true);
                     }
 
@@ -1869,7 +1872,7 @@ Template.appointments.onRendered(function() {
                         "";
                     document.getElementById("state").value = result[0].state || "";
                     document.getElementById("address").value = result[0].street || "";
-                    if (Session.get("CloudAppointmentNotes") == true) {
+                    if (localStorage.getItem("CloudAppointmentNotes") == true) {
                         document.getElementById("txtNotes").value = result[0].notes || "";
                         document.getElementById("txtNotes-1").value = result[0].notes || "";
                     }
@@ -1901,7 +1904,6 @@ Template.appointments.onRendered(function() {
                                 templateObject.extraProductFees.set(extraProductFees);
                             })
                             .catch(function(err) {
-                                console.error(err);
                             });
                         $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
                     }
@@ -1981,12 +1983,12 @@ Template.appointments.onRendered(function() {
                 } else {
                     let splitId = id.split(":");
 
-                    FlowRouter.go("/employeescard?id=" + splitId[1]);
+                    // FlowRouter.go("/employeescard?id=" + splitId[1]);
                     setTimeout(function() {
-                        $('.payrollTab').tab('show');
-                        $('a[href="#leave"]').tab('show');
+                        // $('.payrollTab').tab('show');
+                        // $('a[href="#leave"]').tab('show');
 
-                        $('#removeLeaveRequestBtn').show();
+                        // $('#removeLeaveRequestBtn').show();
                         let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                         var getLeaveInfo = leaveemployeerecords.filter((leave) => {
                             return (
@@ -2012,7 +2014,7 @@ Template.appointments.onRendered(function() {
                         }
 
                         $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
-                            window.open("/appointments", "_self");
+                            // window.open("/appointments", "_self");
                         });
                     }, 1000);
                 }
@@ -2169,7 +2171,7 @@ Template.appointments.onRendered(function() {
                 $("#tActualEndTime").prop("disabled", false);
                 $("#txtActualHoursSpent").prop("disabled", false);
 
-                if (Session.get("CloudAppointmentStartStopAccessLevel") == true) {
+                if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
                 document.getElementById("employee_name").value =
@@ -2375,7 +2377,7 @@ Template.appointments.onRendered(function() {
                     eventStatus[item.EmployeeID] = item.Status;
                 });
 
-                let title = document.createElement("p"); 
+                let title = document.createElement("p");
                 if (event.timeText != '') {
                     title.innerHTML = event.timeText + " " + event.event.title;
                     title.style.backgroundColor = event.backgroundColor;
@@ -2522,7 +2524,7 @@ Template.appointments.onRendered(function() {
         });
 
         calendar.render();
-        
+
         $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:170px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="off" checked="checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
         $('.fc-today-button').prop('disabled', false);
         let draggableEl = document.getElementById("external-events-list");
@@ -2818,7 +2820,7 @@ Template.appointments.onRendered(function() {
                                 }
                                 let selectedColor = "#" + randomColor;
                                 if (
-                                    Session.get("mySessionEmployee") ==
+                                    localStorage.getItem("mySessionEmployee") ==
                                     data.temployee[i].fields.EmployeeName
                                 ) {
                                     if (data.temployee[i].fields.CustFld8 == "false") {
@@ -2829,7 +2831,7 @@ Template.appointments.onRendered(function() {
                                 if (seeOwnAppointments == true) {
                                     if (
                                         data.temployee[i].fields.EmployeeName ==
-                                        Session.get("mySessionEmployee")
+                                        localStorage.getItem("mySessionEmployee")
                                     ) {
                                         var dataList = {
                                             id: data.temployee[i].fields.ID || "",
@@ -2915,7 +2917,7 @@ Template.appointments.onRendered(function() {
                         }
 
                         if (
-                            Session.get("mySessionEmployee") == useData[i].fields.EmployeeName
+                            localStorage.getItem("mySessionEmployee") == useData[i].fields.EmployeeName
                         ) {
                             if (useData[i].fields.CustFld8 == "false") {
                                 templateObject.includeAllProducts.set(false);
@@ -2925,7 +2927,7 @@ Template.appointments.onRendered(function() {
                         if (seeOwnAppointments == true) {
                             if (
                                 useData[i].fields.EmployeeName ==
-                                Session.get("mySessionEmployee")
+                                localStorage.getItem("mySessionEmployee")
                             ) {
                                 var dataList = {
                                     id: useData[i].fields.ID || "",
@@ -2990,7 +2992,7 @@ Template.appointments.onRendered(function() {
                             }
                             let selectedColor = "#" + randomColor;
                             if (
-                                Session.get("mySessionEmployee") ==
+                                localStorage.getItem("mySessionEmployee") ==
                                 data.temployee[i].fields.EmployeeName
                             ) {
                                 if (useData[i].fields.CustFld8 == "false") {
@@ -3000,7 +3002,7 @@ Template.appointments.onRendered(function() {
                             if (seeOwnAppointments == true) {
                                 if (
                                     data.temployee[i].fields.EmployeeName ==
-                                    Session.get("mySessionEmployee")
+                                    localStorage.getItem("mySessionEmployee")
                                 ) {
                                     var dataList = {
                                         id: data.temployee[i].fields.ID || "",
@@ -3635,12 +3637,9 @@ Template.appointments.onRendered(function() {
         });
 
     templateObject.getAllAppointmentListData = function(refresh = true) {
-        getVS1Data("TAppointment")
-            .then(function(dataObject) {
+        getVS1Data("TAppointment").then(function(dataObject) {
                 if (dataObject.length == 0 || refresh) {
-                    sideBarService
-                        .getAllAppointmentList(initialDataLoad, 0)
-                        .then(function(data) {
+                    sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
                             addVS1Data("TAppointment", JSON.stringify(data));
                             $(".fullScreenSpin").css("display", "inline-block");
                             let appColor = "#00a3d3";
@@ -3755,7 +3754,7 @@ Template.appointments.onRendered(function() {
                                 if (seeOwnAppointments == true) {
                                     if (
                                         data.tappointmentex[i].fields.TrainerName ==
-                                        Session.get("mySessionEmployee")
+                                        localStorage.getItem("mySessionEmployee")
                                     ) {
                                         eventData.push(dataList);
                                         appointmentList.push(appointment);
@@ -3861,7 +3860,7 @@ Template.appointments.onRendered(function() {
                                         "";
                                     document.getElementById("state").value = result[0].state;
                                     document.getElementById("address").value = result[0].street;
-                                    if (Session.get("CloudAppointmentNotes") == true) {
+                                    if (localStorage.getItem("CloudAppointmentNotes") == true) {
                                         document.getElementById("txtNotes").value = result[0].notes;
                                         document.getElementById("txtNotes-1").value = result[0].notes;
                                     }
@@ -3898,7 +3897,7 @@ Template.appointments.onRendered(function() {
                                                 $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
                                             })
                                             .catch(function(err) {
-                                                console.error(err);
+
                                             });
                                     }
 
@@ -4324,7 +4323,7 @@ Template.appointments.onRendered(function() {
                                         if (seeOwnAppointments == true) {
                                             if (
                                                 data.tappointmentex[t].fields.TrainerName ==
-                                                Session.get("mySessionEmployee")
+                                                localStorage.getItem("mySessionEmployee")
                                             ) {
                                                 let found = resourceChat.some(
                                                     (emp) =>
@@ -4419,7 +4418,7 @@ Template.appointments.onRendered(function() {
                                         if (seeOwnAppointments == true) {
                                             if (
                                                 data.tappointmentex[t].fields.TrainerName ==
-                                                Session.get("mySessionEmployee")
+                                                localStorage.getItem("mySessionEmployee")
                                             ) {
                                                 resourceColor = resourceColor =
                                                     templateObject.employeerecords.get();
@@ -4971,7 +4970,7 @@ Template.appointments.onRendered(function() {
                                     document.getElementById("startTime").value = startTime;
                                     document.getElementById("endTime").value = endTime;
                                     document.getElementById("employee_name").value =
-                                        Session.get("mySessionEmployee");
+                                        localStorage.getItem("mySessionEmployee");
                                     if (calendarSet.DefaultApptDuration) {
                                         let hoursFormattedStartTime =
                                             templateObject.timeFormat(
@@ -5168,7 +5167,7 @@ Template.appointments.onRendered(function() {
                                     $("#txtActualHoursSpent").prop("disabled", false);
 
                                     if (
-                                        Session.get("CloudAppointmentStartStopAccessLevel") == true
+                                        localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true
                                     ) {
                                         //$("#btnHold").prop("disabled", true);
                                     }
@@ -5389,6 +5388,7 @@ Template.appointments.onRendered(function() {
                         });
                 } else {
                     let data = JSON.parse(dataObject[0].data);
+
                     let useData = data.tappointmentex;
                     $(".fullScreenSpin").css("display", "none");
                     let appColor = "#00a3d3";
@@ -5484,7 +5484,7 @@ Template.appointments.onRendered(function() {
                         if (seeOwnAppointments == true) {
                             if (
                                 useData[i].fields.TrainerName ==
-                                Session.get("mySessionEmployee")
+                                localStorage.getItem("mySessionEmployee")
                             ) {
                                 eventData.push(dataList);
                                 appointmentList.push(appointment);
@@ -5560,7 +5560,7 @@ Template.appointments.onRendered(function() {
                                 "";
                             document.getElementById("state").value = result[0].state;
                             document.getElementById("address").value = result[0].street;
-                            if (Session.get("CloudAppointmentNotes") == true) {
+                            if (localStorage.getItem("CloudAppointmentNotes") == true) {
                                 document.getElementById("txtNotes").value = result[0].notes;
                                 document.getElementById("txtNotes-1").value = result[0].notes;
                             }
@@ -5997,7 +5997,7 @@ Template.appointments.onRendered(function() {
                                 if (seeOwnAppointments == true) {
                                     if (
                                         useData[t].fields.TrainerName ==
-                                        Session.get("mySessionEmployee")
+                                        localStorage.getItem("mySessionEmployee")
                                     ) {
                                         let found = resourceChat.some(
                                             (emp) => emp.employeeName == useData[t].fields.TrainerName
@@ -6083,7 +6083,7 @@ Template.appointments.onRendered(function() {
                                 if (seeOwnAppointments == true) {
                                     if (
                                         useData[t].fields.TrainerName ==
-                                        Session.get("mySessionEmployee")
+                                        localStorage.getItem("mySessionEmployee")
                                     ) {
                                         resourceColor = resourceColor =
                                             templateObject.employeerecords.get();
@@ -6461,11 +6461,8 @@ Template.appointments.onRendered(function() {
                         $(".fullScreenSpin").css("display", "none");
                     }, 0);
                 }
-            })
-            .catch(function(err) {
-                sideBarService
-                    .getAllAppointmentList(initialDataLoad, 0)
-                    .then(function(data) {
+            }).catch(function(err) {
+                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
                         addVS1Data("TAppointment", JSON.stringify(data));
                         $(".fullScreenSpin").css("display", "inline-block");
                         let appColor = "";
@@ -6575,7 +6572,7 @@ Template.appointments.onRendered(function() {
                             if (seeOwnAppointments == true) {
                                 if (
                                     data.tappointmentex[i].fields.TrainerName ==
-                                    Session.get("mySessionEmployee")
+                                    localStorage.getItem("mySessionEmployee")
                                 ) {
                                     eventData.push(dataList);
                                     appointmentList.push(appointment);
@@ -6654,7 +6651,7 @@ Template.appointments.onRendered(function() {
                                     "";
                                 document.getElementById("state").value = result[0].state;
                                 document.getElementById("address").value = result[0].street;
-                                if (Session.get("CloudAppointmentNotes") == true) {
+                                if (localStorage.getItem("CloudAppointmentNotes") == true) {
                                     document.getElementById("txtNotes").value = result[0].notes;
                                     document.getElementById("txtNotes-1").value = result[0].notes;
                                 }
@@ -7051,7 +7048,7 @@ Template.appointments.onRendered(function() {
                                     if (seeOwnAppointments == true) {
                                         if (
                                             data.tappointmentex[t].fields.TrainerName ==
-                                            Session.get("mySessionEmployee")
+                                            localStorage.getItem("mySessionEmployee")
                                         ) {
                                             let found = resourceChat.some(
                                                 (emp) =>
@@ -7146,7 +7143,7 @@ Template.appointments.onRendered(function() {
                                     if (seeOwnAppointments == true) {
                                         if (
                                             data.tappointmentex[t].fields.TrainerName ==
-                                            Session.get("mySessionEmployee")
+                                            localStorage.getItem("mySessionEmployee")
                                         ) {
                                             resourceColor = resourceColor =
                                                 templateObject.employeerecords.get();
@@ -7683,7 +7680,7 @@ Template.appointments.onRendered(function() {
                                 document.getElementById("startTime").value = startTime;
                                 document.getElementById("endTime").value = endTime;
                                 document.getElementById("employee_name").value =
-                                    Session.get("mySessionEmployee");
+                                    localStorage.getItem("mySessionEmployee");
                                 if (calendarSet.DefaultApptDuration) {
                                     let hoursFormattedStartTime =
                                         templateObject.timeFormat(
@@ -7874,7 +7871,7 @@ Template.appointments.onRendered(function() {
                                 $("#tActualEndTime").prop("disabled", false);
                                 $("#txtActualHoursSpent").prop("disabled", false);
                                 if (
-                                    Session.get("CloudAppointmentStartStopAccessLevel") == true
+                                    localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true
                                 ) {
                                     //$("#btnHold").prop("disabled", true);
                                 }
@@ -8428,6 +8425,36 @@ Template.appointments.onRendered(function() {
                                         }
 
                                         setTimeout(function() {
+                                            // let customerRecord = {
+                                            //     id:popCustomerID,
+                                            //     phone:popCustomerPhone,
+                                            //     firstname:popCustomerFirstName,
+                                            //     middlename: popCustomerMiddleName,
+                                            //     lastname:popCustomerLastName,
+                                            //     company:data.tcustomer[0].fields.Companyname || '',
+                                            //     email: popCustomerEmail,
+                                            //     title: popCustomerTitle,
+                                            //     tfn: popCustomertfn,
+                                            //     mobile: popCustomerMobile,
+                                            //     fax: popCustomerFaxnumber,
+                                            //     shippingaddress: popCustomerStreet,
+                                            //     scity: popCustomerStreet2,
+                                            //     sstate: popCustomerCountry,
+                                            //     terms: '',
+                                            //     spostalcode: popCustomerPostcode,
+                                            //     scountry: popCustomerState,
+                                            //     billingaddress: popCustomerbillingaddress,
+                                            //     bcity: popCustomerbcity,
+                                            //     bstate: popCustomerbstate,
+                                            //     bpostalcode: popCustomerbpostalcode,
+                                            //     bcountry: popCustomerCountry,
+                                            //     custFld1: popCustomercustfield1,
+                                            //     custFld2: popCustomercustfield2,
+                                            //     jobbcountry: '',
+                                            //     jobscountry: '',
+                                            //     discount:0
+                                            // }
+                                            // templateObject.customerRecord.set(customerRecord);
                                             $("#addCustomerModal").modal("show");
                                         }, 200);
                                     })
@@ -8573,6 +8600,36 @@ Template.appointments.onRendered(function() {
                                         }
 
                                         setTimeout(function() {
+                                            // let customerRecord = {
+                                            //     id:popCustomerID,
+                                            //     phone:popCustomerPhone,
+                                            //     firstname:popCustomerFirstName,
+                                            //     middlename: popCustomerMiddleName,
+                                            //     lastname:popCustomerLastName,
+                                            //     company:data.tcustomervs1[i].fields.Companyname || '',
+                                            //     email: popCustomerEmail,
+                                            //     title: popCustomerTitle,
+                                            //     tfn: popCustomertfn,
+                                            //     mobile: popCustomerMobile,
+                                            //     fax: popCustomerFaxnumber,
+                                            //     shippingaddress: popCustomerStreet,
+                                            //     scity: popCustomerStreet2,
+                                            //     sstate: popCustomerCountry,
+                                            //     terms: '',
+                                            //     spostalcode: popCustomerPostcode,
+                                            //     scountry: popCustomerState,
+                                            //     billingaddress: popCustomerbillingaddress,
+                                            //     bcity: popCustomerbcity,
+                                            //     bstate: popCustomerbstate,
+                                            //     bpostalcode: popCustomerbpostalcode,
+                                            //     bcountry: popCustomerCountry,
+                                            //     custFld1: popCustomercustfield1,
+                                            //     custFld2: popCustomercustfield2,
+                                            //     jobbcountry: '',
+                                            //     jobscountry: '',
+                                            //     discount:0
+                                            // }
+                                            // templateObject.customerRecord.set(customerRecord);
                                             $("#addCustomerModal").modal("show");
                                         }, 200);
                                     }
@@ -9327,7 +9384,7 @@ Template.appointments.onRendered(function() {
         $("#tActualEndTime").prop("disabled", false);
         $("#txtActualHoursSpent").prop("disabled", false);
 
-        if (Session.get("CloudAppointmentStartStopAccessLevel") == true) {
+        if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
             //$("#btnHold").prop("disabled", true);
         }
         if (overridesettings[0].override == "false") {
@@ -9878,7 +9935,7 @@ Template.appointments.onRendered(function() {
         return hour;
     };
 
-    if (Session.get("CloudAppointmentStartStopAccessLevel") == true) {
+    if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
         //$("#btnHold").prop("disabled", true);
     }
 
@@ -9959,7 +10016,7 @@ Template.appointments.onRendered(function() {
                 .find(".colStreetAddress")
                 .text()
                 .replace(/(?:\r\n|\r|\n)/g, ", ");
-            if (Session.get("CloudAppointmentNotes") == true) {
+            if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = $(this)
                     .find(".colNotes")
                     .text();
@@ -10315,7 +10372,7 @@ Template.appointments.onRendered(function() {
                                 document.getElementById("startTime").value = startTime;
                                 document.getElementById("endTime").value = endTime;
                                 document.getElementById("employee_name").value =
-                                    Session.get("mySessionEmployee");
+                                    localStorage.getItem("mySessionEmployee");
                                 if (calendarSet.DefaultApptDuration) {
                                     let hoursFormattedStartTime =
                                         templateObject.timeFormat(
@@ -10400,7 +10457,7 @@ Template.appointments.onRendered(function() {
                                     }
 
                                     if (
-                                        Session.get("CloudAppointmentStartStopAccessLevel") == true
+                                        localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true
                                     ) {
                                         //$("#btnHold").prop("disabled", true);
                                     }
@@ -10427,7 +10484,7 @@ Template.appointments.onRendered(function() {
                                         "";
                                     document.getElementById("state").value = result[0].state;
                                     document.getElementById("address").value = result[0].street;
-                                    if (Session.get("CloudAppointmentNotes") == true) {
+                                    if (localStorage.getItem("CloudAppointmentNotes") == true) {
                                         document.getElementById("txtNotes").value = result[0].notes;
                                         document.getElementById("txtNotes-1").value = result[0].notes;
                                     }
@@ -10667,7 +10724,7 @@ Template.appointments.onRendered(function() {
                                 $("#tActualEndTime").prop("disabled", false);
                                 $("#txtActualHoursSpent").prop("disabled", false);
                                 if (
-                                    Session.get("CloudAppointmentStartStopAccessLevel") == true
+                                    localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true
                                 ) {
                                     //$("#btnHold").prop("disabled", true);
                                 }
@@ -11213,7 +11270,7 @@ Template.appointments.onRendered(function() {
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise(async(resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
-            const companyName = Session.get("vs1companyName");
+            const companyName = localStorage.getItem("vs1companyName");
             const message =
                 smsSettings.headerAppointmentSMSMessage.replace(
                     "[Company Name]",
@@ -11267,7 +11324,7 @@ Template.appointments.onRendered(function() {
         });
     };
     //TODO: Check SMS Settings and confirm if continue or go to SMS settings page
-    const accessLevel = Session.get("CloudApptSMS");
+    const accessLevel = localStorage.getItem("CloudApptSMS");
     if (!accessLevel) {
         $("#chkSMSCustomer").prop("checked", false);
         $("#chkSMSUser").prop("checked", false);
@@ -11282,7 +11339,7 @@ Template.appointments.onRendered(function() {
     }
 
     templateObject.checkSMSSettings = function() {
-        const accessLevel = Session.get("CloudApptSMS");
+        const accessLevel = localStorage.getItem("CloudApptSMS");
         if (!accessLevel) {
             $("#chkSMSCustomer").prop("checked", false);
             $("#chkSMSUser").prop("checked", false);
@@ -11328,7 +11385,7 @@ Template.appointments.onRendered(function() {
         let customData = {};
         let reset_data = [];
 
-        if (Session.get("CloudSalesQtyOnly")) {
+        if (localStorage.getItem("CloudSalesQtyOnly")) {
             reset_data = [
                 { label: "Product Name", class: "colProductName", active: true },
                 { label: "Description", class: "colDescription", active: true },
@@ -11432,9 +11489,9 @@ Template.appointments.onRendered(function() {
 
     $(document).on("click", "#chkmyAppointments", function(e) {
         if (seeOwnAppointments == true) {
-            Session.setPersistent('CloudAppointmentSeeOwnAppointmentsOnly__', false);
+            localStorage.setItem('CloudAppointmentSeeOwnAppointmentsOnly__', false);
         } else {
-            Session.setPersistent('CloudAppointmentSeeOwnAppointmentsOnly__', true);
+            localStorage.setItem('CloudAppointmentSeeOwnAppointmentsOnly__', true);
         }
 
         // FlowRouter.go('/dashboardsalesmanager', '_self');
@@ -11845,7 +11902,7 @@ Template.appointments.events({
         let templateObject = Template.instance();
         let checkBackOrder = templateObject.includeBOnShippedQty.get();
         let reset_data = [];
-        if (Session.get("CloudSalesQtyOnly")) {
+        if (localStorage.getItem("CloudSalesQtyOnly")) {
             reset_data = [
                 { label: "Product Name", class: "colProductName", active: true },
                 { label: "Description", class: "colDescription", active: true },
@@ -11936,8 +11993,8 @@ Template.appointments.events({
 
     "click .btnResetSettings": function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
+            _id: localStorage.getItem("mycloudLogonID"),
+            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -12048,7 +12105,7 @@ Template.appointments.events({
                     $("#btnHold").prop("disabled", false);
                 }
 
-                if (Session.get("CloudAppointmentStartStopAccessLevel") == true) {
+                if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
 
@@ -12107,7 +12164,7 @@ Template.appointments.events({
                     "";
                 document.getElementById("state").value = result[0].state || "";
                 document.getElementById("address").value = result[0].street || "";
-                if (Session.get("CloudAppointmentNotes") == true) {
+                if (localStorage.getItem("CloudAppointmentNotes") == true) {
                     document.getElementById("txtNotes").value = result[0].notes;
                     document.getElementById("txtNotes-1").value = result[0].notes;
                 }
@@ -13035,9 +13092,9 @@ Template.appointments.events({
         let changeAppointmentView = templateObject.appointmentrecords.get();
 
         let seeOwnAllocations =
-            Session.get("CloudAppointmentSeeOwnAllocationsOnly") || false;
+            localStorage.getItem("CloudAppointmentSeeOwnAllocationsOnly") || false;
         let seeOwnAppointments =
-            Session.get("CloudAppointmentSeeOwnAppointmentsOnly") || false;
+            localStorage.getItem("CloudAppointmentSeeOwnAppointmentsOnly") || false;
         //get current week monday date to use it to search week in month
         let weekDate = moment($(".saturday").attr("id")).format("YYYY/MM/DD");
         let weekendStartListener = "";
@@ -13159,7 +13216,7 @@ Template.appointments.events({
                         if (seeOwnAppointments == true) {
                             if (
                                 changeAppointmentView[a].employeename ==
-                                Session.get("mySessionEmployee")
+                                localStorage.getItem("mySessionEmployee")
                             ) {
                                 let found = resourceChat.some(
                                     (emp) =>
@@ -13244,7 +13301,7 @@ Template.appointments.events({
                         if (seeOwnAppointments == true) {
                             if (
                                 changeAppointmentView[a].employeename ==
-                                Session.get("mySessionEmployee")
+                                localStorage.getItem("mySessionEmployee")
                             ) {
                                 resourceColor = templateObject.employeerecords.get();
 
@@ -13749,9 +13806,9 @@ Template.appointments.events({
     "click #next": function() {
         let templateObject = Template.instance();
         let seeOwnAllocations =
-            Session.get("CloudAppointmentSeeOwnAllocationsOnly") || false;
+            localStorage.getItem("CloudAppointmentSeeOwnAllocationsOnly") || false;
         let seeOwnAppointments =
-            Session.get("CloudAppointmentSeeOwnAppointmentsOnly") || false;
+            localStorage.getItem("CloudAppointmentSeeOwnAppointmentsOnly") || false;
         let weekDate = moment($(".monday").attr("id")).format("YYYY/MM/DD");
         let weeksOfThisMonth = templateObject.weeksOfMonth.get();
         var getSelectedWeek = weeksOfThisMonth.filter((weekend) => {
@@ -13847,7 +13904,7 @@ Template.appointments.events({
                         if (seeOwnAppointments == true) {
                             if (
                                 changeAppointmentView[a].employeename ==
-                                Session.get("mySessionEmployee")
+                                localStorage.getItem("mySessionEmployee")
                             ) {
                                 let found = resourceChat.some(
                                     (emp) =>
@@ -13932,7 +13989,7 @@ Template.appointments.events({
                         if (seeOwnAppointments == true) {
                             if (
                                 changeAppointmentView[a].employeename ==
-                                Session.get("mySessionEmployee")
+                                localStorage.getItem("mySessionEmployee")
                             ) {
                                 resourceColor = templateObject.employeerecords.get();
 
@@ -15265,7 +15322,7 @@ Template.appointments.events({
                         $("#startAppointmentModal").modal("show");
                         const accountName = $("#customer").val();
                         const employeeName = $("#employee_name").val();
-                        const companyName = Session.get("vs1companyName");
+                        const companyName = localStorage.getItem("vs1companyName");
                         const productService = $("#product-list").val();
                         const startAppointmentSMS = templateObject.defaultSMSSettings
                             .get()
@@ -15338,7 +15395,7 @@ Template.appointments.events({
                     $("#stopAppointmentModal").modal("show");
                     const accountName = $("#customer").val();
                     const employeeName = $("#employee_name").val();
-                    const companyName = Session.get("vs1companyName");
+                    const companyName = localStorage.getItem("vs1companyName");
                     const productService = $("#product-list").val();
                     const stopAppointmentSMS = templateObject.defaultSMSSettings
                         .get()
@@ -15415,7 +15472,7 @@ Template.appointments.events({
                         $("#saveAppointmentModal").modal("show");
                         const accountName = $("#customer").val();
                         const employeeName = $("#employee_name").val();
-                        const companyName = Session.get("vs1companyName");
+                        const companyName = localStorage.getItem("vs1companyName");
                         const fullAddress =
                             $("#address").val() +
                             ", " +
@@ -15467,7 +15524,7 @@ Template.appointments.events({
                             $("#saveAppointmentModal").modal("show");
                             const accountName = $("#customer").val();
                             const employeeName = $("#employee_name").val();
-                            const companyName = Session.get("vs1companyName");
+                            const companyName = localStorage.getItem("vs1companyName");
                             const fullAddress =
                                 $("#address").val() +
                                 ", " +
@@ -15492,7 +15549,7 @@ Template.appointments.events({
                         $("#saveAppointmentModal").modal("show");
                         const accountName = $("#customer").val();
                         const employeeName = $("#employee_name").val();
-                        const companyName = Session.get("vs1companyName");
+                        const companyName = localStorage.getItem("vs1companyName");
                         const fullAddress =
                             $("#address").val() +
                             ", " +
@@ -15839,7 +15896,7 @@ Template.appointments.events({
         }
     },
     "click #btnHold": function(event) {
-        // if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+        // if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
         //     swal({
         //         title: 'Oops...',
         //         text: 'You do not have access to put appointments "On Hold"',
@@ -17213,7 +17270,7 @@ Template.appointments.events({
         // });
     },
     "click #btnHold span": function(event) {
-        if (Session.get("CloudAppointmentStartStopAccessLevel") == true) {
+        if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
             swal({
                 title: "Oops...",
                 text: 'You do not have access to put appointments "On Hold"',
@@ -17954,7 +18011,7 @@ Template.appointments.events({
                                                                                 },
                                                                             }, ],
                                                                             TypeName: "Payroll",
-                                                                            WhoEntered: Session.get("mySessionEmployee") || "",
+                                                                            WhoEntered: localStorage.getItem("mySessionEmployee") || "",
                                                                         },
                                                                     };
                                                                     contactService
@@ -18043,7 +18100,7 @@ Template.appointments.events({
                                                                         },
                                                                     }, ],
                                                                     TypeName: "Payroll",
-                                                                    WhoEntered: Session.get("mySessionEmployee") || "",
+                                                                    WhoEntered: localStorage.getItem("mySessionEmployee") || "",
                                                                 },
                                                             };
                                                             contactService
@@ -18291,7 +18348,7 @@ Template.appointments.events({
                                                         },
                                                     }, ],
                                                     TypeName: "Payroll",
-                                                    WhoEntered: Session.get("mySessionEmployee") || "",
+                                                    WhoEntered: localStorage.getItem("mySessionEmployee") || "",
                                                 },
                                             };
                                             contactService
@@ -18438,7 +18495,7 @@ Template.appointments.events({
                                                                                 },
                                                                             }, ],
                                                                             TypeName: "Payroll",
-                                                                            WhoEntered: Session.get("mySessionEmployee") || "",
+                                                                            WhoEntered: localStorage.getItem("mySessionEmployee") || "",
                                                                         },
                                                                     };
                                                                     contactService
@@ -18528,7 +18585,7 @@ Template.appointments.events({
                                                                         },
                                                                     }, ],
                                                                     TypeName: "Payroll",
-                                                                    WhoEntered: Session.get("mySessionEmployee") || "",
+                                                                    WhoEntered: localStorage.getItem("mySessionEmployee") || "",
                                                                 },
                                                             };
                                                             contactService
@@ -18749,15 +18806,16 @@ Template.appointments.events({
             cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.value) {
-                FlowRouter.go("/employeescard?id=" + empID);
+                // FlowRouter.go("/employeescard?id=" + empID);
                 // localStorage.setItem("appt_historypage", "appointmentlist");
                 setTimeout(function() {
-                    $('.payrollTab').tab('show');
-                    $('a[href="#leave"]').tab('show');
-                    $('#newLeaveRequestbtn').trigger('click');
-
+                    // $('.payrollTab').tab('show');
+                    // $('a[href="#leave"]').tab('show');
+                    // $('#newLeaveRequestbtn').trigger('click');
+                    
+                    $('#newLeaveRequestModal').modal('show');
                     $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
-                        window.open("/appointments", "_self");
+                        // window.open("/appointments", "_self");
                     });
                 }, 1000);
                 // $("#newLeaveRequestModal").modal("toggle");
@@ -18925,16 +18983,16 @@ Template.appointments.helpers({
         return Template.instance().appointmentrecords.get();
     },
     accessOnHold: () => {
-        return Session.get("CloudAppointmentStartStopAccessLevel") || false;
+        return localStorage.getItem("CloudAppointmentStartStopAccessLevel") || false;
     },
     accessStartStopOnly: () => {
-        return Session.get("CloudAppointmentStartStopAccessLevel") || false;
+        return localStorage.getItem("CloudAppointmentStartStopAccessLevel") || false;
     },
     addAttachment: () => {
-        return Session.get("CloudAppointmentAddAttachment") || false;
+        return localStorage.getItem("CloudAppointmentAddAttachment") || false;
     },
     addNotes: () => {
-        return Session.get("CloudAppointmentNotes") || false;
+        return localStorage.getItem("CloudAppointmentNotes") || false;
     },
     uploadedFiles: () => {
         return Template.instance().uploadedFiles.get();
@@ -18943,7 +19001,7 @@ Template.appointments.helpers({
         return Template.instance().attachmentCount.get();
     },
     createnewappointment: () => {
-        return Session.get("CloudAppointmentCreateAppointment") || false;
+        return localStorage.getItem("CloudAppointmentCreateAppointment") || false;
     },
     uploadedFile: () => {
         return Template.instance().uploadedFile.get();
@@ -18970,6 +19028,9 @@ Template.appointments.helpers({
     extraProductFees: () => {
         return Template.instance().extraProductFees.get();
     },
+    // customerRecord: () => {
+    //     return Template.instance().customerRecord.get();
+    // },
 });
 
 Template.registerHelper("equals", function(a, b) {
@@ -18993,7 +19054,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
             document.getElementById("employee_name").value =
-                Session.get("mySessionEmployee");
+                localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -19003,7 +19064,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 /(?:\r\n|\r|\n)/g,
                 ", "
             );
-            if (Session.get("CloudAppointmentNotes") == true) {
+            if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
                 document.getElementById("txtNotes-1").value = data.fields.Notes;
             }
@@ -19090,7 +19151,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
             document.getElementById("employee_name").value =
-                Session.get("mySessionEmployee");
+                localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -19100,7 +19161,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 /(?:\r\n|\r|\n)/g,
                 ", "
             );
-            if (Session.get("CloudAppointmentNotes") == true) {
+            if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
                 document.getElementById("txtNotes-1").value = data.fields.Notes;
             }
@@ -19187,7 +19248,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
             document.getElementById("employee_name").value =
-                Session.get("mySessionEmployee");
+                localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -19197,7 +19258,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 /(?:\r\n|\r|\n)/g,
                 ", "
             );
-            if (Session.get("CloudAppointmentNotes") == true) {
+            if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
                 document.getElementById("txtNotes-1").value = data.fields.Notes;
             }

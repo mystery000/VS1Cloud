@@ -16,6 +16,10 @@ import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
 import {ManufacturingService} from '../manufacture/manufacturing-service';
+import { Template } from 'meteor/templating';
+import '../manufacture/frm_processpop.html';
+import {Session} from 'meteor/session';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -253,7 +257,8 @@ Template.new_processpop.events({
     'click #edtWastage': function(e){
         $('#assetAccountListModal').modal();
     },
-    'click #accountListModal table tr': function(e) {
+    
+    'click #accountListModal table tbody tr': function(e) {
         let templateObject = Template.instance();
         let columnDataValue = $(e.target).closest('tr').find('.productName').text();
         switch(templateObject.selectedAccount.get()) {

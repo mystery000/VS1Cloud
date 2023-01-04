@@ -99,6 +99,9 @@ Template.stockadjustmentcard.onRendered(() => {
         $('.uploadedImage').attr('src', imageData);
     };
 
+
+
+
     const records = [];
     let stockTransferService = new StockTransferService();
 
@@ -332,7 +335,6 @@ Template.stockadjustmentcard.onRendered(() => {
                         };
 
                         let getDepartmentVal = data.fields.Lines[0].fields.DeptName || defaultDept;
-
                         setTimeout(function () {
                             // $('#sltDepartment').val(getDepartmentVal);
                             $('#sltAccountName').val(data.fields.AccountName);
@@ -356,7 +358,7 @@ Template.stockadjustmentcard.onRendered(() => {
                             //   liveDrag:true});
                             //$('#tblStockAdjustmentLine').removeClass('JColResizer');
 
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStockAdjustmentLine', function (error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStockAdjustmentLine', function (error, result) {
                                 if (error) {
 
                                     //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
@@ -545,7 +547,7 @@ Template.stockadjustmentcard.onRendered(() => {
                             $(".btnDeleteProduct").prop("disabled", false);
                             $(".close").prop("disabled", false);
                             if (templateObject.record.get()) {
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStockAdjustmentLine', function (error, result) {
+                                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStockAdjustmentLine', function (error, result) {
                                     if (error) {}
                                     else {
                                         if (result) {
@@ -663,7 +665,7 @@ Template.stockadjustmentcard.onRendered(() => {
                         //$('#tblStockAdjustmentLine').removeClass('JColResizer');
 
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStockAdjustmentLine', function (error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStockAdjustmentLine', function (error, result) {
                             if (error) {
 
                                 //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
@@ -780,7 +782,7 @@ Template.stockadjustmentcard.onRendered(() => {
         templateObject.record.set(record);
         if (templateObject.record.get()) {
             // $('#tblStockAdjustmentLine').colResizable({liveDrag:true});
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStockAdjustmentLine', function (error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStockAdjustmentLine', function (error, result) {
                 if (error) {
 
                     //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
@@ -1408,17 +1410,17 @@ Template.stockadjustmentcard.onRendered(() => {
         $('#scanBarcode').modal('toggle');
         if (barcodeScanner != '') {
 
-            // setTimeout(function() {
-            //     $('#tblSearchOverview_filter .form-control-sm').val(barcodeScanner);
-            // }, 200);
-            // templateObject.getAllGlobalSearch(barcodeScanner);
+             setTimeout(function() {
+                $('#tblSearchOverview_filter .form-control-sm').val(barcodeScanner);
+            }, 200);
+            templateObject.getAllGlobalSearch(barcodeScanner);
         }
     }
 
 });
 Template.stockadjustmentcard.helpers({
     isBatchSerialNoTracking: () => {
-        return Session.get('CloudShowSerial') || false;
+        return localStorage.getItem('CloudShowSerial') || false;
     },
     record: () => {
         return Template.instance().record.get();
@@ -1445,13 +1447,13 @@ Template.stockadjustmentcard.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'stockadjustmentcard'
         });
     },
     salesCloudGridPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblStockAdjustmentLine'
         });
     },
@@ -1465,34 +1467,34 @@ Template.stockadjustmentcard.helpers({
         return Template.instance().uploadedFile.get();
     },
     productcost: () => {
-        return Session.get('CloudProductCost');
+        return localStorage.getItem('CloudProductCost');
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () => {
-        return Session.get('vs1companyPhone');
+        return localStorage.getItem('vs1companyPhone');
     },
     companyabn: () => {
-        return Session.get('vs1companyABN');
+        return localStorage.getItem('vs1companyABN');
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
     isMobileDevices: () => {
         var isMobile = false; //initiate as false
@@ -2142,9 +2144,10 @@ Template.stockadjustmentcard.events({
         }
     },
     'click .btnRemove': async function (event) {
+        let templateObject = Template.instance();
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
-        if(targetID != undefined) {    
+        if(targetID != undefined) {
             times++;
             if (times == 1) {
                 $('#deleteLineModal').modal('toggle');
@@ -2176,7 +2179,7 @@ Template.stockadjustmentcard.events({
         let stockTransferService = new StockTransferService();
         setTimeout(async function(){
         var currentDate = new Date();
-        
+
         swal({
             title: 'Delete Stock Adjustment',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
@@ -2321,7 +2324,7 @@ Template.stockadjustmentcard.events({
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         setTimeout(function(){
-        
+
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblStockAdjustmentLine tbody>tr').length > 1) {
             this.click;
@@ -2502,7 +2505,7 @@ Template.stockadjustmentcard.events({
                         Approved: false,
                         CreationDate: creationDate,
                         Deleted: false,
-                        Employee: Session.get('mySessionEmployee'),
+                        Employee: localStorage.getItem('mySessionEmployee'),
                         EnforceUOM: false,
                         //ISEmpty:false,
                         //IsStockTake:false,
@@ -2523,7 +2526,7 @@ Template.stockadjustmentcard.events({
                         Approved: false,
                         CreationDate: creationDate,
                         Deleted: false,
-                        Employee: Session.get('mySessionEmployee'),
+                        Employee: localStorage.getItem('mySessionEmployee'),
                         EnforceUOM: false,
                         //ISEmpty:false,
                         //IsStockTake:false,
@@ -2535,6 +2538,13 @@ Template.stockadjustmentcard.events({
             }
 
             stockTransferService.saveStockAdjustment(objDetails).then(function (objDetails) {
+
+                if (localStorage.getItem("enteredURL") != null) {
+                    FlowRouter.go(localStorage.getItem("enteredURL"));
+                    localStorage.removeItem("enteredURL");
+                    return;
+                }
+
                 // FlowRouter.go('/stockadjustmentoverview?success=true');
                 function generatePdfForMail(invoiceId) {
                     let file = "Invoice-" + invoiceId + ".pdf"
@@ -2581,7 +2591,7 @@ Template.stockadjustmentcard.events({
                     attachment.push(pdfObject);
                     let erpInvoiceId = objDetails.fields.ID;
 
-                    let mailFromName = Session.get('vs1companyName');
+                    let mailFromName = localStorage.getItem('vs1companyName');
                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                     //let customerEmailName = $('#edtCustomerName').val();
                     let checkEmailData = $('#edtCustomerEmail').val();
@@ -2862,7 +2872,7 @@ Template.stockadjustmentcard.events({
                         Approved: false,
                         CreationDate: creationDate,
                         Deleted: false,
-                        Employee: Session.get('mySessionEmployee'),
+                        Employee: localStorage.getItem('mySessionEmployee'),
                         EnforceUOM: false,
                         //ISEmpty:false,
                         //IsStockTake:false,
@@ -2883,7 +2893,7 @@ Template.stockadjustmentcard.events({
                         Approved: false,
                         CreationDate: creationDate,
                         Deleted: false,
-                        Employee: Session.get('mySessionEmployee'),
+                        Employee: localStorage.getItem('mySessionEmployee'),
                         EnforceUOM: false,
                         //ISEmpty:false,
                         //IsStockTake:false,
@@ -2939,7 +2949,7 @@ Template.stockadjustmentcard.events({
                     attachment.push(pdfObject);
                     let erpInvoiceId = objDetails.fields.ID;
 
-                    let mailFromName = Session.get('vs1companyName');
+                    let mailFromName = localStorage.getItem('vs1companyName');
                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                     //let customerEmailName = $('#edtCustomerName').val();
                     let checkEmailData = $('#edtCustomerEmail').val();
@@ -3297,8 +3307,8 @@ Template.stockadjustmentcard.events({
         });
 
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -3362,8 +3372,8 @@ Template.stockadjustmentcard.events({
     },
     'click .btnResetGridSettings': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -3390,8 +3400,8 @@ Template.stockadjustmentcard.events({
     },
     'click .btnResetSettings': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {

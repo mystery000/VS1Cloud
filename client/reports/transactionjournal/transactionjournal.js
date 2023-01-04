@@ -8,6 +8,7 @@ import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import GlobalFunctions from "../../GlobalFunctions";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import { ReactiveVar } from "meteor/reactive-var";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -22,15 +23,40 @@ Template.transactionjournallist.onCreated(() => {
   templateObject.reportOptions = new ReactiveVar([]);
   FxGlobalFunctions.initVars(templateObject);
   templateObject.records = new ReactiveVar([]);
+  templateObject.transactionjournallistth = new ReactiveVar([]);
 });
 function MakeNegative() {
-  $('td').each(function(){
-      if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+  $('td').each(function () {
+    if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
   });
 }
 Template.transactionjournallist.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
+
+  let reset_data = [
+    { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+    { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "100" },
+    { index: 3, label: 'Type', class: 'colType', active: true, display: true, width: "100" },
+    { index: 4, label: 'Debits (Ex)', class: 'colDebitsEx', active: true, display: true, width: "100" },
+    { index: 5, label: 'Debits (Inc)', class: 'colDebitsInc', active: true, display: true, width: "100" },
+    { index: 6, label: 'Credits (Ex)', class: 'colCreditsEx', active: true, display: true, width: "100" },
+    { index: 7, label: 'Credits (Inc)', class: 'colCreditsInc', active: true, display: true, width: "100" },
+    { index: 8, label: 'Global Ref', class: 'colGlobalRef', active: true, display: true, width: "100" },
+    { index: 9, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "100" },
+    { index: 10, label: 'Client Name', class: 'colClientName', active: false, display: true, width: "100" },
+    { index: 11, label: 'Account Number', class: 'colAccountName', active: false, display: true, width: "100" },
+    { index: 12, label: 'Tax Code', class: 'colTaxCode', active: false, display: true, width: "100" },
+    { index: 13, label: 'Product Desc', class: 'colProductDesc', active: false, display: true, width: "100" },
+    { index: 14, label: 'Account Type', class: 'colAccuntType', active: false, display: true, width: "100" },
+    { index: 15, label: 'Trans Time Stamp', class: 'colTransTimeStamp', active: false, display: true, width: "100" },
+    { index: 16, label: 'Employee Name', class: 'colEmployeeName', active: false, display: true, width: "100" },
+    { index: 17, label: 'Department', class: 'colDepartment', active: false, display: true, width: "100" },
+    { index: 18, label: 'Memo', class: 'colMemo', active: false, display: true, width: "100" },
+    { index: 19, label: 'Reference No', class: 'colReferencNo', active: false, display: true, width: "100" },
+    { index: 20, label: 'FixedAssetId', class: 'colfixedAssetID', active: false, display: true, width: "100" },
+  ];
+  templateObject.transactionjournallistth.set(reset_data);
 
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
@@ -87,7 +113,7 @@ Template.transactionjournallist.onRendered(() => {
 
     // //--------- END OF DATE ---------------//
   };
-  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function (ignoreDate = false, formatDateFrom = new Date(), formatDateTo = new Date()) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.fromDate = formatDateFrom;
@@ -101,7 +127,7 @@ Template.transactionjournallist.onRendered(() => {
       };
     }
     $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
+    if (ignoreDate == true) {
       $('.edtReportDates').attr('disabled', true);
       templateObject.dateAsAt.set("Current Date");
     }
@@ -115,7 +141,7 @@ Template.transactionjournallist.onRendered(() => {
     );
   };
 
-  templateObject.loadReport = async  (dateFrom = null, dateTo = null, ignoreDate = false) => {
+  templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
     LoadingOverlay.show();
     // let data = [];
     // if (!localStorage.getItem('VS1TransactionJournal_Report')) {
@@ -132,7 +158,7 @@ Template.transactionjournallist.onRendered(() => {
     // }
 
     let data = await CachedHttp.get(erpObject.TTransactionListReport, async () => {
-      return await reportService.getTransactionJournalReport( dateFrom, dateTo, ignoreDate);
+      return await reportService.getTransactionJournalReport(dateFrom, dateTo, ignoreDate);
     }, {
       useIndexDb: true,
       useLocalStorage: false,
@@ -143,29 +169,29 @@ Template.transactionjournallist.onRendered(() => {
 
     data = data.response;
 
-    let reportGroups = []; 
-    if( data.ttransactionlistreport.length > 0 ){
-        for (const item of data.ttransactionlistreport) {
-            let isExist = reportGroups.filter((subitem) => {
-                if( subitem.ACCOUNTID == item.ACCOUNTID ){
-                    subitem.SubAccounts.push(item)
-                    return subitem
-                }
-            });
+    let reportGroups = [];
+    if (data.ttransactionlistreport.length > 0) {
+      for (const item of data.ttransactionlistreport) {
+        let isExist = reportGroups.filter((subitem) => {
+          if (subitem.ACCOUNTID == item.ACCOUNTID) {
+            subitem.SubAccounts.push(item)
+            return subitem
+          }
+        });
 
-            if( isExist.length == 0 ){
-                reportGroups.push({
-                    SubAccounts: [item],
-                    ...item
-                });
-            }
+        if (isExist.length == 0) {
+          reportGroups.push({
+            SubAccounts: [item],
+            ...item
+          });
         }
+      }
     }
     templateObject.records.set(reportGroups);
     if (templateObject.records.get()) {
       setTimeout(function () {
         $("td a").each(function () {
-          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+          if ($(this).text().indexOf("-" + Currency) >= 0) {
             $(this).addClass("text-danger");
             $(this).removeClass("fgrblue");
           }
@@ -204,6 +230,35 @@ Template.transactionjournallist.onRendered(() => {
 });
 
 Template.transactionjournallist.events({
+  'click .chkDatatable': function (event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.' + columnDataValue).addClass('showColumn');
+      $('.' + columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.' + columnDataValue).addClass('hiddenColumn');
+      $('.' + columnDataValue).removeClass('showColumn');
+    }
+  },
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click .btnRefresh": function () {
     LoadingOverlay.show();
     localStorage.setItem("VS1BinLocations_Report", "");
@@ -235,47 +290,47 @@ Template.transactionjournallist.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
-    setTimeout(function(){
-    let values = [];
-    let basedOnTypeStorages = Object.keys(localStorage);
-    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-      let employeeId = storage.split("_")[2];
-      return (
-        storage.includes("BasedOnType_") &&
-        employeeId == Session.get("mySessionEmployeeLoggedID")
-      );
-    });
-    let i = basedOnTypeStorages.length;
-    if (i > 0) {
-      while (i--) {
-        values.push(localStorage.getItem(basedOnTypeStorages[i]));
-      }
-    }
-    values.forEach((value) => {
-      let reportData = JSON.parse(value);
-      reportData.HostURL = $(location).attr("protocal")
-        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-        : "http://" + $(location).attr("hostname");
-      if (reportData.BasedOnType.includes("P")) {
-        if (reportData.FormID == 1) {
-          let formIds = reportData.FormIDs.split(",");
-          if (formIds.includes("225")) {
-            reportData.FormID = 225;
-            Meteor.call("sendNormalEmail", reportData);
-          }
-        } else {
-          if (reportData.FormID == 225)
-            Meteor.call("sendNormalEmail", reportData);
+    setTimeout(function () {
+      let values = [];
+      let basedOnTypeStorages = Object.keys(localStorage);
+      basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+        let employeeId = storage.split("_")[2];
+        return (
+          storage.includes("BasedOnType_") &&
+          employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
+        );
+      });
+      let i = basedOnTypeStorages.length;
+      if (i > 0) {
+        while (i--) {
+          values.push(localStorage.getItem(basedOnTypeStorages[i]));
         }
       }
-    });
+      values.forEach((value) => {
+        let reportData = JSON.parse(value);
+        reportData.HostURL = $(location).attr("protocal")
+          ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+          : "http://" + $(location).attr("hostname");
+        if (reportData.BasedOnType.includes("P")) {
+          if (reportData.FormID == 1) {
+            let formIds = reportData.FormIDs.split(",");
+            if (formIds.includes("225")) {
+              reportData.FormID = 225;
+              Meteor.call("sendNormalEmail", reportData);
+            }
+          } else {
+            if (reportData.FormID == 225)
+              Meteor.call("sendNormalEmail", reportData);
+          }
+        }
+      });
 
-    document.title = "Bin Location List";
-    $(".printReport").print({
-      title: "Bin Location List | " + loggedCompany,
-      noPrintSelector: ".addSummaryEditor",
-    });
-  }, delayTimeAfterSound);
+      document.title = "Bin Location List";
+      $(".printReport").print({
+        title: "Bin Location List | " + loggedCompany,
+        noPrintSelector: ".addSummaryEditor",
+      });
+    }, delayTimeAfterSound);
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
@@ -378,16 +433,16 @@ Template.transactionjournallist.events({
   //   let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
   //   await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
   // },
-  "click #ignoreDate":  (e, templateObject) => {
+  "click #ignoreDate": (e, templateObject) => {
     localStorage.setItem("VS1TransactionJournal_Report", "");
     LoadingOverlay.show();
-   // localStorage.setItem('VS1TransactionJournal_Report', '');
+    // localStorage.setItem('VS1TransactionJournal_Report', '');
     // let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
     //await templateObject.setReportOptions(true);
     $('#dateFrom').attr('readonly', true);
     $('#dateTo').attr('readonly', true);
-     templateObject.loadReport(null, null, true);
+    templateObject.loadReport(null, null, true);
   },
 
   // CURRENCY MODULE //
@@ -444,18 +499,18 @@ Template.transactionjournallist.events({
   },
   "click [href='#noInfoFound']": function () {
     swal({
-        title: 'Information',
-        text: "No further information available on this column",
-        type: 'warning',
-        confirmButtonText: 'Ok'
-      })
+      title: 'Information',
+      text: "No further information available on this column",
+      type: 'warning',
+      confirmButtonText: 'Ok'
+    })
   },
 
 
   /**
    * This is the new way to handle any modification on the date fields
    */
-   "change #dateTo, change #dateFrom": (e, templateObject) => {
+  "change #dateTo, change #dateFrom": (e, templateObject) => {
     localStorage.setItem("VS1TransactionJournal_Report", "");
     templateObject.loadReport(
       GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
@@ -467,6 +522,9 @@ Template.transactionjournallist.events({
 });
 
 Template.transactionjournallist.helpers({
+  transactionjournallistth: () => {
+    return Template.instance().transactionjournallistth.get();
+  },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
@@ -474,7 +532,7 @@ Template.transactionjournallist.helpers({
     return Template.instance().records.get();
   },
   redirectionType(item) {
-    if(item.AccountType === 'PO') {
+    if (item.AccountType === 'PO') {
       return '/purchaseordercard?id=' + item.ACCOUNTID;
     } else {
       return '#noInfoFound';
@@ -487,14 +545,14 @@ Template.transactionjournallist.helpers({
     return false;
   },
 
-  formatDate: ( date ) => {
-    return ( date )? moment(date).format("YYYY/MM/DD") : '';
+  formatDate: (date) => {
+    return (date) ? moment(date).format("YYYY/MM/DD") : '';
   },
-   // FX Module //
-   convertAmount: (amount, currencyData) => {
+  // FX Module //
+  convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    if(isNaN(amount)) {
+    if (isNaN(amount)) {
       if (!amount || amount.trim() == "") {
         return "";
       }
@@ -636,22 +694,22 @@ Template.transactionjournallist.helpers({
     return Currency;
   },
 
-  formatPrice( amount){
+  formatPrice(amount) {
 
     let utilityService = new UtilityService();
-    if( isNaN( amount ) ){
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    if (isNaN(amount)) {
+      amount = (amount === undefined || amount === null || amount.length === 0) ? 0 : amount;
+      amount = (amount) ? Number(amount.replace(/[^0-9.-]+/g, "")) : 0;
     }
-      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    return utilityService.modifynegativeCurrencyFormat(amount) || 0.00;
   },
-  formatTax( amount){
+  formatTax(amount) {
 
-    if( isNaN( amount ) ){
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    if (isNaN(amount)) {
+      amount = (amount === undefined || amount === null || amount.length === 0) ? 0 : amount;
+      amount = (amount) ? Number(amount.replace(/[^0-9.-]+/g, "")) : 0;
     }
-      return amount + "%" || "0.00 %";
+    return amount + "%" || "0.00 %";
   },
 });
 

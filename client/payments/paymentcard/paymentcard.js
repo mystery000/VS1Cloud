@@ -386,7 +386,13 @@ Template.paymentcard.onRendered(() => {
         let customer = $('#edtCustomerName').val();
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
+        if (name == undefined)
+            name = customer;
+        if (surname == undefined)
+            surname = "";
         let dept = $('#sltDepartment').val();
+        if (dept == "Default" || dept == undefined)
+            dept = "";
         var erpGet = erpDb();
         let fx = $('#sltCurrency').val();
 
@@ -436,7 +442,7 @@ Template.paymentcard.onRendered(() => {
 
 
         });
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -454,11 +460,11 @@ Template.paymentcard.onRendered(() => {
 
         if (number == 1) {
             item_payments = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                 o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                 o_phone: Template.paymentcard.__helpers.get('companyphone').call(),
@@ -472,7 +478,7 @@ Template.paymentcard.onRendered(() => {
                 paylink: "",
                 supplier_type: "Customer",
                 supplier_name: customer,
-                supplier_addr: "",
+                supplier_addr: customer + "\r\n" + name + " " + surname + "\r\n" + customerEmail + "\r\n" + dept,
                 fields: {
                     "Date": ["15", "left"],
                     "Type": ["15", "left"],
@@ -505,11 +511,11 @@ Template.paymentcard.onRendered(() => {
 
         } else if (number == 2) {
             item_payments = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                 o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                 o_phone: Template.paymentcard.__helpers.get('companyphone').call(),
@@ -523,7 +529,7 @@ Template.paymentcard.onRendered(() => {
                 paylink: "",
                 supplier_type: "Customer",
                 supplier_name: customer,
-                supplier_addr: "",
+                supplier_addr: customer + "\r\n" + name + " " + surname + "\r\n" + customerEmail + "\r\n" + dept,
                 fields: {
                     "Date": ["15", "left"],
                     "Type": ["15", "left"],
@@ -560,11 +566,11 @@ Template.paymentcard.onRendered(() => {
                 fx = '  ';
             }
             item_payments = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                 o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                 o_phone: Template.paymentcard.__helpers.get('companyphone').call(),
@@ -578,7 +584,7 @@ Template.paymentcard.onRendered(() => {
                 paylink: "",
                 supplier_type: "Customer",
                 supplier_name: customer,
-                supplier_addr: "",
+                supplier_addr: customer + "\r\n" + name + " " + surname + "\r\n" + customerEmail + "\r\n" + dept,
                 fields: {
                     "Date": ["15", "left"],
                     "Type": ["15", "left"],
@@ -701,7 +707,7 @@ Template.paymentcard.onRendered(() => {
 
 
         });
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -719,11 +725,11 @@ Template.paymentcard.onRendered(() => {
 
         if (number == 1) {
             item_payments = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                 o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                 o_phone: Template.paymentcard.__helpers.get('companyphone').call(),
@@ -770,11 +776,11 @@ Template.paymentcard.onRendered(() => {
 
         } else if (number == 2) {
             item_payments = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                 o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                 o_phone: Template.paymentcard.__helpers.get('companyphone').call(),
@@ -825,11 +831,11 @@ Template.paymentcard.onRendered(() => {
                 fx = '  ';
             }
             item_payments = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                 o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                 o_phone: Template.paymentcard.__helpers.get('companyphone').call(),
@@ -906,11 +912,11 @@ Template.paymentcard.onRendered(() => {
             var count = 0;
             for (item_temp of item) {
                 if (count == 1) {
-                    html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+                    html = html + "<td style='color:#00a3d3; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else if (count > 2) {
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else {
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 }
                 count++;
             }
@@ -957,11 +963,11 @@ Template.paymentcard.onRendered(() => {
             var count = 0;
             for (item_temp of item) {
                 if (count == 1) {
-                    html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+                    html = html + "<td style='color:#00a3d3; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else if (count > 2) {
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else {
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 }
                 count++;
             }
@@ -1012,11 +1018,11 @@ Template.paymentcard.onRendered(() => {
             var count = 0;
             for (item_temp of item) {
                 if (count == 1) {
-                    html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+                    html = html + "<td style='color:#00a3d3; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else if (count > 2) {
-                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    html = html + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 } else {
-                    html = html + "<td>" + item_temp + "</td>";
+                    html = html + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
                 }
                 count++;
             }
@@ -1355,7 +1361,7 @@ Template.paymentcard.onRendered(() => {
 
     templateObject.getLastPaymentData = async function () {
         let lastBankAccount = "Bank";
-        let lastDepartment = Session.get('department') || defaultDept || "";
+        let lastDepartment = localStorage.getItem('department') || defaultDept || "";
         paymentService.getAllCustomerPaymentData1().then(function (data) {
             let latestPaymentId;
             if (data.tcustomerpayment.length > 0) {
@@ -1379,8 +1385,8 @@ Template.paymentcard.onRendered(() => {
                 ;
             }, 50);
         }).catch(function (err) {
-            if (Session.get('bankaccount')) {
-                $('#edtSelectBankAccountName').val(Session.get('bankaccount'));
+            if (localStorage.getItem('bankaccount')) {
+                $('#edtSelectBankAccountName').val(localStorage.getItem('bankaccount'));
             } else {
                 $('#edtSelectBankAccountName').val(lastBankAccount);
             }
@@ -3832,12 +3838,12 @@ Template.paymentcard.onRendered(() => {
                             customerName: data.fields.CustomerName || '',
                             paymentDate: begunDate,
                             reference: data.fields.ReferenceNo || ' ',
-                            bankAccount: Session.get('bankaccount') || data.fields.GLAccountName || '',
+                            bankAccount: localStorage.getItem('bankaccount') || data.fields.GLAccountName || '',
                             paymentAmount: appliedAmt || 0,
                             notes: data.fields.Comments,
                             LineItems: lineItems,
-                            checkpayment: Session.get('paymentmethod') || data.fields.PayMethod,
-                            department: Session.get('department') || data.fields.DeptClassName,
+                            checkpayment: localStorage.getItem('paymentmethod') || data.fields.PayMethod,
+                            department: localStorage.getItem('department') || data.fields.DeptClassName,
                             applied: appliedAmt.toLocaleString(undefined, {
                                 minimumFractionDigits: 2
                             })
@@ -3845,14 +3851,14 @@ Template.paymentcard.onRendered(() => {
                         };
 
                         _setTmpAppliedAmount(record.applied);
-                        let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
+                        let getPaymentMethodVal = localStorage.getItem('paymentmethod') || data.fields.PayMethod || 'Cash';
                         $('#sltPaymentMethod').val(getPaymentMethodVal);
 
-                        let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
+                        let getDepartmentVal = localStorage.getItem('department') || data.fields.DeptClassName || defaultDept;
                         templateObject.record.set(record);
                         $('#edtCustomerName').val(data.fields.CustomerName);
                         $('#sltDepartment').val(getDepartmentVal);
-                        let bankAccountData = Session.get('bankaccount') || 'Bank';
+                        let bankAccountData = localStorage.getItem('bankaccount') || 'Bank';
                         $('#edtSelectBankAccountName').val(bankAccountData);
                         await templateObject.getLastPaymentData();
                         if (clientList) {
@@ -3920,12 +3926,12 @@ Template.paymentcard.onRendered(() => {
                                 customerName: useData[d].fields.CustomerName || '',
                                 paymentDate: begunDate,
                                 reference: useData[d].fields.ReferenceNo || ' ',
-                                bankAccount: Session.get('bankaccount') || useData[d].fields.GLAccountName || '',
+                                bankAccount: localStorage.getItem('bankaccount') || useData[d].fields.GLAccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: useData[d].fields.Comments,
                                 LineItems: lineItems,
-                                checkpayment: Session.get('paymentmethod') || useData[d].fields.PayMethod,
-                                department: Session.get('department') || useData[d].fields.DeptClassName,
+                                checkpayment: localStorage.getItem('paymentmethod') || useData[d].fields.PayMethod,
+                                department: localStorage.getItem('department') || useData[d].fields.DeptClassName,
                                 applied: appliedAmt.toLocaleString(undefined, {
                                     minimumFractionDigits: 2
                                 })
@@ -3935,13 +3941,13 @@ Template.paymentcard.onRendered(() => {
 
                             templateObject.record.set(record);
                             _setTmpAppliedAmount(record.applied);
-                            let getDepartmentVal = Session.get('department') || useData[d].fields.DeptClassName || defaultDept;
+                            let getDepartmentVal = localStorage.getItem('department') || useData[d].fields.DeptClassName || defaultDept;
 
                             $('#edtCustomerName').val(useData[d].fields.CustomerName);
-                            let getPaymentMethodVal = Session.get('paymentmethod') || useData[d].fields.PayMethod;
+                            let getPaymentMethodVal = localStorage.getItem('paymentmethod') || useData[d].fields.PayMethod;
                             $('#sltPaymentMethod').val(getPaymentMethodVal);
                             $('#sltDepartment').val(getDepartmentVal);
-                            let bankAccountData = Session.get('bankaccount') || 'Bank';
+                            let bankAccountData = localStorage.getItem('bankaccount') || 'Bank';
                             $('#edtSelectBankAccountName').val(bankAccountData);
                             await templateObject.getLastPaymentData();
                             if (clientList) {
@@ -4004,12 +4010,12 @@ Template.paymentcard.onRendered(() => {
                                 customerName: data.fields.CustomerName || '',
                                 paymentDate: begunDate,
                                 reference: data.fields.ReferenceNo || ' ',
-                                bankAccount: Session.get('bankaccount') || data.fields.GLAccountName || '',
+                                bankAccount: localStorage.getItem('bankaccount') || data.fields.GLAccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: data.fields.Comments,
                                 LineItems: lineItems,
-                                checkpayment: Session.get('paymentmethod') || data.fields.PayMethod,
-                                department: Session.get('department') || data.fields.DeptClassName,
+                                checkpayment: localStorage.getItem('paymentmethod') || data.fields.PayMethod,
+                                department: localStorage.getItem('department') || data.fields.DeptClassName,
                                 applied: appliedAmt.toLocaleString(undefined, {
                                     minimumFractionDigits: 2
                                 })
@@ -4017,14 +4023,14 @@ Template.paymentcard.onRendered(() => {
                             };
                             _setTmpAppliedAmount(record.applied);
 
-                            let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
+                            let getPaymentMethodVal = localStorage.getItem('paymentmethod') || data.fields.PayMethod || 'Cash';
                             $('#sltPaymentMethod').val(getPaymentMethodVal);
 
-                            let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
+                            let getDepartmentVal = localStorage.getItem('department') || data.fields.DeptClassName || defaultDept;
                             templateObject.record.set(record);
                             $('#edtCustomerName').val(data.fields.CustomerName);
                             $('#sltDepartment').val(getDepartmentVal);
-                            let bankAccountData = Session.get('bankaccount') || 'Bank';
+                            let bankAccountData = localStorage.getItem('bankaccount') || 'Bank';
                             $('#edtSelectBankAccountName').val(bankAccountData);
                             await templateObject.getLastPaymentData();
                             if (clientList) {
@@ -4087,12 +4093,12 @@ Template.paymentcard.onRendered(() => {
                         customerName: data.fields.CustomerName || '',
                         paymentDate: begunDate,
                         reference: data.fields.ReferenceNo || ' ',
-                        bankAccount: Session.get('bankaccount') || data.fields.GLAccountName || '',
+                        bankAccount: localStorage.getItem('bankaccount') || data.fields.GLAccountName || '',
                         paymentAmount: appliedAmt || 0,
                         notes: data.fields.Comments,
                         LineItems: lineItems,
-                        checkpayment: Session.get('paymentmethod') || data.fields.PayMethod,
-                        department: Session.get('department') || data.fields.DeptClassName,
+                        checkpayment: localStorage.getItem('paymentmethod') || data.fields.PayMethod,
+                        department: localStorage.getItem('department') || data.fields.DeptClassName,
                         applied: appliedAmt.toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         })
@@ -4100,13 +4106,13 @@ Template.paymentcard.onRendered(() => {
                     };
                     templateObject.record.set(record);
                     _setTmpAppliedAmount(record.applied);
-                    let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
+                    let getDepartmentVal = localStorage.getItem('department') || data.fields.DeptClassName || defaultDept;
                     await templateObject.getLastPaymentData();
                     $('#edtCustomerName').val(data.fields.CustomerName);
-                    let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
+                    let getPaymentMethodVal = localStorage.getItem('paymentmethod') || data.fields.PayMethod || 'Cash';
                     $('#sltPaymentMethod').val(getPaymentMethodVal);
                     $('#sltDepartment').val(getDepartmentVal);
-                    let bankAccountData = Session.get('bankaccount') || 'Bank';
+                    let bankAccountData = localStorage.getItem('bankaccount') || 'Bank';
                     $('#edtSelectBankAccountName').val(bankAccountData);
                     if (clientList) {
                         for (var i = 0; i < clientList.length; i++) {
@@ -4209,14 +4215,14 @@ Template.paymentcard.onRendered(() => {
                     customerName: companyName || '',
                     paymentDate: paymentdate ? moment(paymentdate).format('DD/MM/YYYY') : "",
                     reference: referenceNo || ' ',
-                    bankAccount: Session.get('bankaccount') || accountName || '',
+                    bankAccount: localStorage.getItem('bankaccount') || accountName || '',
                     paymentAmount: appliedAmt.toLocaleString(undefined, {
                         minimumFractionDigits: 2
                     }) || 0,
                     notes: notes || '',
                     LineItems: lineItems,
-                    checkpayment: Session.get('paymentmethod') || checkpayment || '',
-                    department: Session.get('department') || department || '',
+                    checkpayment: localStorage.getItem('paymentmethod') || checkpayment || '',
+                    department: localStorage.getItem('department') || department || '',
                     applied: appliedAmt.toLocaleString(undefined, {
                         minimumFractionDigits: 2
                     }) || 0
@@ -4224,10 +4230,10 @@ Template.paymentcard.onRendered(() => {
                 };
                 _setTmpAppliedAmount(record.applied);
 
-                let getPaymentMethodVal = Session.get('paymentmethod') || checkpayment || 'Cash';
+                let getPaymentMethodVal = localStorage.getItem('paymentmethod') || checkpayment || 'Cash';
                 $('#sltPaymentMethod').val(getPaymentMethodVal);
                 $('#edtCustomerName').val(companyName);
-                let bankAccountData = Session.get('bankaccount') || accountName || 'Bank';
+                let bankAccountData = localStorage.getItem('bankaccount') || accountName || 'Bank';
                 $('#edtSelectBankAccountName').val(bankAccountData);
 
                 templateObject.record.set(record);
@@ -4350,12 +4356,12 @@ Template.paymentcard.onRendered(() => {
                     customerName: data.fields.CustomerName || '',
                     paymentDate: begunDate,
                     reference: data.fields.ReferenceNo || ' ',
-                    bankAccount: Session.get('bankaccount') || data.fields.GLAccountName || '',
+                    bankAccount: localStorage.getItem('bankaccount') || data.fields.GLAccountName || '',
                     paymentAmount: appliedAmt || 0,
                     notes: data.fields.Comments,
                     LineItems: lineItems,
-                    checkpayment: Session.get('paymentmethod') || data.fields.PayMethod,
-                    department: Session.get('department') || data.fields.DeptClassName,
+                    checkpayment: localStorage.getItem('paymentmethod') || data.fields.PayMethod,
+                    department: localStorage.getItem('department') || data.fields.DeptClassName,
                     applied: appliedAmt.toLocaleString(undefined, {
                         minimumFractionDigits: 2
                     })
@@ -4364,15 +4370,15 @@ Template.paymentcard.onRendered(() => {
                 templateObject.record.set(record);
                 _setTmpAppliedAmount(record.applied);
 
-                let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
+                let getDepartmentVal = localStorage.getItem('department') || data.fields.DeptClassName || defaultDept;
 
                 $('#edtCustomerName').val(data.fields.CustomerName);
 
-                let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
+                let getPaymentMethodVal = localStorage.getItem('paymentmethod') || data.fields.PayMethod || 'Cash';
                 $('#sltPaymentMethod').val(getPaymentMethodVal);
 
                 $('#sltDepartment').val(getDepartmentVal);
-                let bankAccountData = Session.get('bankaccount') || 'Bank';
+                let bankAccountData = localStorage.getItem('bankaccount') || 'Bank';
                 $('#edtSelectBankAccountName').val(bankAccountData);
                 if (clientList) {
                     for (var i = 0; i < clientList.length; i++) {
@@ -4451,25 +4457,25 @@ Template.paymentcard.onRendered(() => {
                         customerName: data.fields.CustomerName || '',
                         paymentDate: begunDate,
                         reference: data.fields.ReferenceNo || ' ',
-                        bankAccount: Session.get('bankaccount') || data.fields.GLAccountName || '',
+                        bankAccount: localStorage.getItem('bankaccount') || data.fields.GLAccountName || '',
                         paymentAmount: utilityService.modifynegativeCurrencyFormat(amountData) || 0,
                         notes: data.fields.Comments,
                         LineItems: lineItems,
-                        checkpayment: Session.get('paymentmethod') || data.fields.PayMethod,
-                        department: Session.get('department') || data.fields.DeptClassName,
+                        checkpayment: localStorage.getItem('paymentmethod') || data.fields.PayMethod,
+                        department: localStorage.getItem('department') || data.fields.DeptClassName,
                         applied: utilityService.modifynegativeCurrencyFormat(amountData) || 0
 
                     };
                     templateObject.record.set(record);
                     _setTmpAppliedAmount(record.applied);
-                    let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
+                    let getDepartmentVal = localStorage.getItem('department') || data.fields.DeptClassName || defaultDept;
 
-                    let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
+                    let getPaymentMethodVal = localStorage.getItem('paymentmethod') || data.fields.PayMethod || 'Cash';
                     $('#sltPaymentMethod').val(getPaymentMethodVal);
 
                     $('#edtCustomerName').val(data.fields.CustomerName);
                     $('#sltDepartment').val(getDepartmentVal);
-                    let bankAccountData = Session.get('bankaccount') || 'Bank';
+                    let bankAccountData = localStorage.getItem('bankaccount') || 'Bank';
                     $('#edtSelectBankAccountName').val(bankAccountData);
                     if (clientList) {
                         for (var i = 0; i < clientList.length; i++) {
@@ -4535,9 +4541,9 @@ Template.paymentcard.onRendered(() => {
         let paymentrecord = {
             id: '',
             lid: '',
-            bankAccount: Session.get('bankaccount') || 'Bank',
-            checkpayment: Session.get('paymentmethod') || '',
-            department: Session.get('department') || '',
+            bankAccount: localStorage.getItem('bankaccount') || 'Bank',
+            checkpayment: localStorage.getItem('paymentmethod') || '',
+            department: localStorage.getItem('department') || '',
             accountname: '',
             memo: '',
             sosupplier: '',
@@ -4599,12 +4605,12 @@ Template.paymentcard.onRendered(() => {
         $("#form :input").prop("disabled", false);
         templateObject.record.set(paymentrecord);
         _setTmpAppliedAmount(paymentrecord.applied);
-        let getDepartmentVal = Session.get('department') || defaultDept;
+        let getDepartmentVal = localStorage.getItem('department') || defaultDept;
 
-        let getPaymentMethodVal = Session.get('paymentmethod') || '';
+        let getPaymentMethodVal = localStorage.getItem('paymentmethod') || '';
         $('#sltPaymentMethod').val(getPaymentMethodVal);
         $('#sltDepartment').val(getDepartmentVal);
-        let bankAccountData = Session.get('bankaccount') || 'Bank';
+        let bankAccountData = localStorage.getItem('bankaccount') || 'Bank';
         $('#edtSelectBankAccountName').val(bankAccountData);
 
 
@@ -4731,7 +4737,7 @@ Template.paymentcard.onRendered(() => {
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     return storage.includes('BasedOnType_');
                 });
                 let j = basedOnTypeStorages.length;
@@ -4908,49 +4914,49 @@ Template.paymentcard.helpers({
     },
     salesCloudGridPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblPaymentcard'
         });
     },
     companyphone: () => {
-        return "Phone: " + Session.get('vs1companyPhone');
+        return "Phone: " + localStorage.getItem('vs1companyPhone');
     },
     companyabn: () => { //Update Company ABN
-        let countryABNValue = Session.get("vs1companyABN");
+        let countryABNValue = localStorage.getItem("vs1companyABN");
         // if (LoggedCountry == "South Africa") {
-        //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+        //     countryABNValue = "Vat No: " + localStorage.getItem("vs1companyABN");
         // }
         return countryABNValue;
     },
     companyReg: () => { //Add Company Reg
         let countryRegValue = '';
         if (LoggedCountry == "South Africa") {
-            countryRegValue = "Reg No: " + Session.get('vs1companyReg');
+            countryRegValue = "Reg No: " + localStorage.getItem('vs1companyReg');
         }
 
         return countryRegValue;
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
 
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
 
 
@@ -5062,9 +5068,9 @@ Template.paymentcard.events({
         }
 
 
-        Session.setPersistent('paymentmethod', payMethod);
-        Session.setPersistent('bankaccount', bankAccount);
-        Session.setPersistent('department', department);
+        localStorage.setItem('paymentmethod', payMethod);
+        localStorage.setItem('bankaccount', bankAccount);
+        localStorage.setItem('department', department);
         var url = FlowRouter.current().path;
         if (url.indexOf('?soid=') > 0) {
             var getsale_id = url.split('?soid=');
@@ -5120,6 +5126,13 @@ Template.paymentcard.events({
                 };
 
                 paymentService.saveDepositData(objDetails).then(function (data) {
+
+                    if (localStorage.getItem("enteredURL") != null) {
+                        FlowRouter.go(localStorage.getItem("enteredURL"));
+                        localStorage.removeItem("enteredURL");
+                        return;
+                    }
+
                     var customerID = $('#edtCustomerEmail').attr('customerid');
                     // Send Email
                     $('#html-2-pdfwrapper').css('display', 'block');
@@ -5148,7 +5161,7 @@ Template.paymentcard.events({
                             // let mailBody = "VS1 Cloud Test";
                             let erpInvoiceId = objDetails.fields.ID;
 
-                            let mailFromName = Session.get('vs1companyName');
+                            let mailFromName = localStorage.getItem('vs1companyName');
                             let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                             let customerEmailName = $('#edtCustomerName').val();
                             let checkEmailData = $('#edtCustomerEmail').val();
@@ -5255,7 +5268,7 @@ Template.paymentcard.events({
                                 let basedOnTypeStorages = Object.keys(localStorage);
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
-                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                     return storage.includes('BasedOnType_');
                                 });
                                 let i = basedOnTypeStorages.length;
@@ -5317,7 +5330,7 @@ Template.paymentcard.events({
                                 let basedOnTypeStorages = Object.keys(localStorage);
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
-                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                     return storage.includes('BasedOnType_');
                                 });
                                 let i = basedOnTypeStorages.length;
@@ -5378,7 +5391,7 @@ Template.paymentcard.events({
                                 let basedOnTypeStorages = Object.keys(localStorage);
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
-                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                     return storage.includes('BasedOnType_');
                                 });
                                 let i = basedOnTypeStorages.length;
@@ -5412,7 +5425,7 @@ Template.paymentcard.events({
                                 let basedOnTypeStorages = Object.keys(localStorage);
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
-                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                     return storage.includes('BasedOnType_');
                                 });
                                 let i = basedOnTypeStorages.length;
@@ -5577,7 +5590,7 @@ Template.paymentcard.events({
                                 // let mailBody = "VS1 Cloud Test";
                                 let erpInvoiceId = objDetails.fields.ID;
 
-                                let mailFromName = Session.get('vs1companyName');
+                                let mailFromName = localStorage.getItem('vs1companyName');
                                 let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                                 let customerEmailName = $('#edtCustomerName').val();
                                 let checkEmailData = $('#edtCustomerEmail').val();
@@ -5689,7 +5702,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -5756,7 +5769,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -5822,7 +5835,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -5855,7 +5868,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -6002,7 +6015,7 @@ Template.paymentcard.events({
                                 // let mailBody = "VS1 Cloud Test";
                                 let erpInvoiceId = objDetails.fields.ID;
 
-                                let mailFromName = Session.get('vs1companyName');
+                                let mailFromName = localStorage.getItem('vs1companyName');
                                 let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                                 let customerEmailName = $('#edtCustomerName').val();
                                 let checkEmailData = $('#edtCustomerEmail').val();
@@ -6119,7 +6132,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -6186,7 +6199,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -6252,7 +6265,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -6285,7 +6298,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -6456,7 +6469,7 @@ Template.paymentcard.events({
                             // let mailBody = "VS1 Cloud Test";
                             let erpInvoiceId = objDetails.fields.ID;
 
-                            let mailFromName = Session.get('vs1companyName');
+                            let mailFromName = localStorage.getItem('vs1companyName');
                             let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                             let customerEmailName = $('#edtCustomerName').val();
                             let checkEmailData = $('#edtCustomerEmail').val();
@@ -6563,7 +6576,7 @@ Template.paymentcard.events({
                                 let basedOnTypeStorages = Object.keys(localStorage);
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
-                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                     return storage.includes('BasedOnType_');
                                 });
                                 let i = basedOnTypeStorages.length;
@@ -6625,7 +6638,7 @@ Template.paymentcard.events({
                                 let basedOnTypeStorages = Object.keys(localStorage);
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
-                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                     return storage.includes('BasedOnType_');
                                 });
                                 let i = basedOnTypeStorages.length;
@@ -6686,7 +6699,7 @@ Template.paymentcard.events({
                                 let basedOnTypeStorages = Object.keys(localStorage);
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
-                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                     return storage.includes('BasedOnType_');
                                 });
                                 let i = basedOnTypeStorages.length;
@@ -6850,7 +6863,7 @@ Template.paymentcard.events({
                         // let mailBody = "VS1 Cloud Test";
                         let erpInvoiceId = objDetails.fields.ID;
 
-                        let mailFromName = Session.get('vs1companyName');
+                        let mailFromName = localStorage.getItem('vs1companyName');
                         let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                         let customerEmailName = $('#edtCustomerName').val();
                         let checkEmailData = $('#edtCustomerEmail').val();
@@ -6972,7 +6985,7 @@ Template.paymentcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 return storage.includes('BasedOnType_');
                             });
                             let i = basedOnTypeStorages.length;
@@ -7039,7 +7052,7 @@ Template.paymentcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 return storage.includes('BasedOnType_');
                             });
                             let i = basedOnTypeStorages.length;
@@ -7105,7 +7118,7 @@ Template.paymentcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 return storage.includes('BasedOnType_');
                             });
                             let i = basedOnTypeStorages.length;
@@ -7139,7 +7152,7 @@ Template.paymentcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 return storage.includes('BasedOnType_');
                             });
                             let i = basedOnTypeStorages.length;
@@ -7260,7 +7273,7 @@ Template.paymentcard.events({
                     // let mailBody = "VS1 Cloud Test";
                     let erpInvoiceId = paymentID;
 
-                    let mailFromName = Session.get('vs1companyName');
+                    let mailFromName = localStorage.getItem('vs1companyName');
                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                     let customerEmailName = $('#edtCustomerName').val();
                     let checkEmailData = $('#edtCustomerEmail').val();
@@ -7372,7 +7385,7 @@ Template.paymentcard.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                             return storage.includes('BasedOnType_');
                         });
                         let i = basedOnTypeStorages.length;
@@ -7439,7 +7452,7 @@ Template.paymentcard.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                             return storage.includes('BasedOnType_');
                         });
                         let i = basedOnTypeStorages.length;
@@ -7505,7 +7518,7 @@ Template.paymentcard.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                             return storage.includes('BasedOnType_');
                         });
                         let i = basedOnTypeStorages.length;
@@ -7538,7 +7551,7 @@ Template.paymentcard.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                             return storage.includes('BasedOnType_');
                         });
                         let i = basedOnTypeStorages.length;
@@ -7678,9 +7691,9 @@ Template.paymentcard.events({
             let allData = [];
             let checkData = [];
             var currentSalesID = getsale_id[getsale_id.length - 1];
-            checkData = Session.get('customerpayments') || [];
+            checkData = localStorage.getItem('customerpayments') || [];
             if (checkData.length > 0) {
-                let getPayments = JSON.parse(Session.get('customerpayments') || []);
+                let getPayments = JSON.parse(localStorage.getItem('customerpayments') || []);
                 if (getPayments.length > 0) {
                     allData = getPayments;
                 } else {
@@ -7745,10 +7758,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            localStorage.setItem('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            localStorage.setItem('customerpayments', []);
                         }
 
                         // Send Email
@@ -7778,7 +7791,7 @@ Template.paymentcard.events({
                                 // let mailBody = "VS1 Cloud Test";
                                 let erpInvoiceId = objDetails.fields.ID;
 
-                                let mailFromName = Session.get('vs1companyName');
+                                let mailFromName = localStorage.getItem('vs1companyName');
                                 let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                                 let customerEmailName = $('#edtCustomerName').val();
                                 let checkEmailData = $('#edtCustomerEmail').val();
@@ -7887,7 +7900,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -7950,7 +7963,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -8011,7 +8024,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -8043,7 +8056,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -8115,10 +8128,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            localStorage.setItem('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            localStorage.setItem('customerpayments', []);
                         }
                         swal({
                             title: 'Oooops...',
@@ -8172,10 +8185,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            localStorage.setItem('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            localStorage.setItem('customerpayments', []);
                         }
                         var customerID = $('#edtCustomerEmail').attr('customerid');
                         // Send Email
@@ -8205,7 +8218,7 @@ Template.paymentcard.events({
                                 // let mailBody = "VS1 Cloud Test";
                                 let erpInvoiceId = objDetails.fields.ID;
 
-                                let mailFromName = Session.get('vs1companyName');
+                                let mailFromName = localStorage.getItem('vs1companyName');
                                 let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                                 let customerEmailName = $('#edtCustomerName').val();
                                 let checkEmailData = $('#edtCustomerEmail').val();
@@ -8324,7 +8337,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -8397,7 +8410,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -8469,7 +8482,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -8502,7 +8515,7 @@ Template.paymentcard.events({
                                     let basedOnTypeStorages = Object.keys(localStorage);
                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                         let employeeId = storage.split('_')[2];
-                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                         return storage.includes('BasedOnType_');
                                     });
                                     let i = basedOnTypeStorages.length;
@@ -8579,10 +8592,10 @@ Template.paymentcard.events({
                         if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
-                            Session.setPersistent('customerpayments', JSON.stringify(allData));
+                            localStorage.setItem('customerpayments', JSON.stringify(allData));
                         } else {
                             newURL = '/paymentoverview?success=true';
-                            Session.setPersistent('customerpayments', []);
+                            localStorage.setItem('customerpayments', []);
                         }
                         swal({
                             title: 'Oooops...',
@@ -8680,7 +8693,7 @@ Template.paymentcard.events({
                         // let mailBody = "VS1 Cloud Test";
                         let erpInvoiceId = objDetails.fields.ID;
 
-                        let mailFromName = Session.get('vs1companyName');
+                        let mailFromName = localStorage.getItem('vs1companyName');
                         let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                         let customerEmailName = $('#edtCustomerName').val();
                         let checkEmailData = $('#edtCustomerEmail').val();
@@ -8787,7 +8800,7 @@ Template.paymentcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 return storage.includes('BasedOnType_');
                             });
                             let i = basedOnTypeStorages.length;
@@ -8849,7 +8862,7 @@ Template.paymentcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 return storage.includes('BasedOnType_');
                             });
                             let i = basedOnTypeStorages.length;
@@ -8910,7 +8923,7 @@ Template.paymentcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 return storage.includes('BasedOnType_');
                             });
                             let i = basedOnTypeStorages.length;
@@ -8942,7 +8955,7 @@ Template.paymentcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                                 return storage.includes('BasedOnType_');
                             });
                             let i = basedOnTypeStorages.length;
@@ -9365,7 +9378,7 @@ Template.paymentcard.events({
         var printTemplate = [];
         LoadingOverlay.show();
         var customer_payment = $('input[name="Customer Payments"]:checked').val();
-        let emid = Session.get('mySessionEmployeeLoggedID');
+        let emid = localStorage.getItem('mySessionEmployeeLoggedID');
 
         sideBarService.getTemplateNameandEmployeId("Customer Payments", emid, 1).then(function (data) {
             let templateid = data.ttemplatesettings;
@@ -9374,7 +9387,7 @@ Template.paymentcard.events({
                 type: "TTemplateSettings",
                 fields: {
                     ID: parseInt(id),
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Customer Payments",
                     GlobalRef: "Customer Payments",
                     Description: $('input[name="Customer Payments_1"]').val(),
@@ -9397,7 +9410,7 @@ Template.paymentcard.events({
             let objDetails = {
                 type: "TTemplateSettings",
                 fields: {
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Customer Payments",
                     Description: $('input[name="Customer Payments_1"]').val(),
                     Template: "1",
@@ -9427,7 +9440,7 @@ Template.paymentcard.events({
                 type: "TTemplateSettings",
                 fields: {
                     ID: parseInt(id),
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Customer Payments",
                     GlobalRef: "Customer Payments",
                     Description: $('input[name="Customer Payments_2"]').val(),
@@ -9452,7 +9465,7 @@ Template.paymentcard.events({
             let objDetails = {
                 type: "TTemplateSettings",
                 fields: {
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Customer Payments",
                     Description: $('input[name="Customer Payments_2"]').val(),
                     Template: "2",
@@ -9481,7 +9494,7 @@ Template.paymentcard.events({
                 type: "TTemplateSettings",
                 fields: {
                     ID: parseInt(id),
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Customer Payments",
                     GlobalRef: "Customer Payments",
                     Description: $('input[name="Customer Payments_3"]').val(),
@@ -9507,7 +9520,7 @@ Template.paymentcard.events({
             let objDetails = {
                 type: "TTemplateSettings",
                 fields: {
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Customer Payments",
                     Description: $('input[name="Customer Payments_3"]').val(),
                     Template: "3",
@@ -9528,48 +9541,44 @@ Template.paymentcard.events({
 
         });
 
-        $('#html-2-pdfwrapper').css('display', 'block');
-        if ($('.edtCustomerEmail').val() != "") {
-            $('.pdfCustomerName').html($('#edtCustomerName').val());
-            $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-
-            var ponumber = $('#ponumber').val() || '.';
-            $('.po').text(ponumber);
-            var rowCount = $('.tblInvoiceLine tbody tr').length;
-
-            if ($('#print_custom_payment').is(':checked') || $('#print_custom_payment_second').is(':checked')) {
-                printTemplate.push('Customer Payments');
-            }
-
-            if (printTemplate.length > 0) {
-
-                for (var i = 0; i < printTemplate.length; i++) {
-                    if (printTemplate[i] == 'Customer Payments') {
-                        var template_number = $('input[name="Customer Payments"]:checked').val();
-                    }
-
-                    let result = await exportSalesToPdf(printTemplate[i], template_number);
-                    if (result == true) {
-                    }
-
-                }
-
-            }
-
-
-        } else {
-            swal({
-                title: 'Customer Email Required',
-                text: 'Please enter customer email',
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.value) {
-                } else if (result.dismiss === 'cancel') {
-                }
-            });
+        if ($('#print_custom_payment').is(':checked') || $('#print_custom_payment_second').is(':checked')) {
+            printTemplate.push('Customer Payments');
         }
+
+        if (printTemplate.length > 0) {
+            for (var i = 0; i < printTemplate.length; i++) {
+                if (printTemplate[i] == 'Customer Payments') {
+                    var template_number = $('input[name="Customer Payments"]:checked').val();
+                }
+
+                let result = await exportSalesToPdf(printTemplate[i], template_number);
+                if (result == true) {
+                }
+
+            }
+        }
+
+        // $('#html-2-pdfwrapper').css('display', 'block');
+        // if ($('.edtCustomerEmail').val() != "") {
+        //     $('.pdfCustomerName').html($('#edtCustomerName').val());
+        //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+
+        //     var ponumber = $('#ponumber').val() || '.';
+        //     $('.po').text(ponumber);
+        //     var rowCount = $('.tblInvoiceLine tbody tr').length;
+        // } else {
+        //     swal({
+        //         title: 'Customer Email Required',
+        //         text: 'Please enter customer email',
+        //         type: 'error',
+        //         showCancelButton: false,
+        //         confirmButtonText: 'OK'
+        //     }).then((result) => {
+        //         if (result.value) {
+        //         } else if (result.dismiss === 'cancel') {
+        //         }
+        //     });
+        // }
     }, delayTimeAfterSound);
     },
 
@@ -9621,16 +9630,10 @@ Template.paymentcard.events({
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id') || 0; // table row ID
         $('#selectDeleteLineID').val(targetID);
-        
         if(targetID != undefined){
             times++;
             if (times == 1) {
-                if (targetID == 0) {
-                    $(event.target).closest('tr').remove();
-                } else {
-                    $('#deleteLineModal').modal('toggle');
-                }
-
+                $('#deleteLineModal').modal('show');
             } else {
                 if ($('#tblPaymentcard tbody>tr').length > 1) {
                     this.click;
@@ -9649,14 +9652,14 @@ Template.paymentcard.events({
                     if (targetID == 0) {
                         $(event.target).closest('tr').remove();
                     } else {
-                        $('#deleteLineModal').modal('toggle');
+                        $('#deleteLineModal').modal('show');
                     }
                 }
 
             }
         } else {
-            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
-            else $("#footerDeleteModal1").modal("toggle");
+            if(templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("show");
+            else $("#footerDeleteModal1").modal("show");
         }
     },
     'click .btnDeleteFollowingPayments': async function (event) {
@@ -9972,8 +9975,8 @@ Template.paymentcard.events({
     },
     'click .btnResetGridSettings': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -10029,8 +10032,8 @@ Template.paymentcard.events({
         });
 
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {

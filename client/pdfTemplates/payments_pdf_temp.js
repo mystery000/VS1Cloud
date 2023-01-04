@@ -8,6 +8,9 @@ import { UtilityService } from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import {Random} from 'meteor/random';
 import '../lib/global/indexdbstorage.js';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './payments_pdf_temp.html';
 
 Template.paymentsPrintTemp.onCreated(()=>{
     const templateObject = Template.instance();
@@ -113,7 +116,7 @@ Template.paymentsPrintTemp.onRendered(()=>{
                                 templateObject.paymentsrecords.set(paymentsRecords);
 
                                 //setTimeout(function () {
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
+                                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
                                     if (error) {
                                         //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
                                     } else {
@@ -161,12 +164,12 @@ Template.paymentsPrintTemp.helpers({
         return Template.instance().paymentsrecords.get()
     },
     companyphone: () => {
-        return "Phone: "+Session.get('vs1companyPhone');
+        return "Phone: "+localStorage.getItem('vs1companyPhone');
     },
     companyabn: () => { //Update Company ABN
-      let countryABNValue = "ABN: " + Session.get('vs1companyABN');
+      let countryABNValue = "ABN: " + localStorage.getItem('vs1companyABN');
       if(LoggedCountry== "South Africa"){
-        countryABNValue = "Vat No: " + Session.get('vs1companyABN');;
+        countryABNValue = "Vat No: " + localStorage.getItem('vs1companyABN');;
       }
 
         return countryABNValue;
@@ -174,34 +177,34 @@ Template.paymentsPrintTemp.helpers({
     companyReg: () => { //Add Company Reg
       let countryRegValue = '';
       if(LoggedCountry== "South Africa"){
-        countryRegValue = "Reg No: " + Session.get('vs1companyReg');
+        countryRegValue = "Reg No: " + localStorage.getItem('vs1companyReg');
       }
 
         return countryRegValue;
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
 
     companyabn: () => {
-        return Session.get('vs1companyABN');
+        return localStorage.getItem('vs1companyABN');
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     }
 })

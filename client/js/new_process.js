@@ -204,6 +204,13 @@ Template.new_process.events({
 
 
         manufacturingService.saveProcessData(objDetail).then(function(){
+
+            if (localStorage.getItem("enteredURL") != null) {
+                FlowRouter.go(localStorage.getItem("enteredURL"));
+                localStorage.removeItem("enteredURL");
+                return;
+            }
+
             manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(function(datareturn) {
                 addVS1Data('TProcessStep', JSON.stringify(datareturn)).then(function(){
                     $('.fullScreenSpin').css('display', 'none');
@@ -286,7 +293,8 @@ Template.new_process.events({
     'click #edtWastage': function(e){
         $('#assetAccountListModal').modal();
     },
-    'click #accountListModal table tr': function(e) {
+    
+    'click #accountListModal table tbody tr': function(e) {
         let templateObject = Template.instance();
         let columnDataValue = $(e.target).closest('tr').find('.productName').text();
         switch(templateObject.selectedAccount.get()) {

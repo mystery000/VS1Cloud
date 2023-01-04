@@ -5,6 +5,10 @@ import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from "../../js/sidebar-service";
 import { UtilityService } from "../../utility-service";
 
+import { Template } from 'meteor/templating';
+import './dsleadlistchart.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 
 Template.dsleadlistchart.onCreated(function() {
@@ -28,7 +32,7 @@ Template.dsleadlistchart.onRendered(function() {
         getVS1Data('TProspectEx').then(function(dataObject) {
             if (dataObject.length === 0) {
                 sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function(data) {
-                    addVS1Data('TProspectEx', JSON.stringify(data));
+                    //addVS1Data('TProspectEx', JSON.stringify(data));
                     setAllLeads(data);
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -39,7 +43,7 @@ Template.dsleadlistchart.onRendered(function() {
             }
         }).catch(function(err) {
             sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function(data) {
-                addVS1Data('TProspectEx', JSON.stringify(data));
+                //addVS1Data('TProspectEx', JSON.stringify(data));
                 setAllLeads(data);
             }).catch(function(err) {
                 $('.fullScreenSpin').css('display', 'none');
@@ -77,7 +81,7 @@ Template.dsleadlistchart.onRendered(function() {
         }
         templateObject.datatablerecords.set(splashArrayLeadList);
         if (templateObject.datatablerecords.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblDSLeadChartList', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblDSLeadChartList', function(error, result) {
                 if (error) {
 
                 } else {
@@ -618,7 +622,7 @@ Template.dsleadlistchart.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblDSLeadChartList' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblDSLeadChartList' });
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
@@ -627,8 +631,8 @@ Template.dsleadlistchart.helpers({
 
 function getCheckPrefDetails() {
     const getcurrentCloudDetails = CloudUser.findOne({
-        _id: Session.get('mycloudLogonID'),
-        clouddatabaseID: Session.get('mycloudLogonDBID')
+        _id: localStorage.getItem('mycloudLogonID'),
+        clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
     });
     let checkPrefDetails = null;
     if (getcurrentCloudDetails) {

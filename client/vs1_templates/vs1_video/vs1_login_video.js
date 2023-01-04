@@ -1,3 +1,5 @@
+import { Template } from 'meteor/templating';
+import './vs1_login_video.html';
 Template.vs1_login_video.onRendered(function () {
   const instance = this
   const parent = instance.find('#video-parent')
@@ -8,7 +10,7 @@ Template.vs1_login_video.onRendered(function () {
   instance.video.id = 'myVS1Video';
   instance.video.controls = false;
   instance.video.preload = 'none';
-  instance.video.loop = 'loop';
+  // instance.video.loop = 'loop';
   instance.video.playsinline = '';
   instance.video.src = instance.data.src ? instance.data.src : ''
   instance.video.addEventListener('canplaythrough', () => {

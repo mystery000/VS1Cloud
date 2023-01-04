@@ -52,7 +52,7 @@ Template.addemployeepop.onRendered(function () {
     var erpGet = erpDb();
 
     LoadingOverlay.show();
-    Session.setPersistent('cloudCurrentLogonName', '');
+    localStorage.setItem('cloudCurrentLogonName', '');
     let templateObject = Template.instance();
     let contactService = new ContactService();
     var countryService = new CountryService();
@@ -77,7 +77,7 @@ Template.addemployeepop.onRendered(function () {
     let totAmountOverDue = 0;
 
     setTimeout(function () {
-        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'defaulttax', function (error, result) {
+        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'defaulttax', function (error, result) {
             if (error) {
                 salestaxcode = loggedTaxCodeSalesInc;
                 templateObject.defaultsaletaxcode.set(salestaxcode);
@@ -108,12 +108,12 @@ Template.addemployeepop.onRendered(function () {
         });
 
     }, 500);
-    var CloudUserPass = Session.get('CloudUserPass');
+    var CloudUserPass = localStorage.getItem('CloudUserPass');
     if (CloudUserPass) {
         templateObject.isCloudUserPass.set(true);
     }
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTransactionlist', function (error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTransactionlist', function (error, result) {
         if (error) {}
         else {
             if (result) {
@@ -251,7 +251,7 @@ Template.addemployeepop.onRendered(function () {
 
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTransactionlist', function (error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTransactionlist', function (error, result) {
                             if (error) {}
                             else {
                                 if (result) {
@@ -419,7 +419,7 @@ Template.addemployeepop.onRendered(function () {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTransactionlist', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTransactionlist', function (error, result) {
                         if (error) {}
                         else {
                             if (result) {
@@ -581,7 +581,7 @@ Template.addemployeepop.onRendered(function () {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTransactionlist', function (error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTransactionlist', function (error, result) {
                         if (error) {}
                         else {
                             if (result) {
@@ -851,7 +851,7 @@ Template.addemployeepop.onRendered(function () {
                                     let emplineItems = [];
                                     let emplineItemObj = {};
                                     empEmail = data.fields.User.fields.LogonName;
-                                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                    localStorage.setItem('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                     emplineItemObj = {
                                         empID: data.fields.User.fields.EmployeeId || '',
                                         EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -877,7 +877,7 @@ Template.addemployeepop.onRendered(function () {
                                 if (data.fields.User != null) {
                                     let emplineItems = [];
                                     let emplineItemObj = {};
-                                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                    localStorage.setItem('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                     emplineItemObj = {
                                         empID: data.fields.User.fields.EmployeeId || '',
                                         EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -1031,7 +1031,7 @@ Template.addemployeepop.onRendered(function () {
                                         let emplineItems = [];
                                         let emplineItemObj = {};
                                         empEmail = useData[i].fields.User.fields.LogonName;
-                                        Session.setPersistent('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
+                                        localStorage.setItem('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
                                         emplineItemObj = {
                                             empID: useData[i].fields.User.fields.EmployeeId || '',
                                             EmployeeName: useData[i].fields.User.fields.EmployeeName || '',
@@ -1057,7 +1057,7 @@ Template.addemployeepop.onRendered(function () {
                                     if (useData[i].fields.User != null) {
                                         let emplineItems = [];
                                         let emplineItemObj = {};
-                                        Session.setPersistent('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
+                                        localStorage.setItem('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
                                         emplineItemObj = {
                                             empID: useData[i].fields.User.fields.EmployeeId || '',
                                             EmployeeName: useData[i].fields.User.fields.EmployeeName || '',
@@ -1217,7 +1217,7 @@ Template.addemployeepop.onRendered(function () {
                                         let emplineItems = [];
                                         let emplineItemObj = {};
                                         empEmail = data.fields.User.fields.LogonName;
-                                        Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                        localStorage.setItem('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                         emplineItemObj = {
                                             empID: data.fields.User.fields.EmployeeId || '',
                                             EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -1243,7 +1243,7 @@ Template.addemployeepop.onRendered(function () {
                                     if (data.fields.User != null) {
                                         let emplineItems = [];
                                         let emplineItemObj = {};
-                                        Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                        localStorage.setItem('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                         emplineItemObj = {
                                             empID: data.fields.User.fields.EmployeeId || '',
                                             EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -1393,7 +1393,7 @@ Template.addemployeepop.onRendered(function () {
                                 let emplineItems = [];
                                 let emplineItemObj = {};
                                 empEmail = data.fields.User.fields.LogonName;
-                                Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                localStorage.setItem('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                 emplineItemObj = {
                                     empID: data.fields.User.fields.EmployeeId || '',
                                     EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -1419,7 +1419,7 @@ Template.addemployeepop.onRendered(function () {
                             if (data.fields.User != null) {
                                 let emplineItems = [];
                                 let emplineItemObj = {};
-                                Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                                localStorage.setItem('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                                 emplineItemObj = {
                                     empID: data.fields.User.fields.EmployeeId || '',
                                     EmployeeName: data.fields.User.fields.EmployeeName || '',
@@ -2221,7 +2221,7 @@ Template.addemployeepop.events({
                 };
             }
             appointmentService.saveAppointmentPreferences(objectData).then(function (data) {
-                var cloudDBID = Session.get('mycloudLogonDBID');
+                var cloudDBID = localStorage.getItem('mycloudLogonDBID');
                 // var logonName = $("#cloudEmpLogonName").val();
                 var enteredEmail = $(".addemployeepop #cloudEmpEmailAddress").val();
                 var checkifupdate = $(".addemployeepop #cloudCheckEmpEmailAddress").val();
@@ -2660,23 +2660,23 @@ Template.addemployeepop.events({
                     });
                 } else {
                     let newStripePrice = objDetailsUser.Params.Price.toFixed(2);
-                    // Meteor.call('braintreeChargeCard', Session.get('VS1AdminUserName'), 35);
-                    // Meteor.call('StripeChargeCard', Session.get('VS1AdminUserName'), 3500);
+                    // Meteor.call('braintreeChargeCard', localStorage.getItem('VS1AdminUserName'), 35);
+                    // Meteor.call('StripeChargeCard', localStorage.getItem('VS1AdminUserName'), 3500);
                     // swal('User details successfully added', '', 'success');
                     let to2Decimal = objDetailsUser.Params.Price.toFixed(2)
                         let amount = to2Decimal.toString().replace(/\./g, '')
                         let currencyname = (CountryAbbr).toLowerCase();
                     let stringQuery = "?";
-                    let name = Session.get('mySessionEmployee').split(' ')[0];
-                    let surname = Session.get('mySessionEmployee').split(' ')[1];
+                    let name = localStorage.getItem('mySessionEmployee').split(' ')[0];
+                    let surname = localStorage.getItem('mySessionEmployee').split(' ')[1];
                     stringQuery = stringQuery + "product" + 0 + "= New User" + "&price" + 0 + "=" + Currency + objDetailsUser.Params.Price + "&qty" + 0 + "=" + 1 + "&";
-                    stringQuery = stringQuery + "tax=0" + "&total=" + Currency + objDetailsUser.Params.Price + "&customer=" + Session.get('vs1companyName') + "&name=" + name + "&surname=" + surname + "&company=" + Session.get('vs1companyName') + "&customeremail=" + localStorage.getItem('mySession') + "&type=VS1 Modules Purchase&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
+                    stringQuery = stringQuery + "tax=0" + "&total=" + Currency + objDetailsUser.Params.Price + "&customer=" + localStorage.getItem('vs1companyName') + "&name=" + name + "&surname=" + surname + "&company=" + localStorage.getItem('vs1companyName') + "&customeremail=" + localStorage.getItem('mySession') + "&type=VS1 Modules Purchase&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
                     sideBarService.getAllEmployees(25, 0).then(function (dataReload) {
                         addVS1Data('TEmployee', JSON.stringify(dataReload)).then(function (datareturn) {
                             $.ajax({
                                 url: stripeGlobalURL +'vs1_module_purchase.php',
                                 data: {
-                                    'email': Session.get('VS1AdminUserName'),
+                                    'email': localStorage.getItem('VS1AdminUserName'),
                                     'price': newStripePrice.replace('.', ''),
                                     'currency': currencyname
                                 },
@@ -3173,8 +3173,8 @@ Template.addemployeepop.events({
     },
     'click .addemployeepop .resetTable': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -3226,8 +3226,8 @@ Template.addemployeepop.events({
         //datatable.state.save();
 
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -3811,7 +3811,7 @@ Template.addemployeepop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblSalesOverview'
         });
     },
@@ -3824,12 +3824,12 @@ Template.addemployeepop.helpers({
         return Template.instance().empuserrecord.get();
     },
     cloudUserDetails: function () {
-        if ((Session.get('cloudCurrentLogonName')) && (Session.get('cloudCurrentLogonName') != '')) {
+        if ((localStorage.getItem('cloudCurrentLogonName')) && (localStorage.getItem('cloudCurrentLogonName') != '')) {
             let userID = '';
             var usertoLoad = CloudUser.find({
-                clouddatabaseID: Session.get('mycloudLogonDBID')
+                clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
             }).forEach(function (doc) {
-                if ((doc.cloudUsername == Session.get('cloudCurrentLogonName')) || (doc.cloudUsername == Session.get('cloudCurrentLogonName').toLowerCase())) {
+                if ((doc.cloudUsername == localStorage.getItem('cloudCurrentLogonName')) || (doc.cloudUsername == localStorage.getItem('cloudCurrentLogonName').toLowerCase())) {
                     userID = doc._id;
                 }
             });
@@ -3861,7 +3861,7 @@ Template.addemployeepop.helpers({
     },
     contactCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'employeescard'
         });
     },

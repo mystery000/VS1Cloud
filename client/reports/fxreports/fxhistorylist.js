@@ -9,6 +9,7 @@ let utilityService = new UtilityService();
 Template.fxhistorylist.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.dateAsAt = new ReactiveVar();
+    templateObject.fxhistorylistth = new ReactiveVar([]);
 
 });
 
@@ -20,6 +21,22 @@ Template.fxhistorylist.onRendered(() => {
         $('#uploadedImage').attr('src', imageData);
         $('#uploadedImage').attr('width', '50%');
     }
+
+    let reset_data = [
+        { index: 1, label: 'Company', class:'colCompany', active: true, display: true, width: "" },
+        { index: 2, label: 'Currency', class:'colCurrency', active: true, display: true, width: "" },
+        { index: 3, label: 'Code', class:'colCode', active: true, display: true, width: "" },
+        { index: 4, label: 'Buy Rate', class:'colBuyRate', active: true, display: true, width: "" },
+        { index: 5, label: 'Sell Rate', class:'colSellRate', active: true, display: true, width: "" },
+        { index: 6, label: 'Rate Last Modified', class:'colRateLastModified', active: true, display: true, width: "" },
+        { index: 7, label: 'Active', class:'colActive', active: true, display: true, width: "" },
+        { index: 8, label: 'Global Ref', class:'colGlobalRef', active: false, display: true, width: "" },
+        { index: 9, label: 'Currency Symbol', class:'colCurrencySymbol', active: false, display: true, width: "" },
+        { index: 10, label: 'Currency ID', class:'colCurrencyID', active: false, display: true, width: "" },
+        { index: 11, label: 'Edited Flag', class:'colEditedFlag', active: false, display: true, width: "" },
+      ];
+
+      templateObject.fxhistorylistth.set(reset_data);
 
     templateObject.setDateAs = ( dateFrom = null ) => {
         templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
@@ -47,6 +64,35 @@ Template.fxhistorylist.onRendered(() => {
 });
 
 Template.fxhistorylist.events({
+    'click .chkDatatable': function(event) {
+        let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+        if ($(event.target).is(':checked')) {
+          $('.'+columnDataValue).addClass('showColumn');
+          $('.'+columnDataValue).removeClass('hiddenColumn');
+        } else {
+          $('.'+columnDataValue).addClass('hiddenColumn');
+          $('.'+columnDataValue).removeClass('showColumn');
+        }
+    },
+      'click .btnOpenReportSettings': () => {
+          let templateObject = Template.instance();
+          // let currenttranstablename = templateObject.data.tablename||";
+          $(`thead tr th`).each(function (index) {
+            var $tblrow = $(this);
+            var colWidth = $tblrow.width() || 0;
+            var colthClass = $tblrow.attr('data-class') || "";
+            $('.rngRange' + colthClass).val(colWidth);
+          });
+         $('.'+templateObject.data.tablename+'_Modal').modal('toggle');
+      },
+      'change .custom-range': async function(event) {
+      //   const tableHandler = new TableHandler();
+        let range = $(event.target).val()||0;
+        let colClassName = $(event.target).attr("valueclass");
+        await $('.' + colClassName).css('width', range);
+      //   await $('.colAccountTree').css('width', range);
+        $('.dataTable').resizable();
+      },
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         localStorage.setItem('VS1FXHistoryList_Report', '');
@@ -73,7 +119,7 @@ Template.fxhistorylist.events({
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split('_')[2];
-            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
         });
         let i = basedOnTypeStorages.length;
         if (i > 0) {
@@ -155,6 +201,9 @@ Template.fxhistorylist.helpers({
     dateAsAt: () =>{
         return Template.instance().dateAsAt.get() || '-';
     },
+    fxhistorylistth: () => {
+        return Template.instance().fxhistorylistth.get();
+    }
 });
 
 Template.registerHelper('equals', function(a, b) {

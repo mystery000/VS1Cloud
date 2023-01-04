@@ -1,5 +1,8 @@
 import _ from "lodash";
 import { SideBarService } from '../../js/sidebar-service';
+import { Template } from 'meteor/templating';
+import './dashboard-manager-cards.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 
@@ -26,7 +29,10 @@ Template.dashboardManagerCards.onRendered(() => {
                         leadsThisMonthCount += 1;
                     }
                 });
+
                 $('#new-leads-month').text(leadsThisMonthCount);
+            } else {
+                $('#new-leads-month').text("No Data in Range");
             }
         }).catch(function(err) {});
 
@@ -67,7 +73,6 @@ Template.dashboardManagerCards.onRendered(() => {
         //         // const lastMonthUnix = moment().subtract(1, 'months').unix();
         //         const fromDate = new Date($("#dateFrom").datepicker("getDate"));
         //         const toDate = new Date($("#dateTo").datepicker("getDate"));
-        //         alert(fromDate);
         //         const lastYearUnix = moment().subtract(12, 'months').unix();
 
         //         tinvoicelist.forEach(tinvoice => {
@@ -108,9 +113,14 @@ Template.dashboardManagerCards.onRendered(() => {
                 });
                 const winRate = convertedQuotesCount ? parseInt((convertedQuotesCount / (convertedQuotesCount + nonConvertedQuotesCount)) * 100) : 0;
                 const avgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount / days(toDate, fromDate) : convertedQuotesAmount;
+
                 $('#sales-winrate').text(winRate.toFixed(2));
                 $('#new-deals-month').text(dealsThisMonthCount);
                 $('#avg-sales-cycle').text(avgSalesCycle.toFixed(2));
+            } else {
+                $('#sales-winrate').text("No Data in Range");
+                $('#new-deals-month').text("No Data in Range");
+                $('#avg-sales-cycle').text("No Data in Range");
             }
         }).catch(function(err) {
 
@@ -121,8 +131,6 @@ Template.dashboardManagerCards.onRendered(() => {
                 let tinvoicelist = dataInvoice.tinvoicelist;
                 let closedDealsThisMonth = 0;
                 let closedDealsThisYear = 0;
-                // const lastMonthUnix = moment().subtract(1, 'months').unix();
-                // const lastYearUnix = moment().subtract(12, 'months').unix();
 
                 tinvoicelist.forEach(tinvoice => {
                     const saleDate = new Date(tinvoice.SaleDate);
@@ -135,8 +143,12 @@ Template.dashboardManagerCards.onRendered(() => {
                     //     closedDealsThisYear += tinvoice.Balance;
                     // }
                 });
+
                 $('#closed-deals-month').text(closedDealsThisMonth);
                 $('#closed-deals-year').text(`$${closedDealsThisYear.toFixed(2)}`);
+            } else {
+                $('#closed-deals-month').text("No Data in Range");
+                $('#closed-deals-year').text("No Data in Range");
             }
         }).catch(function(err) {});
     };

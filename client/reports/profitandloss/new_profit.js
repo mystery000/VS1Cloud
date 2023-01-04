@@ -18,6 +18,10 @@ import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import "jQuery.print/jQuery.print.js";
 import { jsPDF } from "jspdf";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './new_profit.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let utilityService = new UtilityService();
 let reportService = new ReportService();
@@ -26,7 +30,7 @@ let taxRateService = new TaxRateService();
 const templateObject = Template.instance();
 const productService = new ProductService();
 const defaultPeriod = 3;
-const employeeId = Session.get("mySessionEmployeeLoggedID");
+const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 Template.newprofitandloss.onCreated(function () {
@@ -987,7 +991,7 @@ Template.newprofitandloss.events({
       .startOf("year")
       .format("YYYY-MM-DD");
     await clearData("TAccountRunningBalanceReport");
-    //Session.setPersistent('showHeader',true);
+    //localStorage.setItem('showHeader',true);
     window.open(
       "/balancetransactionlist?accountName=" +
         accountName +
@@ -1102,7 +1106,7 @@ Template.newprofitandloss.events({
             let employeeId = storage.split("_")[2];
             return (
               storage.includes("BasedOnType_")
-              // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
+              // storage.includes("BasedOnType_") && employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
             );
           });
           let i = basedOnTypeStorages.length;
@@ -1200,7 +1204,95 @@ Template.newprofitandloss.events({
     //
     // });
   },
+  "click .btnSpreadSheetLink": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let utilityService = new UtilityService();
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
+    let formatDateFrom =
+      dateFrom.getFullYear() +
+      "-" +
+      (dateFrom.getMonth() + 1) +
+      "-" +
+      dateFrom.getDate();
+    let formatDateTo =
+      dateTo.getFullYear() +
+      "-" +
+      (dateTo.getMonth() + 1) +
+      "-" +
+      dateTo.getDate();
+
+    // const filename = loggedCompany + "-Profit and Loss" + ".csv";
+
+    var table = $("#tableExport").filter("table");
+    var rows = table.find('tr').not(options.ignoreRows);
+
+    var numCols = rows.first().find("td,th").not(options.ignoreColumns).length;
+    var tables = [];
+    var wsnames = [];
+
+    var maintab = {
+      rows: []
+    };
+
+    rows.each(function() {
+      var cells = [];
+      $(this).find("td,th").not(options.ignoreColumns)
+          .each(function(i, col) {
+              var column = $(col);
+
+              // Strip whitespaces
+              var content = options.trimContent ? $.trim(column.text()) : column.text();
+              cells.push({
+                "data-type": "String",
+                "data-style": "",
+                "data-value": content,
+                "innerHTML": "",
+                "data-formula": null,
+                getAttribute: function (attr_val) {
+                  if (attr_val) {
+                    return this[attr_val];
+                  }
+                }
+              });
+          });
+      maintab.rows.push({cells: cells});
+    });
+
+    tables.push(maintab);
+
+    //raw data tab content
+
+    tables.push([]);
+    
+    //----------------
+    
+    wsnames.push(loggedCompany + "-Profit and Loss");
+    wsnames.push("Raw data");
+
+
+    utilityService.multipleTablesToExcel(tables, wsnames, loggedCompany + "-Profit and Loss", "");
+    // reportService.getProfitandLoss(formatDateFrom,formatDateTo,false).then(function (data) {
+    //     if(data.profitandlossreport){
+    //         rows[0] = ['Account Type','Account Name', 'Account Number', 'Total Amount(EX)'];
+    //         data.profitandlossreport.forEach(function (e, i) {
+    //             rows.push([
+    //               data.profitandlossreport[i]['AccountTypeDesc'],
+    //               data.profitandlossreport[i].AccountName,
+    //               data.profitandlossreport[i].AccountNo,
+    //               // utilityService.modifynegativeCurrencyFormat(data.profitandlossreport[i]['Sub Account Total']),
+    //               utilityService.modifynegativeCurrencyFormat(data.profitandlossreport[i].TotalAmount)]);
+    //         });
+    //         setTimeout(function () {
+    //             utilityService.exportReportToCsv(rows, filename, 'xls');
+    //             $('.fullScreenSpin').css('display','none');
+    //         }, 1000);
+    //     }
+    //
+    // });
+  },
   "click .selPeriod": async function (e) {
     let periods = $(e.target).data("period");
     $(".fullScreenSpin").css("display", "block");
@@ -2244,7 +2336,7 @@ Template.newprofitandloss.events({
     );
 
     const pSortfields = $(".pSortItems");
-    const employeeId = Session.get("mySessionEmployeeLoggedID");
+    const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
     let pSortList = [];
     pSortfields.each(function(){
       let Position = $(this).attr('position');

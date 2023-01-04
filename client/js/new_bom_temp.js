@@ -3,7 +3,10 @@ import {ProductService} from '../product/product-service';
 import { SideBarService } from "./sidebar-service";
 import 'jquery-editable-select';
 import { UtilityService } from "../utility-service";
-
+import { Template } from 'meteor/templating';
+import '../manufacture/bom_setup_temp.html';
+import '../manufacture/bom_setup.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 //product name, process name, product sales description, qty in stock, subs, 
 Template.bom_template.onCreated(function() {

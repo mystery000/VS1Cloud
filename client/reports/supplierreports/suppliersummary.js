@@ -19,6 +19,7 @@ Template.suppliersummary.onCreated(() => {
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.records = new ReactiveVar([]);
   templateObject.reportOptions = new ReactiveVar([]);
+  templateObject.suppliersummaryth = new ReactiveVar([]);
 
   FxGlobalFunctions.initVars(templateObject);
 });
@@ -26,6 +27,41 @@ Template.suppliersummary.onCreated(() => {
 Template.suppliersummary.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
+
+  let reset_data = [
+    { index: 1, label: 'Supplier ID', class: 'colSupplierID', active: true, display: true, width: "" },
+    { index: 2, label: 'Contact Name', class: 'colContactName', active: true, display: true, width: "" },
+    { index: 3, label: 'Phone', class: 'colPhone', active: true, display: true, width: "" },
+    { index: 4, label: 'Mobile', class: 'colMobile', active: true, display: true, width: "" },
+    { index: 5, label: 'Fax Number', class: 'colFaxNumber', active: true, display: true, width: "" },
+    { index: 6, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "" },
+    { index: 7, label: 'AP Balance', class: 'colAPBalance', active: true, display: true, width: "" },
+    { index: 8, label: 'Balance', class: 'colBalance', active: true, display: true, width: "" },
+    { index: 9, label: 'Street', class: 'colStreet', active: true, display: true, width: "" },
+    { index: 10, label: 'Suburb', class: 'colSubburb', active: true, display: true, width: "" },
+    { index: 11, label: 'State', class: 'colState', active: true, display: true, width: "" },
+    { index: 12, label: 'Postcode', class: 'colPostcode', active: true, display: true, width: "" },
+    { index: 13, label: 'Country', class: 'colCountry', active: true, display: true, width: "" },
+    { index: 14, label: 'Bank Account Name', class: 'colBankAccountName', active: true, display: true, width: "" },
+    { index: 15, label: 'Bank Account BSB', class: 'colBankAccountBSB', active: true, display: true, width: "" },
+    { index: 16, label: 'Bank Account No', class: 'colAccountNo', active: true, display: true, width: "" },
+    { index: 17, label: 'Creation Date', class: 'colCreationDate', active: true, display: true, width: "" },
+    { index: 18, label: 'Active', class: 'colActive', active: true, display: true, width: "" },
+    { index: 19, label: 'Global Ref', class: 'colGlobalRef', active: false, display: true, width: "" },
+    { index: 20, label: 'Street2', class: 'colStreet2', active: false, display: true, width: "" },
+    { index: 21, label: 'Street3', class: 'colStreet3', active: false, display: true, width: "" },
+    { index: 22, label: 'No Staff', class: 'colNoStaff', active: false, display: true, width: "" },
+    { index: 23, label: 'Min Inv value', class: 'colMinInvValue', active: false, display: true, width: "" },
+    { index: 24, label: 'Freight to Store', class: 'colFrighttoStore', active: false, display: true, width: "" },
+    { index: 25, label: 'Rebate', class: 'colRebate', active: false, display: true, width: "" },
+    { index: 26, label: 'First Name', class: 'colFirstName', active: false, display: true, width: "" },
+    { index: 27, label: 'Last Name', class: 'colLastName', active: false, display: true, width: "" },
+    { index: 28, label: 'Contact Details', class: 'colContractDetails', active: false, display: true, width: "" },
+    { index: 29, label: 'ABN', class: 'colABN', active: false, display: true, width: "" },
+    { index: 30, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "" },
+    { index: 31, label: 'ClientID', class: 'colClientID', active: false, display: true, width: "" },
+  ];
+  templateObject.suppliersummaryth.set(reset_data);
 
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
@@ -243,6 +279,36 @@ Template.suppliersummary.onRendered(() => {
 });
 
 Template.suppliersummary.events({
+  'click .chkDatatable': function(event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.'+columnDataValue).addClass('showColumn');
+      $('.'+columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.'+columnDataValue).addClass('hiddenColumn');
+      $('.'+columnDataValue).removeClass('showColumn');
+    }
+},
+
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1SupplierSummary_Report", "");
@@ -279,7 +345,7 @@ Template.suppliersummary.events({
       let employeeId = storage.split("_")[2];
       return (
         storage.includes("BasedOnType_") &&
-        employeeId == Session.get("mySessionEmployeeLoggedID")
+        employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
       );
     });
     let i = basedOnTypeStorages.length;
@@ -512,6 +578,9 @@ Template.suppliersummary.events({
 });
 
 Template.suppliersummary.helpers({
+  suppliersummaryth: () => {
+    return Template.instance().suppliersummaryth.get();
+  },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
@@ -708,4 +777,3 @@ Template.registerHelper("notEquals", function (a, b) {
 Template.registerHelper("containsequals", function (a, b) {
   return a.indexOf(b) >= 0;
 });
-

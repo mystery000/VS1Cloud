@@ -1,3 +1,6 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
+FlowRouter.decodeQueryParamsOnce = true;
 const publicRedirect = () => {
 
 };
@@ -7,13 +10,12 @@ const publicRoutes = FlowRouter.group({
     triggersEnter: [publicRedirect]
 });
 
-FlowRouter.notFound = {
-    action() {
-        BlazeLayout.render('layoutlogin', {
-            yield: 'notFound'
-        });
-    }
-};
+FlowRouter.route('*', {
+  action() {
+    // Show 404 error page using Blaze
+    this.render('notFound');
+  }
+});
 
 publicRoutes.route('/', {
     name: 'vs1login',
@@ -132,11 +134,11 @@ const authenticatedRedirect = () => {
         } else if (win.width() <= 450) {
             document.getElementById("sidebar").style.display = "none";
         } else {
-            let sidePanelToggle = Session.get('sidePanelToggle');
+            let sidePanelToggle = localStorage.getItem('sidePanelToggle');
             if ((sidePanelToggle === 'undefined') || (sidePanelToggle === undefined)) {
                 document.getElementById("sidebar").style.display = "block";
-                Session.setPersistent('sidePanelToggle', "toggled");
-                sidePanelToggle = Session.get('sidePanelToggle');
+                localStorage.setItem('sidePanelToggle', "toggled");
+                sidePanelToggle = localStorage.getItem('sidePanelToggle');
             }
             if (sidePanelToggle) {
                 if (sidePanelToggle === "toggled") {
@@ -149,23 +151,23 @@ const authenticatedRedirect = () => {
 
     });
 
-    if (Session.get('CloudSidePanelMenu')) {
+    if (localStorage.getItem('CloudSidePanelMenu')) {
         $("html").addClass("hasSideBar");
         $("body").addClass("hasSideBar");
     }
 
-    if (Session.get('sidePanelSettings') === "openNav") {
+    if (localStorage.getItem('sidePanelSettings') === "openNav") {
         $(".active_page_content").css("text-align", "right");
     } else {
         $(".active_page_content").css("text-align", "inherit");
     }
 
-    if (Session.get('lastUrl') == undefined) {
-        Session.setPersistent('lastUrl', window.location.pathname);
+    if (localStorage.getItem('lastUrl') == undefined) {
+        localStorage.setItem('lastUrl', window.location.pathname);
     } else {
-        let lastUrl = Session.get('lastUrl');
+        let lastUrl = localStorage.getItem('lastUrl');
     }
-    Session.setPersistent('lastUrl', window.location.pathname);
+    localStorage.setItem('lastUrl', window.location.pathname);
 
     let lastPageVisitUrl = window.location.pathname;
     if(FlowRouter.current().oldRoute != undefined){
@@ -193,6 +195,7 @@ let previous_url = "";
 
 FlowRouter.triggers.enter([
     function (context, redirect, stop) {
+        localStorage.removeItem("enteredURL");
         if (previous_url !== "" && previous_url !== context.path && JSON.parse(localStorage.getItem("isFormUpdated"))) {
             stop();
             swal({
@@ -200,16 +203,20 @@ FlowRouter.triggers.enter([
                 text: 'Do you wish to save your changes?',
                 type: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
+                confirmButtonText: 'Save',
+                cancelButtonText: 'Leave'
             }).then((result) => {
                 if (result.value) {
-                    FlowRouter.go(previous_url);
+                    localStorage.setItem("enteredURL", context.path);
+                    $(document).find(".btn-auto-save").click();
+                    // FlowRouter.go(previous_url);
                 } else if (result.dismiss === 'cancel') {
                     FlowRouter.go(context.path);
+                    Meteor._reload.reload();
                     //TODO need to url async
                     previous_url = "";
                     localStorage.setItem("isFormUpdated", false);
+                    FlowRouter.reload();
                 }
             });
         }
@@ -1775,6 +1782,24 @@ authenticatedRoutes.route('/newbankrecon', {
     }
 });
 
+authenticatedRoutes.route('/newreconrule', {
+    name: 'newreconrule',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'newreconrule'
+        });
+    }
+});
+
+authenticatedRoutes.route('/reconrulelist', {
+    name: 'reconrulelist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'reconrulelist'
+        });
+    }
+});
+
 authenticatedRoutes.route('/newbankrule', {
     name: 'newbankrule',
     action() {
@@ -2402,4 +2427,21 @@ authenticatedRoutes.route('/productionplanner', {
             yield: 'production_planner'
         })
     }
-})
+});
+authenticatedRoutes.route('/mypayroll', {
+    name: 'mypayroll',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'mypayroll'
+        });
+    }
+});
+
+authenticatedRoutes.route('/mypayrollleave', {
+    name: 'mypayrollleave',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'mypayrollleave'
+        });
+    }
+});

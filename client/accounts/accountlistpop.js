@@ -13,6 +13,11 @@ import { autoTable } from 'jspdf-autotable';
 import 'jquery-editable-select';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './accountlistpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -147,6 +152,7 @@ Template.accountlistpop.onRendered(function() {
                             lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                             info: true,
                             responsive: true,
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function () {
                                 $("<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAccount_filter");
                                 $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
@@ -238,6 +244,7 @@ Template.accountlistpop.onRendered(function() {
                         lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                             $("<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAccount_filter");
                             $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
@@ -329,6 +336,7 @@ Template.accountlistpop.onRendered(function() {
                         lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                             $("<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAccount_filter");
                             $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
@@ -407,10 +415,10 @@ Template.accountlistpop.helpers({
         });
     },
     purchaseCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'creditcard' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'creditcard' });
     },
     purchaseCloudGridPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblCreditLine' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblCreditLine' });
     },
     uploadedFiles: () => {
         return Template.instance().uploadedFiles.get();
@@ -432,22 +440,22 @@ Template.accountlistpop.helpers({
         });
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     companyphone: () => {
-        return Session.get('vs1companyPhone');
+        return localStorage.getItem('vs1companyPhone');
     },
     companyabn: () => {
-        return Session.get('vs1companyABN');
+        return localStorage.getItem('vs1companyABN');
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
     isMobileDevices: () => {
         var isMobile = false;
@@ -460,7 +468,7 @@ Template.accountlistpop.helpers({
         return isMobile;
     },
     isCurrencyEnable: () => {
-        return Session.get('CloudUseForeignLicence');
+        return localStorage.getItem('CloudUseForeignLicence');
     }
 });
 
@@ -626,7 +634,7 @@ Template.accountlistpop.events({
         let clientService = new SalesBoardService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         let status = $('#status').val();
         let leadData = {
             type: 'TLeadStatusType',
@@ -985,7 +993,7 @@ Template.accountlistpop.events({
         let purchaseService = new PurchaseBoardService();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -1030,7 +1038,7 @@ Template.accountlistpop.events({
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         setTimeout(function(){
-        
+
         let taxcodeList = templateObject.taxraterecords.get();
         let selectLineID = $('#selectDeleteLineID').val();
         if ($('#tblCreditLine tbody>tr').length > 1) {
@@ -1239,7 +1247,7 @@ Template.accountlistpop.events({
             var url = FlowRouter.current().path;
             var getso_id = url.split('?id=');
             var currentCredit = getso_id[getso_id.length - 1];
-            
+
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             var objDetails = '';
             if (getso_id[1]) {
@@ -1326,7 +1334,7 @@ Template.accountlistpop.events({
 
                         let erpInvoiceId = objDetails.fields.ID;
 
-                        let mailFromName = Session.get('vs1companyName');
+                        let mailFromName = localStorage.getItem('vs1companyName');
                         let mailFrom = localStorage.getItem('VS1OrgEmail')||localStorage.getItem('VS1AdminUserName');
                         let customerEmailName = $('#edtSupplierName').val();
                         let checkEmailData = $('#edtSupplierEmail').val();
@@ -1533,7 +1541,7 @@ Template.accountlistpop.events({
                     }
                 }
 
-                var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+                var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
                         var clientID = getcurrentCloudDetails._id;
@@ -1763,7 +1771,7 @@ Template.accountlistpop.events({
 
         });
 
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1821,7 +1829,7 @@ Template.accountlistpop.events({
         }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1842,7 +1850,7 @@ Template.accountlistpop.events({
         }
     },
     'click .btnResetSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -2121,7 +2129,7 @@ Template.accountlistpop.events({
                 }
                 let linesave = objDetails.fields.ID;
 
-                var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+                var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
                         var clientID = getcurrentCloudDetails._id;

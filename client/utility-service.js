@@ -1265,7 +1265,7 @@ export class UtilityService {
     }
 
     modifynegativeCurrencyFormat = function(price) {
-        if (Session.get('ERPLoggedCountry') === "United Arab Emirates") {
+        if (localStorage.getItem('ERPLoggedCountry') === "United Arab Emirates") {
             return ((parseFloat(price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })) + ' ' + Currency);
         } else {
             if (price < 0) {
@@ -1332,6 +1332,19 @@ export class UtilityService {
             return (parseFloat(price));
         } else {
             value = value.replace(".", "");
+            value = value.substring(1).replace(",", ".");
+            return (parseFloat(value));
+        }
+    }
+
+    convertSubstringParseFloatR(value) {
+        if ((value).includes('-')) {
+            let price = value.replace(",", "");
+            price = price.substring(2).replace(",", ".");
+            price = '-' + price;
+            return (parseFloat(price));
+        } else {
+            value = value.replace(",", "");
             value = value.substring(1).replace(",", ".");
             return (parseFloat(value));
         }

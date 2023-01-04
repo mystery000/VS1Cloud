@@ -128,7 +128,7 @@ Template.inventorylist.onRendered(function() {
     try {
       getVS1Data("VS1_Customize").then( function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
             reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
             showCustomFieldDisplaySettings(reset_data);
             $(".fullScreenSpin").css("display", "none");
@@ -203,15 +203,15 @@ Template.inventorylist.onRendered(function() {
     var splashArrayProd = new Array();
     var splashArrayProdDept = new Array();
 
-    let isStockTransfer = Session.get("CloudStockTransferModule");
-    let isStockAdjustment = Session.get("CloudStockAdjustmentModule");
+    let isStockTransfer = localStorage.getItem("CloudStockTransferModule");
+    let isStockAdjustment = localStorage.getItem("CloudStockAdjustmentModule");
 
-    let isProductList = Session.get('CloudProdList');
-    let isNewProduct = Session.get('CloudNewProd');
-    let isNewStockTransfer = Session.get('CloudNewStockTransfer');
-    let isExportProduct = Session.get('CloudExportProd');
-    let isImportProduct = Session.get('CloudImportProd');
-    let isStockonHandDemandChart = Session.get('CloudStockOnHand');
+    let isProductList = localStorage.getItem('CloudProdList');
+    let isNewProduct = localStorage.getItem('CloudNewProd');
+    let isNewStockTransfer = localStorage.getItem('CloudNewStockTransfer');
+    let isExportProduct = localStorage.getItem('CloudExportProd');
+    let isImportProduct = localStorage.getItem('CloudImportProd');
+    let isStockonHandDemandChart = localStorage.getItem('CloudStockOnHand');
 
     if (isStockTransfer) {
         templateObject.includeStockTransfer.set(true);
@@ -346,7 +346,7 @@ Template.inventorylist.onRendered(function() {
                             templateObject.datatablebackuprecords.set(dataTableList);
 
 
-                            // Session.set('VS1ProductList', splashArrayProd);
+                            // localStorage.setItem('VS1ProductList', splashArrayProd);
 
                             if (templateObject.datatablerecords.get()) {
 
@@ -558,7 +558,7 @@ Template.inventorylist.onRendered(function() {
                     templateObject.datatablerecords.set(dataTableList);
                     // templateObject.datatablebackuprecords.set(dataTableList);
 
-                    // Session.set('VS1ProductList', splashArrayProd);
+                    // localStorage.setItem('VS1ProductList', splashArrayProd);
 
                     if (templateObject.datatablerecords.get()) {
 
@@ -767,7 +767,7 @@ Template.inventorylist.onRendered(function() {
                         templateObject.datatablebackuprecords.set(dataTableList);
 
 
-                        // Session.set('VS1ProductList', splashArrayProd);
+                        // localStorage.setItem('VS1ProductList', splashArrayProd);
 
                         if (templateObject.datatablerecords.get()) {
                             setTimeout(function() {
@@ -1183,13 +1183,13 @@ Template.inventorylist.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get("mycloudLogonID"),
+            userid: localStorage.getItem("mycloudLogonID"),
             PrefName: "tblInventoryOverview",
         });
     },
     productsCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get("mycloudLogonID"),
+            userid: localStorage.getItem("mycloudLogonID"),
             PrefName: "productview",
         });
     },
@@ -1344,10 +1344,10 @@ Template.inventorylist.events({
       try {
         let erpGet = erpDb();
         let tableName = "tblInventoryOverview";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+        let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
         let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         if(added) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
               $(".fullScreenSpin").css("display", "none");
               addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
               swal({

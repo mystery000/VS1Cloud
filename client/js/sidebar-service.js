@@ -1,12 +1,13 @@
 import { BaseService } from "../js/base-service.js";
 import { HTTP } from "meteor/http";
+import { Session } from 'meteor/session';
 export class SideBarService extends BaseService {
 
   getRegionalOptionInfo() {
 
     let options = {
       ListType:"Detail",
-      select: "[Region]=" + Session.get('ERPLoggedCountry'),
+      select: "[Region]=" + localStorage.getItem('ERPLoggedCountry'),
     };
 
     return this.getList(this.ERPObjects.TRegionalOptions, options);
@@ -28,7 +29,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
-    return this.getList(this.ERPObjects.TProductVS1, options);
+        return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
   getProductListVS1(limitcount, limitfrom) {
@@ -36,14 +37,14 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-          Search: "PublishOnVS1 == true",
+        Search: "Active == true",
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
         ListType: "Detail",
-        Search: "PublishOnVS1 = true",
+        Search: "Active = true",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
@@ -104,7 +105,7 @@ export class SideBarService extends BaseService {
 
     let options = {
       ListType:"Detail",
-      select: "[EmployeeID]=" + Session.get('mySessionEmployeeLoggedID'),
+      select: "[EmployeeID]=" + localStorage.getItem('mySessionEmployeeLoggedID'),
     };
 
     return this.getList(this.ERPObjects.TTemplateSettings, options);
@@ -915,8 +916,9 @@ export class SideBarService extends BaseService {
         options = {
           IgnoreDates:true,
           orderby: '"name asc"',
+          // search: 'email="'+ dataSearchName+ '"',
           search: 'name="' + dataSearchName + '"',
-          // search: 'name='+ dataSearchName+ ' OR email=' + dataSearchName + '',
+          // search: "name='"+ dataSearchName+ ' OR email=' + dataSearchName + "'",
           // search: 'name="' + dataSearchName + '" OR email="' +  dataSearchName + '"',
           //search: 'name="' + dataSearchName + '" OR street="' + dataSearchName + '" OR suburb="' + dataSearchName + '" OR state="' + dataSearchName + '" OR postcode="' + dataSearchName + '"',
         };
@@ -2119,8 +2121,8 @@ export class SideBarService extends BaseService {
   getTAppointmentListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
     let options = "";
     let seeOwnAppointments =
-      Session.get("CloudAppointmentSeeOwnAppointmentsOnly") || false;
-    let loggedEmpID = Session.get("mySessionEmployeeLoggedID") || 0;
+      localStorage.getItem("CloudAppointmentSeeOwnAppointmentsOnly") || false;
+    let loggedEmpID = localStorage.getItem("mySessionEmployeeLoggedID") || 0;
     if (seeOwnAppointments == true) {
       //Check Access Level
       if (ignoreDate == true) {
@@ -2170,8 +2172,8 @@ export class SideBarService extends BaseService {
 
   getTAppointmentListDataByName(dataSearchName) {
     let options = "";
-    let seeOwnAppointments = Session.get("CloudAppointmentSeeOwnAppointmentsOnly") || false;
-    let loggedEmpID = Session.get("mySessionEmployeeLoggedID") || 0;
+    let seeOwnAppointments = localStorage.getItem("CloudAppointmentSeeOwnAppointmentsOnly") || false;
+    let loggedEmpID = localStorage.getItem("mySessionEmployeeLoggedID") || 0;
     if (seeOwnAppointments == true) {
       options = {
         OrderBy: "CreationDate desc",
@@ -2594,7 +2596,7 @@ export class SideBarService extends BaseService {
 
       options = {
         ListType: "Detail",
-        select: "[Active]=true",
+        select: "pt.Active=true",
         // LimitCount: initialReportLoad
       };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
@@ -2602,8 +2604,8 @@ export class SideBarService extends BaseService {
 
   getAllAppointmentList(limitcount, limitfrom) {
     let options = "";
-    let checkOwnAppointment = Session.get("CloudAppointmentSeeOwnAppointmentsOnly");
-    let selectedEmployeeName = Session.get("mySessionEmployee");
+    let checkOwnAppointment = localStorage.getItem("CloudAppointmentSeeOwnAppointmentsOnly");
+    let selectedEmployeeName = localStorage.getItem("mySessionEmployee");
 
     if (limitcount == "All") {
       options = {
@@ -3776,7 +3778,7 @@ export class SideBarService extends BaseService {
   getEmpFormAccessDetail() {
     let options = {
       ListType: "Detail",
-      select:"[TabGroup]=26 and [EmployeeId]='" +Session.get("mySessionEmployeeLoggedID") +"'",
+      select:"[TabGroup]=26 and [EmployeeId]='" +localStorage.getItem("mySessionEmployeeLoggedID") +"'",
     };
     return this.getList(this.ERPObjects.TEmployeeFormAccessDetail, options);
   }
@@ -3910,7 +3912,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select: "[EmployeeID]='" + Session.get("mySessionEmployeeLoggedID") + "'",
+      select: "[EmployeeID]='" + localStorage.getItem("mySessionEmployeeLoggedID") + "'",
     };
     return this.getList(this.ERPObjects.Tvs1dashboardpreferences, options);
   }
@@ -3997,7 +3999,7 @@ export class SideBarService extends BaseService {
     let options = "";
       options = {
        ListType: "Detail",
-       select: "[Active]=true"
+       select: "pt.Active=true"
      };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
