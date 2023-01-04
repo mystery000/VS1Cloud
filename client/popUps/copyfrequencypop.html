@@ -30,8 +30,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="hidden" name="frequencyid" id="frequencyid">
                             <input class="form-check-input" type="hidden" name="formid" id="formid">
-                            <input class="form-check-input" type="radio" name="frequencyRadio" id="frequencyMonthly"
-                                >
+                            <input class="form-check-input" type="radio" name="frequencyRadio" id="frequencyMonthly">
                             <label class="form-check-label" for="frequencyMonthly">
                                 Monthly
                             </label>
@@ -49,14 +48,14 @@
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="frequencyRadio"
-                                id="frequencyOnetimeonly" checked>
+                            <input class="form-check-input" type="radio" name="frequencyRadio" id="frequencyOnetimeonly"
+                                checked>
                             <label class="form-check-label" for="frequencyOnetimeonly">
                                 One Time Only
                             </label>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-9 monthlySettings colSettings" id="monthlySettings">
+                    <div class="col-12 col-lg-9 monthlySettings colSettings" id="monthlySettings" style="display:none">
                         <div class="row">
                             <div class="col-12">
                                 <h5 style="margin-bottom: 8px;">Settings</h5>
@@ -96,7 +95,7 @@
                                 </div>
                             </div>
                         </div> -->
-                        <div class="row" style="margin-bottom: 8px;">
+                        <div class="row" style="margin-bottom: 28px;">
                             <div class="col-3">
                                 <label class="form-check-label" for="" style="margin-top: 2px;">
                                     Every Day
@@ -122,7 +121,7 @@
                                         <option value="day2">2nd</option>
                                         <option value="day3">3rd</option>
                                         <option value="day4">4th</option>
-                                        <option value="day5">5th</option>
+                                        <option selected value="day5">5th</option>
                                         <option value="day6">6th</option>
                                         <option value="day7">7th</option>
                                         <option value="day8">8th</option>
@@ -150,6 +149,14 @@
                                         <option value="day30">30th</option>
                                         <option value="day31">31st</option>
                                     </select>
+                                    <!-- 
+                                    <script>
+                                        var today = new Date();
+                                        var dd = String(today.getDate()).padStart(2, '0');                                        
+                                        today = dd;                                    
+                                        document.getElementById('sltDay').value = today;
+                                        $('#sltDay option[value=""]').attr('selected', 'selected'); 
+                                    </script> -->
                                 </div>
                             </div>
                         </div>
@@ -297,6 +304,17 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <script>
+                                var today = new Date();
+                                var dd = String(today.getDate()).padStart(2, '0');
+                                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                                var yyyy = today.getFullYear();
+
+                                today = mm + '/' + dd + '/' + yyyy;
+
+                                document.getElementById('edtMonthlyStartDate').value = today;
+                            </script>
                         </div>
                         <div class="row" style="margin-bottom: 8px;">
                             <div class="col-3">
@@ -317,9 +335,19 @@
                                 </div>
                             </div>
                         </div>
+
+                        <script>
+                            var finishdate = new Date();
+                            var dd = String(finishdate.getDate()).padStart(2, '0');
+                            var mm = String(finishdate.getMonth() + 1).padStart(2, '0'); //January is 0!
+                            var yyyy = finishdate.getFullYear() + 1;
+
+                            finishdate = mm + '/' + dd + '/' + yyyy;
+
+                            document.getElementById('edtMonthlyFinishDate').value = finishdate;
+                        </script>
                     </div>
-                    <div class="col-12 col-lg-9 weeklySettings colSettings" id="weeklySettings"
-                        style="display: none;">
+                    <div class="col-12 col-lg-9 weeklySettings colSettings" id="weeklySettings" style="display: none;">
                         <div class="row">
                             <div class="col-12">
                                 <h5 style="margin-bottom: 8px;">Settings</h5>
@@ -401,9 +429,8 @@
                             <div class="col-3">
                                 <div class="input-group mb-3 dateTimePickerMobile"
                                     style="margin-bottom: 0px !important;">
-                                    <input type="number" class="form-control weeklyEveryXWeeks"
-                                        id="weeklyEveryXWeeks" name="weeklyEveryXWeeks"
-                                        aria-describedby="basic-addon2" min="1"
+                                    <input type="number" class="form-control weeklyEveryXWeeks" id="weeklyEveryXWeeks"
+                                        name="weeklyEveryXWeeks" aria-describedby="basic-addon2" min="1"
                                         style="height: 30px !important; padding: 2px 6px;">
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2"
@@ -453,6 +480,17 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <script>
+                                var today = new Date();
+                                var dd = String(today.getDate()).padStart(2, '0');
+                                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                                var yyyy = today.getFullYear();
+
+                                today = mm + '/' + dd + '/' + yyyy;
+
+                                document.getElementById('edtWeeklyStartDate').value = today;
+                            </script>
                         </div>
                         <div class="row" style="margin-bottom: 8px;">
                             <div class="col-3">
@@ -476,10 +514,20 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <script>
+                                var finishdate = new Date();
+                                var dd = String(finishdate.getDate()).padStart(2, '0');
+                                var mm = String(finishdate.getMonth() + 2).padStart(2, '0'); //January is 0!
+                                var yyyy = finishdate.getFullYear();
+
+                                finishdate = mm + '/' + dd + '/' + yyyy;
+
+                                document.getElementById('edtWeeklyFinishDate').value = finishdate;
+                            </script>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-9 dailySettings colSettings" id="dailySettings"
-                        style="display: none;">
+                    <div class="col-12 col-lg-9 dailySettings colSettings" id="dailySettings" style="display: none;">
                         <div class="row">
                             <div class="col-12">
                                 <h5 style="margin-bottom: 8px;">Settings</h5>
@@ -488,8 +536,8 @@
                         <div class="row" style="margin-bottom: 8px;">
                             <div class="col-6 col-lg-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="dailyRadio"
-                                        id="dailyEveryDay" checked>
+                                    <input class="form-check-input" type="radio" name="dailyRadio" id="dailyEveryDay"
+                                        checked>
                                     <label class="form-check-label" for="dailyEveryDay">
                                         Every Day
                                     </label>
@@ -499,8 +547,7 @@
                         <div class="row" style="margin-bottom: 8px;">
                             <div class="col-3 col-lg-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="dailyRadio"
-                                        id="dailyWeekdays">
+                                    <input class="form-check-input" type="radio" name="dailyRadio" id="dailyWeekdays">
                                     <label class="form-check-label" for="dailyWeekdays">
                                         Weekdays
                                     </label>
@@ -521,7 +568,8 @@
                                     style="margin-bottom: 0px !important;">
                                     <input type="number" class="form-control dailyEveryXDays" id="dailyEveryXDays"
                                         name="dailyEveryXDays" aria-describedby="basic-addon2"
-                                        style="height: 30px !important; padding: 2px 6px;" disabled>
+                                        style="height: 30px !important; padding: 2px 6px;">
+                                    <!--2023.1.4 fixed(disabled)-->
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2"
                                             style="height: 30px !important; padding: 2px 6px;">Days</span>
@@ -565,6 +613,17 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <script>
+                                var today = new Date();
+                                var dd = String(today.getDate()).padStart(2, '0');
+                                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                                var yyyy = today.getFullYear();
+
+                                today = mm + '/' + dd + '/' + yyyy;
+
+                                document.getElementById('edtDailyStartDate').value = today;
+                            </script>
                         </div>
                         <div class="row" style="margin-bottom: 8px;">
                             <div class="col-3">
@@ -584,10 +643,20 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <script>
+                                var finishdate = new Date();
+                                var dd = String(finishdate.getDate()).padStart(2, '0');
+                                var mm = String(finishdate.getMonth() + 2).padStart(2, '0'); //January is 0!
+                                var yyyy = finishdate.getFullYear();
+
+                                finishdate = mm + '/' + dd + '/' + yyyy;
+
+                                document.getElementById('edtDailyFinishDate').value = finishdate;
+                            </script>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-9 oneTimeOnlySettings colSettings" id="oneTimeOnlySettings"
-                        style="display: none;">
+                    <div class="col-12 col-lg-9 oneTimeOnlySettings colSettings" id="oneTimeOnlySettings">
                         <div class="row">
                             <div class="col-12">
                                 <h5 style="margin-bottom: 8px;">Settings</h5>
@@ -633,6 +702,16 @@
                                         style="display: none; color: darkred; margin: 0; font-size: 15px;">This
                                         field is required.</p>
                                 </div>
+                                <script>
+                                    var today = new Date();
+                                    var dd = String(today.getDate()).padStart(2, '0');
+                                    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                                    var yyyy = today.getFullYear();
+
+                                    today = mm + '/' + dd + '/' + yyyy;
+
+                                    document.getElementById('edtOneTimeOnlyDate').value = today;
+                                </script>
                             </div>
                         </div>
                     </div>
