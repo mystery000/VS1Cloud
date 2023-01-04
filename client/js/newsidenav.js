@@ -9419,6 +9419,7 @@ Template.newsidenav.helpers({
     },
     isGreenTrack: function() {
         let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
+
         return checkGreenTrack;
     },
     includeSeedToSale: () => {

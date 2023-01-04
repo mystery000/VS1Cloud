@@ -9,10 +9,9 @@ Template.export_import_print_display_button.onCreated(function(){
 Template.export_import_print_display_button.events({
     'click .btnOpenSettings': async function (event, template) {
       let templateObject = Template.instance();
-        var url = FlowRouter.current().path;
+        // var url = FlowRouter.current().path;
         //let tableName = await template.tablename.get()||'';
         let currenttablename = templateObject.data.tablename||"";
-
         let getTableName = currenttablename||'';
         if(currenttablename != ''){
         $(`#${getTableName} thead tr th`).each(function (index) {

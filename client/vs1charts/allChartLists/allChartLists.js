@@ -13,15 +13,27 @@ import ApiService from "../../js/Api/Module/ApiService";
 import '../../lib/global/indexdbstorage.js';
 import { SideBarService } from "../../js/sidebar-service";
 
-import {Session} from 'meteor/session';
+import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './allChartLists.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
+import '../bankaccountschart/bankaccountschart.html'
+import '../monthlyprofitandloss/monthlyprofitandloss.html'
+import '../profitandlosschart/profitandlosschart.html'
+import '../resalescomparision/resalescomparision.html'
+import '../expenses/expenseschart.html'
+import '../accountslist/accountslistchart.html'
+import '../mytaskswdiget/mytaskswidgetchart.html'
+
+import '../top10Customers/dsm_top10Customers.html'
+import '../../Dashboard/appointments-widget/dsm-appointments-widget.html'
+
+
 let _ = require("lodash");
 
 let chartsPlaceList = {
-    "Accounts_Overview" : [
+    "Accounts_Overview": [
         "accountrevenuestreams",
         "profitandlosschart",
     ],
@@ -483,7 +495,7 @@ Template.allChartLists.onRendered(function() {
                     chart.fields._chartSlug = chart.fields.ChartGroup.toLowerCase() + "__" + chart.fields.ChartName.toLowerCase().split(" ").join("_");
                     $(`[key='${chart.fields._chartSlug}']`).addClass("chart-visibility");
                     $(`[key='${chart.fields._chartSlug}']`).attr("pref-id", 0);
-                    $(`[key='${chart.fields._chartSlug}']`).attr("chart-id",chart.fields.ID);
+                    $(`[key='${chart.fields._chartSlug}']`).attr("chart-id", chart.fields.ID);
                     // Default charts
                     let defaultClass = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-class');
                     let defaultPosition = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-position');
@@ -797,9 +809,9 @@ Template.allChartLists.helpers({
 
     is_available_chart: (current, chart) => {
         return chartsPlaceList[current].includes(chart);
-//        return 1;
+        // return 1;
     },
-    
+
     is_dashboard_check: (currentTemplate) => {
         //console.log(FlowRouter.current().path, currentTemplate);
         return FlowRouter.current().path.includes(currentTemplate);

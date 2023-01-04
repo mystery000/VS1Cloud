@@ -4,6 +4,10 @@ import {AccountService} from "../accounts/account-service";
 import {UtilityService} from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import './bankrulelist.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.bankrulelist.onCreated(function(){

@@ -5,6 +5,8 @@ import {UtilityService} from "../../utility-service";
 import '../../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
+import { Template } from 'meteor/templating';
+import "./printstatement.html";
 
 Template.printstatement.onCreated(()=>{
 

@@ -597,7 +597,7 @@ Template.non_transactional_list.onRendered(function() {
                 display: reset_data[r].display,
                 width: reset_data[r].width ? reset_data[r].width : ''
             };
-            let currentTable = document.getElementById(currenttablename)  
+            let currentTable = document.getElementById(currenttablename)
             if (reset_data[r].active == true) {
                 if(currentTable){
                     $('#' + currenttablename + ' .' + reset_data[r].class).removeClass('hiddenColumn');
@@ -1086,7 +1086,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+      setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Employee List Data
@@ -1421,7 +1421,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Accounts Overview List Data
@@ -1813,7 +1813,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Do Something Here
@@ -2182,7 +2182,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Lead List Data
@@ -2555,7 +2555,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Client Type List Data
@@ -2843,7 +2843,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Lead Status List Data
@@ -3128,7 +3128,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Department List Data
@@ -3400,7 +3400,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Payment Method List Data
@@ -3656,7 +3656,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Terms List Data
@@ -4089,7 +4089,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //UOM List Data
@@ -4462,7 +4462,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getBOMListData = async function() {
@@ -4688,7 +4688,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Currency List Data
@@ -5010,7 +5010,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getTitleListData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
@@ -5169,7 +5169,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
 
@@ -5439,7 +5439,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
 
 
     }
@@ -5713,7 +5713,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getCustomerTransactionListData = function() {
@@ -5985,7 +5985,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getCustomerJobDetailsListData = function() {
@@ -6256,7 +6256,7 @@ Template.non_transactional_list.onRendered(function() {
             });
             $(".fullScreenSpin").css("display", "none");
         }, 0);
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getEmployeeTransactionListData = function() {
@@ -6572,7 +6572,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
     templateObject.getLeadCrmListData = function() {
         let dataTableList = [];
@@ -6848,7 +6848,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getLeadCrmListDataWithDate = function(deleteFilter = false, datefrom="", dateto="") {
@@ -7585,7 +7585,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getCustomerCrmListData = function(){
@@ -7861,7 +7861,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getCustomerCrmListDataWithDate = function(deleteFilter = false, datefrom="", dateto="") {
@@ -7873,7 +7873,7 @@ Template.non_transactional_list.onRendered(function() {
 
         fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
         toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
-        
+
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName(customerName).then(async function(data) {
@@ -8599,7 +8599,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getSupplierCrmListData = function() {
@@ -8876,7 +8876,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getSupplierCrmListDataWithDate = function(deleteFilter = false, datefrom="", dateto="") {
@@ -9613,7 +9613,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getSTPListData = async function(deleteFilter = false) {
@@ -9884,7 +9884,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Check URL to make right call.
@@ -10256,7 +10256,7 @@ Template.non_transactional_list.events({
     },
     // "change #dateFrom, change #dateTo": function() {
     //     let templateObject = Template.instance();
-        
+
     // },
 });
 

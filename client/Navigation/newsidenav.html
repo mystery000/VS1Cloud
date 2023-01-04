@@ -400,7 +400,7 @@
                 </li>
             {{/if}}
 
-            {{#if isGreenTrack}}
+            {{#if equals isGreenTrack true}}
             {{else}}
                 {{#if includeAppointmentScheduling}}
                     <li class="appointmentsLi" id="sidenavappointment">
@@ -548,7 +548,7 @@
                 </li>
             {{/if}}
 
-            {{#if isGreenTrack}}
+            {{#if equals isGreenTrack true}}
                 <li class="gsemployeesLi" id="sidenavemployeesGreenTrack">
                     <a class="liHeader sidenavemployeesGreenTrack text-left"><i class="fa fa-user faHeader"></i><span> Employee List</span></a>
                 </li>
@@ -663,7 +663,7 @@
                 </div>
             </li>
             <!-- {{/if}} -->
-            
+
 
             {{#if includePayments}}
                 <li class="paymentsLi" id="sidenavpayments">
@@ -753,7 +753,7 @@
                   <a class="liHeader payrollLiHeader text-left" ><i class="fas fa-hourglass-half faHeader"></i> Clock On/Off</a>
               </li>
             {{/if}}
-            
+
             {{#if includePurchases}}
                 <li class="purchasesLi" id="sidenavpurchases">
                     <a href="#purchasesSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader purchasesLiHeader"><i class="fa fa-arrow-circle-down faHeader"></i> Purchases</a>
@@ -1007,7 +1007,7 @@
                     <a href="#settingsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader settingsLiHeader"><i class="fas fa-cog faHeader"></i> Settings</a>
                     <div class="submenuItem collapse" id="settingsSubmenu">
                         <ul class="list-unstyled">
-                            {{#if isGreenTrack}}
+                            {{#if equals isGreenTrack true}}
                                 <li>
                                     <a id="sidenavcompanyappsettings" name="sidenavcompanyappsettings"><i class="fas fa-cog"></i> VS1 Modules</a>
                                 </li>

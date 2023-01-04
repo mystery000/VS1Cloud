@@ -1,15 +1,18 @@
-Template.dashboardCardCharts.helpers({ 
-    create: function() { 
-         
-    }, 
-    rendered: function() { 
-         
-    }, 
-    destroyed: function() { 
-         
-    }, 
-}); 
+import { Template } from 'meteor/templating';
+import './dashboardCardCharts.html';
 
-Template.dashboardCardCharts.events({ 
-   
-}); 
+Template.dashboardCardCharts.helpers({
+    create: function() {
+
+    },
+    rendered: function() {
+
+    },
+    destroyed: function() {
+
+    },
+});
+
+Template.dashboardCardCharts.events({
+
+});
