@@ -14,6 +14,8 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './purchasesummaryreport.html';
 
+let _ = require('lodash');
+
 
 const reportService = new ReportService();
 const utilityService = new UtilityService();
@@ -794,7 +796,7 @@ Template.purchasesummaryreport.events({
                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                         let employeeId = storage.split('_')[2];
                         return storage.includes('BasedOnType_');
-                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     });
                     let i = basedOnTypeStorages.length;
                     if (i > 0) {

@@ -266,7 +266,7 @@ Template.bom_list.events({
 })
 Template.bom_list.helpers({
   salesCloudPreferenceRec: () => {
-    return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblEmployeelist'});
+    return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblEmployeelist'});
   },
   loggedCompany: () => {
       return localStorage.getItem('mySession') || '';

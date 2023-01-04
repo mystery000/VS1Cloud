@@ -13,6 +13,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './trialbalance.html';
 
+let _ = require('lodash');
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 let reportService = new ReportService();
@@ -1129,7 +1130,7 @@ Template.trialbalance.events({
             let employeeId = storage.split("_")[2];
             return (
               storage.includes("BasedOnType_")
-              // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
+              // storage.includes("BasedOnType_") && employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
             );
           });
           let i = basedOnTypeStorages.length;

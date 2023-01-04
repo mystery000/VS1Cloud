@@ -63,25 +63,25 @@ Template.companyappsettingsdup.onRendered(function () {
         }
     });
 
-    let isFxCurrencyLicence = Session.get('CloudUseForeignLicence');
-    let isSeedToSaleLicence = Session.get('CloudSeedToSaleLicence');
-    let isManufacturingLicence = Session.get('CloudManufacturingLicence');
-    let isWMSLicence = Session.get('CloudWMSLicence');
-    let isAddExtraUserLicence = Session.get('CloudAddExtraLicence');
-    let isMatrixLicence = Session.get('CloudMatrixLicence');
-    let isShippingLicence = Session.get('CloudShippingLicence');
-    let isPayrollLicence = Session.get('CloudPayrollLicence');
-    let isExpenseClaimsLicence = Session.get('CloudExpenseClaimsLicence');
-    let isPOSLicence = Session.get('CloudPOSLicence');
-    let regionData = Session.get('ERPLoggedCountry');
+    let isFxCurrencyLicence = localStorage.getItem('CloudUseForeignLicence');
+    let isSeedToSaleLicence = localStorage.getItem('CloudSeedToSaleLicence');
+    let isManufacturingLicence = localStorage.getItem('CloudManufacturingLicence');
+    let isWMSLicence = localStorage.getItem('CloudWMSLicence');
+    let isAddExtraUserLicence = localStorage.getItem('CloudAddExtraLicence');
+    let isMatrixLicence = localStorage.getItem('CloudMatrixLicence');
+    let isShippingLicence = localStorage.getItem('CloudShippingLicence');
+    let isPayrollLicence = localStorage.getItem('CloudPayrollLicence');
+    let isExpenseClaimsLicence = localStorage.getItem('CloudExpenseClaimsLicence');
+    let isPOSLicence = localStorage.getItem('CloudPOSLicence');
+    let regionData = localStorage.getItem('ERPLoggedCountry');
     let recordObj = null;
     let essentailPrice = 0;
     let plusPrice = 0;
 
     let cloudPackage = localStorage.getItem('vs1cloudlicenselevel');
-    let isGreenTrack = Session.get('isGreenTrack');
+    let isGreenTrack = localStorage.getItem('isGreenTrack');
 
-    if (isGreenTrack) {
+    if (isGreenTrack == true) {
         $('.additionalNotGreenTrack').css('display', 'none');
         $(".simpleStartText").html('VS1 Cloud' + ' ' + '<b class="">$225</b> /MO.');
         $(".essentialsText").html('Quickbooks' + ' ' + '<b class="">$250</b> /MO.');
@@ -665,8 +665,8 @@ Template.companyappsettingsdup.events({
         }
         let currencyname = (CountryAbbr).toLowerCase();
         let stringQuery = "?";
-        let name = Session.get('mySessionEmployee').split(' ')[0];
-        let surname = Session.get('mySessionEmployee').split(' ')[1];
+        let name = localStorage.getItem('mySessionEmployee').split(' ')[0];
+        let surname = localStorage.getItem('mySessionEmployee').split(' ')[1];
 
         if (lineItemsForm.length > 0) {
             for (let i = 0; i < lineItemsForm.length; i++) {
@@ -688,7 +688,7 @@ Template.companyappsettingsdup.events({
             stringQuery = stringQuery + "product" + l + "=" + lineItemsForm1[l].ModuleName + "&price" + l + "=" + Currency + lineItemsForm1[l].Price + "&qty" + l + "=" + lineItemsForm1[l].RenewDiscountDesc + "&";
         }
         $('.fullScreenSpin').css('display', 'block');
-        stringQuery = stringQuery + "tax=0" + "&total=" + Currency + grandTotal + "&customer=" + Session.get('vs1companyName') + "&name=" + name + "&surname=" + surname + "&company=" + Session.get('vs1companyName') + "&customeremail=" + localStorage.getItem('mySession') + "&type=VS1 Modules Purchase&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
+        stringQuery = stringQuery + "tax=0" + "&total=" + Currency + grandTotal + "&customer=" + localStorage.getItem('vs1companyName') + "&name=" + name + "&surname=" + surname + "&company=" + localStorage.getItem('vs1companyName') + "&customeremail=" + localStorage.getItem('mySession') + "&type=VS1 Modules Purchase&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
         var oPost = new XMLHttpRequest();
         oPost.open("POST", URLRequest + loggedserverIP + ':' + loggedserverPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_AddModules"', true);
         oPost.setRequestHeader("database", vs1loggedDatatbase);
@@ -703,8 +703,8 @@ Template.companyappsettingsdup.events({
         let newStripePrice = grandTotal.toFixed(2);
         oPost.onreadystatechange = function () {
             if (oPost.readyState == 4 && oPost.status == 200) {
-                //Meteor.call('braintreeChargeCard', Session.get('VS1AdminUserName'), parseFloat(grandTotal));
-                // Meteor.call('StripeChargeCard', Session.get('VS1AdminUserName'), newStripePrice.replace('.', ''), function(error, result){
+                //Meteor.call('braintreeChargeCard', localStorage.getItem('VS1AdminUserName'), parseFloat(grandTotal));
+                // Meteor.call('StripeChargeCard', localStorage.getItem('VS1AdminUserName'), newStripePrice.replace('.', ''), function(error, result){
                 //     if(error){
 
                 //     }else{
@@ -721,7 +721,7 @@ Template.companyappsettingsdup.events({
                             $.ajax({
                                 url: stripeGlobalURL + 'vs1_module_purchase.php',
                                 data: {
-                                    'email': Session.get('VS1AdminUserName'),
+                                    'email': localStorage.getItem('VS1AdminUserName'),
                                     'price': newStripePrice.replace('.', ''),
                                     'currency': currencyname
                                 },
@@ -732,12 +732,12 @@ Template.companyappsettingsdup.events({
                                         $.ajax({
                                             url: stripeGlobalURL + 'update.php',
                                             data: {
-                                                'email': Session.get('VS1AdminUserName'),
+                                                'email': localStorage.getItem('VS1AdminUserName'),
                                                 'products': JSON.stringify(lineItemsForm1),
                                                 'price': newStripePrice.replace('.', ''),
                                                 'update_price': newStripePrice,
                                                 'currency': currencyname,
-                                                'country': Session.get('ERPLoggedCountry')
+                                                'country': localStorage.getItem('ERPLoggedCountry')
                                             },
                                             method: 'post',
                                             success: function (responseFinal) {
@@ -798,7 +798,7 @@ Template.companyappsettingsdup.events({
                         $.ajax({
                             url: stripeGlobalURL + 'vs1_module_purchase.php',
                             data: {
-                                'email': Session.get('VS1AdminUserName'),
+                                'email': localStorage.getItem('VS1AdminUserName'),
                                 'price': newStripePrice.replace('.', ''),
                                 'currency': currencyname
                             },
@@ -866,7 +866,7 @@ Template.companyappsettingsdup.events({
                                 confirmButtonText: 'OK'
                             }).then((result) => {
                                 //if (result.value) {
-                                Session.set('CloudTrueERPModule', true);
+                                localStorage.setItem('CloudTrueERPModule', true);
                                 window.open('/linktrueerp', '_self');
                                 //} else if (result.dismiss === 'cancel') {
 
@@ -1417,7 +1417,7 @@ Template.companyappsettingsdup.helpers({
         });
     },
     isGreenTrack: function () {
-        let checkGreenTrack = Session.get('isGreenTrack') || false;
+        let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
         return checkGreenTrack;
     }
 });

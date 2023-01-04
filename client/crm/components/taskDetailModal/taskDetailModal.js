@@ -1,5 +1,9 @@
-import { mergeEventStores } from '@fullcalendar/core';
 import { CRMService } from '../../crm-service';
+
+import { Template } from 'meteor/templating';
+import './taskDetailModal.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let crmService = new CRMService();
 
 Template.taskDetailModal.onCreated(function() {});

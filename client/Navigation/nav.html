@@ -76,7 +76,7 @@ $('#myPopupLogout').click(function(event){
 
 function logOutFunc() {
   window.open('/','_self');
-  CloudUser.update({_id: Session.get('mycloudLogonID')},{ $set: {userMultiLogon: false}});
+  CloudUser.update({_id: localStorage.getItem('mycloudLogonID')},{ $set: {userMultiLogon: false}});
 };
 
 $(document).ready(function(){

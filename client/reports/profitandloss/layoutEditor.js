@@ -4,7 +4,7 @@ export default class layoutEditor {
       return null;
     }
 
-    this.employeeId = Session.get("mySessionEmployeeLoggedID");
+    this.employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 
     this.save = element.querySelector(".saveTable"); // save button
 

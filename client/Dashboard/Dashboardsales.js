@@ -9,7 +9,7 @@ Template.dashboardsales.onCreated(function() {
 
 Template.dashboardsales.onRendered(function() {
     let templateObject = Template.instance();
-    let isDashboard = Session.get("CloudDashboardModule");
+    let isDashboard = localStorage.getItem("CloudDashboardModule");
     if (isDashboard) {
         templateObject.includeDashboard.set(true);
     }

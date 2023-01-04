@@ -35,7 +35,7 @@ Template.paychexapi.onRendered(function () {
   }
   var fromDate =fromDateDay + "/" +(fromDateMonth) + "/" + currentDate.getFullYear();
 
-  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblpaychex', function(error, result){
+  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblpaychex', function(error, result){
   if(error){
 
   }else{
@@ -199,7 +199,7 @@ yearRange: "-90:+10",
       templateObject.datatablerecords.set(dataTableList);
       if(templateObject.datatablerecords.get()){
 
-        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblpaychex', function(error, result){
+        Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblpaychex', function(error, result){
         if(error){
 
         }else{
@@ -322,7 +322,7 @@ Template.paychexapi.events({
     });
   },
   'click .resetTable' : function(event){
-    var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+    var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
     if(getcurrentCloudDetails){
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;
@@ -366,7 +366,7 @@ Template.paychexapi.events({
 
       lineItems.push(lineItemObj);
     });
-    var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+    var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
     if(getcurrentCloudDetails){
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;

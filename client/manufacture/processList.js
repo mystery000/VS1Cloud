@@ -48,7 +48,7 @@ Template.processList.onRendered (function() {
     //                 addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){}).catch(function(err){})
     //                 templateObject.datatablerecords.set(data.tprocessstep)
     //                 if (templateObject.datatablerecords.get()) {
-    //                     Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblProcessList', function (error, result) {
+    //                     Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblProcessList', function (error, result) {
     //                         if (error) {
     //                         }
     //                         else {
@@ -239,7 +239,7 @@ Template.processList.onRendered (function() {
     //             templateObject.datatablerecords.set(data.tprocessstep);
 
     //             if (templateObject.datatablerecords.get()) {
-    //                 Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblProcessList', function (error, result) {
+    //                 Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblProcessList', function (error, result) {
     //                     if (error) {
     //                     }
     //                     else {
@@ -432,7 +432,7 @@ Template.processList.onRendered (function() {
     //             addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){}).catch(function(err){})
     //             templateObject.datatablerecords.set(data.tprocessstep);
     //             if (templateObject.datatablerecords.get()) {
-    //                 Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblProcessList', function (error, result) {
+    //                 Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblProcessList', function (error, result) {
     //                     if (error) {
     //                     }
     //                     else {
