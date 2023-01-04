@@ -46,6 +46,7 @@ Template.assetregisteroverview.onRendered(function () {
   templateObject.init_reset_data();
   // set initial table rest_data
 
+  
   // custom field displaysettings
   templateObject.initCustomFieldDisplaySettings = function (listType) {
     let reset_data = templateObject.reset_data.get();
@@ -75,6 +76,146 @@ Template.assetregisteroverview.onRendered(function () {
     } catch (error) {
     }
     return;
+  }
+
+  templateObject.getFixedAssetsList = function () {
+    getVS1Data("TFixedAssets").then(function (dataObject) {
+      if (dataObject.length == 0) {
+        fixedAssetService.getTFixedAssetsList().then(function (data) {
+          setFixedAssetsList(data);
+        }).catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        setFixedAssetsList(data);
+      }
+    }).catch(function (err) {
+      fixedAssetService.getTFixedAssetsList().then(function (data) {
+        setFixedAssetsList(data);
+      }).catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
+      });
+    });
+  };
+
+  $(".fullScreenSpin").css("display", "inline-block");
+  templateObject.getFixedAssetsList();
+
+  function setFixedAssetsList(data) {
+    addVS1Data('TFixedAssets', JSON.stringify(data));
+    const dataTableList = [];
+    for (const asset of data.tfixedassets) {
+      const dataList = {
+        id: asset.fields.ID || "",
+        assetname: asset.fields.AssetName || "",
+        color: asset.fields.Colour || "",
+        brandname: asset.fields.BrandName || "",
+        manufacture: asset.fields.Manufacture || "",
+        model: asset.fields.Model || "",
+        assetcode: asset.fields.AssetCode || "",
+        assettype: asset.fields.AssetType || "",
+        department: asset.fields.Department || "",   // tempcode how to get department
+        purchdate: asset.fields.PurchDate ? moment(asset.fields.PurchDate).format("DD/MM/YYYY") : "",
+        purchcost: utilityService.modifynegativeCurrencyFormat(asset.fields.PurchCost) || 0.0,
+        serial: asset.fields.Serial || "",
+        qty: asset.fields.Qty || 0,
+        assetcondition: asset.fields.AssetCondition || "",
+        locationdescription: asset.fields.LocationDescription || "",
+        notes: asset.fields.Notes || "",
+        size: asset.fields.Size || "",
+        shape: asset.fields.Shape || "",
+        status: asset.fields.Status || "",
+        businessuse: asset.fields.BusinessUsePercent || 0.0,
+        businessuse2: asset.fields.BusinessUsePercent2 || 0.0,
+        estimatedvalue: utilityService.modifynegativeCurrencyFormat(asset.fields.EstimatedValue) || 0.0,
+        replacementcost: utilityService.modifynegativeCurrencyFormat(asset.fields.ReplacementCost) || 0.0,
+        warrantytype: asset.fields.WarrantyType || "",
+        warrantyexpiresDate: asset.fields.WarrantyExpiresDate ? moment(asset.fields.WarrantyExpiresDate).format("DD/MM/YYYY") : "",
+        insuredby: asset.fields.InsuredBy || "",
+        insurancepolicy: asset.fields.InsurancePolicy || "",
+        insureduntil: asset.fields.InsuredUntil ? moment(asset.fields.InsuredUntil).format("DD/MM/YYYY") : "",
+        active: asset.fields.Active || false
+      };
+      dataTableList.push(dataList);
+    }
+
+    templateObject.datatablerecords.set(dataTableList);
+
+    $(".fullScreenSpin").css("display", "none");
+    setTimeout(function () {
+      $("#tblAssetRegisterTable").DataTable({
+        columnDefs: [
+        ],
+        select: true,
+        destroy: true,
+        colReorder: true,
+        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        buttons: [{
+          extend: "csvHtml5",
+          text: "",
+          download: "open",
+          className: "btntabletocsv hiddenColumn",
+          filename: "FixedAssetsOverview__" + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible",
+          },
+        },
+        {
+          extend: "print",
+          download: "open",
+          className: "btntabletopdf hiddenColumn",
+          text: "",
+          title: "Accounts Overview",
+          filename: "Accounts Overview_" + moment().format(),
+          exportOptions: {
+            columns: ":visible",
+          },
+        },
+        {
+          extend: "excelHtml5",
+          title: "",
+          download: "open",
+          className: "btntabletoexcel hiddenColumn",
+          filename: "FixedAssetsOverview__" + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible",
+          },
+        },
+        ],
+        pageLength: initialDatatableLoad,
+        lengthMenu: [
+          [initialDatatableLoad, -1],
+          [initialDatatableLoad, "All"],
+        ],
+        info: true,
+        responsive: true,
+        order: [
+          [0, "asc"]
+        ],
+        // "aaSorting": [[1,'desc']],
+        action: function () {
+          $("#tblFixedAssetsOverview").DataTable().ajax.reload();
+        },
+        language: { search: "", searchPlaceholder: "Search List..." },
+        fnDrawCallback: function (oSettings) {
+        },
+        fnInitComplete: function () {
+          $(
+            "<button class='btn btn-primary btnSearchFixedAccount' type='button' id='btnSearchFixedAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+          ).insertAfter("#tblFixedAssetsOverview_filter");
+        },
+      })
+        .on("page", function () {
+          let draftRecord = templateObject.datatablerecords.get();
+          templateObject.datatablerecords.set(draftRecord);
+        })
+        .on("column-reorder", function () { })
+        .on("length.dt", function (e, settings, len) {
+        });
+    }, 10);
   }
 
   function showCustomFieldDisplaySettings(reset_data) {
@@ -237,7 +378,9 @@ Template.assetregisteroverview.events({
       Meteor._reload.reload();
     });
   },
-
+  "click button#btnNewAsset": function () {
+    FlowRouter.go('/fixedassetcard');
+  }
 });
 
 Template.assetregisteroverview.helpers({

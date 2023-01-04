@@ -317,6 +317,14 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Cost Asset Account</label>
                         <select type="search" class="form-control" id="edtCostAssetAccount" name="edtCostAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                          {{#if edtCostAssetAccount}}
+                            <option></option>
+                            {{#each account in edtCostAssetAccount}}
+                              <option class="" value="{{account.id}}">
+                                {{account.accountName}}
+                              </option>
+                            {{/each}}
+                          {{/if}}
                         </select>
                       </div>
                     </div>
@@ -324,6 +332,14 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Bank Account</label>
                         <select type="search" class="form-control" id="editBankAccount" name="editBankAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                          {{#if editBankAccount}}
+                            <option></option>
+                            {{#each account in editBankAccount}}
+                              <option class="" value="{{account.id}}">
+                                {{account.accountName}}
+                              </option>
+                            {{/each}}
+                          {{/if}}
                         </select>
                       </div>
                     </div>
@@ -331,6 +347,14 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Depreciation Asset Account</label>
                         <select type="search" class="form-control" id="edtDepreciationAssetAccount" name="edtDepreciationAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                          {{#if edtDepreciationAssetAccount}}
+                          <option></option>
+                            {{#each account in edtDepreciationAssetAccount}}
+                              <option class="" value="{{account.id}}">
+                                {{account.accountName}}
+                              </option>
+                            {{/each}}
+                          {{/if}}
                         </select>
                       </div>
                     </div>
@@ -338,6 +362,14 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Depreciation Expense Account</label>
                         <select type="search" class="form-control" id="edtDepreciationExpenseAccount" name="edtDepreciationExpenseAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                          {{#if edtDepreciationExpenseAccount}}
+                            <option></option>
+                            {{#each account in edtDepreciationExpenseAccount}}
+                              <option class="" value="{{account.id}}">
+                                {{account.accountName}}
+                              </option>
+                            {{/each}}
+                          {{/if}}
                         </select>
                       </div>
                     </div>
