@@ -5,6 +5,9 @@ import "jquery-editable-select";
 import { bankNameList } from "../lib/global/bank-names";
 import { AccountService } from "../accounts/account-service";
 import LoadingOverlay from "../LoadingOverlay";
+import { Template } from 'meteor/templating';
+import './newbankrule.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let accountService = new AccountService();
 

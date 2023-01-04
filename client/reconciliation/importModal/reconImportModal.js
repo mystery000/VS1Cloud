@@ -1,3 +1,6 @@
+import { Template } from 'meteor/templating';
+import './reconImportModal.html';
+
 Template.reconImportModal.onCreated(function () {});
 
 Template.reconImportModal.onRendered(function () {

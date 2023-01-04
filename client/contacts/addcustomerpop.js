@@ -7,6 +7,10 @@ import { PaymentsService } from '../payments/payments-service';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import LoadingOverlay from "../LoadingOverlay";
+import { Template } from 'meteor/templating';
+import './addcustomerpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
