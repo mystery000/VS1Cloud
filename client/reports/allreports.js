@@ -3,6 +3,8 @@ import { Template } from 'meteor/templating';
 import "./reports.html"
 
 import { TaxRateService } from "../settings/settings-service";
+import './reports.html';
+
 Template.allreports.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.isBalanceSheet = new ReactiveVar();
