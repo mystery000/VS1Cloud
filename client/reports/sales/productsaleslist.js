@@ -23,7 +23,7 @@ Template.productsaleslist.onRendered(()=>{
   const tableHeaderList = [];
   var splashArray = new Array();
 
-  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblProductalesReport', function(error, result){
+  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblProductalesReport', function(error, result){
  if(error){
 
  }else{
@@ -135,7 +135,7 @@ Template.productsaleslist.onRendered(()=>{
 
         if(templateObject.datatablerecords.get()){
 
-          Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblProductalesReport', function(error, result){
+          Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblProductalesReport', function(error, result){
           if(error){
 
           }else{
@@ -312,7 +312,7 @@ Template.productsaleslist.onRendered(()=>{
 
     if(templateObject.datatablerecords.get()){
 
-      Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblProductalesReport', function(error, result){
+      Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblProductalesReport', function(error, result){
       if(error){
 
       }else{
@@ -465,7 +465,7 @@ Template.productsaleslist.helpers({
      return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-  return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblProductalesReport'});
+  return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblProductalesReport'});
 }
 });
 
@@ -490,7 +490,7 @@ Template.productsaleslist.events({
       });
     },
     'click .resetTable' : function(event){
-      var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+      var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
       if(getcurrentCloudDetails){
         if (getcurrentCloudDetails._id.length > 0) {
           var clientID = getcurrentCloudDetails._id;
@@ -534,7 +534,7 @@ Template.productsaleslist.events({
         lineItems.push(lineItemObj);
       });
 
-      var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+      var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
       if(getcurrentCloudDetails){
         if (getcurrentCloudDetails._id.length > 0) {
           var clientID = getcurrentCloudDetails._id;

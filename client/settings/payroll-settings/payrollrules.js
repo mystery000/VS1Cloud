@@ -19,9 +19,15 @@ import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertime
 import GlobalFunctions from "../../GlobalFunctions";
 import TableHandler from "../../js/Table/TableHandler";
 
+import './payrollrules.html';
+import './fundtype.html';
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
+
 
 Template.payrollrules.onCreated(function() {
 
@@ -62,7 +68,7 @@ Template.payrollrules.onRendered(function() {
     var uleavetypearraylist = [];
     var countryService = new CountryService();
     let countries = [];
-    let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
+    let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
 
     let tabid = FlowRouter.current().queryParams.active_key;
 
@@ -1482,7 +1488,6 @@ Template.payrollrules.onRendered(function() {
 
 
             }, 0);
-
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
             LoadingOverlay.hide();
 
@@ -5552,7 +5557,6 @@ Template.payrollrules.onRendered(function() {
         overtimes.forEach((overtime) => {
             overtime.rateType = rateTypes.find(rate => rate.ID == overtime.rateTypeId);
         });
-
         await templateObject.overtimes.set(overtimes);
 
         await templateObject.setupOvertimeTable();
@@ -5633,10 +5637,11 @@ Template.payrollrules.onRendered(function() {
 
     templateObject.addOverTime= async () => {
         if($('#btnAddNewOvertime').attr('overtime-id')) {
+            console.log('Update......')
             const overtimeIdToupdate = $('#btnAddNewOvertime').attr('overtime-id');
             return templateObject.updateOvertime(overtimeIdToupdate);
         }
-
+        console.log('Add..........')
         $('#btnAddNewOvertime .modal-title').text('Add new Overtime');
 
         LoadingOverlay.show();
@@ -5647,24 +5652,24 @@ Template.payrollrules.onRendered(function() {
         const rateType = rateTypes.find(rate => rate.ID == $('#overtimeRateType').attr('rate-type-id'));
         const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
         const weekEndDay = $('#OvertimeWeekEndDay').val();
+        const rate = $('#rateList').val();
 
         const object = new PayrollSettingsOvertimes({
             hours: hours,
             rateTypeId: rateType.ID,
-            //rateType: rateType,
-            //rateType: rateType.Description,
+            rate: rate,
             hourlyMultiplier: hourlyMultiplier,
-            rule: rateType.Description == "Weekend" ? `${rateType.Description} (${weekEndDay.toLowerCase()})` : `${rateType.Description}`,
-            day: rateType.Description == "Weekend" ? weekEndDay: null
+            rate,
+            rule: rate == "Weekend"? `${weekEndDay}` : `Greater than ${hours} hours`,
+            day: rate == "Weekend" ? weekEndDay: null
 
         });
-        object.setRateType(rateType);
+        // object.setRateType(rateType);
 
 
         // Add to the list of overtimes
         let overtimes = await templateObject.overtimes.get();
         overtimes.push(object);
-
         // This code has to be removed once we save on remote database
         overtimes = overtimes.map((overtime, index) => {
             return {
@@ -5709,14 +5714,16 @@ Template.payrollrules.onRendered(function() {
                     const rateTypeId =  $('#overtimeRateType').attr('rate-type-id');
                     const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
                     const weekEndDay = $('#OvertimeWeekEndDay').val();
+                    const rate = $('#rateList').val();
+
                     const newOvertime = {
                         ...overtime,
                         hours: parseFloat(hours),
                         rateTypeId: parseInt(rateTypeId),
-                        rateType: rateTypes.find(rt => rt.ID == rateTypeId),
                         hourlyMultiplier: parseFloat(hourlyMultiplier),
-                        rule: rateType == "Weekend" ? `${rateType} : (${weekEndDay})` : `${rateType}`,
-                        ...(rateType == "Weekend" ? {day: weekEndDay} : {day: null}),
+                        rate,
+                        rule: rate == "Weekend"? `${weekEndDay}` : `Greater than ${hours} hours`,
+                        day: rate == "Weekend" ? weekEndDay: null
 
                     };
 
@@ -5734,42 +5741,39 @@ Template.payrollrules.onRendered(function() {
 
     }
 
+    templateObject.openAddOvertimeEditor = async (overtimeId = null)  => {
+        console.log('Add Modal....')
+        $('#btnAddNewOvertime').modal('show');
+        $('#btnAddNewOvertime .modal-title').text('Add Overtime');
+        $('#overtimeRateType').attr('rate-type-id', 1);
+    }
+
     templateObject.openOvertimeEditor = async (overtimeId = null)  => {
+        console.log('Edit Modal....')
         $('#btnAddNewOvertime').modal('show');
         $('#btnAddNewOvertime .modal-title').text('Edit Overtime');
-
 
         $('#btnAddNewOvertime').attr('overtime-id', overtimeId);
 
         let overtimes = await templateObject.overtimes.get();
         let overtime = overtimes.find(overtime => overtime.id == overtimeId);
-
-        $('#overtimeHours').val(overtime.hours);
-        $('#overtimeRateType').val(overtime.rateType.Description);
+        if(overtime.rate == "Weekend"){
+            $('.weekendDiv').css('display', 'block');
+            $('.greaterThanDiv').css('display', 'none');
+            $('#OvertimeWeekEndDay').val(overtime.day);
+        }else{
+            $('#overtimeHours').val(overtime.hours);
+        }
+        $('#rateList').val(overtime.rate);
+        let rateTypes = await templateObject.rateTypes.get();
+        const rateType = rateTypes.find(rate => rate.ID == overtime.rateTypeId);
+        $('#overtimeRateType').val(rateType.Description);
         $('#overtimeRateType').attr('rate-type-id', overtime.rateTypeId);
         $('#overtimeHourlyMultiplier').val(overtime.hourlyMultiplier);
-        $('#OvertimeWeekEndDay').val(overtime.day);
     }
 
-    templateObject.editOverTime = async (overtimeId = null) => {
-        // $('#btnAddNewOvertime').modal('show');
-        // $('#btnAddNewOvertime .modal-title').text('Edit Overtime');
 
-        // $('#btnAddNewOvertime').attr('overtime-id', overtimeId);
-
-         let overtimes = await templateObject.overtimes.get();
-         let overtime = overtimes.find(overtime => overtime.id == overtimeId);
-
-        // $('#overtimeHours').val(overtime.hours);
-        // $('#overtimeRateType').val(overtime.rateType);
-        // $('#overtimeRateType').attr('rate-type-id', overtime.rateTypeId);
-        // $('#overtimeHourlyMultiplier').val(overtime.hourlyMultiplier);
-        // $('#OvertimeWeekEndDay').val(overtime.day);
-
-         templateObject.addOverTime(overtime.id);
-
-    }
-
+    
     templateObject.resetOvertimeModal = async () => {
         $('#overtimeHours').val('');
         $('#overtimeRateType').val('');
@@ -5956,19 +5960,19 @@ Template.payrollrules.onRendered(function() {
 
     //     switch(evalue) {
     //         case 'Time & Half':
-    //             $('.graterThenDiv').css('display', 'block');
+    //             $('.greaterThanDiv').css('display', 'block');
     //             $('.weekendDiv').css('display', 'none');
     //         break;
     //         case 'Double Time':
-    //             $('.graterThenDiv').css('display', 'block');
+    //             $('.greaterThanDiv').css('display', 'block');
     //             $('.weekendDiv').css('display', 'none');
     //         break;
     //         case 'Weekend':
     //             $('.weekendDiv').css('display', 'block');
-    //             $('.graterThenDiv').css('display', 'none');
+    //             $('.greaterThanDiv').css('display', 'none');
     //         break;
     //         default:
-    //             $('.graterThenDiv').css('display', 'block');
+    //             $('.greaterThanDiv').css('display', 'block');
     //             $('.weekendDiv').css('display', 'none');
     //     }
     // });
@@ -8103,8 +8107,6 @@ Template.payrollrules.onRendered(function() {
              }, 500);
            }
          }
-
-
       });
 
      $('#editsuperliabbankaccount').editableSelect().on('click.editable-select', function (e, li) {
@@ -15023,7 +15025,40 @@ Template.payrollrules.onRendered(function() {
         }, 1000);
     });
 
-
+    $(document).on('click', '#rateList', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#ratePopModal').modal('toggle');
+        } else {
+        }
+    });
+    $(document).on("click", "#tblRatePopList tbody tr", function(e) {
+        let updatedValue = $(this).find(".colRateName").text();
+        $('#rateList').val(updatedValue);
+        switch(updatedValue) {
+            case 'Normal':
+                $('.greaterThanDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+            break;
+            case 'Time & Half':
+                $('.greaterThanDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+            break;
+            case 'Double Time':
+                $('.greaterThanDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+            break;
+            case 'Weekend':
+                $('.weekendDiv').css('display', 'block');
+                $('.greaterThanDiv').css('display', 'none');
+            break;
+            default:
+                $('.greaterThanDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+        }
+        $('#ratePopModal').modal('toggle');
+    });
 });
 
 Template.payrollrules.events({
@@ -16889,7 +16924,7 @@ Template.payrollrules.events({
                     showemployeebases:swtShowEmploymentBasis,
                     TimeSheetCategory:timesheetcat,
                     EmployeeGroup:employegroup,
-                    KeyStringFieldName:Session.get('mySessionEmployeeLoggedID'),
+                    KeyStringFieldName:localStorage.getItem('mySessionEmployeeLoggedID'),
                 }
             };
 
@@ -16992,7 +17027,7 @@ Template.payrollrules.events({
                                           Accountno:edtaccountnumber,
                                           ElectronicsServiceAddressAlias:edtelectronicsalias,
                                           BSB:edtbsb,
-                                          Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                          Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                           Amount:1,
                                           DepartmentName:defaultDept,
                                           Allclasses:true,
@@ -17112,7 +17147,7 @@ Template.payrollrules.events({
                                     Accountno:edtaccountnumber,
                                     ElectronicsServiceAddressAlias:edtelectronicsalias,
                                     BSB:edtbsb,
-                                    Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                    Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                     Amount:1,
                                     DepartmentName:defaultDept,
                                     Allclasses:true,
@@ -17183,7 +17218,7 @@ Template.payrollrules.events({
                                           AccountNo:edtaccountnumber,
                                           ElectronicsServiceAddressAlias:edtelectronicsalias,
                                           BSB:edtbsb,
-                                          Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                          Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                           Amount:1,
                                           DepartmentName:defaultDept,
                                           Allclasses:true,
@@ -17264,7 +17299,7 @@ Template.payrollrules.events({
                                   AccountNo:edtaccountnumber,
                                   ElectronicsServiceAddressAlias:edtelectronicsalias,
                                   BSB:edtbsb,
-                                  Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                  Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                   Amount:1,
                                   DepartmentName:defaultDept,
                                   Allclasses:true,
@@ -17336,7 +17371,7 @@ Template.payrollrules.events({
                                       AccountNo:edtaccountnumber,
                                       ElectronicsServiceAddressAlias:edtelectronicsalias,
                                       BSB:edtbsb,
-                                      Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                      Clientid:localStorage.getItem('mySessionEmployeeLoggedID'),
                                       Amount:1,
                                       DepartmentName:defaultDept,
                                       Allclasses:true,
@@ -22276,13 +22311,15 @@ Template.payrollrules.events({
      "click .edit-overtime": (e, ui) => {
         const id = $(e.currentTarget).attr('overtime-id');
         ui.openOvertimeEditor(id);
-        // ui.editOverTime(id);
+     },
+     "click .btnAddNewOvertime": (e, ui) => {
+        const id = $(e.currentTarget).attr('overtime-id');
+        ui.openAddOvertimeEditor(id);
      },
 
      "click #overtimeRateType, click #edtRateType": (e, ui) => {
         $(e.currentTarget).addClass('paste-rate');
         $('#select-rate-type-modal').modal('show');
-
      },
 
      "click #tblratetypes tbody > tr, click  #tblratetypelist tbody > tr": (e, ui) => {
@@ -22303,42 +22340,34 @@ Template.payrollrules.events({
     //  }
     //  "show.bs.modal #select-ratetype-modal": (e, ui) => {
     // },
-    'change #overtimeRateType': (e, ui) => {
-        let evalue = $(e.currentTarget).val();
-
-        switch(evalue) {
-            case 'Time & Half':
-                $('.graterThenDiv').css('display', 'block');
-                $('.weekendDiv').css('display', 'none');
-            break;
-            case 'Double Time':
-                $('.graterThenDiv').css('display', 'block');
-                $('.weekendDiv').css('display', 'none');
-            break;
-            case 'Weekend':
-                $('.weekendDiv').css('display', 'block');
-                $('.graterThenDiv').css('display', 'none');
-            break;
-            default:
-                $('.graterThenDiv').css('display', 'block');
-                $('.weekendDiv').css('display', 'none');
-        }
+    // 'change #rateList': (e, ui) => {
+    //     let evalue = $(e.currentTarget).val();
+    //     switch(evalue) {
+    //         case 'Normal':
+    //             $('.greaterThanDiv').css('display', 'block');
+    //             $('.weekendDiv').css('display', 'none');
+    //         break;
+    //         case 'Time & Half':
+    //             $('.greaterThanDiv').css('display', 'block');
+    //             $('.weekendDiv').css('display', 'none');
+    //         break;
+    //         case 'Double Time':
+    //             $('.greaterThanDiv').css('display', 'block');
+    //             $('.weekendDiv').css('display', 'none');
+    //         break;
+    //         case 'Weekend':
+    //             $('.weekendDiv').css('display', 'block');
+    //             $('.greaterThanDiv').css('display', 'none');
+    //         break;
+    //         default:
+    //             $('.greaterThanDiv').css('display', 'block');
+    //             $('.weekendDiv').css('display', 'none');
+    //     }
+    // },
+    'click #rateList': function(event) {
+        $('#rateList').select();
+        $('#rateList').editableSelect();
     },
-    "click #chkUseOverTime": (e, ui) => {
-        let elementId =  e.target.id;
-        let checked = $(event.target).is(':checked');
-        if(checked){
-            $("#edtTimeAndHalf").removeAttr("readonly");
-            $("#edtDoubleTime").removeAttr("readonly");
-            $("#edtWeekend1").removeAttr("readonly");
-            $("#edtWeekend2").removeAttr("readonly");
-        }else{
-            $('#edtTimeAndHalf').attr('readonly', true);
-            $('#edtDoubleTime').attr('readonly', true);
-            $('#edtWeekend1').attr('readonly', true);
-            $('#edtWeekend2').attr('readonly', true);
-        }
-    }
 });
 
 Template.payrollrules.helpers({
@@ -22389,7 +22418,6 @@ export const getOvertimes = async () => {
     let overtimesData = await getVS1Data(erpObject.TPayrollSettingOvertimes);
     let overtimes = overtimesData.length > 0 ? JSON.parse(overtimesData[0].data) : [];
     const rateTypes = await getRateTypes();
-
     // This part is handling the auto add of default values in the list
     let defaultOvertimes = PayrollSettingsOvertimes.getDefaults();
     defaultOvertimes.forEach((defaultOvertime) => {

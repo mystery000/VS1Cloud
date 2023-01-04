@@ -49,7 +49,7 @@ Template.depositlist.onRendered(function() {
         try {
         getVS1Data("VS1_Customize").then(function (dataObject) {
             if (dataObject.length == 0) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+            sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
                 // reset_data = data.ProcessLog.CustomLayout.Columns;
                 reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
                 templateObject.showCustomFieldDisplaySettings(reset_data);
@@ -143,7 +143,7 @@ Template.depositlist.onRendered(function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblDepositList', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDepositList', function(error, result){
         if(error){
 
         }else{
@@ -247,7 +247,7 @@ Template.depositlist.onRendered(function() {
                   templateObject.datatablerecords.set(dataTableList);
                   if(templateObject.datatablerecords.get()){
 
-                      Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblDepositList', function(error, result){
+                      Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDepositList', function(error, result){
                           if(error){
 
                           }else{
@@ -542,7 +542,7 @@ Template.depositlist.onRendered(function() {
                 templateObject.datatablerecords.set(dataTableList);
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblDepositList', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDepositList', function(error, result){
                         if(error){
 
                         }else{
@@ -832,7 +832,7 @@ Template.depositlist.onRendered(function() {
                 templateObject.datatablerecords.set(dataTableList);
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblDepositList', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDepositList', function(error, result){
                         if(error){
 
                         }else{
@@ -1406,7 +1406,7 @@ Template.depositlist.events({
         $(".btnRefresh").trigger("click");
     },
     'click .resetTable' : function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1451,7 +1451,7 @@ Template.depositlist.events({
             lineItems.push(lineItemObj);
         });
         //datatable.state.save();
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1592,7 +1592,7 @@ Template.depositlist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblDepositList'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblDepositList'});
     },
     currentdate : () => {
         var currentDate = new Date();

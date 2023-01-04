@@ -4,6 +4,10 @@ import {AccountService} from "../accounts/account-service";
 import {UtilityService} from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import './bankrulelist.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.bankrulelist.onCreated(function(){
@@ -21,7 +25,7 @@ Template.bankrulelist.onRendered(function() {
     if(FlowRouter.current().queryParams.success){
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblbankrulelist', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblbankrulelist', function(error, result){
         if(error){
 
         }else{
@@ -160,7 +164,7 @@ Template.bankrulelist.onRendered(function() {
         }
         templateObject.datatablerecords.set(dataTableList);
         if(templateObject.datatablerecords.get()){
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblbankrulelist', function(error, result){
+            Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblbankrulelist', function(error, result){
                 if (error){
 
                 } else {
@@ -455,8 +459,8 @@ Template.bankrulelist.events({
     },
     'click .resetTable' : function(event){
         const getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
@@ -497,8 +501,8 @@ Template.bankrulelist.events({
         });
 
         const getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
@@ -855,6 +859,6 @@ Template.bankrulelist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     purchasesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblbankrulelist'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblbankrulelist'});
     }
 });

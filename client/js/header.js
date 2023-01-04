@@ -1,3 +1,4 @@
+import { Template } from 'meteor/templating';
 import {
     ReactiveVar
 } from 'meteor/reactive-var';
@@ -24,6 +25,11 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import { AccountService } from '../accounts/account-service';
+
+import '../Navigation/header.html';
+import '../Navigation/onsuccesswaterfall.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { Session } from 'meteor/session';
 let utilityService = new UtilityService();
 let productService = new ProductService();
 let organizationService = new OrganisationService();
@@ -100,10 +106,10 @@ Template.header.onRendered(function () {
     //     templateObject.confirmedStepCount.set(cntConfirmedSteps);
     // }
     // templateObject.getConfirmedStepCount();
-    
+
     checkSetupFinished2();
 
-    let sidePanelToggle = Session.get('sidePanelToggle');
+    let sidePanelToggle = localStorage.getItem('sidePanelToggle');
 
     var dontOpenSearchGuide = localStorage.getItem('dontopensearchguide') || 'false';
     setTimeout(function () {
@@ -1526,32 +1532,32 @@ Template.header.onRendered(function () {
         }
     }
 
-    let employeeLoggedUserAccess = Session.get('ERPSolidCurrentUSerAccess');
+    let employeeLoggedUserAccess = localStorage.getItem('ERPSolidCurrentUSerAccess');
     var sessionDataToLog = localStorage.getItem('mySession');
     document.getElementById("logged_user").innerHTML = sessionDataToLog;
 
-    let isDashboard = Session.get('CloudDashboardModule');
-    let isMain = Session.get('CloudMainModule');
-    let isInventory = Session.get('CloudInventoryModule');
-    let isManufacturing = Session.get('CloudManufacturingModule');
-    let isAccessLevels = Session.get('CloudAccessLevelsModule');
-    let isShipping = Session.get('CloudShippingModule');
-    let isStockTransfer = Session.get('CloudStockTransferModule');
-    let isStockTake = Session.get('CloudStockTakeModule');
-    let isSales = Session.get('CloudSalesModule');
-    let isPurchases = Session.get('CloudPurchasesModule');
-    let isExpenseClaims = Session.get('CloudExpenseClaimsModule');
-    let isFixedAssets = Session.get('CloudFixedAssetsModule');
+    let isDashboard = localStorage.getItem('CloudDashboardModule');
+    let isMain = localStorage.getItem('CloudMainModule');
+    let isInventory = localStorage.getItem('CloudInventoryModule');
+    let isManufacturing = localStorage.getItem('CloudManufacturingModule');
+    let isAccessLevels = localStorage.getItem('CloudAccessLevelsModule');
+    let isShipping = localStorage.getItem('CloudShippingModule');
+    let isStockTransfer = localStorage.getItem('CloudStockTransferModule');
+    let isStockTake = localStorage.getItem('CloudStockTakeModule');
+    let isSales = localStorage.getItem('CloudSalesModule');
+    let isPurchases = localStorage.getItem('CloudPurchasesModule');
+    let isExpenseClaims = localStorage.getItem('CloudExpenseClaimsModule');
+    let isFixedAssets = localStorage.getItem('CloudFixedAssetsModule');
 
-    let isPayments = Session.get('CloudPaymentsModule');
-    let isContacts = Session.get('CloudContactsModule');
-    let isAccounts = Session.get('CloudAccountsModule');
-    let isReports = Session.get('CloudReportsModule');
-    let isSettings = Session.get('CloudSettingsModule');
+    let isPayments = localStorage.getItem('CloudPaymentsModule');
+    let isContacts = localStorage.getItem('CloudContactsModule');
+    let isAccounts = localStorage.getItem('CloudAccountsModule');
+    let isReports = localStorage.getItem('CloudReportsModule');
+    let isSettings = localStorage.getItem('CloudSettingsModule');
 
-    let isSidePanel = Session.get('CloudSidePanelMenu');
-    let isTopPanel = Session.get('CloudTopPanelMenu');
-    let loggedUserEventFired = Session.get('LoggedUserEventFired');
+    let isSidePanel = localStorage.getItem('CloudSidePanelMenu');
+    let isTopPanel = localStorage.getItem('CloudTopPanelMenu');
+    let loggedUserEventFired = localStorage.getItem('LoggedUserEventFired');
     var splashArrayProd = new Array();
     templateObject.getAllProducts = function () {
 
@@ -1646,22 +1652,22 @@ Template.header.onRendered(function () {
             let companyAccountant = data.tcompanyinfo[0].Contact || '';
             let companyCountry = data.tcompanyinfo[0].PoCountry || '';
             let bankDetails = "Bank Name: " + bankName + "\n" + "Account Name: " + accountName + "\n Bank Account: " + accNo + "\nBSB: " + bsb + "\n Swift Code: " + swiftCode + "\n" + "Routing No: " + routingNo;
-            Session.setPersistent('vs1companyName', companyName);
-            Session.setPersistent('vs1companyaddress1', companyaddress1);
-            Session.setPersistent('vs1companyaddress2', companyaddress2);
-            Session.setPersistent('vs1companyABN', companyABN);
-            Session.setPersistent('vs1companyPhone', companyPhone);
-            Session.setPersistent('vs1companyURL', companyURL);
-            Session.setPersistent('vs1companyPOBox', poBox);
-            Session.setPersistent('vs1companyCity', companyCity);
-            Session.setPersistent('companyState', companyState);
-            Session.setPersistent('vs1companyStripeID', data.tcompanyinfo[0].Apcano);
-            Session.setPersistent('vs1companyStripeFeeMethod', data.tcompanyinfo[0].DvaABN);
-            Session.setPersistent('vs1companyBankDetails', bankDetails);
-            Session.setPersistent('vs1companyBankName1', bankDetails);
-            Session.setPersistent('vs1companyCompanyPOBox', bankDetails);
-            Session.setPersistent('vs1companyReg', companyReg);
-            Session.setPersistent('vs1companyCountry', companyCountry);
+            localStorage.setItem('vs1companyName', companyName);
+            localStorage.setItem('vs1companyaddress1', companyaddress1);
+            localStorage.setItem('vs1companyaddress2', companyaddress2);
+            localStorage.setItem('vs1companyABN', companyABN);
+            localStorage.setItem('vs1companyPhone', companyPhone);
+            localStorage.setItem('vs1companyURL', companyURL);
+            localStorage.setItem('vs1companyPOBox', poBox);
+            localStorage.setItem('vs1companyCity', companyCity);
+            localStorage.setItem('companyState', companyState);
+            localStorage.setItem('vs1companyStripeID', data.tcompanyinfo[0].Apcano);
+            localStorage.setItem('vs1companyStripeFeeMethod', data.tcompanyinfo[0].DvaABN);
+            localStorage.setItem('vs1companyBankDetails', bankDetails);
+            localStorage.setItem('vs1companyBankName1', bankDetails);
+            localStorage.setItem('vs1companyCompanyPOBox', bankDetails);
+            localStorage.setItem('vs1companyReg', companyReg);
+            localStorage.setItem('vs1companyCountry', companyCountry);
             localStorage.setItem('vs1companyBankName', bankName);
             localStorage.setItem('vs1companyBankAccountName', accountName);
             localStorage.setItem('vs1companyBankAccountNo', accNo);
@@ -1725,8 +1731,9 @@ Template.header.onRendered(function () {
         templateObject.getBankDescription();
         templateObject.getCompanyInfo();
         $(document).ready(function () {
-            let checkGreenTrack = Session.get('isGreenTrack') || false;
-            if (checkGreenTrack) {
+            let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
+            console.log(checkGreenTrack);
+            if (checkGreenTrack == true) {
                 document.title = 'GreenTrack';
                 $('head').append('<link rel="icon" type="image/png" sizes="16x16" href="icons/greentrackIcon.png">');
             } else {
@@ -1736,25 +1743,8 @@ Template.header.onRendered(function () {
 
         });
 
-        setTimeout(function () {
 
 
-        }, 0);
-
-        if (!localStorage.getItem('VS1TERPFormList')) {
-
-        }
-
-        if (Session.get('userlogged_status')) {
-
-            CloudUser.update({
-                _id: Session.get('mycloudLogonID')
-            }, {
-                $set: {
-                    userMultiLogon: true
-                }
-            });
-        }
 
     }
 
@@ -1764,7 +1754,7 @@ Template.header.onRendered(function () {
     document.getElementById("logged_user").innerHTML = LoggedUser;
 
     /*document.getElementById("loggeddatabaseuser").innerHTML = LoggedUser;*/
-    var CloudUserPass = Session.get('CloudUserPass');
+    var CloudUserPass = localStorage.getItem('CloudUserPass');
     var currentLoc = FlowRouter.current().route.path;
     if (CloudUserPass) {
         templateObject.isCloudUserPass.set(true);
@@ -2159,11 +2149,11 @@ Template.header.events({
     },
     'click #closeCloudTopPanelMenu': function (event) {
         let templateObject = Template.instance();
-        let empLoggedID = Session.get('mySessionEmployeeLoggedID');
+        let empLoggedID = localStorage.getItem('mySessionEmployeeLoggedID');
         let accesslevelService = new AccessLevelService();
         let isTopPanel = false;
-        let topPanelID = Session.get('CloudTopPanelMenuID');
-        let topPanelFormID = Session.get('CloudTopPanelMenuFormID');
+        let topPanelID = localStorage.getItem('CloudTopPanelMenuID');
+        let topPanelFormID = localStorage.getItem('CloudTopPanelMenuFormID');
 
         let data = {
             type: "TEmployeeFormAccess",
@@ -2176,7 +2166,7 @@ Template.header.events({
         }
         if (confirm("Are you sure you want to close the top panel?")) {
             accesslevelService.saveEmpAccess(data).then(function (data) {
-                Session.setPersistent('CloudTopPanelMenu', isTopPanel);
+                localStorage.setItem('CloudTopPanelMenu', isTopPanel);
 
                 Meteor._reload.reload();
             }).catch(function (err) {
@@ -2186,12 +2176,12 @@ Template.header.events({
         } else { }
     },
     'click .userprofileclick': function (event) {
-        window.open('/employeescard?id=' + Session.get('mySessionEmployeeLoggedID'), '_self');
+        window.open('/employeescard?id=' + localStorage.getItem('mySessionEmployeeLoggedID'), '_self');
     },
     'click .accountantDatabases': function (event) {
         $('.databaseSelectModal').modal('toggle');
         $('.modal-backdrop').css('display', 'none');
-        // window.open('/employeescard?id=' + Session.get('mySessionEmployeeLoggedID'), '_self');
+        // window.open('/employeescard?id=' + localStorage.getItem('mySessionEmployeeLoggedID'), '_self');
     },
     'click .btnRefreshSearch': function (event) {
         let templateObject = Template.instance();
@@ -2278,11 +2268,11 @@ Template.header.helpers({
         return Template.instance().includeSettings.get();
     },
     isGreenTrack: function () {
-        let checkGreenTrack = Session.get('isGreenTrack') || false;
+        let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
         return checkGreenTrack;
     },
     isCloudTrueERP: function () {
-        let checkCloudTrueERP = Session.get('CloudTrueERPModule') || false;
+        let checkCloudTrueERP = localStorage.getItem('CloudTrueERPModule') || false;
         return checkCloudTrueERP;
     },
     isSetupWizardComplete: function () {

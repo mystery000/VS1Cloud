@@ -1,6 +1,8 @@
 import {StockTransferService} from "../stockadjust-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
+import { Template } from 'meteor/templating';
+import "./stockAdjusmentOverview.html";
 
 import {UtilityService} from "../../utility-service";
 import { SideBarService } from '../../js/sidebar-service';
@@ -27,7 +29,7 @@ Template.stockadjustmentoverview.onRendered(function() {
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblStockAdjustOverview', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblStockAdjustOverview', function(error, result){
         if(error){
 
         }else{
@@ -90,7 +92,7 @@ Template.stockadjustmentoverview.onRendered(function() {
                     templateObject.datatablerecords.set(dataTableList);
                     if(templateObject.datatablerecords.get()){
 
-                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblStockAdjustOverview', function(error, result){
+                        Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblStockAdjustOverview', function(error, result){
                             if(error){
 
                             }else{
@@ -285,7 +287,7 @@ Template.stockadjustmentoverview.onRendered(function() {
                 templateObject.datatablerecords.set(dataTableList);
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblStockAdjustOverview', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblStockAdjustOverview', function(error, result){
                         if(error){
 
                         }else{
@@ -570,7 +572,7 @@ Template.stockadjustmentoverview.onRendered(function() {
                 templateObject.datatablerecords.set(dataTableList);
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblStockAdjustOverview', function(error, result){
+                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblStockAdjustOverview', function(error, result){
                         if(error){
 
                         }else{
@@ -790,7 +792,7 @@ Template.stockadjustmentoverview.events({
         $(".btnRefresh").trigger("click");
     },
     'click .resetTable' : function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -836,7 +838,7 @@ Template.stockadjustmentoverview.events({
         });
         //datatable.state.save();
 
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -977,7 +979,7 @@ Template.stockadjustmentoverview.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblStockAdjustOverview'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblStockAdjustOverview'});
     },
     currentdate : () => {
         var currentDate = new Date();

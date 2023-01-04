@@ -1,3 +1,4 @@
+import { Session } from 'meteor/session';
   Barcode_SepChar = '-';
 
   Barcode_Prefix_Employee     = 'EMP';
@@ -45,7 +46,7 @@
   Barcode_Prefix_Task = 'TSK';
   Barcode_Prefix_WorkOrder = 'WO';
 
-  
+
  licenceIPAddress = "login.vs1cloud.com"; //165.228.147.127
  //licenceIPAddress = "sandboxcoreedi.vs1cloud.com"; //192.168.15.124
   //Global Declaration
@@ -69,14 +70,14 @@
 
 loggedserverIP = localStorage.getItem('mainEIPAddress');
 loggedserverPort = localStorage.getItem('mainEPort');
-Currency = Session.get('ERPCurrency') || '$';
-CountryAbbr = Session.get('ERPCountryAbbr');
+Currency = localStorage.getItem('ERPCurrency') || '$';
+CountryAbbr = localStorage.getItem('ERPCountryAbbr');
 addExtraUserPrice = 0;
-// loggedCompany = Session.get('EDatabase');
-loggedCompany = Session.get('vs1companyName');
-defaultDept = Session.get('ERPDefaultDepartment');
-defaultUOM = Session.get('ERPDefaultUOM')||"Units";
-isModuleGreenTrack = Session.get('CloudSeedToSaleLicence');
+// loggedCompany = localStorage.getItem('EDatabase');
+loggedCompany = localStorage.getItem('vs1companyName');
+defaultDept = localStorage.getItem('ERPDefaultDepartment');
+defaultUOM = localStorage.getItem('ERPDefaultUOM')||"Units";
+isModuleGreenTrack = localStorage.getItem('CloudSeedToSaleLicence');
 isPurchasedTrueERPModule = localStorage.getItem('isPurchasedTrueERPModule') || false;
 bsbCodeName = "Branch Code";
 reportsloadMonths = 1; //This load for 1 months
@@ -92,14 +93,14 @@ bOrderInvoice = 1;
 confirmStepCount = 10;
 firstIndentLeft = 8;
 
-loggedTermsPurchase = Session.get('ERPTermsPurchase') || "COD";
-loggedTermsSales = Session.get('ERPTermsSales') || "COD";
-if(Session.get('ERPLoggedCountry') == "Australia"){
-  // Session.setPersistent('ERPTaxCodePurchaseInc', "NCG");
-  // Session.setPersistent('ERPTaxCodeSalesInc', "GST");
-  loggedTaxCodePurchaseInc = Session.get('ERPTaxCodePurchaseInc') || "NCG";
-  loggedTaxCodeSalesInc = Session.get('ERPTaxCodeSalesInc') || "GST";
-  LoggedCountry = Session.get('ERPLoggedCountry');
+loggedTermsPurchase = localStorage.getItem('ERPTermsPurchase') || "COD";
+loggedTermsSales = localStorage.getItem('ERPTermsSales') || "COD";
+if(localStorage.getItem('ERPLoggedCountry') == "Australia"){
+  // localStorage.setItem('ERPTaxCodePurchaseInc', "NCG");
+  // localStorage.setItem('ERPTaxCodeSalesInc', "GST");
+  loggedTaxCodePurchaseInc = localStorage.getItem('ERPTaxCodePurchaseInc') || "NCG";
+  loggedTaxCodeSalesInc = localStorage.getItem('ERPTaxCodeSalesInc') || "GST";
+  LoggedCountry = localStorage.getItem('ERPLoggedCountry');
   chequeSpelling = "Cheque";
   if(isPurchasedTrueERPModule === 'true'){
     addExtraUserPrice = Currency+65; //152
@@ -107,7 +108,7 @@ if(Session.get('ERPLoggedCountry') == "Australia"){
     if(localStorage.getItem('EDatabase')){
     if(localStorage.getItem('EDatabase') == 'rapp_australia_pty_ltd'){
       addExtraUserPrice = Currency+65;
-      Session.setPersistent('VS1AdminUserName', 'roger@rappaustralia.com.au');
+      localStorage.setItem('VS1AdminUserName', 'roger@rappaustralia.com.au');
     }
    }
 
@@ -116,12 +117,12 @@ if(Session.get('ERPLoggedCountry') == "Australia"){
   }
 
   bsbCodeName = "BSB (Branch Number)";
-}else if(Session.get('ERPLoggedCountry') == "United States of America"){
-  // Session.setPersistent('ERPTaxCodePurchaseInc', "NT");
-  // Session.setPersistent('ERPTaxCodeSalesInc', "NT");
+}else if(localStorage.getItem('ERPLoggedCountry') == "United States of America"){
+  // localStorage.setItem('ERPTaxCodePurchaseInc', "NT");
+  // localStorage.setItem('ERPTaxCodeSalesInc', "NT");
   LoggedCountry = "United States";
-  loggedTaxCodePurchaseInc = Session.get('ERPTaxCodePurchaseInc') || "NT";
-  loggedTaxCodeSalesInc = Session.get('ERPTaxCodeSalesInc') || "NT";
+  loggedTaxCodePurchaseInc = localStorage.getItem('ERPTaxCodePurchaseInc') || "NT";
+  loggedTaxCodeSalesInc = localStorage.getItem('ERPTaxCodeSalesInc') || "NT";
   chequeSpelling = "Check";
   if(isPurchasedTrueERPModule === 'true'){
     addExtraUserPrice = Currency+110;
@@ -129,37 +130,37 @@ if(Session.get('ERPLoggedCountry') == "Australia"){
   addExtraUserPrice = Currency+35;
    }
 }else{
-  loggedTaxCodePurchaseInc = Session.get('ERPTaxCodePurchaseInc') || "NT";
-  loggedTaxCodeSalesInc = Session.get('ERPTaxCodeSalesInc') || "NT";
+  loggedTaxCodePurchaseInc = localStorage.getItem('ERPTaxCodePurchaseInc') || "NT";
+  loggedTaxCodeSalesInc = localStorage.getItem('ERPTaxCodeSalesInc') || "NT";
   chequeSpelling = "Cheque";
-  LoggedCountry = Session.get('ERPLoggedCountry');
+  LoggedCountry = localStorage.getItem('ERPLoggedCountry');
 }
 
-if(Session.get('ERPLoggedCountry') == "South Africa"){
+if(localStorage.getItem('ERPLoggedCountry') == "South Africa"){
   if(isPurchasedTrueERPModule === 'true'){
     addExtraUserPrice = Currency+1660;
   }else{
   addExtraUserPrice = Currency+480;
   }
-}else if((Session.get('ERPLoggedCountry') == "Canada")){
+}else if((localStorage.getItem('ERPLoggedCountry') == "Canada")){
   if(isPurchasedTrueERPModule === 'true'){
     addExtraUserPrice = Currency+140;
   }else{
   addExtraUserPrice = Currency+40;
   }
-}else if((Session.get('ERPLoggedCountry') == "New Zealand")){
+}else if((localStorage.getItem('ERPLoggedCountry') == "New Zealand")){
   if(isPurchasedTrueERPModule === 'true'){
     addExtraUserPrice = Currency+160;
   }else{
   addExtraUserPrice = Currency+40;
    }
-}else if(Session.get('ERPLoggedCountry') == "United Arab Emirates"){
+}else if(localStorage.getItem('ERPLoggedCountry') == "United Arab Emirates"){
   if(isPurchasedTrueERPModule === 'true'){
     addExtraUserPrice = '$'+110;
   }else{
   addExtraUserPrice = '$'+35;
     }
-}else if(Session.get('ERPLoggedCountry') == "United Kingdom"){
+}else if(localStorage.getItem('ERPLoggedCountry') == "United Kingdom"){
   if(isPurchasedTrueERPModule === 'true'){
     addExtraUserPrice = Currency+80;
   }else{
@@ -169,6 +170,5 @@ if(Session.get('ERPLoggedCountry') == "South Africa"){
 
 checkResponseError ="You have lost internet connection, please log out and log back in.";
 
-//loggedTaxCodePurchaseInc = Session.get('ERPTaxCodePurchaseInc');
-//loggedTaxCodeSalesInc = Session.get('ERPTaxCodeSalesInc');
-
+//loggedTaxCodePurchaseInc = localStorage.getItem('ERPTaxCodePurchaseInc');
+//loggedTaxCodeSalesInc = localStorage.getItem('ERPTaxCodeSalesInc');

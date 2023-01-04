@@ -6,6 +6,10 @@ import { AccountService } from "../accounts/account-service";
 import { UtilityService } from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import './accounttransactions.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.accounttransactions.onCreated(function() {
@@ -27,7 +31,7 @@ Template.accounttransactions.onRendered(function() {
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblchequelist', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblchequelist', function(error, result) {
         if (error) {
 
         } else {
@@ -100,7 +104,7 @@ Template.accounttransactions.onRendered(function() {
 
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblchequelist', function(error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblchequelist', function(error, result) {
                             if (error) {
 
                             } else {
@@ -310,7 +314,7 @@ Template.accounttransactions.onRendered(function() {
 
             if (templateObject.datatablerecords.get()) {
 
-                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblchequelist', function(error, result) {
+                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblchequelist', function(error, result) {
                     if (error) {
 
                     } else {
@@ -486,7 +490,7 @@ Template.accounttransactions.onRendered(function() {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblchequelist', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblchequelist', function(error, result) {
                         if (error) {
 
                         } else {
@@ -658,7 +662,7 @@ Template.accounttransactions.events({
         });
     },
     'click .resetTable': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -701,7 +705,7 @@ Template.accounttransactions.events({
 
             lineItems.push(lineItemObj);
         });
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -849,7 +853,7 @@ Template.accounttransactions.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     purchasesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblchequelist' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblchequelist' });
     },
     formname: () => {
         return "Transaction List";

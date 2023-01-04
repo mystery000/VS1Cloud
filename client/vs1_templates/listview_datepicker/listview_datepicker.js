@@ -210,7 +210,7 @@ Template.listview_datepicker.onCreated(function () {
 //     //     if (dataObject.length == 0) {
 //     //       sideBarService
 //     //         .getNewCustomFieldsWithQuery(
-//     //           parseInt(Session.get("mySessionEmployeeLoggedID")),
+//     //           parseInt(localStorage.getItem("mySessionEmployeeLoggedID")),
 //     //           listType
 //     //         )
 //     //         .then(function (data) {

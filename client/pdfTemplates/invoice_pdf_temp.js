@@ -7,6 +7,9 @@ import { InvoiceService } from "../invoice/invoice-service";
 import { UtilityService } from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './invoice_pdf_temp.html';
 // import { jsPDF } from 'jspdf';
 // import autoTable from 'jspdf-autotable';
 
@@ -106,7 +109,7 @@ Template.invoicePrintTemp.onRendered(function () {
                         if (invoicerecord) {
                             invoicesTemp.push(invoicerecord);
                             templateObject.invoicerecords.set(invoicesTemp);
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblInvoiceLine', function (error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblInvoiceLine', function (error, result) {
                                 if (error) {}
                                 else {
                                     if (result) {

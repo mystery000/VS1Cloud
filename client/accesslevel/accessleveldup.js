@@ -114,11 +114,11 @@ Template.accessleveldup.onRendered(function(){
 
             if(itemData[i].Description === "Side Panel Menu"){
                 isSidePanelFormID = itemData[i].Id;
-                Session.setPersistent('CloudSidePanelMenuFormID', isSidePanelFormID);
+                localStorage.setItem('CloudSidePanelMenuFormID', isSidePanelFormID);
             }
             if(itemData[i].Description === "Top Panel Menu"){
                 isTopPanelFormID = itemData[i].Id;
-                Session.setPersistent('CloudTopPanelMenuFormID', isTopPanelFormID);
+                localStorage.setItem('CloudTopPanelMenuFormID', isTopPanelFormID);
             }
             lineItemsForm.push(lineItemObjForm);
             splashArray.push(lineItemObjForm);
@@ -160,11 +160,11 @@ Template.accessleveldup.onRendered(function(){
 
             if(itemData[i].Description === "Side Panel Menu"){
                 isSidePanelFormID = itemData[i].Id;
-                Session.setPersistent('CloudSidePanelMenuFormID', isSidePanelFormID);
+                localStorage.setItem('CloudSidePanelMenuFormID', isSidePanelFormID);
             }
             if(itemData[i].Description === "Top Panel Menu"){
                 isTopPanelFormID = itemData[i].Id;
-                Session.setPersistent('CloudTopPanelMenuFormID', isTopPanelFormID);
+                localStorage.setItem('CloudTopPanelMenuFormID', isTopPanelFormID);
             }
             lineItemsForm.push(lineItemObjForm);
             splashArray.push(lineItemObjForm);
@@ -203,11 +203,11 @@ Template.accessleveldup.onRendered(function(){
 
           if(itemData[i].Description === "Side Panel Menu"){
               isSidePanelFormID = itemData[i].Id;
-              Session.setPersistent('CloudSidePanelMenuFormID', isSidePanelFormID);
+              localStorage.setItem('CloudSidePanelMenuFormID', isSidePanelFormID);
           }
           if(itemData[i].Description === "Top Panel Menu"){
               isTopPanelFormID = itemData[i].Id;
-              Session.setPersistent('CloudTopPanelMenuFormID', isTopPanelFormID);
+              localStorage.setItem('CloudTopPanelMenuFormID', isTopPanelFormID);
           }
           lineItemsForm.push(lineItemObjForm);
           splashArray.push(lineItemObjForm);
@@ -284,7 +284,7 @@ Template.accessleveldup.onRendered(function(){
     }
 
 
-    let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
+    let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
 
     if((loggedEmpID) && (loggedEmpID !== null)){
 
@@ -334,27 +334,27 @@ Template.accessleveldup.onRendered(function(){
     function getTableData(employeeID){
 
         /* Lincence Check for Menu Options */
-        let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
-        let isInventoryLicence = Session.get('CloudInventoryLicence');
-        let isManufacturingLicence = Session.get('CloudManufacturingLicence');
-        let isPurchasesLicence = Session.get('CloudPurchasesLicence');
-        let isSalesLicence = Session.get('CloudSalesLicence');
-        let isShippingLicence = Session.get('CloudShippingLicence');
-        let isStockTakeLicence = Session.get('CloudStockTakeLicence');
-        let isStockTransferLicence = Session.get('CloudStockTransferLicence');
-        let isMainLicence = Session.get('CloudMainLicence');
-        let isDashboardLicence = Session.get('CloudDashboardLicence');
+        let isFixedAssetsLicence = localStorage.getItem('CloudFixedAssetsLicence');
+        let isInventoryLicence = localStorage.getItem('CloudInventoryLicence');
+        let isManufacturingLicence = localStorage.getItem('CloudManufacturingLicence');
+        let isPurchasesLicence = localStorage.getItem('CloudPurchasesLicence');
+        let isSalesLicence = localStorage.getItem('CloudSalesLicence');
+        let isShippingLicence = localStorage.getItem('CloudShippingLicence');
+        let isStockTakeLicence = localStorage.getItem('CloudStockTakeLicence');
+        let isStockTransferLicence = localStorage.getItem('CloudStockTransferLicence');
+        let isMainLicence = localStorage.getItem('CloudMainLicence');
+        let isDashboardLicence = localStorage.getItem('CloudDashboardLicence');
 
         /*Licence Check Menu to add */
-        let isAccountsLicence = Session.get('CloudAccountsLicence');
-        let isContactsLicence = Session.get('CloudContactsLicence');
-        let isExpenseClaimsLicence = Session.get('CloudExpenseClaimsLicence');
-        let isPaymentsLicence = Session.get('CloudPaymentsLicence');
-        let isReportsLicence = Session.get('CloudReportsLicence');
-        let isSettingsLicence = Session.get('CloudSettingsLicence');
+        let isAccountsLicence = localStorage.getItem('CloudAccountsLicence');
+        let isContactsLicence = localStorage.getItem('CloudContactsLicence');
+        let isExpenseClaimsLicence = localStorage.getItem('CloudExpenseClaimsLicence');
+        let isPaymentsLicence = localStorage.getItem('CloudPaymentsLicence');
+        let isReportsLicence = localStorage.getItem('CloudReportsLicence');
+        let isSettingsLicence = localStorage.getItem('CloudSettingsLicence');
 
-        let isAppointmentSchedulingLicence = Session.get('CloudAppointmentSchedulingLicence');
-        let isPayrollLicence = Session.get('CloudPayrollLicence');
+        let isAppointmentSchedulingLicence = localStorage.getItem('CloudAppointmentSchedulingLicence');
+        let isPayrollLicence = localStorage.getItem('CloudPayrollLicence');
         /*End Licence Check Menu to add */
         /* End Licence Check for menu option */
 
@@ -548,7 +548,7 @@ Template.accessleveldup.onRendered(function(){
                 templateObject.accessgrouprecord.set(groups);
                 templateObject.accesslevelrecord.set(lineItemslevel);
             }
-            let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
+            let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
             getVS1Data('TEmployeeFormAccessDetail').then(function (dataObject) {
               if(dataObject.length == 0){
                 accesslevelService.getEmpFormAccessDetail(loggedEmpID).then(function(data){
@@ -1090,7 +1090,7 @@ Template.accessleveldup.onRendered(function(){
                 }
 
 
-                // let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
+                // let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
                 if((employeeID == loggedEmpID) && (loggedEmpID !== null)){
                     localStorage.setItem('VS1AccessLevelList', JSON.stringify(splashArrayAccess));
                     templateObject.accesslevelrecord.set(lineItemslevel);
@@ -1637,7 +1637,7 @@ Template.accessleveldup.onRendered(function(){
                 }
 
 
-                // let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
+                // let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
                 if((employeeID == loggedEmpID) && (loggedEmpID !== null)){
                     localStorage.setItem('VS1AccessLevelList', JSON.stringify(splashArrayAccess));
                     templateObject.accesslevelrecord.set(lineItemslevel);
@@ -2184,7 +2184,7 @@ Template.accessleveldup.onRendered(function(){
               }
 
 
-              // let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
+              // let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
               if((employeeID == loggedEmpID) && (loggedEmpID !== null)){
                   localStorage.setItem('VS1AccessLevelList', JSON.stringify(splashArrayAccess));
                   templateObject.accesslevelrecord.set(lineItemslevel);
@@ -2736,7 +2736,7 @@ Template.accessleveldup.onRendered(function(){
                 }
 
 
-                let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
+                let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
                 if((employeeID == loggedEmpID) && (loggedEmpID !== null)){
                     localStorage.setItem('VS1AccessLevelList', JSON.stringify(splashArrayAccess));
                     templateObject.accesslevelrecord.set(lineItemslevel);
@@ -3282,7 +3282,7 @@ Template.accessleveldup.helpers({
         return Template.instance().employeeformaccessrecord.get();
     },
     isAccountsLicence: () => {
-        return Session.get('CloudAccountsLicence');
+        return localStorage.getItem('CloudAccountsLicence');
     },
     employeerecords: () => {
         return Template.instance().employeerecords.get().sort(function(a, b){
@@ -3342,24 +3342,24 @@ Template.accessleveldup.events({
         var targetID = $(event.target).closest('tr').attr('id');
 
         /* Lincence Check for Menu Options */
-        let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
-        let isInventoryLicence = Session.get('CloudInventoryLicence');
-        let isManufacturingLicence = Session.get('CloudManufacturingLicence');
-        let isPurchasesLicence = Session.get('CloudPurchasesLicence');
-        let isSalesLicence = Session.get('CloudSalesLicence');
-        let isShippingLicence = Session.get('CloudShippingLicence');
-        let isStockTakeLicence = Session.get('CloudStockTakeLicence');
-        let isStockTransferLicence = Session.get('CloudStockTransferLicence');
-        let isMainLicence = Session.get('CloudMainLicence');
-        let isDashboardLicence = Session.get('CloudDashboardLicence');
+        let isFixedAssetsLicence = localStorage.getItem('CloudFixedAssetsLicence');
+        let isInventoryLicence = localStorage.getItem('CloudInventoryLicence');
+        let isManufacturingLicence = localStorage.getItem('CloudManufacturingLicence');
+        let isPurchasesLicence = localStorage.getItem('CloudPurchasesLicence');
+        let isSalesLicence = localStorage.getItem('CloudSalesLicence');
+        let isShippingLicence = localStorage.getItem('CloudShippingLicence');
+        let isStockTakeLicence = localStorage.getItem('CloudStockTakeLicence');
+        let isStockTransferLicence = localStorage.getItem('CloudStockTransferLicence');
+        let isMainLicence = localStorage.getItem('CloudMainLicence');
+        let isDashboardLicence = localStorage.getItem('CloudDashboardLicence');
 
         /*Licence Check Menu to add */
-        let isAccountsLicence = Session.get('CloudAccountsLicence');
-        let isContactsLicence = Session.get('CloudContactsLicence');
-        let isExpenseClaimsLicence = Session.get('CloudExpenseClaimsLicence');
-        let isPaymentsLicence = Session.get('CloudPaymentsLicence');
-        let isReportsLicence = Session.get('CloudReportsLicence');
-        let isSettingsLicence = Session.get('CloudSettingsLicence');
+        let isAccountsLicence = localStorage.getItem('CloudAccountsLicence');
+        let isContactsLicence = localStorage.getItem('CloudContactsLicence');
+        let isExpenseClaimsLicence = localStorage.getItem('CloudExpenseClaimsLicence');
+        let isPaymentsLicence = localStorage.getItem('CloudPaymentsLicence');
+        let isReportsLicence = localStorage.getItem('CloudReportsLicence');
+        let isSettingsLicence = localStorage.getItem('CloudSettingsLicence');
 
         let accessDesc = $("#"+targetID+"_accessDesc").val();
         $('.upgModule').html(accessDesc);
@@ -3409,7 +3409,7 @@ Template.accessleveldup.events({
         localStorage.setItem('VS1TERPFormList', '');
         Meteor._reload.reload();
         let templateObject = Template.instance();
-        let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
+        let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
         if((loggedEmpID) && (loggedEmpID !== null)){
             setTimeout(function () {
                 localStorage.setItem('VS1AccessLevelList', '');
@@ -3787,29 +3787,29 @@ Template.accessleveldup.events({
 
 
             var loggedEmpName = localStorage.getItem('mySession');
-            let empLoggedID = Session.get('mySessionEmployeeLoggedID');
+            let empLoggedID = localStorage.getItem('mySessionEmployeeLoggedID');
             let isSidePanelID = '';
             let isTopPanelID = '';
 
             /* Lincence Check for Menu Options */
-            let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
-            let isInventoryLicence = Session.get('CloudInventoryLicence');
-            let isManufacturingLicence = Session.get('CloudManufacturingLicence');
-            let isPurchasesLicence = Session.get('CloudPurchasesLicence');
-            let isSalesLicence = Session.get('CloudSalesLicence');
-            let isShippingLicence = Session.get('CloudShippingLicence');
-            let isStockTakeLicence = Session.get('CloudStockTakeLicence');
-            let isStockTransferLicence = Session.get('CloudStockTransferLicence');
-            let isMainLicence = Session.get('CloudMainLicence');
-            let isDashboardLicence = Session.get('CloudDashboardLicence');
+            let isFixedAssetsLicence = localStorage.getItem('CloudFixedAssetsLicence');
+            let isInventoryLicence = localStorage.getItem('CloudInventoryLicence');
+            let isManufacturingLicence = localStorage.getItem('CloudManufacturingLicence');
+            let isPurchasesLicence = localStorage.getItem('CloudPurchasesLicence');
+            let isSalesLicence = localStorage.getItem('CloudSalesLicence');
+            let isShippingLicence = localStorage.getItem('CloudShippingLicence');
+            let isStockTakeLicence = localStorage.getItem('CloudStockTakeLicence');
+            let isStockTransferLicence = localStorage.getItem('CloudStockTransferLicence');
+            let isMainLicence = localStorage.getItem('CloudMainLicence');
+            let isDashboardLicence = localStorage.getItem('CloudDashboardLicence');
 
             /*Licence Check Menu to add */
-            let isAccountsLicence = Session.get('CloudAccountsLicence');
-            let isContactsLicence = Session.get('CloudContactsLicence');
-            let isExpenseClaimsLicence = Session.get('CloudExpenseClaimsLicence');
-            let isPaymentsLicence = Session.get('CloudPaymentsLicence');
-            let isReportsLicence = Session.get('CloudReportsLicence');
-            let isSettingsLicence = Session.get('CloudSettingsLicence');
+            let isAccountsLicence = localStorage.getItem('CloudAccountsLicence');
+            let isContactsLicence = localStorage.getItem('CloudContactsLicence');
+            let isExpenseClaimsLicence = localStorage.getItem('CloudExpenseClaimsLicence');
+            let isPaymentsLicence = localStorage.getItem('CloudPaymentsLicence');
+            let isReportsLicence = localStorage.getItem('CloudReportsLicence');
+            let isSettingsLicence = localStorage.getItem('CloudSettingsLicence');
             /*End Licence Check Menu to add */
             /* End Licence Check for menu option */
             let lineItemsFormAccess = [];
@@ -4001,29 +4001,29 @@ Template.accessleveldup.events({
         let empInputValue = templateObject.$("#sltEmployeeName").val();
         let employeeID = $("#mytag").val()||'';
         var loggedEmpName = localStorage.getItem('mySession');
-        let empLoggedID = Session.get('mySessionEmployeeLoggedID');
+        let empLoggedID = localStorage.getItem('mySessionEmployeeLoggedID');
         let isSidePanelID = '';
         let isTopPanelID = '';
 
         /* Lincence Check for Menu Options */
-        let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
-        let isInventoryLicence = Session.get('CloudInventoryLicence');
-        let isManufacturingLicence = Session.get('CloudManufacturingLicence');
-        let isPurchasesLicence = Session.get('CloudPurchasesLicence');
-        let isSalesLicence = Session.get('CloudSalesLicence');
-        let isShippingLicence = Session.get('CloudShippingLicence');
-        let isStockTakeLicence = Session.get('CloudStockTakeLicence');
-        let isStockTransferLicence = Session.get('CloudStockTransferLicence');
-        let isMainLicence = Session.get('CloudMainLicence');
-        let isDashboardLicence = Session.get('CloudDashboardLicence');
+        let isFixedAssetsLicence = localStorage.getItem('CloudFixedAssetsLicence');
+        let isInventoryLicence = localStorage.getItem('CloudInventoryLicence');
+        let isManufacturingLicence = localStorage.getItem('CloudManufacturingLicence');
+        let isPurchasesLicence = localStorage.getItem('CloudPurchasesLicence');
+        let isSalesLicence = localStorage.getItem('CloudSalesLicence');
+        let isShippingLicence = localStorage.getItem('CloudShippingLicence');
+        let isStockTakeLicence = localStorage.getItem('CloudStockTakeLicence');
+        let isStockTransferLicence = localStorage.getItem('CloudStockTransferLicence');
+        let isMainLicence = localStorage.getItem('CloudMainLicence');
+        let isDashboardLicence = localStorage.getItem('CloudDashboardLicence');
 
         /*Licence Check Menu to add */
-        let isAccountsLicence = Session.get('CloudAccountsLicence');
-        let isContactsLicence = Session.get('CloudContactsLicence');
-        let isExpenseClaimsLicence = Session.get('CloudExpenseClaimsLicence');
-        let isPaymentsLicence = Session.get('CloudPaymentsLicence');
-        let isReportsLicence = Session.get('CloudReportsLicence');
-        let isSettingsLicence = Session.get('CloudSettingsLicence');
+        let isAccountsLicence = localStorage.getItem('CloudAccountsLicence');
+        let isContactsLicence = localStorage.getItem('CloudContactsLicence');
+        let isExpenseClaimsLicence = localStorage.getItem('CloudExpenseClaimsLicence');
+        let isPaymentsLicence = localStorage.getItem('CloudPaymentsLicence');
+        let isReportsLicence = localStorage.getItem('CloudReportsLicence');
+        let isSettingsLicence = localStorage.getItem('CloudSettingsLicence');
         /*End Licence Check Menu to add */
         /* End Licence Check for menu option */
 
@@ -4053,58 +4053,58 @@ Template.accessleveldup.events({
                             if((employeeID == empLoggedID) ){
                                 if((radioValue == 1) && (accessDesc == "Print Delivery Docket")){
                                     isDocket = true;
-                                    Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
+                                    localStorage.setItem('CloudPrintDeliveryDocket', isDocket);
                                 }else if((radioValue != 1) && (accessDesc == "Print Delivery Docket")){
                                     isDocket = false;
-                                    Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
+                                    localStorage.setItem('CloudPrintDeliveryDocket', isDocket);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Print Invoice")){
                                     isInvoice = true;
-                                    Session.setPersistent('CloudPrintInvoice', isInvoice);
+                                    localStorage.setItem('CloudPrintInvoice', isInvoice);
                                 }else if((radioValue != 1) && (accessDesc == "Print Invoice")){
                                     isInvoice = false;
-                                    Session.setPersistent('CloudPrintInvoice', isInvoice);
+                                    localStorage.setItem('CloudPrintInvoice', isInvoice);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "User Password Details")){
                                     isUserPassDetail = true;
-                                    Session.setPersistent('CloudUserPass', isUserPassDetail);
+                                    localStorage.setItem('CloudUserPass', isUserPassDetail);
                                 }else if((radioValue != 1) && (accessDesc == "User Password Details")){
                                     isUserPassDetail = false;
-                                    Session.setPersistent('CloudUserPass', isUserPassDetail);
+                                    localStorage.setItem('CloudUserPass', isUserPassDetail);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "View Dockets")){
                                     isViewDockets = true;
-                                    Session.setPersistent('CloudViewDockets', isViewDockets);
+                                    localStorage.setItem('CloudViewDockets', isViewDockets);
                                 }else if((radioValue != 1) && (accessDesc == "View Dockets")){
                                     isViewDockets = false;
-                                    Session.setPersistent('CloudViewDockets', isViewDockets);
+                                    localStorage.setItem('CloudViewDockets', isViewDockets);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Qty Only on Purchase Order")){
                                     isPurchaseQtyOnly = true;
-                                    Session.setPersistent('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+                                    localStorage.setItem('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
                                 }else if((radioValue != 1) && (accessDesc == "Qty Only on Purchase Order")){
                                     isPurchaseQtyOnly = false;
-                                    Session.setPersistent('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+                                    localStorage.setItem('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Qty Only on Sales")){
                                     isSalesQtyOnly = true;
-                                    Session.setPersistent('CloudSalesQtyOnly', isSalesQtyOnly);
+                                    localStorage.setItem('CloudSalesQtyOnly', isSalesQtyOnly);
                                 }else if((radioValue != 1) && (accessDesc == "Qty Only on Sales")){
                                     isSalesQtyOnly = false;
-                                    Session.setPersistent('CloudSalesQtyOnly', isSalesQtyOnly);
+                                    localStorage.setItem('CloudSalesQtyOnly', isSalesQtyOnly);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Dashboard") && (isDashboardLicence)){
                                     isDashboard = true;
-                                    Session.setPersistent('CloudDashboardModule', isDashboard);
+                                    localStorage.setItem('CloudDashboardModule', isDashboard);
                                 }else if((radioValue != 1) && (accessDesc == "Dashboard") && (isDashboardLicence)){
                                     isDashboard = false;
-                                    Session.setPersistent('CloudDashboardModule', isDashboard);
+                                    localStorage.setItem('CloudDashboardModule', isDashboard);
                                 }
 
 
@@ -4117,113 +4117,113 @@ Template.accessleveldup.events({
 
                                 if((radioValue == 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                                     isInventory = true;
-                                    Session.setPersistent('CloudInventoryModule', isInventory);
+                                    localStorage.setItem('CloudInventoryModule', isInventory);
                                 }else if((radioValue != 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                                     isInventory = false;
-                                    Session.setPersistent('CloudInventoryModule', isInventory);
+                                    localStorage.setItem('CloudInventoryModule', isInventory);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Manufacturing") && (isManufacturingLicence)){
                                     isManufacturing = true;
-                                    Session.setPersistent('CloudManufacturingModule', isManufacturing);
+                                    localStorage.setItem('CloudManufacturingModule', isManufacturing);
                                 }else if((radioValue != 1) && (accessDesc == "Manufacturing") && (isManufacturingLicence)){
                                     isManufacturing = false;
-                                    Session.setPersistent('CloudManufacturingModule', isManufacturing);
+                                    localStorage.setItem('CloudManufacturingModule', isManufacturing);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Settings")){
                                     isAccessLevels = true;
-                                    Session.setPersistent('CloudAccessLevelsModule', isAccessLevels);
+                                    localStorage.setItem('CloudAccessLevelsModule', isAccessLevels);
                                 }else if((radioValue != 1) && (accessDesc == "Settings")){
                                     isAccessLevels = false;
-                                    Session.setPersistent('CloudAccessLevelsModule', isAccessLevels);
+                                    localStorage.setItem('CloudAccessLevelsModule', isAccessLevels);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Shipping") && (isShippingLicence)){
                                     isShipping = true;
-                                    Session.setPersistent('CloudShippingModule', isShipping);
+                                    localStorage.setItem('CloudShippingModule', isShipping);
                                 }else if((radioValue != 1) && (accessDesc == "Shipping") && (isShippingLicence)){
                                     isShipping = false;
-                                    Session.setPersistent('CloudShippingModule', isShipping);
+                                    localStorage.setItem('CloudShippingModule', isShipping);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Stock Transfer") && (isStockTransferLicence)){
                                     isStockTransfer = true;
-                                    Session.setPersistent('CloudStockTransferModule', isStockTransfer);
+                                    localStorage.setItem('CloudStockTransferModule', isStockTransfer);
                                 }else if((radioValue != 1) && (accessDesc == "Stock Transfer") && (isStockTransferLicence)){
                                     isStockTransfer = false;
-                                    Session.setPersistent('CloudStockTransferModule', isStockTransfer);
+                                    localStorage.setItem('CloudStockTransferModule', isStockTransfer);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Stock Take") && (isStockTakeLicence)){
                                     isStockTake = true;
-                                    Session.setPersistent('CloudStockTakeModule', isStockTake);
+                                    localStorage.setItem('CloudStockTakeModule', isStockTake);
                                 }else if((radioValue != 1) && (accessDesc == "Stock Take") && (isStockTakeLicence)){
                                     isStockTake = false;
-                                    Session.setPersistent('CloudStockTakeModule', isStockTake);
+                                    localStorage.setItem('CloudStockTakeModule', isStockTake);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Sales") && (isSalesLicence)){
                                     isSales = true;
-                                    Session.setPersistent('CloudSalesModule', isSales);
+                                    localStorage.setItem('CloudSalesModule', isSales);
                                 }else if((radioValue != 1) && (accessDesc == "Sales") && (isSalesLicence)){
                                     isSales = false;
-                                    Session.setPersistent('CloudSalesModule', isSales);
+                                    localStorage.setItem('CloudSalesModule', isSales);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Purchases") && (isPurchasesLicence)){
                                     isPurchases = true;
-                                    Session.setPersistent('CloudPurchasesModule', isPurchases);
+                                    localStorage.setItem('CloudPurchasesModule', isPurchases);
                                 }else if((radioValue != 1) && (accessDesc == "Purchases") && (isPurchasesLicence)){
                                     isPurchases = false;
-                                    Session.setPersistent('CloudPurchasesModule', isPurchases);
+                                    localStorage.setItem('CloudPurchasesModule', isPurchases);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Expense Claims") && (isExpenseClaimsLicence)){
                                     isExpenseClaims = true;
-                                    Session.setPersistent('CloudExpenseClaimsModule', isExpenseClaims);
+                                    localStorage.setItem('CloudExpenseClaimsModule', isExpenseClaims);
                                 }else if((radioValue != 1) && (accessDesc == "Expense Claims") && (isExpenseClaimsLicence)){
                                     isExpenseClaims = false;
-                                    Session.setPersistent('CloudExpenseClaimsModule', isExpenseClaims);
+                                    localStorage.setItem('CloudExpenseClaimsModule', isExpenseClaims);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Fixed Assets") && (isFixedAssetsLicence)){
                                     isFixedAssets = true;
-                                    Session.setPersistent('CloudFixedAssetsModule', isFixedAssets);
+                                    localStorage.setItem('CloudFixedAssetsModule', isFixedAssets);
                                 }else if((radioValue != 1) && (accessDesc == "Fixed Assets") && (isFixedAssetsLicence)){
                                     isFixedAssets = false;
-                                    Session.setPersistent('CloudFixedAssetsModule', isFixedAssets);
+                                    localStorage.setItem('CloudFixedAssetsModule', isFixedAssets);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Payments") && (isPaymentsLicence)){
                                     isPayments = true;
-                                    Session.setPersistent('CloudPaymentsModule', isPayments);
+                                    localStorage.setItem('CloudPaymentsModule', isPayments);
                                 }else if((radioValue != 1) && (accessDesc == "Payments") && (isPaymentsLicence)){
                                     isPayments = false;
-                                    Session.setPersistent('CloudPaymentsModule', isPayments);
+                                    localStorage.setItem('CloudPaymentsModule', isPayments);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Contacts") && (isContactsLicence)){
                                     isContacts = true;
-                                    Session.setPersistent('CloudContactsModule', isContacts);
+                                    localStorage.setItem('CloudContactsModule', isContacts);
                                 }else if((radioValue != 1) && (accessDesc == "Contacts") && (isContactsLicence)){
                                     isContacts = false;
-                                    Session.setPersistent('CloudContactsModule', isContacts);
+                                    localStorage.setItem('CloudContactsModule', isContacts);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Accounts") && (isAccountsLicence)){
                                     isAccounts = true;
-                                    Session.setPersistent('CloudAccountsModule', isAccounts);
+                                    localStorage.setItem('CloudAccountsModule', isAccounts);
                                 }else if((radioValue != 1) && (accessDesc == "Accounts") && (isAccountsLicence)){
                                     isAccounts = false;
-                                    Session.setPersistent('CloudAccountsModule', isAccounts);
+                                    localStorage.setItem('CloudAccountsModule', isAccounts);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Reports") && (isReportsLicence)){
                                     isReports = true;
-                                    Session.setPersistent('CloudReportsModule', isReports);
+                                    localStorage.setItem('CloudReportsModule', isReports);
                                 }else if((radioValue != 1) && (accessDesc == "Reports") && (isReportsLicence)){
                                     isReports = false;
-                                    Session.setPersistent('CloudReportsModule', isReports);
+                                    localStorage.setItem('CloudReportsModule', isReports);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Settings") && (isSettingsLicence)){
                                     isSettings = true;
-                                    Session.setPersistent('CloudSettingsModule', isSettings);
+                                    localStorage.setItem('CloudSettingsModule', isSettings);
                                 }else if((radioValue != 1) && (accessDesc == "Settings") && (isSettingsLicence)){
                                     isSettings = false;
-                                    Session.setPersistent('CloudSettingsModule', isSettings);
+                                    localStorage.setItem('CloudSettingsModule', isSettings);
                                 }
 
                             }
@@ -4257,171 +4257,171 @@ Template.accessleveldup.events({
                             if((employeeID == empLoggedID) ){
                                 if((radioValue == 1) && (accessDesc == "Print Delivery Docket")){
                                     isDocket = true;
-                                    Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
+                                    localStorage.setItem('CloudPrintDeliveryDocket', isDocket);
                                 }else if((radioValue != 1) && (accessDesc == "Print Delivery Docket")){
                                     isDocket = false;
-                                    Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
+                                    localStorage.setItem('CloudPrintDeliveryDocket', isDocket);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Print Invoice")){
                                     isInvoice = true;
-                                    Session.setPersistent('CloudPrintInvoice', isInvoice);
+                                    localStorage.setItem('CloudPrintInvoice', isInvoice);
                                 }else if((radioValue != 1) && (accessDesc == "Print Invoice")){
                                     isInvoice = false;
-                                    Session.setPersistent('CloudPrintInvoice', isInvoice);
+                                    localStorage.setItem('CloudPrintInvoice', isInvoice);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "User Password Details")){
                                     isUserPassDetail = true;
-                                    Session.setPersistent('CloudUserPass', isUserPassDetail);
+                                    localStorage.setItem('CloudUserPass', isUserPassDetail);
                                 }else if((radioValue != 1) && (accessDesc == "User Password Details")){
                                     isUserPassDetail = false;
-                                    Session.setPersistent('CloudUserPass', isUserPassDetail);
+                                    localStorage.setItem('CloudUserPass', isUserPassDetail);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "View Dockets")){
                                     isViewDockets = true;
-                                    Session.setPersistent('CloudViewDockets', isViewDockets);
+                                    localStorage.setItem('CloudViewDockets', isViewDockets);
                                 }else if((radioValue != 1) && (accessDesc == "View Dockets")){
                                     isViewDockets = false;
-                                    Session.setPersistent('CloudViewDockets', isViewDockets);
+                                    localStorage.setItem('CloudViewDockets', isViewDockets);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Qty Only on Purchase Order")){
                                     isPurchaseQtyOnly = true;
-                                    Session.setPersistent('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+                                    localStorage.setItem('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
                                 }else if((radioValue != 1) && (accessDesc == "Qty Only on Purchase Order")){
                                     isPurchaseQtyOnly = false;
-                                    Session.setPersistent('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+                                    localStorage.setItem('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Qty Only on Sales")){
                                     isSalesQtyOnly = true;
-                                    Session.setPersistent('CloudSalesQtyOnly', isSalesQtyOnly);
+                                    localStorage.setItem('CloudSalesQtyOnly', isSalesQtyOnly);
                                 }else if((radioValue != 1) && (accessDesc == "Qty Only on Sales")){
                                     isSalesQtyOnly = false;
-                                    Session.setPersistent('CloudSalesQtyOnly', isSalesQtyOnly);
+                                    localStorage.setItem('CloudSalesQtyOnly', isSalesQtyOnly);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Dashboard") && (isDashboardLicence)){
                                     isDashboard = true;
-                                    Session.setPersistent('CloudDashboardModule', isDashboard);
+                                    localStorage.setItem('CloudDashboardModule', isDashboard);
                                 }else if((radioValue != 1) && (accessDesc == "Dashboard") && (isDashboardLicence)){
                                     isDashboard = false;
-                                    Session.setPersistent('CloudDashboardModule', isDashboard);
+                                    localStorage.setItem('CloudDashboardModule', isDashboard);
                                 }
 
 
 
                                 if((radioValue == 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                                     isInventory = true;
-                                    Session.setPersistent('CloudInventoryModule', isInventory);
+                                    localStorage.setItem('CloudInventoryModule', isInventory);
                                 }else if((radioValue != 1) && (accessDesc == "Inventory" || accessDesc == "Inventory Tracking") && (isInventoryLicence)){
                                     isInventory = false;
-                                    Session.setPersistent('CloudInventoryModule', isInventory);
+                                    localStorage.setItem('CloudInventoryModule', isInventory);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Manufacturing") && (isManufacturingLicence)){
                                     isManufacturing = true;
-                                    Session.setPersistent('CloudManufacturingModule', isManufacturing);
+                                    localStorage.setItem('CloudManufacturingModule', isManufacturing);
                                 }else if((radioValue != 1) && (accessDesc == "Manufacturing") && (isManufacturingLicence)){
                                     isManufacturing = false;
-                                    Session.setPersistent('CloudManufacturingModule', isManufacturing);
+                                    localStorage.setItem('CloudManufacturingModule', isManufacturing);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Settings")){
                                     isAccessLevels = true;
-                                    Session.setPersistent('CloudAccessLevelsModule', isAccessLevels);
+                                    localStorage.setItem('CloudAccessLevelsModule', isAccessLevels);
                                 }else if((radioValue != 1) && (accessDesc == "Settings")){
                                     isAccessLevels = false;
-                                    Session.setPersistent('CloudAccessLevelsModule', isAccessLevels);
+                                    localStorage.setItem('CloudAccessLevelsModule', isAccessLevels);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Shipping") && (isShippingLicence)){
                                     isShipping = true;
-                                    Session.setPersistent('CloudShippingModule', isShipping);
+                                    localStorage.setItem('CloudShippingModule', isShipping);
                                 }else if((radioValue != 1) && (accessDesc == "Shipping") && (isShippingLicence)){
                                     isShipping = false;
-                                    Session.setPersistent('CloudShippingModule', isShipping);
+                                    localStorage.setItem('CloudShippingModule', isShipping);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Stock Transfer") && (isStockTransferLicence)){
                                     isStockTransfer = true;
-                                    Session.setPersistent('CloudStockTransferModule', isStockTransfer);
+                                    localStorage.setItem('CloudStockTransferModule', isStockTransfer);
                                 }else if((radioValue != 1) && (accessDesc == "Stock Transfer") && (isStockTransferLicence)){
                                     isStockTransfer = false;
-                                    Session.setPersistent('CloudStockTransferModule', isStockTransfer);
+                                    localStorage.setItem('CloudStockTransferModule', isStockTransfer);
                                 }
 
                                 if((radioValue == 1) && (accessDesc == "Stock Take") && (isStockTakeLicence)){
                                     isStockTake = true;
-                                    Session.setPersistent('CloudStockTakeModule', isStockTake);
+                                    localStorage.setItem('CloudStockTakeModule', isStockTake);
                                 }else if((radioValue != 1) && (accessDesc == "Stock Take") && (isStockTakeLicence)){
                                     isStockTake = false;
-                                    Session.setPersistent('CloudStockTakeModule', isStockTake);
+                                    localStorage.setItem('CloudStockTakeModule', isStockTake);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Sales") && (isSalesLicence)){
                                     isSales = true;
-                                    Session.setPersistent('CloudSalesModule', isSales);
+                                    localStorage.setItem('CloudSalesModule', isSales);
                                 }else if((radioValue != 1) && (accessDesc == "Sales") && (isSalesLicence)){
                                     isSales = false;
-                                    Session.setPersistent('CloudSalesModule', isSales);
+                                    localStorage.setItem('CloudSalesModule', isSales);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Purchases") && (isPurchasesLicence)){
                                     isPurchases = true;
-                                    Session.setPersistent('CloudPurchasesModule', isPurchases);
+                                    localStorage.setItem('CloudPurchasesModule', isPurchases);
                                 }else if((radioValue != 1) && (accessDesc == "Purchases") && (isPurchasesLicence)){
                                     isPurchases = false;
-                                    Session.setPersistent('CloudPurchasesModule', isPurchases);
+                                    localStorage.setItem('CloudPurchasesModule', isPurchases);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Expense Claims") && (isExpenseClaimsLicence)){
                                     isExpenseClaims = true;
-                                    Session.setPersistent('CloudExpenseClaimsModule', isExpenseClaims);
+                                    localStorage.setItem('CloudExpenseClaimsModule', isExpenseClaims);
                                 }else if((radioValue != 1) && (accessDesc == "Expense Claims") && (isExpenseClaimsLicence)){
                                     isExpenseClaims = false;
-                                    Session.setPersistent('CloudExpenseClaimsModule', isExpenseClaims);
+                                    localStorage.setItem('CloudExpenseClaimsModule', isExpenseClaims);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Fixed Assets") && (isFixedAssetsLicence)){
                                     isFixedAssets = true;
-                                    Session.setPersistent('CloudFixedAssetsModule', isFixedAssets);
+                                    localStorage.setItem('CloudFixedAssetsModule', isFixedAssets);
                                 }else if((radioValue != 1) && (accessDesc == "Fixed Assets") && (isFixedAssetsLicence)){
                                     isFixedAssets = false;
-                                    Session.setPersistent('CloudFixedAssetsModule', isFixedAssets);
+                                    localStorage.setItem('CloudFixedAssetsModule', isFixedAssets);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Payments") && (isPaymentsLicence)){
                                     isPayments = true;
-                                    Session.setPersistent('CloudPaymentsModule', isPayments);
+                                    localStorage.setItem('CloudPaymentsModule', isPayments);
                                 }else if((radioValue != 1) && (accessDesc == "Payments") && (isPaymentsLicence)){
                                     isPayments = false;
-                                    Session.setPersistent('CloudPaymentsModule', isPayments);
+                                    localStorage.setItem('CloudPaymentsModule', isPayments);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Contacts") && (isContactsLicence)){
                                     isContacts = true;
-                                    Session.setPersistent('CloudContactsModule', isContacts);
+                                    localStorage.setItem('CloudContactsModule', isContacts);
                                 }else if((radioValue != 1) && (accessDesc == "Contacts") && (isContactsLicence)){
                                     isContacts = false;
-                                    Session.setPersistent('CloudContactsModule', isContacts);
+                                    localStorage.setItem('CloudContactsModule', isContacts);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Accounts") && (isAccountsLicence)){
                                     isAccounts = true;
-                                    Session.setPersistent('CloudAccountsModule', isAccounts);
+                                    localStorage.setItem('CloudAccountsModule', isAccounts);
                                 }else if((radioValue != 1) && (accessDesc == "Accounts") && (isAccountsLicence)){
                                     isAccounts = false;
-                                    Session.setPersistent('CloudAccountsModule', isAccounts);
+                                    localStorage.setItem('CloudAccountsModule', isAccounts);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Reports") && (isReportsLicence)){
                                     isReports = true;
-                                    Session.setPersistent('CloudReportsModule', isReports);
+                                    localStorage.setItem('CloudReportsModule', isReports);
                                 }else if((radioValue != 1) && (accessDesc == "Reports") && (isReportsLicence)){
                                     isReports = false;
-                                    Session.setPersistent('CloudReportsModule', isReports);
+                                    localStorage.setItem('CloudReportsModule', isReports);
                                 }
                                 if((radioValue == 1) && (accessDesc == "Settings") && (isSettingsLicence)){
                                     isSettings = true;
-                                    Session.setPersistent('CloudSettingsModule', isSettings);
+                                    localStorage.setItem('CloudSettingsModule', isSettings);
                                 }else if((radioValue != 1) && (accessDesc == "Settings") && (isSettingsLicence)){
                                     isSettings = false;
-                                    Session.setPersistent('CloudSettingsModule', isSettings);
+                                    localStorage.setItem('CloudSettingsModule', isSettings);
                                 }
 
 

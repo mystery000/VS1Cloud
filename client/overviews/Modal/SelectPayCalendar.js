@@ -12,6 +12,9 @@ import LoadingOverlay from "../../LoadingOverlay";
 import {TaxRateService} from "../../settings/settings-service";
 import {UtilityService} from "../../utility-service";
 
+import { Template } from 'meteor/templating';
+import './SelectPayCalendar.html';
+
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let accountService = new AccountService();

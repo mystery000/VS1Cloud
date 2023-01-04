@@ -2,6 +2,10 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../js/sidebar-service";
 import { UtilityService } from "../../utility-service";
 
+import { Template } from 'meteor/templating';
+import './clockedOnEmployees.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let _ = require("lodash");
@@ -118,26 +122,26 @@ Template.clockedOnEmployees.helpers({
         });
     },
     edithours: () => {
-      return Session.get("CloudEditTimesheetHours") || false;
+      return localStorage.getItem("CloudEditTimesheetHours") || false;
     },
     clockOnOff: () => {
-      return Session.get("CloudClockOnOff") || false;
+      return localStorage.getItem("CloudClockOnOff") || false;
     },
     launchClockOnOff: () => {
-      return Session.get("launchClockOnOff") || false;
+      return localStorage.getItem("launchClockOnOff") || false;
     },
     timesheetStartStop: () => {
-      return Session.get("timesheetStartStop ") || false;
+      return localStorage.getItem("timesheetStartStop ") || false;
     },
     showTimesheet: () => {
-      return Session.get("CloudShowTimesheet") || false;
+      return localStorage.getItem("CloudShowTimesheet") || false;
     },
     tableheaderrecords: () => {
       return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
       return CloudPreference.findOne({
-        userid: Session.get("mycloudLogonID"),
+        userid: localStorage.getItem("mycloudLogonID"),
         PrefName: "tblPayHistorylist",
       });
     },

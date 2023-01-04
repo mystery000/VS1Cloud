@@ -8,6 +8,8 @@ import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
+import { Template } from 'meteor/templating';
+import "./payrollhistoryreport.html";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -270,7 +272,7 @@ Template.payrollhistoryreport.events({
       let employeeId = storage.split("_")[2];
       return (
         storage.includes("BasedOnType_") &&
-        employeeId == Session.get("mySessionEmployeeLoggedID")
+        employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
       );
     });
     let i = basedOnTypeStorages.length;

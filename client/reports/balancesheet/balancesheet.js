@@ -7,6 +7,8 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
+import { Template } from 'meteor/templating';
+import "./balancesheet.html"
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
@@ -572,7 +574,7 @@ Template.balancesheetreport.events({
         let accountName = $(event.target).parent().first().text();
         let toDate = moment($("#balanceDate").val()).clone().endOf("month").format("YYYY-MM-DD");
         let fromDate = "1899-01-01";
-        Session.setPersistent("showHeader", true);
+        localStorage.setItem("showHeader", true);
         await clearData('TAccountRunningBalanceReport');
         window.open("/balancetransactionlist?accountName=" + accountName + "&toDate=" + toDate + "&fromDate=" + fromDate + "&isTabItem=" + false, "_self");
     },
@@ -619,7 +621,7 @@ Template.balancesheetreport.events({
             comparePeriod +
             "&sort=" +
             sort;
-        if (!Session.get("AgedReceivablesTemplate")) {
+        if (!localStorage.getItem("AgedReceivablesTemplate")) {
             FlowRouter.go(url);
         }
     },

@@ -8,8 +8,11 @@ import { SideBarService } from '../../js/sidebar-service';
 import TableHandler from '../../js/Table/TableHandler';
 import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
 import { template } from 'lodash';
+import { Template } from 'meteor/templating';
+import './transaction_line.html';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+
 
 export const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Amount (Inc)", "Unit Price (Inc)", "Cost Price"];
 
@@ -30,10 +33,10 @@ Template.transaction_line.onCreated(function(){
 Template.transaction_line.onRendered(function() {
   const plusArr = [];
   const monthArr = [];
-  let isGreenTrack = Session.get('isGreenTrack');
-  let regionData = Session.get('ERPLoggedCountry');
+  let isGreenTrack = localStorage.getItem('isGreenTrack');
+  let regionData = localStorage.getItem('ERPLoggedCountry');
   let recordObj = null;
-  if(isGreenTrack) {
+  if(isGreenTrack == true) {
     $.get("/GreentrackModules.json").success(function (data) {
         for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
 
@@ -153,12 +156,12 @@ Template.transaction_line.onRendered(function() {
           { index: 18, label: "Tax Amt",            class: "TaxAmount",     width: "75",        active: true,   display: true },
           { index: 19, label: "Amount (Ex)",        class: "AmountEx",      width: "152",       active: true,   display: true },
           { index: 20, label: "Amount (Inc)",       class: "AmountInc",     width: "152",       active: false,  display: true },
-          { index: 21, label: "Units",              class: "cc",            width: "95",        active: true,   display: true },
+          { index: 21, label: "Units",              class: "Units",            width: "95",        active: true,   display: true },
           { index: 22, label: "Custom Field 1",     class: "CustomField1",  width: "124",       active: false,  display: false },
           { index: 23, label: "Custom Field 2",     class: "CustomField2",  width: "124",       active: false,  display: false },
       ];
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      let isBOnShippedQty = Session.get("CloudSalesQtyOnly");
+      let isBatchSerialNoTracking = localStorage.getItem("CloudShowSerial") || false;
+      let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly");
       if (isBOnShippedQty) {
          let x;
          x = reset_data.find(x => x.class === 'Qty'); if(x != undefined) x.display = true;
@@ -173,11 +176,9 @@ Template.transaction_line.onRendered(function() {
         x = reset_data.find(x => x.class === 'BackOrder'); if(x != undefined) x.display = true;
       }
       if (isBatchSerialNoTracking) {
-        let x = reset_data.find(x => x.class === 'TaxAmount');
-        if(x != undefined) x.display = true;
+        let x = reset_data.find(x => x.class === 'TaxAmount'); if(x != undefined) x.display = true;
       } else {
-        let x = reset_data.find(x => x.class === 'TaxAmount');
-        if(x != undefined) x.display = false;
+        let x = reset_data.find(x => x.class === 'TaxAmount'); if(x != undefined) x.display = false;
       }
       let templateObject = Template.instance();
       templateObject.init_data.set(reset_data);
@@ -207,13 +208,7 @@ Template.transaction_line.onRendered(function() {
           ];
             reset_data = templateObject.init_data.get().map( item => {
                 x = reset_data_salesorder.find( x => x.class === item.class);
-                if(x != undefined) {
-                    const checks = ["AmountEx", "AmountInc", "UnitPriceEx", "UnitPriceInc"];
-                    if(checks.includes(x.class))
-                        return {...item, active: x.active, display: x.display};
-                    else 
-                        return {...item, active: x.display, display: x.display};
-                }
+                if(x != undefined) return {...item, active: x.active, display: x.display};
                 return {...item, active: false, display: false};
             });
             amtEx = reset_data.find(x => x.class == "AmountEx");
@@ -239,13 +234,7 @@ Template.transaction_line.onRendered(function() {
           ];
           reset_data = templateObject.init_data.get().map( item => {
                 x = reset_data_credit.find( x => x.class === item.class);
-                if(x != undefined) {
-                    const checks = ["AmountEx", "AmountInc", "UnitPriceEx", "UnitPriceInc"];
-                    if(checks.includes(x.class))
-                        return {...item, active: x.active, display: x.display};
-                    else 
-                        return {...item, active: x.display, display: x.display};
-                }
+                if(x != undefined) return {...item, active: x.active, display: x.display};
                 return {...item, active: false, display: false};
             });
             amtEx = reset_data.find(x => x.class == "AmountEx");
@@ -260,26 +249,62 @@ Template.transaction_line.onRendered(function() {
 
           getVS1Data("VS1_Customize").then(function(dataObject) {
               if (dataObject.length == 0) {
-                  sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
+                  sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
                     reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                    resetData = templateObject.init_data.get().map((item) => {
-                        data =  reset_data.find(x => x.class == item.class);
-                        if(data != undefined) {
-                            const checks = ["AmountEx", "AmountInc", "UnitPriceEx", "UnitPriceInc"];
-                            if(checks.includes(data.class))
-                                return {...item, active: data.active, display: data.display};
-                            else 
-                                return {...item, active: data.display, display: data.display};
+                    if(listType != 'tblBillLine'){
+                        resetData = templateObject.init_data.get().map((item) => {
+                            data =  reset_data.find(x => x.class == item.class);
+                            if(data != undefined) return {...item, active: data.active, display: data.display};
+                            return {...item, active: false, display: false};
+                        });
+                        amtEx = resetData.find(x => x.class == "AmountEx");
+                        amtInc = resetData.find(x => x.class == "AmountInc");
+                        unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
+                        unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
+                        if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
+                        if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active;
+
+                        canShowBackOrder = templateObject.data.canShowBackOrder;
+                        canShowUOM = templateObject.data.canShowUOM;
+                        includeBOnShippedQty = templateObject.data.includeBOnShippedQty;
+                        isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking;
+
+
+                        if(!canShowBackOrder || !includeBOnShippedQty) {
+                            ordered = resetData.find(x => x.class == "Ordered");
+                            shipped = resetData.find(x => x.class == "Shipped");
+                            backorder = resetData.find(x => x.class == "BackOrder");
+
+                            if(backorder != undefined){
+                                resetData.find(x => x.class == "BackOrder").display = false;
+                                resetData.find(x => x.class == "BackOrder").active = false;
+                            }
+                            if(ordered != undefined){
+                                resetData.find(x => x.class == "Ordered").display = false;
+                                resetData.find(x => x.class == "Ordered").active = false;
+                            }
+                            if(shipped != undefined){
+                                resetData.find(x => x.class == "Shipped").display = false;
+                                resetData.find(x => x.class == "Shipped").active = false;
+                            }
                         }
-                        return {...item, active: false, display: false};
-                    });
-                    amtEx = resetData.find(x => x.class == "AmountEx");
-                    amtInc = resetData.find(x => x.class == "AmountInc");
-                    unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
-                    unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
-                    if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
-                    if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active; 
-                    templateObject.showCustomFieldDisplaySettings(resetData);
+                        if(!isBatchSerialNoTracking) {
+                            serialNo = resetData.find(x => x.class == "SerialNo");
+                            if(serialNo != undefined){
+                                resetData.find(x => x.class == "SerialNo").display = false;
+                                resetData.find(x => x.class == "SerialNo").active = false;
+                            }
+                        }
+                        if(!canShowUOM) {
+                            units = resetData.find(x => x.class == "Units");
+                            if(units != undefined){
+                                resetData.find(x => x.class == "Units").display = false;
+                                resetData.find(x => x.class == "Units").active = false;
+                            }
+                        }
+
+                        templateObject.showCustomFieldDisplaySettings(resetData);
+                    }
                   }).catch(function(err) {});
               } else {
                   let data = JSON.parse(dataObject[0].data);
@@ -287,23 +312,57 @@ Template.transaction_line.onRendered(function() {
                       for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                           if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
                                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                                if(listType == 'tblBillLine') break;
                                 resetData = templateObject.init_data.get().map((item) => {
                                     data =  reset_data.find(x => x.class == item.class);
-                                    if(data != undefined) {
-                                        const checks = ["AmountEx", "AmountInc", "UnitPriceEx", "UnitPriceInc"];
-                                        if(checks.includes(data.class))
-                                            return {...item, active: data.active, display: data.display};
-                                        else 
-                                            return {...item, active: data.display, display: data.display};
-                                    }
+                                    if(data != undefined) return {...item, active: data.active, display: data.display};
                                     return {...item, active: false, display: false};
-                                });                                                            
+                                });
                                 amtEx = resetData.find(x => x.class == "AmountEx");
                                 amtInc = resetData.find(x => x.class == "AmountInc");
                                 unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
                                 unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
-                                if(amtInc && amtEx) if(amtEx.display) amtInc.active = !amtEx.active;                                
+                                if(amtInc && amtEx) if(amtEx.display) amtInc.active = !amtEx.active;
                                 if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active;
+
+                                canShowBackOrder = templateObject.data.canShowBackOrder;
+                                canShowUOM = templateObject.data.canShowUOM;
+                                includeBOnShippedQty = templateObject.data.includeBOnShippedQty;
+                                isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking;
+
+
+                                if(!canShowBackOrder || !includeBOnShippedQty) {
+                                    ordered = resetData.find(x => x.class == "Ordered");
+                                    shipped = resetData.find(x => x.class == "Shipped");
+                                    backorder = resetData.find(x => x.class == "BackOrder");
+
+                                    if(backorder != undefined){
+                                        resetData.find(x => x.class == "BackOrder").display = false;
+                                        resetData.find(x => x.class == "BackOrder").active = false;
+                                    }
+                                    if(ordered != undefined){
+                                        resetData.find(x => x.class == "Ordered").display = false;
+                                        resetData.find(x => x.class == "Ordered").active = false;
+                                    }
+                                    if(shipped != undefined){
+                                        resetData.find(x => x.class == "Shipped").display = false;
+                                        resetData.find(x => x.class == "Shipped").active = false;
+                                    }
+                                }
+                                if(!isBatchSerialNoTracking) {
+                                    serialNo = resetData.find(x => x.class == "SerialNo");
+                                    if(serialNo != undefined){
+                                        resetData.find(x => x.class == "SerialNo").display = false;
+                                        resetData.find(x => x.class == "SerialNo").active = false;
+                                    }
+                                }
+                                if(!canShowUOM) {
+                                    units = resetData.find(x => x.class == "Units");
+                                    if(units != undefined){
+                                        resetData.find(x => x.class == "Units").display = false;
+                                        resetData.find(x => x.class == "Units").active = false;
+                                    }
+                                }
                                 templateObject.showCustomFieldDisplaySettings(resetData);
                           }
                       }
@@ -339,7 +398,7 @@ Template.transaction_line.onRendered(function() {
           };
           custFields.push(customData);
       }
-      
+
       await templateObject.displayfields.set(custFields);
       await templateObject.reset_data.set(custFields);
 
@@ -356,7 +415,7 @@ Template.transaction_line.events({
       let templateObject = Template.instance();
       let currenttranstablename = templateObject.data.tablename||"";
       let reset_data = templateObject.reset_data.get();
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+      let isBatchSerialNoTracking = localStorage.getItem("CloudShowSerial") || false;
       if (isBatchSerialNoTracking) {
         data = reset_data.find((x) => x.class === 'TaxRate');
         if(data != undefined) data = {...data, display: true, active: true};
@@ -447,12 +506,12 @@ Template.transaction_line.events({
     try {
         let erpGet = erpDb();
         let tableName = templateObject.data.tablename||"";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+        let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
         let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
 
         $(".fullScreenSpin").css("display", "none");
         if(added) {
-        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
             addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
         });
 
@@ -484,7 +543,7 @@ Template.transaction_line.helpers({
     let currenttranstablename = Template.instance().data.tablename||"";
     let data = Template.instance().displayfields.get();
 
-    let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+    let isBatchSerialNoTracking = localStorage.getItem("CloudShowSerial") || false;
     if (!isBatchSerialNoTracking) {
         let serialNo = data.find((x) => x.class === 'SerialNo');
         if( serialNo != undefined) {

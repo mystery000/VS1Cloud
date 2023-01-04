@@ -3,6 +3,11 @@ import 'jQuery.print/jQuery.print.js';
 import {UtilityService} from "../../utility-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
+
+import { Template } from 'meteor/templating';
+import './monthllyexpenses.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
@@ -57,7 +62,7 @@ if (!localStorage.getItem('VS1PNLPeriodReport_dash')) {
     let totalPayment6  = 0;
     let totalPayment7  = 0;
     let totalPayment8  = 0;
-    var sessionmyExpenses = Session.get('myExpenses');
+    var sessionmyExpenses = localStorage.getItem('myExpenses');
     if(sessionmyExpenses){
       setTimeout(function () {
         let filterData = _.filter(sessionmyExpenses.tapreport, function (sessionmyExpenses) {
@@ -379,7 +384,7 @@ if (!localStorage.getItem('VS1PNLPeriodReport_dash')) {
           let totalPayment6  = 0;
           let totalPayment7  = 0;
           let totalPayment8  = 0;
-          var sessionmyExpenses = Session.get('myExpenses');
+          var sessionmyExpenses = localStorage.getItem('myExpenses');
           let filterData = _.filter(sessionmyExpenses.tapreport, function (sessionmyExpenses) {
                 return sessionmyExpenses.Name
             });

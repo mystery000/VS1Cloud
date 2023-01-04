@@ -307,7 +307,7 @@ Template.refundcard.onRendered(() => {
       lineItems.push(lineItemObj);
     });
 
-    let company = Session.get("vs1companyName");
+    let company = localStorage.getItem("vs1companyName");
     let vs1User = localStorage.getItem("mySession");
     let customerEmail = $("#edtCustomerEmail").val();
     let id = $(".printID").attr("id") || "new";
@@ -375,12 +375,12 @@ Template.refundcard.onRendered(() => {
 
     if (number == 1) {
       item_invoices = {
-        o_url: Session.get("vs1companyURL"),
-        o_name: Session.get("vs1companyName"),
-        o_address: Session.get("vs1companyaddress1"),
-        o_city: Session.get("vs1companyCity"),
+        o_url: localStorage.getItem("vs1companyURL"),
+        o_name: localStorage.getItem("vs1companyName"),
+        o_address: localStorage.getItem("vs1companyaddress1"),
+        o_city: localStorage.getItem("vs1companyCity"),
         o_state:
-            Session.get("companyState") + " " + Session.get("vs1companyPOBox"),
+            localStorage.getItem("companyState") + " " + localStorage.getItem("vs1companyPOBox"),
         o_reg: Template.new_invoice.__helpers.get("companyReg").call(),
         o_abn: Template.new_invoice.__helpers.get("companyabn").call(),
         o_phone: Template.new_invoice.__helpers.get("companyphone").call(),
@@ -428,12 +428,12 @@ Template.refundcard.onRendered(() => {
       };
     } else if (number == 2) {
       item_invoices = {
-        o_url: Session.get("vs1companyURL"),
-        o_name: Session.get("vs1companyName"),
-        o_address: Session.get("vs1companyaddress1"),
-        o_city: Session.get("vs1companyCity"),
+        o_url: localStorage.getItem("vs1companyURL"),
+        o_name: localStorage.getItem("vs1companyName"),
+        o_address: localStorage.getItem("vs1companyaddress1"),
+        o_city: localStorage.getItem("vs1companyCity"),
         o_state:
-            Session.get("companyState") + " " + Session.get("vs1companyPOBox"),
+            localStorage.getItem("companyState") + " " + localStorage.getItem("vs1companyPOBox"),
         o_reg: Template.new_invoice.__helpers.get("companyReg").call(),
         o_abn: Template.new_invoice.__helpers.get("companyabn").call(),
         o_phone: Template.new_invoice.__helpers.get("companyphone").call(),
@@ -481,12 +481,12 @@ Template.refundcard.onRendered(() => {
       };
     } else {
       item_invoices = {
-        o_url: Session.get("vs1companyURL"),
-        o_name: Session.get("vs1companyName"),
-        o_address: Session.get("vs1companyaddress1"),
-        o_city: Session.get("vs1companyCity"),
+        o_url: localStorage.getItem("vs1companyURL"),
+        o_name: localStorage.getItem("vs1companyName"),
+        o_address: localStorage.getItem("vs1companyaddress1"),
+        o_city: localStorage.getItem("vs1companyCity"),
         o_state:
-            Session.get("companyState") + " " + Session.get("vs1companyPOBox"),
+            localStorage.getItem("companyState") + " " + localStorage.getItem("vs1companyPOBox"),
         o_reg: Template.new_invoice.__helpers.get("companyReg").call(),
         o_abn: Template.new_invoice.__helpers.get("companyabn").call(),
         o_phone: Template.new_invoice.__helpers.get("companyphone").call(),
@@ -664,7 +664,7 @@ Template.refundcard.onRendered(() => {
       lineItems.push(lineItemObj);
     });
 
-    let company = Session.get("vs1companyName");
+    let company = localStorage.getItem("vs1companyName");
     let vs1User = localStorage.getItem("mySession");
     let customerEmail = $("#edtCustomerEmail").val();
     let id = $(".printID").attr("id") || "new";
@@ -732,12 +732,12 @@ Template.refundcard.onRendered(() => {
 
     if (number == 1) {
       item_invoices = {
-        o_url: Session.get("vs1companyURL"),
-        o_name: Session.get("vs1companyName"),
-        o_address: Session.get("vs1companyaddress1"),
-        o_city: Session.get("vs1companyCity"),
+        o_url: localStorage.getItem("vs1companyURL"),
+        o_name: localStorage.getItem("vs1companyName"),
+        o_address: localStorage.getItem("vs1companyaddress1"),
+        o_city: localStorage.getItem("vs1companyCity"),
         o_state:
-            Session.get("companyState") + " " + Session.get("vs1companyPOBox"),
+            localStorage.getItem("companyState") + " " + localStorage.getItem("vs1companyPOBox"),
         o_reg: Template.new_invoice.__helpers.get("companyReg").call(),
         o_abn: Template.new_invoice.__helpers.get("companyabn").call(),
         o_phone: Template.new_invoice.__helpers.get("companyphone").call(),
@@ -785,12 +785,12 @@ Template.refundcard.onRendered(() => {
       };
     } else if (number == 2) {
       item_invoices = {
-        o_url: Session.get("vs1companyURL"),
-        o_name: Session.get("vs1companyName"),
-        o_address: Session.get("vs1companyaddress1"),
-        o_city: Session.get("vs1companyCity"),
+        o_url: localStorage.getItem("vs1companyURL"),
+        o_name: localStorage.getItem("vs1companyName"),
+        o_address: localStorage.getItem("vs1companyaddress1"),
+        o_city: localStorage.getItem("vs1companyCity"),
         o_state:
-            Session.get("companyState") + " " + Session.get("vs1companyPOBox"),
+            localStorage.getItem("companyState") + " " + localStorage.getItem("vs1companyPOBox"),
         o_reg: Template.new_invoice.__helpers.get("companyReg").call(),
         o_abn: Template.new_invoice.__helpers.get("companyabn").call(),
         o_phone: Template.new_invoice.__helpers.get("companyphone").call(),
@@ -838,12 +838,12 @@ Template.refundcard.onRendered(() => {
       };
     } else {
       item_invoices = {
-        o_url: Session.get("vs1companyURL"),
-        o_name: Session.get("vs1companyName"),
-        o_address: Session.get("vs1companyaddress1"),
-        o_city: Session.get("vs1companyCity"),
+        o_url: localStorage.getItem("vs1companyURL"),
+        o_name: localStorage.getItem("vs1companyName"),
+        o_address: localStorage.getItem("vs1companyaddress1"),
+        o_city: localStorage.getItem("vs1companyCity"),
         o_state:
-            Session.get("companyState") + " " + Session.get("vs1companyPOBox"),
+            localStorage.getItem("companyState") + " " + localStorage.getItem("vs1companyPOBox"),
         o_reg: Template.new_invoice.__helpers.get("companyReg").call(),
         o_abn: Template.new_invoice.__helpers.get("companyabn").call(),
         o_phone: Template.new_invoice.__helpers.get("companyphone").call(),
@@ -1690,7 +1690,7 @@ Template.refundcard.onRendered(() => {
                 };
 
                 if (data.ttermsvs1[i].isSalesdefault == true) {
-                  Session.setPersistent(
+                  localStorage.setItem(
                       "ERPTermsSales",
                       data.ttermsvs1[i].TermsName || "COD"
                   );
@@ -1724,7 +1724,7 @@ Template.refundcard.onRendered(() => {
                 termsname: data.ttermsvs1[i].TermsName || " ",
               };
               if (data.ttermsvs1[i].isSalesdefault == true) {
-                Session.setPersistent(
+                localStorage.setItem(
                     "ERPTermsSales",
                     data.ttermsvs1[i].TermsName || "COD"
                 );
@@ -1807,8 +1807,8 @@ Template.refundcard.onRendered(() => {
   }
 
   templateObject.getOrganisationDetails = function () {
-    let account_id = Session.get("vs1companyStripeID") || "";
-    let stripe_fee = Session.get("vs1companyStripeFeeMethod") || "apply";
+    let account_id = localStorage.getItem("vs1companyStripeID") || "";
+    let stripe_fee = localStorage.getItem("vs1companyStripeFeeMethod") || "apply";
     templateObject.accountID.set(account_id);
     templateObject.stripe_fee_method.set(stripe_fee);
   };
@@ -2301,7 +2301,7 @@ Template.refundcard.onRendered(() => {
                       if (templateObject.invoicerecord.get()) {
                         Meteor.call(
                             "readPrefMethod",
-                            Session.get("mycloudLogonID"),
+                            localStorage.getItem("mycloudLogonID"),
                             "tblInvoiceLine",
                             function (error, result) {
                               if (error) {
@@ -2889,7 +2889,7 @@ Template.refundcard.onRendered(() => {
                     if (templateObject.invoicerecord.get()) {
                       Meteor.call(
                           "readPrefMethod",
-                          Session.get("mycloudLogonID"),
+                          localStorage.getItem("mycloudLogonID"),
                           "tblInvoiceLine",
                           function (error, result) {
                             if (error) {
@@ -3435,7 +3435,7 @@ Template.refundcard.onRendered(() => {
                         if (templateObject.invoicerecord.get()) {
                           Meteor.call(
                               "readPrefMethod",
-                              Session.get("mycloudLogonID"),
+                              localStorage.getItem("mycloudLogonID"),
                               "tblInvoiceLine",
                               function (error, result) {
                                 if (error) {
@@ -3972,7 +3972,7 @@ Template.refundcard.onRendered(() => {
                     if (templateObject.invoicerecord.get()) {
                       Meteor.call(
                           "readPrefMethod",
-                          Session.get("mycloudLogonID"),
+                          localStorage.getItem("mycloudLogonID"),
                           "tblInvoiceLine",
                           function (error, result) {
                             if (error) {
@@ -4116,7 +4116,7 @@ Template.refundcard.onRendered(() => {
     } else {
       $("#edtCustomerName").val("");
     }
-    let getPaymentMethodVal = Session.get("paymentmethod") || "Cash";
+    let getPaymentMethodVal = localStorage.getItem("paymentmethod") || "Cash";
     setTimeout(function () {
       $("#sltDept").val(defaultDept);
       $("#sltPaymentMethod").val(getPaymentMethodVal);
@@ -4128,7 +4128,7 @@ Template.refundcard.onRendered(() => {
     if (templateObject.invoicerecord.get()) {
       Meteor.call(
           "readPrefMethod",
-          Session.get("mycloudLogonID"),
+          localStorage.getItem("mycloudLogonID"),
           "tblInvoiceLine",
           function (error, result) {
             if (error) {
@@ -6420,7 +6420,7 @@ Template.refundcard.onRendered(() => {
           let basedOnTypeStorages = Object.keys(localStorage);
           basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split("_")[2];
-            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
             return storage.includes("BasedOnType_");
           });
           let j = basedOnTypeStorages.length;
@@ -7120,7 +7120,7 @@ Template.refundcard.helpers({
   },
 
   isBatchSerialNoTracking: () => {
-    return Session.get("CloudShowSerial") || false;
+    return localStorage.getItem("CloudShowSerial") || false;
   },
   invoicerecord: () => {
     return Template.instance().invoicerecord.get();
@@ -7196,13 +7196,13 @@ Template.refundcard.helpers({
   },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "refundcard",
     });
   },
   salesCloudGridPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "tblInvoiceLine",
     });
   },
@@ -7230,30 +7230,30 @@ Template.refundcard.helpers({
         });
   },
   companyaddress1: () => {
-    return Session.get("vs1companyaddress1");
+    return localStorage.getItem("vs1companyaddress1");
   },
   companyaddress2: () => {
-    return Session.get("vs1companyaddress2");
+    return localStorage.getItem("vs1companyaddress2");
   },
   city: () => {
-    return Session.get("vs1companyCity");
+    return localStorage.getItem("vs1companyCity");
   },
   state: () => {
-    return Session.get("companyState");
+    return localStorage.getItem("companyState");
   },
   poBox: () => {
-    return Session.get("vs1companyPOBox");
+    return localStorage.getItem("vs1companyPOBox");
   },
   companyphone: () => {
-    let phone = "Phone: " + Session.get("vs1companyPhone");
+    let phone = "Phone: " + localStorage.getItem("vs1companyPhone");
     return phone;
   },
 
   companyabn: () => {
     //Update Company ABN
-    let countryABNValue = Session.get("vs1companyABN");
+    let countryABNValue = localStorage.getItem("vs1companyABN");
     // if (LoggedCountry == "South Africa") {
-    //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+    //     countryABNValue = "Vat No: " + localStorage.getItem("vs1companyABN");
     // }
 
     return countryABNValue;
@@ -7263,16 +7263,16 @@ Template.refundcard.helpers({
     //Add Company Reg
     let countryRegValue = "";
     if (LoggedCountry == "South Africa") {
-      countryRegValue = "Reg No: " + Session.get("vs1companyReg");
+      countryRegValue = "Reg No: " + localStorage.getItem("vs1companyReg");
     }
 
     return countryRegValue;
   },
   organizationname: () => {
-    return Session.get("vs1companyName");
+    return localStorage.getItem("vs1companyName");
   },
   organizationurl: () => {
-    return Session.get("vs1companyURL");
+    return localStorage.getItem("vs1companyURL");
   },
   isMobileDevices: () => {
     var isMobile = false;
@@ -8551,7 +8551,7 @@ Template.refundcard.events({
       LoadingOverlay.show();
 
       var refunds = $('input[name="Refunds"]:checked').val();
-      let emid = Session.get("mySessionEmployeeLoggedID");
+      let emid = localStorage.getItem("mySessionEmployeeLoggedID");
 
       sideBarService
           .getTemplateNameandEmployeId("Refunds", emid, 1)
@@ -8562,7 +8562,7 @@ Template.refundcard.events({
               type: "TTemplateSettings",
               fields: {
                 ID: parseInt(id),
-                EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+                EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
                 SettingName: "Refunds",
                 GlobalRef: "Refunds",
                 Description: $('input[name="Refunds_1"]').val(),
@@ -8586,7 +8586,7 @@ Template.refundcard.events({
             objDetails = {
               type: "TTemplateSettings",
               fields: {
-                EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+                EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
                 SettingName: "Refunds",
                 Description: $('input[name="Refunds_1"]').val(),
                 Template: "1",
@@ -8615,7 +8615,7 @@ Template.refundcard.events({
               type: "TTemplateSettings",
               fields: {
                 ID: parseInt(id),
-                EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+                EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
                 SettingName: "Refunds",
                 GlobalRef: "Refunds",
                 Description: $('input[name="Refunds_2"]').val(),
@@ -8639,7 +8639,7 @@ Template.refundcard.events({
             objDetails = {
               type: "TTemplateSettings",
               fields: {
-                EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+                EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
                 SettingName: "Refunds",
                 Description: $('input[name="Refunds_2"]').val(),
                 Template: "2",
@@ -8668,7 +8668,7 @@ Template.refundcard.events({
               type: "TTemplateSettings",
               fields: {
                 ID: parseInt(id),
-                EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+                EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
                 SettingName: "Refunds",
                 GlobalRef: "Refunds",
                 Description: $('input[name="Refunds_3"]').val(),
@@ -8692,7 +8692,7 @@ Template.refundcard.events({
             objDetails = {
               type: "TTemplateSettings",
               fields: {
-                EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+                EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
                 SettingName: "Refunds",
                 Description: $('input[name="Refunds_3"]').val(),
                 Template: "3",
@@ -9210,7 +9210,7 @@ Template.refundcard.events({
       let customername = $("#edtCustomerName");
       let termname = $("#sltTerms").val() || "";
       let payMethod = $("#sltPaymentMethod").val() || "Cash";
-      Session.setPersistent("paymentmethod", payMethod);
+      localStorage.setItem("paymentmethod", payMethod);
       if (termname === "") {
         swal("Terms has not been selected!", "", "warning");
         event.preventDefault();
@@ -9480,7 +9480,7 @@ Template.refundcard.events({
 
                   let erpInvoiceId = objDetails.fields.ID;
 
-                  let mailFromName = Session.get("vs1companyName");
+                  let mailFromName = localStorage.getItem("vs1companyName");
                   let mailFrom =
                       localStorage.getItem("VS1OrgEmail") ||
                       localStorage.getItem("VS1AdminUserName");
@@ -9667,7 +9667,7 @@ Template.refundcard.events({
                         (storage) => {
                           let employeeId = storage.split("_")[2];
                           return storage.includes("BasedOnType_");
-                          // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                          // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         }
                     );
                     let i = basedOnTypeStorages.length;
@@ -9746,7 +9746,7 @@ Template.refundcard.events({
                         (storage) => {
                           let employeeId = storage.split("_")[2];
                           return storage.includes("BasedOnType_");
-                          // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                          // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         }
                     );
                     let i = basedOnTypeStorages.length;
@@ -9824,7 +9824,7 @@ Template.refundcard.events({
                         (storage) => {
                           let employeeId = storage.split("_")[2];
                           return storage.includes("BasedOnType_");
-                          // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                          // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         }
                     );
                     let i = basedOnTypeStorages.length;
@@ -9861,7 +9861,7 @@ Template.refundcard.events({
                         (storage) => {
                           let employeeId = storage.split("_")[2];
                           return storage.includes("BasedOnType_");
-                          // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                          // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         }
                     );
                     let i = basedOnTypeStorages.length;
@@ -9929,8 +9929,8 @@ Template.refundcard.events({
                 };
               }
               var getcurrentCloudDetails = CloudUser.findOne({
-                _id: Session.get("mycloudLogonID"),
-                clouddatabaseID: Session.get("mycloudLogonDBID"),
+                _id: localStorage.getItem("mycloudLogonID"),
+                clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
               });
               if (getcurrentCloudDetails) {
                 if (getcurrentCloudDetails._id.length > 0) {
@@ -10204,8 +10204,21 @@ Template.refundcard.events({
       $(".colSerialNo").removeClass("showColumn");
     }
   },
+  "click .chkFixedAsset": function(event) {
+    if ($(event.target).is(':checked')) {
+        $('.colFixedAsset').addClass('showColumn');
+        $('.colFixedAsset').removeClass('hiddenColumn');
+    } else {
+        $('.colFixedAsset').addClass('hiddenColumn');
+        $('.colFixedAsset').removeClass('showColumn');
+    }
+  },
   // display settings
-
+  'change .rngRangeFixedAsset': function(event) {
+    let range = $(event.target).val();
+    $(".spWidthFixedAsset").html(range);
+    $('.colFixedAsset').css('width', range);
+  },
   "change .rngRangeProductName": function (event) {
     let range = $(event.target).val();
     $(".spWidthProductName").html(range);
@@ -10280,8 +10293,8 @@ Template.refundcard.events({
 
   "click .btnResetSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -10643,8 +10656,8 @@ Template.refundcard.events({
             }
             let linesave = objDetails.fields.ID;
             var getcurrentCloudDetails = CloudUser.findOne({
-              _id: Session.get("mycloudLogonID"),
-              clouddatabaseID: Session.get("mycloudLogonDBID"),
+              _id: localStorage.getItem("mycloudLogonID"),
+              clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
             });
             if (getcurrentCloudDetails) {
               if (getcurrentCloudDetails._id.length > 0) {

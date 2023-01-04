@@ -6,6 +6,9 @@ import { AccountService } from "../accounts/account-service";
 import { UtilityService } from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import "./cheque_list.html";
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.chequelist.onCreated(function() {
@@ -60,7 +63,7 @@ Template.chequelist.onRendered(function() {
         try {
         getVS1Data("VS1_Customize").then(function (dataObject) {
             if (dataObject.length == 0) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+            sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
                 // reset_data = data.ProcessLog.CustomLayout.Columns;
                 reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
                 templateObject.showCustomFieldDisplaySettings(reset_data);
@@ -694,8 +697,8 @@ Template.chequelist.events({
         },
     'click .resetTable': function(event) {
         const getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -735,8 +738,8 @@ Template.chequelist.events({
             lineItems.push(lineItemObj);
         });
         const getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1089,7 +1092,7 @@ Template.chequelist.events({
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split('_')[2];
-            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
         });
         let i = basedOnTypeStorages.length;
         if (i > 0) {
@@ -1137,7 +1140,7 @@ Template.chequelist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     purchasesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblchequelist' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblchequelist' });
     },
     formname: () => {
         return chequeSpelling;

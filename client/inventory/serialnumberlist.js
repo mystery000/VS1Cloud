@@ -4,6 +4,9 @@ import { SalesBoardService } from '../js/sales-service';
 import { SideBarService } from '../js/sidebar-service';
 import { StockTransferService } from './stockadjust-service';
 import '../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import "./serialnumberlist.html";
+
 // Define services
 let sideBarService = new SideBarService();
 const purchaseService = new PurchaseBoardService();
@@ -27,7 +30,7 @@ Template.serialnumberlist.onRendered(function() {
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSerialNumberList', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSerialNumberList', function(error, result) {
         if (error) {
 
         } else {
@@ -98,7 +101,7 @@ Template.serialnumberlist.onRendered(function() {
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSerialNumberList', function(error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSerialNumberList', function(error, result) {
                             if (error) {
 
                             } else {
@@ -378,7 +381,7 @@ Template.serialnumberlist.onRendered(function() {
                         templateObject.datatablerecords.set(dataTableList);
                         if (templateObject.datatablerecords.get()) {
 
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSerialNumberList', function(error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSerialNumberList', function(error, result) {
                                 if (error) {
 
                                 } else {
@@ -564,7 +567,7 @@ Template.serialnumberlist.onRendered(function() {
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSerialNumberList', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblSerialNumberList', function(error, result) {
                         if (error) {
 
                         } else {
@@ -862,7 +865,7 @@ Template.serialnumberlist.events({
         $(".btnRefresh").trigger("click");
     },
     'click .resetTable': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -907,7 +910,7 @@ Template.serialnumberlist.events({
             lineItems.push(lineItemObj);
         });
 
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1041,7 +1044,7 @@ Template.serialnumberlist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblSerialNumberList' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblSerialNumberList' });
     },
     currentdate: () => {
         var currentDate = new Date();

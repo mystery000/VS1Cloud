@@ -4,7 +4,7 @@ import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
 import {ProductService} from "../product/product-service";
 import {OrganisationService} from '../js/organisation-service';
-import '../lib/global/erp-objects';
+import '../lib/global/erp-objects.js';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import {Random} from 'meteor/random';
@@ -16,11 +16,11 @@ import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
 import LoadingOverlay from '../LoadingOverlay';
-import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
-import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
-import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
-import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
-import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line';
+import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget.js';
+import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard.js';
+import { getCurrentCurrencySymbol } from '../popUps/currnecypopup.js';
+import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions.js';
+import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line.js';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -365,7 +365,7 @@ Template.new_quote.onRendered(() => {
             lineItems.push(lineItemObj);
         });
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -380,11 +380,11 @@ Template.new_quote.onRendered(() => {
         let item_quote = '';
         if (number == 1) {
             item_quote = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                 o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                 o_phone: Template.new_quote.__helpers.get('companyphone').call(),
@@ -429,11 +429,11 @@ Template.new_quote.onRendered(() => {
             };
         } else if (number == 2) {
             item_quote = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                 o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                 o_phone: Template.new_quote.__helpers.get('companyphone').call(),
@@ -478,11 +478,11 @@ Template.new_quote.onRendered(() => {
             };
         } else {
             item_quote = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                 o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                 o_phone: Template.new_quote.__helpers.get('companyphone').call(),
@@ -642,7 +642,7 @@ Template.new_quote.onRendered(() => {
             lineItems.push(lineItemObj);
         });
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -659,11 +659,11 @@ Template.new_quote.onRendered(() => {
 
         if (number == 1) {
             item_quote = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name:  Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                    o_url: localStorage.getItem('vs1companyURL'),
+                    o_name:  localStorage.getItem('vs1companyName'),
+                    o_address: localStorage.getItem('vs1companyaddress1'),
+                    o_city: localStorage.getItem('vs1companyCity'),
+                    o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                     o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                     o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                     o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
@@ -702,11 +702,11 @@ Template.new_quote.onRendered(() => {
 
         } else if(number == 2) {
             item_quote = {
-                    o_url: Session.get('vs1companyURL'),
-                        o_name:  Session.get('vs1companyName'),
-                        o_address: Session.get('vs1companyaddress1'),
-                        o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                    o_url: localStorage.getItem('vs1companyURL'),
+                        o_name:  localStorage.getItem('vs1companyName'),
+                        o_address: localStorage.getItem('vs1companyaddress1'),
+                        o_city: localStorage.getItem('vs1companyCity'),
+                        o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                         o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                         o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                         o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
@@ -744,11 +744,11 @@ Template.new_quote.onRendered(() => {
                 };
         } else {
             item_quote = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name:  Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                    o_url: localStorage.getItem('vs1companyURL'),
+                    o_name:  localStorage.getItem('vs1companyName'),
+                    o_address: localStorage.getItem('vs1companyaddress1'),
+                    o_city: localStorage.getItem('vs1companyCity'),
+                    o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                     o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                     o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                     o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
@@ -1446,8 +1446,8 @@ Template.new_quote.onRendered(() => {
     templateObject.getAllClients();
 
     templateObject.getOrganisationDetails = function() {
-        let account_id = Session.get('vs1companyStripeID') || '';
-        let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+        let account_id = localStorage.getItem('vs1companyStripeID') || '';
+        let stripe_fee = localStorage.getItem('vs1companyStripeFeeMethod') || 'apply';
         templateObject.accountID.set(account_id);
         templateObject.stripe_fee_method.set(stripe_fee);
     };
@@ -1592,7 +1592,7 @@ Template.new_quote.onRendered(() => {
                             termsname: data.ttermsvs1[i].TermsName || ' ',
                         };
                         if (data.ttermsvs1[i].isSalesdefault == true) {
-                            Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                            localStorage.setItem('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                             templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                         }
                         termrecords.push(termrecordObj);
@@ -1620,7 +1620,7 @@ Template.new_quote.onRendered(() => {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
                     if (data.ttermsvs1[i].isSalesdefault == true) {
-                        Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+                        localStorage.setItem('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                         templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                     }
                     termrecords.push(termrecordObj);
@@ -1634,7 +1634,7 @@ Template.new_quote.onRendered(() => {
     let url = FlowRouter.current().path;
     let getso_id = url.split('?id=');
     let invoiceId = getso_id[getso_id.length - 1];
-    let bankDetails = Session.get('vs1companyBankDetails') || '';
+    let bankDetails = localStorage.getItem('vs1companyBankDetails') || '';
     //$('.bankDetails').html(bankDetails.replace(/[\r\n]/g, "<br />"));
     if (url.includes("id") && url.includes("total")) {
         url = new URL(window.location.href);
@@ -1895,7 +1895,7 @@ Template.new_quote.onRendered(() => {
 
 
 
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+                                Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                                     if (error) {
 
 
@@ -2240,7 +2240,7 @@ Template.new_quote.onRendered(() => {
 
 
 
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                                         if (error) {
 
 
@@ -2465,7 +2465,7 @@ Template.new_quote.onRendered(() => {
 
 
 
-                                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+                                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                                         if (error) {
 
 
@@ -2806,7 +2806,7 @@ Template.new_quote.onRendered(() => {
 
 
 
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                                 if (error) {
 
 
@@ -2889,7 +2889,7 @@ Template.new_quote.onRendered(() => {
                     let erpInvoiceId = getso_id;
 
 
-                    let mailFromName = Session.get('vs1companyName');
+                    let mailFromName = localStorage.getItem('vs1companyName');
                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                     let customerEmailName = $('#edtCustomerName').val();
                     let checkEmailData = url.searchParams.get("email");
@@ -3193,7 +3193,7 @@ Template.new_quote.onRendered(() => {
         }, 200);
         templateObject.quoterecord.set(quoterecord);
         if (templateObject.quoterecord.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                 if (error) {
 
                 } else {
@@ -3454,7 +3454,7 @@ Template.new_quote.onRendered(() => {
         templateObject.selectedCurrency.set(quoterecord.currency);
         templateObject.inputSelectedCurrency.set(quoterecord.currency);
         if (templateObject.quoterecord.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
                 if (error) {
 
                 } else {
@@ -4542,7 +4542,7 @@ Template.new_quote.onRendered(() => {
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     return storage.includes('BasedOnType_');
                 });
                 let j = basedOnTypeStorages.length;
@@ -4666,7 +4666,7 @@ Template.new_quote.onRendered(() => {
         });
         let id = $('.printID').attr("id") || "new";
         const erpGet = erpDb();
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let currencyname = (CountryAbbr).toLowerCase();
@@ -5395,7 +5395,7 @@ Template.new_quote.helpers({
         return template_numbers;
     },
     isBatchSerialNoTracking: () => {
-        return Session.get('CloudShowSerial') || false;
+        return localStorage.getItem('CloudShowSerial') || false;
     },
     vs1companyBankName: () => {
         return localStorage.getItem('vs1companyBankName') || '';
@@ -5480,13 +5480,13 @@ Template.new_quote.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'new_quote'
         });
     },
     salesCloudGridPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblQuoteLine'
         });
     },
@@ -5510,43 +5510,43 @@ Template.new_quote.helpers({
         });
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () => {
-         let phone = "Phone: "+ Session.get('vs1companyPhone');
+         let phone = "Phone: "+ localStorage.getItem('vs1companyPhone');
          return phone;
     },
     companyabn: () => { //Update Company ABN
-        let countryABNValue = Session.get("vs1companyABN");
+        let countryABNValue = localStorage.getItem("vs1companyABN");
         // if (LoggedCountry == "South Africa") {
-        //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+        //     countryABNValue = "Vat No: " + localStorage.getItem("vs1companyABN");
         // }
         return countryABNValue;
     },
     companyReg: () => { //Add Company Reg
         let countryRegValue = '';
         if(LoggedCountry== "South Africa"){
-            countryRegValue = "Reg No: " + Session.get('vs1companyReg');
+            countryRegValue = "Reg No: " + localStorage.getItem('vs1companyReg');
         }
         return countryRegValue;
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
     isMobileDevices: () => {
         let isMobile = false;
@@ -5558,7 +5558,7 @@ Template.new_quote.helpers({
     },
     loggedInCountryVAT: () => {
         let countryVatLabel ="GST";
-        if(Session.get('ERPLoggedCountry') == "South Africa"){
+        if(localStorage.getItem('ERPLoggedCountry') == "South Africa"){
             countryVatLabel = "VAT";
         }
         return countryVatLabel;
@@ -6282,6 +6282,7 @@ Template.new_quote.events({
         $('.chkUnitPriceEx').prop("checked", true);
         $('.chkUnitPriceInc').prop("checked", false);
     },
+
     'click #btnCustomFileds': function(event) {
         const x = document.getElementById("divCustomFields");
         if (x.style.display === "none") {
@@ -6796,7 +6797,7 @@ Template.new_quote.events({
         const printTemplate = [];
         LoadingOverlay.show();
         const quotes = $('input[name="Quotes"]:checked').val();
-        let emid = Session.get('mySessionEmployeeLoggedID');
+        let emid = localStorage.getItem('mySessionEmployeeLoggedID');
         sideBarService.getTemplateNameandEmployeId("Quotes",emid,1).then(function (data) {
             let templateid = data.ttemplatesettings;
             const id = templateid[0].fields.ID;
@@ -6804,7 +6805,7 @@ Template.new_quote.events({
                 type: "TTemplateSettings",
                 fields: {
                     ID: parseInt(id),
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     GlobalRef: "Quotes",
                     Description: $('input[name="Quotes_1"]').val(),
@@ -6823,7 +6824,7 @@ Template.new_quote.events({
             let objDetails = {
                 type: "TTemplateSettings",
                 fields: {
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     Description: $('input[name="Quotes_1"]').val(),
                     Template: "1",
@@ -6846,7 +6847,7 @@ Template.new_quote.events({
                 type: "TTemplateSettings",
                 fields: {
                     ID: parseInt(id),
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     GlobalRef: "Quotes",
                     Description: $('input[name="Quotes_2"]').val(),
@@ -6865,7 +6866,7 @@ Template.new_quote.events({
             let objDetails = {
                 type: "TTemplateSettings",
                 fields: {
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     Description: $('input[name="Quotes_2"]').val(),
                     Template: "2",
@@ -6887,7 +6888,7 @@ Template.new_quote.events({
                 type: "TTemplateSettings",
                 fields: {
                     ID: parseInt(id),
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     GlobalRef: "Quotes",
                     Description: $('input[name="Quotes_3"]').val(),
@@ -6907,7 +6908,7 @@ Template.new_quote.events({
             let objDetails = {
                 type: "TTemplateSettings",
                 fields: {
-                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
                     SettingName: "Quotes",
                     Description: $('input[name="Quotes_3"]').val(),
                     Template: "3",
@@ -7595,7 +7596,7 @@ Template.new_quote.events({
             }
             let customer = $('#edtCustomerName').val();
             const customerID = $('#edtCustomerEmail').attr('customerid');
-            let company = Session.get('vs1companyName');
+            let company = localStorage.getItem('vs1companyName');
             let vs1User = localStorage.getItem('mySession');
             let customerEmail = $('#edtCustomerEmail').val();
             let currencyname = (CountryAbbr).toLowerCase();
@@ -7784,7 +7785,7 @@ Template.new_quote.events({
                     };
                     attachment.push(pdfObject);
                     let erpInvoiceId = objDetails.fields.ID;
-                    let mailFromName = Session.get('vs1companyName');
+                    let mailFromName = localStorage.getItem('vs1companyName');
                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                     let customerEmailName = $('#edtCustomerName').val();
                     let checkEmailData = $('#edtCustomerEmail').val();
@@ -8065,7 +8066,7 @@ Template.new_quote.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -8129,7 +8130,7 @@ Template.new_quote.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_')
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -8194,7 +8195,7 @@ Template.new_quote.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')☻
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -8225,7 +8226,7 @@ Template.new_quote.events({
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
                             return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
+                            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')☻
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -8260,8 +8261,8 @@ Template.new_quote.events({
                 addAttachment();
 
                 const getcurrentCloudDetails = CloudUser.findOne({
-                    _id: Session.get('mycloudLogonID'),
-                    clouddatabaseID: Session.get('mycloudLogonDBID')
+                    _id: localStorage.getItem('mycloudLogonID'),
+                    clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                 });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
@@ -8510,7 +8511,21 @@ Template.new_quote.events({
             $('.colSerialNo').removeClass('showColumn');
         }
     },
+    "click .chkFixedAsset": function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colFixedAsset').addClass('showColumn');
+            $('.colFixedAsset').removeClass('hiddenColumn');
+        } else {
+            $('.colFixedAsset').addClass('hiddenColumn');
+            $('.colFixedAsset').removeClass('showColumn');
+        }
+    },
     // display settings
+    'change .rngRangeFixedAsset': function(event) {
+        let range = $(event.target).val();
+        $(".spWidthFixedAsset").html(range);
+        $('.colFixedAsset').css('width', range);
+    },
     'change .rngRangeProductName': function(event) {
         let range = $(event.target).val();
         // $(".spWidthProductName").html(range);
@@ -8586,8 +8601,8 @@ Template.new_quote.events({
 
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
+            _id: localStorage.getItem('mycloudLogonID'),
+            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -8757,7 +8772,7 @@ Template.new_quote.events({
                     lineItems.push(lineItemObj);
                 });
                 const erpGet = erpDb();
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let customerEmail = $('#edtCustomerEmail').val();
                 let currencyname = (CountryAbbr).toLowerCase();
@@ -8775,7 +8790,7 @@ Template.new_quote.events({
                 let customername = $('#edtCustomerName');
                 let name = $('#edtCustomerEmail').attr('customerfirstname');
                 let surname = $('#edtCustomerEmail').attr('customerlastname');
-                let company = Session.get('vs1companyName');
+                let company = localStorage.getItem('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let customerEmail = $('#edtCustomerEmail').val();
                 let customer = $('#edtCustomerName').val();
@@ -9009,7 +9024,7 @@ Template.new_quote.events({
                             let erpInvoiceId = objDetails.fields.ID;
 
 
-                            let mailFromName = Session.get('vs1companyName');
+                            let mailFromName = localStorage.getItem('vs1companyName');
                             let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                             let customerEmailName = $('#edtCustomerName').val();
                             let checkEmailData = $('#edtCustomerEmail').val();
@@ -9469,7 +9484,7 @@ Template.new_quote.events({
 
             let customer = $('#edtCustomerName').val();
             let customerEmail = $('#edtCustomerEmail').val();
-            let company = Session.get('vs1companyName');
+            let company = localStorage.getItem('vs1companyName');
             let vs1User = localStorage.getItem('mySession');
             let currencyname = (CountryAbbr).toLowerCase();
             const customerID = $('#edtCustomerEmail').attr('customerid');
@@ -9574,8 +9589,8 @@ Template.new_quote.events({
                 let linesave = objDetails.fields.ID;
 
                 var getcurrentCloudDetails = CloudUser.findOne({
-                    _id: Session.get('mycloudLogonID'),
-                    clouddatabaseID: Session.get('mycloudLogonDBID')
+                    _id: localStorage.getItem('mycloudLogonID'),
+                    clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
                 });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
@@ -9846,7 +9861,7 @@ Template.new_quote.events({
     //             }
     //             let customer = $('#edtCustomerName').val();
     //             let customerEmail = $('#edtCustomerEmail').val();
-    //             let company = Session.get('vs1companyName');
+    //             let company = localStorage.getItem('vs1companyName');
     //             let vs1User = localStorage.getItem('mySession');
     //             let currencyname = (CountryAbbr).toLowerCase();
     //             const customerID = $('#edtCustomerEmail').attr('customerid');
@@ -9950,8 +9965,8 @@ Template.new_quote.events({
     //                 let linesave = objDetails.fields.ID;
 
     //                 const getcurrentCloudDetails = CloudUser.findOne({
-    //                     _id: Session.get('mycloudLogonID'),
-    //                     clouddatabaseID: Session.get('mycloudLogonDBID')
+    //                     _id: localStorage.getItem('mycloudLogonID'),
+    //                     clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
     //                 });
     //                 if (getcurrentCloudDetails) {
     //                     if (getcurrentCloudDetails._id.length > 0) {
@@ -10214,7 +10229,7 @@ Template.new_quote.events({
     //                 getchkcustomField2 = false;
     //             }
 
-    //             let company = Session.get('vs1companyName');
+    //             let company = localStorage.getItem('vs1companyName');
     //             let vs1User = localStorage.getItem('mySession');
     //             let customerEmail = $('#edtCustomerEmail').val();
     //             let customer = $('#edtCustomerName').val();
@@ -10323,8 +10338,8 @@ Template.new_quote.events({
     //                 let linesave = objDetails.fields.ID;
 
     //                 var getcurrentCloudDetails = CloudUser.findOne({
-    //                     _id: Session.get('mycloudLogonID'),
-    //                     clouddatabaseID: Session.get('mycloudLogonDBID')
+    //                     _id: localStorage.getItem('mycloudLogonID'),
+    //                     clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
     //                 });
     //                 if (getcurrentCloudDetails) {
     //                     if (getcurrentCloudDetails._id.length > 0) {

@@ -16,6 +16,7 @@ export default class PayrollSettingsOvertimes {
     rateType = null,
     isDefault = false,
     searchByRuleName = false,
+    rate,
   }) {
     this.id = id || ObjectManager.init(erpObject.TPayrollSettingOvertimes);
     this.active = active;
@@ -26,6 +27,7 @@ export default class PayrollSettingsOvertimes {
     this.day = day;
     this.isDefault = isDefault;
     this.searchByRuleName = searchByRuleName;
+    this.rate = rate;
     if (rateType) 
       this.setRateType(rateType);
     }
@@ -65,53 +67,51 @@ export default class PayrollSettingsOvertimes {
   static getDefaults() {
     return [
       new PayrollSettingsOvertimes({
-        //id: 1,
-        active: true,
-        isDefault: true,
-        hourlyMultiplier: 1.5,
-        hours: 8,
-        rateTypeId: 1,
-        rule: "Hourly Rate"
-      }),
-      new PayrollSettingsOvertimes({
-        //id: 2,
         active: true,
         isDefault: true,
         hourlyMultiplier: 1,
-        hours: 1.5,
+        hours: 8,
         rateTypeId: 1,
-        rule: "Hourly Rate (Time and Half)"
+        rule: "8hours",
+        rate:"Normal",
       }),
       new PayrollSettingsOvertimes({
-        //id: 3,
+        active: true,
+        isDefault: true,
+        hourlyMultiplier: 1.5,
+        hours: 1.5,
+        rateTypeId: 1,
+        rule: "Greater than 8 hours",
+        rate:"Time & Half"
+      }),
+      new PayrollSettingsOvertimes({
         active: true,
         isDefault: true,
         hourlyMultiplier: 2,
         hours: 9.5,
         rateTypeId: 1,
-        rule: "Hourly Rate (Double Time)"
+        rule: "Greater than 12 hours",
+        rate:"Double Time"
       }),
       new PayrollSettingsOvertimes({
-        //id: 3,
         active: true,
         isDefault: true,
         hourlyMultiplier: 2,
-        //hours: 9.5,
         rateTypeId: 1,
-        rule: "Weekend (Saturday)",
-        day: "saturday",
-        searchByRuleName: true
+        rule: "Saturday",
+        day: "Saturday",
+        searchByRuleName: true,
+        rate:"Weekend"
       }),
       new PayrollSettingsOvertimes({
-        //id: 3,
         active: true,
         isDefault: true,
         hourlyMultiplier: 3,
-        //hours: 9.5,
         rateTypeId: 1,
-        rule: "Weekend (Sunday)",
-        day: "sunday",
+        rule: "Sunday",
+        day: "Sunday",
         searchByRuleName: true,
+        rate:"Weekend"
       })
     ];
   }

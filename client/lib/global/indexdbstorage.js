@@ -41,6 +41,7 @@ openDb = function(dbName) {
             db.createObjectStore("TProductList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TCustomerVS1", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TCustomerVS1List", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TSupplierProduct", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TSupplierVS1", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TSupplierVS1List", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TAccountVS1", { keyPath: "EmployeeEmail" });
@@ -158,6 +159,8 @@ openDb = function(dbName) {
             db.createObjectStore("TUnitOfMeasureList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProductBarcode", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProductPicture", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TProductBin", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TProductMovementList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TERPForm", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TEmployeeFormAccess", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TEmployeeFormAccessDetail", { keyPath: "EmployeeEmail" });
@@ -172,6 +175,8 @@ openDb = function(dbName) {
             db.createObjectStore("TStatementList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TStatementForCustomer", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TJobEx", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TJobSalesSummary", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TJobProfitability", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TERPCombinedContacts", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TPaymentList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TOtherContactVS1", { keyPath: "EmployeeEmail" });
@@ -595,7 +600,7 @@ getStoreToDelete = async function(email) {
 openDbCheckVersion = async function() {
     var promiseversion = new Promise((resolve, reject) => {
         var versionExists = false;
-        let dbReqVersion = indexedDB.open('TDatabaseVersion', 107);
+        let dbReqVersion = indexedDB.open('TDatabaseVersion', 200);
         dbReqVersion.onsuccess = function() {
             resolve(versionExists);
         };

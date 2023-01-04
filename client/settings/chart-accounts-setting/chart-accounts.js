@@ -508,7 +508,7 @@ Template.chartOfAccountSettings.events({
             templateObj.records.set(chartRecords);
         }
         templateObj.selectedObj.set(toBeDeleted);
-        Session.set('selectedRecords', templateObj.selectedObj.get().length);
+        localStorage.setItem('selectedRecords', templateObj.selectedObj.get().length);
 
         let flag = true;
         let currentDataTablePage;
@@ -623,7 +623,7 @@ Template.chartOfAccountSettings.events({
         chartRecords[currentTableId] = records;
         templateObj.records.set(chartRecords);
         templateObj.selectedObj.set(templateObj.toBeDeleted);
-        Session.set('selectedRecords', templateObj.selectedObj.get().length);
+        localStorage.setItem('selectedRecords', templateObj.selectedObj.get().length);
 
     },
 
@@ -952,7 +952,7 @@ Template.chartOfAccountSettings.events({
     'click #close-draft-aw-notification':function(){
         let tempObj = Template.instance();
         tempObj.$(".notify").hide();
-        Session.set('addBankAccount',false);
+        localStorage.setItem('addBankAccount',false);
     }
 });
 
@@ -965,7 +965,7 @@ Template.chartOfAccountSettings.helpers({
         return Template.instance().taxraterecords.get();
     },
     selectedrecords: () => {
-        return Session.get('selectedRecords');
+        return localStorage.getItem('selectedRecords');
     },
 
     records: () => {
@@ -990,19 +990,19 @@ Template.chartOfAccountSettings.helpers({
         return Template.instance().newAccountType.get();
     },
     addSingleBankAccount: () => {
-        return Session.get('addSingleBankAccount');
+        return localStorage.getItem('addSingleBankAccount');
     },
     addMultipleBankAccount: () => {
-        return Session.get('addMultipleBankAccount');
+        return localStorage.getItem('addMultipleBankAccount');
     },
     addBankAccount: () => {
-        return Session.get('addBankAccount');
+        return localStorage.getItem('addBankAccount');
     },
     accountName: () => {
-        return Session.get('accountName');
+        return localStorage.getItem('accountName');
     },
     accountCode: () => {
-        return Session.get('accountCode');
+        return localStorage.getItem('accountCode');
     }
 });
 
@@ -1116,7 +1116,7 @@ Template.chartOfAccountSettings.onRendered(function () {
                     recordsData.allaccountlist = recordsCopy;
                     templateObject.records.set(recordsData);
                     templateObject.selectedObj.set(templateObject.toBeDeleted);
-                    Session.set('selectedRecords', templateObject.selectedObj.get().length);
+                    localStorage.setItem('selectedRecords', templateObject.selectedObj.get().length);
                     $('#head-check-allaccountlist').prop('checked', false);
                     $('.checkbox-allaccountlist').prop('checked', false);
                 });
@@ -1188,7 +1188,7 @@ Template.chartOfAccountSettings.onRendered(function () {
                     recordsData.accountassetslist = recordsCopy;
                     templateObject.records.set(recordsData);
                     templateObject.selectedObj.set(templateObject.toBeDeleted);
-                    Session.set('selectedRecords', templateObject.selectedObj.get().length);
+                    localStorage.setItem('selectedRecords', templateObject.selectedObj.get().length);
                     $('#head-check-accountassetslist').prop('checked', false);
                     $('.checkbox-accountassetslist').prop('checked', false);
                 });
@@ -1261,7 +1261,7 @@ Template.chartOfAccountSettings.onRendered(function () {
                     recordsData.accountliabilitylist = recordsCopy;
                     templateObject.records.set(recordsData);
                     templateObject.selectedObj.set(templateObject.toBeDeleted);
-                    Session.set('selectedRecords', templateObject.selectedObj.get().length);
+                    localStorage.setItem('selectedRecords', templateObject.selectedObj.get().length);
                     $('#head-check-accountliabilitylist').prop('checked', false);
                     $('.checkbox-accountliabilitylist').prop('checked', false);
                 });
@@ -1334,7 +1334,7 @@ Template.chartOfAccountSettings.onRendered(function () {
                     recordsData.accountequitylist = recordsCopy;
                     templateObject.records.set(recordsData);
                     templateObject.selectedObj.set(templateObject.toBeDeleted);
-                    Session.set('selectedRecords', templateObject.selectedObj.get().length);
+                    localStorage.setItem('selectedRecords', templateObject.selectedObj.get().length);
                     $('#head-check-accountequitylist').prop('checked', false);
                     $('.checkbox-accountequitylist').prop('checked', false);
 
@@ -1408,7 +1408,7 @@ Template.chartOfAccountSettings.onRendered(function () {
                     recordsData.accountexpenselist = recordsCopy;
                     templateObject.records.set(recordsData);
                     templateObject.selectedObj.set(templateObject.toBeDeleted);
-                    Session.set('selectedRecords', templateObject.selectedObj.get().length);
+                    localStorage.setItem('selectedRecords', templateObject.selectedObj.get().length);
                     $('#head-check-accountexpenselist').prop('checked', false);
                     $('.checkbox-accountexpenselist').prop('checked', false);
 
@@ -1484,7 +1484,7 @@ Template.chartOfAccountSettings.onRendered(function () {
                     recordsData.accountrevenuelist = recordsCopy;
                     templateObject.records.set(recordsData);
                     templateObject.selectedObj.set(templateObject.toBeDeleted);
-                    Session.set('selectedRecords', templateObject.selectedObj.get().length);
+                    localStorage.setItem('selectedRecords', templateObject.selectedObj.get().length);
                     $('#head-check-accountrevenuelist').prop('checked', false);
                     $('.checkbox-accountrevenuelist').prop('checked', false);
                 });
@@ -1558,7 +1558,7 @@ Template.chartOfAccountSettings.onRendered(function () {
                     recordsData.accountarchivelist = recordsCopy;
                     templateObject.records.set(recordsData);
                     templateObject.selectedObj.set(templateObject.toBeDeleted);
-                    Session.set('selectedRecords', templateObject.selectedObj.get().length);
+                    localStorage.setItem('selectedRecords', templateObject.selectedObj.get().length);
                     $('#head-check-accountarchivelist').prop('checked', false);
                     $('.checkbox-accountarchivelist').prop('checked', false);
 

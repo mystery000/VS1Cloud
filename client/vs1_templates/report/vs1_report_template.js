@@ -6,6 +6,10 @@ import '../../lib/global/indexdbstorage.js';
 import { ReportService } from "../../reports/report-service";
 import TableHandler from '../../js/Table/TableHandler';
 import moment from 'moment';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './vs1_report_template.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -495,15 +499,18 @@ Template.vs1_report_template.onRendered(function () {
         break;
       case "trialbalance":
         reset_data = [
-          { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "86" },
-          { index: 2, label: 'Account Number', class: 'colAccountNo', active: true, display: true, width: "86" },
-          { index: 3, label: 'Account', class: 'colAccount', active: true, display: true, width: "192" },
-          { index: 4, label: 'Credits (Ex)', class: 'colCreditsEx', active: true, display: true, width: "137" },
-          { index: 5, label: 'Credits (Inc)', class: 'colCreditsInc', active: true, display: true, width: "85" },
-          { index: 6, label: 'Debits (Ex)', class: 'colDebitsEx', active: true, display: true, width: "85" },
-          { index: 7, label: 'Debits (Inc)', class: 'colDebitsInc', active: true, display: true, width: "85" },
-          { index: 8, label: 'Account Name Only', class: 'colAccountNameOnly', active: false, display: true, width: "85" },
-          { index: 9, label: 'TransID', class: 'colTransID', active: false, display: true, width: "85" },
+          { index: 1, label: 'ID', class:'colID', active: false, display: true, width: "50" },  
+          { index: 2, label: 'Account', class:'colAccount', active: true, display: true, width: "150" },
+          { index: 3, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "250" },
+          { index: 4, label: 'Account Name Only', class:'colAccountNameOnly', active: false, display: true, width: "200" },
+          { index: 5, label: 'Account Number', class:'colAccountNo', active: true, display: true, width: "150" },
+          { index: 6, label: 'Credits (Ex)', class:'colCreditsEx', active: true, display: true, width: "120" },
+          { index: 7, label: 'Credits (Inc)', class:'colCreditsInc', active: true, display: true, width: "120" },
+          { index: 8, label: 'Debits (Ex)', class:'colDebitsEx', active: true, display: true, width: "120" },
+          { index: 9, label: 'Debits (Inc)', class:'colDebitsInc', active: true, display: true, width: "120" },
+          { index: 10, label: 'Sort ID', class:'colSortID', active: false, display: true, width: "80" },
+          { index: 11, label: 'Sort Order', class:'colSortOrder', active: false, display: true, width: "80" },
+          { index: 12, label: 'Trans ID', class:'colTransID', active: false, display: true, width: "80" },      
         ]
         break;
       case "customerdetailsreport":
@@ -528,26 +535,26 @@ Template.vs1_report_template.onRendered(function () {
         break;
       case "customersummaryreport":
         reset_data = [
-          { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "100" },
-          { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "100" },
+          { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "200" },
+          { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "150" },
           { index: 3, label: 'Rep', class: 'colRep', active: true, display: true, width: "100" },
           { index: 4, label: 'Type', class: 'colType', active: true, display: true, width: "100" },
-          { index: 5, label: 'Invoice Number', class: 'colInvoiceNumber', active: true, display: true, width: "100" },
-          { index: 6, label: 'SaleDate', class: 'colSaleDate', active: true, display: true, width: "100" },
-          { index: 7, label: 'DueDate', class: 'colDueDate', active: true, display: true, width: "100" },
-          { index: 8, label: 'Total Amount (Ex)', class: 'colTotalAEX', active: true, display: true, width: "100" },
-          { index: 9, label: 'Total Amount (Inc)', class: 'colTotalAInc', active: true, display: true, width: "100" },
+          { index: 5, label: 'Invoice Number', class: 'colInvoiceNumber', active: true, display: true, width: "130" },
+          { index: 6, label: 'SaleDate', class: 'colSaleDate', active: true, display: true, width: "160" },
+          { index: 7, label: 'DueDate', class: 'colDueDate', active: true, display: true, width: "160" },
+          { index: 8, label: 'Total Amount (Ex)', class: 'colTotalAEX', active: true, display: true, width: "150" },
+          { index: 9, label: 'Total Amount (Inc)', class: 'colTotalAInc', active: true, display: true, width: "150" },
           { index: 10, label: 'Gross Profit', class: 'colGrossProfit', active: true, display: true, width: "100" },
-          { index: 11, label: 'Margin', class: 'colMargin', active: true, display: true, width: "100" },
-          { index: 12, label: 'Address', class: 'colAddress', active: true, display: true, width: "100" },
-          { index: 13, label: 'Address 2', class: 'colAddress2', active: true, display: true, width: "100" },
+          { index: 11, label: 'Margin', class: 'colMargin', active: false, display: true, width: "100" },
+          { index: 12, label: 'Address', class: 'colAddress', active: true, display: true, width: "200" },
+          { index: 13, label: 'Address 2', class: 'colAddress2', active: true, display: true, width: "200" },
           { index: 14, label: 'Suburb', class: 'colSuburb', active: true, display: true, width: "100" },
           { index: 15, label: 'Postcode', class: 'colPostcode', active: true, display: true, width: "100" },
           { index: 16, label: 'State', class: 'colState', active: true, display: true, width: "100" },
           { index: 17, label: 'FaxNumber', class: 'colFaxNumber', active: true, display: true, width: "100" },
           { index: 18, label: 'Sale ID', class: 'colSaleID', active: false, display: true, width: "100" },
           { index: 19, label: 'Customer ID', class: 'colCustomerID', active: false, display: true, width: "100" },
-          { index: 20, label: 'Address 3', class: 'colAddress3', active: false, display: true, width: "100" },
+          { index: 20, label: 'Address 3', class: 'colAddress3', active: false, display: true, width: "200" },
           { index: 21, label: 'Country', class: 'colCountry', active: false, display: true, width: "100" },
           { index: 22, label: 'Details', class: 'colDetails', active: false, display: true, width: "100" },
           { index: 23, label: 'Client ID', class: 'colClientID', active: false, display: true, width: "100" },
@@ -557,7 +564,7 @@ Template.vs1_report_template.onRendered(function () {
           { index: 27, label: 'Customer Type', class: 'colCustomerType', active: false, display: true, width: "100" },
           { index: 28, label: 'Email', class: 'colEmail', active: false, display: true, width: "100" },
           { index: 29, label: 'Total Cost', class: 'colTotalCost', active: false, display: true, width: "100" },
-        ]
+        ];
         break;
       // case "trialbalance":
       //     reset_data = [
@@ -683,114 +690,73 @@ Template.vs1_report_template.onRendered(function () {
         break;
       case "jobsalessummary":
         reset_data = [
-          { index: 1, label: 'Customer ID', class: 'colCustomerID', active: true, display: true, width: "100" },
-          { index: 2, label: 'Contact Name', class: 'colContactName', active: true, display: true, width: "100" },
-          { index: 3, label: 'Job Customer Name', class: 'colJobCustomerName', active: true, display: true, width: "100" },
+          { index: 1, label: 'Customer', class: 'colCustomer', active: true, display: true, width: "100" },
+          { index: 2, label: 'Job Customer', class: 'colJobCustomer', active: true, display: true, width: "150" },
+          { index: 3, label: 'Job Number', class: 'colJobNumber', active: true, display: true, width: "100" },
           { index: 4, label: 'Job Name', class: 'colJobName', active: true, display: true, width: "100" },
-          { index: 5, label: 'Sale Date Time', class: 'colSaleDateTime', active: true, display: true, width: "100" },
-          { index: 6, label: 'Sale Total Ex', class: 'colSaleTotalEx', active: true, display: true, width: "100" },
-          { index: 7, label: 'Sale Amount Inc', class: 'colSaleAmountInc', active: true, display: true, width: "100" },
-          { index: 8, label: 'Sale Tax', class: 'colSaleTax', active: true, display: true, width: "100" },
-          { index: 9, label: 'Sale Cust Field1', class: 'colSaleCustField1', active: true, display: true, width: "100" },
-          { index: 10, label: 'Sale Cust Field2', class: 'colSaleCustField2', active: true, display: true, width: "100" },
-          { index: 11, label: 'Sale Cust Field3', class: 'colSaleCustField3', active: true, display: true, width: "100" },
-          { index: 12, label: 'Sale Cust Field4', class: 'colSaleCustField4', active: true, display: true, width: "100" },
-          { index: 13, label: 'Sale Cust Field5', class: 'colSaleCustField5', active: true, display: true, width: "100" },
-          { index: 14, label: 'Sale Cust Field6', class: 'colSaleCustField6', active: true, display: true, width: "100" },
-          { index: 15, label: 'Sale Cust Field7', class: 'colSaleCustField7', active: true, display: true, width: "100" },
-          { index: 16, label: 'Sale Cust Field8', class: 'colSaleCustField8', active: true, display: true, width: "100" },
-          { index: 17, label: 'Sale Cust Field9', class: 'colSaleCustField9', active: true, display: true, width: "100" },
-          { index: 18, label: 'Sale Cust Field10', class: 'colSaleCustField10', active: true, display: true, width: "100" },
-          { index: 19, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "100" },
-          { index: 20, label: 'Uom Qty Shipped', class: 'colUomQtyShipped', active: true, display: true, width: "100" },
-          { index: 21, label: 'Uom Name', class: 'colUomName', active: true, display: true, width: "100" },
-          { index: 22, label: 'Amount Ex', class: 'colAmountEx', active: true, display: true, width: "100" },
-          { index: 23, label: 'Amount Inc', class: 'colAmountInc', active: true, display: true, width: "100" },
-          { index: 24, label: 'Amount Tax', class: 'colAmountTax', active: true, display: true, width: "100" },
-          { index: 25, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "100" },
-          { index: 26, label: 'Amount Discount', class: 'colAmountDiscount', active: true, display: true, width: "100" },
-          { index: 27, label: 'Discount Per Unit', class: 'colDiscountPerUnit', active: true, display: true, width: "100" },
-          { index: 28, label: 'DetailType', class: 'colDetailType', active: false, display: true, width: "100" },
-          { index: 29, label: 'CustomerID', class: 'colCustomerID', active: false, display: true, width: "100" },
-          { index: 30, label: 'ClientNo', class: 'colClientNo', active: false, display: true, width: "100" },
-          { index: 31, label: 'CustomerType', class: 'colCustomerType', active: false, display: true, width: "100" },
-          { index: 32, label: 'CustomerStreet', class: 'colCustomerStreet', active: false, display: true, width: "100" },
-          { index: 33, label: 'CustomerStreet2', class: 'colCustomerStreet2', active: false, display: true, width: "100" },
-          { index: 34, label: 'CustomerStreet3', class: 'colCustomerStreet3', active: false, display: true, width: "100" },
-          { index: 35, label: 'Suburb', class: 'colSuburb', active: false, display: true, width: "100" },
-          { index: 36, label: 'State', class: 'colState', active: false, display: true, width: "100" },
-          { index: 37, label: 'CustomerPostcode', class: 'colCustomerPostcode', active: false, display: true, width: "100" },
-          { index: 39, label: 'JobID', class: 'colJobID', acticve: false, display: true, width: "100" },
-          { index: 40, label: 'JobClientNo', class: 'colJobClientNo', active: false, display: true, width: "100" },
-          { index: 41, label: 'JobRegistration', class: 'colJobRegistration', active: false, display: true, width: "100" },
-          { index: 42, label: 'JobNumber', class: 'colJobNumber', active: false, display: true, width: "100" },
-          { index: 43, label: 'JobWarrantyPeriod', class: 'colJobWarrantyPeriod', active: false, display: true, width: "100" },
-          { index: 44, label: 'JobNotes', class: 'colJobNotes', active: false, display: true, width: "100" },
-          { index: 45, label: 'SaleCustomerName', class: 'colSaleCustomerName', active: false, display: true, width: "100" },
-          { index: 46, label: 'SaleDate', class: 'colSaleDate', active: false, display: true, width: "100" },
-          { index: 47, label: 'SaleDepartment', class: 'colSaleDepartment', active: false, display: true, width: "100" },
-          { index: 48, label: 'SaleComments', class: 'colSaleComments', active: false, display: true, width: "100" },
-          { index: 49, label: 'SaleTerms', class: 'colSaleTerms', active: false, display: true, width: "100" },
-          { index: 50, label: 'SaleCustomerName', class: 'colSaleCustomerName', active: false, display: true, width: "100" },
-          { index: 51, label: 'DocketNumber', class: 'colDocketNumber', active: false, display: true, width: "100" },
-          { index: 52, label: 'MemoLine', class: 'colMemoLine', active: false, display: true, width: "100" },
-          { index: 53, label: 'UomQtySold', class: 'colUomQtySold', active: false, display: true, width: "100" },
-          { index: 54, label: 'UomQtyBackorder ', class: 'colUomQtyBackorder', active: false, display: true, width: "100" },
+          { index: 5, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "100" },
+          { index: 6, label: 'Qty Shipped', class: 'colQtyShipped', active: true, display: true, width: "100" },
+          { index: 7, label: 'Discount', class: 'colDiscount', active: true, display: true, width: "100" },
+          { index: 8, label: 'Tax', class: 'colTax', active: true, display: true, width: "100" },
+          { index: 9, label: 'Amount Ex', class: 'colAmountEx', active: true, display: true, width: "100" },
+          { index: 10, label: 'Amount Inc', class: 'colAmountInc', active: true, display: true, width: "100" },
+          { index: 11, label: 'DetailType', class: 'colDetailType', active: false, display: true, width: "100" },
+          { index: 12, label: 'ParentClientID', class: 'colParentClientID', active: false, display: true, width: "100" },
+          { index: 13, label: 'ClientID', class: 'colClientID', active: false, display: true, width: "100" },
         ]
         break;
       case "jobprofitabilityreport":
         reset_data = [
-          { index: 1, label: 'Company Name', class: 'colCompanyName', active: true, display: true, width: "85" },
-          { index: 2, label: 'Job Name', class: 'colJobName', active: true, display: true, width: "85" },
-          { index: 3, label: 'Job Number', class: 'colJobNumber', active: true, display: true, width: "85" },
-          { index: 4, label: 'Txn Type', class: 'colTxnType', active: true, display: true, width: "85" },
-          { index: 5, label: 'Txn No', class: 'colTxnNo', active: true, display: true, width: "85" },
-          { index: 6, label: 'Cost Ex', class: 'colCostEx', active: true, display: true, width: "85" },
-          { index: 7, label: 'Income Ex', class: 'colIncomeEx', active: true, display: true, width: "85" },
-          { index: 8, label: 'Quoted Ex', class: 'colQuotedEx', active: true, display: true, width: "85" },
-          { index: 9, label: 'Diff Inc Cost', class: 'colDiffIncCost', active: true, display: true, width: "85" },
-          { index: 10, label: '%Diff Inc By Cost', class: 'colDiffIncByCost', active: true, display: true, width: "85" },
-          { index: 11, label: 'Diff Inc Quote', class: 'colDiffIncQuote', active: true, display: true, width: "85" },
-          { index: 12, label: '%Diff Inc By Quote', class: 'colDiffIncByQuote', active: true, display: true, width: "85" },
-          { index: 13, label: 'Backorders', class: 'colBackorders', active: true, display: true, width: "85" },
-          { index: 14, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "85" },
-          { index: 15, label: 'Debit Ex', class: 'colDebitEx', active: true, display: true, width: "85" },
-          { index: 16, label: 'Credit Ex', class: 'colCreditEx', active: true, display: true, width: "85" },
-          { index: 17, label: 'Profit %', class: 'colProfitpercent', active: true, display: true, width: "85" },
-          { index: 18, label: 'Department', class: 'colDepartment', active: true, display: true, width: "85" },
-          { index: 19, label: 'Product', class: 'colProduct', active: true, display: true, width: "85" },
-          { index: 20, label: 'Sub  Group', class: 'colSubGroup', active: true, display: true, width: "85" },
-          { index: 21, label: 'Type', class: 'colType', active: true, display: true, width: "85" },
-          { index: 22, label: 'Dept', class: 'colDept', active: true, display: true, width: "85" },
-          { index: 23, label: 'Area', class: 'colArea', active: true, display: true, width: "85" },
-          { index: 24, label: 'Landed Cost', class: 'colLandedCost', active: true, display: true, width: "85" },
-          { index: 25, label: 'Latestcost', class: 'colLatestcost', active: true, display: true, width: "85" },
-          { index: 26, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "85" },
-          { index: 27, label: 'Last Name', class: 'colLastName', active: true, display: true, width: "85" },
-          { index: 28, label: 'Diff Inc Landedcost', class: 'colDiffIncLandedcost', active: true, display: true, width: "85" },
-          { index: 29, label: '%Diff Inc By Landedcost', class: 'colDiffIncByLandedcost', active: true, display: true, width: "85" },
-          { index: 30, label: 'Diff Inc Latestcost', class: 'colDiffIncLatestcost', active: true, display: true, width: "85" },
-          { index: 31, label: '%Diff Inc By Latestcost', class: 'colDiffIncByLatestcost', active: true, display: true, width: "85" },
-          { index: 32, label: 'Ordered', class: 'colOrderd', active: true, display: true, width: "85" },
-          { index: 33, label: 'Shipped', class: 'colShipped', active: true, display: true, width: "85" },
-          { index: 34, label: 'Back Ordered', class: 'colBackOrdered', active: true, display: true, width: "85" },
-          { index: 35, label: 'CUSTFLD1', class: 'colCUSTFLD1', active: true, display: true, width: "85" },
-          { index: 36, label: 'CUSTFLD2', class: 'colCUSTFLD2', active: true, display: true, width: "85" },
-          { index: 37, label: 'CUSTFLD3', class: 'colCUSTFLD3', active: true, display: true, width: "85" },
-          { index: 39, label: 'CUSTFLD4', class: 'colCUSTFLD4', acticve: true, display: true, width: "85" },
-          { index: 40, label: 'CUSTFLD5', class: 'colCUSTFLD5', active: true, display: true, width: "85" },
-          { index: 41, label: 'CUSTFLD6', class: 'colCUSTFLD6', active: true, display: true, width: "85" },
-          { index: 42, label: 'CUSTFLD7', class: 'colCUSTFLD7', active: true, display: true, width: "85" },
-          { index: 43, label: 'CUSTFLD8', class: 'colCUSTFLD8', active: true, display: true, width: "85" },
-          { index: 44, label: 'JobNotes', class: 'colJobNotes', active: true, display: true, width: "85" },
-          { index: 45, label: 'CUSTFLD9', class: 'colCUSTFLD9', active: true, display: true, width: "85" },
-          { index: 46, label: 'CUSTFLD10', class: 'colCUSTFLD10', active: true, display: true, width: "85" },
-          { index: 47, label: 'CUSTFLD11', class: 'colCUSTFLD11', active: true, display: true, width: "85" },
-          { index: 48, label: 'CUSTFLD12', class: 'colCUSTFLD12', active: true, display: true, width: "85" },
-          { index: 49, label: 'CUSTFLD13', class: 'colCUSTFLD13', active: true, display: true, width: "85" },
-          { index: 50, label: 'CUSTFLD14', class: 'colCUSTFLD14', active: true, display: true, width: "85" },
-          { index: 51, label: 'CUSTFLD15', class: 'colCUSTFLD15', active: true, display: true, width: "85" },
-          { index: 52, label: 'Profit $', class: 'colProfitdoller', active: true, display: true, width: "85" },
+          { index: 1, label: 'Company Name', class: 'colCompanyName', active: true, display: true, width: "120" },
+          { index: 2, label: 'Job Name', class: 'colJobName', active: true, display: true, width: "120" },
+          { index: 3, label: 'Job Number', class: 'colJobNumber', active: true, display: true, width: "120" },
+          { index: 4, label: 'Txn Type', class: 'colTxnType', active: true, display: true, width: "120" },
+          { index: 5, label: 'Txn No', class: 'colTxnNo', active: true, display: true, width: "120" },
+          { index: 6, label: 'Cost Ex', class: 'colCostEx', active: true, display: true, width: "120" },
+          { index: 7, label: 'Income Ex', class: 'colIncomeEx', active: true, display: true, width: "120" },
+          { index: 8, label: 'Quoted Ex', class: 'colQuotedEx', active: true, display: true, width: "120" },
+          { index: 9, label: 'Diff Inc Cost', class: 'colDiffIncCost', active: true, display: true, width: "120" },
+          { index: 10, label: '%Diff Inc By Cost', class: 'colDiffIncByCost', active: true, display: true, width: "120" },
+          { index: 11, label: 'Diff Inc Quote', class: 'colDiffIncQuote', active: true, display: true, width: "120" },
+          { index: 12, label: '%Diff Inc By Quote', class: 'colDiffIncByQuote', active: true, display: true, width: "120" },
+          { index: 13, label: 'Backorders', class: 'colBackorders', active: true, display: true, width: "120" },
+          { index: 14, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "120" },
+          { index: 15, label: 'Debit Ex', class: 'colDebitEx', active: true, display: true, width: "120" },
+          { index: 16, label: 'Credit Ex', class: 'colCreditEx', active: true, display: true, width: "120" },
+          { index: 17, label: 'Profit %', class: 'colProfitpercent', active: true, display: true, width: "120" },
+          { index: 18, label: 'Department', class: 'colDepartment', active: true, display: true, width: "120" },
+          { index: 19, label: 'Product', class: 'colProduct', active: true, display: true, width: "120" },
+          { index: 20, label: 'Sub Group', class: 'colSubGroup', active: true, display: true, width: "120" },
+          { index: 21, label: 'Type', class: 'colType', active: true, display: true, width: "120" },
+          { index: 22, label: 'Dept', class: 'colDept', active: true, display: true, width: "120" },
+          { index: 23, label: 'Area', class: 'colArea', active: true, display: true, width: "120" },
+          { index: 24, label: 'Landed Cost', class: 'colLandedCost', active: true, display: true, width: "120" },
+          { index: 25, label: 'Latestcost', class: 'colLatestcost', active: true, display: true, width: "120" },
+          { index: 26, label: 'Diff Inc Landedcost', class: 'colDiffIncLandedcost', active: true, display: true, width: "120" },
+          { index: 27, label: '%Diff Inc By Landedcost', class: 'colDiffIncByLandedcost', active: true, display: true, width: "120" },
+          { index: 28, label: 'Diff Inc Latestcost', class: 'colDiffIncLatestcost', active: true, display: true, width: "120" },
+          { index: 29, label: '%Diff Inc By Latestcost', class: 'colDiffIncByLatestcost', active: true, display: true, width: "120" },
+          { index: 30, label: 'Ordered', class: 'colOrderd', active: true, display: true, width: "120" },
+          { index: 31, label: 'Shipped', class: 'colShipped', active: true, display: true, width: "120" },
+          { index: 32, label: 'Back Ordered', class: 'colBackOrdered', active: true, display: true, width: "120" },
+          { index: 33, label: 'CUSTFLD1', class: 'colCUSTFLD1', active: true, display: true, width: "120" },
+          { index: 34, label: 'CUSTFLD2', class: 'colCUSTFLD2', active: true, display: true, width: "120" },
+          { index: 35, label: 'CUSTFLD3', class: 'colCUSTFLD3', active: true, display: true, width: "120" },
+          { index: 36, label: 'CUSTFLD4', class: 'colCUSTFLD4', active: true, display: true, width: "120" },
+          { index: 37, label: 'CUSTFLD5', class: 'colCUSTFLD5', active: true, display: true, width: "120" },
+          { index: 38, label: 'CUSTFLD6', class: 'colCUSTFLD6', active: true, display: true, width: "120" },
+          { index: 39, label: 'CUSTFLD7', class: 'colCUSTFLD7', active: true, display: true, width: "120" },
+          { index: 40, label: 'CUSTFLD8', class: 'colCUSTFLD8', active: true, display: true, width: "120" },
+          { index: 41, label: 'CUSTFLD9', class: 'colCUSTFLD9', active: true, display: true, width: "120" },
+          { index: 42, label: 'CUSTFLD10', class: 'colCUSTFLD10', active: true, display: true, width: "120" },
+          { index: 43, label: 'CUSTFLD11', class: 'colCUSTFLD11', active: true, display: true, width: "120" },
+          { index: 44, label: 'CUSTFLD12', class: 'colCUSTFLD12', active: true, display: true, width: "120" },
+          { index: 45, label: 'CUSTFLD13', class: 'colCUSTFLD13', active: true, display: true, width: "120" },
+          { index: 46, label: 'CUSTFLD14', class: 'colCUSTFLD14', active: true, display: true, width: "120" },
+          { index: 47, label: 'CUSTFLD15', class: 'colCUSTFLD15', active: true, display: true, width: "120" },
+          { index: 48, label: 'Profit $', class: 'colProfitdoller', active: true, display: true, width: "120" },
+          { index: 49, label: 'Trans Date', class: 'colTransDate', active: true, display: true, width: "120" },
+          { index: 50, label: 'Supplier ID', class: 'colSupplierID', active: false, display: true, width: "120" },
         ]
         break;
       case "binlocationslist":
@@ -1035,7 +1001,7 @@ Template.vs1_report_template.onRendered(function () {
 
     //   getVS1Data("VS1_Customize").then(function (dataObject) {
     //     if (dataObject.length == 0) {
-    //       sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+    //       sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
     //           reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
     //           templateObject.showCustomFieldDisplaySettings(reset_data);
     //       }).catch(function (err) {
@@ -1098,11 +1064,12 @@ Template.vs1_report_template.events({
     $(`thead tr th`).each(function (index) {
       var $tblrow = $(this);
       var colWidth = $tblrow.width() || 0;
-      var colthClass = $tblrow.attr('data-class') || "100";
+      console.log(colWidth);
+      console.log($tblrow.text());
+      var colthClass = $tblrow.attr('data-class') || "";
       $('.rngRange' + colthClass).val(colWidth);
     });
     $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
-
   },
   "blur .divcolumn": async function (event) {
     const templateObject = Template.instance();
@@ -1173,11 +1140,11 @@ Template.vs1_report_template.events({
     lineItems.sort((a, b) => a.index - b.index);
     let erpGet = erpDb();
     let tableName = await templateObject.tablename.get() || '';
-    let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID')) || 0;
+    let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')) || 0;
     let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
 
     if (added) {
-      sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), '').then(function (dataCustomize) {
+      sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), '').then(function (dataCustomize) {
         addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
       }).catch(function (err) {
       });

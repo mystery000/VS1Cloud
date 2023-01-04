@@ -1,7 +1,8 @@
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../js/core-service';
 import {DashBoardService} from './dashboard-service';
-
+import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
 Template.home.onCreated(function () {
     this.loggedDb = new ReactiveVar("");
     const templateObject = Template.instance();
@@ -46,24 +47,24 @@ Template.home.onCreated(function () {
 Template.home.onRendered(function () {
   const templateObject = Template.instance();
 
-  let isDashboard = Session.get('CloudDashboardModule');
-  let isMain = Session.get('CloudMainModule');
-  let isInventory = Session.get('CloudInventoryModule');
-  let isManufacturing = Session.get('CloudManufacturingModule');
-  let isAccessLevels = Session.get('CloudAccessLevelsModule');
-  let isShipping = Session.get('CloudShippingModule');
-  let isStockTransfer = Session.get('CloudStockTransferModule');
-  let isStockTake = Session.get('CloudStockTakeModule');
-  let isSales = Session.get('CloudSalesModule');
-  let isPurchases = Session.get('CloudPurchasesModule');
-  let isExpenseClaims = Session.get('CloudExpenseClaimsModule');
-  let isFixedAssets = Session.get('CloudFixedAssetsModule');
+  let isDashboard = localStorage.getItem('CloudDashboardModule');
+  let isMain = localStorage.getItem('CloudMainModule');
+  let isInventory = localStorage.getItem('CloudInventoryModule');
+  let isManufacturing = localStorage.getItem('CloudManufacturingModule');
+  let isAccessLevels = localStorage.getItem('CloudAccessLevelsModule');
+  let isShipping = localStorage.getItem('CloudShippingModule');
+  let isStockTransfer = localStorage.getItem('CloudStockTransferModule');
+  let isStockTake = localStorage.getItem('CloudStockTakeModule');
+  let isSales = localStorage.getItem('CloudSalesModule');
+  let isPurchases = localStorage.getItem('CloudPurchasesModule');
+  let isExpenseClaims = localStorage.getItem('CloudExpenseClaimsModule');
+  let isFixedAssets = localStorage.getItem('CloudFixedAssetsModule');
 
-  let isPayments = Session.get('CloudPaymentsModule');
-  let isContacts = Session.get('CloudContactsModule');
-  let isAccounts = Session.get('CloudAccountsModule');
-  let isReports = Session.get('CloudReportsModule');
-  let isSettings = Session.get('CloudSettingsModule');
+  let isPayments = localStorage.getItem('CloudPaymentsModule');
+  let isContacts = localStorage.getItem('CloudContactsModule');
+  let isAccounts = localStorage.getItem('CloudAccountsModule');
+  let isReports = localStorage.getItem('CloudReportsModule');
+  let isSettings = localStorage.getItem('CloudSettingsModule');
   var erpGet = erpDb();
   var LoggedDB = erpGet.ERPDatabase;
   var LoggedUser = localStorage.getItem('mySession');
@@ -258,7 +259,7 @@ Template.home.events({
   },
   'click .includeLogOut': function (event) {
     FlowRouter.go('/');
-    CloudUser.update({_id: Session.get('mycloudLogonID')},{ $set: {userMultiLogon: false}});
+    CloudUser.update({_id: localStorage.getItem('mycloudLogonID')},{ $set: {userMultiLogon: false}});
   },
   'mouseenter .portfolio .includeLogOut': function (event) {
     $('.includeLogOut').css({

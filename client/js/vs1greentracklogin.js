@@ -10,11 +10,11 @@ Template.vs1greentracklogin.onCreated( () => {
 Template.vs1greentracklogin.helpers({
 
     currentLoginEmail: function() {
-          return Session.get('loginEmail') == this._email;
+          return localStorage.getItem('loginEmail') == this._email;
     },
     companyDatabases: function(){
-      if(Session.get('loginEmail')){
-       return RegisterUser.find({useremail: Session.get('loginEmail')}).fetch().sort(function (a, b) {
+      if(localStorage.getItem('loginEmail')){
+       return RegisterUser.find({useremail: localStorage.getItem('loginEmail')}).fetch().sort(function (a, b) {
          if (a.description.toLowerCase() == 'NA') {
            return 1;
          }
@@ -41,7 +41,7 @@ Template.vs1greentracklogin.onCreated(function(){
 
 
 Template.vs1greentracklogin.onRendered(function(){
-  Session.setPersistent('VS1ProductList', '');
+  localStorage.setItem('VS1ProductList', '');
   localStorage.setItem('VS1SalesProductList', '');
   localStorage.setItem('VS1PurchaseAccountList', '');
 
@@ -64,35 +64,35 @@ Template.vs1greentracklogin.onRendered(function(){
 
 
 
-  Session.setPersistent('ERPCurrency', '');
-  Session.setPersistent('ERPCountryAbbr', '');
-  Session.setPersistent('ERPDefaultDepartment', '');
+  localStorage.setItem('ERPCurrency', '');
+  localStorage.setItem('ERPCountryAbbr', '');
+  localStorage.setItem('ERPDefaultDepartment', '');
 
-  Session.setPersistent('mycloudLogonPassword', '');
-  Session.setPersistent('mycloudLogonID', '');
-  Session.setPersistent('mycloudLogonRole', '');
-  Session.setPersistent('myerpPassword', '');
-  Session.setPersistent('mySessionEmployee', '');
+  localStorage.setItem('mycloudLogonPassword', '');
+  localStorage.setItem('mycloudLogonID', '');
+  localStorage.setItem('mycloudLogonRole', '');
+  localStorage.setItem('myerpPassword', '');
+  localStorage.setItem('mySessionEmployee', '');
   localStorage.setItem('EIPAddress', '');
   localStorage.setItem('EUserName', '');
   localStorage.setItem('EPassword', '');
   localStorage.setItem('EDatabase', '');
   localStorage.setItem('EPort', '');
-  Session.setPersistent('mySessionEmployeeLoggedID', '');
+  localStorage.setItem('mySessionEmployeeLoggedID', '');
   localStorage.setItem('mySession', '');
-  Session.setPersistent('mySessionEmployee', '');
-  Session.setPersistent('loginEmail', '');
+  localStorage.setItem('mySessionEmployee', '');
+  localStorage.setItem('loginEmail', '');
 
-  Session.setPersistent('mycloudLogonDBID', '');
-  Session.setPersistent('mycloudLogonID', '');
-  Session.setPersistent('mycloudLogonUsername', '');
-  Session.setPersistent('mycloudLogonUserEmail', '');
+  localStorage.setItem('mycloudLogonDBID', '');
+  localStorage.setItem('mycloudLogonID', '');
+  localStorage.setItem('mycloudLogonUsername', '');
+  localStorage.setItem('mycloudLogonUserEmail', '');
 
-  Session.setPersistent('mainEIPAddress', '');
-  Session.setPersistent('mainEPort', '');
-  Session.setPersistent('isGreenTrack', false);
+  localStorage.setItem('mainEIPAddress', '');
+  localStorage.setItem('mainEPort', '');
+  localStorage.setItem('isGreenTrack', false);
 
-  Session.setPersistent('VS1AdminUserName', '');
+  localStorage.setItem('VS1AdminUserName', '');
 
   localStorage.setItem('vs1cloudlicenselevel', '');
 
@@ -153,25 +153,25 @@ Template.vs1greentracklogin.onRendered(function(){
     let isTopPanelFormID = '';
 
     /* Lincence Check for Menu Options */
-    let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
-    let isInventoryLicence = Session.get('CloudInventoryLicence');
-    let isManufacturingLicence = Session.get('CloudManufacturingLicence');
-    let isPurchasesLicence = Session.get('CloudPurchasesLicence');
-    let isSalesLicence = Session.get('CloudSalesLicence');
-    let isShippingLicence = Session.get('CloudShippingLicence');
-    let isStockTakeLicence = Session.get('CloudStockTakeLicence');
-    let isStockTransferLicence = Session.get('CloudStockTransferLicence');
-    let isMainLicence = Session.get('CloudMainLicence');
-    let isDashboardLicence = Session.get('CloudDashboardLicence');
+    let isFixedAssetsLicence = localStorage.getItem('CloudFixedAssetsLicence');
+    let isInventoryLicence = localStorage.getItem('CloudInventoryLicence');
+    let isManufacturingLicence = localStorage.getItem('CloudManufacturingLicence');
+    let isPurchasesLicence = localStorage.getItem('CloudPurchasesLicence');
+    let isSalesLicence = localStorage.getItem('CloudSalesLicence');
+    let isShippingLicence = localStorage.getItem('CloudShippingLicence');
+    let isStockTakeLicence = localStorage.getItem('CloudStockTakeLicence');
+    let isStockTransferLicence = localStorage.getItem('CloudStockTransferLicence');
+    let isMainLicence = localStorage.getItem('CloudMainLicence');
+    let isDashboardLicence = localStorage.getItem('CloudDashboardLicence');
 
 
         /*Licence Check Menu to add */
-    let isAccountsLicence = Session.get('CloudAccountsLicence');
-    let isContactsLicence = Session.get('CloudContactsLicence');
-    let isExpenseClaimsLicence = Session.get('CloudExpenseClaimsLicence');
-    let isPaymentsLicence = Session.get('CloudPaymentsLicence');
-    let isReportsLicence = Session.get('CloudReportsLicence');
-    let isSettingsLicence = Session.get('CloudSettingsLicence');
+    let isAccountsLicence = localStorage.getItem('CloudAccountsLicence');
+    let isContactsLicence = localStorage.getItem('CloudContactsLicence');
+    let isExpenseClaimsLicence = localStorage.getItem('CloudExpenseClaimsLicence');
+    let isPaymentsLicence = localStorage.getItem('CloudPaymentsLicence');
+    let isReportsLicence = localStorage.getItem('CloudReportsLicence');
+    let isSettingsLicence = localStorage.getItem('CloudSettingsLicence');
        /*End Licence Check Menu to add */
 
     /* End Licence Check for menu option */
@@ -354,47 +354,47 @@ Template.vs1greentracklogin.onRendered(function(){
            isMain = false;
          }
 
-        Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
-        Session.setPersistent('CloudPrintInvoice', isInvoice);
-        Session.setPersistent('CloudUserPass', isUserPassDetail);
+        localStorage.setItem('CloudPrintDeliveryDocket', isDocket);
+        localStorage.setItem('CloudPrintInvoice', isInvoice);
+        localStorage.setItem('CloudUserPass', isUserPassDetail);
 
-        Session.setPersistent('CloudViewDockets', isViewDockets);
+        localStorage.setItem('CloudViewDockets', isViewDockets);
 
-        Session.setPersistent('CloudSalesQtyOnly', isSalesQtyOnly);
-        Session.setPersistent('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+        localStorage.setItem('CloudSalesQtyOnly', isSalesQtyOnly);
+        localStorage.setItem('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
 
 
-        Session.setPersistent('CloudDashboardModule', isDashboard);
-        Session.setPersistent('CloudMainModule', isMain);
-        Session.setPersistent('CloudInventoryModule', isInventory);
-        Session.setPersistent('CloudManufacturingModule', isManufacturing);
-        Session.setPersistent('CloudAccessLevelsModule', isAccessLevels);
-        Session.setPersistent('CloudShippingModule', isShipping);
-        Session.setPersistent('CloudStockTransferModule', isStockTransfer);
-        Session.setPersistent('CloudStockTakeModule', isStockTake);
-        Session.setPersistent('CloudSalesModule', isSales);
-        Session.setPersistent('CloudPurchasesModule', isPurchases);
-        Session.setPersistent('CloudExpenseClaimsModule', isExpenseClaims);
-        Session.setPersistent('CloudFixedAssetsModule', isFixedAssets);
+        localStorage.setItem('CloudDashboardModule', isDashboard);
+        localStorage.setItem('CloudMainModule', isMain);
+        localStorage.setItem('CloudInventoryModule', isInventory);
+        localStorage.setItem('CloudManufacturingModule', isManufacturing);
+        localStorage.setItem('CloudAccessLevelsModule', isAccessLevels);
+        localStorage.setItem('CloudShippingModule', isShipping);
+        localStorage.setItem('CloudStockTransferModule', isStockTransfer);
+        localStorage.setItem('CloudStockTakeModule', isStockTake);
+        localStorage.setItem('CloudSalesModule', isSales);
+        localStorage.setItem('CloudPurchasesModule', isPurchases);
+        localStorage.setItem('CloudExpenseClaimsModule', isExpenseClaims);
+        localStorage.setItem('CloudFixedAssetsModule', isFixedAssets);
 
-        Session.setPersistent('CloudPaymentsModule', isPayments);
-        Session.setPersistent('CloudContactsModule', isContacts);
-        Session.setPersistent('CloudAccountsModule', isAccounts);
-        Session.setPersistent('CloudReportsModule', isReports);
-        Session.setPersistent('CloudSettingsModule', isSettings);
+        localStorage.setItem('CloudPaymentsModule', isPayments);
+        localStorage.setItem('CloudContactsModule', isContacts);
+        localStorage.setItem('CloudAccountsModule', isAccounts);
+        localStorage.setItem('CloudReportsModule', isReports);
+        localStorage.setItem('CloudSettingsModule', isSettings);
 
-        Session.setPersistent('CloudSidePanelMenu', isSidePanel);
-        Session.setPersistent('CloudTopPanelMenu', isTopPanel);
-        Session.setPersistent('CloudSidePanelMenuID', isSidePanelID);
-        Session.setPersistent('CloudTopPanelMenuID', isTopPanelID);
-        Session.setPersistent('CloudSidePanelMenuFormID', isSidePanelFormID);
-        Session.setPersistent('CloudTopPanelMenuFormID', isTopPanelFormID);
+        localStorage.setItem('CloudSidePanelMenu', isSidePanel);
+        localStorage.setItem('CloudTopPanelMenu', isTopPanel);
+        localStorage.setItem('CloudSidePanelMenuID', isSidePanelID);
+        localStorage.setItem('CloudTopPanelMenuID', isTopPanelID);
+        localStorage.setItem('CloudSidePanelMenuFormID', isSidePanelFormID);
+        localStorage.setItem('CloudTopPanelMenuFormID', isTopPanelFormID);
 
          let userSerssion = {'loggedEmpID':employeeID,
                              'loggedUserName':accessUserName,
                              'loggedDatabase':accessDatabase,
                              'loggedAccessData':lineItemslevel};
-        Session.setPersistent('ERPSolidCurrentUSerAccess', userSerssion);
+        localStorage.setItem('ERPSolidCurrentUSerAccess', userSerssion);
 
        let userModuleRedirect = lineItemsAccesslevel.sort(function (a, b) {
          if (a.description.toLowerCase() == 'NA') {
@@ -446,26 +446,26 @@ window.open('/dashboard','_self');
 
 /* Remove licence */
 
-    Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
-    Session.setPersistent('CloudContactsLicence', isContactsLicence);
-    Session.setPersistent('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
-    Session.setPersistent('CloudPaymentsLicence', isPaymentsLicence);
-    Session.setPersistent('CloudReportsLicence', isReportsLicence);
-    Session.setPersistent('CloudSettingsLicence', isSettingsLicence);
+    localStorage.setItem('CloudAccountsLicence', isAccountsLicence);
+    localStorage.setItem('CloudContactsLicence', isContactsLicence);
+    localStorage.setItem('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
+    localStorage.setItem('CloudPaymentsLicence', isPaymentsLicence);
+    localStorage.setItem('CloudReportsLicence', isReportsLicence);
+    localStorage.setItem('CloudSettingsLicence', isSettingsLicence);
 
-    Session.setPersistent('CloudMainLicence', isMainLicence);
-    Session.setPersistent('CloudDashboardLicence', isDashboardLicence);
+    localStorage.setItem('CloudMainLicence', isMainLicence);
+    localStorage.setItem('CloudDashboardLicence', isDashboardLicence);
 
 
 
-      Session.setPersistent('CloudFixedAssetsLicence', isFixedAssetsLicence);
-      Session.setPersistent('CloudInventoryLicence', isInventoryLicence);
-      Session.setPersistent('CloudManufacturingLicence', isManufacturingLicence);
-      Session.setPersistent('CloudPurchasesLicence', isPurchasesLicence);
-      Session.setPersistent('CloudSalesLicence', isSalesLicence);
-      Session.setPersistent('CloudShippingLicence', isShippingLicence);
-      Session.setPersistent('CloudStockTakeLicence', isStockTakeLicence);
-      Session.setPersistent('CloudStockTransferLicence', isStockTransferLicence);
+      localStorage.setItem('CloudFixedAssetsLicence', isFixedAssetsLicence);
+      localStorage.setItem('CloudInventoryLicence', isInventoryLicence);
+      localStorage.setItem('CloudManufacturingLicence', isManufacturingLicence);
+      localStorage.setItem('CloudPurchasesLicence', isPurchasesLicence);
+      localStorage.setItem('CloudSalesLicence', isSalesLicence);
+      localStorage.setItem('CloudShippingLicence', isShippingLicence);
+      localStorage.setItem('CloudStockTakeLicence', isStockTakeLicence);
+      localStorage.setItem('CloudStockTransferLicence', isStockTransferLicence);
       /* End Remove licence */
 
 
@@ -522,29 +522,29 @@ window.open('/dashboard','_self');
     let isPayroll = false;
 
     /* Lincence Check for Menu Options */
-    let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
-    let isInventoryLicence = Session.get('CloudInventoryLicence');
-    let isManufacturingLicence = Session.get('CloudManufacturingLicence');
-    let isPurchasesLicence = Session.get('CloudPurchasesLicence');
-    let isSalesLicence = Session.get('CloudSalesLicence');
-    let isShippingLicence = Session.get('CloudShippingLicence');
-    let isStockTakeLicence = Session.get('CloudStockTakeLicence');
-    let isStockTransferLicence = Session.get('CloudStockTransferLicence');
-    let isMainLicence = Session.get('CloudMainLicence');
-    let isDashboardLicence = Session.get('CloudDashboardLicence');
+    let isFixedAssetsLicence = localStorage.getItem('CloudFixedAssetsLicence');
+    let isInventoryLicence = localStorage.getItem('CloudInventoryLicence');
+    let isManufacturingLicence = localStorage.getItem('CloudManufacturingLicence');
+    let isPurchasesLicence = localStorage.getItem('CloudPurchasesLicence');
+    let isSalesLicence = localStorage.getItem('CloudSalesLicence');
+    let isShippingLicence = localStorage.getItem('CloudShippingLicence');
+    let isStockTakeLicence = localStorage.getItem('CloudStockTakeLicence');
+    let isStockTransferLicence = localStorage.getItem('CloudStockTransferLicence');
+    let isMainLicence = localStorage.getItem('CloudMainLicence');
+    let isDashboardLicence = localStorage.getItem('CloudDashboardLicence');
 
-    let isSeedToSaleLicence = Session.get('CloudSeedToSaleLicence');
-    let isBankingLicence = Session.get('CloudBankingLicence');
-    let isPayrollLicence = Session.get('CloudPayrollLicence');
+    let isSeedToSaleLicence = localStorage.getItem('CloudSeedToSaleLicence');
+    let isBankingLicence = localStorage.getItem('CloudBankingLicence');
+    let isPayrollLicence = localStorage.getItem('CloudPayrollLicence');
 
 
         /*Licence Check Menu to add */
-    let isAccountsLicence = Session.get('CloudAccountsLicence');
-    let isContactsLicence = Session.get('CloudContactsLicence');
-    let isExpenseClaimsLicence = Session.get('CloudExpenseClaimsLicence');
-    let isPaymentsLicence = Session.get('CloudPaymentsLicence');
-    let isReportsLicence = Session.get('CloudReportsLicence');
-    let isSettingsLicence = Session.get('CloudSettingsLicence');
+    let isAccountsLicence = localStorage.getItem('CloudAccountsLicence');
+    let isContactsLicence = localStorage.getItem('CloudContactsLicence');
+    let isExpenseClaimsLicence = localStorage.getItem('CloudExpenseClaimsLicence');
+    let isPaymentsLicence = localStorage.getItem('CloudPaymentsLicence');
+    let isReportsLicence = localStorage.getItem('CloudReportsLicence');
+    let isSettingsLicence = localStorage.getItem('CloudSettingsLicence');
        /*End Licence Check Menu to add */
 
     /* End Licence Check for menu option */
@@ -615,51 +615,51 @@ window.open('/dashboard','_self');
     if(!isPayrollLicence){
       isPayroll = false;
     }
-   Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
-   Session.setPersistent('CloudPrintInvoice', isInvoice);
-   Session.setPersistent('CloudUserPass', isUserPassDetail);
+   localStorage.setItem('CloudPrintDeliveryDocket', isDocket);
+   localStorage.setItem('CloudPrintInvoice', isInvoice);
+   localStorage.setItem('CloudUserPass', isUserPassDetail);
 
-   Session.setPersistent('CloudViewDockets', isViewDockets);
+   localStorage.setItem('CloudViewDockets', isViewDockets);
 
-   Session.setPersistent('CloudSalesQtyOnly', isSalesQtyOnly);
-   Session.setPersistent('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
+   localStorage.setItem('CloudSalesQtyOnly', isSalesQtyOnly);
+   localStorage.setItem('CloudPurchaseQtyOnly', isPurchaseQtyOnly);
 
 
-   Session.setPersistent('CloudDashboardModule', isDashboard);
-   Session.setPersistent('CloudMainModule', isMain);
-   Session.setPersistent('CloudInventoryModule', isInventory);
-   Session.setPersistent('CloudManufacturingModule', isManufacturing);
-   Session.setPersistent('CloudAccessLevelsModule', isAccessLevels);
-   Session.setPersistent('CloudShippingModule', isShipping);
-   Session.setPersistent('CloudStockTransferModule', isStockTransfer);
-   Session.setPersistent('CloudStockTakeModule', isStockTake);
-   Session.setPersistent('CloudSalesModule', isSales);
-   Session.setPersistent('CloudPurchasesModule', isPurchases);
-   Session.setPersistent('CloudExpenseClaimsModule', isExpenseClaims);
-   Session.setPersistent('CloudFixedAssetsModule', isFixedAssets);
+   localStorage.setItem('CloudDashboardModule', isDashboard);
+   localStorage.setItem('CloudMainModule', isMain);
+   localStorage.setItem('CloudInventoryModule', isInventory);
+   localStorage.setItem('CloudManufacturingModule', isManufacturing);
+   localStorage.setItem('CloudAccessLevelsModule', isAccessLevels);
+   localStorage.setItem('CloudShippingModule', isShipping);
+   localStorage.setItem('CloudStockTransferModule', isStockTransfer);
+   localStorage.setItem('CloudStockTakeModule', isStockTake);
+   localStorage.setItem('CloudSalesModule', isSales);
+   localStorage.setItem('CloudPurchasesModule', isPurchases);
+   localStorage.setItem('CloudExpenseClaimsModule', isExpenseClaims);
+   localStorage.setItem('CloudFixedAssetsModule', isFixedAssets);
 
-   Session.setPersistent('CloudPaymentsModule', isPayments);
-   Session.setPersistent('CloudContactsModule', isContacts);
-   Session.setPersistent('CloudAccountsModule', isAccounts);
-   Session.setPersistent('CloudReportsModule', isReports);
-   Session.setPersistent('CloudSettingsModule', isSettings);
+   localStorage.setItem('CloudPaymentsModule', isPayments);
+   localStorage.setItem('CloudContactsModule', isContacts);
+   localStorage.setItem('CloudAccountsModule', isAccounts);
+   localStorage.setItem('CloudReportsModule', isReports);
+   localStorage.setItem('CloudSettingsModule', isSettings);
 
-   Session.setPersistent('CloudSidePanelMenu', isSidePanel);
-   Session.setPersistent('CloudTopPanelMenu', isTopPanel);
-   Session.setPersistent('CloudSidePanelMenuID', isSidePanelID);
-   Session.setPersistent('CloudTopPanelMenuID', isTopPanelID);
-   Session.setPersistent('CloudSidePanelMenuFormID', isSidePanelFormID);
-   Session.setPersistent('CloudTopPanelMenuFormID', isTopPanelFormID);
+   localStorage.setItem('CloudSidePanelMenu', isSidePanel);
+   localStorage.setItem('CloudTopPanelMenu', isTopPanel);
+   localStorage.setItem('CloudSidePanelMenuID', isSidePanelID);
+   localStorage.setItem('CloudTopPanelMenuID', isTopPanelID);
+   localStorage.setItem('CloudSidePanelMenuFormID', isSidePanelFormID);
+   localStorage.setItem('CloudTopPanelMenuFormID', isTopPanelFormID);
 
-   Session.setPersistent('CloudSeedToSaleModule', isSeedToSale);
-   Session.setPersistent('CloudBankingModule', isBanking);
-   Session.setPersistent('CloudPayrollModule', isPayroll);
+   localStorage.setItem('CloudSeedToSaleModule', isSeedToSale);
+   localStorage.setItem('CloudBankingModule', isBanking);
+   localStorage.setItem('CloudPayrollModule', isPayroll);
 
     let userSerssion = {'loggedEmpID':userAccessOptions.items[0].fields.EmployeeId,
-                        'loggedUserName':Session.get('EUserName'),
-                        'loggedDatabase':Session.get('EDatabase'),
+                        'loggedUserName':localStorage.getItem('EUserName'),
+                        'loggedDatabase':localStorage.getItem('EDatabase'),
                         'loggedAccessData':lineItemslevel};
-   Session.setPersistent('ERPSolidCurrentUSerAccess', userSerssion);
+   localStorage.setItem('ERPSolidCurrentUSerAccess', userSerssion);
 
   let userModuleRedirect = lineItemsAccesslevel.sort(function (a, b) {
     if (a.description.toLowerCase() == 'NA') {
@@ -685,10 +685,10 @@ $("#login-button").click(function(e){
   let employeeUserID = '';
   let loggedUserEventFired = false;
 
-  Session.setPersistent('ERPCurrency', '$');
-  Session.setPersistent('ERPCountryAbbr', 'AUD');
-  Session.setPersistent('ERPDefaultDepartment', 'Default');
-  Session.setPersistent('ERPDefaultUOM', '');
+  localStorage.setItem('ERPCurrency', '$');
+  localStorage.setItem('ERPCountryAbbr', 'AUD');
+  localStorage.setItem('ERPDefaultDepartment', 'Default');
+  localStorage.setItem('ERPDefaultUOM', '');
 
 
   if ($('#remember_me').is(':checked')) {
@@ -756,7 +756,7 @@ $("#login-button").click(function(e){
       var cloudUserpassword = regUserDetails[i].cloudHashPassword;
 
 
-       Session.setPersistent('mycloudLogonPassword', cloudUserpassword);
+       localStorage.setItem('mycloudLogonPassword', cloudUserpassword);
 
       let erpdbname = ERPIPAdderess+','+ERPdbName+','+ERPuserName+','+ERPpassword+','+ERPport;
       getERPLicenceInfo(erpdbname);
@@ -772,13 +772,13 @@ $("#login-button").click(function(e){
         cloudLoggedUsername = regUserDetails[i].cloudUsername;
 
 
-        Session.setPersistent('mycloudLogonDBID', cloudLoggedDBID);
-        Session.setPersistent('mycloudLogonID', cloudLoggedID);
-        Session.setPersistent('mycloudLogonUsername', cloudLoggedUsername);
-        Session.setPersistent('mycloudLogonUserEmail', cloudUserEmail);
+        localStorage.setItem('mycloudLogonDBID', cloudLoggedDBID);
+        localStorage.setItem('mycloudLogonID', cloudLoggedID);
+        localStorage.setItem('mycloudLogonUsername', cloudLoggedUsername);
+        localStorage.setItem('mycloudLogonUserEmail', cloudUserEmail);
 
-        Session.setPersistent('myerpPassword', cloudUserpassword);
-        Session.setPersistent('mySessionEmployee', ERPuserName);
+        localStorage.setItem('myerpPassword', cloudUserpassword);
+        localStorage.setItem('mySessionEmployee', ERPuserName);
 
         localStorage.setItem('EIPAddress', ERPIPAdderess);
         localStorage.setItem('EUserName', ERPuserName);
@@ -800,8 +800,8 @@ $("#login-button").click(function(e){
 
         oReqCheackUserObject.onreadystatechange = function() {
         if (oReqCheackUserObject.readyState == 4 && oReqCheackUserObject.status == 200) {
-          Session.setPersistent('LoggedUserEventFired', loggedUserEventFired);
-          Session.setPersistent('userlogged_status', 'active');
+          localStorage.setItem('LoggedUserEventFired', loggedUserEventFired);
+          localStorage.setItem('userlogged_status', 'active');
           var dataListCheackUser = JSON.parse(oReqCheackUserObject.responseText)
           for (var eventCheackUser in dataListCheackUser) {
             var dataCheackUserCopy = dataListCheackUser[eventCheackUser];
@@ -812,10 +812,10 @@ $("#login-button").click(function(e){
               var employeeUserLogon = mainCheackUserData.LogonName;
               var employeeUserID = mainCheackUserData.EmployeeId;
               var employeename = mainCheackUserData.EmployeeName;
-              Session.setPersistent('mySessionEmployeeLoggedID', employeeUserID);
+              localStorage.setItem('mySessionEmployeeLoggedID', employeeUserID);
               localStorage.setItem('mySession', empusername);
               var sessionDataToLog = localStorage.getItem('mySession');
-              Session.setPersistent('mySessionEmployee', employeename);
+              localStorage.setItem('mySessionEmployee', employeename);
 
               var ERPCheackAppUserObject = "TAppUser?PropertyList=ID,DatabaseName,UserName,MultiLogon&Select=[DatabaseName]='"+ERPdbName+"' and [UserName]='"+ERPLoggeduserName+"'";
               var oReqCheackAppUserObject = new XMLHttpRequest();
@@ -1085,8 +1085,8 @@ $("#erplogin-button").click(function(e){
               oReq.onreadystatechange = function() {
 
                 if (oReq.readyState == 4 && oReq.status == 200) {
-                  Session.setPersistent('mainEIPAddress', licenceIPAddress);
-                  Session.setPersistent('mainEPort', checkSSLPorts);
+                  localStorage.setItem('mainEIPAddress', licenceIPAddress);
+                  localStorage.setItem('mainEPort', checkSSLPorts);
 
 
                   var dataReturnRes = JSON.parse(oReq.responseText);
@@ -1099,7 +1099,7 @@ $("#erplogin-button").click(function(e){
                       $('.fullScreenSpin').css('display','none');
 
                       swal({
-                        title: 'Your payment has been declined please update your payment subscription information!',
+                        title: 'You Seem To Have Missed a Payment Recently, Can You Please Update your Subscription Information!',
                         text: '',
                         type: 'error',
                         showCancelButton: true,
@@ -1107,7 +1107,7 @@ $("#erplogin-button").click(function(e){
                         cancelButtonText: 'Cancel'
                       }).then((result) => {
                         if (result.value) {
-                          window.open('https://magento-473757-1929062.cloudwaysapps.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_blank');
+                          window.open('https://magento-473757-1929062.cloudwaysapps.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_self');
                         } else if (result.dismiss === 'cancel') {
 
                         }
@@ -1139,8 +1139,8 @@ $("#erplogin-button").click(function(e){
 
 
 
-                          Session.setPersistent('mycloudLogonDBID', regUserDetails.clouddatabaseID);
-                          Session.setPersistent('mycloudLogonID', regUserDetails._id);
+                          localStorage.setItem('mycloudLogonDBID', regUserDetails.clouddatabaseID);
+                          localStorage.setItem('mycloudLogonID', regUserDetails._id);
 
                     }
                     }
@@ -1149,7 +1149,7 @@ $("#erplogin-button").click(function(e){
 
                     localStorage.setItem('vs1cloudLoginInfo', dataReturnRes);
                     localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
-                    Session.setPersistent('isGreenTrack', true);
+                    localStorage.setItem('isGreenTrack', true);
                     if(!localStorage.getItem('VS1loggedDatabase')){
                       localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                       localStorage.setItem('VS11099Contractor_Report', '');
@@ -1172,7 +1172,7 @@ $("#erplogin-button").click(function(e){
                       localStorage.setItem('VS1TaxSummary_Report', '');
                       localStorage.setItem('VS1TrialBalance_Report', '');
                       localStorage.setItem('VS1PrintStatements_Report', '');
-                      Session.setPersistent('bankaccountid', '');
+                      localStorage.setItem('bankaccountid', '');
 
                       localStorage.setItem('VS1ProductList', '');
                       localStorage.setItem('VS1CustomerList', '');
@@ -1234,47 +1234,47 @@ $("#erplogin-button").click(function(e){
 
 
                         localStorage.setItem('VS1AccoountList','');
-                        Session.setPersistent('bankaccountid', '');
+                        localStorage.setItem('bankaccountid', '');
                       }
                     }
 
 
 
-                    Session.setPersistent('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
+                    localStorage.setItem('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
 
                     var region = dataReturnRes.ProcessLog.RegionName;
-                    Session.setPersistent('ERPLoggedCountry', region);
+                    localStorage.setItem('ERPLoggedCountry', region);
 
                     if(dataReturnRes.ProcessLog.RegionName === "Australia"){
-                      Session.setPersistent('ERPCountryAbbr', 'AUD');
+                      localStorage.setItem('ERPCountryAbbr', 'AUD');
                     }else if(dataReturnRes.ProcessLog.RegionName === "Canada"){
-                      Session.setPersistent('ERPCountryAbbr', 'CAD');
+                      localStorage.setItem('ERPCountryAbbr', 'CAD');
                     }else if(dataReturnRes.ProcessLog.RegionName === "Colombia"){
-                      Session.setPersistent('ERPCountryAbbr', 'COP');
+                      localStorage.setItem('ERPCountryAbbr', 'COP');
                     }else if(dataReturnRes.ProcessLog.RegionName === "Kuwait"){
-                      Session.setPersistent('ERPCountryAbbr', 'KYD');
+                      localStorage.setItem('ERPCountryAbbr', 'KYD');
                     }else if(dataReturnRes.ProcessLog.RegionName === "Mexico"){
-                      Session.setPersistent('ERPCountryAbbr', 'MXN');
+                      localStorage.setItem('ERPCountryAbbr', 'MXN');
                     }else if(dataReturnRes.ProcessLog.RegionName === "New Zealand"){
-                      Session.setPersistent('ERPCountryAbbr', 'NZD');
+                      localStorage.setItem('ERPCountryAbbr', 'NZD');
                     }else if(dataReturnRes.ProcessLog.RegionName === "Qatar"){
-                      Session.setPersistent('ERPCountryAbbr', 'QAR');
+                      localStorage.setItem('ERPCountryAbbr', 'QAR');
                     }else if(dataReturnRes.ProcessLog.RegionName === "Kingdom of Saudi Arabia"){
-                      Session.setPersistent('ERPCountryAbbr', 'SAR');
+                      localStorage.setItem('ERPCountryAbbr', 'SAR');
                     }else if(dataReturnRes.ProcessLog.RegionName === "Singapore"){
-                      Session.setPersistent('ERPCountryAbbr', 'SGD');
+                      localStorage.setItem('ERPCountryAbbr', 'SGD');
                     }else if(dataReturnRes.ProcessLog.RegionName === "South Africa"){
-                      Session.setPersistent('ERPCountryAbbr', 'ZAR');
+                      localStorage.setItem('ERPCountryAbbr', 'ZAR');
                     }else if(dataReturnRes.ProcessLog.RegionName === "United Arab Emirates"){
-                      Session.setPersistent('ERPCountryAbbr', 'AED');
+                      localStorage.setItem('ERPCountryAbbr', 'AED');
                     }else if(dataReturnRes.ProcessLog.RegionName === "United Kingdom"){
-                      Session.setPersistent('ERPCountryAbbr', 'GBP');
+                      localStorage.setItem('ERPCountryAbbr', 'GBP');
                     }else if(dataReturnRes.ProcessLog.RegionName === "United States of America"){
-                      Session.setPersistent('ERPCountryAbbr', 'USD');
+                      localStorage.setItem('ERPCountryAbbr', 'USD');
                     }
-                    Session.setPersistent('ERPDefaultDepartment', 'Default');
-                    Session.setPersistent('ERPDefaultUOM', '');
-                    Session.setPersistent('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
+                    localStorage.setItem('ERPDefaultDepartment', 'Default');
+                    localStorage.setItem('ERPDefaultUOM', '');
+                    localStorage.setItem('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
                     dataReturnRes.ProcessLog.VS1AdminPassword = userLoginPassword;
                     dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
                     var ERPIPAdderess= "";
@@ -1287,7 +1287,7 @@ $("#erplogin-button").click(function(e){
 
                var ERPport = dataReturnRes.ProcessLog.APIPort;
 
-                 Session.setPersistent('mycloudLogonUserEmail', userLoginEmail);
+                 localStorage.setItem('mycloudLogonUserEmail', userLoginEmail);
 
                var ERPuserName = userLoginEmail;
                 var ERPLoggeduserName = userLoginEmail;
@@ -1361,36 +1361,36 @@ $("#erplogin-button").click(function(e){
 
               /* Remove licence */
 
-                  Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
-                  Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
-                  Session.setPersistent('CloudContactsLicence', isContactsLicence);
-                  Session.setPersistent('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
-                  Session.setPersistent('CloudPaymentsLicence', isPaymentsLicence);
-                  Session.setPersistent('CloudReportsLicence', isReportsLicence);
-                  Session.setPersistent('CloudSettingsLicence', isSettingsLicence);
+                  localStorage.setItem('CloudTrueERPModule', isTrueERPConnection);
+                  localStorage.setItem('CloudAccountsLicence', isAccountsLicence);
+                  localStorage.setItem('CloudContactsLicence', isContactsLicence);
+                  localStorage.setItem('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
+                  localStorage.setItem('CloudPaymentsLicence', isPaymentsLicence);
+                  localStorage.setItem('CloudReportsLicence', isReportsLicence);
+                  localStorage.setItem('CloudSettingsLicence', isSettingsLicence);
 
-                  Session.setPersistent('CloudMainLicence', isMainLicence);
-                  Session.setPersistent('CloudDashboardLicence', isDashboardLicence);
+                  localStorage.setItem('CloudMainLicence', isMainLicence);
+                  localStorage.setItem('CloudDashboardLicence', isDashboardLicence);
 
 
-                  Session.setPersistent('CloudSeedToSaleLicence', isSeedToSaleLicence);
-                  Session.setPersistent('CloudBankingLicence', isBankingLicence);
-                  Session.setPersistent('CloudPayrollLicence', isPayrollLicence);
+                  localStorage.setItem('CloudSeedToSaleLicence', isSeedToSaleLicence);
+                  localStorage.setItem('CloudBankingLicence', isBankingLicence);
+                  localStorage.setItem('CloudPayrollLicence', isPayrollLicence);
 
-                  Session.setPersistent('CloudFixedAssetsLicence', isFixedAssetsLicence);
-                  Session.setPersistent('CloudInventoryLicence', isInventoryLicence);
-                  Session.setPersistent('CloudManufacturingLicence', isManufacturingLicence);
-                  Session.setPersistent('CloudPurchasesLicence', isPurchasesLicence);
-                  Session.setPersistent('CloudSalesLicence', isSalesLicence);
-                  Session.setPersistent('CloudShippingLicence', isShippingLicence);
-                  Session.setPersistent('CloudStockTakeLicence', isStockTakeLicence);
-                  Session.setPersistent('CloudStockTransferLicence', isStockTransferLicence);
+                  localStorage.setItem('CloudFixedAssetsLicence', isFixedAssetsLicence);
+                  localStorage.setItem('CloudInventoryLicence', isInventoryLicence);
+                  localStorage.setItem('CloudManufacturingLicence', isManufacturingLicence);
+                  localStorage.setItem('CloudPurchasesLicence', isPurchasesLicence);
+                  localStorage.setItem('CloudSalesLicence', isSalesLicence);
+                  localStorage.setItem('CloudShippingLicence', isShippingLicence);
+                  localStorage.setItem('CloudStockTakeLicence', isStockTakeLicence);
+                  localStorage.setItem('CloudStockTransferLicence', isStockTransferLicence);
 
-                  Session.setPersistent('CloudAddExtraLicence', isAddExtraUserLicence);
-                  Session.setPersistent('CloudMatrixLicence', isMatrixLicence);
-                  Session.setPersistent('CloudPOSLicence', isPOSLicence);
-                  Session.setPersistent('CloudUseForeignLicence', isFxCurrencyLicence);
-                  Session.setPersistent('CloudWMSLicence', isWMSLicence);
+                  localStorage.setItem('CloudAddExtraLicence', isAddExtraUserLicence);
+                  localStorage.setItem('CloudMatrixLicence', isMatrixLicence);
+                  localStorage.setItem('CloudPOSLicence', isPOSLicence);
+                  localStorage.setItem('CloudUseForeignLicence', isFxCurrencyLicence);
+                  localStorage.setItem('CloudWMSLicence', isWMSLicence);
                     /* End Remove licence */
 
                     if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail == undefined){
@@ -1413,11 +1413,11 @@ $("#erplogin-button").click(function(e){
 
 
 
-            Session.setPersistent('mycloudLogonUsername', ERPuserName);
-            Session.setPersistent('mycloudLogonUserEmail', ERPuserName);
+            localStorage.setItem('mycloudLogonUsername', ERPuserName);
+            localStorage.setItem('mycloudLogonUserEmail', ERPuserName);
 
-          Session.setPersistent('myerpPassword', userLoginPassword);
-          Session.setPersistent('mySessionEmployee', ERPuserName);
+          localStorage.setItem('myerpPassword', userLoginPassword);
+          localStorage.setItem('mySessionEmployee', ERPuserName);
 
           localStorage.setItem('EIPAddress', ERPIPAdderess);
           localStorage.setItem('EUserName', ERPuserName);
@@ -1431,21 +1431,21 @@ $("#erplogin-button").click(function(e){
 
 
           if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields){
-          Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
-          Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
-          Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
-          Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
-          Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
-          Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
+          localStorage.setItem('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
+          localStorage.setItem('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
+          localStorage.setItem('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
+          localStorage.setItem('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
+          localStorage.setItem('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
+          localStorage.setItem('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
 
-          Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
-          Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
+          localStorage.setItem('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
+          localStorage.setItem('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
 
 
 
-          Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
-          Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
-          Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
+          localStorage.setItem('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
+          localStorage.setItem('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
+          localStorage.setItem('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
 
 
           localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT||Currency+'0');
@@ -1472,20 +1472,20 @@ $("#erplogin-button").click(function(e){
             localStorage.setItem('vs1LoggedEmployeeImages_dash','');
           }
           }else{
-            Session.setPersistent('vs1companyName', '');
-            Session.setPersistent('vs1companyaddress1', '');
-            Session.setPersistent('vs1companyaddress2', '');
-            Session.setPersistent('vs1companyABN', '');
-            Session.setPersistent('vs1companyPhone', '');
-            Session.setPersistent('vs1companyURL', '');
+            localStorage.setItem('vs1companyName', '');
+            localStorage.setItem('vs1companyaddress1', '');
+            localStorage.setItem('vs1companyaddress2', '');
+            localStorage.setItem('vs1companyABN', '');
+            localStorage.setItem('vs1companyPhone', '');
+            localStorage.setItem('vs1companyURL', '');
 
-            Session.setPersistent('ERPDefaultDepartment', '');
-            Session.setPersistent('ERPDefaultUOM', '');
+            localStorage.setItem('ERPDefaultDepartment', '');
+            localStorage.setItem('ERPDefaultUOM', '');
 
 
 
-            Session.setPersistent('ERPTaxCodePurchaseInc', '');
-            Session.setPersistent('ERPTaxCodeSalesInc', '');
+            localStorage.setItem('ERPTaxCodePurchaseInc', '');
+            localStorage.setItem('ERPTaxCodeSalesInc', '');
 
 
             localStorage.setItem('VS1OverDueInvoiceAmt_dash', '');
@@ -1512,17 +1512,17 @@ $("#erplogin-button").click(function(e){
           localStorage.setItem('VS1SalesListReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_saleslist.items)||'');
           localStorage.setItem('VS1SalesEmpReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_salesperemployee.items)||'');
 
-            Session.setPersistent('LoggedUserEventFired', true);
-            Session.setPersistent('userlogged_status', 'active');
+            localStorage.setItem('LoggedUserEventFired', true);
+            localStorage.setItem('userlogged_status', 'active');
 
                 var empusername = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
                 var employeeUserLogon = ERPLoggeduserName;
                 var employeeUserID = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId;
                 var employeename =dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
-                Session.setPersistent('mySessionEmployeeLoggedID', employeeUserID);
+                localStorage.setItem('mySessionEmployeeLoggedID', employeeUserID);
                 localStorage.setItem('mySession', employeeUserLogon);
                 var sessionDataToLog = localStorage.getItem('mySession');
-                Session.setPersistent('mySessionEmployee', employeename);
+                localStorage.setItem('mySessionEmployee', employeename);
                 let userAccessOptions = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail || '';
                 if(userAccessOptions != ""){
                   addLoginData(dataReturnRes).then(function (datareturn) {
@@ -1654,7 +1654,7 @@ $("#erplogin-button").click(function(e){
            $('.fullScreenSpin').css('display','none');
 
            swal({
-             title: 'Your payment has been declined please update your payment subscription information!',
+             title: 'You Seem To Have Missed a Payment Recently, Can You Please Update your Subscription Information!',
              text: '',
              type: 'error',
              showCancelButton: true,
@@ -1662,7 +1662,7 @@ $("#erplogin-button").click(function(e){
              cancelButtonText: 'Cancel'
            }).then((result) => {
              if (result.value) {
-               window.open('https://magento-473757-1929062.cloudwaysapps.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_blank');
+               window.open('https://magento-473757-1929062.cloudwaysapps.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_self');
              } else if (result.dismiss === 'cancel') {
 
              }
@@ -1687,8 +1687,8 @@ $("#erplogin-button").click(function(e){
            if(regUserDetails.length === 0){
 
            }
-               Session.setPersistent('mycloudLogonDBID', regUserDetails.clouddatabaseID);
-               Session.setPersistent('mycloudLogonID', regUserDetails._id);
+               localStorage.setItem('mycloudLogonDBID', regUserDetails.clouddatabaseID);
+               localStorage.setItem('mycloudLogonID', regUserDetails._id);
 
          }
          }
@@ -1697,7 +1697,7 @@ $("#erplogin-button").click(function(e){
 
          localStorage.setItem('vs1cloudLoginInfo', dataReturnRes);
          localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
-         Session.setPersistent('isGreenTrack', true);
+         localStorage.setItem('isGreenTrack', true);
          if(!localStorage.getItem('VS1loggedDatabase')){
            localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
            localStorage.setItem('VS11099Contractor_Report', '');
@@ -1720,7 +1720,7 @@ $("#erplogin-button").click(function(e){
            localStorage.setItem('VS1TaxSummary_Report', '');
            localStorage.setItem('VS1TrialBalance_Report', '');
            localStorage.setItem('VS1PrintStatements_Report', '');
-           Session.setPersistent('bankaccountid', '');
+           localStorage.setItem('bankaccountid', '');
 
            localStorage.setItem('VS1ProductList', '');
            localStorage.setItem('VS1CustomerList', '');
@@ -1782,48 +1782,48 @@ $("#erplogin-button").click(function(e){
 
 
              localStorage.setItem('VS1AccoountList','');
-             Session.setPersistent('bankaccountid', '');
+             localStorage.setItem('bankaccountid', '');
            }
          }
 
 
 
-         Session.setPersistent('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
+         localStorage.setItem('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
 
          var region = dataReturnRes.ProcessLog.RegionName;
-         Session.setPersistent('ERPLoggedCountry', region);
+         localStorage.setItem('ERPLoggedCountry', region);
 
          if(dataReturnRes.ProcessLog.RegionName === "Australia"){
-           Session.setPersistent('ERPCountryAbbr', 'AUD');
+           localStorage.setItem('ERPCountryAbbr', 'AUD');
          }else if(dataReturnRes.ProcessLog.RegionName === "Canada"){
-           Session.setPersistent('ERPCountryAbbr', 'CAD');
+           localStorage.setItem('ERPCountryAbbr', 'CAD');
          }else if(dataReturnRes.ProcessLog.RegionName === "Colombia"){
-           Session.setPersistent('ERPCountryAbbr', 'COP');
+           localStorage.setItem('ERPCountryAbbr', 'COP');
          }else if(dataReturnRes.ProcessLog.RegionName === "Kuwait"){
-           Session.setPersistent('ERPCountryAbbr', 'KYD');
+           localStorage.setItem('ERPCountryAbbr', 'KYD');
          }else if(dataReturnRes.ProcessLog.RegionName === "Mexico"){
-           Session.setPersistent('ERPCountryAbbr', 'MXN');
+           localStorage.setItem('ERPCountryAbbr', 'MXN');
          }else if(dataReturnRes.ProcessLog.RegionName === "New Zealand"){
-           Session.setPersistent('ERPCountryAbbr', 'NZD');
+           localStorage.setItem('ERPCountryAbbr', 'NZD');
          }else if(dataReturnRes.ProcessLog.RegionName === "Qatar"){
-           Session.setPersistent('ERPCountryAbbr', 'QAR');
+           localStorage.setItem('ERPCountryAbbr', 'QAR');
          }else if(dataReturnRes.ProcessLog.RegionName === "Kingdom of Saudi Arabia"){
-           Session.setPersistent('ERPCountryAbbr', 'SAR');
+           localStorage.setItem('ERPCountryAbbr', 'SAR');
          }else if(dataReturnRes.ProcessLog.RegionName === "Singapore"){
-           Session.setPersistent('ERPCountryAbbr', 'SGD');
+           localStorage.setItem('ERPCountryAbbr', 'SGD');
          }else if(dataReturnRes.ProcessLog.RegionName === "South Africa"){
-           Session.setPersistent('ERPCountryAbbr', 'ZAR');
+           localStorage.setItem('ERPCountryAbbr', 'ZAR');
          }else if(dataReturnRes.ProcessLog.RegionName === "United Arab Emirates"){
-           Session.setPersistent('ERPCountryAbbr', 'AED');
+           localStorage.setItem('ERPCountryAbbr', 'AED');
          }else if(dataReturnRes.ProcessLog.RegionName === "United Kingdom"){
-           Session.setPersistent('ERPCountryAbbr', 'GBP');
+           localStorage.setItem('ERPCountryAbbr', 'GBP');
          }else if(dataReturnRes.ProcessLog.RegionName === "United States of America"){
-           Session.setPersistent('ERPCountryAbbr', 'USD');
+           localStorage.setItem('ERPCountryAbbr', 'USD');
          }
 
-         Session.setPersistent('ERPDefaultDepartment', 'Default');
-         Session.setPersistent('ERPDefaultUOM', '');
-         Session.setPersistent('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
+         localStorage.setItem('ERPDefaultDepartment', 'Default');
+         localStorage.setItem('ERPDefaultUOM', '');
+         localStorage.setItem('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
 
          var ERPIPAdderess= "";
          if(dataReturnRes.ProcessLog.ServerName == "110.145.181.218"){
@@ -1836,7 +1836,7 @@ $("#erplogin-button").click(function(e){
     var ERPport = dataReturnRes.ProcessLog.APIPort;
 
 
-      Session.setPersistent('mycloudLogonUserEmail', userLoginEmail);
+      localStorage.setItem('mycloudLogonUserEmail', userLoginEmail);
 
     var ERPuserName = userLoginEmail;
      var ERPLoggeduserName = userLoginEmail;
@@ -1910,36 +1910,36 @@ $("#erplogin-button").click(function(e){
 
     /* Remove licence */
 
-       Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
-       Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
-       Session.setPersistent('CloudContactsLicence', isContactsLicence);
-       Session.setPersistent('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
-       Session.setPersistent('CloudPaymentsLicence', isPaymentsLicence);
-       Session.setPersistent('CloudReportsLicence', isReportsLicence);
-       Session.setPersistent('CloudSettingsLicence', isSettingsLicence);
+       localStorage.setItem('CloudTrueERPModule', isTrueERPConnection);
+       localStorage.setItem('CloudAccountsLicence', isAccountsLicence);
+       localStorage.setItem('CloudContactsLicence', isContactsLicence);
+       localStorage.setItem('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
+       localStorage.setItem('CloudPaymentsLicence', isPaymentsLicence);
+       localStorage.setItem('CloudReportsLicence', isReportsLicence);
+       localStorage.setItem('CloudSettingsLicence', isSettingsLicence);
 
-       Session.setPersistent('CloudMainLicence', isMainLicence);
-       Session.setPersistent('CloudDashboardLicence', isDashboardLicence);
+       localStorage.setItem('CloudMainLicence', isMainLicence);
+       localStorage.setItem('CloudDashboardLicence', isDashboardLicence);
 
 
-       Session.setPersistent('CloudSeedToSaleLicence', isSeedToSaleLicence);
-       Session.setPersistent('CloudBankingLicence', isBankingLicence);
-       Session.setPersistent('CloudPayrollLicence', isPayrollLicence);
+       localStorage.setItem('CloudSeedToSaleLicence', isSeedToSaleLicence);
+       localStorage.setItem('CloudBankingLicence', isBankingLicence);
+       localStorage.setItem('CloudPayrollLicence', isPayrollLicence);
 
-       Session.setPersistent('CloudFixedAssetsLicence', isFixedAssetsLicence);
-       Session.setPersistent('CloudInventoryLicence', isInventoryLicence);
-       Session.setPersistent('CloudManufacturingLicence', isManufacturingLicence);
-       Session.setPersistent('CloudPurchasesLicence', isPurchasesLicence);
-       Session.setPersistent('CloudSalesLicence', isSalesLicence);
-       Session.setPersistent('CloudShippingLicence', isShippingLicence);
-       Session.setPersistent('CloudStockTakeLicence', isStockTakeLicence);
-       Session.setPersistent('CloudStockTransferLicence', isStockTransferLicence);
+       localStorage.setItem('CloudFixedAssetsLicence', isFixedAssetsLicence);
+       localStorage.setItem('CloudInventoryLicence', isInventoryLicence);
+       localStorage.setItem('CloudManufacturingLicence', isManufacturingLicence);
+       localStorage.setItem('CloudPurchasesLicence', isPurchasesLicence);
+       localStorage.setItem('CloudSalesLicence', isSalesLicence);
+       localStorage.setItem('CloudShippingLicence', isShippingLicence);
+       localStorage.setItem('CloudStockTakeLicence', isStockTakeLicence);
+       localStorage.setItem('CloudStockTransferLicence', isStockTransferLicence);
 
-       Session.setPersistent('CloudAddExtraLicence', isAddExtraUserLicence);
-       Session.setPersistent('CloudMatrixLicence', isMatrixLicence);
-       Session.setPersistent('CloudPOSLicence', isPOSLicence);
-       Session.setPersistent('CloudUseForeignLicence', isFxCurrencyLicence);
-       Session.setPersistent('CloudWMSLicence', isWMSLicence);
+       localStorage.setItem('CloudAddExtraLicence', isAddExtraUserLicence);
+       localStorage.setItem('CloudMatrixLicence', isMatrixLicence);
+       localStorage.setItem('CloudPOSLicence', isPOSLicence);
+       localStorage.setItem('CloudUseForeignLicence', isFxCurrencyLicence);
+       localStorage.setItem('CloudWMSLicence', isWMSLicence);
          /* End Remove licence */
 
          if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail == undefined){
@@ -1960,11 +1960,11 @@ $("#erplogin-button").click(function(e){
 
 
 
-    Session.setPersistent('mycloudLogonUsername', ERPuserName);
-    Session.setPersistent('mycloudLogonUserEmail', ERPuserName);
+    localStorage.setItem('mycloudLogonUsername', ERPuserName);
+    localStorage.setItem('mycloudLogonUserEmail', ERPuserName);
 
-    Session.setPersistent('myerpPassword', userLoginPassword);
-    Session.setPersistent('mySessionEmployee', ERPuserName);
+    localStorage.setItem('myerpPassword', userLoginPassword);
+    localStorage.setItem('mySessionEmployee', ERPuserName);
 
     localStorage.setItem('EIPAddress', ERPIPAdderess);
     localStorage.setItem('EUserName', ERPuserName);
@@ -1977,21 +1977,21 @@ $("#erplogin-button").click(function(e){
     localStorage.setItem('mainEPort', checkSSLPorts);
 
     if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields){
-    Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
-    Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
-    Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
-    Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
-    Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
-    Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
+    localStorage.setItem('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
+    localStorage.setItem('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
+    localStorage.setItem('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
+    localStorage.setItem('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
+    localStorage.setItem('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
+    localStorage.setItem('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
 
-    Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
-    Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
+    localStorage.setItem('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
+    localStorage.setItem('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
 
 
 
-    Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
-    Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
-    Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
+    localStorage.setItem('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
+    localStorage.setItem('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
+    localStorage.setItem('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
 
 
     localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT||Currency+'0');
@@ -2018,20 +2018,20 @@ $("#erplogin-button").click(function(e){
     localStorage.setItem('vs1LoggedEmployeeImages_dash','');
     }
     }else{
-    Session.setPersistent('vs1companyName', '');
-    Session.setPersistent('vs1companyaddress1', '');
-    Session.setPersistent('vs1companyaddress2', '');
-    Session.setPersistent('vs1companyABN', '');
-    Session.setPersistent('vs1companyPhone', '');
-    Session.setPersistent('vs1companyURL', '');
+    localStorage.setItem('vs1companyName', '');
+    localStorage.setItem('vs1companyaddress1', '');
+    localStorage.setItem('vs1companyaddress2', '');
+    localStorage.setItem('vs1companyABN', '');
+    localStorage.setItem('vs1companyPhone', '');
+    localStorage.setItem('vs1companyURL', '');
 
-    Session.setPersistent('ERPDefaultDepartment', '');
-    Session.setPersistent('ERPDefaultUOM', '');
+    localStorage.setItem('ERPDefaultDepartment', '');
+    localStorage.setItem('ERPDefaultUOM', '');
 
 
 
-    Session.setPersistent('ERPTaxCodePurchaseInc', '');
-    Session.setPersistent('ERPTaxCodeSalesInc', '');
+    localStorage.setItem('ERPTaxCodePurchaseInc', '');
+    localStorage.setItem('ERPTaxCodeSalesInc', '');
 
 
     localStorage.setItem('VS1OverDueInvoiceAmt_dash', '');
@@ -2058,17 +2058,17 @@ $("#erplogin-button").click(function(e){
     localStorage.setItem('VS1SalesListReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_saleslist.items)||'');
     localStorage.setItem('VS1SalesEmpReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_salesperemployee.items)||'');
 
-    Session.setPersistent('LoggedUserEventFired', true);
-    Session.setPersistent('userlogged_status', 'active');
+    localStorage.setItem('LoggedUserEventFired', true);
+    localStorage.setItem('userlogged_status', 'active');
 
      var empusername = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
      var employeeUserLogon = ERPLoggeduserName;
      var employeeUserID = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId;
      var employeename =dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
-     Session.setPersistent('mySessionEmployeeLoggedID', employeeUserID);
+     localStorage.setItem('mySessionEmployeeLoggedID', employeeUserID);
      localStorage.setItem('mySession', employeeUserLogon);
      var sessionDataToLog = localStorage.getItem('mySession');
-     Session.setPersistent('mySessionEmployee', employeename);
+     localStorage.setItem('mySessionEmployee', employeename);
      let userAccessOptions = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail || '';
      if(userAccessOptions != ""){
        addLoginData(dataReturnRes).then(function (datareturn) {
@@ -2094,8 +2094,8 @@ $("#erplogin-button").click(function(e){
             oReq.onreadystatechange = function() {
 
               if (oReq.readyState == 4 && oReq.status == 200) {
-                Session.setPersistent('mainEIPAddress', licenceIPAddress);
-                Session.setPersistent('mainEPort', checkSSLPorts);
+                localStorage.setItem('mainEIPAddress', licenceIPAddress);
+                localStorage.setItem('mainEPort', checkSSLPorts);
 
 
                 var dataReturnRes = JSON.parse(oReq.responseText);
@@ -2107,7 +2107,7 @@ $("#erplogin-button").click(function(e){
                     $('.fullScreenSpin').css('display','none');
 
                     swal({
-                      title: 'Your payment has been declined please update your payment subscription information!',
+                      title: 'You Seem To Have Missed a Payment Recently, Can You Please Update your Subscription Information!',
                       text: '',
                       type: 'error',
                       showCancelButton: true,
@@ -2115,7 +2115,7 @@ $("#erplogin-button").click(function(e){
                       cancelButtonText: 'Cancel'
                     }).then((result) => {
                       if (result.value) {
-                        window.open('https://magento-473757-1929062.cloudwaysapps.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_blank');
+                        window.open('https://magento-473757-1929062.cloudwaysapps.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_self');
                       } else if (result.dismiss === 'cancel') {
 
                       }
@@ -2148,8 +2148,8 @@ $("#erplogin-button").click(function(e){
 
 
 
-                        Session.setPersistent('mycloudLogonDBID', regUserDetails.clouddatabaseID);
-                        Session.setPersistent('mycloudLogonID', regUserDetails._id);
+                        localStorage.setItem('mycloudLogonDBID', regUserDetails.clouddatabaseID);
+                        localStorage.setItem('mycloudLogonID', regUserDetails._id);
 
                   }
                   }
@@ -2158,7 +2158,7 @@ $("#erplogin-button").click(function(e){
 
                   localStorage.setItem('vs1cloudLoginInfo', dataReturnRes);
                   localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
-                  Session.setPersistent('isGreenTrack', true);
+                  localStorage.setItem('isGreenTrack', true);
                   if(!localStorage.getItem('VS1loggedDatabase')){
                     localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                     localStorage.setItem('VS11099Contractor_Report', '');
@@ -2181,7 +2181,7 @@ $("#erplogin-button").click(function(e){
                     localStorage.setItem('VS1TaxSummary_Report', '');
                     localStorage.setItem('VS1TrialBalance_Report', '');
                     localStorage.setItem('VS1PrintStatements_Report', '');
-                    Session.setPersistent('bankaccountid', '');
+                    localStorage.setItem('bankaccountid', '');
 
                     localStorage.setItem('VS1ProductList', '');
                     localStorage.setItem('VS1CustomerList', '');
@@ -2243,47 +2243,47 @@ $("#erplogin-button").click(function(e){
 
 
                       localStorage.setItem('VS1AccoountList','');
-                      Session.setPersistent('bankaccountid', '');
+                      localStorage.setItem('bankaccountid', '');
                     }
                   }
 
 
 
-                  Session.setPersistent('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
+                  localStorage.setItem('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
 
                   var region = dataReturnRes.ProcessLog.RegionName;
-                  Session.setPersistent('ERPLoggedCountry', region);
+                  localStorage.setItem('ERPLoggedCountry', region);
 
                   if(dataReturnRes.ProcessLog.RegionName === "Australia"){
-                    Session.setPersistent('ERPCountryAbbr', 'AUD');
+                    localStorage.setItem('ERPCountryAbbr', 'AUD');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Canada"){
-                    Session.setPersistent('ERPCountryAbbr', 'CAD');
+                    localStorage.setItem('ERPCountryAbbr', 'CAD');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Colombia"){
-                    Session.setPersistent('ERPCountryAbbr', 'COP');
+                    localStorage.setItem('ERPCountryAbbr', 'COP');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Kuwait"){
-                    Session.setPersistent('ERPCountryAbbr', 'KYD');
+                    localStorage.setItem('ERPCountryAbbr', 'KYD');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Mexico"){
-                    Session.setPersistent('ERPCountryAbbr', 'MXN');
+                    localStorage.setItem('ERPCountryAbbr', 'MXN');
                   }else if(dataReturnRes.ProcessLog.RegionName === "New Zealand"){
-                    Session.setPersistent('ERPCountryAbbr', 'NZD');
+                    localStorage.setItem('ERPCountryAbbr', 'NZD');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Qatar"){
-                    Session.setPersistent('ERPCountryAbbr', 'QAR');
+                    localStorage.setItem('ERPCountryAbbr', 'QAR');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Kingdom of Saudi Arabia"){
-                    Session.setPersistent('ERPCountryAbbr', 'SAR');
+                    localStorage.setItem('ERPCountryAbbr', 'SAR');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Singapore"){
-                    Session.setPersistent('ERPCountryAbbr', 'SGD');
+                    localStorage.setItem('ERPCountryAbbr', 'SGD');
                   }else if(dataReturnRes.ProcessLog.RegionName === "South Africa"){
-                    Session.setPersistent('ERPCountryAbbr', 'ZAR');
+                    localStorage.setItem('ERPCountryAbbr', 'ZAR');
                   }else if(dataReturnRes.ProcessLog.RegionName === "United Arab Emirates"){
-                    Session.setPersistent('ERPCountryAbbr', 'AED');
+                    localStorage.setItem('ERPCountryAbbr', 'AED');
                   }else if(dataReturnRes.ProcessLog.RegionName === "United Kingdom"){
-                    Session.setPersistent('ERPCountryAbbr', 'GBP');
+                    localStorage.setItem('ERPCountryAbbr', 'GBP');
                   }else if(dataReturnRes.ProcessLog.RegionName === "United States of America"){
-                    Session.setPersistent('ERPCountryAbbr', 'USD');
+                    localStorage.setItem('ERPCountryAbbr', 'USD');
                   }
-                  Session.setPersistent('ERPDefaultDepartment', 'Default');
-                  Session.setPersistent('ERPDefaultUOM', '');
-                  Session.setPersistent('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
+                  localStorage.setItem('ERPDefaultDepartment', 'Default');
+                  localStorage.setItem('ERPDefaultUOM', '');
+                  localStorage.setItem('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
                   var ERPIPAdderess= "";
                   if(dataReturnRes.ProcessLog.ServerName == "110.145.181.218"){
                     ERPIPAdderess= "www.login.vs1cloud.com";
@@ -2297,7 +2297,7 @@ $("#erplogin-button").click(function(e){
              var ERPport = dataReturnRes.ProcessLog.APIPort;
 
 
-               Session.setPersistent('mycloudLogonUserEmail', userLoginEmail);
+               localStorage.setItem('mycloudLogonUserEmail', userLoginEmail);
 
              var ERPuserName = userLoginEmail;
               var ERPLoggeduserName = userLoginEmail;
@@ -2371,36 +2371,36 @@ $("#erplogin-button").click(function(e){
 
             /* Remove licence */
 
-                Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
-                Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
-                Session.setPersistent('CloudContactsLicence', isContactsLicence);
-                Session.setPersistent('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
-                Session.setPersistent('CloudPaymentsLicence', isPaymentsLicence);
-                Session.setPersistent('CloudReportsLicence', isReportsLicence);
-                Session.setPersistent('CloudSettingsLicence', isSettingsLicence);
+                localStorage.setItem('CloudTrueERPModule', isTrueERPConnection);
+                localStorage.setItem('CloudAccountsLicence', isAccountsLicence);
+                localStorage.setItem('CloudContactsLicence', isContactsLicence);
+                localStorage.setItem('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
+                localStorage.setItem('CloudPaymentsLicence', isPaymentsLicence);
+                localStorage.setItem('CloudReportsLicence', isReportsLicence);
+                localStorage.setItem('CloudSettingsLicence', isSettingsLicence);
 
-                Session.setPersistent('CloudMainLicence', isMainLicence);
-                Session.setPersistent('CloudDashboardLicence', isDashboardLicence);
+                localStorage.setItem('CloudMainLicence', isMainLicence);
+                localStorage.setItem('CloudDashboardLicence', isDashboardLicence);
 
 
-                Session.setPersistent('CloudSeedToSaleLicence', isSeedToSaleLicence);
-                Session.setPersistent('CloudBankingLicence', isBankingLicence);
-                Session.setPersistent('CloudPayrollLicence', isPayrollLicence);
+                localStorage.setItem('CloudSeedToSaleLicence', isSeedToSaleLicence);
+                localStorage.setItem('CloudBankingLicence', isBankingLicence);
+                localStorage.setItem('CloudPayrollLicence', isPayrollLicence);
 
-                Session.setPersistent('CloudFixedAssetsLicence', isFixedAssetsLicence);
-                Session.setPersistent('CloudInventoryLicence', isInventoryLicence);
-                Session.setPersistent('CloudManufacturingLicence', isManufacturingLicence);
-                Session.setPersistent('CloudPurchasesLicence', isPurchasesLicence);
-                Session.setPersistent('CloudSalesLicence', isSalesLicence);
-                Session.setPersistent('CloudShippingLicence', isShippingLicence);
-                Session.setPersistent('CloudStockTakeLicence', isStockTakeLicence);
-                Session.setPersistent('CloudStockTransferLicence', isStockTransferLicence);
+                localStorage.setItem('CloudFixedAssetsLicence', isFixedAssetsLicence);
+                localStorage.setItem('CloudInventoryLicence', isInventoryLicence);
+                localStorage.setItem('CloudManufacturingLicence', isManufacturingLicence);
+                localStorage.setItem('CloudPurchasesLicence', isPurchasesLicence);
+                localStorage.setItem('CloudSalesLicence', isSalesLicence);
+                localStorage.setItem('CloudShippingLicence', isShippingLicence);
+                localStorage.setItem('CloudStockTakeLicence', isStockTakeLicence);
+                localStorage.setItem('CloudStockTransferLicence', isStockTransferLicence);
 
-                Session.setPersistent('CloudAddExtraLicence', isAddExtraUserLicence);
-                Session.setPersistent('CloudMatrixLicence', isMatrixLicence);
-                Session.setPersistent('CloudPOSLicence', isPOSLicence);
-                Session.setPersistent('CloudUseForeignLicence', isFxCurrencyLicence);
-                Session.setPersistent('CloudWMSLicence', isWMSLicence);
+                localStorage.setItem('CloudAddExtraLicence', isAddExtraUserLicence);
+                localStorage.setItem('CloudMatrixLicence', isMatrixLicence);
+                localStorage.setItem('CloudPOSLicence', isPOSLicence);
+                localStorage.setItem('CloudUseForeignLicence', isFxCurrencyLicence);
+                localStorage.setItem('CloudWMSLicence', isWMSLicence);
                   /* End Remove licence */
 
                   if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail == undefined){
@@ -2420,11 +2420,11 @@ $("#erplogin-button").click(function(e){
                   };
 
 
-          Session.setPersistent('mycloudLogonUsername', ERPuserName);
-          Session.setPersistent('mycloudLogonUserEmail', ERPuserName);
+          localStorage.setItem('mycloudLogonUsername', ERPuserName);
+          localStorage.setItem('mycloudLogonUserEmail', ERPuserName);
 
-        Session.setPersistent('myerpPassword', userLoginPassword);
-        Session.setPersistent('mySessionEmployee', ERPuserName);
+        localStorage.setItem('myerpPassword', userLoginPassword);
+        localStorage.setItem('mySessionEmployee', ERPuserName);
 
         localStorage.setItem('EIPAddress', ERPIPAdderess);
         localStorage.setItem('EUserName', ERPuserName);
@@ -2437,21 +2437,21 @@ $("#erplogin-button").click(function(e){
         localStorage.setItem('mainEPort', checkSSLPorts);
 
         if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields){
-        Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
-        Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
-        Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
-        Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
-        Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
-        Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
+        localStorage.setItem('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
+        localStorage.setItem('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
+        localStorage.setItem('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
+        localStorage.setItem('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
+        localStorage.setItem('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
+        localStorage.setItem('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
 
-        Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
-        Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
+        localStorage.setItem('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
+        localStorage.setItem('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
 
 
 
-        Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
-        Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
-        Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
+        localStorage.setItem('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
+        localStorage.setItem('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
+        localStorage.setItem('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
 
 
         localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT||Currency+'0');
@@ -2478,20 +2478,20 @@ $("#erplogin-button").click(function(e){
           localStorage.setItem('vs1LoggedEmployeeImages_dash','');
         }
         }else{
-          Session.setPersistent('vs1companyName', '');
-          Session.setPersistent('vs1companyaddress1', '');
-          Session.setPersistent('vs1companyaddress2', '');
-          Session.setPersistent('vs1companyABN', '');
-          Session.setPersistent('vs1companyPhone', '');
-          Session.setPersistent('vs1companyURL', '');
+          localStorage.setItem('vs1companyName', '');
+          localStorage.setItem('vs1companyaddress1', '');
+          localStorage.setItem('vs1companyaddress2', '');
+          localStorage.setItem('vs1companyABN', '');
+          localStorage.setItem('vs1companyPhone', '');
+          localStorage.setItem('vs1companyURL', '');
 
-          Session.setPersistent('ERPDefaultDepartment', '');
-          Session.setPersistent('ERPDefaultUOM', '');
+          localStorage.setItem('ERPDefaultDepartment', '');
+          localStorage.setItem('ERPDefaultUOM', '');
 
 
 
-          Session.setPersistent('ERPTaxCodePurchaseInc', '');
-          Session.setPersistent('ERPTaxCodeSalesInc', '');
+          localStorage.setItem('ERPTaxCodePurchaseInc', '');
+          localStorage.setItem('ERPTaxCodeSalesInc', '');
 
 
           localStorage.setItem('VS1OverDueInvoiceAmt_dash', '');
@@ -2518,17 +2518,17 @@ $("#erplogin-button").click(function(e){
         localStorage.setItem('VS1SalesListReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_saleslist.items)||'');
         localStorage.setItem('VS1SalesEmpReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_salesperemployee.items)||'');
 
-          Session.setPersistent('LoggedUserEventFired', true);
-          Session.setPersistent('userlogged_status', 'active');
+          localStorage.setItem('LoggedUserEventFired', true);
+          localStorage.setItem('userlogged_status', 'active');
 
               var empusername = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
               var employeeUserLogon = ERPLoggeduserName;
               var employeeUserID = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId;
               var employeename =dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
-              Session.setPersistent('mySessionEmployeeLoggedID', employeeUserID);
+              localStorage.setItem('mySessionEmployeeLoggedID', employeeUserID);
               localStorage.setItem('mySession', employeeUserLogon);
               var sessionDataToLog = localStorage.getItem('mySession');
-              Session.setPersistent('mySessionEmployee', employeename);
+              localStorage.setItem('mySessionEmployee', employeename);
               let userAccessOptions = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail || '';
               if(userAccessOptions != ""){
                 addLoginData(dataReturnRes).then(function (datareturn) {
@@ -2649,8 +2649,8 @@ $("#erplogin-button").click(function(e){
         oReq.onreadystatechange = function() {
 
           if (oReq.readyState == 4 && oReq.status == 200) {
-            Session.setPersistent('mainEIPAddress', licenceIPAddress);
-            Session.setPersistent('mainEPort', checkSSLPorts);
+            localStorage.setItem('mainEIPAddress', licenceIPAddress);
+            localStorage.setItem('mainEPort', checkSSLPorts);
 
 
             var dataReturnRes = JSON.parse(oReq.responseText);
@@ -2662,7 +2662,7 @@ $("#erplogin-button").click(function(e){
                 $('.fullScreenSpin').css('display','none');
 
                 swal({
-                  title: 'Your payment has been declined please update your payment subscription information!',
+                  title: 'You Seem To Have Missed a Payment Recently, Can You Please Update your Subscription Information!',
                   text: '',
                   type: 'error',
                   showCancelButton: true,
@@ -2670,7 +2670,7 @@ $("#erplogin-button").click(function(e){
                   cancelButtonText: 'Cancel'
                 }).then((result) => {
                   if (result.value) {
-                    window.open('https://magento-473757-1929062.cloudwaysapps.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_blank');
+                    window.open('https://magento-473757-1929062.cloudwaysapps.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_self');
                   } else if (result.dismiss === 'cancel') {
 
                   }
@@ -2702,8 +2702,8 @@ $("#erplogin-button").click(function(e){
 
 
 
-                    Session.setPersistent('mycloudLogonDBID', regUserDetails.clouddatabaseID);
-                    Session.setPersistent('mycloudLogonID', regUserDetails._id);
+                    localStorage.setItem('mycloudLogonDBID', regUserDetails.clouddatabaseID);
+                    localStorage.setItem('mycloudLogonID', regUserDetails._id);
 
               }
               }
@@ -2712,7 +2712,7 @@ $("#erplogin-button").click(function(e){
 
               localStorage.setItem('vs1cloudLoginInfo', dataReturnRes);
               localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
-              Session.setPersistent('isGreenTrack', true);
+              localStorage.setItem('isGreenTrack', true);
               if(!localStorage.getItem('VS1loggedDatabase')){
                 localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                 localStorage.setItem('VS11099Contractor_Report', '');
@@ -2735,7 +2735,7 @@ $("#erplogin-button").click(function(e){
                 localStorage.setItem('VS1TaxSummary_Report', '');
                 localStorage.setItem('VS1TrialBalance_Report', '');
                 localStorage.setItem('VS1PrintStatements_Report', '');
-                Session.setPersistent('bankaccountid', '');
+                localStorage.setItem('bankaccountid', '');
 
                 localStorage.setItem('VS1ProductList', '');
                 localStorage.setItem('VS1CustomerList', '');
@@ -2797,47 +2797,47 @@ $("#erplogin-button").click(function(e){
 
 
                   localStorage.setItem('VS1AccoountList','');
-                  Session.setPersistent('bankaccountid', '');
+                  localStorage.setItem('bankaccountid', '');
                 }
               }
 
 
 
-              Session.setPersistent('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
+              localStorage.setItem('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
 
               var region = dataReturnRes.ProcessLog.RegionName;
-              Session.setPersistent('ERPLoggedCountry', region);
+              localStorage.setItem('ERPLoggedCountry', region);
 
               if(dataReturnRes.ProcessLog.RegionName === "Australia"){
-                Session.setPersistent('ERPCountryAbbr', 'AUD');
+                localStorage.setItem('ERPCountryAbbr', 'AUD');
               }else if(dataReturnRes.ProcessLog.RegionName === "Canada"){
-                Session.setPersistent('ERPCountryAbbr', 'CAD');
+                localStorage.setItem('ERPCountryAbbr', 'CAD');
               }else if(dataReturnRes.ProcessLog.RegionName === "Colombia"){
-                Session.setPersistent('ERPCountryAbbr', 'COP');
+                localStorage.setItem('ERPCountryAbbr', 'COP');
               }else if(dataReturnRes.ProcessLog.RegionName === "Kuwait"){
-                Session.setPersistent('ERPCountryAbbr', 'KYD');
+                localStorage.setItem('ERPCountryAbbr', 'KYD');
               }else if(dataReturnRes.ProcessLog.RegionName === "Mexico"){
-                Session.setPersistent('ERPCountryAbbr', 'MXN');
+                localStorage.setItem('ERPCountryAbbr', 'MXN');
               }else if(dataReturnRes.ProcessLog.RegionName === "New Zealand"){
-                Session.setPersistent('ERPCountryAbbr', 'NZD');
+                localStorage.setItem('ERPCountryAbbr', 'NZD');
               }else if(dataReturnRes.ProcessLog.RegionName === "Qatar"){
-                Session.setPersistent('ERPCountryAbbr', 'QAR');
+                localStorage.setItem('ERPCountryAbbr', 'QAR');
               }else if(dataReturnRes.ProcessLog.RegionName === "Kingdom of Saudi Arabia"){
-                Session.setPersistent('ERPCountryAbbr', 'SAR');
+                localStorage.setItem('ERPCountryAbbr', 'SAR');
               }else if(dataReturnRes.ProcessLog.RegionName === "Singapore"){
-                Session.setPersistent('ERPCountryAbbr', 'SGD');
+                localStorage.setItem('ERPCountryAbbr', 'SGD');
               }else if(dataReturnRes.ProcessLog.RegionName === "South Africa"){
-                Session.setPersistent('ERPCountryAbbr', 'ZAR');
+                localStorage.setItem('ERPCountryAbbr', 'ZAR');
               }else if(dataReturnRes.ProcessLog.RegionName === "United Arab Emirates"){
-                Session.setPersistent('ERPCountryAbbr', 'AED');
+                localStorage.setItem('ERPCountryAbbr', 'AED');
               }else if(dataReturnRes.ProcessLog.RegionName === "United Kingdom"){
-                Session.setPersistent('ERPCountryAbbr', 'GBP');
+                localStorage.setItem('ERPCountryAbbr', 'GBP');
               }else if(dataReturnRes.ProcessLog.RegionName === "United States of America"){
-                Session.setPersistent('ERPCountryAbbr', 'USD');
+                localStorage.setItem('ERPCountryAbbr', 'USD');
               }
-              Session.setPersistent('ERPDefaultDepartment', 'Default');
-              Session.setPersistent('ERPDefaultUOM', '');
-              Session.setPersistent('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
+              localStorage.setItem('ERPDefaultDepartment', 'Default');
+              localStorage.setItem('ERPDefaultUOM', '');
+              localStorage.setItem('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
               dataReturnRes.ProcessLog.VS1AdminPassword = userLoginPassword;
               dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
               var ERPIPAdderess= "";
@@ -2851,7 +2851,7 @@ $("#erplogin-button").click(function(e){
          var ERPport = dataReturnRes.ProcessLog.APIPort;
 
 
-           Session.setPersistent('mycloudLogonUserEmail', userLoginEmail);
+           localStorage.setItem('mycloudLogonUserEmail', userLoginEmail);
 
          var ERPuserName = userLoginEmail;
           var ERPLoggeduserName = userLoginEmail;
@@ -2925,36 +2925,36 @@ $("#erplogin-button").click(function(e){
 
         /* Remove licence */
 
-            Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
-            Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
-            Session.setPersistent('CloudContactsLicence', isContactsLicence);
-            Session.setPersistent('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
-            Session.setPersistent('CloudPaymentsLicence', isPaymentsLicence);
-            Session.setPersistent('CloudReportsLicence', isReportsLicence);
-            Session.setPersistent('CloudSettingsLicence', isSettingsLicence);
+            localStorage.setItem('CloudTrueERPModule', isTrueERPConnection);
+            localStorage.setItem('CloudAccountsLicence', isAccountsLicence);
+            localStorage.setItem('CloudContactsLicence', isContactsLicence);
+            localStorage.setItem('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
+            localStorage.setItem('CloudPaymentsLicence', isPaymentsLicence);
+            localStorage.setItem('CloudReportsLicence', isReportsLicence);
+            localStorage.setItem('CloudSettingsLicence', isSettingsLicence);
 
-            Session.setPersistent('CloudMainLicence', isMainLicence);
-            Session.setPersistent('CloudDashboardLicence', isDashboardLicence);
+            localStorage.setItem('CloudMainLicence', isMainLicence);
+            localStorage.setItem('CloudDashboardLicence', isDashboardLicence);
 
 
-            Session.setPersistent('CloudSeedToSaleLicence', isSeedToSaleLicence);
-            Session.setPersistent('CloudBankingLicence', isBankingLicence);
-            Session.setPersistent('CloudPayrollLicence', isPayrollLicence);
+            localStorage.setItem('CloudSeedToSaleLicence', isSeedToSaleLicence);
+            localStorage.setItem('CloudBankingLicence', isBankingLicence);
+            localStorage.setItem('CloudPayrollLicence', isPayrollLicence);
 
-            Session.setPersistent('CloudFixedAssetsLicence', isFixedAssetsLicence);
-            Session.setPersistent('CloudInventoryLicence', isInventoryLicence);
-            Session.setPersistent('CloudManufacturingLicence', isManufacturingLicence);
-            Session.setPersistent('CloudPurchasesLicence', isPurchasesLicence);
-            Session.setPersistent('CloudSalesLicence', isSalesLicence);
-            Session.setPersistent('CloudShippingLicence', isShippingLicence);
-            Session.setPersistent('CloudStockTakeLicence', isStockTakeLicence);
-            Session.setPersistent('CloudStockTransferLicence', isStockTransferLicence);
+            localStorage.setItem('CloudFixedAssetsLicence', isFixedAssetsLicence);
+            localStorage.setItem('CloudInventoryLicence', isInventoryLicence);
+            localStorage.setItem('CloudManufacturingLicence', isManufacturingLicence);
+            localStorage.setItem('CloudPurchasesLicence', isPurchasesLicence);
+            localStorage.setItem('CloudSalesLicence', isSalesLicence);
+            localStorage.setItem('CloudShippingLicence', isShippingLicence);
+            localStorage.setItem('CloudStockTakeLicence', isStockTakeLicence);
+            localStorage.setItem('CloudStockTransferLicence', isStockTransferLicence);
 
-            Session.setPersistent('CloudAddExtraLicence', isAddExtraUserLicence);
-            Session.setPersistent('CloudMatrixLicence', isMatrixLicence);
-            Session.setPersistent('CloudPOSLicence', isPOSLicence);
-            Session.setPersistent('CloudUseForeignLicence', isFxCurrencyLicence);
-            Session.setPersistent('CloudWMSLicence', isWMSLicence);
+            localStorage.setItem('CloudAddExtraLicence', isAddExtraUserLicence);
+            localStorage.setItem('CloudMatrixLicence', isMatrixLicence);
+            localStorage.setItem('CloudPOSLicence', isPOSLicence);
+            localStorage.setItem('CloudUseForeignLicence', isFxCurrencyLicence);
+            localStorage.setItem('CloudWMSLicence', isWMSLicence);
               /* End Remove licence */
 
               if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail == undefined){
@@ -2976,11 +2976,11 @@ $("#erplogin-button").click(function(e){
 
               dataReturnRes.ProcessLog.VS1AdminPassword = userLoginPassword;
               dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
-      Session.setPersistent('mycloudLogonUsername', ERPuserName);
-      Session.setPersistent('mycloudLogonUserEmail', ERPuserName);
+      localStorage.setItem('mycloudLogonUsername', ERPuserName);
+      localStorage.setItem('mycloudLogonUserEmail', ERPuserName);
 
-    Session.setPersistent('myerpPassword', userLoginPassword);
-    Session.setPersistent('mySessionEmployee', ERPuserName);
+    localStorage.setItem('myerpPassword', userLoginPassword);
+    localStorage.setItem('mySessionEmployee', ERPuserName);
 
     localStorage.setItem('EIPAddress', ERPIPAdderess);
     localStorage.setItem('EUserName', ERPuserName);
@@ -2993,21 +2993,21 @@ $("#erplogin-button").click(function(e){
     localStorage.setItem('mainEPort', checkSSLPorts);
 
     if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields){
-    Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
-    Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
-    Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
-    Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
-    Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
-    Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
+    localStorage.setItem('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
+    localStorage.setItem('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
+    localStorage.setItem('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
+    localStorage.setItem('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
+    localStorage.setItem('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
+    localStorage.setItem('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
 
-    Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
-    Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
+    localStorage.setItem('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
+    localStorage.setItem('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
 
 
 
-    Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
-    Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
-    Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
+    localStorage.setItem('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
+    localStorage.setItem('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
+    localStorage.setItem('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
 
 
     localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT||Currency+'0');
@@ -3034,20 +3034,20 @@ $("#erplogin-button").click(function(e){
       localStorage.setItem('vs1LoggedEmployeeImages_dash','');
     }
     }else{
-      Session.setPersistent('vs1companyName', '');
-      Session.setPersistent('vs1companyaddress1', '');
-      Session.setPersistent('vs1companyaddress2', '');
-      Session.setPersistent('vs1companyABN', '');
-      Session.setPersistent('vs1companyPhone', '');
-      Session.setPersistent('vs1companyURL', '');
+      localStorage.setItem('vs1companyName', '');
+      localStorage.setItem('vs1companyaddress1', '');
+      localStorage.setItem('vs1companyaddress2', '');
+      localStorage.setItem('vs1companyABN', '');
+      localStorage.setItem('vs1companyPhone', '');
+      localStorage.setItem('vs1companyURL', '');
 
-      Session.setPersistent('ERPDefaultDepartment', '');
-      Session.setPersistent('ERPDefaultUOM', '');
+      localStorage.setItem('ERPDefaultDepartment', '');
+      localStorage.setItem('ERPDefaultUOM', '');
 
 
 
-      Session.setPersistent('ERPTaxCodePurchaseInc', '');
-      Session.setPersistent('ERPTaxCodeSalesInc', '');
+      localStorage.setItem('ERPTaxCodePurchaseInc', '');
+      localStorage.setItem('ERPTaxCodeSalesInc', '');
 
 
       localStorage.setItem('VS1OverDueInvoiceAmt_dash', '');
@@ -3074,17 +3074,17 @@ $("#erplogin-button").click(function(e){
     localStorage.setItem('VS1SalesListReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_saleslist.items)||'');
     localStorage.setItem('VS1SalesEmpReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_salesperemployee.items)||'');
 
-      Session.setPersistent('LoggedUserEventFired', true);
-      Session.setPersistent('userlogged_status', 'active');
+      localStorage.setItem('LoggedUserEventFired', true);
+      localStorage.setItem('userlogged_status', 'active');
 
           var empusername = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
           var employeeUserLogon = ERPLoggeduserName;
           var employeeUserID = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId;
           var employeename =dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
-          Session.setPersistent('mySessionEmployeeLoggedID', employeeUserID);
+          localStorage.setItem('mySessionEmployeeLoggedID', employeeUserID);
           localStorage.setItem('mySession', employeeUserLogon);
           var sessionDataToLog = localStorage.getItem('mySession');
-          Session.setPersistent('mySessionEmployee', employeename);
+          localStorage.setItem('mySessionEmployee', employeename);
           let userAccessOptions = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail || '';
           if(userAccessOptions != ""){
             addLoginData(dataReturnRes).then(function (datareturn) {
@@ -3217,8 +3217,8 @@ $("#erplogin-button").click(function(e){
             oReq.onreadystatechange = function() {
 
               if (oReq.readyState == 4 && oReq.status == 200) {
-                Session.setPersistent('mainEIPAddress', licenceIPAddress);
-                Session.setPersistent('mainEPort', checkSSLPorts);
+                localStorage.setItem('mainEIPAddress', licenceIPAddress);
+                localStorage.setItem('mainEPort', checkSSLPorts);
 
 
                 var dataReturnRes = JSON.parse(oReq.responseText);
@@ -3230,7 +3230,7 @@ $("#erplogin-button").click(function(e){
                     $('.fullScreenSpin').css('display','none');
 
                     swal({
-                      title: 'Your payment has been declined please update your payment subscription information!',
+                      title: 'You Seem To Have Missed a Payment Recently, Can You Please Update your Subscription Information!',
                       text: '',
                       type: 'error',
                       showCancelButton: true,
@@ -3238,7 +3238,7 @@ $("#erplogin-button").click(function(e){
                       cancelButtonText: 'Cancel'
                     }).then((result) => {
                       if (result.value) {
-                        window.open('https://magento-473757-1929062.cloudwaysapps.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_blank');
+                        window.open('https://magento-473757-1929062.cloudwaysapps.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_self');
                       } else if (result.dismiss === 'cancel') {
 
                       }
@@ -3270,8 +3270,8 @@ $("#erplogin-button").click(function(e){
 
 
 
-                        Session.setPersistent('mycloudLogonDBID', regUserDetails.clouddatabaseID);
-                        Session.setPersistent('mycloudLogonID', regUserDetails._id);
+                        localStorage.setItem('mycloudLogonDBID', regUserDetails.clouddatabaseID);
+                        localStorage.setItem('mycloudLogonID', regUserDetails._id);
 
                   }
                   }
@@ -3280,7 +3280,7 @@ $("#erplogin-button").click(function(e){
 
                   localStorage.setItem('vs1cloudLoginInfo', dataReturnRes);
                   localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
-                  Session.setPersistent('isGreenTrack', true);
+                  localStorage.setItem('isGreenTrack', true);
                   if(!localStorage.getItem('VS1loggedDatabase')){
                     localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                     localStorage.setItem('VS11099Contractor_Report', '');
@@ -3303,7 +3303,7 @@ $("#erplogin-button").click(function(e){
                     localStorage.setItem('VS1TaxSummary_Report', '');
                     localStorage.setItem('VS1TrialBalance_Report', '');
                     localStorage.setItem('VS1PrintStatements_Report', '');
-                    Session.setPersistent('bankaccountid', '');
+                    localStorage.setItem('bankaccountid', '');
 
                     localStorage.setItem('VS1ProductList', '');
                     localStorage.setItem('VS1CustomerList', '');
@@ -3365,47 +3365,47 @@ $("#erplogin-button").click(function(e){
 
 
                       localStorage.setItem('VS1AccoountList','');
-                      Session.setPersistent('bankaccountid', '');
+                      localStorage.setItem('bankaccountid', '');
                     }
                   }
 
 
 
-                  Session.setPersistent('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
+                  localStorage.setItem('ERPCurrency', dataReturnRes.ProcessLog.TRegionalOptions.CurrencySymbol);
 
                   var region = dataReturnRes.ProcessLog.RegionName;
-                  Session.setPersistent('ERPLoggedCountry', region);
+                  localStorage.setItem('ERPLoggedCountry', region);
 
                   if(dataReturnRes.ProcessLog.RegionName === "Australia"){
-                    Session.setPersistent('ERPCountryAbbr', 'AUD');
+                    localStorage.setItem('ERPCountryAbbr', 'AUD');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Canada"){
-                    Session.setPersistent('ERPCountryAbbr', 'CAD');
+                    localStorage.setItem('ERPCountryAbbr', 'CAD');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Colombia"){
-                    Session.setPersistent('ERPCountryAbbr', 'COP');
+                    localStorage.setItem('ERPCountryAbbr', 'COP');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Kuwait"){
-                    Session.setPersistent('ERPCountryAbbr', 'KYD');
+                    localStorage.setItem('ERPCountryAbbr', 'KYD');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Mexico"){
-                    Session.setPersistent('ERPCountryAbbr', 'MXN');
+                    localStorage.setItem('ERPCountryAbbr', 'MXN');
                   }else if(dataReturnRes.ProcessLog.RegionName === "New Zealand"){
-                    Session.setPersistent('ERPCountryAbbr', 'NZD');
+                    localStorage.setItem('ERPCountryAbbr', 'NZD');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Qatar"){
-                    Session.setPersistent('ERPCountryAbbr', 'QAR');
+                    localStorage.setItem('ERPCountryAbbr', 'QAR');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Kingdom of Saudi Arabia"){
-                    Session.setPersistent('ERPCountryAbbr', 'SAR');
+                    localStorage.setItem('ERPCountryAbbr', 'SAR');
                   }else if(dataReturnRes.ProcessLog.RegionName === "Singapore"){
-                    Session.setPersistent('ERPCountryAbbr', 'SGD');
+                    localStorage.setItem('ERPCountryAbbr', 'SGD');
                   }else if(dataReturnRes.ProcessLog.RegionName === "South Africa"){
-                    Session.setPersistent('ERPCountryAbbr', 'ZAR');
+                    localStorage.setItem('ERPCountryAbbr', 'ZAR');
                   }else if(dataReturnRes.ProcessLog.RegionName === "United Arab Emirates"){
-                    Session.setPersistent('ERPCountryAbbr', 'AED');
+                    localStorage.setItem('ERPCountryAbbr', 'AED');
                   }else if(dataReturnRes.ProcessLog.RegionName === "United Kingdom"){
-                    Session.setPersistent('ERPCountryAbbr', 'GBP');
+                    localStorage.setItem('ERPCountryAbbr', 'GBP');
                   }else if(dataReturnRes.ProcessLog.RegionName === "United States of America"){
-                    Session.setPersistent('ERPCountryAbbr', 'USD');
+                    localStorage.setItem('ERPCountryAbbr', 'USD');
                   }
-                  Session.setPersistent('ERPDefaultDepartment', 'Default');
-                  Session.setPersistent('ERPDefaultUOM', '');
-                  Session.setPersistent('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
+                  localStorage.setItem('ERPDefaultDepartment', 'Default');
+                  localStorage.setItem('ERPDefaultUOM', '');
+                  localStorage.setItem('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
                   dataReturnRes.ProcessLog.VS1AdminPassword = userLoginPassword;
                   dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
                   var ERPIPAdderess= "";
@@ -3419,7 +3419,7 @@ $("#erplogin-button").click(function(e){
              var ERPport = dataReturnRes.ProcessLog.APIPort;
 
 
-               Session.setPersistent('mycloudLogonUserEmail', userLoginEmail);
+               localStorage.setItem('mycloudLogonUserEmail', userLoginEmail);
 
              var ERPuserName = userLoginEmail;
               var ERPLoggeduserName = userLoginEmail;
@@ -3493,36 +3493,36 @@ $("#erplogin-button").click(function(e){
 
             /* Remove licence */
 
-                Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
-                Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
-                Session.setPersistent('CloudContactsLicence', isContactsLicence);
-                Session.setPersistent('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
-                Session.setPersistent('CloudPaymentsLicence', isPaymentsLicence);
-                Session.setPersistent('CloudReportsLicence', isReportsLicence);
-                Session.setPersistent('CloudSettingsLicence', isSettingsLicence);
+                localStorage.setItem('CloudTrueERPModule', isTrueERPConnection);
+                localStorage.setItem('CloudAccountsLicence', isAccountsLicence);
+                localStorage.setItem('CloudContactsLicence', isContactsLicence);
+                localStorage.setItem('CloudExpenseClaimsLicence', isExpenseClaimsLicence);
+                localStorage.setItem('CloudPaymentsLicence', isPaymentsLicence);
+                localStorage.setItem('CloudReportsLicence', isReportsLicence);
+                localStorage.setItem('CloudSettingsLicence', isSettingsLicence);
 
-                Session.setPersistent('CloudMainLicence', isMainLicence);
-                Session.setPersistent('CloudDashboardLicence', isDashboardLicence);
+                localStorage.setItem('CloudMainLicence', isMainLicence);
+                localStorage.setItem('CloudDashboardLicence', isDashboardLicence);
 
 
-                Session.setPersistent('CloudSeedToSaleLicence', isSeedToSaleLicence);
-                Session.setPersistent('CloudBankingLicence', isBankingLicence);
-                Session.setPersistent('CloudPayrollLicence', isPayrollLicence);
+                localStorage.setItem('CloudSeedToSaleLicence', isSeedToSaleLicence);
+                localStorage.setItem('CloudBankingLicence', isBankingLicence);
+                localStorage.setItem('CloudPayrollLicence', isPayrollLicence);
 
-                Session.setPersistent('CloudFixedAssetsLicence', isFixedAssetsLicence);
-                Session.setPersistent('CloudInventoryLicence', isInventoryLicence);
-                Session.setPersistent('CloudManufacturingLicence', isManufacturingLicence);
-                Session.setPersistent('CloudPurchasesLicence', isPurchasesLicence);
-                Session.setPersistent('CloudSalesLicence', isSalesLicence);
-                Session.setPersistent('CloudShippingLicence', isShippingLicence);
-                Session.setPersistent('CloudStockTakeLicence', isStockTakeLicence);
-                Session.setPersistent('CloudStockTransferLicence', isStockTransferLicence);
+                localStorage.setItem('CloudFixedAssetsLicence', isFixedAssetsLicence);
+                localStorage.setItem('CloudInventoryLicence', isInventoryLicence);
+                localStorage.setItem('CloudManufacturingLicence', isManufacturingLicence);
+                localStorage.setItem('CloudPurchasesLicence', isPurchasesLicence);
+                localStorage.setItem('CloudSalesLicence', isSalesLicence);
+                localStorage.setItem('CloudShippingLicence', isShippingLicence);
+                localStorage.setItem('CloudStockTakeLicence', isStockTakeLicence);
+                localStorage.setItem('CloudStockTransferLicence', isStockTransferLicence);
 
-                Session.setPersistent('CloudAddExtraLicence', isAddExtraUserLicence);
-                Session.setPersistent('CloudMatrixLicence', isMatrixLicence);
-                Session.setPersistent('CloudPOSLicence', isPOSLicence);
-                Session.setPersistent('CloudUseForeignLicence', isFxCurrencyLicence);
-                Session.setPersistent('CloudWMSLicence', isWMSLicence);
+                localStorage.setItem('CloudAddExtraLicence', isAddExtraUserLicence);
+                localStorage.setItem('CloudMatrixLicence', isMatrixLicence);
+                localStorage.setItem('CloudPOSLicence', isPOSLicence);
+                localStorage.setItem('CloudUseForeignLicence', isFxCurrencyLicence);
+                localStorage.setItem('CloudWMSLicence', isWMSLicence);
                   /* End Remove licence */
 
                   if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail == undefined){
@@ -3543,11 +3543,11 @@ $("#erplogin-button").click(function(e){
 
 
 
-          Session.setPersistent('mycloudLogonUsername', ERPuserName);
-          Session.setPersistent('mycloudLogonUserEmail', ERPuserName);
+          localStorage.setItem('mycloudLogonUsername', ERPuserName);
+          localStorage.setItem('mycloudLogonUserEmail', ERPuserName);
 
-        Session.setPersistent('myerpPassword', userLoginPassword);
-        Session.setPersistent('mySessionEmployee', ERPuserName);
+        localStorage.setItem('myerpPassword', userLoginPassword);
+        localStorage.setItem('mySessionEmployee', ERPuserName);
 
         localStorage.setItem('EIPAddress', ERPIPAdderess);
         localStorage.setItem('EUserName', ERPuserName);
@@ -3560,21 +3560,21 @@ $("#erplogin-button").click(function(e){
         localStorage.setItem('mainEPort', checkSSLPorts);
 
         if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields){
-        Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
-        Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
-        Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
-        Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
-        Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
-        Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
+        localStorage.setItem('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName||'');
+        localStorage.setItem('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address||'');
+        localStorage.setItem('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2||'');
+        localStorage.setItem('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN||'');
+        localStorage.setItem('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber||'');
+        localStorage.setItem('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL||'');
 
-        Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
-        Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
+        localStorage.setItem('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass||'');
+        localStorage.setItem('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM||'');
 
 
 
-        Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
-        Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
-        Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
+        localStorage.setItem('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault||'');
+        localStorage.setItem('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc||'');
+        localStorage.setItem('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc||'');
 
 
         localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT||Currency+'0');
@@ -3601,20 +3601,20 @@ $("#erplogin-button").click(function(e){
           localStorage.setItem('vs1LoggedEmployeeImages_dash','');
         }
         }else{
-          Session.setPersistent('vs1companyName', '');
-          Session.setPersistent('vs1companyaddress1', '');
-          Session.setPersistent('vs1companyaddress2', '');
-          Session.setPersistent('vs1companyABN', '');
-          Session.setPersistent('vs1companyPhone', '');
-          Session.setPersistent('vs1companyURL', '');
+          localStorage.setItem('vs1companyName', '');
+          localStorage.setItem('vs1companyaddress1', '');
+          localStorage.setItem('vs1companyaddress2', '');
+          localStorage.setItem('vs1companyABN', '');
+          localStorage.setItem('vs1companyPhone', '');
+          localStorage.setItem('vs1companyURL', '');
 
-          Session.setPersistent('ERPDefaultDepartment', '');
-          Session.setPersistent('ERPDefaultUOM', '');
+          localStorage.setItem('ERPDefaultDepartment', '');
+          localStorage.setItem('ERPDefaultUOM', '');
 
 
 
-          Session.setPersistent('ERPTaxCodePurchaseInc', '');
-          Session.setPersistent('ERPTaxCodeSalesInc', '');
+          localStorage.setItem('ERPTaxCodePurchaseInc', '');
+          localStorage.setItem('ERPTaxCodeSalesInc', '');
 
 
           localStorage.setItem('VS1OverDueInvoiceAmt_dash', '');
@@ -3641,17 +3641,17 @@ $("#erplogin-button").click(function(e){
         localStorage.setItem('VS1SalesListReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_saleslist.items)||'');
         localStorage.setItem('VS1SalesEmpReport_dash', JSON.stringify(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_salesperemployee.items)||'');
 
-          Session.setPersistent('LoggedUserEventFired', true);
-          Session.setPersistent('userlogged_status', 'active');
+          localStorage.setItem('LoggedUserEventFired', true);
+          localStorage.setItem('userlogged_status', 'active');
 
               var empusername = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
               var employeeUserLogon = ERPLoggeduserName;
               var employeeUserID = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId;
               var employeename =dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeName;
-              Session.setPersistent('mySessionEmployeeLoggedID', employeeUserID);
+              localStorage.setItem('mySessionEmployeeLoggedID', employeeUserID);
               localStorage.setItem('mySession', employeeUserLogon);
               var sessionDataToLog = localStorage.getItem('mySession');
-              Session.setPersistent('mySessionEmployee', employeename);
+              localStorage.setItem('mySessionEmployee', employeename);
 
               let userAccessOptions = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail || '';
               if(userAccessOptions != ""){

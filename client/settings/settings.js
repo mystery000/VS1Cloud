@@ -1,12 +1,13 @@
-import {
-    ReactiveVar
-} from 'meteor/reactive-var';
+import { Template } from 'meteor/templating';
+import {ReactiveVar} from 'meteor/reactive-var';
 import { OrganisationService } from "../js/organisation-service";
+import './settings.html';
+
 let organisationService = new OrganisationService();
 
 Template.settings.onRendered(function () {
 
-    let isFxCurrencyLicence = Session.get('CloudUseForeignLicence');
+    let isFxCurrencyLicence = localStorage.getItem('CloudUseForeignLicence');
 
     setTimeout(function () {
 
@@ -114,10 +115,10 @@ Template.settings.events({
 
 Template.settings.helpers({
     checkFXCurrency: () => {
-        return Session.get('CloudUseForeignLicence');
+        return localStorage.getItem('CloudUseForeignLicence');
     },
     isGreenTrack: function () {
-        let checkGreenTrack = Session.get('isGreenTrack') || false;
+        let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
         return checkGreenTrack;
     }
 });

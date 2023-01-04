@@ -14,6 +14,9 @@ import { PaymentsService } from "../payments/payments-service";
 import { SalesBoardService } from "../js/sales-service";
 import { ContactService } from "../contacts/contact-service";
 import showBankInfo from "./bankInfo"
+import { Template } from 'meteor/templating';
+import './newbankrecon.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -73,8 +76,8 @@ Template.newbankrecon.onRendered(function() {
     const splashArrayTaxRateList = [];
     let accountnamerecords = [];
 
-    let bankaccountid = Session.get('bankaccountid') || '';
-    let bankaccountname = Session.get('bankaccountname') || '';
+    let bankaccountid = localStorage.getItem('bankaccountid') || '';
+    let bankaccountname = localStorage.getItem('bankaccountname') || '';
     let statementDate = localStorage.getItem('statementdate')|| '';
 
     templateObject.getAccountNames = function() {
@@ -807,8 +810,8 @@ Template.newbankrecon.onRendered(function() {
 
                         } else {
                             if (data.treconciliation[k].OnHold == true) {
-                                Session.setPersistent('bankaccountid', data.treconciliation[k].AccountID);
-                                Session.setPersistent('bankaccountname', data.treconciliation[k].AccountName);
+                                localStorage.setItem('bankaccountid', data.treconciliation[k].AccountID);
+                                localStorage.setItem('bankaccountname', data.treconciliation[k].AccountName);
                             }
                         }
                     }
@@ -1353,12 +1356,12 @@ Template.newbankrecon.onRendered(function() {
             if (accountId != "") {
                 bankaccountid = accountId;
                 bankaccountname = accountname;
-                if (bankaccountid != Session.get('bankaccountid')) {
-                    Session.setPersistent('bankaccountid', accountId);
-                    Session.setPersistent('bankaccountname', accountname);
+                if (bankaccountid != localStorage.getItem('bankaccountid')) {
+                    localStorage.setItem('bankaccountid', accountId);
+                    localStorage.setItem('bankaccountname', accountname);
                     // setTimeout(function () {
-                    //     Session.setPersistent('bankaccountid', accountId);
-                    //     Session.setPersistent('bankaccountname', accountname);
+                    //     localStorage.setItem('bankaccountid', accountId);
+                    //     localStorage.setItem('bankaccountname', accountname);
                     //     window.open('/newbankrecon', '_self');
                     // }, 500);
                 }
@@ -1892,8 +1895,8 @@ Template.newbankrecon.events({
                 $("#divLineDetail_"+selectedYodleeID+" #TotalAmount").focus();
                 return false;
             }
-            let employeeID = Session.get('mySessionEmployeeLoggedID');
-            let employeename = Session.get('mySessionEmployee');
+            let employeeID = localStorage.getItem('mySessionEmployeeLoggedID');
+            let employeename = localStorage.getItem('mySessionEmployee');
             let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
             let PaymentType = $("#PaymentType_"+selectedYodleeID).val();
             let clientID = $("#whoID_"+selectedYodleeID).val();
@@ -1931,8 +1934,8 @@ Template.newbankrecon.events({
             let clientBillingAddress = clientName + '\n' + clientDetail.billstreet + '\n' + clientDetail.billstreet2 + ' ' + clientDetail.billstatecode + '\n' + clientDetail.billcountry;
             let clientTermsName = clientDetail.termsName?clientDetail.termsName:defaultTermsName;
             $('.fullScreenSpin').css('display', 'inline-block');
-            let bankaccountid = parseInt(Session.get('bankaccountid'));
-            let bankAccountName = (Session.get("bankaccountname") != undefined && Session.get("bankaccountname") != '')?Session.get("bankaccountname"):null;
+            let bankaccountid = parseInt(localStorage.getItem('bankaccountid'));
+            let bankAccountName = (localStorage.getItem("bankaccountname") != undefined && localStorage.getItem("bankaccountname") != '')?localStorage.getItem("bankaccountname"):null;
             let refText = $("#divLineDetail_"+selectedYodleeID+" #reference").val();
             let dateIn = $("#DateIn_"+selectedYodleeID).val() || '';
             let splitDate = dateIn.split("/");
@@ -3718,10 +3721,10 @@ function handleSaveError(err) {
 function saveDiscuss(text, yodleeID) {
     if (yodleeID) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let employeeID = Session.get('mySessionEmployeeLoggedID');
-        let employeename = Session.get('mySessionEmployee');
-        let bankaccountid = parseInt(Session.get('bankaccountid'));
-        let bankAccountName = (Session.get("bankaccountname") != undefined && Session.get("bankaccountname") != '')?Session.get("bankaccountname"):null;
+        let employeeID = localStorage.getItem('mySessionEmployeeLoggedID');
+        let employeename = localStorage.getItem('mySessionEmployee');
+        let bankaccountid = parseInt(localStorage.getItem('bankaccountid'));
+        let bankAccountName = (localStorage.getItem("bankaccountname") != undefined && localStorage.getItem("bankaccountname") != '')?localStorage.getItem("bankaccountname"):null;
         let reconcileID = $("#reconID_"+yodleeID).val();
         reconcileID = (reconcileID && reconcileID != '')?parseInt(reconcileID):0;
         let objReconDetails = {

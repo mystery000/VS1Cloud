@@ -7,6 +7,9 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import { OrganisationService } from "../js/organisation-service";
 
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import './customerlist.html';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
@@ -632,7 +635,7 @@ Template.customerlist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblCustomerlist'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblCustomerlist'});
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';

@@ -6,6 +6,9 @@ import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
+import { Template } from 'meteor/templating';
+import './agedreceivablessummary.html';
+
 const reportService = new ReportService();
 const utilityService = new UtilityService();
 const taxRateService = new TaxRateService();
@@ -751,7 +754,7 @@ Template.agedreceivablessummary.events({
     var accountName = id[1].split('_').join(' ');
     let toDate = moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
     let fromDate = moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
-    //Session.setPersistent('showHeader',true);
+    //localStorage.setItem('showHeader',true);
     await clearData('TAccountRunningBalanceReport');
     window.open('/balancetransactionlist?accountName=' + accountName + '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem=' + false, '_self');
   },
@@ -785,7 +788,7 @@ Template.agedreceivablessummary.events({
       let basedOnTypeStorages = Object.keys(localStorage);
       basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
         let employeeId = storage.split('_')[2];
-        return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+        return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
       });
       let i = basedOnTypeStorages.length;
       if (i > 0) {

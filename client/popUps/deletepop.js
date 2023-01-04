@@ -1,4 +1,6 @@
-
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './deletepop.html';
 const TransactionTypeTemplates = {
   sales: 
     {
@@ -23,6 +25,14 @@ const TransactionTypeTemplates = {
       item3: "Cheque",
       button1: 'btnDeleteCheque',
       button2: 'btnDeleteFollowingCheques'
+    },
+  deposit: 
+    {
+      item1: "Deposit",
+      item2: "deposit",
+      item3: "Deposit",
+      button1: 'btnDeleteDeposit',
+      button2: 'btnDeleteFollowingDeposits'
     },
   credits: 
     {
@@ -94,6 +104,13 @@ const TransactionTypeTemplates = {
     button1: 'btnDeleteStock',
     button2: 'btnDeleteFollowingStocks'
   },
+  customer_payment: {
+    item1: 'Payment',
+    item2: 'payment',
+    item3: 'Payment',
+    button1: 'btnDeletePayment',
+    button2: 'btnDeleteFollowingPayments'
+  }
 };
 
 // Template.deletepop.onRendered(function () {

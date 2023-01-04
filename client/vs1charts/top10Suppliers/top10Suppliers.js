@@ -5,6 +5,11 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { SalesBoardService } from "../../js/sales-service";
 import { CoreService } from "../../js/core-service";
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './top10Suppliers.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let _ = require("lodash");
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
