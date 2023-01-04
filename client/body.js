@@ -392,6 +392,13 @@ import './salesorder/salesorder_express_list_tables.js';
 import './payroll/timesheet/timesheet.js';
 /* Alex */
 
+/*Vladyslav*/
+import './packages/currency/CurrencyWidget.js';
+import './contacts/customerlist.js';
+import './contacts/supplierlist.js';
+import './contacts/leadlist.js';
+import './packages/currency/currencydropdown.js';
+/*Vladyslav*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
