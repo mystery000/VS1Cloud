@@ -280,8 +280,12 @@ import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
 /* Tinyiko */
 
 /* Rasheed */
-import { DataTable } from 'datatables.net';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+// import { DataTable } from 'datatables.net';
+// // import 'datatables.net-bs';
+// import 'datatables.net-colreorder';
+// import 'datatables.net-fixedcolumns';
+// import 'datatables.net-select';
 /* Rasheed */
 
 /* DevTop/Dev Pioneer */
@@ -308,6 +312,36 @@ import './inventory/inventorypopups/onBackOrderPopUp.js';
 import './inventory/inventorypopups/onOrderPopUp.js';
 import './inventory/inventorypopups/onSalesOrderPopUp.js';
 /* Matthias */
+
+/* Sasa */
+import './Dashboard/Dashboard.js'
+import './Dashboard/dashboardCardCharts/dashboardCardCharts.js'
+import './Dashboard/my-tasks-widget/my-tasks-widget.js'
+import './contacts/addcustomerpop.js'
+import './Dashboard/Dashboardexe.js'
+import './vs1charts/quotedsalesorderinvoicedamounts/quotedsalesorderinvoicedamounts.js'
+import './vs1charts/invstockonhandanddemand/invstockonhandanddemand.js'
+import './vs1charts/monthlyearnings/monthlyearnings.js'
+import './vs1charts/quotedinvoicedamounts/quotedinvoicedamounts.js'
+import './vs1charts/employeecompletedjobs/employeecompletedjobs.js'
+import './vs1charts/clockedOnEmployees/clockedOnEmployees.js'
+import './vs1charts/monthlyearnings/monthlyearnings.js'
+import './vs1charts/monthllyexpenses/monthllyexpenses.js'
+import './vs1charts/expensebreakdown/expensebreakdown.js'
+import './vs1charts/absenteeRate/absenteeRate.js'
+import './Dashboard/dashboard-manager-charts/dashboard-manager-charts.js'
+import './Dashboard/dashboard-sales-charts/dashboard-sales-charts.js'
+import './Dashboard/Dashboardsales.js'
+import './Dashboard/DashboardSalesManager.js'
+import './Dashboard/dashboard-manager-cards/dashboard-manager-cards.js'
+import './Dashboard/dashboard-sales-cards/dashboard-sales-cards.js'
+import './Dashboard/appointments-widget/ds-appointments-widget.js'
+import './packages/currency/currencydropdown.js'
+import './vs1charts/leadlist/dsleadlistchart.js'
+import './contacts/popemployeelist.js'
+import './vs1charts/opportunitiesStatus/opportunitiesStatus.js'
+import './vs1charts/leadlist/dsmleadlistchart.js'
+
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
@@ -369,10 +403,10 @@ Template.body.helpers({
         return checkGreenTrack;
     }
 });
-Template.registerHelper('equals', function (a, b) {
+Template.registerHelper('equals', function(a, b) {
     return a === b;
 });
 
-Template.registerHelper('notEquals', function (a, b) {
+Template.registerHelper('notEquals', function(a, b) {
     return a != b;
 });

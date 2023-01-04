@@ -2,6 +2,11 @@ import {VS1ChartService} from "../vs1charts-service";
 import 'jQuery.print/jQuery.print.js';
 import {UtilityService} from "../../utility-service";
 import {SideBarService} from '../../js/sidebar-service';
+
+import { Template } from 'meteor/templating';
+import './employeecompletedjobs.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
