@@ -9,6 +9,9 @@ import CachedHttp from '../../lib/global/CachedHttp';
 import erpObject from '../../lib/global/erp-objects';
 import LoadingOverlay from '../../LoadingOverlay';
 import TableHandler from '../../js/Table/TableHandler';
+import { Template } from 'meteor/templating';
+import "./timesheet.html";
+
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 Template.timesheet.onCreated(function() {
@@ -1974,7 +1977,7 @@ Template.timesheet.onRendered(function() {
                         url1 = new URL(window.location.href);
                         let timesheetID = url1.searchParams.get("id");
                         let clockList = templateObject.timesheetrecords.get();
-                        var clockList = clockList.filter(timesheetInfo => {
+                        clockList = clockList.filter(timesheetInfo => {
                             return timesheetInfo.id == timesheetID
                         });
 
@@ -2175,7 +2178,7 @@ Template.timesheet.onRendered(function() {
                     url1 = new URL(window.location.href);
                     let timesheetID = url1.searchParams.get("id");
                     let clockList = templateObject.timesheetrecords.get();
-                    var clockList = clockList.filter(timesheetInfo => {
+                    clockList = clockList.filter(timesheetInfo => {
                         return timesheetInfo.id == timesheetID
                     });
 

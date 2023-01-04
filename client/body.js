@@ -314,33 +314,83 @@ import './inventory/inventorypopups/onSalesOrderPopUp.js';
 /* Matthias */
 
 /* Sasa */
-import './Dashboard/Dashboard.js'
-import './Dashboard/dashboardCardCharts/dashboardCardCharts.js'
-import './Dashboard/my-tasks-widget/my-tasks-widget.js'
-import './contacts/addcustomerpop.js'
-import './Dashboard/Dashboardexe.js'
-import './vs1charts/quotedsalesorderinvoicedamounts/quotedsalesorderinvoicedamounts.js'
-import './vs1charts/invstockonhandanddemand/invstockonhandanddemand.js'
-import './vs1charts/monthlyearnings/monthlyearnings.js'
-import './vs1charts/quotedinvoicedamounts/quotedinvoicedamounts.js'
-import './vs1charts/employeecompletedjobs/employeecompletedjobs.js'
-import './vs1charts/clockedOnEmployees/clockedOnEmployees.js'
-import './vs1charts/monthlyearnings/monthlyearnings.js'
-import './vs1charts/monthllyexpenses/monthllyexpenses.js'
-import './vs1charts/expensebreakdown/expensebreakdown.js'
-import './vs1charts/absenteeRate/absenteeRate.js'
-import './Dashboard/dashboard-manager-charts/dashboard-manager-charts.js'
-import './Dashboard/dashboard-sales-charts/dashboard-sales-charts.js'
-import './Dashboard/Dashboardsales.js'
-import './Dashboard/DashboardSalesManager.js'
-import './Dashboard/dashboard-manager-cards/dashboard-manager-cards.js'
-import './Dashboard/dashboard-sales-cards/dashboard-sales-cards.js'
-import './Dashboard/appointments-widget/ds-appointments-widget.js'
-import './packages/currency/currencydropdown.js'
-import './vs1charts/leadlist/dsleadlistchart.js'
-import './contacts/popemployeelist.js'
-import './vs1charts/opportunitiesStatus/opportunitiesStatus.js'
-import './vs1charts/leadlist/dsmleadlistchart.js'
+import './Dashboard/Dashboard.js';
+import './Dashboard/dashboardCardCharts/dashboardCardCharts.js';
+import './Dashboard/my-tasks-widget/my-tasks-widget.js';
+import './contacts/addcustomerpop.js';
+import './Dashboard/Dashboardexe.js';
+import './vs1charts/quotedsalesorderinvoicedamounts/quotedsalesorderinvoicedamounts.js';
+import './vs1charts/invstockonhandanddemand/invstockonhandanddemand.js';
+import './vs1charts/monthlyearnings/monthlyearnings.js';
+import './vs1charts/quotedinvoicedamounts/quotedinvoicedamounts.js';
+import './vs1charts/employeecompletedjobs/employeecompletedjobs.js';
+import './vs1charts/clockedOnEmployees/clockedOnEmployees.js';
+import './vs1charts/monthlyearnings/monthlyearnings.js';
+import './vs1charts/monthllyexpenses/monthllyexpenses.js';
+import './vs1charts/expensebreakdown/expensebreakdown.js';
+import './vs1charts/absenteeRate/absenteeRate.js';
+import './Dashboard/dashboard-manager-charts/dashboard-manager-charts.js';
+import './Dashboard/dashboard-sales-charts/dashboard-sales-charts.js';
+import './Dashboard/Dashboardsales.js';
+import './Dashboard/DashboardSalesManager.js';
+import './Dashboard/dashboard-manager-cards/dashboard-manager-cards.js';
+import './Dashboard/dashboard-sales-cards/dashboard-sales-cards.js';
+import './Dashboard/appointments-widget/ds-appointments-widget.js';
+import './packages/currency/currencydropdown.js';
+import './vs1charts/leadlist/dsleadlistchart.js';
+import './contacts/popemployeelist.js';
+import './vs1charts/opportunitiesStatus/opportunitiesStatus.js';
+import './vs1charts/leadlist/dsmleadlistchart.js';
+
+/* Martin */
+import './contacts/addcustomerpop.js';
+import './contacts/addsupplierpop.js';
+import './reconciliation/importModal/reconImportModal.js';
+import './reconciliation/accounttransactions.js';
+import './reconciliation/bankrecon.js';
+import './reconciliation/bankrecon2.js';
+import './reconciliation/bankrulelist.js';
+import './reconciliation/newbankrecon.js';
+import './reconciliation/newbankrule.js';
+import './reconciliation/newreconrule.js';
+import './reconciliation/reconciliation.js';
+import './reconciliation/reconciliationlist.js';
+import './reconciliation/reconrulelist.js';
+/* Martin */
+
+/* AlexV */
+import './reports/balancesheet/balancesheet.js';
+import './reports/customerreports/customerdetailsreport.js';
+import './reports/customerreports/customersummaryreport.js';
+import './reports/supplierreports/supplierdetail.js';
+import './reports/supplierreports/supplierproductreport.js';
+import './reports/supplierreports/supplierreport';
+import './reports/supplierreports/suppliersummary';
+import './reports/fxreports/fxhistorylist.js';
+import './reports/jobreports/jobprofitabilityreport.js';
+import './reports/jobreports/jobsalessummary.js';
+import './reports/binlocations/binlocations.js';
+import './reports/stockreports/stockmovementreport.js';
+import './reports/stockreports/stockquantitybylocation.js';
+import './reports/stockreports/stockvaluereport.js';
+import './reports/agedpayables/agedpayablessummary.js';
+import './reports/agedreceivables/agedreceivablessummary.js';
+import './reports/printstatement/printstatement.js';
+import './reports/payrollreports/leaveaccruedreport.js';
+import './reports/payrollreports/payrollhistoryreport.js';
+import './reports/payrollreports/payrollleavetaken.js';
+import './reports/payrollreports/timesheetsummary.js';
+import './reports/sales/salessummaryreport.js';
+import './reports/1099report/1099report.js';
+
+import './inventory/lotnumberlist.js';
+import './inventory/serialnumberlist.js';
+import './inventory/stockadjustment/stockadjustmentoverview.js';
+import './cheque/cheque_list.js';
+import './settings/paymentmethod-setting/paymentmethods.js';
+import './salesorder/salesorder_express_list_tables.js';
+import './payroll/timesheet/timesheet.js';
+/* Alex */
 
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';

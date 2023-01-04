@@ -1,7 +1,7 @@
 <template name="jobprofitabilityreport"> 
   {{# vs1_report_template tabledisplayname="Job Profitability Report" tablename="jobprofitabilityreport" dateAsAt=dateAsAt}} 
     <div class="table-responsive">
-      <table class="table table-sm" id="tableExport" name="tableExport">
+      <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tableExport" name="tableExport">
         <thead>
           <tr class="table-active tblAvoid customDoubleTableHeading">
             {{#if jobprofitabilityreportth}}
@@ -82,7 +82,7 @@
           {{/if}} -->
         </thead>
         <tbody>
-          {{#if records}}
+          <!-- {{#if records}}
             {{#each arrayify records}}
               <tr>
                 <td colspan="8" style="font-weight: 800;">{{ value.CompanyName }}</td>
@@ -179,7 +179,7 @@
                 </tr>
               {{/each}}
             {{/each}}
-          {{/if}}
+          {{/if}} -->
         </tbody>
       </table>
     </div>
