@@ -8,6 +8,8 @@ import erpObject from "../../lib/global/erp-objects";
 import GlobalFunctions from "../../GlobalFunctions";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
+import { Template } from 'meteor/templating';
+import "./payrollleavetaken.html";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();

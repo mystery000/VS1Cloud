@@ -1,5 +1,9 @@
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Template } from 'meteor/templating';
+import './absenteeRate.html'; 
+
 let _ = require('lodash');
+
 // let utilityService = new UtilityService();
 Template.absenteeRate.onCreated(function(){
   const templateObject = Template.instance();

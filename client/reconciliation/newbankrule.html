@@ -143,8 +143,8 @@
                             <div class="col-6 col-md-6 mx-4">
                                 <div class="form-group mb-0">
                                     <label>Bank Account Name</label>
-                                    <input type="hidden" id="sltBankAccountID" value="">
-                                    <select type="search" class="form-control" id="sltBankAccount" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
+                                    <input type="hidden" id="bankAccountID" value="">
+                                    <select type="search" class="form-control" id="bankAccountName" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
                                 </div>
                             </div>
                         </div>
@@ -209,25 +209,31 @@
                             </div>
                             <div class="col-12">
                                 <div class="col-12 col-md-12" style="padding: 0 20px;">
-                                    <div>
-                                        <p>Preview bank statement</p>
+                                    <div class="row justify-content-between align-items-center mb-3">
+                                        <div class="col-auto">Preview bank statement</div>
+                                        <div class="col-auto">{{> reconImportModal}}</div>
                                     </div>
                                     {{#if bankRuleData}}
                                     <div class="table-responsive" style="padding: .375rem .75rem;">
                                         <table id="tblBankRulePreview" style="width:100%;" class="table table-bordered tblBankRulePreview">
                                             <thead>
-                                            <tr class="dnd-moved">
-                                                {{#each item in previewColumn}}
-                                                    <th>{{item.column}}</th>
-                                                {{/each}}
-                                            </tr>
+                                                <tr class="dnd-moved">
+                                                    {{#each item in previewColumn}}
+                                                        <th>{{item.order}}</th>
+                                                    {{/each}}
+                                                </tr>
+                                                <tr class="dnd-moved">
+                                                    {{#each item in previewColumn}}
+                                                        <th>{{item.column}}</th>
+                                                    {{/each}}
+                                                </tr>
                                             </thead>
                                             <tbody>
                                                 {{#if previewData}}
                                                     {{#each rowItem in previewData}}
                                                     <tr class="dnd-moved">
                                                         {{#each item in rowItem}}
-                                                            <td>{{item}}</td>
+                                                            <td style="height: 50px">{{item}}</td>
                                                         {{/each}}
                                                     </tr>
                                                     {{/each}}
@@ -264,16 +270,13 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
-            {{> addaccountpop}}
-        </div>
-        <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="bankAccountListModal">
-            {{> accountlistpop}}
-        </div>
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
         {{> addaccountpop}}
+    </div>
+    <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="bankAccountListModal">
+        {{> accountlistpop}}
     </div>
     <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="productListModal">
         {{> productlistpop}}

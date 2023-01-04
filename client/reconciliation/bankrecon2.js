@@ -7,6 +7,9 @@ import XLSX from 'xlsx';
 import 'jquery-editable-select';
 import { AccountService } from "../accounts/account-service";
 let utilityService = new UtilityService();
+import { Template } from 'meteor/templating';
+import './bankrecon2.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.bankrecon2.onCreated(function() {
     const templateObject = Template.instance();

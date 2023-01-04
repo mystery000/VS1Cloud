@@ -5,6 +5,10 @@ import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from "../../js/sidebar-service";
 import { UtilityService } from "../../utility-service";
 
+import { Template } from 'meteor/templating';
+import './dsleadlistchart.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 
 Template.dsleadlistchart.onCreated(function() {

@@ -1,4 +1,7 @@
 import {ReactiveVar} from "meteor/reactive-var";
+import { Template } from 'meteor/templating';
+import './dashboardsalesmanager.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.dashboardsalesmanager.onCreated(function () {
     this.loggedDb = new ReactiveVar("");
