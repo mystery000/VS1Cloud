@@ -1,3 +1,4 @@
+import './productview.html';
 import { ProductService } from "../product/product-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { TaxRateService } from "../settings/settings-service";
@@ -9,6 +10,9 @@ import 'jquery-editable-select';
 import { Random } from 'meteor/random';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let productService = new ProductService();
@@ -4609,8 +4613,7 @@ Template.productview.events({
                     }
                 };
             }
-            console.log('1');
-                    console.log(objDetails);
+
             productService.saveProductVS1(objDetails).then(function(objDetails) {
                 if (itrackThisItem == false) {
                     let objServiceDetails = {
@@ -4731,8 +4734,7 @@ Template.productview.events({
                             }
                         };
                     }
-                    console.log('2');
-                    console.log(objDetails);
+
                     productService.saveProductVS1(objDetails).then(function(objDetails) {
                         let linesave = objDetails.fields.ID;
                         if (itrackThisItem == false) {
@@ -4851,9 +4853,6 @@ Template.productview.events({
                             }
                         };
                     }
-
-                    console.log('3');
-                    console.log(objDetails);
                     productService.saveProductVS1(objDetails).then(function(objDetails) {
                         let linesave = objDetails.fields.ID;
                         if (itrackThisItem == false) {

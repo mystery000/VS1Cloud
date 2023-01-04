@@ -1,3 +1,5 @@
+import { Template } from 'meteor/templating';
+import './productlist.html';
 import {ProductService} from "../product/product-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../js/core-service';

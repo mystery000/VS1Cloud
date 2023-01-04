@@ -1,3 +1,7 @@
+import './inventorylist.html';
+import './inventorypopups/onBackOrderPopUp.html';
+import './inventorypopups/onOrderPopUp.html';
+import './inventorypopups/onSalesOrderPopUp.html';
 import { ProductService } from "../product/product-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { CoreService } from "../js/core-service";
@@ -9,6 +13,8 @@ import XLSX from "xlsx";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import { OrganisationService } from "../js/organisation-service";
+import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let organisationService = new OrganisationService;
