@@ -128,7 +128,7 @@
     <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}" style="min-width: 100%;">
         <!-- New Charts -->
 
-        <!-- {{#if is_available_chart currentTemplate "bankaccountschart"}}
+       {{#if is_available_chart currentTemplate "bankaccountschart"}}
             {{> bankaccountschart
                     md=6 defaultPosition=0 key="dashboard__bank_accountschart" }}
         {{/if}}
@@ -282,7 +282,7 @@
 
         {{#if is_available_chart currentTemplate "dsleadlistchart"}}
             {{> dsleadlistchart md=12 defaultPosition=33 key="dscharts__lead_list" }}
-        {{/if}} -->
+        {{/if}} 
 
     </div>
     <div class="row no-gutters justify-content-center">
