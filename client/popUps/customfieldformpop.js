@@ -459,7 +459,7 @@ Template.customfieldformpop.onRendered(function () {
         }
       })
       .catch(function (err) {
-        taxRateService
+        sideBarService
           .getAllLeadStatus()
           .then(function (data) {
             let lineItems = [];

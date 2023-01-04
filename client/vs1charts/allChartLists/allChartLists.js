@@ -97,8 +97,8 @@ let sideBarService = new SideBarService();
  * Current User ID
  */
 const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
-const _chartGroup = "";
-const _tabGroup = 0;
+var _chartGroup = "";
+var _tabGroup = 0;
 const chartsEditor = new ChartsEditor(
     () => {
         $("#resetcharts").removeClass("hideelement").addClass("showelement"); // This will show the reset charts button
