@@ -280,8 +280,12 @@ import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
 /* Tinyiko */
 
 /* Rasheed */
-import { DataTable } from 'datatables.net';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+// import { DataTable } from 'datatables.net';
+// // import 'datatables.net-bs';
+// import 'datatables.net-colreorder';
+// import 'datatables.net-fixedcolumns';
+// import 'datatables.net-select';
 /* Rasheed */
 
 /* DevTop/Dev Pioneer */
