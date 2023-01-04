@@ -27,7 +27,6 @@ Template.accountant_header.onRendered(function() {
 
 Template.accountant_header.events({
   'click .btnDocusign':  function () {
-     // $(".printReport").show();
         $('.fullScreenSpin').css('display', 'inline-block');
         var opt = {
             margin: 0.8,
@@ -52,8 +51,8 @@ Template.accountant_header.events({
 
         // html2pdf(element);
 
-        // let docfile = html2pdf().set(opt).from(element);
-        
+        let docfile = html2pdf().set(opt).from(element);
+        console.log('docfile==>', docfile);
         $('.fullScreenSpin').css('display', 'none');
 
         // <---------------get args (api part)---------------->
@@ -84,7 +83,7 @@ Template.accountant_header.events({
           //         }
         }
         
-
+        // console.log("success");
 
         let dsApiClient = new docusign.ApiClient();
         dsApiClient.setBasePath(args.basePath);
