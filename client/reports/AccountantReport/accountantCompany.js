@@ -1,3 +1,4 @@
+import { Template } from 'meteor/templating';
 import { ContactService } from "../../contacts/contact-service";
 import { ReportService } from "../report-service";
 
