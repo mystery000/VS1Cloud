@@ -6,6 +6,8 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import Datehandler from "../../DateHandler";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import { Template } from 'meteor/templating';
+import "./binlocations.html";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();

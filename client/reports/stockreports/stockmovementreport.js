@@ -7,6 +7,8 @@ import GlobalFunctions from "../../GlobalFunctions";
 import moment from "moment";
 import Datehandler from "../../DateHandler";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import { Template } from 'meteor/templating';
+import "./stockmovementreport.html";
 
 
 let reportService = new ReportService();

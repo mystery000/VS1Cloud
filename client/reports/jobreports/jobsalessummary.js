@@ -8,6 +8,8 @@ import CachedHttp from "../../lib/global/CachedHttp";
 import GlobalFunctions from "../../GlobalFunctions";
 import Datehandler from "../../DateHandler";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import { Template } from 'meteor/templating';
+import "./jobsalessummary.html"
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();

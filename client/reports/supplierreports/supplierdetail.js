@@ -8,6 +8,8 @@ import GlobalFunctions from "../../GlobalFunctions";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import { Template } from 'meteor/templating';
+import "./supplierdetail.html"
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();

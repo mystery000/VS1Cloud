@@ -9,6 +9,8 @@ import TemplateInjector from "../../TemplateInjector";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import { Template } from 'meteor/templating';
+import './agedpayablessummary.html';
 
 const reportService = new ReportService();
 const utilityService = new UtilityService();

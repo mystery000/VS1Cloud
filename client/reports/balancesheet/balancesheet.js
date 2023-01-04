@@ -7,6 +7,8 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
+import { Template } from 'meteor/templating';
+import "./balancesheet.html"
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 

@@ -4,6 +4,9 @@ import { SalesBoardService } from '../js/sales-service';
 import { SideBarService } from '../js/sidebar-service';
 import { StockTransferService } from './stockadjust-service';
 import '../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import "./serialnumberlist.html";
+
 // Define services
 let sideBarService = new SideBarService();
 const purchaseService = new PurchaseBoardService();
