@@ -27,7 +27,7 @@ import {
 import { AccountService } from '../accounts/account-service';
 
 import '../Navigation/header.html';
-
+import '../Navigation/onsuccesswaterfall.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { Session } from 'meteor/session';
 let utilityService = new UtilityService();
@@ -1727,7 +1727,7 @@ Template.header.onRendered(function () {
     var erpGet = erpDb();
 
     var LoggedDB = erpGet.ERPDatabase;
-    if (loggedUserEventFired == true) {
+    if (loggedUserEventFired) {
         templateObject.getBankDescription();
         templateObject.getCompanyInfo();
         $(document).ready(function () {
