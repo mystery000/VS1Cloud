@@ -14,6 +14,9 @@ import { PaymentsService } from "../payments/payments-service";
 import { SalesBoardService } from "../js/sales-service";
 import { ContactService } from "../contacts/contact-service";
 import showBankInfo from "./bankInfo"
+import { Template } from 'meteor/templating';
+import './newbankrecon.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

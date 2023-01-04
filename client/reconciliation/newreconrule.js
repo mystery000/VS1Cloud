@@ -8,6 +8,8 @@ import { ProductService } from "../product/product-service";
 import { PurchaseBoardService } from "../js/purchase-service";
 import { SideBarService } from '../js/sidebar-service';
 import { Random } from 'meteor/random';
+import { Template } from 'meteor/templating';
+import './newreconrule.html';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
