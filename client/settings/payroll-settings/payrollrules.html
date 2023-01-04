@@ -2130,13 +2130,6 @@
                                                                     <div class="form-group">
                                                                         <label for="rateList">Rate</label>
                                                                         <input type="search" class="form-control es-input" id="rateList" name="rateList" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                        <!-- <label for="overtimeRate">Rate</label>
-                                                                        <select class="form-control overtimeRate" style="cursor: pointer;" id="overtimeRate" >
-                                                                                <option value="Normal">Normal</option>
-                                                                                <option value="Time & Half">Time & Half</option>
-                                                                                <option value="Double Time">Double Time</option>
-                                                                                <option value="Weekend">Weekend</option>
-                                                                        </select> -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
@@ -2490,13 +2483,19 @@
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="ratePopModal">
-        {{> ratepop}}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Rate List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                {{> non_transactional_list tablename="tblRatePopList"}}
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
     </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="newratePopModal">
-        {{> newratepop}}
-    </div>
-
 
     <div class="modal fade" role="dialog" tabindex="-1" id="deleteEarningsLineModal">
         <div class="modal-dialog modal-dialog-centered" role="document">

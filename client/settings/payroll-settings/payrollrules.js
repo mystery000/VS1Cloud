@@ -5637,10 +5637,11 @@ Template.payrollrules.onRendered(function() {
 
     templateObject.addOverTime= async () => {
         if($('#btnAddNewOvertime').attr('overtime-id')) {
+            console.log('Update......')
             const overtimeIdToupdate = $('#btnAddNewOvertime').attr('overtime-id');
             return templateObject.updateOvertime(overtimeIdToupdate);
         }
-        
+        console.log('Add..........')
         $('#btnAddNewOvertime .modal-title').text('Add new Overtime');
 
         LoadingOverlay.show();
@@ -5741,15 +5742,16 @@ Template.payrollrules.onRendered(function() {
     }
 
     templateObject.openAddOvertimeEditor = async (overtimeId = null)  => {
+        console.log('Add Modal....')
         $('#btnAddNewOvertime').modal('show');
         $('#btnAddNewOvertime .modal-title').text('Add Overtime');
         $('#overtimeRateType').attr('rate-type-id', 1);
     }
 
     templateObject.openOvertimeEditor = async (overtimeId = null)  => {
+        console.log('Edit Modal....')
         $('#btnAddNewOvertime').modal('show');
         $('#btnAddNewOvertime .modal-title').text('Edit Overtime');
-
 
         $('#btnAddNewOvertime').attr('overtime-id', overtimeId);
 
@@ -5763,7 +5765,9 @@ Template.payrollrules.onRendered(function() {
             $('#overtimeHours').val(overtime.hours);
         }
         $('#rateList').val(overtime.rate);
-        $('#overtimeRateType').val(overtime.rate);
+        let rateTypes = await templateObject.rateTypes.get();
+        const rateType = rateTypes.find(rate => rate.ID == overtime.rateTypeId);
+        $('#overtimeRateType').val(rateType.Description);
         $('#overtimeRateType').attr('rate-type-id', overtime.rateTypeId);
         $('#overtimeHourlyMultiplier').val(overtime.hourlyMultiplier);
     }
