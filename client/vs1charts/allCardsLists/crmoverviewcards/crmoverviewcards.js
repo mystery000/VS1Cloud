@@ -1,5 +1,11 @@
 import "../../../lib/global/indexdbstorage";
 import { CRMService } from "../../../crm/crm-service";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './crmoverviewcards.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let crmService = new CRMService();
 
 Template.crmoverviewcards.onCreated(function () {
@@ -165,7 +171,7 @@ Template.crmoverviewcards.events({
   },
 
   "click .menu_today": function (e) {
-    // let employeeID = Session.get("mySessionEmployeeLoggedID");
+    // let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
     // var url = FlowRouter.current().path;
     // url = new URL(window.location.href);
     // employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
@@ -188,7 +194,7 @@ Template.crmoverviewcards.events({
   },
 
   "click .menu_upcoming": function (e) {
-    // let employeeID = Session.get("mySessionEmployeeLoggedID");
+    // let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
     // var url = FlowRouter.current().path;
     // url = new URL(window.location.href);
     // employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
@@ -211,7 +217,7 @@ Template.crmoverviewcards.events({
   },
 
   "click .menu_project": function (e) {
-    // let employeeID = Session.get("mySessionEmployeeLoggedID");
+    // let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
     // var url = FlowRouter.current().path;
     // url = new URL(window.location.href);
     // employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;

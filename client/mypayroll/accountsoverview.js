@@ -49,17 +49,17 @@ Template.accountsoverview.onRendered(function() {
 
 
 
-    if(Session.get("ERPLoggedCountry") == "United States of America"){
+    if(localStorage.getItem("ERPLoggedCountry") == "United States of America"){
         $(".btnTaxSummary").show();
         $(".btnBasReturnGroup").hide();
         $(".btnVatReturnGroup").hide();
     }
-    else if(Session.get("ERPLoggedCountry") == "Australia"){
+    else if(localStorage.getItem("ERPLoggedCountry") == "Australia"){
         $(".btnTaxSummary").hide();
         $(".btnBasReturnGroup").show();
         $(".btnVatReturnGroup").hide();
     }
-    else if(Session.get("ERPLoggedCountry") == "South Africa"){
+    else if(localStorage.getItem("ERPLoggedCountry") == "South Africa"){
         $(".btnTaxSummary").hide();
         $(".btnBasReturnGroup").hide();
         $(".btnVatReturnGroup").show();
@@ -70,7 +70,7 @@ Template.accountsoverview.onRendered(function() {
   /*
   function init_reset_data() {
     let bsbname = "Branch Code";
-    if (Session.get("ERPLoggedCountry") === "Australia") {
+    if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
         bsbname = "BSB";
     }
 
@@ -114,7 +114,7 @@ Template.accountsoverview.onRendered(function() {
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
               // reset_data = data.ProcessLog.CustomLayout.Columns;
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
               showCustomFieldDisplaySettings(reset_data);
@@ -2522,7 +2522,7 @@ Template.accountsoverview.helpers({
     },
     bsbRegionName: () => {
         let bsbname = "Branch Code";
-        if (Session.get("ERPLoggedCountry") === "Australia") {
+        if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
             bsbname = "BSB";
         }
         return bsbname;
@@ -2532,7 +2532,7 @@ Template.accountsoverview.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get("mycloudLogonID"),
+            userid: localStorage.getItem("mycloudLogonID"),
             PrefName: "tblAccountOverview",
         });
     },

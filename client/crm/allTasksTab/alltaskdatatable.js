@@ -2214,8 +2214,8 @@ Template.alltaskdatatable.events({
                 $(".fullScreenSpin").css("display", "none");
                 if (data.fields.ID == id) {
                     let selected_record = data.fields;
-                    let employeeID = Session.get("mySessionEmployeeLoggedID");
-                    let employeeName = Session.get("mySessionEmployee");
+                    let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
+                    let employeeName = localStorage.getItem("mySessionEmployee");
                     // handle complete process via api
                     var objDetails = {
                         type: "Tprojecttasks",
@@ -2449,8 +2449,8 @@ Template.alltaskdatatable.events({
                 selected_lbls.push($(this).attr("name"));
             });
 
-            let employeeID = Session.get("mySessionEmployeeLoggedID");
-            let employeeName = Session.get("mySessionEmployee");
+            let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
+            let employeeName = localStorage.getItem("mySessionEmployee");
 
             let assignId = $('#assignedID').val();
             let assignName = $('#add_assigned_name').val();
@@ -3493,8 +3493,8 @@ Template.alltaskdatatable.events({
             swal("Please put the Label Name", "", "warning");
             return;
         }
-        let employeeID = parseInt(Session.get("mySessionEmployeeLoggedID"));
-        let employeeName = Session.get("mySessionEmployee");
+        let employeeID = parseInt(localStorage.getItem("mySessionEmployeeLoggedID"));
+        let employeeName = localStorage.getItem("mySessionEmployee");
 
         var objDetails = {
             type: "Tprojecttask_TaskLabel",
@@ -3996,8 +3996,8 @@ function openEditTaskModal(id, type) {
             $(".editTaskDetailDescription").val(selected_record.TaskDescription);
 
             // tempcode check if AssignedName is set in selected_record
-            let employeeName = selected_record.AssignName ? selected_record.AssignName : Session.get("mySessionEmployee");
-            let assignId = selected_record.AssignID ? selected_record.AssignID : Session.get("mySessionEmployeeLoggedID");
+            let employeeName = selected_record.AssignName ? selected_record.AssignName : localStorage.getItem("mySessionEmployee");
+            let assignId = selected_record.AssignID ? selected_record.AssignID : localStorage.getItem("mySessionEmployeeLoggedID");
             $('#crmEditSelectEmployeeList').val(employeeName);
             $('#assignedID').val(assignId)
 

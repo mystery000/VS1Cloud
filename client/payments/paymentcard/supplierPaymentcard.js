@@ -14,7 +14,9 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import { saveCurrencyHistory } from "../../packages/currency/CurrencyWidget";
-import { EftService } from "../../eft/eft-service"
+import { EftService } from "../../eft/eft-service";
+import { Template } from 'meteor/templating';
+import './supplierPaymentCard.html';
 
 
 let sideBarService = new SideBarService();
@@ -134,8 +136,8 @@ Template.supplierpaymentcard.onRendered(() => {
     let reference = $("#edtReference").val(); 
 
     let colAccountID = $("#colAccountID").val(); 
-    let employeeID = Session.get("mySessionEmployeeLoggedID");
-    let employeeName = Session.get("mySessionEmployee");
+    let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
+    let employeeName = localStorage.getItem("mySessionEmployee");
 
     let lines = templateObject.outstandingExpenses.get();
     let eftService = new EftService();
@@ -245,8 +247,8 @@ Template.supplierpaymentcard.onRendered(() => {
   // templateObject.loadDefaultCurrency(defaultCurrencyCode);
 
   templateObject.getOrganisationDetails = function () {
-      let account_id = Session.get('vs1companyStripeID') || '';
-      let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+      let account_id = localStorage.getItem('vs1companyStripeID') || '';
+      let stripe_fee = localStorage.getItem('vs1companyStripeFeeMethod') || 'apply';
       templateObject.accountID.set(account_id);
       templateObject.stripe_fee_method.set(stripe_fee);
   };
@@ -268,15 +270,15 @@ Template.supplierpaymentcard.onRendered(() => {
         let useData = JSON.parse( supplierPaymentData[0].data );
 
         if(paymentID > 0) {
-            curcode = Session.get("tempCurrencyState");
-            currate = Session.get("tempExchangeRateState");
+            curcode = localStorage.getItem("tempCurrencyState");
+            currate = localStorage.getItem("tempExchangeRateState");
             $("#sltCurrency").val(curcode);
             $("#exchange_rate").val(currate);
 
             curcode = convertToForeignAmount($("#edtPaymentAmount").val(), currate, Currency);
             $("#edtForeignAmount").val(curcode);
             $("#sltCurrency").trigger("change");
-            //FxGlobalFunctions.handleChangedCurrency(Session.get("tempCurrencyState"), defaultCurrencyCode);
+            //FxGlobalFunctions.handleChangedCurrency(localStorage.getItem("tempCurrencyState"), defaultCurrencyCode);
         }
 
         if( useData.tsupplierpayment.length > 0 ){
@@ -345,7 +347,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   ]);
           }
 
-          let company = Session.get('vs1companyName');
+          let company = localStorage.getItem('vs1companyName');
           let vs1User = localStorage.getItem('mySession');
           let customerEmail = $('#edtCustomerEmail').val();
           let id = $('.printID').attr("id") || "new";
@@ -367,11 +369,11 @@ Template.supplierpaymentcard.onRendered(() => {
           if(number == 1)
           {
                   item_supplier = {
-                      o_url: Session.get('vs1companyURL'),
-                      o_name: Session.get('vs1companyName'),
-                      o_address: Session.get('vs1companyaddress1'),
-                      o_city: Session.get('vs1companyCity'),
-                      o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                      o_url: localStorage.getItem('vs1companyURL'),
+                      o_name: localStorage.getItem('vs1companyName'),
+                      o_address: localStorage.getItem('vs1companyaddress1'),
+                      o_city: localStorage.getItem('vs1companyCity'),
+                      o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                       o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
                       o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                       o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
@@ -415,11 +417,11 @@ Template.supplierpaymentcard.onRendered(() => {
           {
 
                   item_supplier = {
-                      o_url: Session.get('vs1companyURL'),
-                      o_name: Session.get('vs1companyName'),
-                      o_address: Session.get('vs1companyaddress1'),
-                      o_city: Session.get('vs1companyCity'),
-                      o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                      o_url: localStorage.getItem('vs1companyURL'),
+                      o_name: localStorage.getItem('vs1companyName'),
+                      o_address: localStorage.getItem('vs1companyaddress1'),
+                      o_city: localStorage.getItem('vs1companyCity'),
+                      o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                       o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
                       o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                       o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
@@ -469,11 +471,11 @@ Template.supplierpaymentcard.onRendered(() => {
               }
 
               item_supplier = {
-                  o_url: Session.get('vs1companyURL'),
-                      o_name: Session.get('vs1companyName'),
-                      o_address: Session.get('vs1companyaddress1'),
-                      o_city: Session.get('vs1companyCity'),
-                      o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                  o_url: localStorage.getItem('vs1companyURL'),
+                      o_name: localStorage.getItem('vs1companyName'),
+                      o_address: localStorage.getItem('vs1companyaddress1'),
+                      o_city: localStorage.getItem('vs1companyCity'),
+                      o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                       o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
                       o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                       o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
@@ -572,7 +574,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 ]);
          }
 
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
@@ -590,11 +592,11 @@ Template.supplierpaymentcard.onRendered(() => {
         {
 
                 item_supplier = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name: Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                    o_url: localStorage.getItem('vs1companyURL'),
+                    o_name: localStorage.getItem('vs1companyName'),
+                    o_address: localStorage.getItem('vs1companyaddress1'),
+                    o_city: localStorage.getItem('vs1companyCity'),
+                    o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                     o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
                     o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
@@ -647,11 +649,11 @@ Template.supplierpaymentcard.onRendered(() => {
 
 
                 item_supplier = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name: Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                    o_url: localStorage.getItem('vs1companyURL'),
+                    o_name: localStorage.getItem('vs1companyName'),
+                    o_address: localStorage.getItem('vs1companyaddress1'),
+                    o_city: localStorage.getItem('vs1companyCity'),
+                    o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                     o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
                     o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
@@ -711,11 +713,11 @@ Template.supplierpaymentcard.onRendered(() => {
 
 
             item_supplier = {
-                o_url: Session.get('vs1companyURL'),
-                    o_name: Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                    o_name: localStorage.getItem('vs1companyName'),
+                    o_address: localStorage.getItem('vs1companyaddress1'),
+                    o_city: localStorage.getItem('vs1companyCity'),
+                    o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                     o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
                     o_abn: Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
@@ -1343,7 +1345,7 @@ Template.supplierpaymentcard.onRendered(() => {
   let newPaymentId = "";
   templateObject.getLastPaymentData = function () {
     let lastBankAccount = "Bank";
-    let lastDepartment = Session.get('department') ||defaultDept|| "";
+    let lastDepartment = localStorage.getItem('department') ||defaultDept|| "";
     paymentService
       .getAllSupplierPaymentData1()
       .then(function (data) {
@@ -1369,9 +1371,9 @@ Template.supplierpaymentcard.onRendered(() => {
         }, 50);
       })
       .catch(function (err) {
-        if (Session.get("bankaccount")) {
-          $("#edtSelectBankAccountName").val(Session.get("bankaccount"));
-          $("#sltBankAccountName").val(Session.get("bankaccount"));
+        if (localStorage.getItem("bankaccount")) {
+          $("#edtSelectBankAccountName").val(localStorage.getItem("bankaccount"));
+          $("#sltBankAccountName").val(localStorage.getItem("bankaccount"));
         } else {
           $("#edtSelectBankAccountName").val(lastBankAccount);
           $("#sltBankAccountName").val(lastBankAccount);
@@ -3572,7 +3574,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 _setTmpAppliedAmount(record.applied);
                 //$('#edtSupplierName').editableSelect('add', data.fields.CompanyName);
                 let getDepartmentVal =
-                  Session.get("department") || data.fields.DeptClassName;
+                  localStorage.getItem("department") || data.fields.DeptClassName;
                 $("#sltDepartment").val(data.fields.DeptClassName);
                 $("#sltPaymentMethod").val(data.fields.PaymentMethodName);
                 $("#edtSupplierName").val(data.fields.CompanyName);
@@ -4461,14 +4463,14 @@ Template.supplierpaymentcard.onRendered(() => {
                   customerName: data.fields.ClientName || "",
                   paymentDate: begunDate,
                   reference: data.fields.CustPONumber || " ",
-                  bankAccount: Session.get("bankaccount") || "",
+                  bankAccount: localStorage.getItem("bankaccount") || "",
                   paymentAmount: appliedAmt || 0,
                   notes: data.fields.Comments,
                   LineItems: lineItems,
                   checkpayment:
-                    Session.get("paymentmethod") || data.fields.PayMethod,
+                    localStorage.getItem("paymentmethod") || data.fields.PayMethod,
                   department:
-                    Session.get("department") || data.fields.DeptClassName,
+                    localStorage.getItem("department") || data.fields.DeptClassName,
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
@@ -4482,17 +4484,17 @@ Template.supplierpaymentcard.onRendered(() => {
                 }
 
                 let getDepartmentVal =
-                  Session.get("department") || data.fields.DeptClassName;
+                  localStorage.getItem("department") || data.fields.DeptClassName;
                 let getPaymentMethodVal = "";
 
-                if (Session.get("paymentmethod")) {
+                if (localStorage.getItem("paymentmethod")) {
                   getPaymentMethodVal =
-                    Session.get("paymentmethod") || data.fields.PayMethod;
+                    localStorage.getItem("paymentmethod") || data.fields.PayMethod;
                 } else {
                   getPaymentMethodVal = data.fields.PayMethod || "";
                 }
                 //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
-                let bankAccountData = Session.get("bankaccount") || "Bank";
+                let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
                 $("#edtSelectBankAccountName").val(bankAccountData);
                 templateObject.getLastPaymentData();
                 $("#edtSupplierName").val(data.fields.ClientName);
@@ -4604,14 +4606,14 @@ Template.supplierpaymentcard.onRendered(() => {
                   customerName: useData[d].fields.ClientName || "",
                   paymentDate: begunDate,
                   reference: useData[d].fields.CustPONumber || " ",
-                  bankAccount: Session.get("bankaccount") || "",
+                  bankAccount: localStorage.getItem("bankaccount") || "",
                   paymentAmount: appliedAmt || 0,
                   notes: useData[d].fields.Comments,
                   LineItems: lineItems,
                   checkpayment:
-                    Session.get("paymentmethod") || useData[d].fields.PayMethod,
+                    localStorage.getItem("paymentmethod") || useData[d].fields.PayMethod,
                   department:
-                    Session.get("department") ||
+                    localStorage.getItem("department") ||
                     useData[d].fields.DeptClassName,
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
@@ -4625,19 +4627,19 @@ Template.supplierpaymentcard.onRendered(() => {
                   templateObject.isInvoiceNo.set(false);
                 }
                 let getDepartmentVal =
-                  Session.get("department") ||
+                  localStorage.getItem("department") ||
                   useData[d].fields.DeptClassName ||
                   defaultDept;
                 let getPaymentMethodVal = "";
 
-                if (Session.get("paymentmethod")) {
+                if (localStorage.getItem("paymentmethod")) {
                   getPaymentMethodVal =
-                    Session.get("paymentmethod") || useData[d].fields.PayMethod;
+                    localStorage.getItem("paymentmethod") || useData[d].fields.PayMethod;
                 } else {
                   getPaymentMethodVal = useData[d].fields.PayMethod || "";
                 }
 
-                let bankAccountData = Session.get("bankaccount") || "Bank";
+                let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
                 $("#edtSelectBankAccountName").val(bankAccountData);
                 templateObject.getLastPaymentData();
                 //$('#edtSupplierName').editableSelect('add', useData[d].fields.ClientName);
@@ -4747,14 +4749,14 @@ Template.supplierpaymentcard.onRendered(() => {
                     customerName: data.fields.ClientName || "",
                     paymentDate: begunDate,
                     reference: data.fields.CustPONumber || " ",
-                    bankAccount: Session.get("bankaccount") || "",
+                    bankAccount: localStorage.getItem("bankaccount") || "",
                     paymentAmount: appliedAmt || 0,
                     notes: data.fields.Comments,
                     LineItems: lineItems,
                     checkpayment:
-                      Session.get("paymentmethod") || data.fields.PayMethod,
+                      localStorage.getItem("paymentmethod") || data.fields.PayMethod,
                     department:
-                      Session.get("department") || data.fields.DeptClassName,
+                      localStorage.getItem("department") || data.fields.DeptClassName,
                     applied: appliedAmt.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     }),
@@ -4767,14 +4769,14 @@ Template.supplierpaymentcard.onRendered(() => {
                     templateObject.isInvoiceNo.set(false);
                   }
                   let getDepartmentVal =
-                    Session.get("department") ||
+                    localStorage.getItem("department") ||
                     data.fields.DeptClassName ||
                     defaultDept;
                   let getPaymentMethodVal = "";
 
-                  if (Session.get("paymentmethod")) {
+                  if (localStorage.getItem("paymentmethod")) {
                     getPaymentMethodVal =
-                      Session.get("paymentmethod") || data.fields.PayMethod;
+                      localStorage.getItem("paymentmethod") || data.fields.PayMethod;
                   } else {
                     getPaymentMethodVal = data.fields.PayMethod || "";
                   }
@@ -4784,7 +4786,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   $("#sltDepartment").val(getDepartmentVal);
                   $("#sltPaymentMethod").val(getPaymentMethodVal);
                   //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-                  let bankAccountData = Session.get("bankaccount") || "Bank";
+                  let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
                   $("#edtSelectBankAccountName").val(bankAccountData);
                   templateObject.getLastPaymentData();
                   if (clientList) {
@@ -4888,14 +4890,14 @@ Template.supplierpaymentcard.onRendered(() => {
                 customerName: data.fields.ClientName || "",
                 paymentDate: begunDate,
                 reference: data.fields.CustPONumber || " ",
-                bankAccount: Session.get("bankaccount") || "",
+                bankAccount: localStorage.getItem("bankaccount") || "",
                 paymentAmount: appliedAmt || 0,
                 notes: data.fields.Comments,
                 LineItems: lineItems,
                 checkpayment:
-                  Session.get("paymentmethod") || data.fields.PayMethod,
+                  localStorage.getItem("paymentmethod") || data.fields.PayMethod,
                 department:
-                  Session.get("department") || data.fields.DeptClassName,
+                  localStorage.getItem("department") || data.fields.DeptClassName,
                 applied: appliedAmt.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                 }),
@@ -4908,14 +4910,14 @@ Template.supplierpaymentcard.onRendered(() => {
                 templateObject.isInvoiceNo.set(false);
               }
               let getDepartmentVal =
-                Session.get("department") ||
+                localStorage.getItem("department") ||
                 data.fields.DeptClassName ||
                 defaultDept;
               let getPaymentMethodVal = "";
 
-              if (Session.get("paymentmethod")) {
+              if (localStorage.getItem("paymentmethod")) {
                 getPaymentMethodVal =
-                  Session.get("paymentmethod") || data.fields.PayMethod;
+                  localStorage.getItem("paymentmethod") || data.fields.PayMethod;
               } else {
                 getPaymentMethodVal = data.fields.PayMethod || "";
               }
@@ -4925,7 +4927,7 @@ Template.supplierpaymentcard.onRendered(() => {
               $("#sltDepartment").val(getDepartmentVal);
               $("#sltPaymentMethod").val(getPaymentMethodVal);
               //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-              let bankAccountData = Session.get("bankaccount") || "Bank";
+              let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
               $("#edtSelectBankAccountName").val(bankAccountData);
               templateObject.getLastPaymentData();
               if (clientList) {
@@ -5031,14 +5033,14 @@ Template.supplierpaymentcard.onRendered(() => {
                 customerName: data.fields.ClientName || "",
                 paymentDate: begunDate,
                 reference: data.fields.CustPONumber || " ",
-                bankAccount: Session.get("bankaccount") || "",
+                bankAccount: localStorage.getItem("bankaccount") || "",
                 paymentAmount: appliedAmt || 0,
                 notes: data.fields.Comments,
                 LineItems: lineItems,
                 checkpayment:
-                  Session.get("paymentmethod") || data.fields.PayMethod,
+                  localStorage.getItem("paymentmethod") || data.fields.PayMethod,
                 department:
-                  Session.get("department") || data.fields.DeptClassName,
+                  localStorage.getItem("department") || data.fields.DeptClassName,
                 applied: appliedAmt.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                 }),
@@ -5051,14 +5053,14 @@ Template.supplierpaymentcard.onRendered(() => {
                 templateObject.isInvoiceNo.set(false);
               }
               let getDepartmentVal =
-                Session.get("department") ||
+                localStorage.getItem("department") ||
                 data.fields.DeptClassName ||
                 defaultDept;
               let getPaymentMethodVal = "";
 
-              if (Session.get("paymentmethod")) {
+              if (localStorage.getItem("paymentmethod")) {
                 getPaymentMethodVal =
-                  Session.get("paymentmethod") || data.fields.PayMethod;
+                  localStorage.getItem("paymentmethod") || data.fields.PayMethod;
               } else {
                 getPaymentMethodVal = data.fields.PayMethod || "";
               }
@@ -5068,7 +5070,7 @@ Template.supplierpaymentcard.onRendered(() => {
               $("#sltDepartment").val(getDepartmentVal);
               $("#sltPaymentMethod").val(getPaymentMethodVal);
               //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-              let bankAccountData = Session.get("bankaccount") || "Bank";
+              let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
               $("#edtSelectBankAccountName").val(bankAccountData);
               templateObject.getLastPaymentData();
               if (clientList) {
@@ -5173,14 +5175,14 @@ Template.supplierpaymentcard.onRendered(() => {
                   customerName: useData[d].fields.ClientName || "",
                   paymentDate: begunDate,
                   reference: useData[d].fields.CustPONumber || " ",
-                  bankAccount: Session.get("bankaccount") || "",
+                  bankAccount: localStorage.getItem("bankaccount") || "",
                   paymentAmount: appliedAmt || 0,
                   notes: useData[d].fields.Comments,
                   LineItems: lineItems,
                   checkpayment:
-                    Session.get("paymentmethod") || useData[d].fields.PayMethod,
+                    localStorage.getItem("paymentmethod") || useData[d].fields.PayMethod,
                   department:
-                    Session.get("department") ||
+                    localStorage.getItem("department") ||
                     useData[d].fields.DeptClassName,
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
@@ -5194,14 +5196,14 @@ Template.supplierpaymentcard.onRendered(() => {
                   templateObject.isInvoiceNo.set(false);
                 }
                 let getDepartmentVal =
-                  Session.get("department") ||
+                  localStorage.getItem("department") ||
                   useData[d].fields.DeptClassName ||
                   defaultDept;
                 let getPaymentMethodVal = "";
 
-                if (Session.get("paymentmethod")) {
+                if (localStorage.getItem("paymentmethod")) {
                   getPaymentMethodVal =
-                    Session.get("paymentmethod") || useData[d].fields.PayMethod;
+                    localStorage.getItem("paymentmethod") || useData[d].fields.PayMethod;
                 } else {
                   getPaymentMethodVal = useData[d].fields.PayMethod || "";
                 }
@@ -5211,7 +5213,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 $("#sltDepartment").val(getDepartmentVal);
                 $("#sltPaymentMethod").val(getPaymentMethodVal);
                 //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-                let bankAccountData = Session.get("bankaccount") || "Bank";
+                let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
                 $("#edtSelectBankAccountName").val(bankAccountData);
                 templateObject.getLastPaymentData();
                 if (clientList) {
@@ -5314,14 +5316,14 @@ Template.supplierpaymentcard.onRendered(() => {
                     customerName: data.fields.ClientName || "",
                     paymentDate: begunDate,
                     reference: data.fields.CustPONumber || " ",
-                    bankAccount: Session.get("bankaccount") || "",
+                    bankAccount: localStorage.getItem("bankaccount") || "",
                     paymentAmount: appliedAmt || 0,
                     notes: data.fields.Comments,
                     LineItems: lineItems,
                     checkpayment:
-                      Session.get("paymentmethod") || data.fields.PayMethod,
+                      localStorage.getItem("paymentmethod") || data.fields.PayMethod,
                     department:
-                      Session.get("department") || data.fields.DeptClassName,
+                      localStorage.getItem("department") || data.fields.DeptClassName,
                     applied: appliedAmt.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     }),
@@ -5334,14 +5336,14 @@ Template.supplierpaymentcard.onRendered(() => {
                     templateObject.isInvoiceNo.set(false);
                   }
                   let getDepartmentVal =
-                    Session.get("department") ||
+                    localStorage.getItem("department") ||
                     data.fields.DeptClassName ||
                     defaultDept;
                   let getPaymentMethodVal = "";
 
-                  if (Session.get("paymentmethod")) {
+                  if (localStorage.getItem("paymentmethod")) {
                     getPaymentMethodVal =
-                      Session.get("paymentmethod") || data.fields.PayMethod;
+                      localStorage.getItem("paymentmethod") || data.fields.PayMethod;
                   } else {
                     getPaymentMethodVal = data.fields.PayMethod || "";
                   }
@@ -5351,7 +5353,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   $("#sltDepartment").val(getDepartmentVal);
                   $("#sltPaymentMethod").val(getPaymentMethodVal);
                   //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-                  let bankAccountData = Session.get("bankaccount") || "Bank";
+                  let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
                   $("#edtSelectBankAccountName").val(bankAccountData);
                   templateObject.getLastPaymentData();
                   if (clientList) {
@@ -5453,14 +5455,14 @@ Template.supplierpaymentcard.onRendered(() => {
               customerName: data.fields.ClientName || "",
               paymentDate: begunDate,
               reference: data.fields.CustPONumber || " ",
-              bankAccount: Session.get("bankaccount") || "",
+              bankAccount: localStorage.getItem("bankaccount") || "",
               paymentAmount: appliedAmt || 0,
               notes: data.fields.Comments,
               LineItems: lineItems,
               checkpayment:
-                Session.get("paymentmethod") || data.fields.PayMethod,
+                localStorage.getItem("paymentmethod") || data.fields.PayMethod,
               department:
-                Session.get("department") || data.fields.DeptClassName,
+                localStorage.getItem("department") || data.fields.DeptClassName,
               applied: appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }),
@@ -5473,14 +5475,14 @@ Template.supplierpaymentcard.onRendered(() => {
               templateObject.isInvoiceNo.set(false);
             }
             let getDepartmentVal =
-              Session.get("department") ||
+              localStorage.getItem("department") ||
               data.fields.DeptClassName ||
               defaultDept;
             let getPaymentMethodVal = "";
 
-            if (Session.get("paymentmethod")) {
+            if (localStorage.getItem("paymentmethod")) {
               getPaymentMethodVal =
-                Session.get("paymentmethod") || data.fields.PayMethod;
+                localStorage.getItem("paymentmethod") || data.fields.PayMethod;
             } else {
               getPaymentMethodVal = data.fields.PayMethod || "";
             }
@@ -5490,7 +5492,7 @@ Template.supplierpaymentcard.onRendered(() => {
             $("#sltDepartment").val(getDepartmentVal);
             $("#sltPaymentMethod").val(getPaymentMethodVal);
             //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-            let bankAccountData = Session.get("bankaccount") || "Bank";
+            let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
             $("#edtSelectBankAccountName").val(bankAccountData);
             templateObject.getLastPaymentData();
             if (clientList) {
@@ -5600,14 +5602,14 @@ Template.supplierpaymentcard.onRendered(() => {
                   customerName: data.fields.ClientName || "",
                   paymentDate: begunDate,
                   reference: data.fields.CustPONumber || " ",
-                  bankAccount: Session.get("bankaccount") || "",
+                  bankAccount: localStorage.getItem("bankaccount") || "",
                   paymentAmount: appliedAmt || 0,
                   notes: data.fields.Comments,
                   LineItems: lineItems,
                   checkpayment:
-                    Session.get("paymentmethod") || data.fields.PayMethod,
+                    localStorage.getItem("paymentmethod") || data.fields.PayMethod,
                   department:
-                    Session.get("department") || data.fields.DeptClassName,
+                    localStorage.getItem("department") || data.fields.DeptClassName,
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
@@ -5617,14 +5619,14 @@ Template.supplierpaymentcard.onRendered(() => {
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
 
                 let getDepartmentVal =
-                  Session.get("department") ||
+                  localStorage.getItem("department") ||
                   data.fields.DeptClassName ||
                   defaultDept;
                 let getPaymentMethodVal = "";
 
-                if (Session.get("paymentmethod")) {
+                if (localStorage.getItem("paymentmethod")) {
                   getPaymentMethodVal =
-                    Session.get("paymentmethod") || data.fields.PayMethod;
+                    localStorage.getItem("paymentmethod") || data.fields.PayMethod;
                 } else {
                   getPaymentMethodVal = data.fields.PayMethod || "";
                 }
@@ -5634,7 +5636,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 $("#sltDepartment").val(getDepartmentVal);
                 $("#sltPaymentMethod").val(getPaymentMethodVal);
                 //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-                let bankAccountData = Session.get("bankaccount") || "Bank";
+                let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
                 $("#edtSelectBankAccountName").val(bankAccountData);
                 templateObject.getLastPaymentData();
                 if (clientList) {
@@ -5741,14 +5743,14 @@ Template.supplierpaymentcard.onRendered(() => {
                   customerName: useData[d].fields.ClientName || "",
                   paymentDate: begunDate,
                   reference: useData[d].fields.CustPONumber || " ",
-                  bankAccount: Session.get("bankaccount") || "",
+                  bankAccount: localStorage.getItem("bankaccount") || "",
                   paymentAmount: appliedAmt || 0,
                   notes: useData[d].fields.Comments,
                   LineItems: lineItems,
                   checkpayment:
-                    Session.get("paymentmethod") || useData[d].fields.PayMethod,
+                    localStorage.getItem("paymentmethod") || useData[d].fields.PayMethod,
                   department:
-                    Session.get("department") ||
+                    localStorage.getItem("department") ||
                     useData[d].fields.DeptClassName,
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
@@ -5760,14 +5762,14 @@ Template.supplierpaymentcard.onRendered(() => {
 
 
                 let getDepartmentVal =
-                  Session.get("department") ||
+                  localStorage.getItem("department") ||
                   useData[d].fields.DeptClassName ||
                   defaultDept;
                 let getPaymentMethodVal = "";
 
-                if (Session.get("paymentmethod")) {
+                if (localStorage.getItem("paymentmethod")) {
                   getPaymentMethodVal =
-                    Session.get("paymentmethod") || useData[d].fields.PayMethod;
+                    localStorage.getItem("paymentmethod") || useData[d].fields.PayMethod;
                 } else {
                   getPaymentMethodVal = useData[d].fields.PayMethod || "";
                 }
@@ -5777,7 +5779,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 $("#sltDepartment").val(getDepartmentVal);
                 $("#sltPaymentMethod").val(getPaymentMethodVal);
                 //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-                let bankAccountData = Session.get("bankaccount") || "Bank";
+                let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
                 $("#edtSelectBankAccountName").val(bankAccountData);
                 templateObject.getLastPaymentData();
                 if (clientList) {
@@ -5882,14 +5884,14 @@ Template.supplierpaymentcard.onRendered(() => {
               customerName: data.fields.ClientName || "",
               paymentDate: begunDate,
               reference: data.fields.CustPONumber || " ",
-              bankAccount: Session.get("bankaccount") || "",
+              bankAccount: localStorage.getItem("bankaccount") || "",
               paymentAmount: appliedAmt || 0,
               notes: data.fields.Comments,
               LineItems: lineItems,
               checkpayment:
-                Session.get("paymentmethod") || data.fields.PayMethod,
+                localStorage.getItem("paymentmethod") || data.fields.PayMethod,
               department:
-                Session.get("department") || data.fields.DeptClassName,
+                localStorage.getItem("department") || data.fields.DeptClassName,
               applied: appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }),
@@ -5901,14 +5903,14 @@ Template.supplierpaymentcard.onRendered(() => {
             //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
             $("#edtSupplierName").val(data.fields.ClientName);
             let getDepartmentVal =
-              Session.get("department") ||
+              localStorage.getItem("department") ||
               data.fields.DeptClassName ||
               defaultDept;
             let getPaymentMethodVal = "";
 
-            if (Session.get("paymentmethod")) {
+            if (localStorage.getItem("paymentmethod")) {
               getPaymentMethodVal =
-                Session.get("paymentmethod") || data.fields.PayMethod;
+                localStorage.getItem("paymentmethod") || data.fields.PayMethod;
             } else {
               getPaymentMethodVal = data.fields.PayMethod || "";
             }
@@ -5916,7 +5918,7 @@ Template.supplierpaymentcard.onRendered(() => {
             $("#sltDepartment").val(getDepartmentVal);
             $("#sltPaymentMethod").val(getPaymentMethodVal);
             //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-            let bankAccountData = Session.get("bankaccount") || "Bank";
+            let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
             $("#edtSelectBankAccountName").val(bankAccountData);
             templateObject.getLastPaymentData();
             if (clientList) {
@@ -6084,15 +6086,15 @@ Template.supplierpaymentcard.onRendered(() => {
               ? moment(paymentdate).format("DD/MM/YYYY")
               : "",
             reference: referenceNo || " ",
-            bankAccount: Session.get("bankaccount") || accountName || "",
+            bankAccount: localStorage.getItem("bankaccount") || accountName || "",
             paymentAmount:
               appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }) || 0,
             notes: notes || "",
             LineItems: lineItems,
-            checkpayment: Session.get("paymentmethod") || checkpayment || "",
-            department: Session.get("department") || department || "",
+            checkpayment: localStorage.getItem("paymentmethod") || checkpayment || "",
+            department: localStorage.getItem("department") || department || "",
             applied:
               appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
@@ -6102,10 +6104,10 @@ Template.supplierpaymentcard.onRendered(() => {
 
           $("#edtSupplierName").val(companyName);
           let bankAccountData =
-            Session.get("bankaccount") || accountName || "Bank";
+            localStorage.getItem("bankaccount") || accountName || "Bank";
           $("#edtSelectBankAccountName").val(bankAccountData);
           let paymentMethodData =
-            Session.get("paymentmethod") || checkpayment || "Cash";
+            localStorage.getItem("paymentmethod") || checkpayment || "Cash";
           $("#sltPaymentMethod").val(paymentMethodData);
 
           templateObject.record.set(record);
@@ -6367,7 +6369,7 @@ Template.supplierpaymentcard.onRendered(() => {
               ? moment(paymentdate).format("DD/MM/YYYY")
               : "",
             reference: referenceNo || " ",
-            bankAccount: Session.get("bankaccount") || accountName || "",
+            bankAccount: localStorage.getItem("bankaccount") || accountName || "",
             paymentAmount:
               appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
@@ -6375,8 +6377,8 @@ Template.supplierpaymentcard.onRendered(() => {
             notes: notes || "",
             deleted: data.fields.Deleted,
             LineItems: lineItems,
-            checkpayment: Session.get("paymentmethod") || checkpayment || "",
-            department: Session.get("department") || department || "",
+            checkpayment: localStorage.getItem("paymentmethod") || checkpayment || "",
+            department: localStorage.getItem("department") || department || "",
             applied:
               appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
@@ -6386,10 +6388,10 @@ Template.supplierpaymentcard.onRendered(() => {
 
           $("#edtSupplierName").val(companyName);
           let bankAccountData =
-            Session.get("bankaccount") || accountName || "Bank";
+            localStorage.getItem("bankaccount") || accountName || "Bank";
           $("#edtSelectBankAccountName").val(bankAccountData);
           let paymentMethodData =
-            Session.get("paymentmethod") || checkpayment || "Cash";
+            localStorage.getItem("paymentmethod") || checkpayment || "Cash";
           $("#sltPaymentMethod").val(paymentMethodData);
 
           templateObject.record.set(record);
@@ -6503,12 +6505,12 @@ Template.supplierpaymentcard.onRendered(() => {
             customerName: data.fields.ClientName || "",
             paymentDate: begunDate,
             reference: data.fields.CustPONumber || " ",
-            bankAccount: Session.get("bankaccount") || "",
+            bankAccount: localStorage.getItem("bankaccount") || "",
             paymentAmount: appliedAmt || 0,
             notes: data.fields.Comments,
             LineItems: lineItems,
-            checkpayment: Session.get("paymentmethod") || data.fields.PayMethod,
-            department: Session.get("department") || data.fields.DeptClassName,
+            checkpayment: localStorage.getItem("paymentmethod") || data.fields.PayMethod,
+            department: localStorage.getItem("department") || data.fields.DeptClassName,
             applied: appliedAmt.toLocaleString(undefined, {
               minimumFractionDigits: 2,
             }),
@@ -6521,12 +6523,12 @@ Template.supplierpaymentcard.onRendered(() => {
             templateObject.isInvoiceNo.set(false);
           }
           let getDepartmentVal =
-            Session.get("department") || data.fields.DeptClassName;
+            localStorage.getItem("department") || data.fields.DeptClassName;
           let getPaymentMethodVal = "";
 
-          if (Session.get("paymentmethod")) {
+          if (localStorage.getItem("paymentmethod")) {
             getPaymentMethodVal =
-              Session.get("paymentmethod") || data.fields.PayMethod;
+              localStorage.getItem("paymentmethod") || data.fields.PayMethod;
           } else {
             getPaymentMethodVal = data.fields.PayMethod || "";
           }
@@ -6535,7 +6537,7 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#sltDepartment").val(getDepartmentVal);
           $("#sltPaymentMethod").val(getPaymentMethodVal);
           //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-          let bankAccountData = Session.get("bankaccount") || "Bank";
+          let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
           $("#edtSelectBankAccountName").val(bankAccountData);
           templateObject.getLastPaymentData();
           if (clientList) {
@@ -6638,7 +6640,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   customerName: data.fields.ClientName || "",
                   paymentDate: begunDate,
                   reference: data.fields.CustPONumber || " ",
-                  bankAccount: Session.get("bankaccount") || "",
+                  bankAccount: localStorage.getItem("bankaccount") || "",
                   paymentAmount:
                     utilityService.modifynegativeCurrencyFormat(
                       totalGrandAmount
@@ -6646,9 +6648,9 @@ Template.supplierpaymentcard.onRendered(() => {
                   notes: data.fields.Comments,
                   LineItems: lineItems,
                   checkpayment:
-                    Session.get("paymentmethod") || data.fields.PayMethod,
+                    localStorage.getItem("paymentmethod") || data.fields.PayMethod,
                   department:
-                    Session.get("department") || data.fields.DeptClassName,
+                    localStorage.getItem("department") || data.fields.DeptClassName,
                   applied:
                     utilityService.modifynegativeCurrencyFormat(
                       totalGrandAmount
@@ -6729,12 +6731,12 @@ Template.supplierpaymentcard.onRendered(() => {
     //       customerName: companyName || '',
     //       paymentDate: paymentdate ? moment(paymentdate).format('DD/MM/YYYY') : "",
     //       reference: referenceNo || ' ',
-    //       bankAccount: Session.get('bankaccount') || accountName || '',
+    //       bankAccount: localStorage.getItem('bankaccount') || accountName || '',
     //       paymentAmount: appliedAmt.toLocaleString(undefined, {minimumFractionDigits: 2})  || 0,
     //       notes: notes || '',
     //       LineItems:lineItems,
-    //       checkpayment: Session.get('paymentmethod') ||checkpayment ||'',
-    //       department: Session.get('department') || department ||'',
+    //       checkpayment: localStorage.getItem('paymentmethod') ||checkpayment ||'',
+    //       department: localStorage.getItem('department') || department ||'',
     //       applied:appliedAmt.toLocaleString(undefined, {minimumFractionDigits: 2}) || 0
     //
     //   };
@@ -6752,7 +6754,7 @@ Template.supplierpaymentcard.onRendered(() => {
     //     }
     //   }
     //
-    //   Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSupplierPaymentcard', function(error, result){
+    //   Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblSupplierPaymentcard', function(error, result){
     //     if(error){
     //
     //   }else{
@@ -6870,15 +6872,15 @@ Template.supplierpaymentcard.onRendered(() => {
                 customerName: data.fields.ClientName || "",
                 paymentDate: begunDate,
                 reference: data.fields.CustPONumber || " ",
-                bankAccount: Session.get("bankaccount") || "",
+                bankAccount: localStorage.getItem("bankaccount") || "",
                 paymentAmount:
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
                 notes: data.fields.Comments,
                 LineItems: lineItems,
                 checkpayment:
-                  Session.get("paymentmethod") || data.fields.PayMethod,
+                  localStorage.getItem("paymentmethod") || data.fields.PayMethod,
                 department:
-                  Session.get("department") || data.fields.DeptClassName,
+                  localStorage.getItem("department") || data.fields.DeptClassName,
                 applied:
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
                 IsPaid: data.fields.IsPaid || false
@@ -6890,14 +6892,14 @@ Template.supplierpaymentcard.onRendered(() => {
                 templateObject.isInvoiceNo.set(false);
               }
               let getDepartmentVal =
-                Session.get("department") ||
+                localStorage.getItem("department") ||
                 data.fields.DeptClassName ||
                 defaultDept;
               let getPaymentMethodVal = "";
 
-              if (Session.get("paymentmethod")) {
+              if (localStorage.getItem("paymentmethod")) {
                 getPaymentMethodVal =
-                  Session.get("paymentmethod") || data.fields.PayMethod;
+                  localStorage.getItem("paymentmethod") || data.fields.PayMethod;
               } else {
                 getPaymentMethodVal = data.fields.PayMethod || "";
               }
@@ -6906,7 +6908,7 @@ Template.supplierpaymentcard.onRendered(() => {
               $("#sltDepartment").val(getDepartmentVal);
               $("#sltPaymentMethod").val(getPaymentMethodVal);
               //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-              let bankAccountData = Session.get("bankaccount") || "Bank";
+              let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
               $("#edtSelectBankAccountName").val(bankAccountData);
               templateObject.getLastPaymentData();
               if (clientList) {
@@ -7009,15 +7011,15 @@ Template.supplierpaymentcard.onRendered(() => {
               customerName: data.fields.ClientName || "",
               paymentDate: begunDate,
               reference: data.fields.CustPONumber || " ",
-              bankAccount: Session.get("bankaccount") || "",
+              bankAccount: localStorage.getItem("bankaccount") || "",
               paymentAmount:
                 utilityService.modifynegativeCurrencyFormat(amountData) || 0,
               notes: data.fields.Comments,
               LineItems: lineItems,
               checkpayment:
-                Session.get("paymentmethod") || data.fields.PayMethod,
+                localStorage.getItem("paymentmethod") || data.fields.PayMethod,
               department:
-                Session.get("department") || data.fields.DeptClassName,
+                localStorage.getItem("department") || data.fields.DeptClassName,
               applied:
                 utilityService.modifynegativeCurrencyFormat(amountData) || 0,
               IsPaid: data.fields.IsPaid || false
@@ -7030,14 +7032,14 @@ Template.supplierpaymentcard.onRendered(() => {
             }
             //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
             let getDepartmentVal =
-              Session.get("department") ||
+              localStorage.getItem("department") ||
               data.fields.DeptClassName ||
               defaultDept;
             let getPaymentMethodVal = "";
 
-            if (Session.get("paymentmethod")) {
+            if (localStorage.getItem("paymentmethod")) {
               getPaymentMethodVal =
-                Session.get("paymentmethod") || data.fields.PayMethod;
+                localStorage.getItem("paymentmethod") || data.fields.PayMethod;
             } else {
               getPaymentMethodVal = data.fields.PayMethod || "";
             }
@@ -7045,7 +7047,7 @@ Template.supplierpaymentcard.onRendered(() => {
             $("#edtSupplierName").val(data.fields.ClientName);
             $("#sltPaymentMethod").val(getPaymentMethodVal);
             //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-            let bankAccountData = Session.get("bankaccount") || "Bank";
+            let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
             $("#edtSelectBankAccountName").val(bankAccountData);
             templateObject.getLastPaymentData();
             if (clientList) {
@@ -7150,15 +7152,15 @@ Template.supplierpaymentcard.onRendered(() => {
                 customerName: data.fields.ClientName || "",
                 paymentDate: begunDate,
                 reference: data.fields.CustPONumber || " ",
-                bankAccount: Session.get("bankaccount") || "",
+                bankAccount: localStorage.getItem("bankaccount") || "",
                 paymentAmount:
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
                 notes: data.fields.Comments,
                 LineItems: lineItems,
                 checkpayment:
-                  Session.get("paymentmethod") || data.fields.PayMethod,
+                  localStorage.getItem("paymentmethod") || data.fields.PayMethod,
                 department:
-                  Session.get("department") || data.fields.DeptClassName,
+                  localStorage.getItem("department") || data.fields.DeptClassName,
                 applied:
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
                 IsPaid: data.fields.IsPaid || false
@@ -7168,14 +7170,14 @@ Template.supplierpaymentcard.onRendered(() => {
 
               //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
               let getDepartmentVal =
-                Session.get("department") ||
+                localStorage.getItem("department") ||
                 data.fields.DeptClassName ||
                 defaultDept;
               let getPaymentMethodVal = "";
 
-              if (Session.get("paymentmethod")) {
+              if (localStorage.getItem("paymentmethod")) {
                 getPaymentMethodVal =
-                  Session.get("paymentmethod") || data.fields.PayMethod;
+                  localStorage.getItem("paymentmethod") || data.fields.PayMethod;
               } else {
                 getPaymentMethodVal = data.fields.PayMethod || "";
               }
@@ -7183,7 +7185,7 @@ Template.supplierpaymentcard.onRendered(() => {
               $("#edtSupplierName").val(data.fields.ClientName);
               $("#sltPaymentMethod").val(getPaymentMethodVal);
               //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-              let bankAccountData = Session.get("bankaccount") || "Bank";
+              let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
               $("#edtSelectBankAccountName").val(bankAccountData);
               templateObject.getLastPaymentData();
               if (clientList) {
@@ -7289,13 +7291,13 @@ Template.supplierpaymentcard.onRendered(() => {
             customerName: data.fields.ClientName || "",
             paymentDate: begunDate,
             reference: data.fields.CustPONumber || " ",
-            bankAccount: Session.get("bankaccount") || "",
+            bankAccount: localStorage.getItem("bankaccount") || "",
             paymentAmount:
               utilityService.modifynegativeCurrencyFormat(amountData) || 0,
             notes: data.fields.Comments,
             LineItems: lineItems,
-            checkpayment: Session.get("paymentmethod") || data.fields.PayMethod,
-            department: Session.get("department") || data.fields.DeptClassName,
+            checkpayment: localStorage.getItem("paymentmethod") || data.fields.PayMethod,
+            department: localStorage.getItem("department") || data.fields.DeptClassName,
             applied:
               utilityService.modifynegativeCurrencyFormat(amountData) || 0,
             IsPaid: data.fields.IsPaid || false
@@ -7308,14 +7310,14 @@ Template.supplierpaymentcard.onRendered(() => {
           }
           //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
           let getDepartmentVal =
-            Session.get("department") ||
+            localStorage.getItem("department") ||
             data.fields.DeptClassName ||
             defaultDept;
           let getPaymentMethodVal = "";
 
-          if (Session.get("paymentmethod")) {
+          if (localStorage.getItem("paymentmethod")) {
             getPaymentMethodVal =
-              Session.get("paymentmethod") || data.fields.PayMethod;
+              localStorage.getItem("paymentmethod") || data.fields.PayMethod;
           } else {
             getPaymentMethodVal = data.fields.PayMethod || "";
           }
@@ -7323,7 +7325,7 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#edtSupplierName").val(data.fields.ClientName);
           $("#sltPaymentMethod").val(getPaymentMethodVal);
           //$('#edtBankAccountName').editableSelect('add',record.bankAccount);
-          let bankAccountData = Session.get("bankaccount") || "Bank";
+          let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
           $("#edtSelectBankAccountName").val(bankAccountData);
           templateObject.getLastPaymentData();
           if (clientList) {
@@ -7398,9 +7400,9 @@ Template.supplierpaymentcard.onRendered(() => {
     let paymentrecord = {
       id: "",
       lid: "",
-      bankAccount: Session.get("bankaccount") || "Bank",
-      checkpayment: Session.get("paymentmethod") || "",
-      department: Session.get("department") || "",
+      bankAccount: localStorage.getItem("bankaccount") || "Bank",
+      checkpayment: localStorage.getItem("paymentmethod") || "",
+      department: localStorage.getItem("department") || "",
       accountname: "",
       memo: "",
       sosupplier: "",
@@ -7462,14 +7464,14 @@ Template.supplierpaymentcard.onRendered(() => {
     templateObject.record.set(paymentrecord);
     localStorage.setItem('APPLIED_AMOUNT', paymentrecord.applied);
 
-    let getDepartmentVal = Session.get("department") || defaultDept;
+    let getDepartmentVal = localStorage.getItem("department") || defaultDept;
     let getPaymentMethodVal = "";
 
-    if (Session.get("paymentmethod")) {
-      getPaymentMethodVal = Session.get("paymentmethod") || "";
+    if (localStorage.getItem("paymentmethod")) {
+      getPaymentMethodVal = localStorage.getItem("paymentmethod") || "";
     }
 
-    let bankAccountData = Session.get("bankaccount") || "Bank";
+    let bankAccountData = localStorage.getItem("bankaccount") || "Bank";
     $("#edtSelectBankAccountName").val(bankAccountData);
     templateObject.getLastPaymentData();
 
@@ -8013,18 +8015,18 @@ Template.supplierpaymentcard.helpers({
   },
   salesCloudGridPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "tblSupplierPaymentcard",
     });
   },
   companyphone: () => {
-    return "Phone: " + Session.get("vs1companyPhone");
+    return "Phone: " + localStorage.getItem("vs1companyPhone");
   },
   companyabn: () => {
     //Update Company ABN
-    let countryABNValue = Session.get("vs1companyABN");
+    let countryABNValue = localStorage.getItem("vs1companyABN");
     // if (LoggedCountry == "South Africa") {
-    //     countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+    //     countryABNValue = "Vat No: " + localStorage.getItem("vs1companyABN");
     // }
     return countryABNValue;
   },
@@ -8032,34 +8034,34 @@ Template.supplierpaymentcard.helpers({
     //Add Company Reg
     let countryRegValue = "";
     if (LoggedCountry == "South Africa") {
-      countryRegValue = "Reg No: " + Session.get("vs1companyReg");
+      countryRegValue = "Reg No: " + localStorage.getItem("vs1companyReg");
     }
 
     return countryRegValue;
   },
   companyaddress1: () => {
-    return Session.get("vs1companyaddress1");
+    return localStorage.getItem("vs1companyaddress1");
   },
   companyaddress2: () => {
-    return Session.get("vs1companyaddress2");
+    return localStorage.getItem("vs1companyaddress2");
   },
   city: () => {
-    return Session.get("vs1companyCity");
+    return localStorage.getItem("vs1companyCity");
   },
   state: () => {
-    return Session.get("companyState");
+    return localStorage.getItem("companyState");
   },
   poBox: () => {
-    return Session.get("vs1companyPOBox");
+    return localStorage.getItem("vs1companyPOBox");
   },
   // companyphone: () => {
-  //   return Session.get("vs1companyPhone");
+  //   return localStorage.getItem("vs1companyPhone");
   // },
   organizationname: () => {
-    return Session.get("vs1companyName");
+    return localStorage.getItem("vs1companyName");
   },
   organizationurl: () => {
-    return Session.get("vs1companyURL");
+    return localStorage.getItem("vs1companyURL");
   },
 
   convertToForeignAmount: (amount) => {
@@ -8104,7 +8106,7 @@ Template.supplierpaymentcard.events({
             let total = $('#balanceDue').html() || 0;
             let tax = $('#subtotal_tax').html() || 0;
             let customer = $('#edtSupplierFirstName').val() + ' ' + $('#edtSupplierLastName').val();
-            let company = Session.get('vs1companyName');
+            let company = localStorage.getItem('vs1companyName');
             $('#tblSupplierPaymentcard > tbody > tr').each(function () {
                 var lineID = this.id;
                 let tddescription = $(this).find(".colType").text();
@@ -8165,7 +8167,7 @@ Template.supplierpaymentcard.events({
     LoadingOverlay.show();
 
     var supplier_payments = $('input[name="Supplier Payments"]:checked').val();
-    let emid = Session.get('mySessionEmployeeLoggedID');
+    let emid = localStorage.getItem('mySessionEmployeeLoggedID');
 
     sideBarService.getTemplateNameandEmployeId("Supplier Payments",emid,1).then(function (data) {
       templateid = data.ttemplatesettings;
@@ -8174,7 +8176,7 @@ Template.supplierpaymentcard.events({
       type:"TTemplateSettings",
       fields:{
                           ID:parseInt(id),
-                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                           SettingName:"Supplier Payments",
                           GlobalRef:"Supplier Payments",
                           Description:$('input[name="Supplier Payments_1"]').val(),
@@ -8201,7 +8203,7 @@ Template.supplierpaymentcard.events({
               objDetails =  {
               type:"TTemplateSettings",
               fields:{
-                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                           SettingName:"Supplier Payments",
                           Description:$('input[name="Supplier Payments_1"]').val(),
                           Template:"1",
@@ -8232,7 +8234,7 @@ Template.supplierpaymentcard.events({
       type:"TTemplateSettings",
       fields:{
                           ID:parseInt(id),
-                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                           SettingName:"Supplier Payments",
                           GlobalRef:"Supplier Payments",
                           Description:$('input[name="Supplier Payments_2"]').val(),
@@ -8257,7 +8259,7 @@ Template.supplierpaymentcard.events({
               objDetails =  {
               type:"TTemplateSettings",
               fields:{
-                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                           SettingName:"Supplier Payments",
                           Description:$('input[name="Supplier Payments_2"]').val(),
                           Template:"2",
@@ -8285,7 +8287,7 @@ Template.supplierpaymentcard.events({
       type:"TTemplateSettings",
       fields:{
                           ID:parseInt(id),
-                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                           SettingName:"Supplier Payments",
                           GlobalRef:"Supplier Payments",
                           Description:$('input[name="Supplier Payments_3"]').val(),
@@ -8312,7 +8314,7 @@ Template.supplierpaymentcard.events({
               objDetails =  {
               type:"TTemplateSettings",
               fields:{
-                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          EmployeeID:localStorage.getItem('mySessionEmployeeLoggedID'),
                           SettingName:"Supplier Payments",
                           Description:$('input[name="Supplier Payments_3"]').val(),
                           Template:"3",
@@ -8479,9 +8481,9 @@ Template.supplierpaymentcard.events({
       return false;
     };
 
-    Session.set("paymentmethod", payMethod);
-    Session.set("bankaccount", bankAccount);
-    Session.set("department", department);
+    localStorage.setItem("paymentmethod", payMethod);
+    localStorage.setItem("bankaccount", bankAccount);
+    localStorage.setItem("department", department);
     var currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth = currentBeginDate.getMonth() + 1;
@@ -8617,7 +8619,7 @@ Template.supplierpaymentcard.events({
 
               let erpInvoiceId = objDetails.fields.ID;
 
-              let mailFromName = Session.get("vs1companyName");
+              let mailFromName = localStorage.getItem("vs1companyName");
               let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -9033,7 +9035,7 @@ Template.supplierpaymentcard.events({
 
               let erpInvoiceId = objDetails.fields.ID;
 
-              let mailFromName = Session.get("vs1companyName");
+              let mailFromName = localStorage.getItem("vs1companyName");
               let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -9470,7 +9472,7 @@ Template.supplierpaymentcard.events({
 
               let erpInvoiceId = objDetails.fields.ID;
 
-              let mailFromName = Session.get("vs1companyName");
+              let mailFromName = localStorage.getItem("vs1companyName");
               let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -9891,7 +9893,7 @@ Template.supplierpaymentcard.events({
 
               let erpInvoiceId = objDetails.fields.ID;
 
-              let mailFromName = Session.get("vs1companyName");
+              let mailFromName = localStorage.getItem("vs1companyName");
               let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -10328,7 +10330,7 @@ Template.supplierpaymentcard.events({
 
               let erpInvoiceId = objDetails.fields.ID;
 
-              let mailFromName = Session.get("vs1companyName");
+              let mailFromName = localStorage.getItem("vs1companyName");
               let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -10769,7 +10771,7 @@ Template.supplierpaymentcard.events({
 
               let erpInvoiceId = objDetails.fields.ID;
 
-              let mailFromName = Session.get("vs1companyName");
+              let mailFromName = localStorage.getItem("vs1companyName");
               let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -11117,9 +11119,9 @@ Template.supplierpaymentcard.events({
           }
       }
 
-      checkData = Session.get("supplierpayments") || [];
+      checkData = localStorage.getItem("supplierpayments") || [];
       if (checkData.length > 0) {
-        let getPayments = JSON.parse(Session.get("supplierpayments") || []);
+        let getPayments = JSON.parse(localStorage.getItem("supplierpayments") || []);
         if (getPayments.length > 0) {
           allData = getPayments;
         } else {
@@ -11210,10 +11212,10 @@ Template.supplierpaymentcard.events({
               "&selectsuppcredit=" +
               allData[0].credit;
             allData.shift();
-            Session.set("supplierpayments", JSON.stringify(allData));
+            localStorage.setItem("supplierpayments", JSON.stringify(allData));
           } else {
             newURL = "/paymentoverview?success=true";
-            Session.set("supplierpayments", JSON.stringify(allData));
+            localStorage.setItem("supplierpayments", JSON.stringify(allData));
           }
           // Start End Send Email
           $("#html-2-pdfwrapper").css("display", "block");
@@ -11245,7 +11247,7 @@ Template.supplierpaymentcard.events({
 
               let erpInvoiceId = objDetails.fields.ID;
 
-              let mailFromName = Session.get("vs1companyName");
+              let mailFromName = localStorage.getItem("vs1companyName");
               let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -11550,10 +11552,10 @@ Template.supplierpaymentcard.events({
               "&selectsuppcredit=" +
               allData[0].credit;
             allData.shift();
-            Session.set("supplierpayments", JSON.stringify(allData));
+            localStorage.setItem("supplierpayments", JSON.stringify(allData));
           } else {
             newURL = "/paymentoverview?success=true";
-            Session.set("supplierpayments", JSON.stringify(allData));
+            localStorage.setItem("supplierpayments", JSON.stringify(allData));
           }
 
           //window.open('/paymentoverview','_self');
@@ -11691,7 +11693,7 @@ Template.supplierpaymentcard.events({
 
               let erpInvoiceId = objDetails.fields.ID;
 
-              let mailFromName = Session.get("vs1companyName");
+              let mailFromName = localStorage.getItem("vs1companyName");
               let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -12862,8 +12864,8 @@ Template.supplierpaymentcard.events({
   },
   "click .btnResetGridSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -12920,8 +12922,8 @@ Template.supplierpaymentcard.events({
     });
 
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {

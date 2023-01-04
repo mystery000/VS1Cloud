@@ -396,7 +396,7 @@ Template.depositcard.onRendered(()=>{
 
             if(templateObject.datatablerecords.get()){
 
-              Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblpaymentmethodList', function(error, result){
+              Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblpaymentmethodList', function(error, result){
               if(error){
 
               }else{
@@ -569,7 +569,7 @@ Template.depositcard.onRendered(()=>{
 
   if(templateObject.datatablerecords.get()){
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblpaymentmethodList', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblpaymentmethodList', function(error, result){
     if(error){
 
     }else{
@@ -736,7 +736,7 @@ Template.depositcard.onRendered(()=>{
 
           if(templateObject.datatablerecords.get()){
 
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblpaymentmethodList', function(error, result){
+            Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblpaymentmethodList', function(error, result){
             if(error){
 
             }else{
@@ -967,7 +967,7 @@ Template.depositcard.onRendered(()=>{
                     $('#sltAccountName').val(data.fields.AccountName);
 
                     if(templateObject.record.get()){
-                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblDepositEntryLine', function(error, result){
+                        Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDepositEntryLine', function(error, result){
                             if(error){
 
 
@@ -1087,7 +1087,7 @@ Template.depositcard.onRendered(()=>{
               templateObject.record.set(record);
               $('#sltAccountName').val(useData[d].fields.AccountName);
               if(templateObject.record.get()){
-                  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblDepositEntryLine', function(error, result){
+                  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDepositEntryLine', function(error, result){
                       if(error){
 
                       }else{
@@ -1188,7 +1188,7 @@ Template.depositcard.onRendered(()=>{
                       $('#sltAccountName').val(data.fields.AccountName);
 
                       if(templateObject.record.get()){
-                          Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblDepositEntryLine', function(error, result){
+                          Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDepositEntryLine', function(error, result){
                               if(error){
 
 
@@ -1305,7 +1305,7 @@ Template.depositcard.onRendered(()=>{
                   $('#sltAccountName').val(data.fields.AccountName);
 
                   if(templateObject.record.get()){
-                      Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblDepositEntryLine', function(error, result){
+                      Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDepositEntryLine', function(error, result){
                           if(error){
 
 
@@ -1406,7 +1406,7 @@ Template.depositcard.onRendered(()=>{
         $("#form :input").prop("disabled", false);
         templateObject.record.set(record);
         if(templateObject.record.get()){
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblDepositEntryLine', function(error, result){
+            Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDepositEntryLine', function(error, result){
                 if(error){
 
 
@@ -1680,7 +1680,7 @@ Template.depositcard.onRendered(()=>{
         let surname = '';
         let dept = '';
         let tax = '';
-        let company = Session.get('vs1companyName');
+        let company = localStorage.getItem('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = '';
         let id = $('.printID').attr("id") || "new";
@@ -1696,11 +1696,11 @@ Template.depositcard.onRendered(()=>{
         {
               item_invoices = {
 
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1750,11 +1750,11 @@ Template.depositcard.onRendered(()=>{
         else if(number == 2)
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -1804,11 +1804,11 @@ Template.depositcard.onRendered(()=>{
         else
         {
             item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                o_url: localStorage.getItem('vs1companyURL'),
+                o_name: localStorage.getItem('vs1companyName'),
+                o_address: localStorage.getItem('vs1companyaddress1'),
+                o_city: localStorage.getItem('vs1companyCity'),
+                o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -2608,10 +2608,10 @@ Template.depositcard.helpers({
       });
     },
     purchaseCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'depositcard'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'depositcard'});
     },
     purchaseCloudGridPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblDepositEntryLine'});
+        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblDepositEntryLine'});
     },
     uploadedFiles: () => {
         return Template.instance().uploadedFiles.get();
@@ -2640,31 +2640,31 @@ Template.depositcard.helpers({
         return Template.instance().totalDebit.get();
     },
     companyaddress1: () =>{
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () =>{
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
    city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
      poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () =>{
-        return Session.get('vs1companyPhone');
+        return localStorage.getItem('vs1companyPhone');
     },
     companyabn: () =>{
-        return Session.get('vs1companyABN');
+        return localStorage.getItem('vs1companyABN');
     },
     organizationname: () =>{
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () =>{
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
     isMobileDevices: () =>{
         var isMobile = false;
@@ -4455,7 +4455,7 @@ Template.depositcard.events({
 
         });
 
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -4499,7 +4499,7 @@ Template.depositcard.events({
         }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -4520,7 +4520,7 @@ Template.depositcard.events({
         }
     },
     'click .btnResetSettings': function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
         if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;

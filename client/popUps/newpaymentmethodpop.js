@@ -11,6 +11,12 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './newpaymentmethodpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 Template.newpaymentmethodpop.onCreated(function() {
@@ -36,7 +42,7 @@ Template.newpaymentmethodpop.onRendered(function() {
     const tableHeaderList = [];
     const deptrecords = [];
     let deptprodlineItems = [];
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'paymentmethodList', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'paymentmethodList', function(error, result) {
         if (error) {
 
         } else {
@@ -112,7 +118,7 @@ Template.newpaymentmethodpop.onRendered(function() {
 
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'paymentmethodList', function(error, result) {
+                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'paymentmethodList', function(error, result) {
                             if (error) {
 
                             } else {
@@ -287,7 +293,7 @@ Template.newpaymentmethodpop.onRendered(function() {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'paymentmethodList', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'paymentmethodList', function(error, result) {
                         if (error) {
 
                         } else {
@@ -458,7 +464,7 @@ Template.newpaymentmethodpop.onRendered(function() {
 
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'paymentmethodList', function(error, result) {
+                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'paymentmethodList', function(error, result) {
                         if (error) {
 
                         } else {
@@ -719,7 +725,7 @@ Template.newpaymentmethodpop.onRendered(function() {
                 }
             };
             organisationService.saveOrganisationSetting(objDetails).then(function(data) {
-                Session.set('vs1companyStripeFeeMethod', feeMethod);
+                localStorage.setItem('vs1companyStripeFeeMethod', feeMethod);
                 window.open('/paymentmethodSettings', '_self');
             }).catch(function(err) {
                 window.open('/paymentmethodSettings', '_self');
@@ -991,7 +997,7 @@ Template.newpaymentmethodpop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'paymentmethodList'
         });
     },

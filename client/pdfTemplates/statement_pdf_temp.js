@@ -9,6 +9,9 @@ import '../lib/global/indexdbstorage.js';
 import { jsPDF } from 'jspdf';
 import 'jQuery.print/jQuery.print.js';
 import { autoTable } from 'jspdf-autotable';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './statement_pdf_temp.html';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -27,8 +30,8 @@ Template.statementPrintTemp.onRendered(()=>{
     let contactService = new ContactService();
     templateObject.getOrganisationDetails = function () {
 
-        let account_id = Session.get('vs1companyStripeID') || '';
-        let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+        let account_id = localStorage.getItem('vs1companyStripeID') || '';
+        let stripe_fee = localStorage.getItem('vs1companyStripeFeeMethod') || 'apply';
         templateObject.accountID.set(account_id);
         templateObject.stripe_fee_method.set(stripe_fee);
     }
@@ -160,7 +163,7 @@ Template.statementPrintTemp.onRendered(()=>{
                     let stripe_id = templateObject.accountID.get();
                     let stripe_fee_method = templateObject.stripe_fee_method.get();
                     var erpGet = erpDb();
-                    let company = Session.get('vs1companyName');
+                    let company = localStorage.getItem('vs1companyName');
                     let vs1User = localStorage.getItem('mySession');
                     let dept = "Head Office";
                     let customerName = data.tstatementforcustomer[0].CustomerName;
@@ -274,22 +277,22 @@ Template.statementPrintTemp.helpers({
         return loggedCompany;
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     companyphone: () => {
-        return Session.get('vs1companyPhone');
+        return localStorage.getItem('vs1companyPhone');
     },
     companyabn: () => {
-        return Session.get('vs1companyABN');
+        return localStorage.getItem('vs1companyABN');
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
 
 });

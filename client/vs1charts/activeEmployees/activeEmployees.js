@@ -2,6 +2,11 @@ import "jQuery.print/jQuery.print.js";
 import { ReactiveVar } from "meteor/reactive-var";
 import { ContactService } from "../../contacts/contact-service";
 import User from "./User";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './activeEmployees.html';
+
 let _ = require("lodash");
 
 Template.activeEmployees.onCreated(() => {
@@ -22,14 +27,14 @@ Template.activeEmployees.onRendered(() => {
                 contactService.getCurrentLoggedUser().then(function (data) {
                   //addVS1Data('TAppUser', JSON.stringify(data));
                   let dataListloggedUser = {};
-                  let vs1EmployeeImage = Session.get("vs1EmployeeImages");
+                  let vs1EmployeeImage = localStorage.getItem("vs1EmployeeImages");
 
                   let encoded = "";
                   for (let i = 0; i < data.tappuser.length; i++) {
                     let employeeUser =
                       data.tappuser[i].FirstName + " " + data.tappuser[i].LastName;
-                    if (parseInt(data.tappuser[i].EmployeeID) == parseInt(Session.get("mySessionEmployeeLoggedID"))) {
-                      employeeUser = Session.get("mySessionEmployee");
+                    if (parseInt(data.tappuser[i].EmployeeID) == parseInt(localStorage.getItem("mySessionEmployeeLoggedID"))) {
+                      employeeUser = localStorage.getItem("mySessionEmployee");
                     }
                     loggedUserList.push(
                       new User({
@@ -45,14 +50,14 @@ Template.activeEmployees.onRendered(() => {
             }else{
                 let data = JSON.parse(dataObject[0].data);
                 let dataListloggedUser = {};
-                let vs1EmployeeImage = Session.get("vs1EmployeeImages");
+                let vs1EmployeeImage = localStorage.getItem("vs1EmployeeImages");
 
                 let encoded = "";
                 for (let i = 0; i < data.tappuser.length; i++) {
                   let employeeUser =
                     data.tappuser[i].FirstName + " " + data.tappuser[i].LastName;
-                  if (parseInt(data.tappuser[i].EmployeeID) == parseInt(Session.get("mySessionEmployeeLoggedID"))) {
-                    employeeUser = Session.get("mySessionEmployee");
+                  if (parseInt(data.tappuser[i].EmployeeID) == parseInt(localStorage.getItem("mySessionEmployeeLoggedID"))) {
+                    employeeUser = localStorage.getItem("mySessionEmployee");
                   }
                   loggedUserList.push(
                     new User({
@@ -70,14 +75,14 @@ Template.activeEmployees.onRendered(() => {
             contactService.getCurrentLoggedUser().then(function (data) {
               //addVS1Data('TAppUser', JSON.stringify(data));
               let dataListloggedUser = {};
-              let vs1EmployeeImage = Session.get("vs1EmployeeImages");
+              let vs1EmployeeImage = localStorage.getItem("vs1EmployeeImages");
 
               let encoded = "";
               for (let i = 0; i < data.tappuser.length; i++) {
                 let employeeUser =
                   data.tappuser[i].FirstName + " " + data.tappuser[i].LastName;
-                if (parseInt(data.tappuser[i].EmployeeID) == parseInt(Session.get("mySessionEmployeeLoggedID"))) {
-                  employeeUser = Session.get("mySessionEmployee");
+                if (parseInt(data.tappuser[i].EmployeeID) == parseInt(localStorage.getItem("mySessionEmployeeLoggedID"))) {
+                  employeeUser = localStorage.getItem("mySessionEmployee");
                 }
                 loggedUserList.push(
                   new User({

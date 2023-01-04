@@ -8,6 +8,9 @@ import { UtilityService } from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import {Random} from 'meteor/random';
 import '../lib/global/indexdbstorage.js';
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './credit_pdf_temp.html';
 
 Template.creditPrintTemp.onCreated(() => {
     const templateObject = Template.instance();
@@ -159,7 +162,7 @@ Template.creditPrintTemp.onRendered(function() {
                         creditTemp.push(creditrecord);
                         templateObject.creditrecords.set(creditTemp);
                         if (creditrecord) {
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblCreditLine', function(error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblCreditLine', function(error, result) {
                                 if (error) {
                                 } else {
                                     if (result) {
@@ -202,28 +205,28 @@ Template.creditPrintTemp.helpers({
         return Template.instance().creditrecords.get();
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     city: () => {
-        return Session.get('vs1companyCity');
+        return localStorage.getItem('vs1companyCity');
     },
     state: () => {
-        return Session.get('companyState');
+        return localStorage.getItem('companyState');
     },
     poBox: () => {
-        return Session.get('vs1companyPOBox');
+        return localStorage.getItem('vs1companyPOBox');
     },
     companyphone: () => {
-        let phone = "Phone: "+ Session.get('vs1companyPhone');
+        let phone = "Phone: "+ localStorage.getItem('vs1companyPhone');
         return phone;
     },
     companyabn: () => { //Update Company ABN
-      let countryABNValue = "ABN: " + Session.get('vs1companyABN');
+      let countryABNValue = "ABN: " + localStorage.getItem('vs1companyABN');
       if(LoggedCountry== "South Africa"){
-        countryABNValue = "Vat No: " + Session.get('vs1companyABN');;
+        countryABNValue = "Vat No: " + localStorage.getItem('vs1companyABN');;
       }
 
         return countryABNValue;
@@ -231,15 +234,15 @@ Template.creditPrintTemp.helpers({
     companyReg: () => { //Add Company Reg
       let countryRegValue = '';
       if(LoggedCountry== "South Africa"){
-        countryRegValue = "Reg No: " + Session.get('vs1companyReg');
+        countryRegValue = "Reg No: " + localStorage.getItem('vs1companyReg');
       }
 
         return countryRegValue;
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
 })

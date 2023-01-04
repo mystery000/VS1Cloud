@@ -61,8 +61,8 @@ Template.shippingdocket.onRendered(function() {
     let stockTransferService = new StockTransferService();
     $('.fullScreenSpin').css('display', 'inline-block');
     const templateObject = Template.instance();
-    let printDeliveryDocket = Session.get('CloudPrintDeliveryDocket');
-    let printInvoice = Session.get('CloudPrintInvoice');
+    let printDeliveryDocket = localStorage.getItem('CloudPrintDeliveryDocket');
+    let printInvoice = localStorage.getItem('CloudPrintInvoice');
     const records = [];
     const viarecords = [];
 
@@ -117,7 +117,7 @@ Template.shippingdocket.onRendered(function() {
         });
 
         var custName = $("#edtCustomerName").val();
-        var empName = Session.get('mySession');
+        var empName = localStorage.getItem('mySession');
         var shipAdress = $('textarea[name="txaShipingInfo"]').val();
         var connote = $('textarea[name="shipconnote"]').val();
         var shipVia = $("#shipvia").val();
@@ -1066,7 +1066,7 @@ Template.shippingdocket.onRendered(function() {
 
             //Add Code here
             if (productName != '') {
-              //if (Session.get('CloudShowSerial')) {
+              //if (localStorage.getItem('CloudShowSerial')) {
                 templateObject.getProductQty(targetID, productName, productID);
               //}
             }
@@ -1203,7 +1203,7 @@ Template.shippingdocket.onRendered(function() {
         });
 
         var custName = $("#edtCustomerName").val();
-        var empName = Session.get('mySession');
+        var empName = localStorage.getItem('mySession');
         var shipAdress = $('textarea[name="txaShipingInfo"]').val();
         var connoteVal = $('#txtshipconnote').val();
         var shipVia = $("#shipvia").val();
@@ -1984,7 +1984,7 @@ Template.shippingdocket.onRendered(function() {
     //         templateObject.availserialrecord.set(dataSerialNumber);
     //     });
     // }
-    // if (Session.get('CloudShowSerial')) {
+    // if (localStorage.getItem('CloudShowSerial')) {
     //     //templateObject.getAllAvailableSerialNumber();
     // }
 
@@ -2340,7 +2340,7 @@ Template.shippingdocket.helpers({
         return Template.instance().availableserialnumberlist.get();
     },
     showSerial: () => {
-        return Session.get('CloudShowSerial') || false;
+        return localStorage.getItem('CloudShowSerial') || false;
     },
     availableserialnumberqty: () => {
         let availaLegnt = false;

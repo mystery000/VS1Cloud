@@ -1933,7 +1933,7 @@ Template.accountslistchart.onRendered(()=>{
     },
     bsbRegionName: () => {
         let bsbname = "Branch Code";
-        if (Session.get("ERPLoggedCountry") === "Australia") {
+        if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
             bsbname = "BSB";
         }
         return bsbname;
@@ -1943,7 +1943,7 @@ Template.accountslistchart.onRendered(()=>{
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get("mycloudLogonID"),
+            userid: localStorage.getItem("mycloudLogonID"),
             PrefName: "tblDashboardAccountChartList",
         });
     },

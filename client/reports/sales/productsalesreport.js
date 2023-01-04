@@ -8,7 +8,12 @@ import CachedHttp from "../../lib/global/CachedHttp";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
 import { ReactiveVar } from "meteor/reactive-var";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './productsalesreport.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
+let _ = require('lodash');
 
 const reportService = new ReportService();
 const utilityService = new UtilityService();
@@ -791,7 +796,7 @@ Template.productsalesreport.events({
           basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split('_')[2];
             return storage.includes('BasedOnType_');
-            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
           });
 
           let i = basedOnTypeStorages.length;

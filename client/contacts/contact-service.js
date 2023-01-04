@@ -1,4 +1,5 @@
 import { BaseService } from "../js/base-service";
+import { Session } from 'meteor/session';
 export class ContactService extends BaseService {
     getAllCustomers() {
         let options = {
@@ -575,7 +576,7 @@ export class ContactService extends BaseService {
     getAllTimeSheetListEmp() {
         let options = {
             ListType: "Detail",
-            select: "[EmployeeName]='" + Session.get('mySessionEmployee') + "' and [Active]=true",
+            select: "[EmployeeName]='" + localStorage.getItem('mySessionEmployee') + "' and [Active]=true",
         }
         return this.getList(this.ERPObjects.TTimeSheet, options);
     }

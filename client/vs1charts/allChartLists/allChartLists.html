@@ -128,7 +128,7 @@
     <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}" style="min-width: 100%;">
         <!-- New Charts -->
 
-        {{#if is_available_chart currentTemplate "bankaccountschart"}}
+        <!-- {{#if is_available_chart currentTemplate "bankaccountschart"}}
             {{> bankaccountschart
                     md=6 defaultPosition=0 key="dashboard__bank_accountschart" }}
         {{/if}}
@@ -242,8 +242,6 @@
                     md=8 defaultPosition=23 key="employees__absentee_rate_over_last_12_months" }}
         {{/if}}
 
-        <!-- position 17 to 18, 24 -->
-        <!-- {{> dashboardManagerCharts}} -->
 
         {{#if is_available_chart currentTemplate "dsmTop10Customers"}}
             {{> dsmTop10Customers
@@ -278,14 +276,13 @@
             {{> dsmleadlistchart md=12 defaultPosition=31 key="dsmcharts__lead_list" }}
         {{/if}}
 
-        <!-- position 30, 31 -->
         {{#if is_available_chart currentTemplate "dashboardSalesCharts"}}
             {{> dashboardSalesCharts}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "dsleadlistchart"}}
             {{> dsleadlistchart md=12 defaultPosition=33 key="dscharts__lead_list" }}
-        {{/if}}
+        {{/if}} -->
 
     </div>
     <div class="row no-gutters justify-content-center">

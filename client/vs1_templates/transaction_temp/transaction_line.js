@@ -8,8 +8,11 @@ import { SideBarService } from '../../js/sidebar-service';
 import TableHandler from '../../js/Table/TableHandler';
 import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
 import { template } from 'lodash';
+import { Template } from 'meteor/templating';
+import './transaction_line.html';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+
 
 export const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Amount (Inc)", "Unit Price (Inc)", "Cost Price"];
 
@@ -30,10 +33,10 @@ Template.transaction_line.onCreated(function(){
 Template.transaction_line.onRendered(function() {
   const plusArr = [];
   const monthArr = [];
-  let isGreenTrack = Session.get('isGreenTrack');
-  let regionData = Session.get('ERPLoggedCountry');
+  let isGreenTrack = localStorage.getItem('isGreenTrack');
+  let regionData = localStorage.getItem('ERPLoggedCountry');
   let recordObj = null;
-  if(isGreenTrack) {
+  if(isGreenTrack == true) {
     $.get("/GreentrackModules.json").success(function (data) {
         for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
 
@@ -157,8 +160,8 @@ Template.transaction_line.onRendered(function() {
           { index: 22, label: "Custom Field 1",     class: "CustomField1",  width: "124",       active: false,  display: false },
           { index: 23, label: "Custom Field 2",     class: "CustomField2",  width: "124",       active: false,  display: false },
       ];
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      let isBOnShippedQty = Session.get("CloudSalesQtyOnly");
+      let isBatchSerialNoTracking = localStorage.getItem("CloudShowSerial") || false;
+      let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly");
       if (isBOnShippedQty) {
          let x;
          x = reset_data.find(x => x.class === 'Qty'); if(x != undefined) x.display = true;
@@ -246,7 +249,7 @@ Template.transaction_line.onRendered(function() {
 
           getVS1Data("VS1_Customize").then(function(dataObject) {
               if (dataObject.length == 0) {
-                  sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
+                  sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
                     reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
                     if(listType != 'tblBillLine'){
                         resetData = templateObject.init_data.get().map((item) => {
@@ -259,7 +262,7 @@ Template.transaction_line.onRendered(function() {
                         unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
                         unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
                         if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
-                        if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active; 
+                        if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active;
 
                         canShowBackOrder = templateObject.data.canShowBackOrder;
                         canShowUOM = templateObject.data.canShowUOM;
@@ -314,12 +317,12 @@ Template.transaction_line.onRendered(function() {
                                     data =  reset_data.find(x => x.class == item.class);
                                     if(data != undefined) return {...item, active: data.active, display: data.display};
                                     return {...item, active: false, display: false};
-                                });                                                            
+                                });
                                 amtEx = resetData.find(x => x.class == "AmountEx");
                                 amtInc = resetData.find(x => x.class == "AmountInc");
                                 unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
                                 unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
-                                if(amtInc && amtEx) if(amtEx.display) amtInc.active = !amtEx.active;                                
+                                if(amtInc && amtEx) if(amtEx.display) amtInc.active = !amtEx.active;
                                 if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active;
 
                                 canShowBackOrder = templateObject.data.canShowBackOrder;
@@ -395,7 +398,7 @@ Template.transaction_line.onRendered(function() {
           };
           custFields.push(customData);
       }
-      
+
       await templateObject.displayfields.set(custFields);
       await templateObject.reset_data.set(custFields);
 
@@ -412,7 +415,7 @@ Template.transaction_line.events({
       let templateObject = Template.instance();
       let currenttranstablename = templateObject.data.tablename||"";
       let reset_data = templateObject.reset_data.get();
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+      let isBatchSerialNoTracking = localStorage.getItem("CloudShowSerial") || false;
       if (isBatchSerialNoTracking) {
         data = reset_data.find((x) => x.class === 'TaxRate');
         if(data != undefined) data = {...data, display: true, active: true};
@@ -503,12 +506,12 @@ Template.transaction_line.events({
     try {
         let erpGet = erpDb();
         let tableName = templateObject.data.tablename||"";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+        let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
         let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
 
         $(".fullScreenSpin").css("display", "none");
         if(added) {
-        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
             addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
         });
 
@@ -540,7 +543,7 @@ Template.transaction_line.helpers({
     let currenttranstablename = Template.instance().data.tablename||"";
     let data = Template.instance().displayfields.get();
 
-    let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+    let isBatchSerialNoTracking = localStorage.getItem("CloudShowSerial") || false;
     if (!isBatchSerialNoTracking) {
         let serialNo = data.find((x) => x.class === 'SerialNo');
         if( serialNo != undefined) {

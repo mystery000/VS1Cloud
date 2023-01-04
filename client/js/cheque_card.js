@@ -804,7 +804,7 @@ Template.chequecard.onRendered(() => {
                   if (templateObject.chequerecord.get()) {
                     Meteor.call(
                       "readPrefMethod",
-                      Session.get("mycloudLogonID"),
+                      localStorage.getItem("mycloudLogonID"),
                       "tblChequeLine",
                       function (error, result) {
                         if (error) {
@@ -1182,7 +1182,7 @@ Template.chequecard.onRendered(() => {
                   if (templateObject.chequerecord.get()) {
                     Meteor.call(
                       "readPrefMethod",
-                      Session.get("mycloudLogonID"),
+                      localStorage.getItem("mycloudLogonID"),
                       "tblChequeLine",
                       function (error, result) {
                         if (error) {
@@ -1537,7 +1537,7 @@ Template.chequecard.onRendered(() => {
                     if (templateObject.chequerecord.get()) {
                       Meteor.call(
                         "readPrefMethod",
-                        Session.get("mycloudLogonID"),
+                        localStorage.getItem("mycloudLogonID"),
                         "tblChequeLine",
                         function (error, result) {
                           if (error) {
@@ -1896,7 +1896,7 @@ Template.chequecard.onRendered(() => {
                 if (templateObject.chequerecord.get()) {
                   Meteor.call(
                     "readPrefMethod",
-                    Session.get("mycloudLogonID"),
+                    localStorage.getItem("mycloudLogonID"),
                     "tblChequeLine",
                     function (error, result) {
                       if (error) {
@@ -2056,7 +2056,7 @@ Template.chequecard.onRendered(() => {
     if (templateObject.chequerecord.get()) {
       Meteor.call(
         "readPrefMethod",
-        Session.get("mycloudLogonID"),
+        localStorage.getItem("mycloudLogonID"),
         "tblChequeLine",
         function (error, result) {
           if (error) {
@@ -4088,7 +4088,7 @@ Template.chequecard.onRendered(() => {
       let surname = '';
       let dept = '';
       let tax = '';
-      let company = Session.get('vs1companyName');
+      let company = localStorage.getItem('vs1companyName');
       let vs1User = localStorage.getItem('mySession');
       let customerEmail = '';
       let id = $('.printID').attr("id") || "new";
@@ -4104,11 +4104,11 @@ Template.chequecard.onRendered(() => {
       {
             item_invoices = {
 
-              o_url: Session.get('vs1companyURL'),
-              o_name: Session.get('vs1companyName'),
-              o_address: Session.get('vs1companyaddress1'),
-              o_city: Session.get('vs1companyCity'),
-              o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+              o_url: localStorage.getItem('vs1companyURL'),
+              o_name: localStorage.getItem('vs1companyName'),
+              o_address: localStorage.getItem('vs1companyaddress1'),
+              o_city: localStorage.getItem('vs1companyCity'),
+              o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
               o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
               o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
               o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -4157,11 +4157,11 @@ Template.chequecard.onRendered(() => {
       else if(number == 2)
       {
           item_invoices = {
-              o_url: Session.get('vs1companyURL'),
-              o_name: Session.get('vs1companyName'),
-              o_address: Session.get('vs1companyaddress1'),
-              o_city: Session.get('vs1companyCity'),
-              o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+              o_url: localStorage.getItem('vs1companyURL'),
+              o_name: localStorage.getItem('vs1companyName'),
+              o_address: localStorage.getItem('vs1companyaddress1'),
+              o_city: localStorage.getItem('vs1companyCity'),
+              o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
               o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
               o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
               o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -4210,11 +4210,11 @@ Template.chequecard.onRendered(() => {
       else
       {
           item_invoices = {
-              o_url: Session.get('vs1companyURL'),
-              o_name: Session.get('vs1companyName'),
-              o_address: Session.get('vs1companyaddress1'),
-              o_city: Session.get('vs1companyCity'),
-              o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+              o_url: localStorage.getItem('vs1companyURL'),
+              o_name: localStorage.getItem('vs1companyName'),
+              o_address: localStorage.getItem('vs1companyaddress1'),
+              o_city: localStorage.getItem('vs1companyCity'),
+              o_state: localStorage.getItem('companyState') + ' ' + localStorage.getItem('vs1companyPOBox'),
               o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
               o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
               o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -4531,7 +4531,7 @@ Template.chequecard.onRendered(() => {
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split('_')[2];
-            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
             return storage.includes('BasedOnType_');
         });
         let j = basedOnTypeStorages.length;
@@ -4871,13 +4871,13 @@ Template.chequecard.helpers({
   },
   purchaseCloudPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "chequecard",
     });
   },
   purchaseCloudGridPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "tblChequeLine",
     });
   },
@@ -4930,28 +4930,28 @@ Template.chequecard.helpers({
       });
   },
   companyaddress1: () => {
-    return Session.get("vs1companyaddress1");
+    return localStorage.getItem("vs1companyaddress1");
   },
   companyaddress2: () => {
-    return Session.get("vs1companyaddress2");
+    return localStorage.getItem("vs1companyaddress2");
   },
   city: () => {
-    return Session.get("vs1companyCity");
+    return localStorage.getItem("vs1companyCity");
   },
   state: () => {
-    return Session.get("companyState");
+    return localStorage.getItem("companyState");
   },
   poBox: () => {
-    return Session.get("vs1companyPOBox");
+    return localStorage.getItem("vs1companyPOBox");
   },
   companyphone: () => {
-    return Session.get("vs1companyPhone");
+    return localStorage.getItem("vs1companyPhone");
   },
   companyabn: () => {
     //Update Company ABN
-    let countryABNValue = "ABN: " + Session.get("vs1companyABN");
+    let countryABNValue = "ABN: " + localStorage.getItem("vs1companyABN");
     if (LoggedCountry == "South Africa") {
-      countryABNValue = "Vat No: " + Session.get("vs1companyABN");
+      countryABNValue = "Vat No: " + localStorage.getItem("vs1companyABN");
     }
 
     return countryABNValue;
@@ -4960,16 +4960,16 @@ Template.chequecard.helpers({
     //Add Company Reg
     let countryRegValue = "";
     if (LoggedCountry == "South Africa") {
-      countryRegValue = "Reg No: " + Session.get("vs1companyReg");
+      countryRegValue = "Reg No: " + localStorage.getItem("vs1companyReg");
     }
 
     return countryRegValue;
   },
   organizationname: () => {
-    return Session.get("vs1companyName");
+    return localStorage.getItem("vs1companyName");
   },
   organizationurl: () => {
-    return Session.get("vs1companyURL");
+    return localStorage.getItem("vs1companyURL");
   },
   formname: () => {
     return chequeSpelling;
@@ -7076,7 +7076,7 @@ Template.chequecard.events({
               };
               attachment.push(pdfObject);
               let erpInvoiceId = objDetails.fields.ID;
-              let mailFromName = Session.get("vs1companyName");
+              let mailFromName = localStorage.getItem("vs1companyName");
               let mailFrom =
                 localStorage.getItem("VS1OrgEmail") ||
                 localStorage.getItem("VS1AdminUserName");
@@ -7245,7 +7245,7 @@ Template.chequecard.events({
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     return storage.includes('BasedOnType_');
                 });
                 let i = basedOnTypeStorages.length;
@@ -7319,7 +7319,7 @@ Template.chequecard.events({
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     return storage.includes('BasedOnType_');
                 });
                 let i = basedOnTypeStorages.length;
@@ -7394,7 +7394,7 @@ Template.chequecard.events({
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     return storage.includes('BasedOnType_');
                 });
                 let i = basedOnTypeStorages.length;
@@ -7429,7 +7429,7 @@ Template.chequecard.events({
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
                     return storage.includes('BasedOnType_');
                 });
                 let i = basedOnTypeStorages.length;
@@ -7492,8 +7492,8 @@ Template.chequecard.events({
             };
           }
           const getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
+            _id: localStorage.getItem("mycloudLogonID"),
+            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
           });
           if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -7751,8 +7751,8 @@ Template.chequecard.events({
     });
 
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -7814,8 +7814,8 @@ Template.chequecard.events({
   },
   "click .btnResetGridSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
@@ -7842,8 +7842,8 @@ Template.chequecard.events({
   },
   "click .btnResetSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
+      _id: localStorage.getItem("mycloudLogonID"),
+      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
     });
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {

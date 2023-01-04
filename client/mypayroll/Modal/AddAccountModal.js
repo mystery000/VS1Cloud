@@ -139,7 +139,7 @@ Template.addAccountModal.onRendered(function () {
               if (templateObject.taxRates.get()) {
                 Meteor.call(
                   "readPrefMethod",
-                  Session.get("mycloudLogonID"),
+                  localStorage.getItem("mycloudLogonID"),
                   "taxRatesList",
                   function (error, result) {
                     if (error) {
@@ -315,7 +315,7 @@ Template.addAccountModal.onRendered(function () {
           if (templateObject.taxRates.get()) {
             Meteor.call(
               "readPrefMethod",
-              Session.get("mycloudLogonID"),
+              localStorage.getItem("mycloudLogonID"),
               "taxRatesList",
               function (error, result) {
                 if (error) {
@@ -487,7 +487,7 @@ Template.addAccountModal.onRendered(function () {
             if (templateObject.taxRates.get()) {
               Meteor.call(
                 "readPrefMethod",
-                Session.get("mycloudLogonID"),
+                localStorage.getItem("mycloudLogonID"),
                 "taxRatesList",
                 function (error, result) {
                   if (error) {
@@ -1498,7 +1498,7 @@ Template.addAccountModal.helpers({
   },
   bsbRegionName: () => {
     let bsbname = "Branch Code";
-    if (Session.get("ERPLoggedCountry") === "Australia") {
+    if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
       bsbname = "BSB";
     }
     return bsbname;

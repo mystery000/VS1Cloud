@@ -132,7 +132,7 @@ Template.journalentrylist.onRendered(function() {
     try {
       // getVS1Data("VS1_Customize").then(function (dataObject) {
       //   if (dataObject.length == 0) {
-      //     sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+      //     sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
       //         // reset_data = data.ProcessLog.CustomLayout.Columns;
       //         reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
       //         templateObject.showCustomFieldDisplaySettings(reset_data);
@@ -1703,7 +1703,7 @@ Template.journalentrylist.events({
     $(".btnRefresh").trigger("click");
   },
   "click .resetTable": function (event) {
-    var getcurrentCloudDetails = CloudUser.findOne({_id: Session.get("mycloudLogonID"), clouddatabaseID: Session.get("mycloudLogonDBID")});
+    var getcurrentCloudDetails = CloudUser.findOne({_id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID")});
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;
@@ -1747,7 +1747,7 @@ Template.journalentrylist.events({
       lineItems.push(lineItemObj);
     });
     //datatable.state.save();
-    var getcurrentCloudDetails = CloudUser.findOne({_id: Session.get("mycloudLogonID"), clouddatabaseID: Session.get("mycloudLogonDBID")});
+    var getcurrentCloudDetails = CloudUser.findOne({_id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID")});
     if (getcurrentCloudDetails) {
       if (getcurrentCloudDetails._id.length > 0) {
         var clientID = getcurrentCloudDetails._id;
@@ -1947,7 +1947,7 @@ Template.journalentrylist.helpers({
     return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-    return CloudPreference.findOne({userid: Session.get("mycloudLogonID"), PrefName: "tblJournalList"});
+    return CloudPreference.findOne({userid: localStorage.getItem("mycloudLogonID"), PrefName: "tblJournalList"});
   },
   currentdate: () => {
     var currentDate = new Date();

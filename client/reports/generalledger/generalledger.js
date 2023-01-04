@@ -7,6 +7,10 @@ import GlobalFunctions from "../../GlobalFunctions";
 import moment from "moment";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './generalledger.html';
+
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 
@@ -1328,7 +1332,7 @@ Template.generalledger.events({
   //         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
   //           let employeeId = storage.split("_")[2];
   //           return (
-  //             // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
+  //             // storage.includes("BasedOnType_") && employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
   //             storage.includes("BasedOnType_")
   //           );
   //         });
