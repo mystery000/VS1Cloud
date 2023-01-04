@@ -270,17 +270,44 @@ import './contacts/addLead.js';
 import './contacts/addEmployee.js';
 
 /* Tinyiko */
-import './settings/tax-rates-setting/taxratelistpop.js';
+import './settings/subscription-settings/subscription.js';
+import './contacts/popemployeelist.js';
+import './overviews/accountsoverview.js';
 import './overviews/Modal/AddAccountModal.js';
 import './eft/optionsModal/eftOptionsModal.js';
 import './eft/bankCodesModal/eftBankCodesModal.js';
 import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
+/* Tinyiko */
 
 /* Rasheed */
-import './overviews/bankingoverview.js';
-import './overviews/accountsoverview.js';
 import { DataTable } from 'datatables.net';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+/* Rasheed */
+
+/* DevTop/Dev Pioneer */
+import './vs1_templates/report/accountant_header.js';
+import './reports/AccountantReport/accountantCompany.js';
+import './reports/AccountantReport/accountantCompanyastrustee.js';
+import './reports/AccountantReport/accountantFinancialstatement.js';
+import './reports/AccountantReport/accountantIndividual.js';
+import './reports/AccountantReport/accountantPartnershipnontrading.js';
+import './reports/AccountantReport/accountantSelfmanagedsuperfund.js';
+import './reports/AccountantReport/accountantSingledirector.js';
+import './reports/AccountantReport/accountantSoletradernontrading.js';
+import './reports/AccountantReport/accountantTrust.js';
+import './reports/AccountantReport/accountantTrustnontrading.js';
+import './reports/allreports.js';
+/* DevTop/Dev Pioneer */
+
+/* Matthias */
+import './inventory/inventory.js';
+import './inventory/inventorylist.js';
+import './inventory/productlist.js';
+import './inventory/productview.js';
+import './inventory/inventorypopups/onBackOrderPopUp.js';
+import './inventory/inventorypopups/onOrderPopUp.js';
+import './inventory/inventorypopups/onSalesOrderPopUp.js';
+/* Matthias */
 
 /* Sasa */
 import './Dashboard/Dashboard.js'

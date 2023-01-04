@@ -1230,7 +1230,7 @@ $("#erplogin-button").click(function(e){
             $('.fullScreenSpin').css('display','none');
 
             swal({
-              title: 'Your payment has been declined please update your payment subscription information!',
+              title: 'You Seem To Have Missed a Payment Recently, Can You Please Update your Subscription Information!',
               text: '',
               type: 'error',
               showCancelButton: true,
@@ -1238,7 +1238,7 @@ $("#erplogin-button").click(function(e){
               cancelButtonText: 'Cancel'
             }).then((result) => {
               if (result.value) {
-                window.open('https://www.payments.vs1cloud.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C/', '_blank');
+                window.open('https://www.payments.vs1cloud.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C/', '_self');
               } else if (result.dismiss === 'cancel') {
 
               }

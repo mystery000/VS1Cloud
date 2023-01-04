@@ -4,7 +4,7 @@ import { CoreService } from '../js/core-service';
 import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
-import '../lib/global/indexdbstorage.js';
+import '../lib/global/indexdbstorage.js'; 
 
 import { Template } from 'meteor/templating';
 import './popemployeelist.html';
