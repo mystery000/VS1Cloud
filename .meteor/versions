@@ -1,7 +1,12 @@
+accounts-base@2.2.6
+accounts-password@2.3.2
+accounts-ui@1.4.2
+accounts-ui-unstyled@1.7.0
 aldeed:simple-schema@1.5.4
-aldeed:tabular@1.3.0
+aldeed:tabular@2.1.2
 aldeed:template-extension@4.1.0
 allow-deny@1.1.1
+amplify@1.0.0
 autoupdate@1.8.0
 babel-compiler@7.10.1
 babel-runtime@1.5.1
@@ -26,6 +31,7 @@ d3js:d3@3.5.8
 ddp@1.4.1
 ddp-client@2.6.1
 ddp-common@1.4.0
+ddp-rate-limiter@1.1.1
 ddp-server@2.6.0
 dev-error-overlay@0.1.1
 diff-sequence@1.1.2
@@ -54,10 +60,12 @@ insecure@1.0.7
 inter-process-messaging@0.1.1
 jparker:crypto-core@0.1.0
 jparker:crypto-md5@0.1.1
-jquery@3.0.0
+jquery@1.11.11
 kadira:blaze-layout@2.0.1
 launch-screen@1.3.0
+less@3.0.2
 littledata:synced-cron@1.5.1
+localstorage@1.2.0
 logging@1.3.1
 matb33:collection-hooks@1.1.4
 mdg:validation-error@0.2.0
@@ -86,7 +94,9 @@ ongoworks:pdf@1.1.1
 ordered-dict@1.1.0
 ostrio:flow-router-extra@3.9.0
 promise@0.12.2
+rajit:bootstrap3-datepicker@1.7.1_1
 random@1.2.1
+rate-limit@1.0.9
 react-fast-refresh@0.2.3
 react-meteor-data@2.6.0
 reactive-dict@1.3.1
@@ -94,7 +104,9 @@ reactive-var@1.0.12
 reload@1.3.1
 retry@1.1.0
 routepolicy@1.1.1
+service-configuration@1.3.1
 session@1.2.1
+sha@1.0.9
 shell-server@0.5.0
 socket-stream-client@0.5.0
 spacebars@1.3.0
@@ -107,6 +119,7 @@ templating-runtime@1.6.1
 templating-tools@1.2.0
 tracker@1.2.1
 typescript@4.6.4
+u2622:persistent-session@0.3.5
 ui@1.0.13
 underscore@1.0.11
 url@1.3.2

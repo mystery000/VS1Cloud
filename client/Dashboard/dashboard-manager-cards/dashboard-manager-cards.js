@@ -1,5 +1,8 @@
 import _ from "lodash";
 import { SideBarService } from '../../js/sidebar-service';
+import { Template } from 'meteor/templating';
+import './dashboard-manager-cards.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 
