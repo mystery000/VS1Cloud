@@ -1,6 +1,11 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { CRMService } from "../../crm/crm-service";
 import { ContactService } from "../../contacts/contact-service";
+
+import { Template } from 'meteor/templating';
+import './my-tasks-widget.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 const highCharts = require('highcharts');
 require('highcharts/modules/exporting')(highCharts);
 require('highcharts/highcharts-more')(highCharts);

@@ -4,6 +4,11 @@ import {UtilityService} from "../../utility-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
 import { SideBarService } from '../../js/sidebar-service';
+
+import { Template } from 'meteor/templating';
+import './quotedinvoicedamounts.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
