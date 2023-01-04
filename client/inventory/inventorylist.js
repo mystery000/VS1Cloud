@@ -9,6 +9,12 @@ import XLSX from "xlsx";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import { OrganisationService } from "../js/organisation-service";
+
+import { Template } from 'meteor/templating';
+import './inventorylist.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let organisationService = new OrganisationService;

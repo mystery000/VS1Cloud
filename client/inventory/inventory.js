@@ -7,6 +7,10 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { UtilityService } from "../utility-service";
 import draggableCharts from "../js/Charts/draggableCharts";
 import resizableCharts from "../js/Charts/resizableCharts";
+
+import { Template } from 'meteor/templating';
+import './inventory.html'; 
+
 let utilityService = new UtilityService();
 const tempObj = Template.instance();
 
