@@ -8,6 +8,10 @@ import { OrganisationService } from "../js/organisation-service";
 let organisationService = new OrganisationService;
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import './leadlist.html';
+
 Template.leadlist.inheritsHooksFrom('non_transactional_list');
 Template.leadlist.onCreated(function(){
     const templateObject = Template.instance();
