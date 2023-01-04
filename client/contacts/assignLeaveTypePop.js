@@ -1,5 +1,7 @@
 import { EmployeePayrollService } from '../js/employeepayroll-service';
 
+import './assignLeaveTypePop.html';
+
 Template.assignLeaveTypePop.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.custdatatablerecords = new ReactiveVar([]);
