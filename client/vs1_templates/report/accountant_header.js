@@ -1,3 +1,4 @@
+import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
 import {UtilityService} from "../../utility-service";
@@ -11,6 +12,7 @@ import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jQuery.print/jQuery.print.js';
 import "../../lib/global/indexdbstorage.js";
+import './accountant_header.html';
 let sideBarService = new SideBarService();
 let reportService = new ReportService();
 let utilityService = new UtilityService();

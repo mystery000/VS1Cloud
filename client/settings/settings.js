@@ -1,7 +1,8 @@
-import {
-    ReactiveVar
-} from 'meteor/reactive-var';
+import { Template } from 'meteor/templating';
+import {ReactiveVar} from 'meteor/reactive-var';
 import { OrganisationService } from "../js/organisation-service";
+import './settings.html';
+
 let organisationService = new OrganisationService();
 
 Template.settings.onRendered(function () {
