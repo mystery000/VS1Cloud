@@ -9,6 +9,12 @@ import { AccountService } from "../../accounts/account-service";
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
 import { AppointmentService } from '../../appointments/appointment-service';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './internal_transaction_list_with_switchbox.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let appointmentService = new AppointmentService();
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -205,7 +211,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         try {
             getVS1Data("VS1_Customize").then(function(dataObject) {
                 if (dataObject.length == 0) {
-                    sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
+                    sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
                         reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
                         templateObject.showCustomFieldDisplaySettings(reset_data);
                     }).catch(function(err) {});
@@ -1204,11 +1210,11 @@ Template.internal_transaction_list_with_switchbox.events({
         lineItems.sort((a, b) => a.index - b.index);
         let erpGet = erpDb();
         let tableName = await templateObject.tablename.get() || '';
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID')) || 0;
+        let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')) || 0;
         let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
 
         if (added) {
-            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), '').then(function(dataCustomize) {
+            sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), '').then(function(dataCustomize) {
                 addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
             }).catch(function(err) {});
             $(".fullScreenSpin").css("display", "none");
@@ -1251,7 +1257,7 @@ Template.internal_transaction_list_with_switchbox.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: Template.instance().tablename.get()
         });
     },

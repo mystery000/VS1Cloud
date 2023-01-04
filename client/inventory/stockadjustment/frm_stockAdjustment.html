@@ -581,6 +581,9 @@
                             <p style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: bold;">Department</p>
                             <p style="margin-bottom: 0px; color: rgb(0 0 0); display:none;" class="pdfCustomerName">{{record.department}}</p>
                             <p><svg id="stockAdjustmentBarCode"></svg></p>
+                            <script>
+                                JsBarcode("#stockAdjustmentBarCode", "SA-132",{displayValue: false});
+                            </script>
                         </div>
                     </div>
                     <div style="margin: 0px; padding: 16px; border: none !important; width: 70mm; max-width: 70mm;">

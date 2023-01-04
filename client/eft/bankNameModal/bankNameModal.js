@@ -1,6 +1,7 @@
 import { ReactiveVar } from "meteor/reactive-var";
-import { BankNameList } from "../../lib/global/bank-names"
+import { BankNameList } from "../../lib/global/bank-names";
 
+import { Template } from 'meteor/templating';
 import './bankNameModal.html';
 
 Template.bankNameModal.onCreated(function () {

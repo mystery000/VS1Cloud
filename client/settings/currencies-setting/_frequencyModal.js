@@ -22,7 +22,7 @@ import FxApi from "./FxApi";
 let sideBarService = new SideBarService();
 let taxRateService = new TaxRateService();
 
-const employeeId = Session.get("mySessionEmployeeLoggedID");
+const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 
 let currentDate = new Date();
 let currentFormatedDate = currentDate.getDay() + "/" + currentDate.getMonth() + "/" + currentDate.getFullYear();

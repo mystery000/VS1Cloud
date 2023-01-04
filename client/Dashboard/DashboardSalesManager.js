@@ -1,4 +1,7 @@
 import {ReactiveVar} from "meteor/reactive-var";
+import { Template } from 'meteor/templating';
+import './dashboardsalesmanager.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.dashboardsalesmanager.onCreated(function () {
     this.loggedDb = new ReactiveVar("");
@@ -9,7 +12,7 @@ Template.dashboardsalesmanager.onCreated(function () {
 
 Template.dashboardsalesmanager.onRendered(function () {
     let templateObject = Template.instance();
-    let isDashboard = Session.get("CloudDashboardModule");
+    let isDashboard = localStorage.getItem("CloudDashboardModule");
     if (isDashboard) {
         templateObject.includeDashboard.set(true);
     }

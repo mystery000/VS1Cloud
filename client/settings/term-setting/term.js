@@ -714,7 +714,7 @@ Template.termsettings.helpers({
      return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-  return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblTermsList'});
+  return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblTermsList'});
 },
 deptrecords: () => {
     return Template.instance().deptrecords.get().sort(function(a, b){

@@ -109,7 +109,7 @@ Template.invoicePrintTemp.onRendered(function () {
                         if (invoicerecord) {
                             invoicesTemp.push(invoicerecord);
                             templateObject.invoicerecords.set(invoicesTemp);
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblInvoiceLine', function (error, result) {
+                            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblInvoiceLine', function (error, result) {
                                 if (error) {}
                                 else {
                                     if (result) {

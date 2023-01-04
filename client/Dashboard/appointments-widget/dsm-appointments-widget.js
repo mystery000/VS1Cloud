@@ -16,11 +16,15 @@ import bootstrapPlugin from '@fullcalendar/bootstrap';
 import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 
+import { Template } from 'meteor/templating';
+import './dsm-appointments-widget.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let smsService = new SMSService();
-let createAppointment = Session.get('CloudAppointmentCreateAppointment') || false;
-let startAndStopAppointmentOnly = Session.get('CloudAppointmentStartStopAccessLevel') || false;
+let createAppointment = localStorage.getItem('CloudAppointmentCreateAppointment') || false;
+let startAndStopAppointmentOnly = localStorage.getItem('CloudAppointmentStartStopAccessLevel') || false;
 
 Template.dsmAppointmentsWidget.onCreated(function() {
     const templateObject = Template.instance();
@@ -67,7 +71,7 @@ Template.dsmAppointmentsWidget.onCreated(function() {
 });
 
 Template.dsmAppointmentsWidget.onRendered(function() {
-    let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly__');
+    let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__');
     let templateObject = Template.instance();
     let contactService = new ContactService();
     let productService = new ProductService();
@@ -86,7 +90,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
     let calendarSettings = [];
     let prefObject = {};
     let globalSet = {};
-    let launchAllocations = Session.get('CloudAppointmentAllocationLaunch');
+    let launchAllocations = localStorage.getItem('CloudAppointmentAllocationLaunch');
 
     let currentId = FlowRouter.current().context.hash;
     if ((currentId == "allocationModal")) {
@@ -100,7 +104,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
             }, 900);
         }
     }
-    if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+    if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
         //$("#btnHold").prop("disabled", true);
     }
 
@@ -336,7 +340,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                 document.getElementById("dtSODate2").value = endDate;
                 document.getElementById("startTime").value = startTime;
                 document.getElementById("endTime").value = dateStartForEndTime;
-                document.getElementById("employee_name").value = Session.get('mySessionEmployee');
+                document.getElementById("employee_name").value = localStorage.getItem('mySessionEmployee');
                 if (calendarSet.DefaultApptDuration) {
                     let hoursFormattedStartTime = templateObject.timeFormat(calendarSet.DefaultApptDuration) || '';
                     document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime
@@ -388,7 +392,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                         $("#btnHold").prop("disabled", false);
                     }
 
-                    if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+                    if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
                         //$("#btnHold").prop("disabled", true);
                     }
 
@@ -430,7 +434,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                     document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                     document.getElementById("state").value = result[0].state || '';
                     document.getElementById("address").value = result[0].street || '';
-                    if (Session.get('CloudAppointmentNotes') == true) {
+                    if (localStorage.getItem('CloudAppointmentNotes') == true) {
                         document.getElementById("txtNotes").value = result[0].notes;
                     }
                     document.getElementById("suburb").value = result[0].suburb || '';
@@ -587,7 +591,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                 $("#tActualEndTime").prop("disabled", false);
                 $("#txtActualHoursSpent").prop("disabled", false);
 
-                if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+                if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
                 document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, '');
@@ -768,7 +772,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                 //templateObject.getAllProductData();
                 let calendarData = templateObject.employeeOptions.get();
                 let calendarSet = templateObject.globalSettings.get();
-                templateObject.empID.set(Session.get('mySessionEmployeeLoggedID'));
+                templateObject.empID.set(localStorage.getItem('mySessionEmployeeLoggedID'));
 
                 let empData = calendarData.filter(calendarOpt => {
                     return calendarOpt.EmployeeID == parseInt(templateObject.empID.get())
@@ -785,7 +789,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                 document.getElementById("dtSODate2").value = endDate;
                 document.getElementById("startTime").value = startTime;
                 document.getElementById("endTime").value = endTime;
-                document.getElementById("employee_name").value = Session.get('mySessionEmployee');
+                document.getElementById("employee_name").value = localStorage.getItem('mySessionEmployee');
                 if (calendarSet.DefaultApptDuration) {
                     let hoursFormattedStartTime = templateObject.timeFormat(calendarSet.DefaultApptDuration) || '';
                     document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime
@@ -857,7 +861,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                         $("#btnHold").prop("disabled", false);
                     }
 
-                    if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+                    if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
                         //$("#btnHold").prop("disabled", true);
                     }
 
@@ -900,7 +904,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                     document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                     document.getElementById("state").value = result[0].state || '';
                     document.getElementById("address").value = result[0].street || '';
-                    if (Session.get('CloudAppointmentNotes') == true) {
+                    if (localStorage.getItem('CloudAppointmentNotes') == true) {
                         document.getElementById("txtNotes").value = result[0].notes || '';
                     }
                     document.getElementById("suburb").value = result[0].suburb;
@@ -1056,7 +1060,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                 $("#tActualStartTime").prop("disabled", false);
                 $("#tActualEndTime").prop("disabled", false);
                 $("#txtActualHoursSpent").prop("disabled", false);
-                if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+                if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
                 document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, '');
@@ -1392,13 +1396,13 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                 //   });
                 // });
             }
-            if (Session.get('mySessionEmployee') == data.temployee[i].fields.EmployeeName) {
+            if (localStorage.getItem('mySessionEmployee') == data.temployee[i].fields.EmployeeName) {
                 if (data.temployee[i].fields.CustFld8 == "false") {
                     templateObject.includeAllProducts.set(false);
                 }
             }
             if (seeOwnAppointments == true) {
-                if (data.temployee[i].fields.EmployeeName == Session.get('mySessionEmployee')) {
+                if (data.temployee[i].fields.EmployeeName == localStorage.getItem('mySessionEmployee')) {
                     dataList = {
                         id: data.temployee[i].fields.ID || '',
                         employeeName: data.temployee[i].fields.EmployeeName || '',
@@ -1687,7 +1691,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
         let appColor = '#00a3d3';
         let dataColor = '';
         let allEmp = templateObject.employeerecords.get();
-        let mySessionEmployee = Session.get("mySessionEmployee");
+        let mySessionEmployee = localStorage.getItem("mySessionEmployee");
         for (let i = 0; i < data.tappointmentex.length; i++) {
             employeeColor = allEmp.filter(apmt => {
                 return apmt.employeeName == data.tappointmentex[i].fields.TrainerName;
@@ -1753,7 +1757,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                 color: appColor
             };
             if (seeOwnAppointments == true) {
-                if (data.tappointmentex[i].fields.TrainerName == Session.get('mySessionEmployee')) {
+                if (data.tappointmentex[i].fields.TrainerName == localStorage.getItem('mySessionEmployee')) {
                     eventData.push(dataList);
                     appointmentList.push(appointment)
                 }
@@ -1820,7 +1824,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                 document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                 document.getElementById("state").value = result[0].state;
                 document.getElementById("address").value = result[0].street;
-                if (Session.get('CloudAppointmentNotes') == true) {
+                if (localStorage.getItem('CloudAppointmentNotes') == true) {
                     document.getElementById("txtNotes").value = result[0].notes;
                 }
                 document.getElementById("suburb").value = result[0].suburb;
@@ -2001,7 +2005,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
             if (resourceChat.length > 0) {
                 if (date >= startWeek && date <= endWeek) {
                     if (seeOwnAppointments == true) {
-                        if (data.tappointmentex[t].fields.TrainerName == Session.get('mySessionEmployee')) {
+                        if (data.tappointmentex[t].fields.TrainerName == localStorage.getItem('mySessionEmployee')) {
                             let found = resourceChat.some(emp => emp.employeeName == data.tappointmentex[t].fields.TrainerName);
                             if (!found) {
                                 let resourceColor = templateObject.employeerecords.get();
@@ -2069,7 +2073,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
             } else {
                 if (date >= startWeek && date <= endWeek) {
                     if (seeOwnAppointments == true) {
-                        if (data.tappointmentex[t].fields.TrainerName == Session.get('mySessionEmployee')) {
+                        if (data.tappointmentex[t].fields.TrainerName == localStorage.getItem('mySessionEmployee')) {
                             let resourceColor = templateObject.employeerecords.get();
                             result = resourceColor.filter(apmtColor => {
                                 return apmtColor.employeeName == data.tappointmentex[t].fields.TrainerName
@@ -2355,7 +2359,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                 document.getElementById("dtSODate2").value = endDate;
                 document.getElementById("startTime").value = startTime;
                 document.getElementById("endTime").value = endTime;
-                document.getElementById("employee_name").value = Session.get('mySessionEmployee');
+                document.getElementById("employee_name").value = localStorage.getItem('mySessionEmployee');
                 if (calendarSet.DefaultApptDuration) {
                     let hoursFormattedStartTime = templateObject.timeFormat(calendarSet.DefaultApptDuration) || '';
                     document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime
@@ -2461,7 +2465,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                 $("#tActualStartTime").prop("disabled", false);
                 $("#tActualEndTime").prop("disabled", false);
                 $("#txtActualHoursSpent").prop("disabled", false);
-                if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+                if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
                 document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, '');
@@ -3029,7 +3033,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
         return hour
     };
 
-    if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+    if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
         //$("#btnHold").prop("disabled", true);
     }
 
@@ -3090,7 +3094,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
         document.getElementById("state").value = $(this).find(".colState").text();
         document.getElementById("country").value = $(this).find(".colCountry").text();
         document.getElementById("address").value = $(this).find(".colStreetAddress").text().replace(/(?:\r\n|\r|\n)/g, ', ');
-        if (Session.get('CloudAppointmentNotes') == true) {
+        if (localStorage.getItem('CloudAppointmentNotes') == true) {
             document.getElementById("txtNotes").value = $(this).find(".colNotes").text();
         }
         document.getElementById("suburb").value = $(this).find(".colCity").text();
@@ -3317,7 +3321,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                         document.getElementById("dtSODate2").value = endDate;
                         document.getElementById("startTime").value = startTime;
                         document.getElementById("endTime").value = endTime;
-                        document.getElementById("employee_name").value = Session.get('mySessionEmployee');
+                        document.getElementById("employee_name").value = localStorage.getItem('mySessionEmployee');
                         if (calendarSet.DefaultApptDuration) {
                             let hoursFormattedStartTime = templateObject.timeFormat(calendarSet.DefaultApptDuration) || '';
                             document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime
@@ -3379,7 +3383,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                                 $("#btnHold").prop("disabled", false);
                             }
 
-                            if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+                            if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
                                 //$("#btnHold").prop("disabled", true);
                             }
                             if (result[0].aEndTime != "") {
@@ -3400,7 +3404,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                             document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                             document.getElementById("state").value = result[0].state;
                             document.getElementById("address").value = result[0].street;
-                            if (Session.get('CloudAppointmentNotes') == true) {
+                            if (localStorage.getItem('CloudAppointmentNotes') == true) {
                                 document.getElementById("txtNotes").value = result[0].notes;
                             }
                             document.getElementById("suburb").value = result[0].suburb;
@@ -3531,7 +3535,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                         $("#tActualStartTime").prop("disabled", false);
                         $("#tActualEndTime").prop("disabled", false);
                         $("#txtActualHoursSpent").prop("disabled", false);
-                        if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+                        if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
                             //$("#btnHold").prop("disabled", true);
                         }
                         document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, '');
@@ -3975,7 +3979,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
             return new Promise(async(resolve, reject) => {
                 const smsSettings = templateObject.defaultSMSSettings.get();
-                const companyName = Session.get('vs1companyName');
+                const companyName = localStorage.getItem('vs1companyName');
                 const message = smsSettings.headerAppointmentSMSMessage.replace('[Company Name]', companyName) + " - " + $(`#${type}AppointmentSMSMessage`).val();
                 const sendSMSResult = await new Promise((res, rej) => {
                     Meteor.call('sendSMS', smsSettings.twilioAccountId, smsSettings.twilioAccountToken, smsSettings.twilioTelephoneNumber, phoneNumber, message, function(error, result) {
@@ -4015,7 +4019,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
             })
         }
         //TODO: Check SMS Settings and confirm if continue or go to SMS settings page
-    const accessLevel = Session.get('CloudApptSMS');
+    const accessLevel = localStorage.getItem('CloudApptSMS');
     if (!accessLevel) {
         $('#chkSMSCustomer').prop('checked', false);
         $('#chkSMSUser').prop('checked', false);
@@ -4029,7 +4033,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
         $('.btnStopIgnoreSMS').addClass('d-none');
     }
     templateObject.checkSMSSettings = function() {
-        const accessLevel = Session.get('CloudApptSMS');
+        const accessLevel = localStorage.getItem('CloudApptSMS');
         if (!accessLevel) {
             $('#chkSMSCustomer').prop('checked', false);
             $('#chkSMSUser').prop('checked', false);
@@ -4074,9 +4078,9 @@ Template.dsmAppointmentsWidget.onRendered(function() {
 
     $(document).on("click", "#chkmyAppointments", function(e) {
         if (seeOwnAppointments == true) {
-            Session.set('CloudAppointmentSeeOwnAppointmentsOnly__', false);
+            localStorage.setItem('CloudAppointmentSeeOwnAppointmentsOnly__', false);
         } else {
-            Session.set('CloudAppointmentSeeOwnAppointmentsOnly__', true);
+            localStorage.setItem('CloudAppointmentSeeOwnAppointmentsOnly__', true);
         }
 
         // FlowRouter.go('/dashboardsalesmanager', '_self');
@@ -4281,7 +4285,7 @@ Template.dsmAppointmentsWidget.events({
                     $("#btnHold").prop("disabled", false);
                 }
 
-                if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+                if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
 
@@ -4336,7 +4340,7 @@ Template.dsmAppointmentsWidget.events({
                 document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                 document.getElementById("state").value = result[0].state || ''
                 document.getElementById("address").value = result[0].street || ''
-                if (Session.get('CloudAppointmentNotes') == true) {
+                if (localStorage.getItem('CloudAppointmentNotes') == true) {
                     document.getElementById("txtNotes").value = result[0].notes;
                 }
                 document.getElementById("suburb").value = result[0].suburb || '';
@@ -5179,8 +5183,8 @@ Template.dsmAppointmentsWidget.events({
         let templateObject = Template.instance();
         let changeAppointmentView = templateObject.appointmentrecords.get();
 
-        let seeOwnAllocations = Session.get('CloudAppointmentSeeOwnAllocationsOnly') || false;
-        let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly__');
+        let seeOwnAllocations = localStorage.getItem('CloudAppointmentSeeOwnAllocationsOnly') || false;
+        let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__');
         //get current week monday date to use it to search week in month
         let weekDate = moment($('.saturday').attr('id')).format("YYYY/MM/DD");
         let weekendStartListener = "";
@@ -5268,7 +5272,7 @@ Template.dsmAppointmentsWidget.events({
                 if (resourceChat.length > 0) {
                     if (date >= startWeek && date <= endWeek) {
                         if (seeOwnAppointments == true) {
-                            if (changeAppointmentView[a].employeename == Session.get('mySessionEmployee')) {
+                            if (changeAppointmentView[a].employeename == localStorage.getItem('mySessionEmployee')) {
                                 let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
                                 if (!found) {
                                     let resourceColor = templateObject.employeerecords.get();
@@ -5338,7 +5342,7 @@ Template.dsmAppointmentsWidget.events({
                 } else {
                     if (date >= startWeek && date <= endWeek) {
                         if (seeOwnAppointments == true) {
-                            if (changeAppointmentView[a].employeename == Session.get('mySessionEmployee')) {
+                            if (changeAppointmentView[a].employeename == localStorage.getItem('mySessionEmployee')) {
                                 let resourceColor = templateObject.employeerecords.get();
                                 var result = resourceColor.filter(apmtColor => {
                                     return apmtColor.employeeName == changeAppointmentView[a].employeename
@@ -5607,8 +5611,8 @@ Template.dsmAppointmentsWidget.events({
     },
     'click #next': function() {
         let templateObject = Template.instance();
-        let seeOwnAllocations = Session.get('CloudAppointmentSeeOwnAllocationsOnly') || false;
-        let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly__');
+        let seeOwnAllocations = localStorage.getItem('CloudAppointmentSeeOwnAllocationsOnly') || false;
+        let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__');
         let weekDate = moment($('.monday').attr('id')).format("YYYY/MM/DD");
         let weeksOfThisMonth = templateObject.weeksOfMonth.get();
         var getSelectedWeek = weeksOfThisMonth.filter(weekend => {
@@ -5669,7 +5673,7 @@ Template.dsmAppointmentsWidget.events({
                 if (resourceChat.length > 0) {
                     if (date >= startWeek && date <= endWeek) {
                         if (seeOwnAppointments == true) {
-                            if (changeAppointmentView[a].employeename == Session.get('mySessionEmployee')) {
+                            if (changeAppointmentView[a].employeename == localStorage.getItem('mySessionEmployee')) {
                                 let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
                                 if (!found) {
                                     let resourceColor = templateObject.employeerecords.get();
@@ -5734,7 +5738,7 @@ Template.dsmAppointmentsWidget.events({
                 } else {
                     if (date >= startWeek && date <= endWeek) {
                         if (seeOwnAppointments == true) {
-                            if (changeAppointmentView[a].employeename == Session.get('mySessionEmployee')) {
+                            if (changeAppointmentView[a].employeename == localStorage.getItem('mySessionEmployee')) {
                                 let resourceColor = templateObject.employeerecords.get();
                                 var result = resourceColor.filter(apmtColor => {
                                     return apmtColor.employeeName == changeAppointmentView[a].employeename
@@ -6647,7 +6651,7 @@ Template.dsmAppointmentsWidget.events({
                     $('#startAppointmentModal').modal('show');
                     const accountName = $('#customer').val();
                     const employeeName = $('#employee_name').val();
-                    const companyName = Session.get('vs1companyName');
+                    const companyName = localStorage.getItem('vs1companyName');
                     const productService = $('#product-list').val();
                     const startAppointmentSMS = templateObject.defaultSMSSettings.get().startAppointmentSMSMessage.replace('[Customer Name]', accountName)
                         .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService);
@@ -6715,7 +6719,7 @@ Template.dsmAppointmentsWidget.events({
                     $('#stopAppointmentModal').modal('show');
                     const accountName = $('#customer').val();
                     const employeeName = $('#employee_name').val();
-                    const companyName = Session.get('vs1companyName');
+                    const companyName = localStorage.getItem('vs1companyName');
                     const productService = $('#product-list').val();
                     const stopAppointmentSMS = templateObject.defaultSMSSettings.get().stopAppointmentSMSMessage.replace('[Customer Name]', accountName)
                         .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService);
@@ -6787,7 +6791,7 @@ Template.dsmAppointmentsWidget.events({
                         $('#saveAppointmentModal').modal('show');
                         const accountName = $('#customer').val();
                         const employeeName = $('#employee_name').val();
-                        const companyName = Session.get('vs1companyName');
+                        const companyName = localStorage.getItem('vs1companyName');
                         const fullAddress = $('#address').val() + ', ' + $('#suburb').val() + ', ' + $('#state').val() + ', ' + $('#country').val();
                         const bookedTime = $('#startTime').val() ? $('#startTime').val() : '';
                         const productService = $('#product-list').val();
@@ -6983,7 +6987,7 @@ Template.dsmAppointmentsWidget.events({
         }
     },
     'click #btnHold': function(event) {
-        // if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+        // if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
         //     swal({
         //         title: 'Oops...',
         //         text: 'You do not have access to put appointments "On Hold"',
@@ -7382,7 +7386,7 @@ Template.dsmAppointmentsWidget.events({
 
     },
     'click #btnHold span': function(event) {
-        if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+        if (localStorage.getItem('CloudAppointmentStartStopAccessLevel') == true) {
             swal({
                 title: 'Oops...',
                 text: 'You do not have access to put appointments "On Hold"',
@@ -7850,7 +7854,7 @@ Template.dsmAppointmentsWidget.events({
 
                 let customerDataName = $("#customer").val();
                 let customerEmail = '';
-                let employeeID = Session.get('mySessionEmployeeLoggedID');
+                let employeeID = localStorage.getItem('mySessionEmployeeLoggedID');
                 let employeeEmail = '';
                 await getVS1Data('TCustomerVS1').then(function(dataObject) {
                     let data = JSON.parse(dataObject[0].data);
@@ -7876,7 +7880,7 @@ Template.dsmAppointmentsWidget.events({
                 });
                 let subject = "test";
                 let text = "this is just a test";
-                let mailFromName = Session.get('vs1companyName');
+                let mailFromName = localStorage.getItem('vs1companyName');
                 let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                 let details = {
                     from: "" + mailFromName + " <" + mailFrom + ">",
@@ -7957,7 +7961,7 @@ Template.dsmAppointmentsWidget.events({
                                                             }
                                                         }],
                                                         "TypeName": "Payroll",
-                                                        "WhoEntered": Session.get('mySessionEmployee') || ""
+                                                        "WhoEntered": localStorage.getItem('mySessionEmployee') || ""
                                                     }
                                                 };
                                                 contactService.saveTimeSheet(data).then(function(dataObj) {
@@ -8011,7 +8015,7 @@ Template.dsmAppointmentsWidget.events({
                                                         }
                                                     }],
                                                     "TypeName": "Payroll",
-                                                    "WhoEntered": Session.get('mySessionEmployee') || ""
+                                                    "WhoEntered": localStorage.getItem('mySessionEmployee') || ""
                                                 }
                                             };
                                             contactService.saveTimeSheet(data).then(function(dataObj) {
@@ -8185,7 +8189,7 @@ Template.dsmAppointmentsWidget.events({
                                                         }
                                                     }],
                                                     "TypeName": "Payroll",
-                                                    "WhoEntered": Session.get('mySessionEmployee') || ""
+                                                    "WhoEntered": localStorage.getItem('mySessionEmployee') || ""
                                                 }
                                             };
                                             contactService.saveTimeSheet(data).then(function(dataObj) {
@@ -8239,7 +8243,7 @@ Template.dsmAppointmentsWidget.events({
                                                     }
                                                 }],
                                                 "TypeName": "Payroll",
-                                                "WhoEntered": Session.get('mySessionEmployee') || ""
+                                                "WhoEntered": localStorage.getItem('mySessionEmployee') || ""
                                             }
                                         };
                                         contactService.saveTimeSheet(data).then(function(dataObj) {
@@ -8400,16 +8404,16 @@ Template.dsmAppointmentsWidget.helpers({
         return Template.instance().appointmentrecords.get();
     },
     accessOnHold: () => {
-        return Session.get('CloudAppointmentStartStopAccessLevel') || false;
+        return localStorage.getItem('CloudAppointmentStartStopAccessLevel') || false;
     },
     accessStartStopOnly: () => {
-        return Session.get('CloudAppointmentStartStopAccessLevel') || false;
+        return localStorage.getItem('CloudAppointmentStartStopAccessLevel') || false;
     },
     addAttachment: () => {
-        return Session.get('CloudAppointmentAddAttachment') || false;
+        return localStorage.getItem('CloudAppointmentAddAttachment') || false;
     },
     addNotes: () => {
-        return Session.get('CloudAppointmentNotes') || false;
+        return localStorage.getItem('CloudAppointmentNotes') || false;
     },
     uploadedFiles: () => {
         return Template.instance().uploadedFiles.get();
@@ -8418,7 +8422,7 @@ Template.dsmAppointmentsWidget.helpers({
         return Template.instance().attachmentCount.get();
     },
     createnewappointment: () => {
-        return Session.get('CloudAppointmentCreateAppointment') || false;
+        return localStorage.getItem('CloudAppointmentCreateAppointment') || false;
     },
     uploadedFile: () => {
         return Template.instance().uploadedFile.get();
@@ -8457,7 +8461,7 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             document.getElementById("state").value = data.fields.State;
             document.getElementById("country").value = data.fields.Country;
             document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ', ');
-            if (Session.get('CloudAppointmentNotes') == true) {
+            if (localStorage.getItem('CloudAppointmentNotes') == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
             }
             document.getElementById("suburb").value = data.fields.Suburb;
@@ -8527,7 +8531,7 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             document.getElementById("state").value = data.fields.State;
             document.getElementById("country").value = data.fields.Country;
             document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ', ');
-            if (Session.get('CloudAppointmentNotes') == true) {
+            if (localStorage.getItem('CloudAppointmentNotes') == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
             }
             document.getElementById("suburb").value = data.fields.Suburb;
@@ -8597,7 +8601,7 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             document.getElementById("state").value = data.fields.State;
             document.getElementById("country").value = data.fields.Country;
             document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ', ');
-            if (Session.get('CloudAppointmentNotes') == true) {
+            if (localStorage.getItem('CloudAppointmentNotes') == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
             }
             document.getElementById("suburb").value = data.fields.Suburb;

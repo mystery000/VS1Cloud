@@ -416,10 +416,10 @@ Template.accountlistpop.helpers({
         });
     },
     purchaseCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'creditcard' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'creditcard' });
     },
     purchaseCloudGridPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblCreditLine' });
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblCreditLine' });
     },
     uploadedFiles: () => {
         return Template.instance().uploadedFiles.get();
@@ -441,22 +441,22 @@ Template.accountlistpop.helpers({
         });
     },
     companyaddress1: () => {
-        return Session.get('vs1companyaddress1');
+        return localStorage.getItem('vs1companyaddress1');
     },
     companyaddress2: () => {
-        return Session.get('vs1companyaddress2');
+        return localStorage.getItem('vs1companyaddress2');
     },
     companyphone: () => {
-        return Session.get('vs1companyPhone');
+        return localStorage.getItem('vs1companyPhone');
     },
     companyabn: () => {
-        return Session.get('vs1companyABN');
+        return localStorage.getItem('vs1companyABN');
     },
     organizationname: () => {
-        return Session.get('vs1companyName');
+        return localStorage.getItem('vs1companyName');
     },
     organizationurl: () => {
-        return Session.get('vs1companyURL');
+        return localStorage.getItem('vs1companyURL');
     },
     isMobileDevices: () => {
         var isMobile = false;
@@ -469,7 +469,7 @@ Template.accountlistpop.helpers({
         return isMobile;
     },
     isCurrencyEnable: () => {
-        return Session.get('CloudUseForeignLicence');
+        return localStorage.getItem('CloudUseForeignLicence');
     }
 });
 
@@ -1335,7 +1335,7 @@ Template.accountlistpop.events({
 
                         let erpInvoiceId = objDetails.fields.ID;
 
-                        let mailFromName = Session.get('vs1companyName');
+                        let mailFromName = localStorage.getItem('vs1companyName');
                         let mailFrom = localStorage.getItem('VS1OrgEmail')||localStorage.getItem('VS1AdminUserName');
                         let customerEmailName = $('#edtSupplierName').val();
                         let checkEmailData = $('#edtSupplierEmail').val();
@@ -1542,7 +1542,7 @@ Template.accountlistpop.events({
                     }
                 }
 
-                var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+                var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
                         var clientID = getcurrentCloudDetails._id;
@@ -1772,7 +1772,7 @@ Template.accountlistpop.events({
 
         });
 
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1830,7 +1830,7 @@ Template.accountlistpop.events({
         }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1851,7 +1851,7 @@ Template.accountlistpop.events({
         }
     },
     'click .btnResetSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -2130,7 +2130,7 @@ Template.accountlistpop.events({
                 }
                 let linesave = objDetails.fields.ID;
 
-                var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+                var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
                 if (getcurrentCloudDetails) {
                     if (getcurrentCloudDetails._id.length > 0) {
                         var clientID = getcurrentCloudDetails._id;

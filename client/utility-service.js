@@ -1265,7 +1265,7 @@ export class UtilityService {
     }
 
     modifynegativeCurrencyFormat = function(price) {
-        if (Session.get('ERPLoggedCountry') === "United Arab Emirates") {
+        if (localStorage.getItem('ERPLoggedCountry') === "United Arab Emirates") {
             return ((parseFloat(price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })) + ' ' + Currency);
         } else {
             if (price < 0) {

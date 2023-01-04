@@ -70,7 +70,7 @@ Template.purchasesoverview.onRendered(function () {
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
               // reset_data = data.ProcessLog.CustomLayout.Columns;
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
               showCustomFieldDisplaySettings(reset_data);
@@ -2006,11 +2006,11 @@ Template.purchasesoverview.events({
     try {
       let erpGet = erpDb();
       let tableName = "tblPurchaseOverview";
-      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+      let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if(added) {
-        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
             addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
         });
           swal({
@@ -2373,7 +2373,7 @@ Template.purchasesoverview.helpers({
   },
   purchasesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
+      userid: localStorage.getItem("mycloudLogonID"),
       PrefName: "tblPurchaseOverview",
     });
   },

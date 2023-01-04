@@ -6,6 +6,11 @@ import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './global_customerlist.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
@@ -84,7 +89,7 @@ Template.global_customerlist.onRendered(function() {
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
               templateObject.showCustomFieldDisplaySettings(reset_data);
           }).catch(function (err) {
@@ -710,11 +715,11 @@ Template.global_customerlist.events({
     lineItems.sort((a,b) => a.index - b.index);
       let erpGet = erpDb();
       let tableName = "tblCustomerlist";
-      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+      let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if(added){
-        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
             addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
         });
         swal({
@@ -749,7 +754,7 @@ Template.global_customerlist.helpers({
   },
   salesCloudPreferenceRec: () => {
       return CloudPreference.findOne({
-          userid: Session.get('mycloudLogonID'),
+          userid: localStorage.getItem('mycloudLogonID'),
           PrefName: 'tblCustomerlist'
       });
   },

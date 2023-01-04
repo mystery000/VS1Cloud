@@ -216,7 +216,7 @@
                           {{/if}}
                         {{/if}} -->
 
-                        {{#if isGreenTrack}}
+                        {{#if equals isGreenTrack true}}
                         {{else}}
                             <a class="nav-link mobileGetSupportBtn" data-toggle="modal" data-target="#supportModal" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;width: 47%; float: right;">Get <img class="img-support"
                                     src="images/phone-support.png" style="width: 25px!important;padding: 2px;"> Support</a>
@@ -255,7 +255,7 @@
                     </li>
                 <!-- {{/if}} -->
 
-                {{#if isGreenTrack}}
+                {{#if equals isGreenTrack true}}
                     <li class="nav-item no-arrow mx-1 upgradeToVS1" id="upgrade" role="presentation">
                         <a class="nav-link"
                             href="https://www.payments.vs1cloud.com/mascartdirect/direct/add/product/12/bypass/1/?product=12&selected_configurable_option=&related_product=&item=12&form_key=fBHY2DVgwe0CQzLa&aw_sarp2_subscription_type=9&qty=1&bypass=1"
@@ -267,7 +267,7 @@
                             target="_blank" style="color:#00a3d3"><img class="img-skype" src="images/VS1CloudIcon.png" style="height: 25px!important;"></a>
                     </li>
                 {{/if}}
-                {{#if isGreenTrack}}
+                {{#if equals isGreenTrack true}}
                 {{else}}
                     <li class="nav-item no-arrow mx-1 supportLi">
                         <!-- <a class="nav-link" href="https://sos.splashtop.com" target="_blank" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">tests <img class="img-support" src="images/phone-support.png" style="width: 25px!important;padding: 2px;"> Support</a> -->
@@ -338,7 +338,7 @@
         <div class="loadingbar progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span class="progressBarInner"></span></div>
     </div> -->
 
-    {{#if isGreenTrack}}
+    {{#if equals isGreenTrack true}}
         <script>
             async function logOutFunc() {
                 $('.fullScreenSpin').css('display', 'inline-block');
@@ -380,14 +380,7 @@
                 }
                 await getLogoutEmails();
                 $('.fullScreenSpin').css('display', 'none')
-                FlowRouter.go('/vs1greentracklogin');
-                CloudUser.update({
-                    _id: Session.get('mycloudLogonID')
-                }, {
-                    $set: {
-                        userMultiLogon: false
-                    }
-                });
+                window.open('/vs1greentracklogin','_self');
 
             };
         </script>
@@ -432,14 +425,7 @@
                     }
                 await getLogoutEmails();
                 $('.fullScreenSpin').css('display', 'none')
-                FlowRouter.go('/');
-                CloudUser.update({
-                    _id: Session.get('mycloudLogonID')
-                }, {
-                    $set: {
-                        userMultiLogon: false
-                    }
-                });
+                window.open('/','_self');
                 };
         </script>
     {{/if}}

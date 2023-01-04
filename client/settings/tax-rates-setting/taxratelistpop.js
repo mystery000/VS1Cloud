@@ -9,6 +9,10 @@ import {
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 
+import { Template } from 'meteor/templating';
+import './taxratelistpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let taxRateService = new TaxRateService();
 let sideBarService = new SideBarService();
 

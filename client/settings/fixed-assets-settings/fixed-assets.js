@@ -89,8 +89,8 @@ Template.fixedAssetsSettings.onRendered(function () {
             let fixedAssetsData = data.tfixedassettype;
             templateObject.fixedAssetsList.set(fixedAssetsData);
             if(fixedAssetsData && fixedAssetsData.length > 0) {
-                let successMsg = Session.get('success');
-                let assetTypeName = Session.get('assetName');
+                let successMsg = localStorage.getItem('success');
+                let assetTypeName = localStorage.getItem('assetName');
                 templateObject.fixedAssetsLength.set(fixedAssetsData.length);
             }
             setTimeout(() => {
@@ -179,10 +179,10 @@ Template.fixedAssetsSettings.helpers({
         return Template.instance().fixedAssetsLength.get();
     },
     successMsg: () => {
-        return Session.get('success');
+        return localStorage.getItem('success');
     },
     assetTypeName: () => {
-        return Session.get('assetName');
+        return localStorage.getItem('assetName');
     },
     loaderOnAccount: () => {
         return Template.instance().loaderOnAccount.get();

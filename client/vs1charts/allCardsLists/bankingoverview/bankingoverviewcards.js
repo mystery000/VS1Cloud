@@ -5,6 +5,12 @@ import { EmployeeProfileService } from "../../../js/profile-service";
 import { AccountService } from "../../../accounts/account-service";
 import { UtilityService } from "../../../utility-service";
 import { SideBarService } from '../../../js/sidebar-service';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './bankingoverviewcards.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 const _tabGroup = 12;
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

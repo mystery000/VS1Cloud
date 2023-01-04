@@ -4,7 +4,12 @@ import { CoreService } from '../js/core-service';
 import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
-import '../lib/global/indexdbstorage.js';
+import '../lib/global/indexdbstorage.js'; 
+
+import { Template } from 'meteor/templating';
+import './popemployeelist.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.popemployeelist.onCreated(function(){
@@ -25,7 +30,7 @@ Template.popemployeelist.onRendered(function() {
     const dataTableList = [];
     const tableHeaderList = [];
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
+    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
     if(error){
 
     }else{
@@ -84,7 +89,7 @@ Template.popemployeelist.onRendered(function() {
 
             if(templateObject.datatablerecords.get()){
 
-              Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
+              Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
               if(error){
 
               }else{
@@ -252,7 +257,7 @@ Template.popemployeelist.onRendered(function() {
 
           if(templateObject.datatablerecords.get()){
 
-              Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
+              Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
   if(error){
 
   }else{
@@ -414,7 +419,7 @@ Template.popemployeelist.onRendered(function() {
 
           if(templateObject.datatablerecords.get()){
 
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
+            Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
             if(error){
 
             }else{
@@ -592,7 +597,7 @@ Template.popemployeelist.events({
       });
     },
     'click .resetTable' : function(event){
-      var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+      var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
       if(getcurrentCloudDetails){
         if (getcurrentCloudDetails._id.length > 0) {
           var clientID = getcurrentCloudDetails._id;
@@ -636,7 +641,7 @@ Template.popemployeelist.events({
         lineItems.push(lineItemObj);
       });
 
-      var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
+      var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
       if(getcurrentCloudDetails){
         if (getcurrentCloudDetails._id.length > 0) {
           var clientID = getcurrentCloudDetails._id;
@@ -933,6 +938,6 @@ Template.popemployeelist.helpers({
      return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-  return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblEmployeelistpop'});
+  return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblEmployeelistpop'});
 }
 });

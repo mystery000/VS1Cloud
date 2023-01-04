@@ -2,6 +2,11 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {UtilityService} from "../utility-service";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './statuspop.html';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -16,7 +21,7 @@ Template.statuspop.onRendered(function() {
     let templateObject = Template.instance();
     const dataTableList = [];
     const tableHeaderList = [];
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
+    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
         if (error) {
 
         } else {
@@ -76,7 +81,7 @@ Template.statuspop.onRendered(function() {
         }
         templateObject.datatablerecords.set(dataTableList);
         if (templateObject.datatablerecords.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
+            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
                 if (error) {
 
                 } else {
@@ -243,7 +248,7 @@ Template.statuspop.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
-            userid: Session.get('mycloudLogonID'),
+            userid: localStorage.getItem('mycloudLogonID'),
             PrefName: 'tblStatusPopList'
         });
     },
