@@ -8,7 +8,6 @@ meteor-base@1.5.1             # Packages every Meteor app needs to have
 mobile-experience@1.1.0       # Packages for a great mobile UX
 mongo@1.16.3                   # The database Meteor supports right now
 blaze-html-templates    # Compile .html files into Meteor Blaze views
-jquery                  # Wrapper package for npm-installed jquery
 reactive-var@1.0.12            # Reactive variable for tracker
 tracker@1.2.1                 # Meteor's client-side reactive programming library
 
@@ -25,6 +24,13 @@ hot-module-replacement@0.5.2  # Update code in development without reloading the
 blaze-hot               # Update files using Blaze's API with HMR
 
 ostrio:flow-router-extra
+
+accounts-password
+accounts-base
+accounts-ui
+u2622:persistent-session
+rajit:bootstrap3-datepicker
+
 kadira:blaze-layout
 dynamic-import
 momentjs:moment
@@ -52,3 +58,4 @@ littledata:synced-cron
 meteorhacks:ssr
 aldeed:template-extension
 dev-error-overlay
+jquery@1.11.10

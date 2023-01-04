@@ -734,7 +734,8 @@ export class ReportService extends BaseService {
                 ListType: "'Detail'"
             };
         }
-        return this.getList(this.ERPObjects.TProductMovementList, options);
+        // return this.getList(this.ERPObjects.TProductMovementList, options);
+        return this.getList(this.ERPObjects.TStockMovement, options);
     }
 
     getSerialNumberReport(dateFrom, dateTo, ignoreDate = false) {

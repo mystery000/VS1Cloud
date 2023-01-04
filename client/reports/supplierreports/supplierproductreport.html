@@ -1,9 +1,21 @@
 <template name="supplierproductreport">
     {{# vs1_report_template tabledisplayname = "Supplier Product Report" tablename="supplierproductreport"  dateAsAt=dateAsAt}}
         <div class="table-responsive">
-            <table class="table table-sm" id="tableExport" name="tableExport">
+            <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tableExport" name="tableExport">
                 <thead>
                     <tr class="table-active customDoubleTableHeading">
+                        {{#each c in supplierproductreportth}}
+                        {{#if c.display}}
+                        <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}"
+                            data-col-active="{{ c.active}}"
+                            class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                            style="text-align: left!important; width:{{c.width}}px">
+                            {{c.label}}
+                        </th>
+                        {{/if}}
+                        {{/each}}
+                    </tr>
+                    <!-- <tr class="table-active customDoubleTableHeading">
                         <th>Supplier</th>
                         <th>PO No</th>
                         <th>Trans Type</th>
@@ -58,10 +70,10 @@
                         <th></th>
 
                         </tr>
-                    {{/if}}
+                    {{/if}} -->
                 </thead>
                 <tbody>
-                    {{#if records}}
+                    <!-- {{#if records}}
                         {{#each arrayify records}}
                             <tr>
                                 <td colspan="15" style="font-weight: 800;">{{ value.Supplier_Name }}</td>
@@ -158,7 +170,7 @@
                         <tr>
                             <td colspan="15" style="font-weight: 800;">No Records Found</td>
                         </tr>
-                    {{/if}}
+                    {{/if}} -->
                 </tbody>
             </table>
         </div>

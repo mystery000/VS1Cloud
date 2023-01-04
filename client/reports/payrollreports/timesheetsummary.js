@@ -6,6 +6,8 @@ import { TaxRateService } from "../../settings/settings-service";
 import Datehandler from "../../DateHandler";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import GlobalFunctions from "../../GlobalFunctions";
+import { Template } from 'meteor/templating';
+import "./timesheetsummary.html";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
