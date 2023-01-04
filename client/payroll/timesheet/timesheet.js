@@ -1977,7 +1977,7 @@ Template.timesheet.onRendered(function() {
                         url1 = new URL(window.location.href);
                         let timesheetID = url1.searchParams.get("id");
                         let clockList = templateObject.timesheetrecords.get();
-                        var clockList = clockList.filter(timesheetInfo => {
+                        clockList = clockList.filter(timesheetInfo => {
                             return timesheetInfo.id == timesheetID
                         });
 
@@ -2178,7 +2178,7 @@ Template.timesheet.onRendered(function() {
                     url1 = new URL(window.location.href);
                     let timesheetID = url1.searchParams.get("id");
                     let clockList = templateObject.timesheetrecords.get();
-                    var clockList = clockList.filter(timesheetInfo => {
+                    clockList = clockList.filter(timesheetInfo => {
                         return timesheetInfo.id == timesheetID
                     });
 
