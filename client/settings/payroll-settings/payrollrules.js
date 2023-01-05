@@ -5685,19 +5685,19 @@ Template.payrollrules.onRendered(function() {
 
     }
 
-    templateObject.deleteOvertime = async (overtimeId = null) =>{
-        LoadingOverlay.show();
-        if(overtimeId == null) {
-            return;
-        }
+    // templateObject.deleteOvertime = async (overtimeId = null) =>{
+    //     LoadingOverlay.show();
+    //     if(overtimeId == null) {
+    //         return;
+    //     }
 
-        let overtimes  = await templateObject.overtimes.get();
-        overtimes =  overtimes.filter(overtime => overtime.id != overtimeId);
-        await templateObject.overtimes.set(overtimes);
-        await templateObject.setupOvertimeTable();
+    //     let overtimes  = await templateObject.overtimes.get();
+    //     overtimes =  overtimes.filter(overtime => overtime.id != overtimeId);
+    //     await templateObject.overtimes.set(overtimes);
+    //     await templateObject.setupOvertimeTable();
 
-        LoadingOverlay.hide();
-    }
+    //     LoadingOverlay.hide();
+    // }
 
     templateObject.updateOvertime = async (overtimeId = null) => {
         if(overtimeId != null) {
@@ -22301,10 +22301,10 @@ Template.payrollrules.events({
      "click .saveAddNewOvertime": (e, ui) => {
         ui.addOverTime();
      },
-     "click .delete-overtime": (e, ui) => {
-        const id = $(e.currentTarget).attr('overtime-id');
-        ui.deleteOvertime(id);
-     },
+    //  "click .delete-overtime": (e, ui) => {
+    //     const id = $(e.currentTarget).attr('overtime-id');
+    //     ui.deleteOvertime(id);
+    //  },
      "click .edit-overtime": (e, ui) => {
         const id = $(e.currentTarget).attr('overtime-id');
         ui.openOvertimeEditor(id);
