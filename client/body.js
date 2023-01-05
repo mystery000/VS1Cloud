@@ -454,6 +454,9 @@ import './quote/quote_express_list_tables.js';
 import './refunds/refunds_list.js';
 import './bills/bill_list.js';
 import './credit/credit_list.js';
+import './purchase/purchaseorder_express_list_tables.js';
+import './purchase/purchaseorderbo_express_list_tables.js';
+import './purchase/purchase-service.js';
 import './Help_Form/help_advisor.js';
 /* OleksandrF */
 
