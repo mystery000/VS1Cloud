@@ -7,6 +7,10 @@ import 'jquery-ui-dist/jquery-ui';
 import { Random } from 'meteor/random';
 
 import 'jquery-editable-select';
+import { Template } from 'meteor/templating';
+import './reconciliation.html';
+
+
 let utilityService = new UtilityService();
 
 Template.reconciliation.onCreated(() => {

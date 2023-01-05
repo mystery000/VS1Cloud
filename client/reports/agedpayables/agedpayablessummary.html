@@ -2,7 +2,7 @@
   {{# vs1_report_template tabledisplayname="Aged Payables Summary" tablename="tblAgedPayablesSummary"
   dateAsAt=dateAsAt}}
   <div class="table-responsive">
-    <table class="table table-sm" id="tableExport" name="tableExport">
+    <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tableExport" name="tableExport">
       <thead>
         <!-- <tr class="table-active customDoubleTableHeading">
             <th class="text-left">Contact</th>
@@ -84,9 +84,8 @@
         {{/if}}
       </thead>
       <tbody>
-        {{#if reportrecords}}
+        <!-- {{#if reportrecords}}
         {{#each items in reportrecords}}
-        <!-- <tr class="totalhr"> <td style="font-weight: 800;"></td> <td style="font-weight: 800;"></td> <td style="font-weight: 800;"></td> <td style="font-weight: 800;"></td> <td style="font-weight: 800;"></td> <td style="font-weight: 800;"></td> <td style="font-weight: 800;"></td> <td style="font-weight: 800;"></td> <td style="font-weight: 800;"></td> <td style="font-weight: 800;"></td> </tr> -->
         <tr class="totalhr">
           <td class="Total1Indented MenuLeft TotalField">
             <span class="table-cells">
@@ -95,11 +94,6 @@
                 style="text-decoration:none!important;">{{items.contact}}</a>
             </span>
           </td>
-          <!-- <td class="Total1Indented MenuLeft TotalField">
-                  <span class="table-cells">
-                    
-                      <a href="#" style="text-decoration:none!important;">{{items.type}}</a>
-                    </span></td> -->
           <td class="Total1Indented MenuLeft TotalField text-left">
             <span class="table-cells">
 
@@ -263,11 +257,9 @@
         {{/each}}
 
         {{#if grandrecords}}
-        <!-- {{#each item in grandrecords}} -->
         <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
 
           <td>{{grandrecords.Title}}</td>
-          <!-- <td></td> -->
           <td></td>
           <td></td>
 
@@ -330,7 +322,7 @@
         <tr class="odd" style="text-align: center;">
           <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
         </tr>
-        {{/if}}
+        {{/if}} -->
 
       </tbody>
     </table>

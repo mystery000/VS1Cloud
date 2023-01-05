@@ -12,6 +12,7 @@ import { SideBarService } from "../../js/sidebar-service";
 import { OrganisationService } from '../../js/organisation-service';
 import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
+import './accountantCompanyastrustee.html';
 
 import { Template } from 'meteor/templating';
 import './accountantCompanyastrustee.html';

@@ -9,6 +9,10 @@ import { OrganisationService } from "../js/organisation-service";
 let organisationService = new OrganisationService;
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import './supplierlist.html';
+
 Template.supplierlist.inheritsHooksFrom('non_transactional_list');
 Template.supplierlist.onCreated(function() {
     const templateObject = Template.instance();

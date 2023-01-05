@@ -6,6 +6,9 @@ import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
+import { Template } from 'meteor/templating';
+import './agedreceivablessummary.html';
+
 const reportService = new ReportService();
 const utilityService = new UtilityService();
 const taxRateService = new TaxRateService();

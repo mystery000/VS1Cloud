@@ -1,6 +1,8 @@
 import {StockTransferService} from "../stockadjust-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
+import { Template } from 'meteor/templating';
+import "./stockAdjusmentOverview.html";
 
 import {UtilityService} from "../../utility-service";
 import { SideBarService } from '../../js/sidebar-service';
