@@ -35,7 +35,186 @@ let manufacturingService = new ManufacturingService();
 Template.production_planner.onRendered(async function() {
     const templateObject = Template.instance();
 
+    let staticWorkorderArray = [
+        {
+            "ID": "989_1",
+            "Customer": "TEST2",
+            "OrderTo": "TEST2\n \n   \nAustralia",
+            "PONumber": "",
+            "SaleDate": new Date(),
+            "DueDate": "19/01/2023",
+            "BOM": {
+                "productName": "just test",
+                "qty": "0.70000",
+                "process": "Painting",
+                "processNote": "",
+                "attachments": [],
+                "subs": [
+                    {
+                        "productName": "helo",
+                        "qty": "0.80000",
+                        "process": "",
+                        "processNote": "",
+                        "attachments": [],
+                        "subs": []
+                    },
+                    {
+                        "productName": "gvjj",
+                        "qty": "0.70000",
+                        "process": "",
+                        "processNote": "",
+                        "attachments": [],
+                        "subs": []
+                    }
+                ],
+                "isBuild": true,
+                "duration": 1.8
+            },
+            "SalesOrderID": "989",
+            "OrderDate": new Date(),
+            "StartTime": new Date(),
+            "Quantity": 1.8199999999999998,
+            "Line": {
+                "Type": "TSalesOrderLine",
+                "fields" :{
+                    "ShipDate": "01/05/2023"
+                }
+            }
+        },
+        {
+            "ID": "989_2",
+            "Customer": "TEST2",
+            "OrderTo": "TEST2\n \n   \nAustralia",
+            "PONumber": "",
+            "SaleDate": new Date(),
+            "DueDate": "19/01/2023",
+            "BOM": {
+                "productName": "maaannn",
+                "qty": "0.46000",
+                "process": "Welding",
+                "processNote": "",
+                "attachments": [],
+                "subs": [
+                    {
+                        "productName": "26",
+                        "qty": "0.64000",
+                        "process": "",
+                        "processNote": "",
+                        "attachments": [],
+                        "subs": []
+                    },
+                    {
+                        "productName": "3434",
+                        "qty": "1.30000",
+                        "process": "",
+                        "processNote": "",
+                        "attachments": [],
+                        "subs": []
+                    }
+                ],
+                "isBuild": true,
+                "duration": 2.4
+            },
+            "SalesOrderID": "989",
+            "OrderDate": new Date(),
+            "StartTime": new Date(),
+            "Quantity": 1.1960000000000002,
+            "Line": {
+                "Type": "TSalesOrderLine",
+                "fields" :{
+                    "ShipDate": "01/05/2023"
+                }
+            }
 
+        },
+        {
+            "ID": "989_3",
+            "Customer": "TEST2",
+            "OrderTo": "TEST2\n \n   \nAustralia",
+            "PONumber": "",
+            "SaleDate": new Date(),
+            "DueDate": "19/01/2023",
+            "BOM": {
+                "productName": "test",
+                "process": "Assembly",
+                "processNote": "",
+                "attachments": [],
+                "subs": [
+                    {
+                        "productName": "just test",
+                        "qty": "0.70000",
+                        "process": "Painting",
+                        "processNote": "",
+                        "attachments": [],
+                        "subs": [
+                            {
+                                "productName": "helo",
+                                "qty": "0.80000",
+                                "process": "",
+                                "processNote": "",
+                                "attachments": [],
+                                "subs": []
+                            },
+                            {
+                                "productName": "gvjj",
+                                "qty": "0.70000",
+                                "process": "",
+                                "processNote": "",
+                                "attachments": [],
+                                "subs": []
+                            }
+                        ],
+                        "isBuild": true,
+                        "duration": 1.8
+                    },
+                    {
+                        "productName": "maaannn",
+                        "qty": "0.46000",
+                        "process": "Painting",
+                        "processNote": "",
+                        "attachments": [],
+                        "subs": [
+                            {
+                                "productName": "26",
+                                "qty": "0.64000",
+                                "process": "",
+                                "processNote": "",
+                                "attachments": [],
+                                "subs": []
+                            },
+                            {
+                                "productName": "3434",
+                                "qty": "1.30000",
+                                "process": "",
+                                "processNote": "",
+                                "attachments": [],
+                                "subs": []
+                            }
+                        ],
+                        "isBuild": true,
+                        "duration": 2.4
+                    }
+                ],
+                "totalQtyInStock": 0,
+                "productDescription": "",
+                "duration": "3.4"
+            },
+            "SalesOrderID": "989",
+            "OrderDate": new Date(),
+            "StartTime": new Date(new Date().getTime() + 11924640),
+            "Quantity": 2.6,
+            "InProgress": true,
+            "Line": {
+                "Type": "TSalesOrderLine",
+                "fields" :{
+                    "ShipDate": "01/05/2023"
+                }
+            }
+        }
+    ]
+    if(!localStorage.getItem('TWorkorders')) {
+        localStorage.setItem('TWorkorders', JSON.stringify(staticWorkorderArray))
+    }
 
     async function getResources() {
         return new Promise(async(resolve, reject) => {
@@ -81,7 +260,8 @@ Template.production_planner.onRendered(async function() {
     }
     let resources = await getResources();
     await templateObject.resources.set(resources);
-    let workorders = localStorage.getItem('TWorkorders') ? JSON.parse(localStorage.getItem('TWorkorders')) : []
+    
+    let workorders = localStorage.getItem('TWorkorders') ? JSON.parse(localStorage.getItem('TWorkorders')) : staticWorkorderArray
         // templateObject.workorders.set(workorders);
     async function getPlanData() {
         return new Promise(async(resolve, reject)=> {
@@ -102,6 +282,14 @@ Template.production_planner.onRendered(async function() {
             })
         })
     }
+
+    function getRandomColor () {
+        var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+        if (randomColor.length == 5) {
+            randomColor = "0"+randomColor;
+        }
+        return randomColor;
+    }
     async function getEvents() {
         return new Promise(async function(resolve, reject) {
             // let events = [];
@@ -111,54 +299,104 @@ Template.production_planner.onRendered(async function() {
             if (eventsData.length == 0) {
 
                 let tempEvents = [];
-                for (let i = 0; i < workorders.length; i++) {
-                    let processName = workorders[i].BOM.process;
-                    let productName = workorders[i].BOM.productName;
-                    let index = resources.findIndex(resource => {
-                        return resource.title == processName;
-                    })
-                    let resourceId = resources[index].id;
-                    let startTime = new Date(workorders[i].StartTime);
-                    let filteredEvents = tempEvents.filter(itemEvent => itemEvent.resourceName == processName && new Date(itemEvent.end).getTime() > startTime.getTime() && new Date(itemEvent.start).getTime() < startTime.getTime())
-                    if(filteredEvents.length > 1) {
-                        filteredEvents.sort((a,b)=> a.end.getTime() - b.end.getTime())
-                        startTime = filteredEvents[filteredEvents.length -1].end;
-                    }else if(filteredEvents.length == 1) {
-                        startTime = filteredEvents[0].end;
-                    }
-                    let duration = workorders[i].BOM.duration;
-                    let quantity = workorders[i].Quantity || 1;
-                    let buildSubs = [];
-                    let stockRaws = [];
-                    let subs = workorders[i].BOM.subs;
-                    if(subs.length > 1) {
-                        for(let j = 0; j < subs.length; j++ ) {
-                            if(subs[j].isBuild == true) {
-                                buildSubs.push(subs[j].productName)
-                            }else {
-                                stockRaws.push(subs[j].productName)
+                if(workorders && workorders.length > 0) {
+                    for (let i = 0; i < workorders.length; i++) {
+                        let processName = workorders[i].BOM.process;
+                        let productName = workorders[i].BOM.productName;
+                        let index = resources.findIndex(resource => {
+                            return resource.title == processName;
+                        })
+                        let resourceId = resources[index].id;
+                        let startTime = new Date(workorders[i].StartTime);
+                        let filteredEvents = tempEvents.filter(itemEvent => itemEvent.resourceName == processName && new Date(itemEvent.end).getTime() > startTime.getTime() && new Date(itemEvent.start).getTime() < startTime.getTime())
+                        if(filteredEvents.length > 1) {
+                            filteredEvents.sort((a,b)=> a.end.getTime() - b.end.getTime())
+                            startTime = filteredEvents[filteredEvents.length -1].end;
+                        }else if(filteredEvents.length == 1) {
+                            startTime = filteredEvents[0].end;
+                        }
+                        let duration = workorders[i].BOM.duration;
+                        let quantity = workorders[i].Quantity || 1;
+                        let buildSubs = [];
+                        let stockRaws = [];
+                        let subs = workorders[i].BOM.subs;
+                        if(subs.length > 1) {
+                            for(let j = 0; j < subs.length; j++ ) {
+                                if(subs[j].isBuild == true) {
+                                    buildSubs.push(subs[j].productName)
+                                }else {
+                                    stockRaws.push(subs[j].productName)
+                                }
                             }
                         }
+                        if (workorders[i].Quantity) duration = duration * parseFloat(workorders[i].Quantity);
+                        let endTime = new Date();
+                        endTime.setTime(startTime.getTime() + duration * 3600000)
+                        var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+                        let event = {
+                            "resourceId": resourceId,
+                            "resourceName": resources[index].title,
+                            "title": productName,
+                            "start": startTime,
+                            "end": endTime,
+                            "color": "#" + randomColor,
+                            "extendedProps": {
+                                "orderId": workorders[i].ID,
+                                'quantity': quantity,
+                                "builds": buildSubs,
+                                "fromStocks": stockRaws
+                            }
+                        }
+                        tempEvents.push(event);
                     }
-                    if (workorders[i].Quantity) duration = duration * parseFloat(workorders[i].Quantity);
-                    let endTime = new Date();
-                    endTime.setTime(startTime.getTime() + duration * 3600000)
-                    var randomColor = Math.floor(Math.random() * 16777215).toString(16);
-                    let event = {
-                        "resourceId": resourceId,
-                        "resourceName": resources[index].title,
-                        "title": productName,
-                        "start": startTime,
-                        "end": endTime,
-                        "color": "#" + randomColor,
+                }else {
+                   
+                    let object = {
+                        "resourceId": 0,
+                        "resourceName": "Assembly",
+                        "title": "Bom Product",
+                        "start": new Date(new Date().getTime() + 14400000),
+                        "end": new Date(new Date().getTime() + 28800000),
+                        "color": "#" + getRandomColor(),
                         "extendedProps": {
-                            "orderId": workorders[i].ID,
-                            'quantity': quantity,
-                            "builds": buildSubs,
-                            "fromStocks": stockRaws
+                            "orderId": "24_1",
+                            'quantity': 2,
+                            "builds": ["sub build 1", "sub build 2"],
+                            "fromStocks": 0
                         }
                     }
-                    tempEvents.push(event);
+                    let subObject1 = {
+                        "resourceId": 2,
+                        "resourceName": "Painting",
+                        "title": "Sub BOM 2",
+                        "start": new Date(),
+                        "end": new Date(new Date().getTime() + 14400000),
+                        "color": "#" + getRandomColor(),
+                        "extendedProps": {
+                            "orderId": "24_2",
+                            'quantity': 1.2,
+                            "builds": ["raw1", "raw2"],
+                            "fromStocks": 0
+                        }
+                    }
+                    let subObject2 = {
+                        "resourceId": 1,
+                        "resourceName": "Welding",
+                        "title": "Sub BOM 2",
+                        "start": new Date(),
+                        "end": new Date(new Date().getTime() + 9000000),
+                        "color": "#" + getRandomColor(),
+                        "extendedProps": {
+                            "orderId": "24_3",
+                            'quantity': 2,
+                            "builds": ["mat1", "mat2"],
+                            "fromStocks": 0
+                        }
+                    }
+
+                    tempEvents.push(object)
+                    tempEvents.push(subObject1);
+                    tempEvents.push(subObject2);
                 }
                 templateObject.events.set(tempEvents)
                 resolve(tempEvents);
@@ -438,12 +676,12 @@ Template.production_planner.onRendered(async function() {
                 if (new Date().getTime() > (new Date(info.event.start)).getTime() && new Date().getTime() < (new Date(info.event.end)).getTime()) {
                     let overallTime = (new Date(info.event.end)).getTime() - (new Date(info.event.start)).getTime();
                     let processedTime = new Date().getTime() - (new Date(info.event.start)).getTime();
-                    percentage = (processedTime / overallTime) * 100;
+                    percentage = ((processedTime / overallTime) * 100).toFixed(2);
                 }
                 let object = {
                     SONumber: workorders[orderIndex].SalesOrderID,
                     Customer: workorders[orderIndex].Customer,
-                    OrderDate: workorders[orderIndex].OrderDate,
+                    OrderDate: new Date(workorders[orderIndex].OrderDate).toLocaleDateString(),
                     ShipDate: workorders[orderIndex].Line.fields.ShipDate,
                     JobNotes: workorders[orderIndex].BOM.processNote || '',
                     Percentage: percentage + '%',
