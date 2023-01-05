@@ -2,6 +2,7 @@ import './inventorylist.html';
 import './inventorypopups/onBackOrderPopUp.html';
 import './inventorypopups/onOrderPopUp.html';
 import './inventorypopups/onSalesOrderPopUp.html';
+// import './inventorypopups/RecentTransactionPopUp.html';
 import { ProductService } from "../product/product-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { CoreService } from "../js/core-service";
@@ -944,7 +945,7 @@ Template.inventorylist.onRendered(function() {
             // FlowRouter.go("/stockmovementreport?id=" + listData);
             // Filter the stock movement report based on product ID
             //modified by Matthias
-            $('#recentTransactionPopUp').modal("show");
+            // $('#recentTransactionPopUp').modal("show");
             $(".productNameOnRT").text(listProductName);
 
         }
