@@ -10,6 +10,7 @@ import { SideBarService } from '../js/sidebar-service.js';
 import '../lib/global/indexdbstorage.js';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import '../fixedassets/fixedassets.js';
 import { Session } from 'meteor/session';
 
 import '../Navigation/newsidenav.html';
@@ -793,7 +794,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavshipping').removeClass('active');
                 $('#sidenavreceipt').removeClass('active');
                 $('#sidenavfixedAssets').removeClass('active');
-                $('.collapse').collapse('hide');
+                // $('.collapse').collapse('hide');
             } else if ((currentLoc == "/timesheet") || (currentLoc == "/adpapi") ||
                 (currentLoc == "/squareapi") || (currentLoc == "/employeetimeclock") || (currentLoc == "/payrolloverview")) {
                 $('#sidenavaccounts').removeClass('active');
@@ -924,7 +925,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavshipping').removeClass('active');
                 $('#sidenavreceipt').removeClass('active');
                 $('#sidenavfixedAssets').addClass('active');
-                $('.collapse').collapse('hide');
+                // $('.collapse').collapse('hide');
             }
         }, 50);
     }

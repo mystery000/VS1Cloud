@@ -2,8 +2,10 @@ import { BaseService } from "../js/base-service.js";
 export class FixedAssetService extends BaseService {
   getTFixedAssetsList() {
     let options = {
-      ListType: "Detail"
+      ListType: "Detail",
+      select: "[Active]=true"
     };
+    console.log("fixedAssets");
     return this.getList(this.ERPObjects.TFixedAssets, options);
   }
 
@@ -25,7 +27,7 @@ export class FixedAssetService extends BaseService {
 
   getFixedAssetTypes() {
     let options = {
-      PropertyList: "AssetTypeName, AssetTypeCode, Notes",
+      PropertyList: "AssetTypeCode, AssetTypeName, Notes, Active",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TFixedAssetType, options);

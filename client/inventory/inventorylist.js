@@ -1,3 +1,8 @@
+import './inventorylist.html';
+import './inventorypopups/onBackOrderPopUp.html';
+import './inventorypopups/onOrderPopUp.html';
+import './inventorypopups/onSalesOrderPopUp.html';
+// import './inventorypopups/RecentTransactionPopUp.html';
 import { ProductService } from "../product/product-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { CoreService } from "../js/core-service";
@@ -13,7 +18,6 @@ import { OrganisationService } from "../js/organisation-service";
 import { Template } from 'meteor/templating';
 import './inventorylist.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -939,9 +943,14 @@ Template.inventorylist.onRendered(function() {
 
     $("#tblInventoryOverview tbody").on("click", "td.colAvailable", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
+        var listProductName = $(this).closest("tr").find(".colProductName").text();
         if (listData) {
-            FlowRouter.go("/stockmovementreport?id=" + listData);
+            // FlowRouter.go("/stockmovementreport?id=" + listData);
             // Filter the stock movement report based on product ID
+            //modified by Matthias
+            // $('#recentTransactionPopUp').modal("show");
+            $(".productNameOnRT").text(listProductName);
+
         }
     });
 
