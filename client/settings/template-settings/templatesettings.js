@@ -5,17 +5,17 @@ import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 
 // Import HTML files
-import './templatesettings.html';
-import '../../vs1_templates/print_templates/custom_print_template.html'
-import '../../vs1_templates/print_templates/preview_body1.html'
-import '../../vs1_templates/print_templates/preview_body2.html'
-import '../../vs1_templates/print_templates/preview_body3.html'
-import '../../vs1_templates/print_templates/preview_footer1.html'
-import '../../vs1_templates/print_templates/preview_footer2.html'
-import '../../vs1_templates/print_templates/preview_footer3.html'
-import '../../vs1_templates/print_templates/preview_header1.html'
-import '../../vs1_templates/print_templates/preview_header2.html'
-import '../../vs1_templates/print_templates/preview_header3.html'
+import './templatesettings.html'
+import '../../vs1_templates/print_templates/custom_print_template.html';
+import '../../vs1_templates/print_templates/preview_body1.html';
+import '../../vs1_templates/print_templates/preview_body2.html';
+import '../../vs1_templates/print_templates/preview_body3.html';
+import '../../vs1_templates/print_templates/preview_footer1.html';
+import '../../vs1_templates/print_templates/preview_footer2.html';
+import '../../vs1_templates/print_templates/preview_footer3.html';
+import '../../vs1_templates/print_templates/preview_header1.html';
+import '../../vs1_templates/print_templates/preview_header2.html';
+import '../../vs1_templates/print_templates/preview_header3.html';
 
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
