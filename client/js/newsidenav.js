@@ -1107,8 +1107,9 @@ Template.newsidenav.onRendered(function() {
     }
 
     let isGreenTrack = localStorage.getItem('isGreenTrack')||false;
-    let loggedUserEventFired = localStorage.getItem('LoggedUserEventFired');
-    if (loggedUserEventFired == true) {
+    let loggedUserEventFired = localStorage.getItem('LoggedUserEventFired')||false;
+    console.log(loggedUserEventFired)
+    if (loggedUserEventFired) {
         $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
         $('.headerprogressbar').addClass('headerprogressbarShow');
         $('.headerprogressbar').removeClass('headerprogressbarHidden');
@@ -1187,7 +1188,7 @@ Template.newsidenav.onRendered(function() {
             } else {
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if (getTimeStamp) {
-                    if (loggedUserEventFired == true) {
+                    if (loggedUserEventFired) {
                         if (getTimeStamp[0] != currenctTodayDate) {
                             sideBarService.getCurrentLoggedUser().then(function(data) {
                                 addVS1Data('TAppUser', JSON.stringify(data));
@@ -4498,7 +4499,7 @@ Template.newsidenav.onRendered(function() {
         localStorage.setItem('LoggedUserEventFired', false);
     }, 2500);
     /* Start Here */
-    if (loggedUserEventFired == true) {
+    if (loggedUserEventFired) {
         templateObject.getFollowedAllObjectPull = function() {
             setTimeout(function() {
                 if (isPayments) {
@@ -4508,7 +4509,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getTStatementListData();
                                     }
@@ -4527,7 +4528,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getTVS1BankDepositData();
                                     }
@@ -4546,7 +4547,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllTimeSheetData();
                                     }
@@ -4563,7 +4564,7 @@ Template.newsidenav.onRendered(function() {
                     //     } else {
                     //         let getTimeStamp = dataObject[0].timestamp.split(' ');
                     //         if (getTimeStamp) {
-                    //             if (loggedUserEventFired == true) {
+                    //             if (loggedUserEventFired) {
                     //                 if (getTimeStamp[0] != currenctTodayDate) {
                     //                     templateObject.getAllPayRunData();
                     //                 }
@@ -4580,7 +4581,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllPayHistoryData();
                                     }
@@ -4597,7 +4598,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllAllowanceData();
                                     }
@@ -4614,7 +4615,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllEmployeepaysettingsData();
                                     }
@@ -4642,7 +4643,7 @@ Template.newsidenav.onRendered(function() {
                             }
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllJournalEntryLineData();
                                     }
@@ -4704,7 +4705,7 @@ Template.newsidenav.onRendered(function() {
                                 } else {
                                     let getTimeStamp = dataObject[0].timestamp.split(' ');
                                     if (getTimeStamp) {
-                                        if (loggedUserEventFired == true) {
+                                        if (loggedUserEventFired) {
                                             if (getTimeStamp[0] != currenctTodayDate) {
                                                 templateObject.getAllTStockAdjustEntryData();
                                             }
@@ -4727,7 +4728,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getTARReportData();
                                     }
@@ -4744,7 +4745,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getTAPReportData();
                                     }
@@ -4763,7 +4764,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getTPaymentListData();
                                     }
@@ -4780,7 +4781,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getTSupplierPaymentData();
                                     }
@@ -4797,7 +4798,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getTCustomerPaymentData();
                                     }
@@ -4840,7 +4841,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllTTransactionListReportData();
                                     }
@@ -4917,7 +4918,7 @@ Template.newsidenav.onRendered(function() {
                                 } else {
                                     let getTimeStamp = dataObject[0].timestamp.split(' ');
                                     if (getTimeStamp) {
-                                        if (loggedUserEventFired == true) {
+                                        if (loggedUserEventFired) {
                                             if (getTimeStamp[0] != currenctTodayDate) {
                                                 templateObject.getAllTCreditData();
                                             }
@@ -5030,7 +5031,7 @@ Template.newsidenav.onRendered(function() {
                                 } else {
                                     let getTimeStamp = dataObject[0].timestamp.split(' ');
                                     if (getTimeStamp) {
-                                        if (loggedUserEventFired == true) {
+                                        if (loggedUserEventFired) {
                                             if (getTimeStamp[0] != currenctTodayDate) {
                                                 sideBarService.getAllBillExList(initialDataLoad, 0).then(function(data) {
                                                     countObjectTimes++;
@@ -5131,7 +5132,7 @@ Template.newsidenav.onRendered(function() {
                                     } else {
                                         let getTimeStamp = dataObject[0].timestamp.split(' ');
                                         if (getTimeStamp) {
-                                            if (loggedUserEventFired == true) {
+                                            if (loggedUserEventFired) {
                                                 if (getTimeStamp[0] != currenctTodayDate) {
                                                     templateObject.getAllTChequeData();
                                                 }
@@ -5238,7 +5239,7 @@ Template.newsidenav.onRendered(function() {
                                 } else {
                                     let getTimeStamp = dataObject[0].timestamp.split(' ');
                                     if (getTimeStamp) {
-                                        if (loggedUserEventFired == true) {
+                                        if (loggedUserEventFired) {
                                             if (getTimeStamp[0] != currenctTodayDate) {
                                                 sideBarService.getAllPurchaseOrderList(initialDataLoad, 0).then(function(data) {
                                                     countObjectTimes++;
@@ -5331,7 +5332,7 @@ Template.newsidenav.onRendered(function() {
                             } else {
                                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                                 if (getTimeStamp) {
-                                    if (loggedUserEventFired == true) {
+                                    if (loggedUserEventFired) {
                                         if (getTimeStamp[0] != currenctTodayDate) {
                                             templateObject.getAllTpurchaseOrderNonBackOrderData();
                                         }
@@ -5364,7 +5365,7 @@ Template.newsidenav.onRendered(function() {
                                         } else {
                                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                                             if (getTimeStamp) {
-                                                if (loggedUserEventFired == true) {
+                                                if (loggedUserEventFired) {
                                                     if (getTimeStamp[0] != currenctTodayDate) {
                                                         templateObject.getAllTChequeData();
                                                     }
@@ -5574,7 +5575,7 @@ Template.newsidenav.onRendered(function() {
                             } else {
                                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                                 if (getTimeStamp) {
-                                    if (loggedUserEventFired == true) {
+                                    if (loggedUserEventFired) {
                                         if (getTimeStamp[0] != currenctTodayDate) {
                                             sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
                                                 countObjectTimes++;
@@ -5673,7 +5674,7 @@ Template.newsidenav.onRendered(function() {
                             } else {
                                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                                 if (getTimeStamp) {
-                                    if (loggedUserEventFired == true) {
+                                    if (loggedUserEventFired) {
                                         if (getTimeStamp[0] != currenctTodayDate) {
                                             templateObject.getAllAppointmentPrefData();
                                         }
@@ -5690,7 +5691,7 @@ Template.newsidenav.onRendered(function() {
                             } else {
                                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                                 if (getTimeStamp) {
-                                    if (loggedUserEventFired == true) {
+                                    if (loggedUserEventFired) {
                                         if (getTimeStamp[0] != currenctTodayDate) {
                                             templateObject.getAllTERPPreferenceData();
                                         }
@@ -5707,7 +5708,7 @@ Template.newsidenav.onRendered(function() {
                             } else {
                                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                                 if (getTimeStamp) {
-                                    if (loggedUserEventFired == true) {
+                                    if (loggedUserEventFired) {
                                         if (getTimeStamp[0] != currenctTodayDate) {
                                             templateObject.getAllTERPPreferenceExtraData();
                                         }
@@ -5748,7 +5749,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllTSalesListData();
                                     }
@@ -5849,7 +5850,7 @@ Template.newsidenav.onRendered(function() {
 
                                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                                 if (getTimeStamp) {
-                                    if (loggedUserEventFired == true) {
+                                    if (loggedUserEventFired) {
                                         if (getTimeStamp[0] != currenctTodayDate) {
                                             sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function(data) {
                                                 countObjectTimes++;
@@ -5949,7 +5950,7 @@ Template.newsidenav.onRendered(function() {
                             } else {
                                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                                 if (getTimeStamp) {
-                                    if (loggedUserEventFired == true) {
+                                    if (loggedUserEventFired) {
                                         if (getTimeStamp[0] != currenctTodayDate) {
                                             templateObject.getAllSalesOrderExListData();
                                         }
@@ -5972,7 +5973,7 @@ Template.newsidenav.onRendered(function() {
                             } else {
                                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                                 if (getTimeStamp) {
-                                    if (loggedUserEventFired == true) {
+                                    if (loggedUserEventFired) {
                                         if (getTimeStamp[0] != currenctTodayDate) {
                                             templateObject.getAllRefundListData();
                                         }
@@ -6005,7 +6006,7 @@ Template.newsidenav.onRendered(function() {
                                 } else {
                                     let getTimeStamp = dataObject[0].timestamp.split(' ');
                                     if (getTimeStamp) {
-                                        if (loggedUserEventFired == true) {
+                                        if (loggedUserEventFired) {
                                             if (getTimeStamp[0] != currenctTodayDate) {
                                                 templateObject.getAllTQuoteData();
                                             }
@@ -6045,7 +6046,7 @@ Template.newsidenav.onRendered(function() {
                             } else {
                                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                                 if (getTimeStamp) {
-                                    if (loggedUserEventFired == true) {
+                                    if (loggedUserEventFired) {
                                         if (getTimeStamp[0] != currenctTodayDate) {
                                             templateObject.getAllBackOrderInvoicetData();
                                         }
@@ -6167,7 +6168,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllCustomersData();
                                     }
@@ -6184,7 +6185,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllTJobVS1Data();
                                     }
@@ -6201,7 +6202,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllSuppliersData();
                                     }
@@ -6218,7 +6219,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllEmployeeData();
                                     }
@@ -6247,7 +6248,7 @@ Template.newsidenav.onRendered(function() {
                     } else {
                         let getTimeStamp = dataObject[0].timestamp.split(' ');
                         if (getTimeStamp) {
-                            if (loggedUserEventFired == true) {
+                            if (loggedUserEventFired) {
                                 if (getTimeStamp[0] != currenctTodayDate) {
                                     templateObject.getAllAppointmentData();
                                 }
@@ -6264,7 +6265,7 @@ Template.newsidenav.onRendered(function() {
                     } else {
                         let getTimeStamp = dataObject[0].timestamp.split(' ');
                         if (getTimeStamp) {
-                            if (loggedUserEventFired == true) {
+                            if (loggedUserEventFired) {
                                 if (getTimeStamp[0] != currenctTodayDate) {
                                     templateObject.getAllAppointmentPrefData();
                                 }
@@ -6281,7 +6282,7 @@ Template.newsidenav.onRendered(function() {
                     } else {
                         let getTimeStamp = dataObject[0].timestamp.split(' ');
                         if (getTimeStamp) {
-                            if (loggedUserEventFired == true) {
+                            if (loggedUserEventFired) {
                                 if (getTimeStamp[0] != currenctTodayDate) {
                                     templateObject.getAllTERPPreferenceData();
                                 }
@@ -6298,7 +6299,7 @@ Template.newsidenav.onRendered(function() {
                     } else {
                         let getTimeStamp = dataObject[0].timestamp.split(' ');
                         if (getTimeStamp) {
-                            if (loggedUserEventFired == true) {
+                            if (loggedUserEventFired) {
                                 if (getTimeStamp[0] != currenctTodayDate) {
                                     templateObject.getAllTERPPreferenceExtraData();
                                 }
@@ -6318,7 +6319,7 @@ Template.newsidenav.onRendered(function() {
                             } else {
                                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                                 if (getTimeStamp) {
-                                    if (loggedUserEventFired == true) {
+                                    if (loggedUserEventFired) {
                                         if (getTimeStamp[0] != currenctTodayDate) {
                                             templateObject.getAllProductServiceData();
                                         }
@@ -6369,7 +6370,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(data) {
                                             countObjectTimes++;
@@ -6454,7 +6455,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllTProductStocknSalePeriodReportData();
                                     }
@@ -6472,7 +6473,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllTStockTransferEntryData();
                                     }
@@ -6531,7 +6532,7 @@ Template.newsidenav.onRendered(function() {
                     } else {
                         let getTimeStamp = dataObject[0].timestamp.split(' ');
                         if (getTimeStamp) {
-                            if (loggedUserEventFired == true) {
+                            if (loggedUserEventFired) {
                                 if (getTimeStamp[0] != currenctTodayDate) {
                                     templateObject.getAllAccountsData();
                                 }
@@ -6550,7 +6551,7 @@ Template.newsidenav.onRendered(function() {
                         } else {
                             let getTimeStamp = dataObject[0].timestamp.split(' ');
                             if (getTimeStamp) {
-                                if (loggedUserEventFired == true) {
+                                if (loggedUserEventFired) {
                                     if (getTimeStamp[0] != currenctTodayDate) {
                                         templateObject.getAllProductServiceData();
                                     }
@@ -6601,7 +6602,7 @@ Template.newsidenav.onRendered(function() {
                     } else {
                         let getTimeStamp = dataObject[0].timestamp.split(' ');
                         if (getTimeStamp) {
-                            if (loggedUserEventFired == true) {
+                            if (loggedUserEventFired) {
                                 if (getTimeStamp[0] != currenctTodayDate) {
                                     sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(data) {
                                         countObjectTimes++;
@@ -6686,7 +6687,7 @@ Template.newsidenav.onRendered(function() {
                     } else {
                         let getTimeStamp = dataObject[0].timestamp.split(' ');
                         if (getTimeStamp) {
-                            if (loggedUserEventFired == true) {
+                            if (loggedUserEventFired) {
                                 if (getTimeStamp[0] != currenctTodayDate) {
                                     templateObject.getAllTProductStocknSalePeriodReportData();
                                 }
@@ -6704,7 +6705,7 @@ Template.newsidenav.onRendered(function() {
                     } else {
                         let getTimeStamp = dataObject[0].timestamp.split(' ');
                         if (getTimeStamp) {
-                            if (loggedUserEventFired == true) {
+                            if (loggedUserEventFired) {
                                 if (getTimeStamp[0] != currenctTodayDate) {
                                     templateObject.getAllTStockTransferEntryData();
                                 }

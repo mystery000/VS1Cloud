@@ -1,7 +1,7 @@
 <template name="jobsalessummary"> 
     {{# vs1_report_template tabledisplayname="Job Sales Summary" tablename="jobsalessummary" dateAsAt=dateAsAt}} 
         <div class="table-responsive">
-            <table class="table table-sm" id="tableExport" name="tableExport">
+            <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tableExport" name="tableExport">
                 <thead>
                     <!-- <tr class="table-active customDoubleTableHeading">
                         <th>Customer</th>
@@ -66,14 +66,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{#if reportRecords}}
+                    <!-- {{#if reportRecords}}
                         {{#each item in reportRecords}}
                             <tr class="departmentHeader">
                                 <td colspan="10" style="font-weight: 800;">{{item.title}}</td>
                             </tr>
-                            <!-- <tr>
-                                <td colspan="10" style="font-weight: 800;">{{item.title}}</td>
-                            </tr> -->
 
                             {{#each entry in item.entries}}
                                 <tr>  
@@ -133,7 +130,7 @@
                         <tr class="odd" style="text-align: center;">
                             <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
                         </tr>
-                    {{/if}}
+                    {{/if}} -->
                     <!-- <tr>
                         <td colspan="10" style="font-weight: 800;">4x4 World</td>
                     </tr>

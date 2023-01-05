@@ -7,6 +7,8 @@ import GlobalFunctions from "../../GlobalFunctions";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
 import { ReactiveVar } from "meteor/reactive-var";
+import { Template } from 'meteor/templating';
+import "./1099report.html";
 
 const reportService = new ReportService();
 const utilityService = new UtilityService();

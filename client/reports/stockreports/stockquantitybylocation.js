@@ -8,7 +8,8 @@ import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import GlobalFunctions from "../../GlobalFunctions";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
-
+import { Template } from 'meteor/templating';
+import "./stockquantitybylocation.html";
 
 const reportService = new ReportService();
 let utilityService = new UtilityService();

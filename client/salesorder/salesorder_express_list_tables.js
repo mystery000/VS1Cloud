@@ -7,6 +7,8 @@ import {InvoiceService} from "../invoice/invoice-service";
 import {UtilityService} from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import {OrganisationService} from '../js/organisation-service';
+import { Template } from 'meteor/templating';
+import "./salesorder_list.html";
 
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();

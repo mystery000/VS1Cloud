@@ -8,6 +8,8 @@ import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
+import { Template } from 'meteor/templating';
+import "./payrollhistoryreport.html";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
