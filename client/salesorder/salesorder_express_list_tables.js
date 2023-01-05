@@ -9,6 +9,10 @@ import { SideBarService } from '../js/sidebar-service';
 import {OrganisationService} from '../js/organisation-service';
 import { Template } from 'meteor/templating';
 import "./salesorder_list.html";
+import "../js/new_salesorder";
+
+//temporarily
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
