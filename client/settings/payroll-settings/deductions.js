@@ -9,6 +9,8 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let employeePayrollService = new EmployeePayrollService();
 
+import './deductions.html';
+
 Template.deductionSettings.onCreated(function() {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);

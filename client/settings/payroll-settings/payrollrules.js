@@ -5637,11 +5637,9 @@ Template.payrollrules.onRendered(function() {
 
     templateObject.addOverTime= async () => {
         if($('#btnAddNewOvertime').attr('overtime-id')) {
-            console.log('Update......')
             const overtimeIdToupdate = $('#btnAddNewOvertime').attr('overtime-id');
             return templateObject.updateOvertime(overtimeIdToupdate);
         }
-        console.log('Add..........')
         $('#btnAddNewOvertime .modal-title').text('Add new Overtime');
 
         LoadingOverlay.show();
@@ -5742,14 +5740,12 @@ Template.payrollrules.onRendered(function() {
     }
 
     templateObject.openAddOvertimeEditor = async (overtimeId = null)  => {
-        console.log('Add Modal....')
         $('#btnAddNewOvertime').modal('show');
         $('#btnAddNewOvertime .modal-title').text('Add Overtime');
         $('#overtimeRateType').attr('rate-type-id', 1);
     }
 
     templateObject.openOvertimeEditor = async (overtimeId = null)  => {
-        console.log('Edit Modal....')
         $('#btnAddNewOvertime').modal('show');
         $('#btnAddNewOvertime .modal-title').text('Edit Overtime');
 
@@ -5797,8 +5793,8 @@ Template.payrollrules.onRendered(function() {
     //    }, 300);
 
     //   setTimeout(() => {
-    //     $("#tblratetypelist").DataTable({
-    //         ...TableHandler.getDefaultTableConfiguration("tblratetypelist"),
+    //     $("#tblRateTypeList").DataTable({
+    //         ...TableHandler.getDefaultTableConfiguration("tblRateTypeList"),
     //         fnInitComplete: function () {
     //             $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
     //             $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
@@ -12354,7 +12350,7 @@ Template.payrollrules.onRendered(function() {
           $('#tblratetypelist_filter .form-control-sm').val();
           $('#tblratetypelist_filter .form-control-sm').trigger("input");
           setTimeout(function () {
-             var datatable = $('#tblratetypelist').DataTable();
+             var datatable = $('#tblRateTypeList').DataTable();
              datatable.draw();
              $('#tblratetypelist_filter .form-control-sm').trigger("input");
           }, 500);
@@ -12513,7 +12509,7 @@ Template.payrollrules.onRendered(function() {
              $('#selectRateLineID').val('edtRateTypeOvertime');
              $('#rateTypeListModel').modal();
              setTimeout(function () {
-                  var datatable = $('#tblratetypelist').DataTable();
+                  var datatable = $('#tblRateTypeList').DataTable();
                  datatable.draw();
 
              }, 500);
@@ -12537,7 +12533,7 @@ Template.payrollrules.onRendered(function() {
     //       $('#tblratetypelist_filter .form-control-sm').val();
     //       $('#tblratetypelist_filter .form-control-sm').trigger("input");
     //     //   setTimeout(function () {
-    //     //      var datatable = $('#tblratetypelist').DataTable();
+    //     //      var datatable = $('#tblRateTypeList').DataTable();
     //     //      datatable.draw();
     //     //      $('#tblratetypelist_filter .form-control-sm').trigger("input");
     //     //   }, 500);
@@ -12696,7 +12692,7 @@ Template.payrollrules.onRendered(function() {
     //          $('#selectRateLineID').val('edtRateType');
     //          $('#rateTypeListModel').modal();
     //         //  setTimeout(function () {
-    //         //       var datatable = $('#tblratetypelist').DataTable();
+    //         //       var datatable = $('#tblRateTypeList').DataTable();
     //         //      datatable.draw();
 
     //         //  }, 500);
@@ -13467,7 +13463,7 @@ Template.payrollrules.onRendered(function() {
           $('#tblratetypelist_filter .form-control-sm').val();
           $('#tblratetypelist_filter .form-control-sm').trigger("input");
           setTimeout(function () {
-             var datatable = $('#tblratetypelist').DataTable();
+             var datatable = $('#tblRateTypeList').DataTable();
              datatable.draw();
              $('#tblratetypelist_filter .form-control-sm').trigger("input");
           }, 500);
@@ -13626,7 +13622,7 @@ Template.payrollrules.onRendered(function() {
              $('#selectRateLineID').val('edtRateTypeTermnination');
              $('#rateTypeListModel').modal();
              setTimeout(function () {
-                  var datatable = $('#tblratetypelist').DataTable();
+                  var datatable = $('#tblRateTypeList').DataTable();
                  datatable.draw();
 
              }, 500);
@@ -13650,7 +13646,7 @@ Template.payrollrules.onRendered(function() {
           $('#tblratetypelist_filter .form-control-sm').val();
           $('#tblratetypelist_filter .form-control-sm').trigger("input");
           setTimeout(function () {
-             var datatable = $('#tblratetypelist').DataTable();
+             var datatable = $('#tblRateTypeList').DataTable();
              datatable.draw();
              $('#tblratetypelist_filter .form-control-sm').trigger("input");
           }, 500);
@@ -13810,7 +13806,7 @@ Template.payrollrules.onRendered(function() {
              $('#selectRateLineID').val('edtRateTypeLumpSumE');
              $('#rateTypeListModel').modal();
              setTimeout(function () {
-                  var datatable = $('#tblratetypelist').DataTable();
+                  var datatable = $('#tblRateTypeList').DataTable();
                  datatable.draw();
 
              }, 500);
@@ -13834,7 +13830,7 @@ Template.payrollrules.onRendered(function() {
           $('#tblratetypelist_filter .form-control-sm').val();
           $('#tblratetypelist_filter .form-control-sm').trigger("input");
           setTimeout(function () {
-             var datatable = $('#tblratetypelist').DataTable();
+             var datatable = $('#tblRateTypeList').DataTable();
              datatable.draw();
              $('#tblratetypelist_filter .form-control-sm').trigger("input");
           }, 500);
@@ -13994,7 +13990,7 @@ Template.payrollrules.onRendered(function() {
              $('#selectRateLineID').val('edtRateTypeBonusesCommissions');
              $('#rateTypeListModel').modal();
              setTimeout(function () {
-                  var datatable = $('#tblratetypelist').DataTable();
+                  var datatable = $('#tblRateTypeList').DataTable();
                  datatable.draw();
 
              }, 500);
@@ -14018,7 +14014,7 @@ Template.payrollrules.onRendered(function() {
           $('#tblratetypelist_filter .form-control-sm').val();
           $('#tblratetypelist_filter .form-control-sm').trigger("input");
           setTimeout(function () {
-             var datatable = $('#tblratetypelist').DataTable();
+             var datatable = $('#tblRateTypeList').DataTable();
              datatable.draw();
              $('#tblratetypelist_filter .form-control-sm').trigger("input");
           }, 500);
@@ -14178,7 +14174,7 @@ Template.payrollrules.onRendered(function() {
              $('#selectRateLineID').val('edtRateTypeDirectorsFees');
              $('#rateTypeListModel').modal();
              setTimeout(function () {
-                  var datatable = $('#tblratetypelist').DataTable();
+                  var datatable = $('#tblRateTypeList').DataTable();
                  datatable.draw();
 
              }, 500);
@@ -14202,7 +14198,7 @@ Template.payrollrules.onRendered(function() {
           $('#tblratetypelist_filter .form-control-sm').val();
           $('#tblratetypelist_filter .form-control-sm').trigger("input");
           setTimeout(function () {
-             var datatable = $('#tblratetypelist').DataTable();
+             var datatable = $('#tblRateTypeList').DataTable();
              datatable.draw();
              $('#tblratetypelist_filter .form-control-sm').trigger("input");
           }, 500);
@@ -14362,7 +14358,7 @@ Template.payrollrules.onRendered(function() {
              $('#selectRateLineID').val('edtRateTypeLumpSumW');
              $('#rateTypeListModel').modal();
              setTimeout(function () {
-                  var datatable = $('#tblratetypelist').DataTable();
+                  var datatable = $('#tblRateTypeList').DataTable();
                  datatable.draw();
 
              }, 500);
@@ -14371,12 +14367,13 @@ Template.payrollrules.onRendered(function() {
 
       });
 
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
+    $(document).on("click", "#tblRateTypeList tbody tr", function(e) {
 
         let selectLineID = $('#selectRateLineID').val();
 
         var table = $(this);
         let description = table.find(".thDescription").text();
+        $('#overtimeRateType').val(description)
         let ratetypeid = table.find(".thRateID").text()||0;
         $('#rateTypeListModel').modal('toggle');
 
@@ -22322,7 +22319,7 @@ Template.payrollrules.events({
         $('#select-rate-type-modal').modal('show');
      },
 
-     "click #tblratetypes tbody > tr, click  #tblratetypelist tbody > tr": (e, ui) => {
+     "click #tblratetypes tbody > tr, click  #tblRateTypeList tbody > tr": (e, ui) => {
         const tr = $(e.currentTarget);
         const rateName = $(tr).find('td:first').text();
 

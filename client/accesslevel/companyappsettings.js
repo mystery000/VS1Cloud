@@ -1,6 +1,9 @@
 import { ReactiveVar } from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
 let utilityService = new UtilityService();
+
+import './companyappsettings.html';
+
 Template.companyappsettings.onCreated(()=>{
   const templateObject = Template.instance();
   templateObject.recordscomp = new ReactiveVar();
