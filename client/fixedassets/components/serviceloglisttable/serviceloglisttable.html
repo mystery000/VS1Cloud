@@ -99,12 +99,12 @@
                 <tr class="dasnd-moved">
                   <th class="th colFixedID hiddenColumn">ID</th>
                   {{#each displayfield in displayfields}}
-                  {{#if displayfield.display}}
-                  <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"
-                    style="width:{{displayfield.width}}px">
-                    {{displayfield.custfieldlabel}}
-                  </th>
-                  {{/if}}
+                    {{#if displayfield.display}}
+                      <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"
+                        style="width:{{displayfield.width}}px">
+                        {{displayfield.custfieldlabel}}
+                      </th>
+                    {{/if}}
                   {{/each}}
                 </tr>
               </thead>

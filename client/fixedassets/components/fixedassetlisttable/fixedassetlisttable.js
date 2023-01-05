@@ -1,8 +1,11 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ReactiveVar } from "meteor/reactive-var";
 import { FixedAssetService } from "../../fixedasset-service";
 import { SideBarService } from "../../../js/sidebar-service";
 import { UtilityService } from "../../../utility-service";
 import "../../../lib/global/indexdbstorage.js";
+
+import "./fixedassetlisttable.html";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let fixedAssetService = new FixedAssetService();
@@ -137,7 +140,7 @@ Template.fixedassetlisttable.onRendered(function () {
   function setFixedAssetsList(data) {
     addVS1Data('TFixedAssets', JSON.stringify(data));
     const dataTableList = [];
-
+    console.log("TFixedAsset :", data);
     for (const asset of data.tfixedassets) {
       const dataList = {
         id: asset.fields.ID || "",

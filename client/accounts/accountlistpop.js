@@ -1,3 +1,4 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../js/core-service';
 import { DashBoardService } from "../Dashboard/dashboard-service";
@@ -16,7 +17,6 @@ import '../lib/global/indexdbstorage.js';
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './accountlistpop.html';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -166,6 +166,7 @@ Template.accountlistpop.onRendered(function() {
                 let useData = data.taccountvs1;
                 let records = [];
                 let inventoryData = [];
+                console.log("[account list :]", useData);
                 for (let i = 0; i < useData.length; i++) {
                     if (!isNaN(useData[i].fields.Balance)) {
                         accBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance) || 0.00;
