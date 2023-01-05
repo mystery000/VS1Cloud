@@ -459,6 +459,9 @@ import './purchase/purchaseorderbo_express_list_tables.js';
 import './purchase/purchase-service.js';
 import './Help_Form/help_advisor.js';
 import './js/new_bill.js';
+import './js/new_credit.js';
+import './fixedassets/components/fixedassetlistpop/fixedassetlistpop.js';
+import './fixedassets/components/costtypelistpop/costtypelistpop.js';
 import './packages/currency/CurrencyRate.js';
 /* OleksandrF */
 

@@ -3,6 +3,10 @@ import { FixedAssetService } from "../../fixedasset-service";
 import { SideBarService } from "../../../js/sidebar-service";
 import { UtilityService } from "../../../utility-service";
 import "../../../lib/global/indexdbstorage.js";
+
+import './fixedassetlistpop.html';
+import { Template } from 'meteor/templating';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let fixedAssetService = new FixedAssetService();
