@@ -10,9 +10,7 @@ import Chart from 'chart.js';
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-
-import { Template } from 'meteor/templating';
-import './productlist.html';
+ 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
