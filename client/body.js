@@ -68,13 +68,10 @@ import './js/sms-settings-service.js';
 // import './js/vs1greentracklogin.js';
 import './js/header.js';
 import './js/yodlee-service.js';
+import './js/new_bom_setup.js';
 // import './lib/global/utBarcodeConst.js';
 // import './setup/setup.html';
 // import './setup/setup.js';
-
-import './accounts/accountlistpop.js';
-import './accounts/addaccountpop.js';
-
 
 import './eft/bankNameModal/bankNameModal.js';
 
@@ -93,7 +90,7 @@ import './lib/global/utBarcodeConst.js';
 import "./vs1_templates/transaction_temp/transaction_header/transaction_header.js"
 import "./vs1_templates/transaction_temp/transaction_footer/index.js"
 
-//import './settings/email-settings/emailsettings.js';
+import './settings/email-settings/emailsettings.js';
 import './settings/xe-currencies/xe-currencies.js';
 import './settings/payroll-settings/payrollrules.js';
 import './settings/payroll-settings/ratetypelistpop.js';
@@ -173,9 +170,8 @@ import './packages/currency/modals/FxRateModal.js';
 import './salesorder/salesorderlistpop.js';
 import './inventory/productlistpop.js';
 import './manufacture/processListPopup.js';
-//import './manufacture/production_planner.js';
+import './manufacture/production_planner.js';
 
-import './accounts/accountlistpop.js';
 import './accounts/expenseaccountlist.js';
 import './accounts/inventoryassetaccountpop.js';
 
@@ -274,9 +270,18 @@ import './settings/subscription-settings/subscription.js';
 import './contacts/popemployeelist.js';
 import './overviews/accountsoverview.js';
 import './overviews/Modal/AddAccountModal.js';
+import './overviews/purchaseOverview.js';
 import './eft/optionsModal/eftOptionsModal.js';
 import './eft/bankCodesModal/eftBankCodesModal.js';
 import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
+import './settings/template-settings/templatesettings.js';
+// import './accesslevel/accesslevel.js';
+// import './accounts/account-service.js';
+import './packages/currency/CurrencyRate.js';
+import './vs1_templates/transaction_temp/transaction_print_modal.js';
+import './vs1_templates/transaction_temp/transaction_calculation.js';
+import './manufacture/bomList.js';
+import './fixedassets/fixedassets.js';
 /* Tinyiko */
 
 /* Rasheed */
@@ -336,9 +341,7 @@ import './Dashboard/DashboardSalesManager.js';
 import './Dashboard/dashboard-manager-cards/dashboard-manager-cards.js';
 import './Dashboard/dashboard-sales-cards/dashboard-sales-cards.js';
 import './Dashboard/appointments-widget/ds-appointments-widget.js';
-import './packages/currency/currencydropdown.js';
 import './vs1charts/leadlist/dsleadlistchart.js';
-import './contacts/popemployeelist.js';
 import './vs1charts/opportunitiesStatus/opportunitiesStatus.js';
 import './vs1charts/leadlist/dsmleadlistchart.js';
 
@@ -397,7 +400,18 @@ import './packages/currency/CurrencyWidget.js';
 import './contacts/customerlist.js';
 import './contacts/supplierlist.js';
 import './contacts/leadlist.js';
+import './contacts/employeelist.js';
+import './contacts/addemployeepop.js';
 import './packages/currency/currencydropdown.js';
+import './accesslevel/accessleveldup.js';
+import './accesslevel/companyappsettingsdup.js';
+import './accesslevel/companyappsettings.js';
+import './settings/payroll-settings/earningsRate.js';
+import './settings/payroll-settings/deductions.js';
+import './settings/payroll-settings/superannuation.js';
+import './settings/payroll-settings/reimbursement.js';
+import './settings/payroll-settings/leaveTypes.js';
+import './contacts/assignLeaveTypePop.js';
 /*Vladyslav*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';

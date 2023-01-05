@@ -22,6 +22,7 @@ let manufacturingService = new ManufacturingService();
 let crmService = new CRMService();
 
 import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
 
 Template.non_transactional_list.inheritsHooksFrom('export_import_print_display_button');
 
@@ -554,8 +555,8 @@ Template.non_transactional_list.onRendered(function() {
             ]
         }else if (currenttablename === "tblRateTypeList"){
             reset_data = [
-                { index: 0, label: "#ID", class: "colRateTypeID", active: false, display: true, width: "" },
-                { index: 1, label: "Description", class: "colRateDescription", active: true, display: true, width: "" },
+                { index: 0, label: "#ID", class: "thRateID", active: false, display: true, width: "" },
+                { index: 1, label: "Description", class: "thDescription", active: true, display: true, width: "" },
             ]
         }
 
@@ -5340,6 +5341,7 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.getRateTypeListData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
+        let refresh = false;
         let data = await CachedHttp.get(erpObject.TPayRateType, async () => {
             return await sideBarService.getRateTypes(initialBaseDataLoad, 0);
         }, {
@@ -5349,32 +5351,40 @@ Template.non_transactional_list.onRendered(function() {
         const response = data.response;
     
         data =  response.tpayratetype ? response.tpayratetype.map(e => e.fields) : null;
-        console.log('data:',data)
         templateObject.displayRateTypeListData(data); //Call this function to display data on the table
     }
 
     templateObject.displayRateTypeListData = async function(data) {
-        var splashArrayRateList = [
-            [1, "Normal"],
-            [2, "Time & Half"],
-            [3, "Double Time"],
-            [4, "Weekend"],
-        ];
+        var splashArrayRateTypeList = new Array();
+        for (let i = 0; i < data.length; i++) {
+            var dataList = [
+                i,
+                data[i].Description || "",
+            ];
+
+            splashArrayRateTypeList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayRateTypeList);
+        }
+        // var splashArrayRateList = [
+        //     [1, "Normal"],
+        //     [2, "Time & Half"],
+        //     [3, "Double Time"],
+        //     [4, "Weekend"],
+        // ];
         let deleteFilter = false;
-        templateObject.transactiondatatablerecords.set(splashArrayRateList)
-            if(templateObject.transactiondatatablerecords.get()) {
-              setTimeout(function () {
-                  MakeNegative();
-              }, 100);
-            }
+        if(templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
+        }
         setTimeout(function() {
             //$('#'+currenttablename).removeClass('hiddenColumn');
             $('#' + currenttablename).DataTable({
-                data: splashArrayRateList,
+                data: splashArrayRateTypeList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
-                        className: "hiddenColumn",
+                        className: "thRateID hiddenColumn",
                         width: "10px",
                         createdCell: function(td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
@@ -5382,7 +5392,7 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "colRateName",
+                        className: "thDescription",
                         width: "100px",
                     }
                 ],
