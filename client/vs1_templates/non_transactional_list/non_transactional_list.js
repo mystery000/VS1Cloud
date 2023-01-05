@@ -23,7 +23,6 @@ let crmService = new CRMService();
 
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
-import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertimes";
 
 
 Template.non_transactional_list.inheritsHooksFrom('export_import_print_display_button');
