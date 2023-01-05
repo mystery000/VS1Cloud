@@ -1279,7 +1279,7 @@ setTimeout(function() {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired == true){
+                if(loggedUserEventFired){
                     if(getTimeStamp[0] != currenctTodayDate){
                         templateObject.getTStatementListData();
                     }
@@ -1298,7 +1298,7 @@ if(isBanking) {
           }else{
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if(getTimeStamp){
-                  if(loggedUserEventFired == true){
+                  if(loggedUserEventFired){
                       if(getTimeStamp[0] != currenctTodayDate){
                       templateObject.getTVS1BankDepositData();
                       }
@@ -1327,7 +1327,7 @@ if(isAccounts) {
             }
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired == true){
+                if(loggedUserEventFired){
                     if(getTimeStamp[0] != currenctTodayDate){
                         templateObject.getAllJournalEntryLineData();
                     }
@@ -1369,7 +1369,7 @@ if (isInventory) {
                 }else{
                     let getTimeStamp = dataObject[0].timestamp.split(' ');
                     if(getTimeStamp){
-                        if(loggedUserEventFired == true){
+                        if(loggedUserEventFired){
                             if(getTimeStamp[0] != currenctTodayDate){
                             templateObject.getAllTStockAdjustEntryData();
                             }
@@ -1390,7 +1390,7 @@ if (isReports) {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired == true){
+                if(loggedUserEventFired){
                     if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getTARReportData();
                     }
@@ -1407,7 +1407,7 @@ if (isReports) {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired == true){
+                if(loggedUserEventFired){
                     if(getTimeStamp[0] != currenctTodayDate){
                         templateObject.getTAPReportData();
                     }
@@ -1426,7 +1426,7 @@ if (isReports) {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired == true){
+                if(loggedUserEventFired){
                     if(getTimeStamp[0] != currenctTodayDate){
                       templateObject.getTPaymentListData();
                     }
@@ -1443,7 +1443,7 @@ if (isReports) {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired == true){
+                if(loggedUserEventFired){
                     if(getTimeStamp[0] != currenctTodayDate){
                         templateObject.getTSupplierPaymentData();
                     }
@@ -1460,7 +1460,7 @@ if (isReports) {
         }else{
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if(getTimeStamp){
-                if(loggedUserEventFired == true){
+                if(loggedUserEventFired){
                     if(getTimeStamp[0] != currenctTodayDate){
                         templateObject.getTCustomerPaymentData();
                     }
@@ -1488,7 +1488,7 @@ if(isContacts) {
         }else{
           let getTimeStamp = dataObject[0].timestamp.split(' ');
           if(getTimeStamp){
-              if(loggedUserEventFired == true){
+              if(loggedUserEventFired){
                   if(getTimeStamp[0] != currenctTodayDate){
                       templateObject.getAllTTransactionListReportData();
                   }
@@ -1536,7 +1536,7 @@ setTimeout(function() {
           }else{
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if(getTimeStamp){
-                  if(loggedUserEventFired == true){
+                  if(loggedUserEventFired){
                       if(getTimeStamp[0] != currenctTodayDate){
                         sideBarService.getAllPurchaseOrderList(initialDataLoad,0).then(function(data) {
                             addVS1Data('TPurchaseOrderEx',JSON.stringify(data));
@@ -1571,7 +1571,7 @@ setTimeout(function() {
               }else{
                   let getTimeStamp = dataObject[0].timestamp.split(' ');
                   if(getTimeStamp){
-                      if(loggedUserEventFired == true){
+                      if(loggedUserEventFired){
                           if(getTimeStamp[0] != currenctTodayDate){
                               templateObject.getAllTBillExData();
                           }
@@ -1597,7 +1597,7 @@ setTimeout(function() {
               }else{
                   let getTimeStamp = dataObject[0].timestamp.split(' ');
                   if(getTimeStamp){
-                      if(loggedUserEventFired == true){
+                      if(loggedUserEventFired){
                           if(getTimeStamp[0] != currenctTodayDate){
                               templateObject.getAllTCreditData();
                           }
@@ -1617,7 +1617,7 @@ setTimeout(function() {
       }else{
         let getTimeStamp = dataObject[0].timestamp.split(' ');
         if(getTimeStamp){
-            if(loggedUserEventFired == true){
+            if(loggedUserEventFired){
                 if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getAllTpurchaseOrderNonBackOrderData();
                 }
@@ -1793,7 +1793,7 @@ setTimeout(function() {
       }else{
         let getTimeStamp = dataObject[0].timestamp.split(' ');
         if(getTimeStamp){
-            if(loggedUserEventFired == true){
+            if(loggedUserEventFired){
                 if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getAllAppUserData();
                 }
@@ -1828,7 +1828,7 @@ if(isAppointmentScheduling){
     }else{
       let getTimeStamp = dataObject[0].timestamp.split(' ');
       if(getTimeStamp){
-          if(loggedUserEventFired == true){
+          if(loggedUserEventFired){
               if(getTimeStamp[0] != currenctTodayDate){
                 sideBarService.getAllAppointmentList(initialDataLoad,0).then(function(data) {
                     addVS1Data('TAppointment',JSON.stringify(data));
@@ -1863,7 +1863,7 @@ getVS1Data('TAppointmentPreferences').then(function (dataObject) {
     }else{
       let getTimeStamp = dataObject[0].timestamp.split(' ');
       if(getTimeStamp){
-          if(loggedUserEventFired == true){
+          if(loggedUserEventFired){
               if(getTimeStamp[0] != currenctTodayDate){
                   templateObject.getAllAppointmentPrefData();
               }
@@ -1880,7 +1880,7 @@ getVS1Data('TERPPreference').then(function (dataObject) {
   }else{
     let getTimeStamp = dataObject[0].timestamp.split(' ');
     if(getTimeStamp){
-        if(loggedUserEventFired == true){
+        if(loggedUserEventFired){
             if(getTimeStamp[0] != currenctTodayDate){
                 templateObject.getAllTERPPreferenceData();
             }
@@ -1897,7 +1897,7 @@ getVS1Data('TERPPreferenceExtra').then(function (dataObject) {
   }else{
     let getTimeStamp = dataObject[0].timestamp.split(' ');
     if(getTimeStamp){
-        if(loggedUserEventFired == true){
+        if(loggedUserEventFired){
             if(getTimeStamp[0] != currenctTodayDate){
                 templateObject.getAllTERPPreferenceExtraData();
             }
@@ -1925,7 +1925,7 @@ templateObject.getFollowedSalesDetailsPull = function () {
         }else{
           let getTimeStamp = dataObject[0].timestamp.split(' ');
           if(getTimeStamp){
-              if(loggedUserEventFired == true){
+              if(loggedUserEventFired){
                   if(getTimeStamp[0] != currenctTodayDate){
                       templateObject.getAllTSalesListData();
                   }
@@ -1971,7 +1971,7 @@ templateObject.getFollowedSalesDetailsPull = function () {
 
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if(getTimeStamp){
-                    if(loggedUserEventFired == true){
+                    if(loggedUserEventFired){
                         if(getTimeStamp[0] != currenctTodayDate){
                           sideBarService.getAllInvoiceList(initialDataLoad,0).then(function(data) {
                               addVS1Data('TInvoiceEx',JSON.stringify(data));
@@ -2013,7 +2013,7 @@ templateObject.getFollowedSalesDetailsPull = function () {
             }else{
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if(getTimeStamp){
-                    if(loggedUserEventFired == true){
+                    if(loggedUserEventFired){
                         if(getTimeStamp[0] != currenctTodayDate){
                           templateObject.getAllSalesOrderExListData();
                         }
@@ -2047,7 +2047,7 @@ templateObject.getFollowedSalesDetailsPull = function () {
                 }else{
                     let getTimeStamp = dataObject[0].timestamp.split(' ');
                     if(getTimeStamp){
-                        if(loggedUserEventFired == true){
+                        if(loggedUserEventFired){
                             if(getTimeStamp[0] != currenctTodayDate){
                                 templateObject.getAllTQuoteData();
                             }
@@ -2086,7 +2086,7 @@ templateObject.getFollowedSalesDetailsPull = function () {
             }else{
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if(getTimeStamp){
-                    if(loggedUserEventFired == true){
+                    if(loggedUserEventFired){
                         if(getTimeStamp[0] != currenctTodayDate){
                           templateObject.getAllBackOrderInvoicetData();
                         }
@@ -2147,7 +2147,7 @@ setTimeout(function() {
       }else{
           let getTimeStamp = dataObject[0].timestamp.split(' ');
           if(getTimeStamp){
-              if(loggedUserEventFired == true){
+              if(loggedUserEventFired){
                   if(getTimeStamp[0] != currenctTodayDate){
                   templateObject.getAllCustomersData();
                   }
@@ -2164,7 +2164,7 @@ setTimeout(function() {
       }else{
         let getTimeStamp = dataObject[0].timestamp.split(' ');
         if(getTimeStamp){
-            if(loggedUserEventFired == true){
+            if(loggedUserEventFired){
                 if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getAllTJobVS1Data();
                 }
@@ -2181,7 +2181,7 @@ setTimeout(function() {
           }else{
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if(getTimeStamp){
-                  if(loggedUserEventFired == true){
+                  if(loggedUserEventFired){
                       if(getTimeStamp[0] != currenctTodayDate){
                           templateObject.getAllSuppliersData();
                       }
@@ -2198,7 +2198,7 @@ setTimeout(function() {
           }else{
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if(getTimeStamp){
-                  if(loggedUserEventFired == true){
+                  if(loggedUserEventFired){
                       if(getTimeStamp[0] != currenctTodayDate){
                           templateObject.getAllEmployeeData();
                       }
@@ -2235,7 +2235,7 @@ if(isAppointmentLaunch){
       }else{
         let getTimeStamp = dataObject[0].timestamp.split(' ');
         if(getTimeStamp){
-            if(loggedUserEventFired == true){
+            if(loggedUserEventFired){
                 if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getAllAppointmentPrefData();
                 }
@@ -2252,7 +2252,7 @@ if(isAppointmentLaunch){
     }else{
       let getTimeStamp = dataObject[0].timestamp.split(' ');
       if(getTimeStamp){
-          if(loggedUserEventFired == true){
+          if(loggedUserEventFired){
               if(getTimeStamp[0] != currenctTodayDate){
                   templateObject.getAllTERPPreferenceData();
               }
@@ -2269,7 +2269,7 @@ if(isAppointmentLaunch){
     }else{
       let getTimeStamp = dataObject[0].timestamp.split(' ');
       if(getTimeStamp){
-          if(loggedUserEventFired == true){
+          if(loggedUserEventFired){
               if(getTimeStamp[0] != currenctTodayDate){
                   templateObject.getAllTERPPreferenceExtraData();
               }
@@ -2294,7 +2294,7 @@ getVS1Data('TAccountVS1').then(function (dataObject) {
     }else{
         let getTimeStamp = dataObject[0].timestamp.split(' ');
         if(getTimeStamp){
-            if(loggedUserEventFired == true){
+            if(loggedUserEventFired){
                 if(getTimeStamp[0] != currenctTodayDate){
                     templateObject.getAllAccountsData();
                 }
@@ -2317,7 +2317,7 @@ getVS1Data('TProductVS1').then(function (dataObject) {
       }else{
           let getTimeStamp = dataObject[0].timestamp.split(' ');
           if(getTimeStamp){
-              if(loggedUserEventFired == true){
+              if(loggedUserEventFired){
                   if(getTimeStamp[0] != currenctTodayDate){
                     sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function(data) {
                         addVS1Data('TProductVS1',JSON.stringify(data));
@@ -2344,7 +2344,7 @@ getVS1Data('TProductStocknSalePeriodReport').then(function (dataObject) {
     }else{
       let getTimeStamp = dataObject[0].timestamp.split(' ');
       if(getTimeStamp){
-          if(loggedUserEventFired == true){
+          if(loggedUserEventFired){
               if(getTimeStamp[0] != currenctTodayDate){
                 templateObject.getAllTProductStocknSalePeriodReportData();
               }

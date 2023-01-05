@@ -9,6 +9,8 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let employeePayrollService = new EmployeePayrollService();
 
+import './superannuation.html';
+
 Template.superannuationSettings.onCreated(function() {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);

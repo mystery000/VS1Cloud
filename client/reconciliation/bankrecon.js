@@ -8,6 +8,9 @@ import XLSX from 'xlsx';
 import 'jquery-editable-select';
 import { AccountService } from "../accounts/account-service";
 import showBankInfo from "./bankInfo";
+import { Template } from 'meteor/templating';
+import './bankrecon.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let accountService = new AccountService();
 let utilityService = new UtilityService();
@@ -1454,8 +1457,42 @@ Template.bankrecon.onRendered(function() {
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
 
-    $(document).ready(function() {
+    $(function() {
         $('#bankAccountName').editableSelect();
+         $('#bankAccountName').editableSelect().on('click', function(e, li) {
+        const $each = $(this);
+        const offset = $each.offset();
+        const accountDataName = e.target.value || '';
+        if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+            openBankAccountListModal();
+        } else {
+            if (accountDataName.replace(/\s/g, '') != '') {
+                getVS1Data('TAccountVS1').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        setOneAccountByName(accountDataName);
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let added = false;
+                        for (let a = 0; a < data.taccountvs1.length; a++) {
+                            if ((data.taccountvs1[a].fields.AccountName) == accountDataName) {
+                                added = true;
+                                setBankAccountData(data, a);
+                            }
+                        }
+                        if (!added) {
+                            setOneAccountByName(accountDataName);
+                        }
+                    }
+                }).catch(function(err) {
+                    setOneAccountByName(accountDataName);
+                });
+                $('#bankAccountListModal').modal('toggle');
+            } else {
+                setTimeout(() => openBankAccountListModal())
+
+            }
+        }
+    });
         setTimeout(function() {
             Split(['#topList', '#bottomList'], {
                 direction: 'vertical',
@@ -1517,40 +1554,7 @@ Template.bankrecon.onRendered(function() {
         }, 1000);
     });
 
-    $('#bankAccountName').editableSelect().on('click.editable-select', function(e, li) {
-        const $each = $(this);
-        const offset = $each.offset();
-        const accountDataName = e.target.value || '';
-        if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
-            openBankAccountListModal();
-        } else {
-            if (accountDataName.replace(/\s/g, '') != '') {
-                getVS1Data('TAccountVS1').then(function(dataObject) {
-                    if (dataObject.length == 0) {
-                        setOneAccountByName(accountDataName);
-                    } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        let added = false;
-                        for (let a = 0; a < data.taccountvs1.length; a++) {
-                            if ((data.taccountvs1[a].fields.AccountName) == accountDataName) {
-                                added = true;
-                                setBankAccountData(data, a);
-                            }
-                        }
-                        if (!added) {
-                            setOneAccountByName(accountDataName);
-                        }
-                    }
-                }).catch(function(err) {
-                    setOneAccountByName(accountDataName);
-                });
-                $('#bankAccountListModal').modal('toggle');
-            } else {
-                setTimeout(() => openBankAccountListModal())
 
-            }
-        }
-    });
 
     $(document).on("click", ".bankrecon #tblAccount tbody tr", function(e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
@@ -1597,31 +1601,44 @@ Template.bankrecon.onRendered(function() {
         }, 1000);
     });
 
-    $('#btnImportState').on('click', function(e) {
-        let accountId = $('#bankAccountID').val()
-        let accountName = $('#bankAccountName').val()
-        if ($('#bankAccountName').val() == '')
-            swal('Please Select Bank Account!', '', 'warning');
-        else {
-            getVS1Data("VS1_BankRule")
-                .then(function (dataObject) {
-                    if (dataObject.length) {
-                        let data = JSON.parse(dataObject[0].data);
-                        if (data[accountId] && data[accountId].length)
-                            return $('#importModal').modal();
-                    }
-                    swal(`Please create a new bank rule for bank`, '', 'warning')
-                        .then((result) => {
-                            FlowRouter.go('/newbankrule', {}, {bankaccountid: accountId, bankaccountname: accountName})
-                        });
-                })
-                .catch(function (err) {
-                    swal('Something went wrong', '', 'error');
-                });
+    // $('#btnImportState').on('click', function(e) {
+    //     let accountId = $('#bankAccountID').val()
+    //     let accountName = $('#bankAccountName').val()
+    //     if ($('#bankAccountName').val() == '')
+    //         swal('Please Select Bank Account!', '', 'warning');
+    //     else {
+    //         getVS1Data("VS1_BankRule")
+    //             .then(function (dataObject) {
+    //                 if (dataObject.length) {
+    //                     let data = JSON.parse(dataObject[0].data);
+    //                     if (data[accountId] && data[accountId].length)
+    //                         return $('#importModal').modal();
+    //                 }
+    //                 swal({
+    //                     text: `This will allow you to manually import a bank statement directly
+    //                     from your Company Bank Account Into your VS1 Bank
+    //                     Reconciliation from. You just need to map or create the rules for
+    //                     the first time, for which column on your Company Bank Account
+    //                     import match's the fields in VS1 and it will remember moving
+    //                     forward.`,
+    //                     type: 'info',
+    //                     showCancelButton: true,
+    //                     // confirmButtonText: 'Yes',
+    //                     // cancelButtonText: 'No'
+    //                 })
+    //                     .then((result) => {
+    //                         if (result.value)
+    //                             return $('#importModal').modal();
+    //                             // FlowRouter.go('/newbankrule', {}, {bankaccountid: accountId, bankaccountname: accountName})
+    //                     });
+    //             })
+    //             .catch(function (err) {
+    //                 swal('Something went wrong', '', 'error');
+    //             });
 
-        }
+    //     }
 
-    })
+    // })
     tableResize();
 });
 

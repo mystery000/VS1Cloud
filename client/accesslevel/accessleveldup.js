@@ -13,6 +13,9 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import './accessleveldup.html';
+
 const _ = require('lodash');
 const defaultAdditionModules = ["POS", "Appointment Scheduling", "Manufacturing", "Add Extra User", "Matrix", "Seed To Sale", "FX Currency", "WMS", "Payroll Integration", "Link To TrueERP"];
 

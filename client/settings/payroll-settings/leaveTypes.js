@@ -9,6 +9,8 @@ import PaidLeaveRequest from "../../js/Api/Model/PaidLeaveRequest";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
+import './leaveTypes.html';
+
 Template.leaveTypeSettings.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);

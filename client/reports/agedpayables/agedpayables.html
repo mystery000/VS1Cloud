@@ -1,7 +1,7 @@
 <template name="agedpayables">
   {{# vs1_report_template tabledisplayname="Aged Payables" tablename="tblAgedPayables" dateAsAt=dateAsAt}} 
     <div class="table-responsive">
-      <table class="table table-sm" id="tableExport" name="tableExport">
+      <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tableExport" name="tableExport">
         <thead>
           {{#if agedpayablesth}}
           {{#each c in agedpayablesth }}
@@ -12,80 +12,10 @@
           {{/if}}
           {{/each}}
           {{/if}}
-          <!-- <tr class="table-active customDoubleTableHeading">
-            <th>Contact</th>
-            <th style="width: 130px;">Type</th>
-            <th>PO No.</th>
-            <th>Due Date</th>
-            <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount Due</th>
-            <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Current</th>
-            <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">1 - 30 Days</th>
-            <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">30 - 60 Days</th>
-            <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">60 - 90 Days</th>
-            <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">&gt; 90 Days</th>
-          </tr>
-
-          {{#if isOnlyDefaultActive equal "false" }}
-            <tr class="table-active tblAvoid">
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
-
-              {{#if currencyList}}
-                {{#each c in currencyList }}
-                  {{# if c.active}}
-                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                  {{/if}}
-                {{/each}}
-              {{/if}}
-
-              {{#if currencyList}}
-                {{#each c in currencyList }}
-                  {{# if c.active}}
-                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                  {{/if}}
-                {{/each}}
-              {{/if}}
-
-              {{#if currencyList}}
-                {{#each c in currencyList }}
-                  {{# if c.active}}
-                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                  {{/if}}
-                {{/each}}
-              {{/if}}
-
-              {{#if currencyList}}
-                {{#each c in currencyList }}
-                  {{# if c.active}}
-                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                  {{/if}}
-                {{/each}}
-              {{/if}}
-
-              {{#if currencyList}}
-                {{#each c in currencyList }}
-                  {{# if c.active}}
-                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                  {{/if}}
-                {{/each}}
-              {{/if}}
-              {{#if currencyList}}
-                {{#each c in currencyList }}
-                  {{# if c.active}}
-                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                  {{/if}}
-                {{/each}}
-              {{/if}}
-
-            </tr>
-          {{/if}} -->
         </thead>
         <tbody>
-          {{#if records}}
+          <!-- {{#if records}}
             {{#each record in records}}
-              <!-- {{#each recordItem in record}} -->
                 {{#if record.title}}
                   <tr class="totalhr">
                     <td style="font-weight: 800;">
@@ -191,14 +121,10 @@
 
                     {{/if}}
 
-                    <!-- {{#each subItem in item.dataArr}} <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right"><a href="#" style="text-decoration:none!important;">{{subItem}}</a></td> {{/each}} -->
                   </tr>
                 {{/each}}
 
-                <!-- {{#each total in record.total}} -->
                   <tr class="TotalField">
-                    <!-- {{#each items in total.dataArr}} -->
-                      <!-- <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td> -->
 
                       <td class="Total1Indented MenuLeft TotalField">
                         <span class="table-cells">
@@ -281,13 +207,9 @@
 
                       {{/if}}
 
-                    <!-- {{/each}} -->
                   </tr>
-                <!-- {{/each}} -->
             {{/each}}
-            <!-- {{/each}} -->
             {{#if grandrecords}}
-              <!-- {{#each item in grandrecords}} -->
               <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
 
                 <td>{{grandrecords.Title}}</td>
@@ -354,7 +276,7 @@
             <tr class="odd" style="text-align: center;">
               <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
             </tr>
-          {{/if}}
+          {{/if}} -->
 
         </tbody>
       </table>

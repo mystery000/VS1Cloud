@@ -2116,18 +2116,24 @@
                                                                 <div class="col-12">
                                                                     <div class="form-group">
                                                                         <label for="overtimeRateType">Rate Type</label>
-                                                                        <!-- <input class="es-input form-control overtimeRateType" id="overtimeRateType" > -->
-                                                                        <select class="form-control overtimeRateType" style="cursor: pointer;" id="overtimeRateType" >
+                                                                        <input class="es-input form-control overtimeRateType" id="overtimeRateType" >
+                                                                        <!-- <select class="form-control overtimeRateType" style="cursor: pointer;" id="overtimeRateType" >
                                                                             {{#if rateTypes}}
                                                                                 {{#each rateType in rateTypes}}
                                                                                 <option value="{{rateType.ID}}">{{rateType.Description}}</option>
                                                                                 {{/each}}
                                                                             {{/if}}
-                                                                        </select>
+                                                                        </select> -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
-                                                                    <div class="form-group graterThenDiv">
+                                                                    <div class="form-group">
+                                                                        <label for="rateList">Rate</label>
+                                                                        <input type="search" class="form-control es-input" id="rateList" name="rateList" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <div class="form-group greaterThanDiv">
                                                                         <label for="overtimeHours">Greater than</label>
                                                                         <div class="addNewRulediv">
                                                                             <input class="form-control" id="overtimeHours" type="number" value=""><span>hours</span>
@@ -2136,8 +2142,8 @@
                                                                     <div style="display: none;" class="form-group weekendDiv">
                                                                         <label for="OvertimeWeekEndDay">Weekend</label>
                                                                         <select class="form-control OvertimeWeekEndDay" style="cursor: pointer;" id="OvertimeWeekEndDay" >
-                                                                            <option value="sunday">Sunday</option>
-                                                                            <option value="saturday">Saturday</option>
+                                                                            <option value="Sunday">Sunday</option>
+                                                                            <option value="Saturday">Saturday</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -2176,7 +2182,7 @@
                                                 <table id="OvertimeTable" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblSuperannuation">
                                                     <thead>
                                                         <tr class="dnd-moved">
-                                                            <th class="th">Rate Type</th>
+                                                            <th class="th">Rate</th>
                                                             <th class="th">Rule</th>
                                                             <th class="th">hourly Multiplier</th>        
                                                             <th style="width: 54px;" class="th">Action</th>
@@ -2186,7 +2192,7 @@
                                                         {{#if overtimes}}
                                                             {{#each overtime in overtimes}}
                                                                 <tr overtime-id="{{overtime.id}}">
-                                                                    <td class="td">{{ overtime.rateType.Description }}</td>
+                                                                    <td class="td">{{ overtime.rate }}</td>
                                                                     <td class="td">{{ overtime.rule }}</td>
                                                                     <td class="td">{{ overtime.hourlyMultiplier }}</td>        
                                                                     <td contenteditable="false" class="colDelete">
@@ -2449,7 +2455,19 @@
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="select-rate-type-modal">
-        {{> ratetypelistpop rateTypes=rateTypes}}
+        <!-- {{> ratetypelistpop rateTypes=rateTypes}} -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Rate Type List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                {{> non_transactional_list tablename="tblRateTypeList"}}
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
     </div> 
 
    <div class="modal fade" role="dialog" tabindex="-1" id="groupTypeListModel">
@@ -2474,6 +2492,21 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="addFundModel">
         {{> fundtypepop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="ratePopModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Rate List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                {{> non_transactional_list tablename="tblRatePopList"}}
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="deleteEarningsLineModal">

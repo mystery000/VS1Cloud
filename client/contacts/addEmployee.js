@@ -72,7 +72,6 @@ Template.employeescard.onCreated(function() {
             yearRange: "-90:+10",
         });
     }, 1000);
-
     templateObject.AppTableModalData = new ReactiveVar([]);
     templateObject.ResidencyStatusList = new ReactiveVar();
     templateObject.EmploymentBasisList = new ReactiveVar();
@@ -112,7 +111,7 @@ Template.employeescard.onCreated(function() {
     templateObject.deliveryMethodList = new ReactiveVar();
     templateObject.taxCodeList = new ReactiveVar();
     templateObject.defaultsaletaxcode = new ReactiveVar();
-
+    
     /* Attachments */
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
@@ -126,11 +125,11 @@ Template.employeescard.onCreated(function() {
     templateObject.allrepservicedata = new ReactiveVar([]);
 
     templateObject.earningLines = new ReactiveVar([]);
-
+    
 
     /* PayRun related vars */
     templateObject.payPeriods = new ReactiveVar([]);
-
+    
     templateObject.allProducts = new ReactiveVar([]);
     templateObject.deletedSelectedProducts = new ReactiveVar([]);
     templateObject.TRepServices = new ReactiveVar([]);
@@ -163,7 +162,6 @@ Template.employeescard.onRendered(function() {
 
     const dataTableList = [];
     const tableHeaderList = [];
-
     let salestaxcode = '';
     let totAmount = 0;
     let totAmountOverDue = 0;
@@ -7033,7 +7031,7 @@ Template.employeescard.events({
         $(`#edtLeavePayPeriod`).val();
         await templateObject.getEmployeePaySettings(true); 
     },
-    'change #taxes :input, #taxes :select': async function() {
+    'change #taxes :input, #taxes select': async function() {
         $('.statusSaved').hide();
         $('.statusUnsaved').show();
     },

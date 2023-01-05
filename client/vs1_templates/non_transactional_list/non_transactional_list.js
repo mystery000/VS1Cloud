@@ -21,6 +21,9 @@ let manufacturingService = new ManufacturingService();
 
 let crmService = new CRMService();
 
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
+
 Template.non_transactional_list.inheritsHooksFrom('export_import_print_display_button');
 
 Template.non_transactional_list.onCreated(function() {
@@ -545,6 +548,16 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: "Net Pay", class: "colNetPay", active: true, display: true, width: "" },
                 { index: 6, label: "Status", class: "colStatus", active: true, display: true, width: "" },
             ]
+        } else if (currenttablename === "tblRatePopList"){
+            reset_data = [
+                { index: 0, label: "#ID", class: "colRateID", active: false, display: true, width: "" },
+                { index: 1, label: "Name", class: "colRateName", active: true, display: true, width: "" },
+            ]
+        }else if (currenttablename === "tblRateTypeList"){
+            reset_data = [
+                { index: 0, label: "#ID", class: "thRateID", active: false, display: true, width: "" },
+                { index: 1, label: "Description", class: "thDescription", active: true, display: true, width: "" },
+            ]
         }
 
         templateObject.reset_data.set(reset_data);
@@ -597,7 +610,7 @@ Template.non_transactional_list.onRendered(function() {
                 display: reset_data[r].display,
                 width: reset_data[r].width ? reset_data[r].width : ''
             };
-            let currentTable = document.getElementById(currenttablename)  
+            let currentTable = document.getElementById(currenttablename)
             if (reset_data[r].active == true) {
                 if(currentTable){
                     $('#' + currenttablename + ' .' + reset_data[r].class).removeClass('hiddenColumn');
@@ -1086,7 +1099,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+      setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Employee List Data
@@ -1421,7 +1434,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Accounts Overview List Data
@@ -1813,7 +1826,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Do Something Here
@@ -2182,7 +2195,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Lead List Data
@@ -2555,7 +2568,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Client Type List Data
@@ -2843,7 +2856,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Lead Status List Data
@@ -3128,7 +3141,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Department List Data
@@ -3400,7 +3413,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Payment Method List Data
@@ -3656,7 +3669,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Terms List Data
@@ -4089,7 +4102,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //UOM List Data
@@ -4462,7 +4475,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getBOMListData = async function() {
@@ -4688,7 +4701,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Currency List Data
@@ -5010,7 +5023,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getTitleListData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
@@ -5055,6 +5068,333 @@ Template.non_transactional_list.onRendered(function() {
                         className: "chkBox pointer",
                         width: "20px",
                     },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Customer Type Settings",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Customer Type Settings',
+                        filename: "Customer Type Settings",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Customer Type Settings",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search List..." },
+                "fnInitComplete": function(oSettings) {
+                    if (deleteFilter) {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    // let countTableData = data.Params.Count || 0; //get count from API data
+                    //
+                    // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
+
+    templateObject.getRateListData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
+        let data = {}
+        templateObject.displayRateListData(data); //Call this function to display data on the table
+    }
+
+    templateObject.displayRateListData = async function(data) {
+        var splashArrayRateList = [
+            [1, "Normal"],
+            [2, "Time & Half"],
+            [3, "Double Time"],
+            [4, "Weekend"],
+        ];
+        let deleteFilter = false;
+        templateObject.transactiondatatablerecords.set(splashArrayRateList)
+            if(templateObject.transactiondatatablerecords.get()) {
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+            }
+        setTimeout(function() {
+            //$('#'+currenttablename).removeClass('hiddenColumn');
+            $('#' + currenttablename).DataTable({
+                data: splashArrayRateList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [{
+                        targets: 0,
+                        className: "hiddenColumn",
+                        width: "10px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        targets: 1,
+                        className: "colRateName",
+                        width: "100px",
+                    }
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Customer Type Settings",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Customer Type Settings',
+                        filename: "Customer Type Settings",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Customer Type Settings",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search List..." },
+                "fnInitComplete": function(oSettings) {
+                    if (deleteFilter) {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    // let countTableData = data.Params.Count || 0; //get count from API data
+                    //
+                    // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
+    templateObject.getRateTypeListData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
+        let refresh = false;
+        let data = await CachedHttp.get(erpObject.TPayRateType, async () => {
+            return await sideBarService.getRateTypes(initialBaseDataLoad, 0);
+        }, {
+            forceOverride: refresh,
+            fallBackToLocal: true,
+        });
+        const response = data.response;
+    
+        data =  response.tpayratetype ? response.tpayratetype.map(e => e.fields) : null;
+        templateObject.displayRateTypeListData(data); //Call this function to display data on the table
+    }
+
+    templateObject.displayRateTypeListData = async function(data) {
+        var splashArrayRateTypeList = new Array();
+        for (let i = 0; i < data.length; i++) {
+            var dataList = [
+                i,
+                data[i].Description || "",
+            ];
+
+            splashArrayRateTypeList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayRateTypeList);
+        }
+        // var splashArrayRateList = [
+        //     [1, "Normal"],
+        //     [2, "Time & Half"],
+        //     [3, "Double Time"],
+        //     [4, "Weekend"],
+        // ];
+        let deleteFilter = false;
+        if(templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
+        }
+        setTimeout(function() {
+            //$('#'+currenttablename).removeClass('hiddenColumn');
+            $('#' + currenttablename).DataTable({
+                data: splashArrayRateTypeList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [{
+                        targets: 0,
+                        className: "thRateID hiddenColumn",
+                        width: "10px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        targets: 1,
+                        className: "thDescription",
+                        width: "100px",
+                    }
                 ],
                 buttons: [{
                         extend: 'csvHtml5',
@@ -5439,7 +5779,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
 
 
     }
@@ -5713,7 +6053,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getCustomerTransactionListData = function() {
@@ -5985,7 +6325,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getCustomerJobDetailsListData = function() {
@@ -6256,7 +6596,7 @@ Template.non_transactional_list.onRendered(function() {
             });
             $(".fullScreenSpin").css("display", "none");
         }, 0);
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getEmployeeTransactionListData = function() {
@@ -6572,7 +6912,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
     templateObject.getLeadCrmListData = function() {
         let dataTableList = [];
@@ -6848,7 +7188,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getLeadCrmListDataWithDate = function(deleteFilter = false, datefrom="", dateto="") {
@@ -7585,7 +7925,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getCustomerCrmListData = function(){
@@ -7861,7 +8201,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getCustomerCrmListDataWithDate = function(deleteFilter = false, datefrom="", dateto="") {
@@ -7873,7 +8213,7 @@ Template.non_transactional_list.onRendered(function() {
 
         fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
         toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
-        
+
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName(customerName).then(async function(data) {
@@ -8599,7 +8939,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getSupplierCrmListData = function() {
@@ -8876,7 +9216,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getSupplierCrmListDataWithDate = function(deleteFilter = false, datefrom="", dateto="") {
@@ -9613,7 +9953,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getSTPListData = async function(deleteFilter = false) {
@@ -9884,7 +10224,7 @@ Template.non_transactional_list.onRendered(function() {
             $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     //Check URL to make right call.
@@ -9957,6 +10297,10 @@ Template.non_transactional_list.onRendered(function() {
         const datefrom = $("#dateFrom").val();
         const dateto = $("#dateTo").val();
         templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
+    } else if (currenttablename === "tblRatePopList"){
+        templateObject.getRateListData(true);
+    }else if (currenttablename === "tblRateTypeList"){
+        templateObject.getRateTypeListData(true);
     }
     tableResize();
 });
@@ -10044,6 +10388,10 @@ Template.non_transactional_list.events({
             const datefrom = $("#dateFrom").val();
             const dateto = $("#dateTo").val();
             templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
+        } else if (currenttablename === "tblRatePopList"){
+            templateObject.getRateListData(true);
+        } else if (currenttablename === "tblRateTypeList"){
+            templateObject.getRateTypeListData(true);
         }
 
     },
@@ -10129,6 +10477,10 @@ Template.non_transactional_list.events({
             const datefrom = $("#dateFrom").val();
             const dateto = $("#dateTo").val();
             templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
+        } else if(currenttablename === "tblRatePopList"){
+            templateObject.getRateListData(false);
+        } else if(currenttablename === "tblRateTypeList"){
+            templateObject.getRateTypeListData(false);
         }
 
     },
@@ -10256,7 +10608,7 @@ Template.non_transactional_list.events({
     },
     // "change #dateFrom, change #dateTo": function() {
     //     let templateObject = Template.instance();
-        
+
     // },
 });
 
