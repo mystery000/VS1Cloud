@@ -11,6 +11,8 @@ import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jQuery.print/jQuery.print.js';
 import "../../lib/global/indexdbstorage.js";
+
+import { Template } from 'meteor/templating';
 import './accountant_header.html';
 
 let sideBarService = new SideBarService();
