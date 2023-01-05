@@ -97,8 +97,8 @@ let sideBarService = new SideBarService();
  * Current User ID
  */
 const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
-const _chartGroup = "";
-const _tabGroup = 0;
+var _chartGroup = "";
+var _tabGroup = 0;
 const chartsEditor = new ChartsEditor(
     () => {
         $("#resetcharts").removeClass("hideelement").addClass("showelement"); // This will show the reset charts button
@@ -279,7 +279,7 @@ Template.allChartLists.onRendered(function() {
                     chartList = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
                 }
             }
-            /*if (chartList.length > 0) {
+            if (chartList.length > 0) {
                 let my_tasksChart = {
                     fields: {
                         Active: true,
@@ -482,7 +482,7 @@ Template.allChartLists.onRendered(function() {
                     }
                 };
                 chartList.push(myBankAccountschart);
-            } */
+            }
         }
 
         if (chartList.length > 0) {

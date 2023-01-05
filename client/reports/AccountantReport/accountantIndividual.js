@@ -15,6 +15,10 @@ import LoadingOverlay from "../../LoadingOverlay";
 import './accountantIndividual.html';
 
 
+import { Template } from 'meteor/templating';
+import './accountantIndividual.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let reportService = new ReportService();
 let utilityService = new UtilityService();
