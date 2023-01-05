@@ -78,7 +78,6 @@ import './eft/bankNameModal/bankNameModal.js';
 
 import './vs1_templates/vs1_video/vs1_login_video.html';
 import './popUps/vs1_databasepopup.html';
-import './Help_Form/help_advisor.html';
 import './Help_Form/help_gotoforum.html';
 import './Help_Form/help_button.html';
 import './route.js';
@@ -190,7 +189,7 @@ import './vs1_templates/toggle_button/toggle_button.html';
 import './popUps/copyfrequencypop.html';
 import './Template/AppTableModal.html';
 
-import './vs1_templates/loggedcompanyoverview/loggedcompanyoverview.js';
+
 import './vs1_templates/internal_transaction_list/internal_transaction_list_with_switchbox.js';
 import './vs1charts/allCardsLists/allCardsLists.js';
 import './vs1charts/allChartLists/allChartLists.js';
@@ -446,6 +445,14 @@ import './contacts/assignLeaveTypePop.js';
 import './overviews/salesoverview.js';
 import './vs1_templates/date_picker/daterangefromto_trans.js';
 import './vs1_templates/transaction_temp/transaction_line.js';
+
+import './invoice/invoice_express_list_tables.js';
+import './invoice/invoice_express_listBO_tables.js';
+import './invoice/invoiceemail.js';
+
+import './quote/quote_express_list_tables.js';
+
+import './Help_Form/help_advisor.js';
 /* OleksandrF */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
