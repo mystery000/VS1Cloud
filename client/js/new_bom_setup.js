@@ -2,7 +2,9 @@ import { ReactiveVar } from "meteor/reactive-var";
 import {ProductService} from '../product/product-service';
 import { SideBarService } from "./sidebar-service";
 import 'jquery-editable-select';
-
+import { Template } from 'meteor/templating';
+import '../manufacture/bom_setup.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 //product name, process name, product sales description, qty in stock, subs, 
 Template.bom_setup.onCreated(function() {
@@ -140,21 +142,22 @@ Template.bom_setup.events({
         getVS1Data('TProductVS1').then(function(dataObject) {
             if(dataObject.length == 0) {
                 productService.getOneProductdatavs1byname($('#edtMainProductName').val()).then(function(data){
-                    objDetails.productDescription = data.tproduct[0].fields.SalesDescription,
-                    objDetails.totalQtyInStock = data.tproduct[0].fields.TotalQtyInStock
-                    productService.saveProduct({
-                        type: 'TProduct',
-                        fields: {
-                            ...data.tproduct[0].fields,
-                            IsManufactured: true
-                        }
-                    }).then(function(){
-                        sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                            addVS1Data('TProductVS1',JSON.stringify(data)).then(()=>{
-                                saveBOMStructure(objDetails)
-                            });
-                        })
-                    })
+                    objDetails.productDescription = data.tproduct[0].fields.SalesDescription;
+                    objDetails.totalQtyInStock = data.tproduct[0].fields.TotalQtyInStock;
+                    saveBOMStructure(objDetails)
+                    // productService.saveProduct({
+                    //     type: 'TProduct',
+                    //     fields: {
+                    //         ...data.tproduct[0].fields,
+                    //         IsManufactured: true
+                    //     }
+                    // }).then(function(){
+                    //     sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
+                    //         addVS1Data('TProductVS1',JSON.stringify(data)).then(()=>{
+                    //             saveBOMStructure(objDetails)
+                    //         });
+                    //     })
+                    // })
                     
                 })
             }else {
@@ -164,49 +167,53 @@ Template.bom_setup.events({
                     if(useData[i].fields.ProductName == $('#edtMainProductName').val() ) {
                         objDetails.productDescription = useData[i].fields.SalesDescription;
                         objDetails.totalQtyInStock = useData[i].fields.TotalQtyInStock;
-                        productService.saveProductVS1({
-                            type: 'TProductVS1',
-                            fields: {
-                                // ...useData[i].fields,
-                                ID: useData[i].fields.ID,
-                                IsManufactured: true
-                            }
-                        }).then(function(){
-                            sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                                addVS1Data('TProductVS1',JSON.stringify(data)).then(()=>{
-                                    saveBOMStructure(objDetails)
-                                });
-                            })
-                        })
+                        saveBOMStructure(objDetails)
+                        // productService.saveProductVS1({
+                        //     type: 'TProductVS1',
+                        //     fields: {
+                        //         // ...useData[i].fields,
+                        //         ID: useData[i].fields.ID,
+                        //         IsManufactured: true
+                        //     }
+                        // }).then(function(){
+                        //     sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
+                        //         addVS1Data('TProductVS1',JSON.stringify(data)).then(()=>{
+                        //             saveBOMStructure(objDetails)
+                        //         }).catch(function(err){});
+                        //     }).catch(function(e){
+                        //     })
+                        // }).catch(function(err){
+                        // })
                     }
                 }
             }
         }).catch(function(e) {
             productService.getOneProductdatavs1byname($('#edtMainProductName').val()).then(function(data){
                 objDetails.productDescription = data.tproduct[0].fields.SalesDescription;
-                objDetails.totalQtyInStock = data.tproductp[0].fields.TotalQtyInStock
-                productService.saveProduct({
-                    type: 'TProduct',
-                    fields: {
-                        ...data.tproduct[0].fields,
-                        IsManufactured: true
-                    }
-                }).then(function(){
-                    sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                        addVS1Data('TProductVS1',JSON.stringify(data)).then(()=>{
-                            saveBOMStructure(objDetails)
-                        }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                            swal("Something went wrong!", "", "error");
-                        });
-                    }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal("Something went wrong!", "", "error");
-                    })
-                }).catch(function(err) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal("Something went wrong!", "", "error");
-                })
+                objDetails.totalQtyInStock = data.tproductp[0].fields.TotalQtyInStock;
+                saveBOMStructure(objDetails)
+                // productService.saveProduct({
+                //     type: 'TProduct',
+                //     fields: {
+                //         ...data.tproduct[0].fields,
+                //         IsManufactured: true
+                //     }
+                // }).then(function(){
+                //     sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
+                //         addVS1Data('TProductVS1',JSON.stringify(data)).then(()=>{
+                //             saveBOMStructure(objDetails)
+                //         }).catch(function(err) {
+                //             $('.fullScreenSpin').css('display', 'none');
+                //             swal("Something went wrong!", "", "error");
+                //         });
+                //     }).catch(function(err) {
+                //         $('.fullScreenSpin').css('display', 'none');
+                //         swal("Something went wrong!", "", "error");
+                //     })
+                // }).catch(function(err) {
+                //     $('.fullScreenSpin').css('display', 'none');
+                //     swal("Something went wrong!", "", "error");
+                // })
                 
             }).catch(function(err) {
                 $('.fullScreenSpin').css('display', 'none');

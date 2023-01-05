@@ -14,6 +14,7 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let organisationService = new OrganisationService();
 
+import { Template } from 'meteor/templating';
 import './employeelist.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 

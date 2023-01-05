@@ -277,11 +277,11 @@ import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
 import './settings/template-settings/templatesettings.js';
 // import './accesslevel/accesslevel.js';
 // import './accounts/account-service.js';
-import './packages/currency/CurrencyRate.js';
+// import './packages/currency/CurrencyRate.js';
 import './vs1_templates/transaction_temp/transaction_print_modal.js';
 import './vs1_templates/transaction_temp/transaction_calculation.js';
 import './manufacture/bomList.js';
-import './fixedassets/fixedassets.js';
+// import './fixedassets/fixedassets.js';
 /* Tinyiko */
 
 /* Rasheed */
@@ -413,6 +413,34 @@ import './settings/payroll-settings/reimbursement.js';
 import './settings/payroll-settings/leaveTypes.js';
 import './contacts/assignLeaveTypePop.js';
 /*Vladyslav*/
+
+/* Roverto */
+// import './crm/crm.js';
+// import './crm/components/help-modal.html';
+// import './crm/components/projectTasksModal/projectTasksModal.html';
+// import './crm/components/editProjectModal/editProjectModal.html';
+// import './crm/components/newProjectModal/newProjectModal.html';
+// import './crm/components/moveToProjectModal/moveToProjectModal.html';
+// import './crm/components/newLabelModal/newLabelModal.html';
+// import './crm/components/editLabelModal/editLabelModal.html';
+// import './crm/mailchimpReport/mailchimp-modal.html';
+// import './crm/components/leadBarChart/leadbarchart.js';
+// import './crm/components/crm_top_menu/top-menu.js';
+// import './crm/components/campaignReport/campaignReport.js';
+// import './crm/allTasksTab/alltaskdatatable.js';
+// import './crm/mailchimpReport/mailchimp-add-campaign-moda.js';
+// import './crm/mailchimpReport/mailchimpList.js';
+// import './settings/leadstatus-setting/leadstatus.js';
+// import './settings/leadstatus-setting/leadstatusmodal.js';
+// import './contacts/joblist.js';
+// import './receipts/receiptclaims.js';
+// import './receipts/tripgroup.js';
+// import './receipts/receiptcategory.js';
+// import './settings/settings.js';
+// import './settings/tax-rates-setting/tax-rates.js';
+// import './settings/tax-rates-setting/subtaxes.js';
+// import './settings/tax-rates-setting/DeleteLineModal.html';
+/* Roverto */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';

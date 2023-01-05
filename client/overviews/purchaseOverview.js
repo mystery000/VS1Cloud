@@ -10,6 +10,10 @@ import { SideBarService } from "../js/sidebar-service";
 import {OrganisationService} from '../js/organisation-service';
 import "../lib/global/indexdbstorage.js";
 
+import { Template } from 'meteor/templating';
+import './purchaseOverview.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let _ = require("lodash");
