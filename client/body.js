@@ -442,6 +442,12 @@ import './contacts/assignLeaveTypePop.js';
 // import './settings/tax-rates-setting/DeleteLineModal.html';
 /* Roverto */
 
+/* OleksandrF */
+import './overviews/salesoverview.js';
+import './vs1_templates/date_picker/daterangefromto_trans.js';
+import './vs1_templates/transaction_temp/transaction_line.js';
+/* OleksandrF */
+
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 

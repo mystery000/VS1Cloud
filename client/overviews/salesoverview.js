@@ -10,6 +10,11 @@ import {OrganisationService} from '../js/organisation-service';
 import "../lib/global/indexdbstorage.js";
 import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentcard";
 import { getCurrentCurrencySymbol } from "../popUps/currnecypopup";
+
+import { Template } from 'meteor/templating';
+import './salesOverview.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
