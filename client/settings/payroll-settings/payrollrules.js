@@ -5558,7 +5558,6 @@ Template.payrollrules.onRendered(function() {
             overtime.rateType = rateTypes.find(rate => rate.ID == overtime.rateTypeId);
         });
         await templateObject.overtimes.set(overtimes);
-
         await templateObject.setupOvertimeTable();
     }
 
@@ -5806,7 +5805,7 @@ Template.payrollrules.onRendered(function() {
 
     templateObject.initData  = async (refresh = false) => {
         LoadingOverlay.show();
-        await templateObject.loadDefaultOvertimes();
+        // await templateObject.loadDefaultOvertimes();
 
         await templateObject.getPayrollOrgainzations(refresh);
         await templateObject.getAllAllowance(refresh);
@@ -15028,6 +15027,18 @@ Template.payrollrules.onRendered(function() {
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
             $('#ratePopModal').modal('toggle');
         } else {
+            $('#ratePopModal').modal('toggle');
+        }
+    });
+    $(document).on('click', '#overtimeRateType', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $(e.currentTarget).addClass('paste-rate');
+            $('#select-rate-type-modal').modal('show');
+        } else {
+            $(e.currentTarget).addClass('paste-rate');
+            $('#select-rate-type-modal').modal('show');
         }
     });
     $(document).on("click", "#tblRatePopList tbody tr", function(e) {
@@ -22301,10 +22312,10 @@ Template.payrollrules.events({
      "click .saveAddNewOvertime": (e, ui) => {
         ui.addOverTime();
      },
-    //  "click .delete-overtime": (e, ui) => {
-    //     const id = $(e.currentTarget).attr('overtime-id');
-    //     ui.deleteOvertime(id);
-    //  },
+     "click .delete-overtime": (e, ui) => {
+        const id = $(e.currentTarget).attr('overtime-id');
+        ui.deleteOvertime(id);
+     },
      "click .edit-overtime": (e, ui) => {
         const id = $(e.currentTarget).attr('overtime-id');
         ui.openOvertimeEditor(id);
@@ -22314,7 +22325,7 @@ Template.payrollrules.events({
         ui.openAddOvertimeEditor(id);
      },
 
-     "click #overtimeRateType, click #edtRateType": (e, ui) => {
+     "click #edtRateType": (e, ui) => {
         $(e.currentTarget).addClass('paste-rate');
         $('#select-rate-type-modal').modal('show');
      },
@@ -22364,6 +22375,10 @@ Template.payrollrules.events({
     'click #rateList': function(event) {
         $('#rateList').select();
         $('#rateList').editableSelect();
+    },
+    'click #overtimeRateType': function(event) {
+        $('#overtimeRateType').select();
+        $('#overtimeRateType').editableSelect();
     },
 });
 
@@ -22421,7 +22436,7 @@ export const getOvertimes = async () => {
         // if doesnt exist, just add it
         if(!overtimes.some(overtime => overtime.rule == defaultOvertime.rule)) {
             if(defaultOvertime.searchByRuleName == true) {
-                defaultOvertime.setRateTypeByRuleName(rateTypes, "Weekend");
+                // defaultOvertime.setRateTypeByRuleName(rateTypes, "Weekend");
             }
             overtimes.push(defaultOvertime);
         };
