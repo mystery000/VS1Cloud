@@ -1,15 +1,16 @@
 // @ts-nocheck
-import './transaction_line.html';
-import { template } from 'lodash';
-import {Session} from 'meteor/session';
+// import { template } from 'lodash';
+// import {Session} from 'meteor/session';
 import '../../lib/global/indexdbstorage.js';
-import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../../js/core-service';
+// import { CoreService } from '../../js/core-service';
 import {UtilityService} from "../../utility-service";
 import { SideBarService } from '../../js/sidebar-service';
-import TableHandler from '../../js/Table/TableHandler';
+// import TableHandler from '../../js/Table/TableHandler';
 import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
+
+import './transaction_line.html';
+import { Template } from 'meteor/templating';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

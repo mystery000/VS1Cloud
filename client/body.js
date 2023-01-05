@@ -458,6 +458,8 @@ import './purchase/purchaseorder_express_list_tables.js';
 import './purchase/purchaseorderbo_express_list_tables.js';
 import './purchase/purchase-service.js';
 import './Help_Form/help_advisor.js';
+import './js/new_bill.js';
+import './packages/currency/CurrencyRate.js';
 /* OleksandrF */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
