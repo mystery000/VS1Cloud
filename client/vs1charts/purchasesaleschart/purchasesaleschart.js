@@ -78,12 +78,13 @@ Template.purchasesaleschart.onRendered(()=>{
             data = await reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, true,contactID);
             localStorage.setItem('VS1AgedPayablesSummary_Card', JSON.stringify(data) || '');
         }else{
-            data = JSON.parse(localStorage.getItem('VS1AgedPayablesSummary_Report'));
+            if(localStorage.getItem('VS1AgedPayablesSummary_Report'))
+                data = JSON.parse(localStorage.getItem('VS1AgedPayablesSummary_Report'));
         }
         let amountdueTotal = 0;
         let currentTotal = 0;
         let itemsPayablescount = [];
-        if( data.tapreport.length > 0 ){
+        if( data.length && data.tapreport.length > 0 ){
             for (const item of data.tapreport) {
                 itemsPayablescount.push({
                     id: item.ClientID || '',
@@ -94,7 +95,7 @@ Template.purchasesaleschart.onRendered(()=>{
         }
         // let totalPayablesSummaryAmount = amountdueTotal + currentTotal;
         let totalPayablesSummaryAmount = amountdueTotal;
-        $('.suppAwaitingAP').text(data.Params.Count);
+        if(data.length) $('.suppAwaitingAP').text(data.Params.Count);
         if (!isNaN(totalPayablesSummaryAmount)) {
             $('.suppAwaitingAPAmtdash').text(utilityService.modifynegativeCurrencyFormat(amountdueTotal));
         }else{

@@ -3,11 +3,23 @@ Template.servicelogcard.onCreated(function () {
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.displayfields = new ReactiveVar([]);
   templateObject.reset_data = new ReactiveVar([]);
+
+  templateObject.asset_code = new ReactiveVar();
+  templateObject.asset_name = new ReactiveVar();
+  templateObject.service_tyoe = new ReactiveVar();
+  templateObject.service_date = new ReactiveVar();
+  templateObject.service_provider = new ReactiveVar();
+  templateObject.next_service_cate = new ReactiveVar();
 });
 
 Template.servicelogcard.onRendered(function () {
   $('#edtAssetCode').editableSelect();
-  $('#edtRep').editableSelect();
+  let objDetails = {
+    type: "TServiceLog",
+    fields: {
+      
+    }
+};
 
   $("#date-input,#dtServiceDate,#dtNextServiceDate").datepicker({
     showOn: 'button',
@@ -21,4 +33,12 @@ Template.servicelogcard.onRendered(function () {
     changeYear: true,
     yearRange: "-90:+10",
   });
+});
+Template.servicelogcard.events({
+  "click button.btnSave": function() {
+    
+  },
+  "click button.btnBack": function() {
+    FlowRouter.go('/serviceloglist');
+  }
 });

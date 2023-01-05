@@ -239,6 +239,7 @@ Template.salesorderslistpop.onRendered(()=>{
                                   $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblSalesOrderlist_filter");
                                 };
                                $("<button class='btn btn-primary btnRefreshSOList' type='button' id='btnRefreshSOList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSalesOrderlist_filter");
+                               $("<button class='btn btn-primary btnCreateNewSalesorder' type='button' id='btnCreateNewSalesorder' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#btnRefreshSOList");
                                $('.myvarFilterForm').appendTo(".colDateFilter");
                            },
                            "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -496,6 +497,7 @@ Template.salesorderslistpop.onRendered(()=>{
                               $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblSalesOrderlist_filter");
                             };
                            $("<button class='btn btn-primary btnRefreshSOList' type='button' id='btnRefreshSOList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSalesOrderlist_filter");
+                           $("<button class='btn btn-primary btnCreateNewSalesorder' type='button' id='btnCreateNewSalesorder' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#btnRefreshSOList");
                            $('.myvarFilterForm').appendTo(".colDateFilter");
                        },
                        "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -851,7 +853,9 @@ Template.salesorderslistpop.onRendered(()=>{
 })
 
 Template.salesorderslistpop.events({
-
+    "click #btnCreateNewSalesorder": function(event) {
+        FlowRouter.go('/salesordercard')
+    } 
 })
 
 Template.salesorderslistpop.helpers({

@@ -1,21 +1,13 @@
-import { Template } from 'meteor/templating';
-import './productlist.html';
-import {ProductService} from "../product/product-service";
+import {ProductService} from "../../product/product-service";
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
-import {AccountService} from "../accounts/account-service";
-import {UtilityService} from "../utility-service";
+import {UtilityService} from "../../utility-service";
 import 'jquery-editable-select';
-import Chart from 'chart.js';
 import XLSX from 'xlsx';
-import { SideBarService } from '../js/sidebar-service';
-import '../lib/global/indexdbstorage.js';
- 
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
+import { SideBarService } from '../../js/sidebar-service';
+import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-Template.productlist.onCreated(function(){
+Template.productTable.onCreated(function(){
   const templateObject = Template.instance();
   templateObject.deptrecords = new ReactiveVar();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -35,7 +27,7 @@ Template.productlist.onCreated(function(){
   templateObject.selectedFile = new ReactiveVar();
 });
 
-Template.productlist.onRendered(function() {
+Template.productTable.onRendered(function() {
   $('.fullScreenSpin').css('display','inline-block');
   let templateObject = Template.instance();
   let productService = new ProductService();
@@ -54,7 +46,7 @@ var splashArrayProductList = new Array();
   var splashArray = new Array();
   var splashArrayProd = new Array();
   var splashArrayProdDept = new Array();
-  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInventory', function(error, result){
+  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInventory', function(error, result){
   if(error){
 
   }else{
@@ -76,7 +68,7 @@ var splashArrayProductList = new Array();
   }
   });
 
-  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'productview', function(error, resultPref){
+  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'productview', function(error, resultPref){
   if(error){
 
   }else{
@@ -175,11 +167,11 @@ var splashArrayProductList = new Array();
               if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
              });
           };
-          // localStorage.setItem('VS1ProductList', splashArrayProd);
+          // Session.set('VS1ProductList', splashArrayProd);
 
           if(templateObject.datatablerecords.get()){
 
-            Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInventory', function(error, result){
+            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInventory', function(error, result){
             if(error){
 
             }else{
@@ -435,11 +427,11 @@ function MakeNegative() {
     if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
    });
 };
-// localStorage.setItem('VS1ProductList', splashArrayProd);
+// Session.set('VS1ProductList', splashArrayProd);
 
 if(templateObject.datatablerecords.get()){
 
-  Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInventory', function(error, result){
+  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInventory', function(error, result){
   if(error){
 
   }else{
@@ -691,11 +683,11 @@ setTimeout(function () {
             if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
            });
         };
-        // localStorage.setItem('VS1ProductList', splashArrayProd);
+        // Session.set('VS1ProductList', splashArrayProd);
 
         if(templateObject.datatablerecords.get()){
 
-          Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInventory', function(error, result){
+          Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblInventory', function(error, result){
           if(error){
 
           }else{
@@ -1216,7 +1208,7 @@ setTimeout(function () {
 
 });
 
-Template.productlist.helpers({
+Template.productTable.helpers({
   deptrecords: () => {
       return Template.instance().deptrecords.get();
   },
@@ -1227,7 +1219,7 @@ Template.productlist.helpers({
      return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-  return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblInventory'});
+  return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblInventory'});
   },
   taxraterecords :() => {
      return Template.instance().taxraterecords.get();
@@ -1241,7 +1233,7 @@ Template.productlist.helpers({
   });
 
 
-  Template.productlist.events({
+  Template.productTable.events({
         'click .chkDatatable' : function(event){
           var columns = $('#tblInventory th');
           let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
@@ -1262,7 +1254,7 @@ Template.productlist.helpers({
           });
         },
         'click .resetTable' : function(event){
-          var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
+          var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
           if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
               var clientID = getcurrentCloudDetails._id;
@@ -1306,7 +1298,7 @@ Template.productlist.helpers({
             lineItems.push(lineItemObj);
           });
 
-          var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
+          var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
           if(getcurrentCloudDetails){
             if (getcurrentCloudDetails._id.length > 0) {
               var clientID = getcurrentCloudDetails._id;
