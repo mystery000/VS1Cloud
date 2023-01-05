@@ -68,6 +68,7 @@ import './js/sms-settings-service.js';
 // import './js/vs1greentracklogin.js';
 import './js/header.js';
 import './js/yodlee-service.js';
+import './js/new_bom_setup.js';
 // import './lib/global/utBarcodeConst.js';
 // import './setup/setup.html';
 // import './setup/setup.js';
@@ -290,8 +291,8 @@ import './settings/template-settings/templatesettings.js';
 import './packages/currency/CurrencyRate.js';
 import './vs1_templates/transaction_temp/transaction_print_modal.js';
 import './vs1_templates/transaction_temp/transaction_calculation.js';
-import './js/new_bom_setup.js';
 import './manufacture/bomList.js';
+import './fixedassets/fixedassets.js';
 /* Tinyiko */
 
 /* Rasheed */
