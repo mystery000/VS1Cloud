@@ -277,11 +277,11 @@ import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
 import './settings/template-settings/templatesettings.js';
 // import './accesslevel/accesslevel.js';
 // import './accounts/account-service.js';
-import './packages/currency/CurrencyRate.js';
+// import './packages/currency/CurrencyRate.js';
 import './vs1_templates/transaction_temp/transaction_print_modal.js';
 import './vs1_templates/transaction_temp/transaction_calculation.js';
 import './manufacture/bomList.js';
-import './fixedassets/fixedassets.js';
+// import './fixedassets/fixedassets.js';
 /* Tinyiko */
 
 /* Rasheed */
