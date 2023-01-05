@@ -26,8 +26,7 @@ import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentc
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import "../bills/frmbill_card.html"
-import '../vs1_templates/transaction_temp/transaction_header/transaction_header.js'
-import '../vs1_templates/transaction_temp/transaction_footer/index.js'
+
 
 var template_list = [
     "Bills",
