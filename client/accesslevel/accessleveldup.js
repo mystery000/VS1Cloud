@@ -13,6 +13,10 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 
+import { Template } from 'meteor/templating';
+import './accessleveldup.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 const _ = require('lodash');
 const defaultAdditionModules = ["POS", "Appointment Scheduling", "Manufacturing", "Add Extra User", "Matrix", "Seed To Sale", "FX Currency", "WMS", "Payroll Integration", "Link To TrueERP"];
 
@@ -3627,7 +3631,7 @@ Template.accessleveldup.events({
         let templateObject = Template.instance();
         let accesslevelService = new AccessLevelService();
         setTimeout(function(){
-        
+
         let empInputValue = templateObject.$("#sltEmployeeName").val()||'';
         var erpGet = erpDb();
         if(empInputValue != ''){

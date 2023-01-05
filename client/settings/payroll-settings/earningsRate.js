@@ -21,6 +21,8 @@ const taxCodesList = [];
 const splashArrayTaxRateList = [];
 let employeePayrollService = new EmployeePayrollService();
 
+import './earningsRate.html';
+
 Template.earningRateSettings.onCreated(function() {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
