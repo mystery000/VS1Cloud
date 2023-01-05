@@ -451,6 +451,7 @@ import './invoice/invoice_express_listBO_tables.js';
 import './invoice/invoiceemail.js';
 
 import './quote/quote_express_list_tables.js';
+import './refunds/refunds_list.js';
 
 import './Help_Form/help_advisor.js';
 /* OleksandrF */
