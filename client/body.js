@@ -90,7 +90,13 @@ import './lib/global/utBarcodeConst.js';
 import "./vs1_templates/transaction_temp/transaction_header/transaction_header.js"
 import "./vs1_templates/transaction_temp/transaction_footer/index.js"
 
-import './settings/email-settings/emailsettings.js';
+import './settings/settings.js';
+import './settings/currencies-setting/_frequencyModal.js';
+import './settings/organisation-setting/organisation_settings.js';
+import './settings/backup-settings/backuprestore.js';
+
+
+//import './settings/email-settings/emailsettings.js';
 import './settings/xe-currencies/xe-currencies.js';
 import './settings/payroll-settings/payrollrules.js';
 import './settings/payroll-settings/ratetypelistpop.js';
@@ -98,12 +104,11 @@ import './settings/payroll-settings/grouptype.js';
 import './settings/payroll-settings/addratetype.js';
 import './settings/payroll-settings/fundtypelist.js';
 
-
+import './vs1_templates/loggedcompanyoverview/loggedcompanyoverview.js';
 import './vs1_templates/template_buttons/export_import_print_display_button.js';
 import './vs1_templates/non_transactional_list/non_transactional_list.js';
 import './vs1_templates/import_template/import_template.html';
 import './vs1_templates/report/vs1_report_template.js';
-import './vs1_templates/loggedcompanyoverview/loggedcompanyoverview.js';
 import './vs1_templates/date_picker/daterangedropdownoption.js';
 import './vs1_templates/date_picker/daterangefromto.js';
 import './vs1_templates/print_templates/custom_print_template.html';
@@ -190,7 +195,6 @@ import './vs1_templates/toggle_button/toggle_button.html';
 import './popUps/copyfrequencypop.html';
 import './Template/AppTableModal.html';
 
-import './vs1_templates/loggedcompanyoverview/loggedcompanyoverview.js';
 import './vs1_templates/internal_transaction_list/internal_transaction_list_with_switchbox.js';
 import './vs1charts/allCardsLists/allCardsLists.js';
 import './vs1charts/allChartLists/allChartLists.js';
@@ -252,6 +256,7 @@ import './inventory/productlistpopwithcheckboxes.js';
 import './inventory/employeeproductlistpop.js';
 import './overviews/Modal/SelectPayCalendar.js';
 import './overviews/bankingoverview.js';
+import './settings/currencies-setting/currencies.js';
 
 import './basreturn/basreturn_list.js';
 import './basreturn/frm_basreturn.js';

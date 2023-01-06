@@ -1,5 +1,6 @@
 import { Template } from 'meteor/templating';
 import {ReactiveVar} from 'meteor/reactive-var';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { OrganisationService } from "../js/organisation-service";
 import './settings.html';
 
@@ -118,7 +119,7 @@ Template.settings.helpers({
         return localStorage.getItem('CloudUseForeignLicence');
     },
     isGreenTrack: function () {
-        let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
+        let checkGreenTrack = localStorage.getItem('isGreenTrack') === 'true';
         return checkGreenTrack;
     }
 });

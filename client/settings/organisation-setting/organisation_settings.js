@@ -5,6 +5,8 @@ import { SideBarService } from "../../js/sidebar-service";
 import { UtilityService } from "../../utility-service";
 import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
+import "./organisation.html";
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let organisationService = new OrganisationService();
