@@ -26,8 +26,8 @@ import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 // import { object } from 'underscore'; 
 
 
-import '../bills/frmbill_card.html';
 import { Template } from 'meteor/templating';
+import '../bills/frmbill_card.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 var template_list = [

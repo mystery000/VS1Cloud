@@ -25,8 +25,8 @@ import { Template } from 'meteor/templating';
 import '../credit/frmcredit_card.html'
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-import '../credit/frmcredit_card.html';
 import { Template } from 'meteor/templating';
+import '../credit/frmcredit_card.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let utilityService = new UtilityService();

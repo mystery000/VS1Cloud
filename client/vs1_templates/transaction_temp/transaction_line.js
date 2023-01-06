@@ -8,8 +8,8 @@ import TableHandler from '../../js/Table/TableHandler';
 import { SideBarService } from '../../js/sidebar-service';
 import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
 
-import './transaction_line.html';
 import { Template } from 'meteor/templating';
+import './transaction_line.html';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

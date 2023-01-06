@@ -20,13 +20,11 @@ import { saveCurrencyHistory } from "../packages/currency/CurrencyWidget";
 import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentcard";
 import { getCurrentCurrencySymbol } from "../popUps/currnecypopup";
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
+
 import { Template } from 'meteor/templating';
 import '../invoice/frm_refund.html'
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-import '../invoice/frm_refund.html';
-import { Template } from 'meteor/templating';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

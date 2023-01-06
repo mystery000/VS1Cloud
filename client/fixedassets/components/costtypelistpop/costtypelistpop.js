@@ -4,8 +4,8 @@ import { SideBarService } from "../../../js/sidebar-service";
 import { UtilityService } from "../../../utility-service";
 import "../../../lib/global/indexdbstorage.js";
 
-import './costtypelistpop.html';
 import { Template } from 'meteor/templating';
+import './costtypelistpop.html';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

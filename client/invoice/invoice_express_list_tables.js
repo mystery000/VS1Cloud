@@ -14,8 +14,8 @@ import { AccountService } from "../accounts/account-service";
 import { InvoiceService } from "../invoice/invoice-service";
 import { OrganisationService } from "../js/organisation-service";
 
-import './invoice_list.html';
 import { Template } from 'meteor/templating';
+import './invoice_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();

@@ -13,8 +13,8 @@ import LoadingOverlay from '../LoadingOverlay';
 import GlobalFunctions from '../GlobalFunctions';
 import TableHandler from '../js/Table/TableHandler';
 
-import './bill_list.html';
 import { Template } from 'meteor/templating';
+import './bill_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 

@@ -4,8 +4,8 @@ import { SideBarService } from "../../../js/sidebar-service";
 import { UtilityService } from "../../../utility-service";
 import "../../../lib/global/indexdbstorage.js";
 
-import './fixedassetlistpop.html';
 import { Template } from 'meteor/templating';
+import './fixedassetlistpop.html';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

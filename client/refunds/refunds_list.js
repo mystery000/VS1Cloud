@@ -9,8 +9,8 @@ import { AccountService } from "../accounts/account-service";
 import { EmployeeProfileService } from "../js/profile-service";
 import {OrganisationService} from '../js/organisation-service';
 
-import './refunds_list.html';
 import { Template } from 'meteor/templating';
+import './refunds_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();

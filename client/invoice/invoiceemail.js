@@ -8,8 +8,8 @@ import {InvoiceService} from "../invoice/invoice-service";
 import {AccountService} from "../accounts/account-service";
 import {EmployeeProfileService} from "../js/profile-service";
 
-import './invoiceemail.html';
 import { Template } from 'meteor/templating';
+import './invoiceemail.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
