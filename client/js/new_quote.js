@@ -22,6 +22,11 @@ import { getCurrentCurrencySymbol } from '../popUps/currnecypopup.js';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions.js';
 import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line.js';
 
+import { Template } from 'meteor/templating';
+import '../quote/frm_quote.html'
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let times = 0;

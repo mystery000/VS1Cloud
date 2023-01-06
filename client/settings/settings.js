@@ -1,6 +1,7 @@
 import { Template } from 'meteor/templating';
 import {ReactiveVar} from 'meteor/reactive-var';
 import { OrganisationService } from "../js/organisation-service";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './settings.html';
 
 let organisationService = new OrganisationService();

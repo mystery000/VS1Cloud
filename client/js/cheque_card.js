@@ -1,3 +1,4 @@
+import { Template } from 'meteor/templating';
 import { SalesBoardService } from "./sales-service";
 import { PurchaseBoardService } from "./purchase-service";
 import { ReactiveVar } from "meteor/reactive-var";
@@ -18,6 +19,9 @@ import { autoTable } from "jspdf-autotable";
 import "jquery-editable-select";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
+import '../cheque/frmcheque_card.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let times = 0;

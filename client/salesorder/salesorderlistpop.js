@@ -1,17 +1,19 @@
-import {SalesBoardService} from '../js/sales-service';
-import { ReactiveVar } from 'meteor/reactive-var';
+import {Session} from 'meteor/session';
+import '../lib/global/indexdbstorage.js';
 import { CoreService } from '../js/core-service';
-import {EmployeeProfileService} from "../js/profile-service";
-import {AccountService} from "../accounts/account-service";
-import {InvoiceService} from "../invoice/invoice-service";
+import { ReactiveVar } from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
+import {SalesBoardService} from '../js/sales-service';
 import { SideBarService } from '../js/sidebar-service';
+import {InvoiceService} from "../invoice/invoice-service";
+import {AccountService} from "../accounts/account-service";
+import {EmployeeProfileService} from "../js/profile-service";
 import {OrganisationService} from '../js/organisation-service';
 
-import '../lib/global/indexdbstorage.js';
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './salesorderlistpop.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 

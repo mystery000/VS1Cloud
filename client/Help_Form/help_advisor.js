@@ -1,3 +1,6 @@
+import { Template } from 'meteor/templating';
+import './help_advisor.html';
+
 Template.helpadvisor.onCreated(function(){
 
 

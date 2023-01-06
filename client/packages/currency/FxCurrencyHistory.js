@@ -10,6 +10,9 @@ import { TaxRateService } from "../../settings/settings-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import CachedHttp from "../../lib/global/CachedHttp";
 import FxGlobalFunctions from "./FxGlobalFunctions";
+import { Template } from 'meteor/templating';
+import "./FxCurrencyHistory.html";
+
 
 const sideBarService = new SideBarService();
 const utilityService = new UtilityService();
