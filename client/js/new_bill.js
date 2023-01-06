@@ -1,4 +1,3 @@
-import { Template } from 'meteor/templating';
 import {SalesBoardService} from './sales-service';
 import {PurchaseBoardService} from './purchase-service';
 import {ReactiveVar} from 'meteor/reactive-var';
