@@ -281,6 +281,9 @@ import './vs1_templates/transaction_temp/transaction_print_modal.js';
 import './vs1_templates/transaction_temp/transaction_calculation.js';
 import './manufacture/bomList.js';
 // import './fixedassets/fixedassets.js';
+// import './appointments/appointments.js';
+// import './appointments/appointment-service.js';
+// import './appointments/appointmenttimelist.js';
 /* Tinyiko */
 
 /* Rasheed */
@@ -439,6 +442,12 @@ import './settings/settings.js';
 import './settings/tax-rates-setting/tax-rates.js';
 import './settings/tax-rates-setting/subtaxes.js';
 import './settings/tax-rates-setting/DeleteLineModal.html';
+import './overviews/paymentoverview.js';
+import './payments/customerAwaitingPayments.js';
+import './payments/customerpayment.js';
+import './payments/supplierpayment.js';
+import './payments/supplierAwaitingPurchaseOrder.js';
+import './contacts/statementlist.js';
 /* Roverto */
 
 /* Kelvin More */
@@ -462,6 +471,21 @@ import './fixedassets/components/costtypelistpop/costtypelistpop.js';
 import './packages/currency/FxCurrencyHistory.js';
 import './packages/currency/FxGlobalFunctions.js';
 /* Stefan */
+
+/* XiaoJang*/
+// import './overviews/payrolloverview.js';
+// import './overviews/payrollleave.js';
+// import './payroll/singletouchpayroll/singletouch.js';
+// import './payroll/singletouchpayroll/singletouchpayroll.js';
+// import './payroll/clockonoff/clockonoff.js';
+// import './payroll/paychexapi/paychexapi.js';
+// import './payroll/payrun/payrun.js';
+// import './payroll/payrun/payrundetails.js';
+// import './overviews/payrolloverview_tmp.html';
+// import './eft/exportModal/eftExportModal.js';
+// import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
+// import './eft/addNewEftModal/addNewEftModal.js';
+/* XiaoJang*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
