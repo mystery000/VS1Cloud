@@ -5,12 +5,15 @@ import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import { OrganisationService } from "../js/organisation-service";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './leadlist.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let organisationService = new OrganisationService;
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import './leadlist.html';
 
 Template.leadlist.inheritsHooksFrom('non_transactional_list');
 Template.leadlist.onCreated(function(){

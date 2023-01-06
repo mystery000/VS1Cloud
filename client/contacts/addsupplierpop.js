@@ -171,7 +171,7 @@ Template.addsupplierpop.onRendered(function() {
                                 data.tpaymentmethodvs1[i].fields.PaymentMethodName
                             );
                         }
-                        preferedPayments = _.sortBy(preferedPayments);
+                        // preferedPayments = _.sortBy(preferedPayments);
 
                         templateObject.preferedPaymentList.set(preferedPayments);
                     });
@@ -181,7 +181,7 @@ Template.addsupplierpop.onRendered(function() {
                     for (let i = 0; i < useData.length; i++) {
                         preferedPayments.push(useData[i].fields.PaymentMethodName);
                     }
-                    preferedPayments = _.sortBy(preferedPayments);
+                    // preferedPayments = _.sortBy(preferedPayments);
                     templateObject.preferedPaymentList.set(preferedPayments);
                 }
             })
@@ -190,7 +190,7 @@ Template.addsupplierpop.onRendered(function() {
                     for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                         preferedPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName);
                     }
-                    preferedPayments = _.sortBy(preferedPayments);
+                    // preferedPayments = _.sortBy(preferedPayments);
 
                     templateObject.preferedPaymentList.set(preferedPayments);
                 });
@@ -213,7 +213,7 @@ Template.addsupplierpop.onRendered(function() {
                                 );
                             }
                         }
-                        terms = _.sortBy(terms);
+                        // terms = _.sortBy(terms);
                         templateObject.termsList.set(terms);
                     });
                 } else {
@@ -225,7 +225,7 @@ Template.addsupplierpop.onRendered(function() {
                             templateObject.defaultpurchaseterm.set(useData[i].TermsName);
                         }
                     }
-                    terms = _.sortBy(terms);
+                    // terms = _.sortBy(terms);
                     templateObject.termsList.set(terms);
                 }
             })
@@ -243,7 +243,7 @@ Template.addsupplierpop.onRendered(function() {
                             );
                         }
                     }
-                    terms = _.sortBy(terms);
+                    // terms = _.sortBy(terms);
                     templateObject.termsList.set(terms);
                 });
             });
@@ -257,7 +257,7 @@ Template.addsupplierpop.onRendered(function() {
                         for (let i = 0; i < data.tshippingmethod.length; i++) {
                             deliveryMethods.push(data.tshippingmethod[i].ShippingMethod);
                         }
-                        deliveryMethods = _.sortBy(deliveryMethods);
+                        // deliveryMethods = _.sortBy(deliveryMethods);
                         templateObject.deliveryMethodList.set(deliveryMethods);
                     });
                 } else {
@@ -266,7 +266,7 @@ Template.addsupplierpop.onRendered(function() {
                     for (let i = 0; i < useData.length; i++) {
                         deliveryMethods.push(useData[i].ShippingMethod);
                     }
-                    deliveryMethods = _.sortBy(deliveryMethods);
+                    // deliveryMethods = _.sortBy(deliveryMethods);
                     templateObject.deliveryMethodList.set(deliveryMethods);
                 }
             })
@@ -275,7 +275,7 @@ Template.addsupplierpop.onRendered(function() {
                     for (let i = 0; i < data.tshippingmethod.length; i++) {
                         deliveryMethods.push(data.tshippingmethod[i].ShippingMethod);
                     }
-                    deliveryMethods = _.sortBy(deliveryMethods);
+                    // deliveryMethods = _.sortBy(deliveryMethods);
                     templateObject.deliveryMethodList.set(deliveryMethods);
                 });
             });
@@ -289,7 +289,7 @@ Template.addsupplierpop.onRendered(function() {
                         for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                             taxCodes.push(data.ttaxcodevs1[i].CodeName);
                         }
-                        taxCodes = _.sortBy(taxCodes);
+                        // taxCodes = _.sortBy(taxCodes);
                         templateObject.taxCodeList.set(taxCodes);
                     });
                 } else {
@@ -298,7 +298,7 @@ Template.addsupplierpop.onRendered(function() {
                     for (let i = 0; i < useData.length; i++) {
                         taxCodes.push(useData[i].CodeName);
                     }
-                    taxCodes = _.sortBy(taxCodes);
+                    // taxCodes = _.sortBy(taxCodes);
                     templateObject.taxCodeList.set(taxCodes);
                 }
             })
@@ -307,7 +307,7 @@ Template.addsupplierpop.onRendered(function() {
                     for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                         taxCodes.push(data.ttaxcodevs1[i].CodeName);
                     }
-                    taxCodes = _.sortBy(taxCodes);
+                    // taxCodes = _.sortBy(taxCodes);
                     templateObject.taxCodeList.set(taxCodes);
                 });
             });

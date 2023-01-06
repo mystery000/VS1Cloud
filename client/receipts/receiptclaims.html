@@ -1693,7 +1693,7 @@
     </div>
 
     <!-- Currency Select Standard Modals -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="currencyModal">
+    <div class="modal fade currencyModal" role="dialog" tabindex="-1" id="currencyModal">
         {{> currencypop}}
     </div>
 
@@ -1702,11 +1702,11 @@
     </div>
 
     <!-- Transaction Type Select Standard Modals -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodModal">
-        {{> paymentmethodpop}}
+    <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodModal_">
+        {{> paymentmethodpop tablename="paymentmethodList_"}}
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="newPaymentMethodModal">
+    <div class="modal fade" role="dialog" tabindex="-1" id="newPaymentMethodModal_">
         {{> newpaymentmethodpop}}
     </div>
 

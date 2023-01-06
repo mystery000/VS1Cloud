@@ -13,6 +13,10 @@ import { onExhangeRateChanged, saveCurrencyHistory } from '../packages/currency/
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 import GlobalFunctions from '../GlobalFunctions';
 
+import { Template } from 'meteor/templating';
+import './receiptclaims.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accountService = new AccountService();
@@ -999,7 +1003,7 @@ Template.receiptsoverview.onRendered(function () {
         $('#edtPaymentMethodID').val('');
         if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
             $each.attr('data-id', '');
-            $('#paymentMethodModal').modal('toggle');
+            $('#paymentMethodModal_').modal('toggle');
         } else {
             if (paymentDataName.replace(/\s/g, '') != '') {
                 $('#paymentMethodHeader').text('Edit Payment Method');
@@ -1018,14 +1022,14 @@ Template.receiptsoverview.onRendered(function () {
                     });
                 });
             } else {
-                $('#paymentMethodModal').modal();
+                $('#paymentMethodModal_').modal();
                 setTimeout(function () {
-                    $('#paymentmethodList_filter .form-control-sm').focus();
-                    $('#paymentmethodList_filter .form-control-sm').val('');
-                    $('#paymentmethodList_filter .form-control-sm').trigger("input");
-                    const datatable = $('#paymentmethodList').DataTable();
+                    $('#paymentmethodList__filter .form-control-sm').focus();
+                    $('#paymentmethodList__filter .form-control-sm').val('');
+                    $('#paymentmethodList__filter .form-control-sm').trigger("input");
+                    const datatable = $('#paymentmethodList_').DataTable();
                     datatable.draw();
-                    $('#paymentmethodList_filter .form-control-sm').trigger("input");
+                    $('#paymentmethodList__filter .form-control-sm').trigger("input");
                 }, 500);
             }
         }
@@ -1045,7 +1049,7 @@ Template.receiptsoverview.onRendered(function () {
             }
         }
         setTimeout(function () {
-            $('#newPaymentMethodModal').modal('toggle');
+            $('#newPaymentMethodModal_').modal('toggle');
         }, 200);
     }
 
@@ -2778,7 +2782,7 @@ Template.receiptsoverview.events({
             });
         }
     },
-    'click #paymentmethodList tbody tr': function (e) {
+    'click #paymentmethodList_ tbody tr': function (e) {
         let typeName = $(e.target).closest('tr').find(".colName").text() || '';
         let typeID = $(e.target).closest('tr').find("input.chkBox").attr('id') || '';
         let from = $('#employeeListModal').attr('data-from');
@@ -2792,7 +2796,7 @@ Template.receiptsoverview.events({
             $('#nav-time .transactionTypes').val(typeName);
             $('#nav-time .transactionTypes').attr('data-id', typeID);
         }
-        $('#paymentMethodModal').modal('toggle');
+        $('#paymentMethodModal_').modal('toggle');
     },
     'change .multipleAmount': function (e) {
         let val = e.target.value;

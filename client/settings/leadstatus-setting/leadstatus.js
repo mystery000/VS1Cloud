@@ -4,6 +4,11 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { UtilityService } from "../../utility-service";
 import '../../lib/global/indexdbstorage.js';
 import XLSX from 'xlsx';
+
+import { Template } from 'meteor/templating';
+import './leadstatus.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
@@ -319,7 +324,8 @@ Template.leadstatussettings.onRendered(function() {
             if (needAddInvoiced) {
                 contactService.getOneLeadStatusExByName("Invoiced").then(function(leadStatus) {
                     let objInvoiced;
-                    if (leadStatus.tleadstatustypelist.length == 0) {
+                    console.log("-------", leadStatus);
+                    if (leadStatus.tleadstatustype.length == 0) {
                         objInvoiced = {
                             type: "TLeadStatusType",
                             fields: {
@@ -330,7 +336,7 @@ Template.leadstatussettings.onRendered(function() {
                             }
                         }
                     } else {
-                        let statusID = leadStatus.tleadstatustypelist[0].ID;
+                        let statusID = leadStatus.tleadstatustype[0].ID;
                         objInvoiced = {
                             type: "TLeadStatusType",
                             fields: {

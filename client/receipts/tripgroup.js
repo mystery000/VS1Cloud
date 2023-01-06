@@ -2,6 +2,10 @@ import { ReceiptService } from "./receipt-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import { Template } from 'meteor/templating';
+import './tripgroup.html';
+
 let sideBarService = new SideBarService();
 Template.tripgroup.onCreated(function(){
     const templateObject = Template.instance();

@@ -1,3 +1,7 @@
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './campaignReport.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.mailchimpCampaignList.onRendered(function () {
   const templateObject = Template.instance();

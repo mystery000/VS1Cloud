@@ -1,5 +1,11 @@
 import '../../../lib/global/indexdbstorage.js';
-import { CRMService } from "../../crm-service"
+import { CRMService } from "../../crm-service";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './leadbarchart.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let _ = require('lodash');
 
 Template.leadbarchart.onCreated(() => {
