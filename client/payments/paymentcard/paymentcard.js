@@ -34,6 +34,9 @@ import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import LoadingOverlay from "../../LoadingOverlay";
 import {TaxRateService} from "../../settings/settings-service";
 import {saveCurrencyHistory} from "../../packages/currency/CurrencyWidget";
+import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import './paymentcard.html'
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

@@ -82,95 +82,95 @@ Template.dashboardManagerCharts.onRendered(function () {
             }
         });
         */
-        if (employeeNames.length > 0) {
-            const ctx = document.getElementById("spd-employee-chart").getContext("2d");
-            const myChart = new Chart(ctx, {
-                type: "horizontalBar",
-                data: {
-                    labels: employeeNames,
-                    datasets: [
-                        {
-                            label: "Earnings",
-                            data: employeesTotalDiscount,
-                            backgroundColor: [
-                                "#f6c23e",
-                                "#f6c23e",
-                                "#f6c23e",
-                                "#f6c23e",
-                                "#f6c23e",
-                                "#f6c23e",
-                            ],
-                            borderColor: [
-                                "rgba(78,115,223,0)",
-                                "rgba(78,115,223,0)",
-                                "rgba(78,115,223,0)",
-                                "rgba(78,115,223,0)",
-                                "rgba(78,115,223,0)",
-                                "rgba(78,115,223,0)",
-                            ],
-                            borderWidth: 1,
-                        },
-                    ],
-                },
-                options: {
-                    onClick: chartClickEvent,
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    tooltips: {
-                        callbacks: {
-                            label: function (tooltipItem, data) {
-                                return (
-                                    utilityService.modifynegativeCurrencyFormat(
-                                        tooltipItem.xLabel
-                                    ) || 0.0
-                                );
-                            },
-                        },
-                    },
-                    legend: {
-                        display: false,
-                    },
-                    title: {},
-                    scales: {
-                        xAxes: [
-                            {
-                                gridLines: {
-                                    color: "rgb(234, 236, 244)",
-                                    zeroLineColor: "rgb(234, 236, 244)",
-                                    drawBorder: false,
-                                    drawTicks: false,
-                                    borderDash: ["2"],
-                                    zeroLineBorderDash: ["2"],
-                                    drawOnChartArea: false,
-                                },
-                                ticks: {
-                                    fontColor: "#858796",
-                                    beginAtZero: true,
-                                    padding: 20,
-                                },
-                            },
-                        ],
-                        yAxes: [
-                            {
-                                gridLines: {
-                                    color: "rgb(234, 236, 244)",
-                                    zeroLineColor: "rgb(234, 236, 244)",
-                                    drawBorder: false,
-                                    drawTicks: false,
-                                    borderDash: ["2"],
-                                    zeroLineBorderDash: ["2"],
-                                },
-                                ticks: {
-                                    fontColor: "#858796",
-                                    beginAtZero: true,
-                                    padding: 20,
-                                },
-                            },
-                        ],
-                    },
-                },
-            });
-        }
+        // if (employeeNames.length > 0) {
+        //     const ctx = document.getElementById("spd-employee-chart").getContext("2d");
+        //     const myChart = new Chart(ctx, {
+        //         type: "horizontalBar",
+        //         data: {
+        //             labels: employeeNames,
+        //             datasets: [
+        //                 {
+        //                     label: "Earnings",
+        //                     data: employeesTotalDiscount,
+        //                     backgroundColor: [
+        //                         "#f6c23e",
+        //                         "#f6c23e",
+        //                         "#f6c23e",
+        //                         "#f6c23e",
+        //                         "#f6c23e",
+        //                         "#f6c23e",
+        //                     ],
+        //                     borderColor: [
+        //                         "rgba(78,115,223,0)",
+        //                         "rgba(78,115,223,0)",
+        //                         "rgba(78,115,223,0)",
+        //                         "rgba(78,115,223,0)",
+        //                         "rgba(78,115,223,0)",
+        //                         "rgba(78,115,223,0)",
+        //                     ],
+        //                     borderWidth: 1,
+        //                 },
+        //             ],
+        //         },
+        //         options: {
+        //             onClick: chartClickEvent,
+        //             maintainAspectRatio: false,
+        //             responsive: true,
+        //             tooltips: {
+        //                 callbacks: {
+        //                     label: function (tooltipItem, data) {
+        //                         return (
+        //                             utilityService.modifynegativeCurrencyFormat(
+        //                                 tooltipItem.xLabel
+        //                             ) || 0.0
+        //                         );
+        //                     },
+        //                 },
+        //             },
+        //             legend: {
+        //                 display: false,
+        //             },
+        //             title: {},
+        //             scales: {
+        //                 xAxes: [
+        //                     {
+        //                         gridLines: {
+        //                             color: "rgb(234, 236, 244)",
+        //                             zeroLineColor: "rgb(234, 236, 244)",
+        //                             drawBorder: false,
+        //                             drawTicks: false,
+        //                             borderDash: ["2"],
+        //                             zeroLineBorderDash: ["2"],
+        //                             drawOnChartArea: false,
+        //                         },
+        //                         ticks: {
+        //                             fontColor: "#858796",
+        //                             beginAtZero: true,
+        //                             padding: 20,
+        //                         },
+        //                     },
+        //                 ],
+        //                 yAxes: [
+        //                     {
+        //                         gridLines: {
+        //                             color: "rgb(234, 236, 244)",
+        //                             zeroLineColor: "rgb(234, 236, 244)",
+        //                             drawBorder: false,
+        //                             drawTicks: false,
+        //                             borderDash: ["2"],
+        //                             zeroLineBorderDash: ["2"],
+        //                         },
+        //                         ticks: {
+        //                             fontColor: "#858796",
+        //                             beginAtZero: true,
+        //                             padding: 20,
+        //                         },
+        //                     },
+        //                 ],
+        //             },
+        //         },
+        //     });
+        // }
     }
 
     function chartClickEvent() {

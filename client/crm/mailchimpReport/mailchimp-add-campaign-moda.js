@@ -1,3 +1,7 @@
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './mailchimp-add-campaign-moda.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.crm_mailchimp_add_campaign_modal.onRendered(function () {
   const templateObject = Template.instance();

@@ -18,6 +18,10 @@ import {TaxRateService} from "../settings/settings-service";
 import 'jquery-editable-select';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import "../deposits/frm_deposit.html"
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
