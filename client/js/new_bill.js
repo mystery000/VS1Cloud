@@ -1,4 +1,3 @@
-import { Template } from 'meteor/templating';
 import {SalesBoardService} from './sales-service';
 import {PurchaseBoardService} from './purchase-service';
 import {ReactiveVar} from 'meteor/reactive-var';
@@ -24,9 +23,12 @@ import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import "../bills/frmbill_card.html"
+// import { object } from 'underscore'; 
 
+
+import { Template } from 'meteor/templating';
+import '../bills/frmbill_card.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 var template_list = [
     "Bills",

@@ -22,6 +22,9 @@ let manufacturingService = new ManufacturingService();
 let crmService = new CRMService();
 
 import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
+import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertimes";
+
 
 Template.non_transactional_list.inheritsHooksFrom('export_import_print_display_button');
 
@@ -556,6 +559,13 @@ Template.non_transactional_list.onRendered(function() {
             reset_data = [
                 { index: 0, label: "#ID", class: "colRateTypeID", active: false, display: true, width: "" },
                 { index: 1, label: "Description", class: "colRateDescription", active: true, display: true, width: "" },
+            ]
+        }else if (currenttablename === "tblOverTimeSheet"){
+            reset_data = [
+                { index: 0, label: "#ID", class: "", active: false, display: true, width: "" },
+                { index: 1, label: "Rate", class: "", active: true, display: true, width: "" },
+                { index: 2, label: "Rule", class: "", active: true, display: true, width: "" },
+                { index: 3, label: "hourly Multiplier", class: "", active: true, display: true, width: "" },
             ]
         }
 
@@ -5501,6 +5511,184 @@ Template.non_transactional_list.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
+    templateObject.getOverTimeSheets = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
+        let overtimesData = await getVS1Data(erpObject.TPayrollSettingOvertimes);
+        let overtimes = overtimesData.length > 0 ? JSON.parse(overtimesData[0].data) : [];
+        // This part is handling the auto add of default values in the list
+        let defaultOvertimes = PayrollSettingsOvertimes.getDefaults();
+        defaultOvertimes.forEach((defaultOvertime) => {
+            // if doesnt exist, just add it
+            if(!overtimes.some(overtime => overtime.rule == defaultOvertime.rule)) {
+                if(defaultOvertime.searchByRuleName == true) {
+                }
+                overtimes.push(defaultOvertime);
+            };
+        })
+        templateObject.displayOverTimeSheetListData(overtimes); //Call this function to display data on the table
+    }
+
+    templateObject.displayOverTimeSheetListData = async function(data) {
+        var splashArrayOverTimeSheetList = new Array();
+        for (let i = 0; i < data.length; i++) {
+            var dataList = [
+                data[i].id || "",
+                data[i].rate || "",
+                data[i].rule || "",
+                data[i].hourlyMultiplier || "",
+            ];
+            splashArrayOverTimeSheetList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayOverTimeSheetList);
+        }
+        let deleteFilter = false;
+        if(templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
+        }
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayOverTimeSheetList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [{
+                        targets: 0,
+                        className: "hiddenColumn",
+                        width: "10px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        targets: 1,
+                        className: "",
+                        width: "",
+                    },
+                    {
+                        targets: 2,
+                        className: "",
+                        width: "200px",
+                    },
+                    {
+                        targets: 3,
+                        className: "",
+                        width: "",
+                    }
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Customer Type Settings",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Customer Type Settings',
+                        filename: "Customer Type Settings",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Customer Type Settings",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search List..." },
+                "fnInitComplete": function(oSettings) {
+                    if (deleteFilter) {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    // let countTableData = data.Params.Count || 0; //get count from API data
+                    //
+                    // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
 
     templateObject.getProcessListData = async function() {
         getVS1Data('TProcessStep').then(function(dataObject) {
@@ -10299,6 +10487,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getRateListData(true);
     }else if (currenttablename === "tblRateTypeList"){
         templateObject.getRateTypeListData(true);
+    }else if (currenttablename === "tblOverTimeSheet"){
+        templateObject.getOverTimeSheets(true);
     }
     tableResize();
 });
@@ -10390,6 +10580,8 @@ Template.non_transactional_list.events({
             templateObject.getRateListData(true);
         } else if (currenttablename === "tblRateTypeList"){
             templateObject.getRateTypeListData(true);
+        }else if (currenttablename === "tblOverTimeSheet"){
+            templateObject.getOverTimeSheets(true);
         }
 
     },
@@ -10479,6 +10671,8 @@ Template.non_transactional_list.events({
             templateObject.getRateListData(false);
         } else if(currenttablename === "tblRateTypeList"){
             templateObject.getRateTypeListData(false);
+        } else if (currenttablename === "tblOverTimeSheet"){
+            templateObject.getOverTimeSheets(false);
         }
 
     },
