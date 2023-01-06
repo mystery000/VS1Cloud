@@ -3,6 +3,10 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import FxGlobalFunctions from "./FxGlobalFunctions";
+
+import { Template } from 'meteor/templating';
+import './CurrencyRate.html';
+
 let sideBarService = new SideBarService();
 
 

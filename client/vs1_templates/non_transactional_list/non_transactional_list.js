@@ -22,7 +22,6 @@ let manufacturingService = new ManufacturingService();
 let crmService = new CRMService();
 
 import CachedHttp from "../../lib/global/CachedHttp";
-import erpObject from "../../lib/global/erp-objects";
 
 Template.non_transactional_list.inheritsHooksFrom('export_import_print_display_button');
 
@@ -555,8 +554,8 @@ Template.non_transactional_list.onRendered(function() {
             ]
         }else if (currenttablename === "tblRateTypeList"){
             reset_data = [
-                { index: 0, label: "#ID", class: "thRateID", active: false, display: true, width: "" },
-                { index: 1, label: "Description", class: "thDescription", active: true, display: true, width: "" },
+                { index: 0, label: "#ID", class: "colRateTypeID", active: false, display: true, width: "" },
+                { index: 1, label: "Description", class: "colRateDescription", active: true, display: true, width: "" },
             ]
         }
 
@@ -580,7 +579,7 @@ Template.non_transactional_list.onRendered(function() {
                     }).catch(function(err) {});
                 } else {
                     let data = JSON.parse(dataObject[0].data);
-                    if (data.ProcessLog.Obj.CustomLayout.length > 0) {
+                    if (data.ProcessLog.Obj != undefined && data.ProcessLog.Obj.CustomLayout.length > 0) {
                         for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                             if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType && listType != "tblAccountOverview") {
                                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
@@ -1839,7 +1838,6 @@ Template.non_transactional_list.onRendered(function() {
                     await addVS1Data('TSupplierVS1List', JSON.stringify(data));
                     templateObject.displaySuppliersListData(data);
                 }).catch(function(err) {
-
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -5341,7 +5339,6 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.getRateTypeListData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
-        let refresh = false;
         let data = await CachedHttp.get(erpObject.TPayRateType, async () => {
             return await sideBarService.getRateTypes(initialBaseDataLoad, 0);
         }, {
@@ -5351,40 +5348,32 @@ Template.non_transactional_list.onRendered(function() {
         const response = data.response;
     
         data =  response.tpayratetype ? response.tpayratetype.map(e => e.fields) : null;
+        console.log('data:',data)
         templateObject.displayRateTypeListData(data); //Call this function to display data on the table
     }
 
     templateObject.displayRateTypeListData = async function(data) {
-        var splashArrayRateTypeList = new Array();
-        for (let i = 0; i < data.length; i++) {
-            var dataList = [
-                i,
-                data[i].Description || "",
-            ];
-
-            splashArrayRateTypeList.push(dataList);
-            templateObject.transactiondatatablerecords.set(splashArrayRateTypeList);
-        }
-        // var splashArrayRateList = [
-        //     [1, "Normal"],
-        //     [2, "Time & Half"],
-        //     [3, "Double Time"],
-        //     [4, "Weekend"],
-        // ];
+        var splashArrayRateList = [
+            [1, "Normal"],
+            [2, "Time & Half"],
+            [3, "Double Time"],
+            [4, "Weekend"],
+        ];
         let deleteFilter = false;
-        if(templateObject.transactiondatatablerecords.get()) {
-            setTimeout(function () {
-                MakeNegative();
-            }, 100);
-        }
+        templateObject.transactiondatatablerecords.set(splashArrayRateList)
+            if(templateObject.transactiondatatablerecords.get()) {
+              setTimeout(function () {
+                  MakeNegative();
+              }, 100);
+            }
         setTimeout(function() {
             //$('#'+currenttablename).removeClass('hiddenColumn');
             $('#' + currenttablename).DataTable({
-                data: splashArrayRateTypeList,
+                data: splashArrayRateList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
-                        className: "thRateID hiddenColumn",
+                        className: "hiddenColumn",
                         width: "10px",
                         createdCell: function(td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
@@ -5392,7 +5381,7 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "thDescription",
+                        className: "colRateName",
                         width: "100px",
                     }
                 ],
@@ -7205,6 +7194,7 @@ Template.non_transactional_list.onRendered(function() {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName(customerName).then(async function(data) {
                     if (data.tprojecttasks.length > 0) {
+                        addVS1Data("TCRMTaskList", JSON.stringify(data));
                         for (let i = 0; i < data.tprojecttasks.length; i++) {
                             let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
                             due_date = new Date(due_date);
@@ -7325,6 +7315,7 @@ Template.non_transactional_list.onRendered(function() {
         }).catch(function(err) {
             crmService.getAllTasksByContactName(customerName).then(async function(data) {
                 if (data.tprojecttasks.length > 0) {
+                    addVS1Data("TCRMTaskList", JSON.stringify(data));
                     for (let i = 0; i < data.tprojecttasks.length; i++) {
                         let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
                         due_date = new Date(due_date);
@@ -7532,6 +7523,7 @@ Template.non_transactional_list.onRendered(function() {
             }).catch(function(err) {
                 crmService.getAllAppointments(customerName).then(async function(dataObj) {
                     if (dataObj.tappointmentex.length > 0) {
+                        addVS1Data("TAppointment", JSON.stringify(dataObj));
                         dataObj.tappointmentex.map(data => {
                             let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
                             creationDate = new Date(creationDate);
@@ -7587,6 +7579,7 @@ Template.non_transactional_list.onRendered(function() {
                             return item.fields.MessageTo == $('#edtLeadEmail').val()
                         })
                         if (totalCorrespondences.length > 0 && $('#edtLeadEmail').val() != '') {
+                            addVS1Data("TCorrespondence", JSON.stringify(data));
                             totalCorrespondences.map(item => {
                                 let ref_Date = item.fields.Ref_Date == "" ? "1770-01-01" : item.fields.Ref_Date;
                                 ref_Date = new Date(ref_Date);
@@ -7660,6 +7653,7 @@ Template.non_transactional_list.onRendered(function() {
                         return item.fields.MessageTo == $('#edtLeadEmail').val()
                     })
                     if (totalCorrespondences.length > 0 && $('#edtLeadEmail').val() != '') {
+                        addVS1Data("TCorrespondence", JSON.stringify(dataReturn));
                         totalCorrespondences.map(item => {
                             let ref_Date = item.fields.Ref_Date == "" ? "1770-01-01" : item.fields.Ref_Date;
                             ref_Date = new Date(ref_Date);
@@ -7688,8 +7682,6 @@ Template.non_transactional_list.onRendered(function() {
                             new Date(a.date) - new Date(b.date)
                         })
                     } catch (error) {}
-                    $("#dateFrom").val(moment(fromDate).format("DD/MM/YYYY"));
-                    $("#dateTo").val(moment(toDate).format("DD/MM/YYYY"));
                     templateObject.displayLeadCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
                 }).catch((err) => {
                     $('.fullScreenSpin').css('display', 'none');
@@ -8218,6 +8210,7 @@ Template.non_transactional_list.onRendered(function() {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName(customerName).then(async function(data) {
                     if (data.tprojecttasks.length > 0) {
+                        addVS1Data("TCRMTaskList", JSON.stringify(data));
                         for (let i = 0; i < data.tprojecttasks.length; i++) {
                             let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
                             due_date = new Date(due_date);
@@ -8338,6 +8331,7 @@ Template.non_transactional_list.onRendered(function() {
         }).catch(function(err) {
             crmService.getAllTasksByContactName(customerName).then(async function(data) {
                 if (data.tprojecttasks.length > 0) {
+                    addVS1Data("TCRMTaskList", JSON.stringify(data));
                     for (let i = 0; i < data.tprojecttasks.length; i++) {
                         let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
                         due_date = new Date(due_date);
@@ -8545,6 +8539,7 @@ Template.non_transactional_list.onRendered(function() {
             }).catch(function(err) {
                 crmService.getAllAppointments(customerName).then(async function(dataObj) {
                     if (dataObj.tappointmentex.length > 0) {
+                        addVS1Data("TAppointment", JSON.stringify(dataObj));
                         dataObj.tappointmentex.map(data => {
                             let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
                             creationDate = new Date(creationDate);
@@ -8600,6 +8595,7 @@ Template.non_transactional_list.onRendered(function() {
                             return item.fields.MessageTo == $('#edtCustomerEmail').val()
                         })
                         if (totalCorrespondences.length > 0 && $('#edtCustomerEmail').val() != '') {
+                            addVS1Data("TCorrespondence", JSON.stringify(dataReturn));
                             totalCorrespondences.map(item => {
                                 let ref_Date = item.fields.Ref_Date == "" ? "1770-01-01" : item.fields.Ref_Date;
                                 ref_Date = new Date(ref_Date);
@@ -8673,6 +8669,7 @@ Template.non_transactional_list.onRendered(function() {
                         return item.fields.MessageTo == $('#edtCustomerEmail').val()
                     })
                     if (totalCorrespondences.length > 0 && $('#edtCustomerEmail').val() != '') {
+                        addVS1Data("TCorrespondence", JSON.stringify(dataReturn));
                         totalCorrespondences.map(item => {
                             let ref_Date = item.fields.Ref_Date == "" ? "1770-01-01" : item.fields.Ref_Date;
                             ref_Date = new Date(ref_Date);
@@ -8701,8 +8698,6 @@ Template.non_transactional_list.onRendered(function() {
                             new Date(a.date) - new Date(b.date)
                         })
                     } catch (error) {}
-                    $("#dateFrom").val(moment(fromDate).format("DD/MM/YYYY"));
-                    $("#dateTo").val(moment(toDate).format("DD/MM/YYYY"));
                     templateObject.displayCustomerCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
                 }).catch((err) => {
                     $('.fullScreenSpin').css('display', 'none');
@@ -9233,6 +9228,7 @@ Template.non_transactional_list.onRendered(function() {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName(customerName).then(async function(data) {
                     if (data.tprojecttasks.length > 0) {
+                        addVS1Data("TCRMTaskList", JSON.stringify(data));
                         for (let i = 0; i < data.tprojecttasks.length; i++) {
                             let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
                             due_date = new Date(due_date);
@@ -9353,6 +9349,7 @@ Template.non_transactional_list.onRendered(function() {
         }).catch(function(err) {
             crmService.getAllTasksByContactName(customerName).then(async function(data) {
                 if (data.tprojecttasks.length > 0) {
+                    addVS1Data("TCRMTaskList", JSON.stringify(data));
                     for (let i = 0; i < data.tprojecttasks.length; i++) {
                         let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
                         due_date = new Date(due_date);
@@ -9560,6 +9557,7 @@ Template.non_transactional_list.onRendered(function() {
             }).catch(function(err) {
                 crmService.getAllAppointments(customerName).then(async function(dataObj) {
                     if (dataObj.tappointmentex.length > 0) {
+                        addVS1Data("TAppointment", JSON.stringify(dataObj));
                         dataObj.tappointmentex.map(data => {
                             let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
                             creationDate = new Date(creationDate);
@@ -9615,6 +9613,7 @@ Template.non_transactional_list.onRendered(function() {
                             return item.fields.MessageTo == $('#edtSupplierCompanyEmail').val()
                         })
                         if (totalCorrespondences.length > 0 && $('#edtSupplierCompanyEmail').val() != '') {
+                            addVS1Data("TCorrespondence", JSON.stringify(dataReturn));
                             totalCorrespondences.map(item => {
                                 let ref_Date = item.fields.Ref_Date == "" ? "1770-01-01" : item.fields.Ref_Date;
                                 ref_Date = new Date(ref_Date);
@@ -9688,6 +9687,7 @@ Template.non_transactional_list.onRendered(function() {
                         return item.fields.MessageTo == $('#edtSupplierCompanyEmail').val()
                     })
                     if (totalCorrespondences.length > 0 && $('#edtSupplierCompanyEmail').val() != '') {
+                        addVS1Data("TCorrespondence", JSON.stringify(dataReturn));
                         totalCorrespondences.map(item => {
                             let ref_Date = item.fields.Ref_Date == "" ? "1770-01-01" : item.fields.Ref_Date;
                             ref_Date = new Date(ref_Date);
@@ -9716,8 +9716,6 @@ Template.non_transactional_list.onRendered(function() {
                             new Date(a.date) - new Date(b.date)
                         })
                     } catch (error) {}
-                    $("#dateFrom").val(moment(fromDate).format("DD/MM/YYYY"));
-                    $("#dateTo").val(moment(toDate).format("DD/MM/YYYY"));
                     templateObject.displaySupplierCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
                 }).catch((err) => {
                     $('.fullScreenSpin').css('display', 'none');

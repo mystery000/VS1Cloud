@@ -21,7 +21,7 @@ Template.popemployeelist.onCreated(function(){
 });
 
 Template.popemployeelist.onRendered(function() {
-    $('.fullScreenSpin').css('display','inline-block');
+    // $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
     const customerList = [];

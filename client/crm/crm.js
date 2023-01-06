@@ -6,6 +6,11 @@ import { UtilityService } from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './crm.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let crmService = new CRMService();
 const contactService = new ContactService();
 const settingService = new TaxRateService();
