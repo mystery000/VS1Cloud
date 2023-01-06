@@ -8,6 +8,7 @@ import { currencySymbolEmpty } from "./CurrencyGlobals";
 import LoadingOverlay from "../../LoadingOverlay";
 import { Template } from 'meteor/templating';
 import './newcurrencypop.html';
+
 let sideBarService = new SideBarService();
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"

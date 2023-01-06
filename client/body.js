@@ -445,6 +445,10 @@ import './contacts/assignLeaveTypePop.js';
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
+// Kelvin More
+import './js/new_bill.js'
+import './bills/frmbill_card.html'
+
 Template.body.onCreated(function bodyOnCreated() {
     const templateObject = Template.instance();
     Meteor.subscribe('RegisterUsers');

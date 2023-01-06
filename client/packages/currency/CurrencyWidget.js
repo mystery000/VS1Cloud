@@ -7,7 +7,16 @@ import LoadingOverlay from "../../LoadingOverlay";
 import FxGlobalFunctions from "./FxGlobalFunctions";
 import { Template } from 'meteor/templating';
 import './CurrencyWidget.html';
-
+import './CurrencyRate.js'
+import './CurrencyConverter.js'
+import './CurrencyGlobals.js'
+import './FxCurrencyHistory.js'
+import './FxGlobalFunctions.js'
+import './FxRatesButton.js'
+import './currencydropdown.js'
+import './newcurrencypop.js'
+import './modals/CountryModal.js';
+import './modals/FxRateModal.js'
 
 let sideBarService = new SideBarService();
 let defaultCurrencyCode = CountryAbbr;
