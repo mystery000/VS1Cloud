@@ -557,7 +557,7 @@ Template.body.onCreated(function bodyOnCreated() {
 
 Template.body.onRendered(function() {
     const templateObject = Template.instance();
-    let isSidePanel = Session.get('CloudSidePanelMenu');
+    let isSidePanel = localStorage.getItem('CloudSidePanelMenu');
     if (isSidePanel) {
         templateObject.isCloudSidePanelMenu.set(true);
         $("html").addClass("hasSideBar");
@@ -596,7 +596,7 @@ Template.body.helpers({
         return Template.instance().isCloudSidePanelMenu.get();
     },
     isGreenTrack: function() {
-        let checkGreenTrack = Session.get('isGreenTrack') || false;
+        let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
         return checkGreenTrack;
     }
 });
