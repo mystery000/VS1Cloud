@@ -4,6 +4,12 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { UtilityService } from "../../utility-service";
 import '../../lib/global/indexdbstorage.js';
 import XLSX from 'xlsx';
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './leadstatus.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
@@ -235,7 +241,7 @@ Template.leadstatussettings.onRendered(function() {
             if (needAddUnqualified) {
                 contactService.getOneLeadStatusExByName("Quoted").then(function(leadStatus) {
                     let objUnqualified;
-                    if (leadStatus.tleadstatustypelist.length == 0) {
+                    if (leadStatus.tleadstatustype.length == 0) {
                         objUnqualified = {
                             type: "TLeadStatusType",
                             fields: {
@@ -246,7 +252,7 @@ Template.leadstatussettings.onRendered(function() {
                             }
                         }
                     } else {
-                        let statusID = leadStatus.tleadstatustypelist[0].ID;
+                        let statusID = leadStatus.tleadstatustype[0].ID;
                         objUnqualified = {
                             type: "TLeadStatusType",
                             fields: {
@@ -263,7 +269,7 @@ Template.leadstatussettings.onRendered(function() {
             if (needAddOpportunity) {
                 contactService.getOneLeadStatusExByName("Quoted").then(function(leadStatus) {
                     let objOpportunity;
-                    if (leadStatus.tleadstatustypelist.length == 0) {
+                    if (leadStatus.tleadstatustype.length == 0) {
                         objOpportunity = {
                             type: "TLeadStatusType",
                             fields: {
@@ -274,7 +280,7 @@ Template.leadstatussettings.onRendered(function() {
                             }
                         }
                     } else {
-                        let statusID = leadStatus.tleadstatustypelist[0].ID;
+                        let statusID = leadStatus.tleadstatustype[0].ID;
                         objOpportunity = {
                             type: "TLeadStatusType",
                             fields: {
@@ -291,7 +297,7 @@ Template.leadstatussettings.onRendered(function() {
             if (needAddQuoted) {
                 contactService.getOneLeadStatusExByName("Quoted").then(function(leadStatus) {
                     let objQuoted;
-                    if (leadStatus.tleadstatustypelist.length == 0) {
+                    if (leadStatus.tleadstatustype.length == 0) {
                         objQuoted = {
                             type: "TLeadStatusType",
                             fields: {
@@ -302,7 +308,7 @@ Template.leadstatussettings.onRendered(function() {
                             }
                         }
                     } else {
-                        let statusID = leadStatus.tleadstatustypelist[0].ID;
+                        let statusID = leadStatus.tleadstatustype[0].ID;
                         objQuoted = {
                             type: "TLeadStatusType",
                             fields: {
@@ -319,7 +325,7 @@ Template.leadstatussettings.onRendered(function() {
             if (needAddInvoiced) {
                 contactService.getOneLeadStatusExByName("Invoiced").then(function(leadStatus) {
                     let objInvoiced;
-                    if (leadStatus.tleadstatustypelist.length == 0) {
+                    if (leadStatus.tleadstatustype.length == 0) {
                         objInvoiced = {
                             type: "TLeadStatusType",
                             fields: {
@@ -330,7 +336,7 @@ Template.leadstatussettings.onRendered(function() {
                             }
                         }
                     } else {
-                        let statusID = leadStatus.tleadstatustypelist[0].ID;
+                        let statusID = leadStatus.tleadstatustype[0].ID;
                         objInvoiced = {
                             type: "TLeadStatusType",
                             fields: {
