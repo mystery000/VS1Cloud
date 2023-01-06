@@ -1,6 +1,9 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { ProductService } from "../product/product-service";
 import { OrganisationService } from "../js/organisation-service";
+import { Template } from 'meteor/templating';
+import './bom_list.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let organisationService = new OrganisationService();
 Template.bom_list.inheritsHooksFrom('non_transactional_list');

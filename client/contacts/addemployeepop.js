@@ -9,6 +9,10 @@ import { AppointmentService } from '../appointments/appointment-service';
 import { ProductService } from "../product/product-service";
 import '../lib/global/indexdbstorage.js';
 import LoadingOverlay from "../LoadingOverlay";
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import './addemployeepop.html';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 

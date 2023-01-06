@@ -1,6 +1,11 @@
 import { ReactiveVar } from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
 let utilityService = new UtilityService();
+
+import { Template } from 'meteor/templating';
+import './companyappsettings.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 Template.companyappsettings.onCreated(()=>{
   const templateObject = Template.instance();
   templateObject.recordscomp = new ReactiveVar();

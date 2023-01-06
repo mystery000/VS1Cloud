@@ -771,4 +771,13 @@ export class TaxRateService extends BaseService {
         return this.POST(this.ERPObjects.TEmailHistory, data)
     }
 
+        getEmailAttachments(tablename) {
+        let options= {
+            ListType: "Detail",
+            Select: "[TableName]='"+tablename+"'",
+            // Search: "Active=true"
+        }
+        return this.getList(this.ERPObjects.TAttachment, options)
+    }
+
 }

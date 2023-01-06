@@ -1,3 +1,4 @@
+import './productview.html';
 import { ProductService } from "../product/product-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { TaxRateService } from "../settings/settings-service";
@@ -9,6 +10,11 @@ import 'jquery-editable-select';
 import { Random } from 'meteor/random';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import { Template } from 'meteor/templating';
+import './productview.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let productService = new ProductService();
@@ -4774,6 +4780,7 @@ Template.productview.events({
                         objDetails = {
                             type: "TProductVS1",
                             fields: {
+                                ID : currentID,
                                 Active: true,
                                 ProductType: "INV",
                                 PRODUCTCODE: productCode,
@@ -4812,6 +4819,7 @@ Template.productview.events({
                         objDetails = {
                             type: "TProductVS1",
                             fields: {
+                                ID : currentID,
                                 Active: true,
                                 ProductType: "NONINV",
                                 PRODUCTCODE: productCode,
@@ -4892,6 +4900,7 @@ Template.productview.events({
                     objDetails = {
                         type: "TProductVS1",
                         fields: {
+                            ID : currentID,
                             Active: true,
                             ProductType: "INV",
                             PRODUCTCODE: productCode,
@@ -4930,6 +4939,7 @@ Template.productview.events({
                     objDetails = {
                         type: "TProductVS1",
                         fields: {
+                            ID : currentID,
                             Active: true,
                             ProductType: "NONINV",
                             PRODUCTCODE: productCode,
@@ -4966,6 +4976,9 @@ Template.productview.events({
                     };
                 }
 
+                console.log('4');
+                console.log(objDetails);
+
                 productService.saveProductVS1(objDetails).then(function(objDetails) {
                     let linesave = objDetails.fields.ID;
                     if (itrackThisItem == false) {
@@ -4984,6 +4997,7 @@ Template.productview.events({
 
 
                     sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(dataReload) {
+                        console.log(dataReload);
                         addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
                             FlowRouter.go('/inventorylist?success=true');
                         }).catch(function(err) {

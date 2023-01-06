@@ -7,6 +7,7 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import { OrganisationService } from "../js/organisation-service";
 
+import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './customerlist.html';
 

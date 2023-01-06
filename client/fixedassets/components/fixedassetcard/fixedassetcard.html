@@ -23,7 +23,7 @@
           <div class="col-12 col-md-4">
               <h1 style="margin: 12px;margin-bottom: 0px;" class="heading">Fixed Asset
 
-                  {{> helpbutton}}
+                  <!-- {{> helpbutton}} -->
 
                   <!-- Start Help View Modal -->
                   <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -145,7 +145,7 @@
                       </div>
                   </div>
                   <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Date of Purchase</label>
+                    <div class="form-group" style="margin: 4px;"><label>Purchased Date</label>
                       <div class="input-group date" style="cursor: pointer;">
                         <input type="text" class="form-control" id="edtDateofPurchase" name="edtDateofPurchase">
                         <div class="input-group-addon">
@@ -317,6 +317,14 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Cost Asset Account</label>
                         <select type="search" class="form-control" id="edtCostAssetAccount" name="edtCostAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                          {{#if edtCostAssetAccount}}
+                            <option></option>
+                            {{#each account in edtCostAssetAccount}}
+                              <option class="" value="{{account.id}}">
+                                {{account.accountName}}
+                              </option>
+                            {{/each}}
+                          {{/if}}
                         </select>
                       </div>
                     </div>
@@ -324,6 +332,14 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Bank Account</label>
                         <select type="search" class="form-control" id="editBankAccount" name="editBankAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                          {{#if editBankAccount}}
+                            <option></option>
+                            {{#each account in editBankAccount}}
+                              <option class="" value="{{account.id}}">
+                                {{account.accountName}}
+                              </option>
+                            {{/each}}
+                          {{/if}}
                         </select>
                       </div>
                     </div>
@@ -331,6 +347,14 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Depreciation Asset Account</label>
                         <select type="search" class="form-control" id="edtDepreciationAssetAccount" name="edtDepreciationAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                          {{#if edtDepreciationAssetAccount}}
+                          <option></option>
+                            {{#each account in edtDepreciationAssetAccount}}
+                              <option class="" value="{{account.id}}">
+                                {{account.accountName}}
+                              </option>
+                            {{/each}}
+                          {{/if}}
                         </select>
                       </div>
                     </div>
@@ -338,6 +362,14 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Depreciation Expense Account</label>
                         <select type="search" class="form-control" id="edtDepreciationExpenseAccount" name="edtDepreciationExpenseAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                          {{#if edtDepreciationExpenseAccount}}
+                            <option></option>
+                            {{#each account in edtDepreciationExpenseAccount}}
+                              <option class="" value="{{account.id}}">
+                                {{account.accountName}}
+                              </option>
+                            {{/each}}
+                          {{/if}}
                         </select>
                       </div>
                     </div>
@@ -386,13 +418,14 @@
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>Accumulated Depreciation</label>
-                        <input type="text" class="form-control" id="edtAccumulatedDepreciation" name="edtAccumulatedDepreciation">
+                          <input type="text" class="form-control" id="edtAccumulatedDepreciation" name="edtAccumulatedDepreciation" 
+                          disabled="{{#if chkEnterAmount}}true{{/if}}">
                       </div>
                     </div>
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>For Year Ending</label>
-                        <input type="text" class="form-control" id="edtForYearEnding" name="edtForYearEnding">
+                        <input type="text" class="form-control" id="edtForYearEnding" name="edtForYearEnding" disabled="{{#if chkEnterAmount}}true{{/if}}">
                       </div>
                     </div>
                   </div>
@@ -475,9 +508,11 @@
     </div>
   </div>
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="fixedAssetTypeModal">
+  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="fixedAssetTypeListModal">
     {{ >fixedassettypepopup}}
-  </div>
+  </div> -->
 
-    {{> init_form_page_script}}
+  <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+    {{> accountlistpop}}
+  </div>
 </template>

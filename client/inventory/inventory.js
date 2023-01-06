@@ -1,12 +1,14 @@
 import { jsPDF } from "jspdf";
 import "jQuery.print/jQuery.print.js";
-
+import { Template } from 'meteor/templating';
+import './inventory.html';
 import { autoTable } from "jspdf-autotable";
 import { ProductService } from "../product/product-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { UtilityService } from "../utility-service";
 import draggableCharts from "../js/Charts/draggableCharts";
 import resizableCharts from "../js/Charts/resizableCharts";
+
 let utilityService = new UtilityService();
 const tempObj = Template.instance();
 

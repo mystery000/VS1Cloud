@@ -1,5 +1,7 @@
 import '../../../lib/global/indexdbstorage.js';
 import { FixedAssetService } from "../../fixedasset-service";
+
+import './fixedassetchart.html';
 let _ = require('lodash');
 
 Template.fixedassetchart.onCreated(() => {
