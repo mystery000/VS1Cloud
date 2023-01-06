@@ -442,30 +442,30 @@ import './contacts/assignLeaveTypePop.js';
 /* Roverto */
 
 /* OleksandrF */
-import './overviews/salesoverview.js';
-import './vs1_templates/date_picker/daterangefromto_trans.js';
-import './vs1_templates/transaction_temp/transaction_line.js';
+// import './overviews/salesoverview.js';
+// import './vs1_templates/date_picker/daterangefromto_trans.js';
+// import './vs1_templates/transaction_temp/transaction_line.js';
 
-import './invoice/invoice_express_list_tables.js';
-import './invoice/invoice_express_listBO_tables.js';
-import './invoice/invoiceemail.js';
+// import './invoice/invoice_express_list_tables.js';
+// import './invoice/invoice_express_listBO_tables.js';
+// import './invoice/invoiceemail.js';
 
-import './quote/quote_express_list_tables.js';
-import './refunds/refunds_list.js';
-import './bills/bill_list.js';
-import './credit/credit_list.js';
-import './purchase/purchaseorder_express_list_tables.js';
-import './purchase/purchaseorderbo_express_list_tables.js';
-import './purchase/purchase-service.js';
-import './Help_Form/help_advisor.js';
-import './js/new_bill.js';
-import './js/new_credit.js';
-import './js/new_invoice.js';
-import './js/new_quote.js';
-import './js/refundcard.js';
-import './fixedassets/components/fixedassetlistpop/fixedassetlistpop.js';
-import './fixedassets/components/costtypelistpop/costtypelistpop.js';
-import './packages/currency/CurrencyRate.js';
+// import './quote/quote_express_list_tables.js';
+// import './refunds/refunds_list.js';
+// import './bills/bill_list.js';
+// import './credit/credit_list.js';
+// import './purchase/purchaseorder_express_list_tables.js';
+// import './purchase/purchaseorderbo_express_list_tables.js';
+// import './purchase/purchase-service.js';
+// import './Help_Form/help_advisor.js';
+// import './js/new_bill.js';
+// import './js/new_credit.js';
+// import './js/new_invoice.js';
+// import './js/new_quote.js';
+// import './js/refundcard.js';
+// import './fixedassets/components/fixedassetlistpop/fixedassetlistpop.js';
+// import './fixedassets/components/costtypelistpop/costtypelistpop.js';
+// import './packages/currency/CurrencyRate.js';
 /* OleksandrF */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
