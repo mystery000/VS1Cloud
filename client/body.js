@@ -77,7 +77,6 @@ import './eft/bankNameModal/bankNameModal.js';
 
 import './vs1_templates/vs1_video/vs1_login_video.html';
 import './popUps/vs1_databasepopup.html';
-import './Help_Form/help_advisor.html';
 import './Help_Form/help_gotoforum.html';
 import './Help_Form/help_button.html';
 import './route.js';
@@ -189,7 +188,7 @@ import './vs1_templates/toggle_button/toggle_button.html';
 import './popUps/copyfrequencypop.html';
 import './Template/AppTableModal.html';
 
-import './vs1_templates/loggedcompanyoverview/loggedcompanyoverview.js';
+
 import './vs1_templates/internal_transaction_list/internal_transaction_list_with_switchbox.js';
 import './vs1charts/allCardsLists/allCardsLists.js';
 import './vs1charts/allChartLists/allChartLists.js';

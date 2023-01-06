@@ -25,6 +25,10 @@ import { Template } from 'meteor/templating';
 import '../credit/frmcredit_card.html'
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
+import { Template } from 'meteor/templating';
+import '../credit/frmcredit_card.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 var times = 0;

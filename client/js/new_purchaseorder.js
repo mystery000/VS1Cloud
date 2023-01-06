@@ -1,31 +1,32 @@
 // @ts-nocheck
+import {CoreService} from '../js/core-service';
+import {ReactiveVar} from 'meteor/reactive-var';
+import {UtilityService} from "../utility-service";
 import {SalesBoardService} from './sales-service';
 import {PurchaseBoardService} from './purchase-service';
-import {ReactiveVar} from 'meteor/reactive-var';
-import {CoreService} from '../js/core-service';
-import {DashBoardService} from "../Dashboard/dashboard-service";
-import {UtilityService} from "../utility-service";
 import {ProductService} from "../product/product-service";
-import '../lib/global/erp-objects';
-import 'jquery-ui-dist/external/jquery/jquery';
-import 'jquery-ui-dist/jquery-ui';
-import {Random} from 'meteor/random';
+import {DashBoardService} from "../Dashboard/dashboard-service";
 import {jsPDF} from 'jspdf';
-import 'jQuery.print/jQuery.print.js';
-import {autoTable} from 'jspdf-autotable';
-import {SideBarService} from '../js/sidebar-service';
 import 'jquery-editable-select';
+import 'jquery-ui-dist/jquery-ui';
+import '../lib/global/erp-objects';
+import {Random} from 'meteor/random';
+import 'jQuery.print/jQuery.print.js';
+import {Session} from 'meteor/session';
+import { rest, template } from 'lodash';
+import {autoTable} from 'jspdf-autotable';
+import 'jquery-ui-dist/external/jquery/jquery';
+import {SideBarService} from '../js/sidebar-service';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
-import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
-import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
-import { rest, template } from 'lodash';
-import {Session} from 'meteor/session';
+import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
+import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
+
 import { Template } from 'meteor/templating';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import '../purchase/frm_purchaseorder.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
