@@ -88,6 +88,7 @@ import './route.js';
 
 import './lib/global/globalfunction.js';
 import './lib/global/utBarcodeConst.js';
+// import "../lib/global/indexdbstorage.js";
 // import '/imports/startup/client';
 // Transaction Header and Footer
 import "./vs1_templates/transaction_temp/transaction_header/transaction_header.js"
@@ -398,6 +399,21 @@ import './contacts/customerlist.js';
 import './contacts/supplierlist.js';
 import './contacts/leadlist.js';
 import './packages/currency/currencydropdown.js';
+/*williamgrayson*/
+import './appointments/frmappointmentpop.js';
+import './appointments/appointmentlist.js';
+// import './appointments/appointments.js';
+import './appointments/appointment-service.js';
+import './appointments/appointmenttimelist.js';
+import './popUps/copyfrequencypop.html';
+import './popUps/deletepop.js';
+import './popUps/deletepop.html';
+import './invoice/invoiceemail.js';
+import './invoice/invoice_express_list_tables.js';
+import './invoice/invoice-service.js';
+import './invoice/invoice_express_listBO_tables.js';
+
+
 /*Vladyslav*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
