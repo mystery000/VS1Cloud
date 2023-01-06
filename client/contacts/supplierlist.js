@@ -9,7 +9,6 @@ import { OrganisationService } from "../js/organisation-service";
 let organisationService = new OrganisationService;
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './supplierlist.html';
