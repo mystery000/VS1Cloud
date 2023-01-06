@@ -6,6 +6,10 @@ import {AccountService} from "../accounts/account-service";
 import {UtilityService} from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import './customerAwaitingPayments.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.customerawaitingpayments.onCreated(function () {

@@ -5,9 +5,7 @@ import "../../lib/global/indexdbstorage.js";
 import FxGlobalFunctions from "./FxGlobalFunctions";
 import { Template } from 'meteor/templating';
 import './CurrencyRate.html';
-// let sideBarService = new SideBarService();
-
-
+let sideBarService = new SideBarService();
 
 Template.CurrencyRate.onCreated(function () {
   const templateObject = Template.instance();
@@ -15,7 +13,7 @@ Template.CurrencyRate.onCreated(function () {
 });
 
 Template.CurrencyRate.onRendered(function () {
-  
+
 });
 
 Template.CurrencyRate.helpers({
