@@ -21,12 +21,9 @@ import { saveCurrencyHistory } from "../packages/currency/CurrencyWidget";
 import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentcard";
 import { getCurrentCurrencySymbol } from "../popUps/currnecypopup";
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
-import { Template } from 'meteor/templating';
-import '../credit/frmcredit_card.html'
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 import { Template } from 'meteor/templating';
-import '../credit/frmcredit_card.html';
+import '../credit/frmcredit_card.html'
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let utilityService = new UtilityService();
