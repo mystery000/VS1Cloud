@@ -17,6 +17,7 @@ import { saveCurrencyHistory } from "../../packages/currency/CurrencyWidget";
 import { EftService } from "../../eft/eft-service";
 import { Template } from 'meteor/templating';
 import './supplierPaymentCard.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 
 let sideBarService = new SideBarService();
