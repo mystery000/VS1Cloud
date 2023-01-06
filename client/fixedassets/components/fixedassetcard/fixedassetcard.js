@@ -108,14 +108,14 @@ Template.fixedassetcard.onRendered(function () {
 });
 Template.fixedassetcard.events({
   "click button.btnSave": function() {
-    // const templateObject = Template.instance();
-    // let typeData = {
-    //   AssetTypeCode: "Vehicles",
-    //   AssetTypeName: "Vehicles",
-    //   Notes: "Vehicles",
-    //   Active: true
-    // };
-    // accountService.saveAssetType(typeData);
+    const templateObject = Template.instance();
+    let typeData = {
+      AssetTypeCode: "Vehicles",
+      AssetTypeName: "Vehicles",
+      Notes: "Vehicles",
+      Active: true
+    };
+    accountService.saveAssetType(typeData);
   },
   "click button.btnBack": function() {
     FlowRouter.go('/fixedassetsoverview');
