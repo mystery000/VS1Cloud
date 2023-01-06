@@ -71,6 +71,8 @@ Template.templatesettings.onRendered(function () {
     $(".modal-title#templatePreviewLabel").css("display", "none");
     $("#templatePreviewModal #templatePreviewInput").css("display", "block");
     $("#editPrintMore").css("display", "block");
+    $('#templatePreviewModal .btnCopyReport').css("display", "block");
+    $('#templatePreviewModal .btnImportReport').css("display", "block");
     $("#templatePreviewModal #templatePreviewInput").val(
       $('input[name="' + title + "_" + number + '"]').val()
     );
@@ -81,6 +83,8 @@ Template.templatesettings.onRendered(function () {
     templateObject.generateInvoiceData(title, number);
     $(".modal-title#templatePreviewLabel").css("display", "block");
     $("#templatePreviewModal #templatePreviewInput").css("display", "none");
+    $('#templatePreviewModal .btnCopyReport').css("display", "none");
+    $('#templatePreviewModal .btnImportReport').css("display", "none");
     $("#editPrintMore").css("display", "none");
     $("#templatePreviewModal .modal-title").text(
       $('input[name="' + title + "_" + number + '"]').val()
