@@ -8,6 +8,7 @@ import "./transaction_journal_header.html"
 import "./transaction_payment_header.html"
 import "./transaction_shippingdocket_header.html"
 import "./transaction_stocktransfer_header.html"
+import "./transaction_stockadjustment_header.html"
 import "./transaction_header.html"
 
 Template.transaction_header.helpers({

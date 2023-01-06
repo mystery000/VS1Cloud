@@ -241,7 +241,11 @@
             {{> absenteeRate
                     md=8 defaultPosition=23 key="employees__absentee_rate_over_last_12_months" }}
         {{/if}}
-
+        
+        {{#if is_available_chart currentTemplate "dashboardManagerCharts"}}
+            <!-- position 17 to 18, 24 -->
+            {{> dashboardManagerCharts}}
+        {{/if}}
 
         {{#if is_available_chart currentTemplate "dsmTop10Customers"}}
             {{> dsmTop10Customers
