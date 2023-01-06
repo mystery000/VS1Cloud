@@ -10,7 +10,6 @@ import { SideBarService } from '../js/sidebar-service.js';
 import '../lib/global/indexdbstorage.js';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import '../fixedassets/fixedassets.js';
 import { Session } from 'meteor/session';
 
 import '../Navigation/newsidenav.html';
