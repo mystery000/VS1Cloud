@@ -1,3 +1,4 @@
+import { Template } from 'meteor/templating';
 import { TaxRateService } from "../../settings/settings-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../js/sidebar-service";
@@ -6,6 +7,7 @@ import FxGlobalFunctions from "./FxGlobalFunctions";
 import { Template } from 'meteor/templating';
 import './CurrencyRate.html';
 let sideBarService = new SideBarService();
+import './CurrencyRate.html';
 
 
 Template.CurrencyRate.onCreated(function () {

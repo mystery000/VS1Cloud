@@ -25,8 +25,8 @@ import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 
 import { Template } from 'meteor/templating';
-import '../purchase/frm_purchaseorder.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import '../purchase/frm_purchaseorder.html';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();

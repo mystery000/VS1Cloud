@@ -2,6 +2,12 @@ import "../../lib/global/indexdbstorage.js";
 import { CRMService } from "../crm-service";
 import { SideBarService } from '../../js/sidebar-service';
 import { ContactService } from "../../contacts/contact-service";
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './alltaskdatatable.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let crmService = new CRMService();
 let sideBarService = new SideBarService();
 let contactService = new ContactService();
@@ -2333,9 +2339,9 @@ Template.alltaskdatatable.events({
                 $("#detailTaskLabelWrapper input:checked").each(function() {
                     selected_lbls.push($(this).attr("name"));
                 });
-                $("#detailTaskLabelWrapper input:unchecked").each(function() {
-                    unselected_lbls.push($(this).attr("name"));
-                });
+                // $("#detailTaskLabelWrapper input:unchecked").each(function() {
+                //     unselected_lbls.push($(this).attr("name"));
+                // });
 
                 let editTaskDetailName = $(".editTaskDetailName").val();
                 let editTaskDetailDescription = $(".editTaskDetailDescription").val();

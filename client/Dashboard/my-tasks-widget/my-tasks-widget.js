@@ -652,9 +652,9 @@ Template.myTasksWidget.events({
                 $("#detailTaskLabelWrapper input:checked").each(function() {
                     selected_lbls.push($(this).attr("name"));
                 });
-                $("#detailTaskLabelWrapper input:unchecked").each(function() {
-                    unselected_lbls.push($(this).attr("name"));
-                });
+                // $("#detailTaskLabelWrapper input:unchecked").each(function() {
+                //     unselected_lbls.push($(this).attr("name"));
+                // });
 
                 let editTaskDetailName = $(".editTaskDetailName").val();
                 let editTaskDetailDescription = $(".editTaskDetailDescription").val();
