@@ -1,7 +1,6 @@
 import moment from "moment";
 import { Template } from 'meteor/templating';
-import './daterangefromto_trans.html'
-
+import './daterangefromto_trans.html';
 Template.daterangefromto_trans.inheritsHooksFrom('daterangedropdownoption');
 Template.daterangefromto_trans.inheritsHelpersFrom('daterangedropdownoption');
 Template.daterangefromto_trans.inheritsEventsFrom('daterangedropdownoption');

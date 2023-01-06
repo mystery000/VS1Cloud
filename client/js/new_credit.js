@@ -22,7 +22,7 @@ import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentc
 import { getCurrentCurrencySymbol } from "../popUps/currnecypopup";
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import { Template } from 'meteor/templating';
-import '../credit/frmcredit_card.html'
+import '../credit/frmcredit_card.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let utilityService = new UtilityService();
@@ -83,7 +83,7 @@ Template.creditcard.onCreated(() => {
   templateObject.subtaxcodes = new ReactiveVar([]);
   templateObject.hasFollow = new ReactiveVar(false);
 
- 
+
 
   templateObject.supplierRecord = new ReactiveVar();
 });
@@ -2751,7 +2751,7 @@ Template.creditcard.onRendered(() => {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
         var tbl_content = $("#templatePreviewModal .tbl_content")
@@ -2819,7 +2819,7 @@ Template.creditcard.onRendered(() => {
                 $("#templatePreviewModal #tax_list_print").remove();
             }
         }
-        
+
 
         // table content
         var tbl_content = $("#templatePreviewModal .tbl_content")

@@ -6,41 +6,41 @@
     {{#if billrecord}}
     <form>
       {{> transaction_header
-        cardType="Bill"
-        data=billrecord
-        uploadedFile=uploadedFile
-        isCurrencyEnable=isCurrencyEnable
-        custfields=custfields
-        showTransactionButtons=true
-        salesCloudPreferenceRec=purchaseCloudPreferenceRec
-        showCustomer=true
-        showBilingAddress=true
-        showSalesDate=true
-        showPONumber=false
-        showInvoiceNumber=true
-        showVia=true
-        showTerms=true
-        showStatus=true
-        showReference=true
-        showDepartment=true
-        showCustomFields=true
-        showShippingInfo=true
-        showPayment=true
-        showCopyTransaction=true
-        showCopyToInvoice=false
-        showCopyToOrder=false
+      cardType="Bill"
+      data=billrecord
+      uploadedFile=uploadedFile
+      isCurrencyEnable=isCurrencyEnable
+      custfields=custfields
+      showTransactionButtons=true
+      salesCloudPreferenceRec=purchaseCloudPreferenceRec
+      showCustomer=true
+      showBilingAddress=true
+      showSalesDate=true
+      showPONumber=false
+      showInvoiceNumber=true
+      showVia=true
+      showTerms=true
+      showStatus=true
+      showReference=true
+      showDepartment=true
+      showCustomFields=true
+      showShippingInfo=true
+      showPayment=true
+      showCopyTransaction=true
+      showCopyToInvoice=false
+      showCopyToOrder=false
       }}
       <div>
         {{> transaction_line
-          tablename="tblBillLine"
-          recordLineItems=billrecord.LineItems
-          isForeignEnabled=isForeignEnabled
-          canShowBackOrder=false
-          canShowUOM=false
-          includeBOnShippedQty=false
-          isBatchSerialNoTracking=false
-          getDefaultCurrency=getDefaultCurrency
-          }}
+        tablename="tblBillLine"
+        recordLineItems=billrecord.LineItems
+        isForeignEnabled=isForeignEnabled
+        canShowBackOrder=false
+        canShowUOM=false
+        includeBOnShippedQty=false
+        isBatchSerialNoTracking=false
+        getDefaultCurrency=getDefaultCurrency
+        }}
         <!-- {{> deletepop itemName1="Bill" itemName2="bill" itemName3="Bill" button1="btnDeleteBill" button2="btnDeleteFollowingBills"}} -->
       </div>
 
@@ -190,7 +190,8 @@
           </div>
           <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
             <h4 class="" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Bill &nbsp;&nbsp;&nbsp;
-              <span class="print-header"></span> </h4>
+              <span class="print-header"></span>
+            </h4>
 
             <div style="display: flex; width: 100%;">
               <div style="width: 50%; padding-right: 16px;font-weight: bold;">
@@ -696,7 +697,8 @@
                   <div class="d-lg-flex d-xl-flex align-items-lg-start align-items-xl-start card-text">
                     <div class="d-xl-flex flex-column flex-grow-1 align-items-xl-start" style="padding-right: 16px;">
                       <label class="text-nowrap" style="font-weight: 800; color: rgb(0 0 0);">TOTAL&nbsp; (inc
-                        GST)</label></div>
+                        GST)</label>
+                    </div>
                     <div class="flex-grow-1" style="padding-left: 16px;">
                       <p class="text-right flex-grow-1" style="margin-bottom: 8px;font-weight: 800; color: rgb(0 0 0);">
                         {{billrecord.Total}}<br></p>
@@ -751,5 +753,5 @@
   <script>
     modalDraggable();
   </script>
-    {{> init_form_page_script}}
+  {{> init_form_page_script}}
 </template>
