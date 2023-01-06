@@ -9,6 +9,12 @@ import '../lib/global/indexdbstorage.js';
 import { convertToForeignAmount } from './paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
+
+import { Session } from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './supplierpayment.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.supplierpayment.onCreated(function(){
