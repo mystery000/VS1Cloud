@@ -2777,13 +2777,12 @@ Template.accessleveldup.onRendered(function(){
     // });
 
     $(document).ready(function() {
+        $('#sltEmployeeName').select();
         $('#sltEmployeeName').editableSelect();
         $("#sltEmployeeName").val('All');
         $('#mytag').val(0);
-    });
 
-    $('#sltEmployeeName').editableSelect()
-    .on('click.editable-select', function (e, li) {
+        $('#sltEmployeeName').editableSelect().on('click.editable-select', function (e, li) {
         var $earch = $(this);
         var offset = $earch.offset();
         $('#edtEmployeePOPID').val('');
@@ -3219,21 +3218,35 @@ Template.accessleveldup.onRendered(function(){
 
     });
 
+    });
+
+    
+
     $(document).on("click", "#tblEmployeelist tbody tr", function (e) {
         let employeeName = $(this).find(".colEmployeeName").text() || '';
         let employeeID = $(this).find(".colID").text() || '';
         $('#sltEmployeeName').val(employeeName);
-        $('#mytag').val(employeeID);
-
-        if(employeeID){
-          $('.fullScreenSpin').css('display','inline-block');
-            templateObject.accessgrouprecord.set('');
-            getTableData(employeeID);
-
+        let enableCopy = $('copyEmployeeSetting').attr('checked');
+        if(enableCopy){
+            let copiedEmployeeID =  $('#mytag').val();
+            if(copiedEmployeeID){
+                $('.fullScreenSpin').css('display','inline-block');
+                  templateObject.accessgrouprecord.set('');
+                getTableData(copiedEmployeeID);
+            }else{
+                getTableData('All');
+            }
         }else{
-            getTableData('All');
+            $('#mytag').val(employeeID);
+            if(employeeID){
+                $('.fullScreenSpin').css('display','inline-block');
+                  templateObject.accessgrouprecord.set('');
+                  getTableData(employeeID);
+      
+            }else{
+                getTableData('All');
+            }
         }
-
         $('.employeeNameHead span').text(employeeName);
 
         // $('#tblEmployeelist').val(employeeName);
@@ -4490,5 +4503,9 @@ Template.accessleveldup.events({
         }else{
             $(event.target).val(6);
         }
+    },
+    'click #copyEmployeeSetting':function(event){
+        $('#employeeListPOPModal').modal();
+        $('#copyEmployeeSetting').attr("checked", true);
     }
 });
