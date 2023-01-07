@@ -21,6 +21,10 @@ export class FixedAssetService extends BaseService {
     return this.getOneById(this.ERPObjects.TFixedAssets, id);
   }
 
+  saveTFixedAsset(data) {
+    return this.POST(this.ERPObjects.TFixedAssets, data);
+  }
+
   updateTFixedAsset(data) {
     return this.POST(this.ERPObjects.TFixedAssets, data);
   }
