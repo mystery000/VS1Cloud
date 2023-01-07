@@ -3,6 +3,8 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { Random } from "meteor/random";
 import { AccountService } from "../../accounts/account-service";
 import { EftService } from "../eft-service"
+import { Template } from 'meteor/templating';
+import './eftExportModal.html';
 
 
 Template.eftExportModal.onCreated(function () {

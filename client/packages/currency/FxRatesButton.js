@@ -9,6 +9,7 @@ import FxGlobalFunctions from "./FxGlobalFunctions";
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './FxRatesButton.html';
+
 let sideBarService = new SideBarService();
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
