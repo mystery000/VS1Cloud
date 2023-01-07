@@ -400,8 +400,11 @@ Template.fixedassetlisttable.events({
 
   "click #btnAssetRegister": function () {
     FlowRouter.go('/assetregisteroverview');
-  }
+  },
 
+  "click #btnServiceLogs": function () {
+    FlowRouter.go('/serviceloglist');
+  }
 });
 
 Template.fixedassetlisttable.helpers({

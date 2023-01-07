@@ -125,6 +125,32 @@ Template.fixedassetcard.events({
         Description: $('input#edtAssetDescription').val(),
         AssetType: $('input#edtAssetType').val(),
         BrandName: $('input#edtBrand').val(),
+        Model: '', //
+        // Number: '',
+        // RegistrationNo: '',
+        // Type:'',
+        // CapacityWeight: '',
+        // CapacityVolumn: '',
+        PurchDate: '', //
+        PurchCost: '', //
+        SupplierID: '', // 
+        RenewalDate:'',
+        InsuranceInfo: '', //?
+        // RenewalDate: '',
+
+        // -----------------Depreciation Information
+        DepreciationOption: '', //Depreciation Type
+        FixedAssetCostAccountID: '',
+        // FixedAssetBankAccountID: '', //ClearingAccountID
+        FixedAssetDepreciationAccountID: '', //FixedAssetDepreciationExpenseAccountID
+        FixedAssetDepreciationAssetAccountID: '',
+        Salvage: '',
+        SalvageType: '',
+        life: '',
+        BusinessUsePercent: '',
+        
+
+
         Active: true
       }
     };
