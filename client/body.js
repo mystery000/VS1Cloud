@@ -24,7 +24,7 @@ import './utility-service';
 import './js/Apptimer.js';
 import './js/base-service.js';
 import './js/Base64.js';
-//import './js/cheque_card.js';
+import './js/cheque_card.js';
 import './js/core-service.js';
 import './js/country-service.js';
 //import './js/email_settings.js';
@@ -32,19 +32,18 @@ import './js/employeepayroll-service.js';
 import './lib/global/indexdbstorage.js';
 // import './js/files.js';
 //import './js/forgotpassword.js';
-// import './js/frm_deposit.js';
-// import './js/frm_journalentry.js';
+import './js/frm_deposit.js';
+import './js/frm_journalentry.js';
 import './js/header.js';
 import './js/Logger.js';
 import './js/mailchimp-service.js';
-// import './js/new_bill.js';
 import './js/new_bom_temp.js';
-// import './js/new_credit.js';
-// import './js/new_invoice.js';
+import './js/new_credit.js';
+import './js/new_invoice.js';
 // import './js/new_process.js';
 import './js/new_processpop.js';
 import './js/new_purchaseorder.js';
-// import './js/new_quote.js';
+import './js/new_quote.js';
 import './js/new_salesorder.js';
 import './js/new_workorder.js';
 import './js/ocr-service.js';
@@ -54,7 +53,7 @@ import './js/profile-service.js';
 import './js/purchase-service.js';
 // import './js/purchasedb.js';
 import './js/ratetype_service.js';
-// import './js/refundcard.js';
+import './js/refundcard.js';
 // import './js/register.js';
 // import './js/registerdb.js';
 // import './js/registersts.js';
@@ -78,7 +77,6 @@ import './eft/bankNameModal/bankNameModal.js';
 
 import './vs1_templates/vs1_video/vs1_login_video.html';
 import './popUps/vs1_databasepopup.html';
-import './Help_Form/help_advisor.html';
 import './Help_Form/help_gotoforum.html';
 import './Help_Form/help_button.html';
 import './route.js';
@@ -191,7 +189,7 @@ import './vs1_templates/toggle_button/toggle_button.html';
 import './popUps/copyfrequencypop.html';
 import './Template/AppTableModal.html';
 
-import './vs1_templates/loggedcompanyoverview/loggedcompanyoverview.js';
+
 import './vs1_templates/internal_transaction_list/internal_transaction_list_with_switchbox.js';
 import './vs1charts/allCardsLists/allCardsLists.js';
 import './vs1charts/allChartLists/allChartLists.js';
@@ -282,7 +280,10 @@ import './settings/template-settings/templatesettings.js';
 import './vs1_templates/transaction_temp/transaction_print_modal.js';
 import './vs1_templates/transaction_temp/transaction_calculation.js';
 import './manufacture/bomList.js';
-// import './fixedassets/fixedassets.js';
+import './fixedassets/fixedassets.js';
+// import './appointments/appointments.js';
+// import './appointments/appointment-service.js';
+// import './appointments/appointmenttimelist.js';
 /* Tinyiko */
 
 /* Rasheed */
@@ -432,32 +433,92 @@ import './contacts/assignLeaveTypePop.js';
 
 
 /* Roverto */
-// import './crm/crm.js';
-// import './crm/components/help-modal.html';
-// import './crm/components/projectTasksModal/projectTasksModal.html';
-// import './crm/components/editProjectModal/editProjectModal.html';
-// import './crm/components/newProjectModal/newProjectModal.html';
-// import './crm/components/moveToProjectModal/moveToProjectModal.html';
-// import './crm/components/newLabelModal/newLabelModal.html';
-// import './crm/components/editLabelModal/editLabelModal.html';
-// import './crm/mailchimpReport/mailchimp-modal.html';
-// import './crm/components/leadBarChart/leadbarchart.js';
-// import './crm/components/crm_top_menu/top-menu.js';
-// import './crm/components/campaignReport/campaignReport.js';
-// import './crm/allTasksTab/alltaskdatatable.js';
-// import './crm/mailchimpReport/mailchimp-add-campaign-moda.js';
-// import './crm/mailchimpReport/mailchimpList.js';
-// import './settings/leadstatus-setting/leadstatus.js';
-// import './settings/leadstatus-setting/leadstatusmodal.js';
-// import './contacts/joblist.js';
-// import './receipts/receiptclaims.js';
-// import './receipts/tripgroup.js';
-// import './receipts/receiptcategory.js';
-// import './settings/settings.js';
-// import './settings/tax-rates-setting/tax-rates.js';
-// import './settings/tax-rates-setting/subtaxes.js';
-// import './settings/tax-rates-setting/DeleteLineModal.html';
+import './crm/crm.js';
+import './crm/components/help-modal.html';
+import './crm/components/projectTasksModal/projectTasksModal.html';
+import './crm/components/editProjectModal/editProjectModal.html';
+import './crm/components/newProjectModal/newProjectModal.html';
+import './crm/components/moveToProjectModal/moveToProjectModal.html';
+import './crm/components/newLabelModal/newLabelModal.html';
+import './crm/components/editLabelModal/editLabelModal.html';
+import './crm/mailchimpReport/mailchimp-modal.html';
+import './crm/components/leadBarChart/leadbarchart.js';
+import './crm/components/crm_top_menu/top-menu.js';
+import './crm/components/campaignReport/campaignReport.js';
+import './crm/allTasksTab/alltaskdatatable.js';
+import './crm/mailchimpReport/mailchimp-add-campaign-moda.js';
+import './crm/mailchimpReport/mailchimpList.js';
+import './settings/leadstatus-setting/leadstatus.js';
+import './settings/leadstatus-setting/leadstatusmodal.js';
+import './contacts/joblist.js';
+import './receipts/receiptclaims.js';
+import './receipts/tripgroup.js';
+import './receipts/receiptcategory.js';
+import './settings/settings.js';
+import './settings/tax-rates-setting/tax-rates.js';
+import './settings/tax-rates-setting/subtaxes.js';
+import './settings/tax-rates-setting/DeleteLineModal.html';
+import './overviews/paymentoverview.js';
+import './payments/customerAwaitingPayments.js';
+import './payments/customerpayment.js';
+import './payments/supplierpayment.js';
+import './payments/supplierAwaitingPurchaseOrder.js';
+import './contacts/statementlist.js';
 /* Roverto */
+
+/* Kelvin More */
+import './js/new_bill.js';
+import './eft/exportModal/eftExportModal.js';
+import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
+import './eft/addNewEftModal/addNewEftModal.js';
+import 'jquery-editable-select';
+import './inventory/stockadjustment/frm_stockAdjustment.js';
+import './stocktransfer/stocktransfercard.js';
+import './stocktransfer/stocktransferlist.js';
+import './payments/paymentcard/paymentcard.js';
+import './settings/tax-rates-setting/addnew-taxrate.js';
+import './settings/tax-rates-setting/AddTaxRateModal.html';
+import './overviews/salesoverview.js';
+import './vs1_templates/date_picker/daterangefromto_trans.js';
+import './fixedassets/components/costtypelistpop/costtypelistpop.js';
+/* Kelvin More */
+
+/* Stefan */
+import './packages/currency/FxCurrencyHistory.js';
+import './packages/currency/FxGlobalFunctions.js';
+/* Stefan */
+
+/* Arthlo */
+import './js/Api/Model/PayrollSettingsOvertimes.js';
+import './vs1_templates/transaction_temp/transaction_line.js';
+import './invoice/invoice_express_list_tables.js';
+import './invoice/invoice_express_listBO_tables.js';
+import './invoice/invoiceemail.js';
+import './quote/quote_express_list_tables.js';
+import './refunds/refunds_list.js';
+import './bills/bill_list.js';
+import './credit/credit_list.js';
+import './purchase/purchaseorder_express_list_tables.js';
+import './purchase/purchaseorderbo_express_list_tables.js';
+import './purchase/purchase-service.js';
+import './Help_Form/help_advisor.js';
+import './fixedassets/components/fixedassetlistpop/fixedassetlistpop.js';
+/* Arthlo */
+
+/* XiaoJang*/
+// import './overviews/payrolloverview.js';
+// import './overviews/payrollleave.js';
+// import './payroll/singletouchpayroll/singletouch.js';
+// import './payroll/singletouchpayroll/singletouchpayroll.js';
+// import './payroll/clockonoff/clockonoff.js';
+// import './payroll/paychexapi/paychexapi.js';
+// import './payroll/payrun/payrun.js';
+// import './payroll/payrun/payrundetails.js';
+// import './overviews/payrolloverview_tmp.html';
+// import './eft/exportModal/eftExportModal.js';
+// import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
+// import './eft/addNewEftModal/addNewEftModal.js';
+/* XiaoJang*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';

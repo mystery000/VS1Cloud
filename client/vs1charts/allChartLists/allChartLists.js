@@ -56,6 +56,7 @@ let chartsPlaceList = {
 
     "DSMCharts_Overview": [
         "mytaskswidgetchart",
+        "dashboardManagerCharts",
         "dsmTop10Customers",
         "dsmAppointmentsWidget",
         "resalescomparision",

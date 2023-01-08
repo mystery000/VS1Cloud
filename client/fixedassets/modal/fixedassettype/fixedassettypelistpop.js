@@ -20,7 +20,7 @@ Template.fixedassettypelistpop.onRendered(function () {
   // set initial table rest_data
   templateObject.init_reset_data = function () {
     let reset_data = [
-      { index: 0, label: 'ID', class: 'FixedID', active: false, display: false, width: "0" },
+      { index: 0, label: 'ID', class: 'FixedID', active: true, display: true, width: "" },
       { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "" },
       { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "" },
       { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "" },
@@ -36,26 +36,26 @@ Template.fixedassettypelistpop.onRendered(function () {
     showCustomFieldDisplaySettings(reset_data);
 
     try {
-      getVS1Data("TFixedAssetType").then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-            reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-            showCustomFieldDisplaySettings(reset_data);
-          }).catch(function (err) {
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          if (data.ProcessLog.Obj.CustomLayout.length > 0) {
-            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-              if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
-                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                showCustomFieldDisplaySettings(reset_data);
-              }
-            }
-          };
-          // handle process here
-        }
-      });
+      // getVS1Data("TFixedAssetType").then(function (dataObject) {
+      //   if (dataObject.length == 0) {
+      //     sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+      //       reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+      //       showCustomFieldDisplaySettings(reset_data);
+      //     }).catch(function (err) {
+      //     });
+      //   } else {
+      //     let data = JSON.parse(dataObject[0].data);
+      //     if (data.ProcessLog.Obj.CustomLayout.length > 0) {
+      //       for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+      //         if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
+      //           reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+      //           showCustomFieldDisplaySettings(reset_data);
+      //         }
+      //       }
+      //     };
+      //     // handle process here
+      //   }
+      // });
     } catch (error) {
     }
     return;
@@ -110,18 +110,16 @@ Template.fixedassettypelistpop.onRendered(function () {
   function setFixedAssetsTypeList(data) {
     addVS1Data('TFixedAssetType', JSON.stringify(data));
     const dataTableList = [];
-    console.log("[Fixed Assets Type:]", data.tfixedassets);
-    for (const asset of data.tfixedassets) {
+    for (const asset of data.tfixedassettype) {
       const dataList = {
-        id: asset.fields.ID || "",
-        assetTypeCode: asset.fields.AssetTypeCode || "",
-        assetTypeName: asset.fields.AssetTypeName || "",
-        notes: asset.fields.Notes || "",
-        active: asset.fields.Active || "",
+        id: asset.Id || "",
+        assetTypeCode: asset.AssetTypeCode || "",
+        assetTypeName: asset.AssetTypeName || "",
+        notes: asset.Notes || "",
+        active: asset.Active || "",
       };
       dataTableList.push(dataList);
     }
-
     templateObject.datatablerecords.set(dataTableList);
 
     $(".fullScreenSpin").css("display", "none");
@@ -215,12 +213,12 @@ Template.fixedassettypelistpop.events({
 Template.fixedassettypelistpop.helpers({
   datatablerecords: () => {
     return Template.instance().datatablerecords.get().sort(function (a, b) {
-      if (a.assetname === "NA") {
+      if (a.assetTypeName === "NA") {
         return 1;
-      } else if (b.assetname === "NA") {
+      } else if (b.assetTypeName === "NA") {
         return -1;
       }
-      return a.assetname.toUpperCase() > b.assetname.toUpperCase() ? 1 : -1;
+      return a.assetTypeName.toUpperCase() > b.assetTypeName.toUpperCase() ? 1 : -1;
     });
   },
   // custom fields displaysettings
