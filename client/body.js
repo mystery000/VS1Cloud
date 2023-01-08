@@ -429,8 +429,7 @@ import './settings/payroll-settings/superannuation.js';
 import './settings/payroll-settings/reimbursement.js';
 import './settings/payroll-settings/leaveTypes.js';
 import './contacts/assignLeaveTypePop.js';
->>>>>>> 9c8ebe9f31fed2c03cd3f69813753da8219de64d
-/*Vladyslav*/
+
 
 /* Roverto */
 // import './crm/crm.js';
