@@ -488,6 +488,17 @@ import './Help_Form/help_advisor.js';
 import './fixedassets/components/fixedassetlistpop/fixedassetlistpop.js';
 /* Arthlo */
 
+/* Colton */
+import './appointments/appointments.js';
+import './appointments/appointmentlist.js';
+import './appointments/appointment-service.js';
+import './appointments/appointmenttimelist.js';
+import './overviews/Modal/newLeaveRequest.js';
+import './appointments/appointments.js';
+import './Dashboard/appointments-widget/dsm-appointments-widget.js';
+import './vs1_templates/calender/calender.js';
+/* Colton */
+
 /* XiaoJang*/
 // import './overviews/payrolloverview.js';
 // import './overviews/payrollleave.js';
