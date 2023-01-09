@@ -20,11 +20,11 @@ let reportService = new ReportService();
 let utilityService = new UtilityService();
 
 Template.accountant_header.onCreated(function(){
-    
+
 });
 
 Template.accountant_header.onRendered(function() {
-    
+
 });
 
 Template.accountant_header.events({
@@ -34,5 +34,5 @@ Template.accountant_header.events({
 });
 
 Template.accountant_header.helpers({
-  
+
 });

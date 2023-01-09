@@ -64,19 +64,19 @@ Template.templatesettings.onRendered(function () {
 
   let templateObject = Template.instance();
   $(document).on("click", "#editPrintMore", function (e) {});
-  $(document).on("click", ".templateItem #btnEditTemplate", function (e) {
-    title = $(this).parent().attr("data-id");
-    number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
-    templateObject.generateInvoiceData(title, number);
-    $(".modal-title#templatePreviewLabel").css("display", "none");
-    $("#templatePreviewModal #templatePreviewInput").css("display", "block");
-    $("#editPrintMore").css("display", "block");
-    $('#templatePreviewModal .btnCopyReport').css("display", "block");
-    $('#templatePreviewModal .btnImportReport').css("display", "block");
-    $("#templatePreviewModal #templatePreviewInput").val(
-      $('input[name="' + title + "_" + number + '"]').val()
-    );
-  });
+  // $(document).on("click", ".templateItem #btnEditTemplate", function (e) {
+  //   title = $(this).parent().attr("data-id");
+  //   number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
+  //   templateObject.generateInvoiceData(title, number);
+  //   $(".modal-title#templatePreviewLabel").css("display", "none");
+  //   $("#templatePreviewModal #templatePreviewInput").css("display", "block");
+  //   $("#editPrintMore").css("display", "block");
+  //   $('#templatePreviewModal .btnCopyReport').css("display", "block");
+  //   $('#templatePreviewModal .btnImportReport').css("display", "block");
+  //   $("#templatePreviewModal #templatePreviewInput").val(
+  //     $('input[name="' + title + "_" + number + '"]').val()
+  //   );
+  // });
   $(document).on("click", ".templateItem #btnPreviewTemplate", function (e) {
     title = $(this).parent().attr("data-id");
     number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
@@ -1601,9 +1601,9 @@ Template.templatesettings.onRendered(function () {
       var content = "";
       for (item_temp of item) {
         if (idx > left_idx)
-          content =
-            content + "<td style='text-align: right;'>" + item_temp + "</td>";
-        else content = content + "<td>" + item_temp + "</td>";
+          content = content + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+        else 
+          content = content + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         idx++;
       }
       tbl_content.append(content);
@@ -1724,9 +1724,9 @@ Template.templatesettings.onRendered(function () {
       var content = "";
       for (item_temp of item) {
         if (idx > left_idx)
-          content =
-            content + "<td style='text-align: right;'>" + item_temp + "</td>";
-        else content = content + "<td>" + item_temp + "</td>";
+          content = content + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+        else 
+          content = content + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         idx++;
       }
       tbl_content.append(content);
@@ -1835,9 +1835,9 @@ Template.templatesettings.onRendered(function () {
       var content = "";
       for (item_temp of item) {
         if (idx > left_idx)
-          content =
-            content + "<td style='text-align: right;'>" + item_temp + "</td>";
-        else content = content + "<td>" + item_temp + "</td>";
+          content = content + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+        else 
+          content = content + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         idx++;
       }
       tbl_content.append(content);

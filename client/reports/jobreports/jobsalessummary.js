@@ -80,7 +80,6 @@ Template.jobsalessummary.onRendered(() => {
     getVS1Data('TJobSalesSummary').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getJobSalesSummaryReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
-          console.log(data);
           await addVS1Data('TJobSalesSummary', JSON.stringify(data));
           templateObject.displayReportData(data);
         }).catch(function (err) {
@@ -139,7 +138,6 @@ Template.jobsalessummary.onRendered(() => {
         MakeNegative();
       }, 100);
     }
-    console.log(splashArrayReport);
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
@@ -262,7 +260,7 @@ Template.jobsalessummary.onRendered(() => {
 });
 
 // Template.jobsalessummary.onRendered(() => {
-  
+
 //   LoadingOverlay.show();
 //   const templateObject = Template.instance();
 //   // const jobSalesApi = new JobSalesApi();
@@ -376,8 +374,8 @@ Template.jobsalessummary.onRendered(() => {
 //       useIndexDb: true,
 //       useLocalStorage: false,
 //       validate: (cachedResponse) => {
-//         if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
-//         && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+//         if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom)
+//         && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
 //         && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
 //           return true;
 //         }
@@ -389,7 +387,7 @@ Template.jobsalessummary.onRendered(() => {
 //       let records = [];
 //       const array = data.response.tjobsalessummary;
 //       let customers = _.groupBy(array, 'Customer');
-    
+
 //       for(let key in customers) {
 //         records.push({
 //           title: key || "Other",
@@ -401,12 +399,12 @@ Template.jobsalessummary.onRendered(() => {
 
 //       templateObject.reportRecords.set(records);
 //     }
-   
-   
+
+
 //     LoadingOverlay.hide();
- 
+
 //   }
- 
+
 
 
 //   templateObject.initDate();
@@ -415,7 +413,7 @@ Template.jobsalessummary.onRendered(() => {
 
 
 //   templateObject.loadReport(
-//     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+//     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
 //     GlobalFunctions.convertYearMonthDay($('#dateTo').val())
 //   );
 
