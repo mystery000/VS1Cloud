@@ -282,7 +282,7 @@ import "./settings/template-settings/templatesettings.js";
 import "./vs1_templates/transaction_temp/transaction_print_modal.js";
 import "./vs1_templates/transaction_temp/transaction_calculation.js";
 import "./manufacture/bomList.js";
-// import './fixedassets/fixedassets.js';
+import "./fixedassets/fixedassets.js";
 // import './appointments/appointments.js';
 // import './appointments/appointment-service.js';
 // import './appointments/appointmenttimelist.js';
