@@ -1,10 +1,12 @@
 <template name="productTable">
     <label id="dataProductList" style="display: none;">{{productList}}</label>
     <label id="columnData" style="display: none;">{{columns}}</label>
+    <div id="modals">
     {{> onBackOrderPopUp productID = productID}}
     {{> onSalesOrderPopUp productID = productID}}
     {{> onOrderPopUp productID = productID}}
     {{> recentTransactionPopUp productID = productID}}
+    </div>
     <div class="table-responsive">
         <style>
             th {

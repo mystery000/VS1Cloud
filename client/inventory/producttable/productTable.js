@@ -332,10 +332,10 @@ Template.productTable.events({
       }
   },
 
-  "click .colQuantity": function(event) {
+  "click .ProductName, . SalesDescription, . Available": function(event) {
       var listData = $(event.target).closest("tr").find(".colProductID").text();
       if (listData) {
-          FlowRouter.go("/productview?id=" + listData + "&instock=true");
+          FlowRouter.go("/productview?id=" + listData);
       }
   },
   'click .th.colCostPrice': function(event) {
