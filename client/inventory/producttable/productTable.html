@@ -1,4 +1,12 @@
 <template name="productTable">
+    <label id="dataProductList" style="display: none;">{{productList}}</label>
+    <label id="columnData" style="display: none;">{{columns}}</label>
+    <div id="modals">
+    {{> onBackOrderPopUp productID = productID}}
+    {{> onSalesOrderPopUp productID = productID}}
+    {{> onOrderPopUp productID = productID}}
+    {{> recentTransactionPopUp productID = productID}}
+    </div>
     <div class="table-responsive">
         <style>
             th {
@@ -125,7 +133,7 @@
         <table id="tblInventoryOverview" style="width:100%" class="dataTable table table-striped table-bordered tblInventoryOverview">
             <thead>
                 <tr class="dnd-moved">
-                    {{#each displayfield in displayfields}}
+                    {{#each displayfield in fields}}
                         <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}}" style="width:{{displayfield.width}}px">
                             {{displayfield.custfieldlabel}}
                             {{#if equals displayfield.class 'CostPrice'}} <i class="fas fa-random"></i>
@@ -215,4 +223,5 @@
             </tbody>
         </table>
     </div>
+    
 </template>

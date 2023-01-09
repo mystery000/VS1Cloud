@@ -14,6 +14,10 @@ import { UtilityService } from "../../utility-service";
 import EmployeePayrollApi from "../../js/Api/EmployeePayrollApi";
 import AssignLeaveType from "../../js/Api/Model/AssignLeaveType";
 
+
+import { Template } from 'meteor/templating';
+import './newLeaveRequest.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let accountService = new AccountService();
