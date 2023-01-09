@@ -12758,13 +12758,13 @@ Template.new_salesorder.events({
               var arrSelectDays = selectDays.split(",");
               for (i=0; i<arrSelectDays.length; i++) {
                 if (parseInt(arrSelectDays[i]) == 0)
-                  $("#formCheck-sunday").prop('checked', true);
+                  $("#formCheck-sunday").prop('checked', false);
                 if (parseInt(arrSelectDays[i]) == 1)
                   $("#formCheck-monday").prop('checked', true);
                 if (parseInt(arrSelectDays[i]) == 2)
                   $("#formCheck-tuesday").prop('checked', true);
                 if (parseInt(arrSelectDays[i]) == 3)
-                  $("#formCheck-wednesday").prop('checked', true);
+                  $("#formCheck-wednesday").prop('checked', false);
                 if (parseInt(arrSelectDays[i]) == 4)
                   $("#formCheck-thursday").prop('checked', true);
                 if (parseInt(arrSelectDays[i]) == 5)
