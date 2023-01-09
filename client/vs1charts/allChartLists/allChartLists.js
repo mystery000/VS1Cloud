@@ -815,7 +815,6 @@ Template.allChartLists.helpers({
     },
 
     is_dashboard_check: (currentTemplate) => {
-        //console.log(FlowRouter.current().path, currentTemplate);
         return FlowRouter.current().path.includes(currentTemplate);
     },
 });

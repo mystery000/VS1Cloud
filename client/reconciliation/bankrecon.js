@@ -36,10 +36,8 @@ Template.bankrecon.onCreated(function() {
 Template.bankrecon.onRendered(function() {
     $('.fullScreenSpin').css('display', 'inline-block');
     // sideBarService.getAllTBankDepositListData().then(function(data) {
-    //     console.log("-----------", data);
     //     for(var i=0; i<data.tbankdeposit.length; i++){
     //         if(data.tbankdeposit[i].fields.Deposit == -55){
-    //             console.log("========", data.tbankdeposit[i]);
     //         }
     //     }
     // }).catch(function(err) {

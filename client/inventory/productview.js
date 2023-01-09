@@ -4357,7 +4357,7 @@ Template.productview.events({
         templateObject.getAllProductRecentTransactions();
     },
     'click .lblPriceEx': function(event) {
-        
+
         $(event.target).removeClass('showColumn');
         $(event.target).addClass('hiddenColumn');
         // $('.lblPriceEx').addClass('hiddenColumn');
@@ -4976,9 +4976,6 @@ Template.productview.events({
                     };
                 }
 
-                console.log('4');
-                console.log(objDetails);
-
                 productService.saveProductVS1(objDetails).then(function(objDetails) {
                     let linesave = objDetails.fields.ID;
                     if (itrackThisItem == false) {
@@ -4997,7 +4994,6 @@ Template.productview.events({
 
 
                     sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(dataReload) {
-                        console.log(dataReload);
                         addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
                             FlowRouter.go('/inventorylist?success=true');
                         }).catch(function(err) {
@@ -6635,7 +6631,7 @@ Template.productview.events({
         NewCOGSRow.insertAfter(".COGSRow:last");
         // itemClineID.find('input[type="text"]').val('');
         // itemClineID.find('select[name^="sltCustomerType"]').val('');
-        
+
     },
 
     'click .btnRemoveUOM': function(event) {

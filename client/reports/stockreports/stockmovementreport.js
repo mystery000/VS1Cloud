@@ -89,7 +89,6 @@ Template.stockmovementreport.onRendered(() => {
     getVS1Data('TProductMovementList').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getStockMovementReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
-          console.log(data);
           await addVS1Data('TProductMovementList', JSON.stringify(data));
           templateObject.displayReportData(data);
         }).catch(function (err) {
@@ -114,7 +113,6 @@ Template.stockmovementreport.onRendered(() => {
     false
   );
   templateObject.displayReportData = async function (data) {
-    console.log(data);
     var splashArrayReport = new Array();
     let deleteFilter = false;
     if (data.Params.Search.replace(/\s/g, "") == "") {
@@ -132,7 +130,7 @@ Template.stockmovementreport.onRendered(() => {
         data.tjobprofitability[i].TransactionNo || "",
         data.tjobprofitability[i].CostEx || "",
         data.tjobprofitability[i].IncomeEx || "",
-        data.tjobprofitability[i].Quotedex || "",               
+        data.tjobprofitability[i].Quotedex || "",
         data.tjobprofitability[i].DiffIncome_Cost || "",
         data.tjobprofitability[i].PercentDiffIncomebyCost || "",
         data.tjobprofitability[i].DiffIncome_Quote || "",

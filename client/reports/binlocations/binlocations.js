@@ -78,7 +78,6 @@ Template.binlocationslist.onRendered(() => {
     getVS1Data('TProductBin').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getBinLocationReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
-          console.log(data);
           await addVS1Data('TProductBin', JSON.stringify(data));
           templateObject.displayReportData(data);
         }).catch(function (err) {
@@ -103,7 +102,6 @@ Template.binlocationslist.onRendered(() => {
     false
   );
   templateObject.displayReportData = async function (data) {
-    console.log(data);
     var splashArrayReport = new Array();
     let deleteFilter = false;
     if (data.Params.Search.replace(/\s/g, "") == "") {
@@ -121,7 +119,7 @@ Template.binlocationslist.onRendered(() => {
         data.tjobprofitability[i].TransactionNo || "",
         data.tjobprofitability[i].CostEx || "",
         data.tjobprofitability[i].IncomeEx || "",
-        data.tjobprofitability[i].Quotedex || "",               
+        data.tjobprofitability[i].Quotedex || "",
         data.tjobprofitability[i].DiffIncome_Cost || "",
         data.tjobprofitability[i].PercentDiffIncomebyCost || "",
         data.tjobprofitability[i].DiffIncome_Quote || "",
@@ -175,7 +173,6 @@ Template.binlocationslist.onRendered(() => {
         MakeNegative();
       }, 100);
     }
-    console.log(splashArrayReport);
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
@@ -448,7 +445,7 @@ Template.binlocationslist.onRendered(() => {
 // Template.binlocationslist.onRendered(() => {
 //   const templateObject = Template.instance();
 //   LoadingOverlay.show();
-  
+
 //   reset_data = [
 //     { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
 //     { index: 2, label: 'Location', class: 'colLocation', active: true, display: true, width: "" },
@@ -472,7 +469,7 @@ Template.binlocationslist.onRendered(() => {
 
 //   templateObject.getBinLocationReportData = async function (dateFrom, dateTo, ignoreDate) {
 //     $(".fullScreenSpin").css("display", "inline-block");
-//     templateObject.setDateAs(dateFrom); 
+//     templateObject.setDateAs(dateFrom);
 //     let data = [];
 //     if (!localStorage.getItem('VS1BinLocations_Report')) {
 //       const options = await templateObject.reportOptions.get();
@@ -486,10 +483,10 @@ Template.binlocationslist.onRendered(() => {
 //     }else{
 //       data = JSON.parse(localStorage.getItem('VS1BinLocations_Report'));
 //     }
-    
-//     let reportGroups = []; 
+
+//     let reportGroups = [];
 //     if( data.tproductbin.length > 0 ){
-//         for (const item of data.tproductbin) {   
+//         for (const item of data.tproductbin) {
 //             let isExist = reportGroups.filter((subitem) => {
 //                 if( subitem.BinClassName == item.fields.BinClassName ){
 //                     subitem.SubAccounts.push(item)
@@ -511,13 +508,13 @@ Template.binlocationslist.onRendered(() => {
 //     }, 1000);
 //     $(".fullScreenSpin").css("display", "none");
 //   }
-  
+
 //   templateObject.getBinLocationReportData(
 //     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
 //     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
 //     false
 //   );
-  
+
 //   templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
 
 
@@ -680,7 +677,7 @@ Template.binlocationslist.events({
     } else {
       $(".table tbody tr").show();
     }
-  },  
+  },
   // CURRENCY MODULE //
   ...FxGlobalFunctions.getEvents(),
   "click .currency-modal-save": (e) => {
@@ -736,8 +733,8 @@ Template.binlocationslist.events({
   "click #ignoreDate":  (e, templateObject) => {
     localStorage.setItem("VS1BinLocations_Report", "");
     templateObject.getBinLocationReportData(
-      null, 
-      null, 
+      null,
+      null,
       true
     )
   },
@@ -745,8 +742,8 @@ Template.binlocationslist.events({
     let templateObject = Template.instance();
     localStorage.setItem("VS1BinLocations_Report", "");
     templateObject.getBinLocationReportData(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     )
   },
