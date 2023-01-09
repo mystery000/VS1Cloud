@@ -2,6 +2,7 @@ import {TaxRateService} from "../settings-service";
 import {ReactiveVar} from "meteor/reactive-var";
 import {CountryService} from "../../js/country-service";
 import {SideBarService} from "../../js/sidebar-service";
+import "./_frequencyModal.html";
 import {HTTP} from "meteor/http";
 import "../../lib/global/indexdbstorage.js";
 import FxSettingsEditor from "../fxupdate/FxSettingsEditor";

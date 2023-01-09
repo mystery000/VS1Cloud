@@ -558,7 +558,7 @@ Template.non_transactional_list.onRendered(function() {
         }else if (currenttablename === "tblRateTypeList"){
             reset_data = [
                 { index: 0, label: "#ID", class: "colRateTypeID", active: false, display: true, width: "" },
-                { index: 1, label: "Description", class: "colRateDescription", active: true, display: true, width: "" },
+                { index: 1, label: "Description", class: "thDescription", active: true, display: true, width: "" },
             ]
         }else if (currenttablename === "tblOverTimeSheet"){
             reset_data = [
@@ -5349,6 +5349,7 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.getRateTypeListData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
+        let refresh = false;
         let data = await CachedHttp.get(erpObject.TPayRateType, async () => {
             return await sideBarService.getRateTypes(initialBaseDataLoad, 0);
         }, {
@@ -5358,19 +5359,20 @@ Template.non_transactional_list.onRendered(function() {
         const response = data.response;
     
         data =  response.tpayratetype ? response.tpayratetype.map(e => e.fields) : null;
-        console.log('data:',data)
         templateObject.displayRateTypeListData(data); //Call this function to display data on the table
     }
 
     templateObject.displayRateTypeListData = async function(data) {
-        var splashArrayRateList = [
-            [1, "Normal"],
-            [2, "Time & Half"],
-            [3, "Double Time"],
-            [4, "Weekend"],
-        ];
+        var splashArrayRateList = new Array();
+        for (let i = 0; i < data.length; i++) {
+            var dataList = [
+                data[i].id || "",
+                data[i].Description || "",
+            ];
+            splashArrayRateList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayRateList);
+        }
         let deleteFilter = false;
-        templateObject.transactiondatatablerecords.set(splashArrayRateList)
             if(templateObject.transactiondatatablerecords.get()) {
               setTimeout(function () {
                   MakeNegative();
@@ -5391,7 +5393,7 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "colRateName",
+                        className: "thDescription",
                         width: "100px",
                     }
                 ],

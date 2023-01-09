@@ -12,8 +12,6 @@ import { Template } from 'meteor/templating';
 import './transaction_line.html';
 
 let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
-
 export const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Amount (Inc)", "Unit Price (Inc)", "Cost Price"];
 
 //Template.transaction_line.inheritsHelpersFrom('new_invoice');
@@ -27,109 +25,8 @@ Template.transaction_line.onCreated(function(){
   templateObject.reset_data = new ReactiveVar([]);
   templateObject.init_data = new ReactiveVar([]); // initial reset data
   templateObject.initialTableWidth = new ReactiveVar('');
-  templateObject.monthArr = new ReactiveVar();
-  templateObject.plusArr = new ReactiveVar();
 });
 Template.transaction_line.onRendered(function() {
-  const plusArr = [];
-  const monthArr = [];
-  let isGreenTrack = Session.get('isGreenTrack');
-  let regionData = Session.get('ERPLoggedCountry');
-  let recordObj = null;
-  if(isGreenTrack) {
-    $.get("/GreentrackModules.json").success(function (data) {
-        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
-
-            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
-                recordObj = {
-                    type: data.tvs1licenselevelsnmodules[i].TYPE,
-                    region: data.tvs1licenselevelsnmodules[i].Region,
-                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
-                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
-                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
-                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
-                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
-                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
-                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
-                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
-                    pricenocurrency: data.tvs1licenselevelsnmodules[i].Price || 0,
-                    price: utilityService.modifynegativeCurrencyFormat(data.tvs1licenselevelsnmodules[i].Price) || 0,
-                    discount: data.tvs1licenselevelsnmodules[i].discount,
-                };
-                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "Xero") {
-                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
-                        plusArr.push(recordObj);
-                    }
-                }
-
-            }
-
-        };
-        templateObject.plusArr.set(plusArr);
-    });
-  } else {
-    $.get("MasterVS1Pricing.json").success(async function (data) {
-        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
-
-            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
-                recordObj = {
-                    type: data.tvs1licenselevelsnmodules[i].TYPE,
-                    region: data.tvs1licenselevelsnmodules[i].Region,
-                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
-                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
-                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
-                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
-                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
-                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
-                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
-                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
-                    discount: data.tvs1licenselevelsnmodules[i].discount,
-                };
-                if ((data.tvs1licenselevelsnmodules[i].ModuleName != "") && (data.tvs1licenselevelsnmodules[i].IsExtra == true) && (data.tvs1licenselevelsnmodules[i].IsMonthly == true)) {
-                    monthArr.push(recordObj);
-                }
-
-                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "PLUS") {
-                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
-                        plusArr.push(recordObj);
-                    }
-                }
-            }
-        };
-        let purchaedAdModuleList = [];
-            let additionModuleSettings = await getVS1Data('vscloudlogininfo');
-            if( additionModuleSettings.length > 0 ){
-                let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
-                if( additionModules.length > 0 ){
-                    let adModulesList = additionModules.filter((item) => {
-                        if( item.ExtraModules == true && item.ModuleActive == true ){
-                            return item;
-                        }
-                    });
-                    if( adModulesList.length > 0 ){
-                        for (const item of adModulesList) {
-                            purchaedAdModuleList.push(item.ModuleName)
-                        }
-                    }
-                }
-            }
-        templateObject.plusArr.set(plusArr);
-        var monthResult = [];
-        $.each(monthArr, function (i, e) {
-            var matchingItemsMonth = $.grep(monthResult, function (itemMonth) {
-                return itemMonth.moduleName === e.moduleName;
-            });
-            e.isPurchased = false
-            if (matchingItemsMonth.length === 0) {
-                if( purchaedAdModuleList.includes(monthArr[i].moduleName) == true ){
-                    e.isPurchased = true
-                }
-                monthResult.push(e);
-            }
-        });
-        templateObject.monthArr.set(monthResult);
-    });
-  };
   let templateObject = Template.instance();
   let currenttranstablename = templateObject.data.tablename||"";
   // set initial table rest_data
@@ -321,7 +218,13 @@ Template.transaction_line.onRendered(function() {
                                     if(data != undefined && !data.display) data.active = false;
                                     if(data != undefined) return {...item, active: data.active, display: data.display};
                                     return {...item, active: false, display: false};
-                                });                                                            
+                                });
+                                if(listType == 'tblPurchaseOrderLine') {
+                                    accountName = resetData.find(x => x.class == 'AccountName');
+                                    memo = resetData.find(x => x.class == 'Memo');
+                                    accountName.display = accountName.active = false;
+                                    memo.display = memo.active = false;
+                                }                                                            
                                 amtEx = resetData.find(x => x.class == "AmountEx");
                                 amtInc = resetData.find(x => x.class == "AmountInc");
                                 unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
@@ -555,17 +458,7 @@ Template.transaction_line.helpers({
             serialNo.active = false;
         }
     }
-    // let monthArr = Template.instance().monthArr.get();
-    // let fixedAsset = data.find((x) => x.class === 'FixedAsset');
-    // let month = monthArr.find((x) => x.moduleName === 'Fixed Assets');
-    // if(fixedAsset != undefined && month != undefined){
-    //     fixedAsset.display = month.isPurchased;
-    //     fixedAsset.active = fixedAsset.display;
-    //     if(currenttranstablename == 'tblSalesOrderLine' || currenttranstablename == "tblQuoteLine"){
-    //         fixedAsset.display = false;
-    //         fixedAsset.active = false;
-    //     }
-    // }
+
     let canShowUOM = Template.instance().data.canShowUOM;
     let isSerialNoTracking = Template.instance().data.isBatchSerialNoTracking;
     if(!canShowUOM) {
