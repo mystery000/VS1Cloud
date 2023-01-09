@@ -280,9 +280,17 @@ import './vs1_templates/transaction_temp/transaction_print_modal.js';
 import './vs1_templates/transaction_temp/transaction_calculation.js';
 import './manufacture/bomList.js';
 import './fixedassets/fixedassets.js';
-// import './appointments/appointments.js';
-// import './appointments/appointment-service.js';
-// import './appointments/appointmenttimelist.js';
+import './settings/chart-accounts-setting/chart-accounts.js';
+import './settings/currencies-setting/currencies.js';
+import './settings/edi-integrations/edi-integrations.js';
+import './settings/fixed-asset_edit-asset-type/fixed-asset_edit-asset-type.js';
+import './settings/fxupdate/fxUpdateSettings.js';
+import './settings/linktrueerp/linkTrueERP.js';
+import './settings/mailchimp-settings/mailchimpSettings.js';
+import './settings/organisation-setting/organisation_settings.js';
+import './shipping/shippinglist.js';
+import './stocktake/add-new-stock-adjust/stockadjustadd.js';
+import './timesheetdetail/timesheetdetail.js';
 /* Tinyiko */
 
 /* Rasheed */
@@ -491,8 +499,6 @@ import './appointments/appointmentlist.js';
 import './appointments/appointment-service.js';
 import './appointments/appointmenttimelist.js';
 import './overviews/Modal/newLeaveRequest.js';
-import './appointments/appointments.js';
-import './Dashboard/appointments-widget/dsm-appointments-widget.js';
 import './vs1_templates/calender/calender.js';
 /* Colton */
 
@@ -509,6 +515,12 @@ import './settings/edi-sms-settings/edi-sms-settings.js';
 import './settings/true-erp/true-erp.js';
 import './settings/yoodle-developer/yoodle-developer.js';
 import './settings/edi-integrations/edi-integrations.js';
+import './settings/organisation-setting/organsation_settings.js';
+import './settings/backup-settings/backuprestore.js';
+import './settings/chart-accounts-setting/chart-account-settings-table.js';
+import './settings/backup-settings/currencies-settings/_frequencyModal,js';
+import './settings/backup-settings/currencies-settings/currencies.js';
+
 /* Andrew */
 
 /* XiaoJang*/

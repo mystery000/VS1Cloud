@@ -1,12 +1,7 @@
-
-
-
+import { Template } from 'meteor/templating';
+import './shipping_list.html';
 import {ShippingService} from "../shipping/shipping-service";
 import {ReactiveVar} from "meteor/reactive-var";
-
-
-
-
 
 Template.shippinglist.onCreated(function () {
   const templateObject = Template.instance();

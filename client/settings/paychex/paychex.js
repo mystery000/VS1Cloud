@@ -1,6 +1,7 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../js/sidebar-service";
 import { TaxRateService } from "../settings-service";
+import { Template } from 'meteor/templating';
 import "./paychex.html";
 
 import "../../lib/global/indexdbstorage.js";

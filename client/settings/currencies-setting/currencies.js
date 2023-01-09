@@ -11,7 +11,9 @@ import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import TableHandler from "../../js/Table/TableHandler";
 import XLSX from 'xlsx';
+import { Template } from 'meteor/templating';
 import "./currencies.html";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 

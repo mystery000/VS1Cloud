@@ -13,9 +13,8 @@ import { jsPDF } from "jspdf";
 import "jQuery.print/jQuery.print.js";
 import { cloneDeep, find, extend } from "lodash";
 import { Template } from 'meteor/templating';
-
 import './emailsettings.html';
-
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // import ldb from 'localdata';
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
