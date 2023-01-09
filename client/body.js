@@ -349,6 +349,11 @@ import './Dashboard/appointments-widget/ds-appointments-widget.js';
 import './vs1charts/leadlist/dsleadlistchart.js';
 import './vs1charts/opportunitiesStatus/opportunitiesStatus.js';
 import './vs1charts/leadlist/dsmleadlistchart.js';
+import './vs1charts/monthlyprofitandloss/monthlyprofitandloss.js';
+import './vs1charts/resalescomparision/resalescomparision.js';
+import './vs1charts/expenses/expenseschart.js';
+import './vs1charts/top10Customers/dsm_top10Customers.js';
+import './vs1charts/resalescomparision/dsm_resalescomparision.js';
 
 /* Martin */
 import './contacts/addcustomerpop.js';
