@@ -1,3 +1,6 @@
+import { Template } from 'meteor/templating';
+import "./chart-account-settings-table.html";
+
 Template.chartaccountsettingtable.onCreated(function (){
     let templateObject = Template.instance();
     templateObject.currentId = new ReactiveVar();

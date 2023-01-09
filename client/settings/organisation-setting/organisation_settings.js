@@ -1,3 +1,5 @@
+import { Template } from 'meteor/templating';
+import "./organisation.html";
 import { OrganisationService } from "../../js/organisation-service";
 import { CountryService } from "../../js/country-service";
 import { ReactiveVar } from "meteor/reactive-var";
@@ -5,7 +7,8 @@ import { SideBarService } from "../../js/sidebar-service";
 import { UtilityService } from "../../utility-service";
 import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
-import "./organisation.html";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 import _ from "lodash";
 
 let sideBarService = new SideBarService();

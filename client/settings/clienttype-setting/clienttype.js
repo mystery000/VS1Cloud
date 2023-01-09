@@ -3,7 +3,9 @@ import { SideBarService } from "../../js/sidebar-service";
 import { TaxRateService } from "../settings-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import XLSX from "xlsx";
+import { Template } from 'meteor/templating';
 import "./clienttype.html";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 Template.clienttypesettings.inheritsHooksFrom("non_transactional_list");

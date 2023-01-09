@@ -14,6 +14,8 @@ import '../../lib/global/indexdbstorage.js';
 import FxUpdater from "./FxUpdater";
 import FxUpdateSetting, { FxFrequencyDaily, FxFrequencyMonthly } from "./Model/FxUpdateSetting";
 import FxSettingsEditor from "./FxSettingsEditor";
+import { Template } from 'meteor/templating';
+import './fxupdate.html';
 let sideBarService = new SideBarService();
 
 

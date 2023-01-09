@@ -1,6 +1,9 @@
 import {ReactiveVar} from 'meteor/reactive-var';
 import {TaxRateService} from "../settings-service";
+import { Template } from 'meteor/templating';
+import "./chart-of-accounts.html";
 const _ = require('lodash');
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let tableData;
 
