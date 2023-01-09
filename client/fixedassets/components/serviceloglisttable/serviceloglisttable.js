@@ -1,4 +1,5 @@
 import { ReactiveVar } from "meteor/reactive-var";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ServiceLogService } from "../../servicelog-service";
 import { FixedAssetService } from "../../fixedasset-service";
 import { SideBarService } from "../../../js/sidebar-service";
@@ -117,92 +118,100 @@ Template.serviceloglisttable.onRendered(function () {
 
   function setServiceLogList(data) {
     addVS1Data('TServiceLogList', JSON.stringify(data));
-
+    console.log("Tserviceloglist", data);
     const dataTableList = [];
 
-    // for (const log of data.tserviceloglist) {
-    //   const dataList = {
-    //     id: log.fields.ID || "",
-    //   };
-    //   dataTableList.push(dataList);
-    // }
+    for (const log of data.tserviceloglist) {
+      const dataList = {
+        id: log.fields.ServiceID || "",
+        assetCode: log.AssetCode || "",
+        assetName: log.AssetName || "",
+        serviceType: log.serviceType || "",
+        serviceDate: log.ServiceDate || "",
+        serviceProvider: log.ServiceProvider || "",
+        nextServiceDate: log.NextServiceDate || "",
+        // serviceNotes: log.ServiceNotes || "",
+        status: log.Done || "",
+      };
+      dataTableList.push(dataList);
+    }
 
-    // templateObject.datatablerecords.set(dataTableList);
+    templateObject.datatablerecords.set(dataTableList);
 
     $(".fullScreenSpin").css("display", "none");
-    // setTimeout(function () {
-    //   $("#tblServiceLogList").DataTable({
-    //     columnDefs: [
-    //     ],
-    //     select: true,
-    //     destroy: true,
-    //     colReorder: true,
-    //     sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-    //     buttons: [{
-    //       extend: "csvHtml5",
-    //       text: "",
-    //       download: "open",
-    //       className: "btntabletocsv hiddenColumn",
-    //       filename: "FixedAssetsOverview__" + moment().format(),
-    //       orientation: "portrait",
-    //       exportOptions: {
-    //         columns: ":visible",
-    //       },
-    //     },
-    //     {
-    //       extend: "print",
-    //       download: "open",
-    //       className: "btntabletopdf hiddenColumn",
-    //       text: "",
-    //       title: "Accounts Overview",
-    //       filename: "Accounts Overview_" + moment().format(),
-    //       exportOptions: {
-    //         columns: ":visible",
-    //       },
-    //     },
-    //     {
-    //       extend: "excelHtml5",
-    //       title: "",
-    //       download: "open",
-    //       className: "btntabletoexcel hiddenColumn",
-    //       filename: "FixedAssetsOverview__" + moment().format(),
-    //       orientation: "portrait",
-    //       exportOptions: {
-    //         columns: ":visible",
-    //       },
-    //     },
-    //     ],
-    //     pageLength: initialDatatableLoad,
-    //     lengthMenu: [
-    //       [initialDatatableLoad, -1],
-    //       [initialDatatableLoad, "All"],
-    //     ],
-    //     info: true,
-    //     responsive: true,
-    //     order: [
-    //       [0, "asc"]
-    //     ],
-    //     // "aaSorting": [[1,'desc']],
-    //     action: function () {
-    //       $("#tblServiceLogList").DataTable().ajax.reload();
-    //     },
-    //     language: { search: "", searchPlaceholder: "Search List..." },
-    //     fnDrawCallback: function (oSettings) {
-    //     },
-    //     fnInitComplete: function () {
-    //       $(
-    //         "<button class='btn btn-primary btnSearchFixedAccount' type='button' id='btnSearchFixedAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-    //       ).insertAfter("#tblServiceLogList_filter");
-    //     },
-    //   })
-    //     .on("page", function () {
-    //       let draftRecord = templateObject.datatablerecords.get();
-    //       templateObject.datatablerecords.set(draftRecord);
-    //     })
-    //     .on("column-reorder", function () { })
-    //     .on("length.dt", function (e, settings, len) {
-    //     });
-    // }, 10);
+    setTimeout(function () {
+      $("#tblServiceLogList").DataTable({
+        columnDefs: [
+        ],
+        select: true,
+        destroy: true,
+        colReorder: true,
+        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        buttons: [{
+          extend: "csvHtml5",
+          text: "",
+          download: "open",
+          className: "btntabletocsv hiddenColumn",
+          filename: "FixedAssetsOverview__" + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible",
+          },
+        },
+        {
+          extend: "print",
+          download: "open",
+          className: "btntabletopdf hiddenColumn",
+          text: "",
+          title: "Accounts Overview",
+          filename: "Accounts Overview_" + moment().format(),
+          exportOptions: {
+            columns: ":visible",
+          },
+        },
+        {
+          extend: "excelHtml5",
+          title: "",
+          download: "open",
+          className: "btntabletoexcel hiddenColumn",
+          filename: "FixedAssetsOverview__" + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible",
+          },
+        },
+        ],
+        pageLength: initialDatatableLoad,
+        lengthMenu: [
+          [initialDatatableLoad, -1],
+          [initialDatatableLoad, "All"],
+        ],
+        info: true,
+        responsive: true,
+        order: [
+          [0, "asc"]
+        ],
+        // "aaSorting": [[1,'desc']],
+        action: function () {
+          $("#tblServiceLogList").DataTable().ajax.reload();
+        },
+        language: { search: "", searchPlaceholder: "Search List..." },
+        fnDrawCallback: function (oSettings) {
+        },
+        fnInitComplete: function () {
+          $(
+            "<button class='btn btn-primary btnSearchFixedAccount' type='button' id='btnSearchFixedAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+          ).insertAfter("#tblServiceLogList_filter");
+        },
+      })
+        .on("page", function () {
+          let draftRecord = templateObject.datatablerecords.get();
+          templateObject.datatablerecords.set(draftRecord);
+        })
+        .on("column-reorder", function () { })
+        .on("length.dt", function (e, settings, len) {
+        });
+    }, 10);
   }
 
 });

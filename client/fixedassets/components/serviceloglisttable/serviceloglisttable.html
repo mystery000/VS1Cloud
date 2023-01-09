@@ -111,7 +111,37 @@
               <tbody>
                 {{#if datatablerecords}}
                 {{#each item in datatablerecords}}
-                 
+                  <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                    <td contenteditable="false" class="colFixedID hiddenColumn">{{item.id}}</td>
+                    <td contenteditable="false"
+                      class="colAssetName {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.assetCode}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colAssetName {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.assetName}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colAssetName {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.serviceType}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colAssetName {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.serviceDate}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colAssetName {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.serviceProvider}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colAssetName {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.nextServiceDate}}
+                    </td>
+                    <td contenteditable="false"
+                      class="colAssetName {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">
+                      {{item.status}}
+                    </td>
+                  </tr>
                 {{/each}}
                 {{/if}}
               </tbody>
