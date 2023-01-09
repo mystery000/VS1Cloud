@@ -100,7 +100,6 @@ Template.fixedassetcard.onRendered(function () {
     let selectLineID = $('#selectLineID').val();
     let accountId = $(this).find('td.colAccountID').html();
     let accountName = $(this).find('td.productName').html();
-    // console.log(accountId, templateObject.current_account_type);
     // let taxcodeList = templateObject.taxraterecords.get();
     templateObject[templateObject.current_account_type.get()].set(accountName);
     var table = $(this);
@@ -109,7 +108,6 @@ Template.fixedassetcard.onRendered(function () {
     $('#accountListModal').modal('toggle');
   });
   $(document).on("click", "#tblFixedassettypelist tbody tr", function(e) {
-    console.log($(this).find('td.AssetName').html());
     $('input#edtAssetType').val($(this).find('td.AssetName').html());
     $('#fixedAssetTypeListModal').modal('hide');
   });
@@ -128,7 +126,6 @@ Template.fixedassetcard.events({
         Active: true
       }
     };
-    console.log(newFixedAsset);
     // fixedassetSercie.saveTFixedAsset(newFixedAsset);
   },
   "click button.btnBack": function() {
@@ -149,7 +146,6 @@ Template.fixedassetcard.events({
   'change input#chkEnterAmount': function(e) {
     const templateObject = Template.instance();
     const status = templateObject.chkEnterAmount.get();
-    console.log(status);
     templateObject.chkEnterAmount.set(!status);
   },
 });

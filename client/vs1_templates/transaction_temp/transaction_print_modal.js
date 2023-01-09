@@ -178,8 +178,6 @@ Template.transaction_print_modal.onCreated(async function () {
           };
         });
 
-      console.log("vs1Data.length == 0", templates);
-
       return templates;
     } else {
       const vs1DataList = JSON.parse(vs1Data[0].data);
@@ -206,8 +204,6 @@ Template.transaction_print_modal.onCreated(async function () {
           };
         });
 
-      console.log("vs1Data.length != 0", templates);
-
       return templates;
     }
   };
@@ -230,7 +226,6 @@ Template.transaction_print_modal.onRendered(function () {
           (transation) => transation.name === template.fields.SettingName
         ).key;
         if (template.fields.Active) {
-          // console.log({ template, templateKey })
           $(`#${templateKey}_${template.fields.Template}`).prop(
             "checked",
             true
@@ -273,7 +268,6 @@ Template.transaction_print_modal.helpers({
     ).key;
   },
   chooseTemplateHandle: (event, key) => {
-    console.log({ event, key });
   },
 });
 
@@ -311,14 +305,9 @@ Template.transaction_print_modal.events({
         );
       }
     }
-
-    console.log({ customerId, contactServiceData });
-
     // const data = await Template.new_salesorder.__helpers
     //   .get("saleOrder")
     //   .call();
-
-    // console.log("saleOrderLines==========>", data);
 
     // Send Email with attachments
     // if (isCheckedEmail && validateEmail(data.checkEmailData)) {
@@ -337,7 +326,6 @@ Template.transaction_print_modal.events({
       //   },
       //   function (error, result) {
       //     if (error && error.error === "error") {
-      //       console.log("Send email: ", { error, result })
       //       if (FlowRouter.current().queryParams.trans) {
       //         // FlowRouter.go(
       //         //   "/customerscard?id=" +
@@ -417,8 +405,6 @@ Template.transaction_print_modal.events({
 
       message = `${message} - Hi ${contactServiceData.fields.FirstName} ${contactServiceData.fields.LastName}`;
 
-      console.log({ companyName });
-
       if (phoneNumber) {
         Meteor.call(
           "sendSMS",
@@ -428,7 +414,6 @@ Template.transaction_print_modal.events({
           phoneNumber,
           message,
           function (error, result) {
-            console.log({ error, result });
             LoadingOverlay.hide();
             if (error) {
               swal({
@@ -471,7 +456,6 @@ Template.transaction_print_modal.events({
     // chooseTemplateCheckboxes.each((item) => {
     //   chosenTemplates.push(`#${$(chooseTemplateCheckboxes[item]).attr("data-id")}-modal .chkGlobalSettings:checked`)
     // })
-    // console.log({ component, chooseTemplateCheckboxes, chosenTemplates })
     // component.generateInvoiceData('Sales Orders', '3')
   },
 });
