@@ -24,7 +24,10 @@ import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
 import { foreignCols } from "../vs1_templates/transaction_temp/transaction_line";
 import {Session} from 'meteor/session';
-// import { CustomerCreationSourceFilter } from "square-connect";
+
+import { Template } from 'meteor/templating';
+import '../invoice/frm_invoice.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

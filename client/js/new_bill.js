@@ -23,7 +23,12 @@ import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
-// import { object } from 'underscore';
+// import { object } from 'underscore'; 
+
+
+import { Template } from 'meteor/templating';
+import '../bills/frmbill_card.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 var template_list = [
     "Bills",

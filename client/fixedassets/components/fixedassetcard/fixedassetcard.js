@@ -2,11 +2,14 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { SideBarService } from '../../../js/sidebar-service'
 
 import { AccountService } from "../../../accounts/account-service";
+import { FixedAssetService } from '../../fixedasset-service';
 import './fixedassetcard.html';
 import { template } from 'lodash';
 
 let sideBarService = new SideBarService();
 let accountService = new AccountService();
+let fixedassetSercie = new FixedAssetService();
+
 Template.fixedassetcard.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.current_account_type = new ReactiveVar('');
@@ -93,29 +96,37 @@ Template.fixedassetcard.onRendered(function () {
     $('#fixedAssetTypeListModal').modal('toggle');
   }
   $(document).on("click", "#tblAccount tbody tr", function(e) {
-        // $(".colAccountName").removeClass('boldtablealertsborder');
-        let selectLineID = $('#selectLineID').val();
-        let accountId = $(this).find('td.colAccountID').html();
-        let accountName = $(this).find('td.productName').html();
-        // console.log(accountId, templateObject.current_account_type);
-        // let taxcodeList = templateObject.taxraterecords.get();
-        templateObject[templateObject.current_account_type.get()].set(accountName);
-        var table = $(this);
-        $("input#"+templateObject.current_account_type.get()).val(accountName);
+    // $(".colAccountName").removeClass('boldtablealertsborder');
+    let selectLineID = $('#selectLineID').val();
+    let accountId = $(this).find('td.colAccountID').html();
+    let accountName = $(this).find('td.productName').html();
+    // let taxcodeList = templateObject.taxraterecords.get();
+    templateObject[templateObject.current_account_type.get()].set(accountName);
+    var table = $(this);
+    $("input#"+templateObject.current_account_type.get()).val(accountName);
 
-        $('#accountListModal').modal('toggle');
-    });
+    $('#accountListModal').modal('toggle');
+  });
+  $(document).on("click", "#tblFixedassettypelist tbody tr", function(e) {
+    $('input#edtAssetType').val($(this).find('td.AssetName').html());
+    $('#fixedAssetTypeListModal').modal('hide');
+  });
 });
 Template.fixedassetcard.events({
   "click button.btnSave": function() {
-    // const templateObject = Template.instance();
-    // let typeData = {
-    //   AssetTypeCode: "Vehicles",
-    //   AssetTypeName: "Vehicles",
-    //   Notes: "Vehicles",
-    //   Active: true
-    // };
-    // accountService.saveAssetType(typeData);
+    const templateObject = Template.instance();
+    let newFixedAsset = {
+      "type":"TFixedAssets",
+      "fields":{
+        AssetCode: $('input#edtAssetCode').val(),
+        AssetName: $('input#edtAssetName').val(),
+        Description: $('input#edtAssetDescription').val(),
+        AssetType: $('input#edtAssetType').val(),
+        BrandName: $('input#edtBrand').val(),
+        Active: true
+      }
+    };
+    // fixedassetSercie.saveTFixedAsset(newFixedAsset);
   },
   "click button.btnBack": function() {
     FlowRouter.go('/fixedassetsoverview');
@@ -135,7 +146,6 @@ Template.fixedassetcard.events({
   'change input#chkEnterAmount': function(e) {
     const templateObject = Template.instance();
     const status = templateObject.chkEnterAmount.get();
-    console.log(status);
     templateObject.chkEnterAmount.set(!status);
   },
 });

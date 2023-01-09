@@ -8,7 +8,6 @@
             <table id="tblFixedassettypelist" name="tblFixedassettypelist" class="dataTable table table-hover table-striped table-bordered tblFixedassettypelist">
               <thead>
                 <tr class="dasnd-moved">
-                  <th class="th assetTypeID">ID</th>
                   {{#each displayfield in displayfields}}
                     {{#if displayfield.display}}
                     <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"
@@ -24,15 +23,17 @@
                   {{#each item in datatablerecords}}
                     <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                       <td contenteditable="false"
-                        class="colAssetName {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
+                        class="{{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
+                        {{item.id}}
+                      </td>
+                      <td contenteditable="false"
+                        class="{{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
                         {{item.assetTypeCode}}
                       </td>
                       <td contenteditable="false"
-                        class="colAssetName {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
-                        {{item.assetTypeName}}
-                      </td>
+                        class="{{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">{{item.assetTypeName}}</td>
                       <td contenteditable="false"
-                        class="colAssetName {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
+                        class="{{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
                         {{item.notes}}
                       </td>
                     </tr>

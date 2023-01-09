@@ -166,7 +166,6 @@ Template.accountlistpop.onRendered(function() {
                 let useData = data.taccountvs1;
                 let records = [];
                 let inventoryData = [];
-                console.log("[account list :]", useData);
                 for (let i = 0; i < useData.length; i++) {
                     if (!isNaN(useData[i].fields.Balance)) {
                         accBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance) || 0.00;

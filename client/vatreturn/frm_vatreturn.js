@@ -287,7 +287,9 @@ Template.vatreturn.onRendered(function() {
 
         getVS1Data('TVATReturn').then(function(dataObject) {
             let taxRateList = templateObject.taxRateList.get();
-            if (dataObject.length == 0) {
+            let userdata = JSON.parse(dataObject[0].data) || [];
+            userdata = userdata.tvatreturns || [];
+            if (userdata.length == 0) {
                 reportService.getAllVATReturn().then(function(data) {
                     for (let i = 0; i < data.tvatreturn.length; i++) {
                         if (getid == "") {
@@ -467,6 +469,30 @@ Template.vatreturn.onRendered(function() {
                     }
                     $('.fullScreenSpin').css('display', 'none');
                 }).catch(function(err) {
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1A");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2A");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_3");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_5");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15A");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_16");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_17");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_18");
+                    // shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
+                    // shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
+                    // shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
+                    // shareFunctionByName.initTable(data.tvatreturn[i].fields._27Selected, "tbltaxCodeCheckbox_27");
+                    // shareFunctionByName.initTable(data.tvatreturn[i].fields._30Selected, "tbltaxCodeCheckbox_30");
+                    // shareFunctionByName.initTable(data.tvatreturn[i].fields._31Selected, "tbltaxCodeCheckbox_31");
+                    // shareFunctionByName.initTable(data.tvatreturn[i].fields._34Selected, "tbltaxCodeCheckbox_34");
+                    // shareFunctionByName.initTable(data.tvatreturn[i].fields._35Selected, "tbltaxCodeCheckbox_35");
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else {
@@ -831,6 +857,30 @@ Template.vatreturn.onRendered(function() {
                 }
                 $('.fullScreenSpin').css('display', 'none');
             }).catch(function(err) {
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_3");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_5");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_16");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_17");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_18");
+                // shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
+                // shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
+                // shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
+                // shareFunctionByName.initTable(data.tvatreturn[i].fields._27Selected, "tbltaxCodeCheckbox_27");
+                // shareFunctionByName.initTable(data.tvatreturn[i].fields._30Selected, "tbltaxCodeCheckbox_30");
+                // shareFunctionByName.initTable(data.tvatreturn[i].fields._31Selected, "tbltaxCodeCheckbox_31");
+                // shareFunctionByName.initTable(data.tvatreturn[i].fields._34Selected, "tbltaxCodeCheckbox_34");
+                // shareFunctionByName.initTable(data.tvatreturn[i].fields._35Selected, "tbltaxCodeCheckbox_35");
                 $('.fullScreenSpin').css('display', 'none');
             });
         });
@@ -915,9 +965,9 @@ Template.vatreturn.onRendered(function() {
                     if (tabType == "t1") {
                         templateObject.taxSummaryListT1.set(mainReportRecords);
                         templateObject.selTaxList("1");
-                        templateObject.selTaxList("1a");
+                        templateObject.selTaxList("1A");
                         templateObject.selTaxList("2");
-                        templateObject.selTaxList("2a");
+                        templateObject.selTaxList("2A");
                         templateObject.selTaxList("3");
                         templateObject.selTaxList("5");
                         templateObject.selTaxList("7");
@@ -926,9 +976,9 @@ Template.vatreturn.onRendered(function() {
                     } else if (tabType == "t2") {
                         templateObject.taxSummaryListT2.set(mainReportRecords);
                         templateObject.selTaxList("14");
-                        templateObject.selTaxList("14a");
+                        templateObject.selTaxList("14A");
                         templateObject.selTaxList("15");
-                        templateObject.selTaxList("15a");
+                        templateObject.selTaxList("15A");
                         templateObject.selTaxList("16");
                         templateObject.selTaxList("17");
                         templateObject.selTaxList("18");
@@ -951,13 +1001,13 @@ Template.vatreturn.onRendered(function() {
                     var tax4cost = parseFloat($("#tax1cost").val()) * 15 / (100 + 15);
                     $("#tax4cost").val(tax4cost.toFixed(2));
                     $("#prt_tax4cost").html("$" + tax4cost.toFixed(2));
-                    var tax4acost = parseFloat($("#tax1acost").val()) * 15 / (100 + 15);
-                    $("#tax4acost").val(tax4acost.toFixed(2));
-                    $("#prt_tax4acost").html("$" + tax4acost.toFixed(2));
-                    var tax6cost = parseFloat($("#tax5acost").val()) * 60 / 100;
+                    var tax4Acost = parseFloat($("#tax1Acost").val()) * 15 / (100 + 15);
+                    $("#tax4Acost").val(tax4Acost.toFixed(2));
+                    $("#prt_tax4Acost").html("$" + tax4Acost.toFixed(2));
+                    var tax6cost = parseFloat($("#tax5Acost").val()) * 60 / 100;
                     $("#tax6cost").val(tax6cost.toFixed(2));
                     $("#prt_tax6cost").html("$" + tax6cost.toFixed(2));
-                    var tax8cost = tax6cost + parseFloat($("#tax7acost").val());
+                    var tax8cost = tax6cost + parseFloat($("#tax7cost").val());
                     $("#tax8cost").val(tax8cost.toFixed(2));
                     $("#prt_tax8cost").html("$" + tax8cost.toFixed(2));
                     var tax9cost = tax8cost * 15 / 100;
@@ -969,7 +1019,7 @@ Template.vatreturn.onRendered(function() {
                     var tax13cost = tax4cost + tax4acost + tax9cost + tax11cost + parseFloat($("#tax12cost").val());
                     $("#tax13cost").val(tax13cost.toFixed(2));
                     $("#prt_tax13cost").html("$" + tax13cost.toFixed(2));
-                    var tax19cost = parseFloat($("#tax14cost").val()) + parseFloat($("#tax14acost").val()) + parseFloat($("#tax15cost").val()) + parseFloat($("#tax15acost").val()) + parseFloat($("#tax16cost").val()) + parseFloat($("#tax17cost").val()) + parseFloat($("#tax18cost").val());
+                    var tax19cost = parseFloat($("#tax14cost").val()) + parseFloat($("#tax14Acost").val()) + parseFloat($("#tax15cost").val()) + parseFloat($("#tax15Acost").val()) + parseFloat($("#tax16cost").val()) + parseFloat($("#tax17cost").val()) + parseFloat($("#tax18cost").val());
                     $("#tax19cost").val(tax19cost.toFixed(2));
                     $("#prt_tax19cost").html("$" + tax19cost.toFixed(2));
                     var tax20cost = tax13cost - tax19cost;
@@ -1026,9 +1076,9 @@ Template.vatreturn.onRendered(function() {
     templateObject.selTaxList = function(pan) {
         let taxRateList = templateObject.taxRateList.get();
         let taxSummaryList = [];
-        if (["1", "1a", "2", "2a", "3", "5", "7", "10", "12"].includes(pan)) {
+        if (["1", "1A", "2", "2A", "3", "5", "7", "10", "12"].includes(pan)) {
             taxSummaryList = templateObject.taxSummaryListT1.get();
-        } else if (["14", "14a", "15", "15a", "16", "17", "18"].includes(pan)) {
+        } else if (["14", "14A", "15", "15A", "16", "17", "18"].includes(pan)) {
             taxSummaryList = templateObject.taxSummaryListT2.get();
         } else if (["21", "22", "23", "26", "27", "28", "30", "31", "32", "34", "35", "36"].includes(pan)) {
             taxSummaryList = templateObject.taxSummaryListT3.get();
@@ -1148,7 +1198,9 @@ Template.vatreturn.onRendered(function() {
                     getVS1Data('TVATReturn').then(function(dataObject) {
                         let taxRateList = templateObject.taxRateList.get();
                         let deptrecords = templateObject.deptrecords.get();
-                        if (dataObject.length == 0) {
+                        let userdata = JSON.parse(dataObject[0].data) || [];
+                        userdata = userdata.tvatreturns || [];
+                        if (userdata.length == 0) {
                             reportService.getOneVATReturn(getid[1]).then(function(data) {
                                 $("#description").val(data.tvatreturn[0].fields.VatSheetDesc);
                                 $("#vatreturnCategory1").prop('checked', data.tvatreturn[0].fields.HasTab1);
@@ -1156,9 +1208,9 @@ Template.vatreturn.onRendered(function() {
                                 $("#vatreturnCategory3").prop('checked', data.tvatreturn[0].fields.HasTab3);
                                 if (data.tvatreturn[0].fields.HasTab1 == true) {
                                     document.getElementById("tax1").setAttribute("href", "#taxCode1option");
-                                    document.getElementById("tax1a").setAttribute("href", "#taxCode1aoption");
+                                    document.getElementById("tax1A").setAttribute("href", "#taxCode1Aoption");
                                     document.getElementById("tax2").setAttribute("href", "#taxCode2option");
-                                    document.getElementById("tax2a").setAttribute("href", "#taxCode2aoption");
+                                    document.getElementById("tax2A").setAttribute("href", "#taxCode2Aoption");
                                     document.getElementById("tax3").setAttribute("href", "#taxCode3option");
                                     $("#tax4cost").attr("disabled", "disabled");
                                     $("#tax4acost").attr("disabled", "disabled");
@@ -1169,9 +1221,9 @@ Template.vatreturn.onRendered(function() {
                                     document.getElementById("tax12").setAttribute("href", "#taxCode12option");
                                 } else {
                                     document.getElementById("tax1").setAttribute("href", "#");
-                                    document.getElementById("tax1a").setAttribute("href", "#");
+                                    document.getElementById("tax1A").setAttribute("href", "#");
                                     document.getElementById("tax2").setAttribute("href", "#");
-                                    document.getElementById("tax2a").setAttribute("href", "#");
+                                    document.getElementById("tax2A").setAttribute("href", "#");
                                     document.getElementById("tax3").setAttribute("href", "#");
                                     $("#tax4cost").attr("disabled", "disabled");
                                     $("#tax4acost").attr("disabled", "disabled");
@@ -1183,17 +1235,17 @@ Template.vatreturn.onRendered(function() {
                                 }
                                 if (data.tvatreturn[0].fields.HasTab2 == true) {
                                     document.getElementById("tax14").setAttribute("href", "#taxCode14option");
-                                    document.getElementById("tax14a").setAttribute("href", "#taxCode14aoption");
+                                    document.getElementById("tax14A").setAttribute("href", "#taxCode14Aoption");
                                     document.getElementById("tax15").setAttribute("href", "#taxCode15option");
-                                    document.getElementById("tax15a").setAttribute("href", "#taxCode15aoption");
+                                    document.getElementById("tax15A").setAttribute("href", "#taxCode15Aoption");
                                     document.getElementById("tax16").setAttribute("href", "#taxCode16option");
                                     document.getElementById("tax17").setAttribute("href", "#taxCode17option");
                                     document.getElementById("tax18").setAttribute("href", "#taxCode18option");
                                 } else {
                                     document.getElementById("tax14").setAttribute("href", "#");
-                                    document.getElementById("tax14a").setAttribute("href", "#");
+                                    document.getElementById("tax14A").setAttribute("href", "#");
                                     document.getElementById("tax15").setAttribute("href", "#");
-                                    document.getElementById("tax15a").setAttribute("href", "#");
+                                    document.getElementById("tax15A").setAttribute("href", "#");
                                     document.getElementById("tax16").setAttribute("href", "#");
                                     document.getElementById("tax17").setAttribute("href", "#");
                                     document.getElementById("tax18").setAttribute("href", "#");
@@ -1258,18 +1310,18 @@ Template.vatreturn.onRendered(function() {
                                 $("#prt_beginningDate").html(data.tvatreturn[0].fields.Tab1_Month + " " + data.tvatreturn[0].fields.Tab1_Year);
                                 $("#tax1cost").val(data.tvatreturn[0].fields._1);
                                 $(".prt_tax1cost").html("$" + data.tvatreturn[0].fields._1);
-                                $("#tax1acost").val(data.tvatreturn[0].fields._1A);
-                                $("#prt_tax1acost").html("$" + data.tvatreturn[0].fields._1A);
+                                $("#tax1Acost").val(data.tvatreturn[0].fields._1A);
+                                $("#prt_tax1Acost").html("$" + data.tvatreturn[0].fields._1A);
                                 $("#tax2cost").val(data.tvatreturn[0].fields._2);
                                 $("#prt_tax2cost").html("$" + data.tvatreturn[0].fields._2);
-                                $("#tax2acost").val(data.tvatreturn[0].fields._2A);
-                                $("#prt_tax2acost").html("$" + data.tvatreturn[0].fields._2A);
+                                $("#tax2Acost").val(data.tvatreturn[0].fields._2A);
+                                $("#prt_tax2Acost").html("$" + data.tvatreturn[0].fields._2A);
                                 $("#tax3cost").val(data.tvatreturn[0].fields._3);
                                 $("#prt_tax3cost").html("$" + data.tvatreturn[0].fields._3);
                                 $("#tax4cost").val(data.tvatreturn[0].fields._4);
                                 $("#prt_tax4cost").html("$" + data.tvatreturn[0].fields._4);
-                                $("#tax4acost").val(data.tvatreturn[0].fields._4A);
-                                $("#prt_tax4acost").html("$" + data.tvatreturn[0].fields._4A);
+                                $("#tax4Acost").val(data.tvatreturn[0].fields._4A);
+                                $("#prt_tax4Acost").html("$" + data.tvatreturn[0].fields._4A);
                                 $("#tax5cost").val(data.tvatreturn[0].fields._5);
                                 $("#prt_tax5cost").html("$" + data.tvatreturn[0].fields._5);
                                 $("#tax7cost").val(data.tvatreturn[0].fields._7);
@@ -1407,9 +1459,9 @@ Template.vatreturn.onRendered(function() {
                                     $("#vatreturnCategory3").prop('checked', data.tvatreturn[i].fields.HasTab3);
                                     if (data.tvatreturn[i].fields.HasTab1 == true) {
                                         document.getElementById("tax1").setAttribute("href", "#taxCode1option");
-                                        document.getElementById("tax1a").setAttribute("href", "#taxCode1aoption");
+                                        document.getElementById("tax1A").setAttribute("href", "#taxCode1Aoption");
                                         document.getElementById("tax2").setAttribute("href", "#taxCode2option");
-                                        document.getElementById("tax2a").setAttribute("href", "#taxCode2aoption");
+                                        document.getElementById("tax2A").setAttribute("href", "#taxCode2Aoption");
                                         document.getElementById("tax3").setAttribute("href", "#taxCode3option");
                                         $("#tax4cost").attr("disabled", "disabled");
                                         $("#tax4acost").attr("disabled", "disabled");
@@ -1420,9 +1472,9 @@ Template.vatreturn.onRendered(function() {
                                         document.getElementById("tax12").setAttribute("href", "#taxCode12option");
                                     } else {
                                         document.getElementById("tax1").setAttribute("href", "#");
-                                        document.getElementById("tax1a").setAttribute("href", "#");
+                                        document.getElementById("tax1A").setAttribute("href", "#");
                                         document.getElementById("tax2").setAttribute("href", "#");
-                                        document.getElementById("tax2a").setAttribute("href", "#");
+                                        document.getElementById("tax2A").setAttribute("href", "#");
                                         document.getElementById("tax3").setAttribute("href", "#");
                                         $("#tax4cost").attr("disabled", "disabled");
                                         $("#tax4acost").attr("disabled", "disabled");
@@ -1434,17 +1486,17 @@ Template.vatreturn.onRendered(function() {
                                     }
                                     if (data.tvatreturn[i].fields.HasTab2 == true) {
                                         document.getElementById("tax14").setAttribute("href", "#taxCode14option");
-                                        document.getElementById("tax14a").setAttribute("href", "#taxCode14aoption");
+                                        document.getElementById("tax14A").setAttribute("href", "#taxCode14Aoption");
                                         document.getElementById("tax15").setAttribute("href", "#taxCode15option");
-                                        document.getElementById("tax15a").setAttribute("href", "#taxCode15aoption");
+                                        document.getElementById("tax15A").setAttribute("href", "#taxCode15Aoption");
                                         document.getElementById("tax16").setAttribute("href", "#taxCode16option");
                                         document.getElementById("tax17").setAttribute("href", "#taxCode17option");
                                         document.getElementById("tax18").setAttribute("href", "#taxCode18option");
                                     } else {
                                         document.getElementById("tax14").setAttribute("href", "#");
-                                        document.getElementById("tax14a").setAttribute("href", "#");
+                                        document.getElementById("tax14A").setAttribute("href", "#");
                                         document.getElementById("tax15").setAttribute("href", "#");
-                                        document.getElementById("tax15a").setAttribute("href", "#");
+                                        document.getElementById("tax15A").setAttribute("href", "#");
                                         document.getElementById("tax16").setAttribute("href", "#");
                                         document.getElementById("tax17").setAttribute("href", "#");
                                         document.getElementById("tax18").setAttribute("href", "#");
@@ -1509,18 +1561,18 @@ Template.vatreturn.onRendered(function() {
                                     $("#prt_beginningDate").html(data.tvatreturn[i].fields.Tab1_Month + " " + data.tvatreturn[i].fields.Tab1_Year);
                                     $("#tax1cost").val(data.tvatreturn[i].fields._1);
                                     $(".prt_tax1cost").html("$" + data.tvatreturn[i].fields._1);
-                                    $("#tax1acost").val(data.tvatreturn[i].fields._1A);
-                                    $("#prt_tax1acost").html("$" + data.tvatreturn[i].fields._1A);
+                                    $("#tax1Acost").val(data.tvatreturn[i].fields._1A);
+                                    $("#prt_tax1Acost").html("$" + data.tvatreturn[i].fields._1A);
                                     $("#tax2cost").val(data.tvatreturn[i].fields._2);
                                     $("#prt_tax2cost").html("$" + data.tvatreturn[i].fields._2);
-                                    $("#tax2acost").val(data.tvatreturn[i].fields._2A);
-                                    $("#prt_tax2acost").html("$" + data.tvatreturn[i].fields._2A);
+                                    $("#tax2Acost").val(data.tvatreturn[i].fields._2A);
+                                    $("#prt_tax2Acost").html("$" + data.tvatreturn[i].fields._2A);
                                     $("#tax3cost").val(data.tvatreturn[i].fields._3);
                                     $("#prt_tax3cost").html("$" + data.tvatreturn[i].fields._3);
                                     $("#tax4cost").val(data.tvatreturn[i].fields._4);
                                     $("#prt_tax4cost").html("$" + data.tvatreturn[i].fields._4);
-                                    $("#tax4acost").val(data.tvatreturn[i].fields._4A);
-                                    $("#prt_tax4acost").html("$" + data.tvatreturn[i].fields._4A);
+                                    $("#tax4Acost").val(data.tvatreturn[i].fields._4A);
+                                    $("#prt_tax4Acost").html("$" + data.tvatreturn[i].fields._4A);
                                     $("#tax5cost").val(data.tvatreturn[i].fields._5);
                                     $("#prt_tax5cost").html("$" + data.tvatreturn[i].fields._5);
                                     $("#tax7cost").val(data.tvatreturn[i].fields._7);
@@ -1660,9 +1712,9 @@ Template.vatreturn.onRendered(function() {
                             $("#vatreturnCategory3").prop('checked', data.tvatreturn[0].fields.HasTab3);
                             if (data.tvatreturn[0].fields.HasTab1 == true) {
                                 document.getElementById("tax1").setAttribute("href", "#taxCode1option");
-                                document.getElementById("tax1a").setAttribute("href", "#taxCode1aoption");
+                                document.getElementById("tax1A").setAttribute("href", "#taxCode1Aoption");
                                 document.getElementById("tax2").setAttribute("href", "#taxCode2option");
-                                document.getElementById("tax2a").setAttribute("href", "#taxCode2aoption");
+                                document.getElementById("tax2A").setAttribute("href", "#taxCode2Aoption");
                                 document.getElementById("tax3").setAttribute("href", "#taxCode3option");
                                 $("#tax4cost").attr("disabled", "disabled");
                                 $("#tax4acost").attr("disabled", "disabled");
@@ -1673,9 +1725,9 @@ Template.vatreturn.onRendered(function() {
                                 document.getElementById("tax12").setAttribute("href", "#taxCode12option");
                             } else {
                                 document.getElementById("tax1").setAttribute("href", "#");
-                                document.getElementById("tax1a").setAttribute("href", "#");
+                                document.getElementById("tax1A").setAttribute("href", "#");
                                 document.getElementById("tax2").setAttribute("href", "#");
-                                document.getElementById("tax2a").setAttribute("href", "#");
+                                document.getElementById("tax2A").setAttribute("href", "#");
                                 document.getElementById("tax3").setAttribute("href", "#");
                                 $("#tax4cost").attr("disabled", "disabled");
                                 $("#tax4acost").attr("disabled", "disabled");
@@ -1687,17 +1739,17 @@ Template.vatreturn.onRendered(function() {
                             }
                             if (data.tvatreturn[0].fields.HasTab2 == true) {
                                 document.getElementById("tax14").setAttribute("href", "#taxCode14option");
-                                document.getElementById("tax14a").setAttribute("href", "#taxCode14aoption");
+                                document.getElementById("tax14A").setAttribute("href", "#taxCode14Aoption");
                                 document.getElementById("tax15").setAttribute("href", "#taxCode15option");
-                                document.getElementById("tax15a").setAttribute("href", "#taxCode15aoption");
+                                document.getElementById("tax15A").setAttribute("href", "#taxCode15Aoption");
                                 document.getElementById("tax16").setAttribute("href", "#taxCode16option");
                                 document.getElementById("tax17").setAttribute("href", "#taxCode17option");
                                 document.getElementById("tax18").setAttribute("href", "#taxCode18option");
                             } else {
                                 document.getElementById("tax14").setAttribute("href", "#");
-                                document.getElementById("tax14a").setAttribute("href", "#");
+                                document.getElementById("tax14A").setAttribute("href", "#");
                                 document.getElementById("tax15").setAttribute("href", "#");
-                                document.getElementById("tax15a").setAttribute("href", "#");
+                                document.getElementById("tax15A").setAttribute("href", "#");
                                 document.getElementById("tax16").setAttribute("href", "#");
                                 document.getElementById("tax17").setAttribute("href", "#");
                                 document.getElementById("tax18").setAttribute("href", "#");
@@ -1762,18 +1814,18 @@ Template.vatreturn.onRendered(function() {
                             $("#prt_beginningDate").html(data.tvatreturn[0].fields.Tab1_Month + " " + data.tvatreturn[0].fields.Tab1_Year);
                             $("#tax1cost").val(data.tvatreturn[0].fields._1);
                             $(".prt_tax1cost").html("$" + data.tvatreturn[0].fields._1);
-                            $("#tax1acost").val(data.tvatreturn[0].fields._1A);
-                            $("#prt_tax1acost").html("$" + data.tvatreturn[0].fields._1A);
+                            $("#tax1Acost").val(data.tvatreturn[0].fields._1A);
+                            $("#prt_tax1Acost").html("$" + data.tvatreturn[0].fields._1A);
                             $("#tax2cost").val(data.tvatreturn[0].fields._2);
                             $("#prt_tax2cost").html("$" + data.tvatreturn[0].fields._2);
-                            $("#tax2acost").val(data.tvatreturn[0].fields._2A);
-                            $("#prt_tax2acost").html("$" + data.tvatreturn[0].fields._2A);
+                            $("#tax2Acost").val(data.tvatreturn[0].fields._2A);
+                            $("#prt_tax2Acost").html("$" + data.tvatreturn[0].fields._2A);
                             $("#tax3cost").val(data.tvatreturn[0].fields._3);
                             $("#prt_tax3cost").html("$" + data.tvatreturn[0].fields._3);
                             $("#tax4cost").val(data.tvatreturn[0].fields._4);
                             $("#prt_tax4cost").html("$" + data.tvatreturn[0].fields._4);
-                            $("#tax4acost").val(data.tvatreturn[0].fields._4A);
-                            $("#prt_tax4acost").html("$" + data.tvatreturn[0].fields._4A);
+                            $("#tax4Acost").val(data.tvatreturn[0].fields._4A);
+                            $("#prt_tax4Acost").html("$" + data.tvatreturn[0].fields._4A);
                             $("#tax5cost").val(data.tvatreturn[0].fields._5);
                             $("#prt_tax5cost").html("$" + data.tvatreturn[0].fields._5);
                             $("#tax7cost").val(data.tvatreturn[0].fields._7);
@@ -1912,9 +1964,9 @@ Template.vatreturn.onRendered(function() {
             $(document).on("click", "#vatreturnCategory1", function(e) {
                 if ($("#vatreturnCategory1").prop('checked') == true) {
                     document.getElementById("tax1").setAttribute("href", "#taxCode1option");
-                    document.getElementById("tax1a").setAttribute("href", "#taxCode1aoption");
+                    document.getElementById("tax1A").setAttribute("href", "#taxCode1Aoption");
                     document.getElementById("tax2").setAttribute("href", "#taxCode2option");
-                    document.getElementById("tax2a").setAttribute("href", "#taxCode2aoption");
+                    document.getElementById("tax2A").setAttribute("href", "#taxCode2Aoption");
                     document.getElementById("tax3").setAttribute("href", "#taxCode3option");
                     document.getElementById("tax5").setAttribute("href", "#taxCode5option");
                     document.getElementById("tax7").setAttribute("href", "#taxCode7option");
@@ -1926,9 +1978,9 @@ Template.vatreturn.onRendered(function() {
                     $("#tax11cost").removeAttr("disabled");
                 } else {
                     document.getElementById("tax1").setAttribute("href", "#");
-                    document.getElementById("tax1a").setAttribute("href", "#");
+                    document.getElementById("tax1A").setAttribute("href", "#");
                     document.getElementById("tax2").setAttribute("href", "#");
-                    document.getElementById("tax2a").setAttribute("href", "#");
+                    document.getElementById("tax2A").setAttribute("href", "#");
                     document.getElementById("tax3").setAttribute("href", "#");
                     document.getElementById("tax5").setAttribute("href", "#");
                     document.getElementById("tax7").setAttribute("href", "#");
@@ -1944,17 +1996,17 @@ Template.vatreturn.onRendered(function() {
             $(document).on("click", "#vatreturnCategory2", function(e) {
                 if ($("#vatreturnCategory2").prop('checked') == true) {
                     document.getElementById("tax14").setAttribute("href", "#taxCode14option");
-                    document.getElementById("tax14a").setAttribute("href", "#taxCode14aoption");
+                    document.getElementById("tax14A").setAttribute("href", "#taxCode14Aoption");
                     document.getElementById("tax15").setAttribute("href", "#taxCode15option");
-                    document.getElementById("tax15a").setAttribute("href", "#taxCode15aoption");
+                    document.getElementById("tax15A").setAttribute("href", "#taxCode15Aoption");
                     document.getElementById("tax16").setAttribute("href", "#taxCode16option");
                     document.getElementById("tax17").setAttribute("href", "#taxCode17option");
                     document.getElementById("tax18").setAttribute("href", "#taxCode18option");
                 } else {
                     document.getElementById("tax14").setAttribute("href", "#");
-                    document.getElementById("tax14a").setAttribute("href", "#");
+                    document.getElementById("tax14A").setAttribute("href", "#");
                     document.getElementById("tax15").setAttribute("href", "#");
-                    document.getElementById("tax15a").setAttribute("href", "#");
+                    document.getElementById("tax15A").setAttribute("href", "#");
                     document.getElementById("tax16").setAttribute("href", "#");
                     document.getElementById("tax17").setAttribute("href", "#");
                     document.getElementById("tax18").setAttribute("href", "#");
@@ -2013,7 +2065,7 @@ Template.vatreturn.helpers({
         return Template.instance().taxRateList.get();
     },
     taxCodePanList: () => {
-        let taxCodePanArray = ["1", "1a", "2", "2a", "3", "5", "7", "10", "12", "14", "14a", "15", "15a", "16", "17", "21", "22", "26", "27", "30", "31", "34", "35"];
+        let taxCodePanArray = ["1", "1A", "2", "2A", "3", "5", "7", "10", "12", "14", "14A", "15", "15A", "16", "17", "21", "22", "26", "27", "30", "31", "34", "35"];
         return taxCodePanArray;
     },
     accountsList: () => {
@@ -2159,13 +2211,13 @@ Template.vatreturn.events({
         var tax4cost = parseFloat($("#tax1cost").val()) * 15 / (100 + 15);
         $("#tax4cost").val(tax4cost.toFixed(2));
         $("#prt_tax4cost").html("$" + tax4cost.toFixed(2));
-        var tax4acost = parseFloat($("#tax1acost").val()) * 15 / (100 + 15);
-        $("#tax4acost").val(tax4acost.toFixed(2));
-        $("#prt_tax4acost").html("$" + tax4acost.toFixed(2));
+        var tax4Acost = parseFloat($("#tax1Acost").val()) * 15 / (100 + 15);
+        $("#tax4Acost").val(tax4Acost.toFixed(2));
+        $("#prt_tax4Acost").html("$" + tax4Acost.toFixed(2));
         var tax6cost = parseFloat($("#tax5cost").val()) * 60 / 100;
         $("#tax6cost").val(tax6cost.toFixed(2));
         $("#prt_tax6cost").html("$" + tax6cost.toFixed(2));
-        var tax8cost = tax6cost + parseFloat($("#tax7acost").val());
+        var tax8cost = tax6cost + parseFloat($("#tax7cost").val());
         $("#tax8cost").val(tax8cost.toFixed(2));
         $("#prt_tax8cost").html("$" + tax8cost.toFixed(2));
         var tax9cost = tax8cost * 15 / 100;
@@ -2174,10 +2226,10 @@ Template.vatreturn.events({
         var tax11cost = parseFloat($("#tax10cost").val()) * 15 / (100 + 15);
         $("#tax11cost").val(tax11cost.toFixed(2));
         $("#prt_tax11cost").html("$" + tax11cost.toFixed(2));
-        var tax13cost = tax4cost + tax4acost + tax9cost + tax11cost + parseFloat($("#tax12cost").val());
+        var tax13cost = tax4cost + tax4Acost + tax9cost + tax11cost + parseFloat($("#tax12cost").val());
         $("#tax13cost").val(tax13cost.toFixed(2));
         $("#prt_tax13cost").html("$" + tax13cost.toFixed(2));
-        var tax19cost = parseFloat($("#tax14cost").val()) + parseFloat($("#tax14acost").val()) + parseFloat($("#tax15cost").val()) + parseFloat($("#tax15acost").val()) + parseFloat($("#tax16cost").val()) + parseFloat($("#tax17cost").val()) + parseFloat($("#tax18cost").val());
+        var tax19cost = parseFloat($("#tax14cost").val()) + parseFloat($("#tax14Acost").val()) + parseFloat($("#tax15cost").val()) + parseFloat($("#tax15Acost").val()) + parseFloat($("#tax16cost").val()) + parseFloat($("#tax17cost").val()) + parseFloat($("#tax18cost").val());
         $("#tax19cost").val(tax19cost.toFixed(2));
         $("#prt_tax19cost").html("$" + tax19cost.toFixed(2));
         var tax20cost = tax13cost - tax19cost;
@@ -2257,12 +2309,12 @@ Template.vatreturn.events({
                         let tab1_month = $("#beginmonthlydate").val();
                         let tab1_year = $("#currentyear").val() || 0;
                         let tax1cost = $('#tax1cost').val();
-                        let tax1acost = $('#tax1acost').val();
+                        let tax1Acost = $('#tax1Acost').val();
                         let tax2cost = $('#tax2cost').val();
-                        let tax2acost = $('#tax2acost').val();
+                        let tax2Acost = $('#tax2Acost').val();
                         let tax3cost = $('#tax3cost').val();
                         let tax4cost = $('#tax4cost').val();
-                        let tax4acost = $('#tax4acost').val();
+                        let tax4Acost = $('#tax4Acost').val();
                         let tax5cost = $('#tax5cost').val();
                         let tax6cost = $('#tax6cost').val();
                         let tax7cost = $('#tax7cost').val();
@@ -2272,18 +2324,18 @@ Template.vatreturn.events({
                         let tax11cost = $('#tax11cost').val();
                         let tax12cost = $('#tax12cost').val();
                         let taxcodes1 = "";
-                        let taxcodes1a = "";
+                        let taxcodes1A = "";
                         let taxcodes2 = "";
-                        let taxcodes2a = "";
+                        let taxcodes2A = "";
                         let taxcodes3 = "";
                         let taxcodes5 = "";
                         let taxcodes7 = "";
                         let taxcodes10 = "";
                         let taxcodes12 = "";
                         let taxcodes14 = "";
-                        let taxcodes14a = "";
+                        let taxcodes14A = "";
                         let taxcodes15 = "";
-                        let taxcodes15a = "";
+                        let taxcodes15A = "";
                         let taxcodes16 = "";
                         let taxcodes17 = "";
                         let taxcodes18 = "";
@@ -2298,12 +2350,12 @@ Template.vatreturn.events({
                         for (var i = 0; i < taxRateList.length; i++) {
                             if ($("#t-1-" + taxRateList[i].Id).prop('checked') == true) {
                                 taxcodes1 = (taxcodes1 == "") ? taxRateList[i].CodeName : taxcodes1 + "," + taxRateList[i].CodeName;
-                            } else if ($("#t-1a-" + taxRateList[i].Id).prop('checked') == true) {
-                                taxcodes1a = (taxcodes1a == "") ? taxRateList[i].CodeName : taxcodes1a + "," + taxRateList[i].CodeName;
+                            } else if ($("#t-1A-" + taxRateList[i].Id).prop('checked') == true) {
+                                taxcodes1a = (taxcodes1A == "") ? taxRateList[i].CodeName : taxcodes1A + "," + taxRateList[i].CodeName;
                             } else if ($("#t-2-" + taxRateList[i].Id).prop('checked') == true) {
                                 taxcodes2 = (taxcodes2 == "") ? taxRateList[i].CodeName : taxcodes2 + "," + taxRateList[i].CodeName;
-                            } else if ($("#t-2a-" + taxRateList[i].Id).prop('checked') == true) {
-                                taxcodes2a = (taxcodes2a == "") ? taxRateList[i].CodeName : taxcodes2a + "," + taxRateList[i].CodeName;
+                            } else if ($("#t-2A-" + taxRateList[i].Id).prop('checked') == true) {
+                                taxcodes2A = (taxcodes2A == "") ? taxRateList[i].CodeName : taxcodes2A + "," + taxRateList[i].CodeName;
                             } else if ($("#t-3-" + taxRateList[i].Id).prop('checked') == true) {
                                 taxcodes3 = (taxcodes3 == "") ? taxRateList[i].CodeName : taxcodes3 + "," + taxRateList[i].CodeName;
                             } else if ($("#t-5-" + taxRateList[i].Id).prop('checked') == true) {
@@ -2316,12 +2368,12 @@ Template.vatreturn.events({
                                 taxcodes12 = (taxcodes12 == "") ? taxRateList[i].CodeName : taxcodes12 + "," + taxRateList[i].CodeName;
                             } else if ($("#t-14-" + taxRateList[i].Id).prop('checked') == true) {
                                 taxcodes14 = (taxcodes14 == "") ? taxRateList[i].CodeName : taxcodes14 + "," + taxRateList[i].CodeName;
-                            } else if ($("#t-14a-" + taxRateList[i].Id).prop('checked') == true) {
-                                taxcodes14a = (taxcodes14a == "") ? taxRateList[i].CodeName : taxcodes14a + "," + taxRateList[i].CodeName;
+                            } else if ($("#t-14A-" + taxRateList[i].Id).prop('checked') == true) {
+                                taxcodes14A = (taxcodes14A == "") ? taxRateList[i].CodeName : taxcodes14A + "," + taxRateList[i].CodeName;
                             } else if ($("#t-15-" + taxRateList[i].Id).prop('checked') == true) {
                                 taxcodes15 = (taxcodes15 == "") ? taxRateList[i].CodeName : taxcodes15 + "," + taxRateList[i].CodeName;
-                            } else if ($("#t-15a-" + taxRateList[i].Id).prop('checked') == true) {
-                                taxcodes15a = (taxcodes15a == "") ? taxRateList[i].CodeName : taxcodes15a + "," + taxRateList[i].CodeName;
+                            } else if ($("#t-15A-" + taxRateList[i].Id).prop('checked') == true) {
+                                taxcodes15A = (taxcodes15A == "") ? taxRateList[i].CodeName : taxcodes15A + "," + taxRateList[i].CodeName;
                             } else if ($("#t-16-" + taxRateList[i].Id).prop('checked') == true) {
                                 taxcodes16 = (taxcodes16 == "") ? taxRateList[i].CodeName : taxcodes16 + "," + taxRateList[i].CodeName;
                             } else if ($("#t-17-" + taxRateList[i].Id).prop('checked') == true) {
@@ -2398,12 +2450,6 @@ Template.vatreturn.events({
                             swal('VAT Return Description cannot be blank!', '', 'warning');
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
-                            getVS1Data('TVATReturn').then(function(dataObject) {
-                                if (dataObject.length > 0) {
-                                    dataArray = JSON.parse(dataObject[0].data);
-                                }
-                            });
-
                             setTimeout(function() {
                                 let jsonObj = {
                                     type: "TVATReturns",
@@ -2421,15 +2467,15 @@ Template.vatreturn.events({
                                         _1: parseFloat(tax1cost),
                                         _1Selected: taxcodes1,
                                         _1A: parseFloat(tax1acost),
-                                        _1ASelected: taxcodes1a,
+                                        _1ASelected: taxcodes1A,
                                         _2: parseFloat(tax2cost),
                                         _2Selected: taxcodes2,
-                                        _2A: parseFloat(tax2acost),
-                                        _2ASelected: taxcodes2a,
+                                        _2A: parseFloat(tax2Acost),
+                                        _2ASelected: taxcodes2A,
                                         _3: parseFloat(tax3cost),
                                         _3Selected: taxcodes3,
                                         _4: parseFloat(tax4cost),
-                                        _4A: parseFloat(tax4acost),
+                                        _4A: parseFloat(tax4Acost),
                                         _5: parseFloat(tax5cost),
                                         _5Selected: taxcodes5,
                                         _7: parseFloat(tax7cost),
@@ -2444,12 +2490,12 @@ Template.vatreturn.events({
                                         Tab2_Year: tab2_year,
                                         _14: parseFloat(tax14cost),
                                         _14Selected: taxcodes14,
-                                        _14A: parseFloat(tax14acost),
-                                        _14ASelected: taxcodes14a,
+                                        _14A: parseFloat(tax14Acost),
+                                        _14ASelected: taxcodes14A,
                                         _15: parseFloat(tax15cost),
                                         _15Selected: taxcodes15,
-                                        _15A: parseFloat(tax15acost),
-                                        _15ASelected: taxcodes15a,
+                                        _15A: parseFloat(tax15Acost),
+                                        _15ASelected: taxcodes15A,
                                         _16: parseFloat(tax16cost),
                                         _16Selected: taxcodes16,
                                         _17: parseFloat(tax17cost),
@@ -2514,11 +2560,11 @@ Template.vatreturn.events({
             } else {
                 if (getID == "tax1cost") {
                     FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=1");
-                } else if (getID == "tax1acost") {
+                } else if (getID == "tax1Acost") {
                     FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=1A");
                 } else if (getID == "tax2cost") {
                     FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=2");
-                } else if (getID == "tax2acost") {
+                } else if (getID == "tax2Acost") {
                     FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=2A");
                 } else if (getID == "tax3cost") {
                     FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=3");
@@ -2532,12 +2578,12 @@ Template.vatreturn.events({
                     FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=12");
                 } else if (getID == "tax14cost") {
                     FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=14");
-                } else if (getID == "tax14acost") {
-                    FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=14a");
+                } else if (getID == "tax14Acost") {
+                    FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=14A");
                 } else if (getID == "tax15cost") {
                     FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=15");
-                } else if (getID == "tax15acost") {
-                    FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=15a");
+                } else if (getID == "tax15Acost") {
+                    FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=15A");
                 } else if (getID == "tax16cost") {
                     FlowRouter.go("/vatreturntransactionlist?vatreturnid=" + templateObject.getId.get() + "&transactionitem=16");
                 } else if (getID == "tax17cost") {
@@ -2621,33 +2667,37 @@ Template.vatreturn.events({
                 }).then((result) => {
                     if (result.value) {
                         $('.fullScreenSpin').css('display', 'inline-block');
-                        getVS1Data('TVATReturn').then(function(dataObject) {
-                            if (dataObject.length > 0) {
-                                let dataArray = JSON.parse(dataObject[0].data);
-                                dataArray.forEach((item, j) => {
-                                    if (item.vatNumber == templateObject.getId.get()) {
-                                        dataArray.splice(j, 1);
-                                    }
-                                });
-                                addVS1Data('TVATReturn', JSON.stringify(dataArray)).then(function(datareturn) {
-                                    FlowRouter.go('/vatreturnlist');
-                                    $('.modal-backdrop').css('display', 'none');
-                                    $('.fullScreenSpin').css('display', 'none');
-                                }).catch(function(err) {
-                                    swal({
-                                        title: 'Oooops...',
-                                        text: err,
-                                        type: 'error',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'Try Again'
-                                    }).then((result) => {
-                                        if (result.value) { if (err === checkResponseError) { window.open('/', '_self'); } } else if (result.dismiss === 'cancel') {
-
-                                        }
-                                    });
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
+                        let jsonObj = {
+                            type: "TVATReturns",
+                            fields: {
+                                ID: templateObject.getId.get(),
+                                Active: false,
                             }
+                        }
+
+                        reportService.saveVATReturn(jsonObj).then(function(res) {
+                            reportService.getAllVATReturn().then(function(data) {
+                                addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {
+                                    window.open("vatreturnlist", "_self");
+                                }).catch(function(err) {
+                                    window.open("vatreturnlist", "_self");
+                                });
+                            }).catch(function(err) {
+                                window.open("vatreturnlist", "_self");
+                            });
+                        }).catch(function(err) {
+                            swal({
+                                title: 'Oooops...',
+                                text: err,
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Try Again'
+                            }).then((result) => {
+                                if (result.value) {
+                                    // Meteor._reload.reload();
+                                } else if (result.dismiss === 'cancel') {}
+                            });
+                            $('.fullScreenSpin').css('display', 'none');
                         });
                     } else {}
                 });
@@ -2667,7 +2717,6 @@ Template.vatreturn.events({
             $('.fullScreenSpin').css('display', 'inline-block');
             let taxRateList = templateObject.taxRateList.get();
 
-            let dataArray = [];
             let description = $('#description').val();
             let allClass = true;
             let classID = 0;
@@ -2692,9 +2741,9 @@ Template.vatreturn.events({
             let tab1_month = $("#beginmonthlydate").val();
             let tab1_year = $("#currentyear").val() || 0;
             let tax1cost = $('#tax1cost').val();
-            let tax1acost = $('#tax1acost').val();
+            let tax1Acost = $('#tax1Acost').val();
             let tax2cost = $('#tax2cost').val();
-            let tax2acost = $('#tax2acost').val();
+            let tax2Acost = $('#tax2Acost').val();
             let tax3cost = $('#tax3cost').val();
             let tax4cost = $('#tax4cost').val();
             let tax4acost = $('#tax4acost').val();
@@ -2707,18 +2756,18 @@ Template.vatreturn.events({
             let tax11cost = $('#tax11cost').val();
             let tax12cost = $('#tax12cost').val();
             let taxcodes1 = "";
-            let taxcodes1a = "";
+            let taxcodes1A = "";
             let taxcodes2 = "";
-            let taxcodes2a = "";
+            let taxcodes2A = "";
             let taxcodes3 = "";
             let taxcodes5 = "";
             let taxcodes7 = "";
             let taxcodes10 = "";
             let taxcodes12 = "";
             let taxcodes14 = "";
-            let taxcodes14a = "";
+            let taxcodes14A = "";
             let taxcodes15 = "";
-            let taxcodes15a = "";
+            let taxcodes15A = "";
             let taxcodes16 = "";
             let taxcodes17 = "";
             let taxcodes18 = "";
@@ -2733,12 +2782,12 @@ Template.vatreturn.events({
             for (var i = 0; i < taxRateList.length; i++) {
                 if ($("#t-1-" + taxRateList[i].Id).prop('checked') == true) {
                     taxcodes1 = (taxcodes1 == "") ? taxRateList[i].CodeName : taxcodes1 + "," + taxRateList[i].CodeName;
-                } else if ($("#t-1a-" + taxRateList[i].Id).prop('checked') == true) {
-                    taxcodes1a = (taxcodes1a == "") ? taxRateList[i].CodeName : taxcodes1a + "," + taxRateList[i].CodeName;
+                } else if ($("#t-1A-" + taxRateList[i].Id).prop('checked') == true) {
+                    taxcodes1A = (taxcodes1A == "") ? taxRateList[i].CodeName : taxcodes1A + "," + taxRateList[i].CodeName;
                 } else if ($("#t-2-" + taxRateList[i].Id).prop('checked') == true) {
                     taxcodes2 = (taxcodes2 == "") ? taxRateList[i].CodeName : taxcodes2 + "," + taxRateList[i].CodeName;
-                } else if ($("#t-2a-" + taxRateList[i].Id).prop('checked') == true) {
-                    taxcodes2a = (taxcodes2a == "") ? taxRateList[i].CodeName : taxcodes2a + "," + taxRateList[i].CodeName;
+                } else if ($("#t-2A-" + taxRateList[i].Id).prop('checked') == true) {
+                    taxcodes2A = (taxcodes2A == "") ? taxRateList[i].CodeName : taxcodes2A + "," + taxRateList[i].CodeName;
                 } else if ($("#t-3-" + taxRateList[i].Id).prop('checked') == true) {
                     taxcodes3 = (taxcodes3 == "") ? taxRateList[i].CodeName : taxcodes3 + "," + taxRateList[i].CodeName;
                 } else if ($("#t-5-" + taxRateList[i].Id).prop('checked') == true) {
@@ -2751,12 +2800,12 @@ Template.vatreturn.events({
                     taxcodes12 = (taxcodes12 == "") ? taxRateList[i].CodeName : taxcodes12 + "," + taxRateList[i].CodeName;
                 } else if ($("#t-14-" + taxRateList[i].Id).prop('checked') == true) {
                     taxcodes14 = (taxcodes14 == "") ? taxRateList[i].CodeName : taxcodes14 + "," + taxRateList[i].CodeName;
-                } else if ($("#t-14a-" + taxRateList[i].Id).prop('checked') == true) {
-                    taxcodes14a = (taxcodes14a == "") ? taxRateList[i].CodeName : taxcodes14a + "," + taxRateList[i].CodeName;
+                } else if ($("#t-14A-" + taxRateList[i].Id).prop('checked') == true) {
+                    taxcodes14A = (taxcodes14A == "") ? taxRateList[i].CodeName : taxcodes14A + "," + taxRateList[i].CodeName;
                 } else if ($("#t-15-" + taxRateList[i].Id).prop('checked') == true) {
                     taxcodes15 = (taxcodes15 == "") ? taxRateList[i].CodeName : taxcodes15 + "," + taxRateList[i].CodeName;
-                } else if ($("#t-15a-" + taxRateList[i].Id).prop('checked') == true) {
-                    taxcodes15a = (taxcodes15a == "") ? taxRateList[i].CodeName : taxcodes15a + "," + taxRateList[i].CodeName;
+                } else if ($("#t-15A-" + taxRateList[i].Id).prop('checked') == true) {
+                    taxcodes15A = (taxcodes15A == "") ? taxRateList[i].CodeName : taxcodes15A + "," + taxRateList[i].CodeName;
                 } else if ($("#t-16-" + taxRateList[i].Id).prop('checked') == true) {
                     taxcodes16 = (taxcodes16 == "") ? taxRateList[i].CodeName : taxcodes16 + "," + taxRateList[i].CodeName;
                 } else if ($("#t-17-" + taxRateList[i].Id).prop('checked') == true) {
@@ -2833,12 +2882,6 @@ Template.vatreturn.events({
                 swal('VAT Return Description cannot be blank!', '', 'warning');
                 $('.fullScreenSpin').css('display', 'none');
             } else {
-                getVS1Data('TVATReturn').then(function(dataObject) {
-                    if (dataObject.length > 0) {
-                        dataArray = JSON.parse(dataObject[0].data);
-                    }
-                });
-
                 setTimeout(function() {
                     let jsonObj = {
                         type: "TVATReturns",
@@ -2855,16 +2898,16 @@ Template.vatreturn.events({
                             Tab1_Year: tab1_year,
                             _1: parseFloat(tax1cost),
                             _1Selected: taxcodes1,
-                            _1A: parseFloat(tax1acost),
-                            _1ASelected: taxcodes1a,
+                            _1A: parseFloat(tax1Acost),
+                            _1ASelected: taxcodes1A,
                             _2: parseFloat(tax2cost),
                             _2Selected: taxcodes2,
-                            _2A: parseFloat(tax2acost),
-                            _2ASelected: taxcodes2a,
+                            _2A: parseFloat(tax2Acost),
+                            _2ASelected: taxcodes2A,
                             _3: parseFloat(tax3cost),
                             _3Selected: taxcodes3,
                             _4: parseFloat(tax4cost),
-                            _4A: parseFloat(tax4acost),
+                            _4A: parseFloat(tax4Acost),
                             _5: parseFloat(tax5cost),
                             _5Selected: taxcodes5,
                             _7: parseFloat(tax7cost),
@@ -2879,12 +2922,12 @@ Template.vatreturn.events({
                             Tab2_Year: tab2_year,
                             _14: parseFloat(tax14cost),
                             _14Selected: taxcodes14,
-                            _14A: parseFloat(tax14acost),
-                            _14ASelected: taxcodes14a,
+                            _14A: parseFloat(tax14Acost),
+                            _14ASelected: taxcodes14A,
                             _15: parseFloat(tax15cost),
                             _15Selected: taxcodes15,
-                            _15A: parseFloat(tax15acost),
-                            _15ASelected: taxcodes15a,
+                            _15A: parseFloat(tax15Acost),
+                            _15ASelected: taxcodes15A,
                             _16: parseFloat(tax16cost),
                             _16Selected: taxcodes16,
                             _17: parseFloat(tax17cost),
@@ -2918,6 +2961,7 @@ Template.vatreturn.events({
                         jsonObj.fields.ID = parseInt(templateObject.getId.get());
                     }
 
+                    console.log("jsonObj=", jsonObj);
                     reportService.saveVATReturn(jsonObj).then(function(res) {
                         reportService.getAllVATReturn().then(function(data) {
                             addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {

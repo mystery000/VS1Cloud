@@ -67,6 +67,7 @@ export default class PayrollSettingsOvertimes {
   static getDefaults() {
     return [
       new PayrollSettingsOvertimes({
+        id:1,
         active: true,
         isDefault: true,
         hourlyMultiplier: 1,
@@ -76,6 +77,7 @@ export default class PayrollSettingsOvertimes {
         rate:"Normal",
       }),
       new PayrollSettingsOvertimes({
+        id:2,
         active: true,
         isDefault: true,
         hourlyMultiplier: 1.5,
@@ -85,6 +87,7 @@ export default class PayrollSettingsOvertimes {
         rate:"Time & Half"
       }),
       new PayrollSettingsOvertimes({
+        id:3,
         active: true,
         isDefault: true,
         hourlyMultiplier: 2,
@@ -94,6 +97,7 @@ export default class PayrollSettingsOvertimes {
         rate:"Double Time"
       }),
       new PayrollSettingsOvertimes({
+        id:4,
         active: true,
         isDefault: true,
         hourlyMultiplier: 2,
@@ -104,6 +108,7 @@ export default class PayrollSettingsOvertimes {
         rate:"Weekend"
       }),
       new PayrollSettingsOvertimes({
+        id:5,
         active: true,
         isDefault: true,
         hourlyMultiplier: 3,

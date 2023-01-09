@@ -1,4 +1,7 @@
 
+import { Template } from 'meteor/templating';
+import './addnew-taxrate.html'
+
 Template.addnewtaxrate.events({
 
   'change .taxRate': function () {

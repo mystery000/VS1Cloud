@@ -1,19 +1,17 @@
-// @ts-nocheck
+import { template } from 'lodash';
 import {Session} from 'meteor/session';
+import '../../lib/global/indexdbstorage.js';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
 import {UtilityService} from "../../utility-service";
-import '../../lib/global/indexdbstorage.js';
-import { SideBarService } from '../../js/sidebar-service';
 import TableHandler from '../../js/Table/TableHandler';
+import { SideBarService } from '../../js/sidebar-service';
 import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
-import { template } from 'lodash';
+
 import { Template } from 'meteor/templating';
 import './transaction_line.html';
+
 let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
-
-
 export const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Amount (Inc)", "Unit Price (Inc)", "Cost Price"];
 
 //Template.transaction_line.inheritsHelpersFrom('new_invoice');
@@ -27,109 +25,8 @@ Template.transaction_line.onCreated(function(){
   templateObject.reset_data = new ReactiveVar([]);
   templateObject.init_data = new ReactiveVar([]); // initial reset data
   templateObject.initialTableWidth = new ReactiveVar('');
-  templateObject.monthArr = new ReactiveVar();
-  templateObject.plusArr = new ReactiveVar();
 });
 Template.transaction_line.onRendered(function() {
-  const plusArr = [];
-  const monthArr = [];
-  let isGreenTrack = localStorage.getItem('isGreenTrack');
-  let regionData = localStorage.getItem('ERPLoggedCountry');
-  let recordObj = null;
-  if(isGreenTrack == true) {
-    $.get("/GreentrackModules.json").success(function (data) {
-        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
-
-            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
-                recordObj = {
-                    type: data.tvs1licenselevelsnmodules[i].TYPE,
-                    region: data.tvs1licenselevelsnmodules[i].Region,
-                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
-                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
-                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
-                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
-                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
-                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
-                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
-                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
-                    pricenocurrency: data.tvs1licenselevelsnmodules[i].Price || 0,
-                    price: utilityService.modifynegativeCurrencyFormat(data.tvs1licenselevelsnmodules[i].Price) || 0,
-                    discount: data.tvs1licenselevelsnmodules[i].discount,
-                };
-                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "Xero") {
-                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
-                        plusArr.push(recordObj);
-                    }
-                }
-
-            }
-
-        };
-        templateObject.plusArr.set(plusArr);
-    });
-  } else {
-    $.get("MasterVS1Pricing.json").success(async function (data) {
-        for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
-
-            if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
-                recordObj = {
-                    type: data.tvs1licenselevelsnmodules[i].TYPE,
-                    region: data.tvs1licenselevelsnmodules[i].Region,
-                    licenselevel: data.tvs1licenselevelsnmodules[i].LicenseLevel,
-                    licenseLeveldescprion: data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion,
-                    moduleId: data.tvs1licenselevelsnmodules[i].ModuleId,
-                    moduleName: data.tvs1licenselevelsnmodules[i].ModuleName,
-                    moduledescription: data.tvs1licenselevelsnmodules[i].moduledescription,
-                    isExtra: data.tvs1licenselevelsnmodules[i].IsExtra,
-                    discountfrom: data.tvs1licenselevelsnmodules[i].Discountfrom,
-                    discountto: data.tvs1licenselevelsnmodules[i].Discountto,
-                    discount: data.tvs1licenselevelsnmodules[i].discount,
-                };
-                if ((data.tvs1licenselevelsnmodules[i].ModuleName != "") && (data.tvs1licenselevelsnmodules[i].IsExtra == true) && (data.tvs1licenselevelsnmodules[i].IsMonthly == true)) {
-                    monthArr.push(recordObj);
-                }
-
-                if (data.tvs1licenselevelsnmodules[i].LicenseLevelDescprion == "PLUS") {
-                    if (data.tvs1licenselevelsnmodules[i].ModuleName != "" && data.tvs1licenselevelsnmodules[i].IsExtra == false) {
-                        plusArr.push(recordObj);
-                    }
-                }
-            }
-        };
-        let purchaedAdModuleList = [];
-            let additionModuleSettings = await getVS1Data('vscloudlogininfo');
-            if( additionModuleSettings.length > 0 ){
-                let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
-                if( additionModules.length > 0 ){
-                    let adModulesList = additionModules.filter((item) => {
-                        if( item.ExtraModules == true && item.ModuleActive == true ){
-                            return item;
-                        }
-                    });
-                    if( adModulesList.length > 0 ){
-                        for (const item of adModulesList) {
-                            purchaedAdModuleList.push(item.ModuleName)
-                        }
-                    }
-                }
-            }
-        templateObject.plusArr.set(plusArr);
-        var monthResult = [];
-        $.each(monthArr, function (i, e) {
-            var matchingItemsMonth = $.grep(monthResult, function (itemMonth) {
-                return itemMonth.moduleName === e.moduleName;
-            });
-            e.isPurchased = false
-            if (matchingItemsMonth.length === 0) {
-                if( purchaedAdModuleList.includes(monthArr[i].moduleName) == true ){
-                    e.isPurchased = true
-                }
-                monthResult.push(e);
-            }
-        });
-        templateObject.monthArr.set(monthResult);
-    });
-  };
   let templateObject = Template.instance();
   let currenttranstablename = templateObject.data.tablename||"";
   // set initial table rest_data
@@ -160,8 +57,8 @@ Template.transaction_line.onRendered(function() {
           { index: 22, label: "Custom Field 1",     class: "CustomField1",  width: "124",       active: false,  display: false },
           { index: 23, label: "Custom Field 2",     class: "CustomField2",  width: "124",       active: false,  display: false },
       ];
-      let isBatchSerialNoTracking = localStorage.getItem("CloudShowSerial") || false;
-      let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly");
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+      let isBOnShippedQty = Session.get("CloudSalesQtyOnly");
       if (isBOnShippedQty) {
          let x;
          x = reset_data.find(x => x.class === 'Qty'); if(x != undefined) x.display = true;
@@ -208,6 +105,7 @@ Template.transaction_line.onRendered(function() {
           ];
             reset_data = templateObject.init_data.get().map( item => {
                 x = reset_data_salesorder.find( x => x.class === item.class);
+                if(x != undefined && !x.display) x.active = false;
                 if(x != undefined) return {...item, active: x.active, display: x.display};
                 return {...item, active: false, display: false};
             });
@@ -232,8 +130,9 @@ Template.transaction_line.onRendered(function() {
             { index: 9,  label: "Custom Field 1",    class: "CustomField1",  width: "124",   active: false,  display: true },
             { index: 10, label: "Custom Field 2",    class: "CustomField2",  width: "124",   active: false,  display: true },
           ];
-          reset_data = templateObject.init_data.get().map( item => {
+            reset_data = templateObject.init_data.get().map( item => {
                 x = reset_data_credit.find( x => x.class === item.class);
+                if(x != undefined && !x.display) x.active = false;
                 if(x != undefined) return {...item, active: x.active, display: x.display};
                 return {...item, active: false, display: false};
             });
@@ -249,20 +148,21 @@ Template.transaction_line.onRendered(function() {
 
           getVS1Data("VS1_Customize").then(function(dataObject) {
               if (dataObject.length == 0) {
-                  sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
+                  sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
                     reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
                     if(listType != 'tblBillLine'){
                         resetData = templateObject.init_data.get().map((item) => {
                             data =  reset_data.find(x => x.class == item.class);
+                            if(data != undefined && !data.display) data.active = false;
                             if(data != undefined) return {...item, active: data.active, display: data.display};
                             return {...item, active: false, display: false};
-                        });
+                        });                       
                         amtEx = resetData.find(x => x.class == "AmountEx");
                         amtInc = resetData.find(x => x.class == "AmountInc");
                         unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
                         unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
                         if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
-                        if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active;
+                        if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active; 
 
                         canShowBackOrder = templateObject.data.canShowBackOrder;
                         canShowUOM = templateObject.data.canShowUOM;
@@ -315,14 +215,21 @@ Template.transaction_line.onRendered(function() {
                                 if(listType == 'tblBillLine') break;
                                 resetData = templateObject.init_data.get().map((item) => {
                                     data =  reset_data.find(x => x.class == item.class);
+                                    if(data != undefined && !data.display) data.active = false;
                                     if(data != undefined) return {...item, active: data.active, display: data.display};
                                     return {...item, active: false, display: false};
                                 });
+                                if(listType == 'tblPurchaseOrderLine') {
+                                    accountName = resetData.find(x => x.class == 'AccountName');
+                                    memo = resetData.find(x => x.class == 'Memo');
+                                    accountName.display = accountName.active = false;
+                                    memo.display = memo.active = false;
+                                }                                                            
                                 amtEx = resetData.find(x => x.class == "AmountEx");
                                 amtInc = resetData.find(x => x.class == "AmountInc");
                                 unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
                                 unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
-                                if(amtInc && amtEx) if(amtEx.display) amtInc.active = !amtEx.active;
+                                if(amtInc && amtEx) if(amtEx.display) amtInc.active = !amtEx.active;                                
                                 if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active;
 
                                 canShowBackOrder = templateObject.data.canShowBackOrder;
@@ -398,7 +305,7 @@ Template.transaction_line.onRendered(function() {
           };
           custFields.push(customData);
       }
-
+      
       await templateObject.displayfields.set(custFields);
       await templateObject.reset_data.set(custFields);
 
@@ -415,7 +322,7 @@ Template.transaction_line.events({
       let templateObject = Template.instance();
       let currenttranstablename = templateObject.data.tablename||"";
       let reset_data = templateObject.reset_data.get();
-      let isBatchSerialNoTracking = localStorage.getItem("CloudShowSerial") || false;
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if (isBatchSerialNoTracking) {
         data = reset_data.find((x) => x.class === 'TaxRate');
         if(data != undefined) data = {...data, display: true, active: true};
@@ -506,12 +413,12 @@ Template.transaction_line.events({
     try {
         let erpGet = erpDb();
         let tableName = templateObject.data.tablename||"";
-        let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
         let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
 
         $(".fullScreenSpin").css("display", "none");
         if(added) {
-        sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
             addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
         });
 
@@ -543,7 +450,7 @@ Template.transaction_line.helpers({
     let currenttranstablename = Template.instance().data.tablename||"";
     let data = Template.instance().displayfields.get();
 
-    let isBatchSerialNoTracking = localStorage.getItem("CloudShowSerial") || false;
+    let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
     if (!isBatchSerialNoTracking) {
         let serialNo = data.find((x) => x.class === 'SerialNo');
         if( serialNo != undefined) {
@@ -551,17 +458,7 @@ Template.transaction_line.helpers({
             serialNo.active = false;
         }
     }
-    let monthArr = Template.instance().monthArr.get();
-    let fixedAsset = data.find((x) => x.class === 'FixedAsset');
-    let month = monthArr.find((x) => x.moduleName === 'Fixed Assets');
-    if(fixedAsset != undefined && month != undefined){
-        fixedAsset.display = month.isPurchased;
-        fixedAsset.active = fixedAsset.display;
-        if(currenttranstablename == 'tblSalesOrderLine' || currenttranstablename == "tblQuoteLine"){
-            fixedAsset.display = false;
-            fixedAsset.active = false;
-        }
-    }
+
     let canShowUOM = Template.instance().data.canShowUOM;
     let isSerialNoTracking = Template.instance().data.isBatchSerialNoTracking;
     if(!canShowUOM) {
@@ -589,6 +486,15 @@ Template.transaction_line.helpers({
           return 1;
       }
       return 1;
+  },
+  displayFieldRowspan: (displayfield, isForeignEnabled) => {
+    if(isForeignEnabled == true) {
+        if (foreignCols.includes(displayfield.custfieldlabel)) {
+            return 1;
+        }
+        return 2;
+    }
+    return 1;
   },
 
   subHeaderForeign: (displayfield) => {

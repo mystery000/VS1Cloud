@@ -499,7 +499,7 @@ Template.vs1_report_template.onRendered(function () {
         break;
       case "trialbalance":
         reset_data = [
-          { index: 1, label: 'ID', class:'colID', active: false, display: true, width: "50" },  
+          { index: 1, label: 'ID', class:'colID', active: false, display: true, width: "50" },
           { index: 2, label: 'Account', class:'colAccount', active: true, display: true, width: "150" },
           { index: 3, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "250" },
           { index: 4, label: 'Account Name Only', class:'colAccountNameOnly', active: false, display: true, width: "200" },
@@ -510,7 +510,7 @@ Template.vs1_report_template.onRendered(function () {
           { index: 9, label: 'Debits (Inc)', class:'colDebitsInc', active: true, display: true, width: "120" },
           { index: 10, label: 'Sort ID', class:'colSortID', active: false, display: true, width: "80" },
           { index: 11, label: 'Sort Order', class:'colSortOrder', active: false, display: true, width: "80" },
-          { index: 12, label: 'Trans ID', class:'colTransID', active: false, display: true, width: "80" },      
+          { index: 12, label: 'Trans ID', class:'colTransID', active: false, display: true, width: "80" },
         ]
         break;
       case "customerdetailsreport":
@@ -1064,8 +1064,6 @@ Template.vs1_report_template.events({
     $(`thead tr th`).each(function (index) {
       var $tblrow = $(this);
       var colWidth = $tblrow.width() || 0;
-      console.log(colWidth);
-      console.log($tblrow.text());
       var colthClass = $tblrow.attr('data-class') || "";
       $('.rngRange' + colthClass).val(colWidth);
     });

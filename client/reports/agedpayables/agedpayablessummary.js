@@ -175,7 +175,6 @@ Template.agedpayablessummary.onRendered(() => {
         MakeNegative();
       }, 100);
     }
-    console.log(splashArrayAgedPayablesReport);
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
@@ -477,7 +476,7 @@ Template.agedpayablessummary.onRendered(() => {
 //     let data = await CachedHttp.get(erpObject.TAPReport, async () => {
 //       return await reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate, contactID);
 //     }, {
-//       useIndexDb: true, 
+//       useIndexDb: true,
 //       useLocalStorage: false,
 //       validate: (cachedResponse) => {
 //         return false;
@@ -638,7 +637,7 @@ Template.agedpayablessummary.onRendered(() => {
 //           threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
 //           Older = Older + parseFloat(entry.entries["120Days"]);
 //         });
-        
+
 //         record.total = {
 //           // new
 //           Title: "Total " + record.title,
@@ -753,12 +752,12 @@ Template.agedpayablessummary.onRendered(() => {
 //       if (this.records.get()) {
 //         setTimeout(function () {
 //           $("td a").each(function () {
-//             if ($(this).text().indexOf("-" + Currency) >= 0) 
+//             if ($(this).text().indexOf("-" + Currency) >= 0)
 //               $(this).addClass("text-danger");
 //             }
 //           );
 //           $("td").each(function () {
-//             if ($(this).text().indexOf("-" + Currency) >= 0) 
+//             if ($(this).text().indexOf("-" + Currency) >= 0)
 //               $(this).addClass("text-danger");
 //             }
 //           );
@@ -766,13 +765,13 @@ Template.agedpayablessummary.onRendered(() => {
 //           $("td").each(function () {
 //             let lineValue = $(this).first().text()[0];
 //             if (lineValue != undefined) {
-//               if (lineValue.indexOf(Currency) >= 0) 
+//               if (lineValue.indexOf(Currency) >= 0)
 //                 $(this).addClass("text-right");
 //               }
 //             });
 
 //           $("td").each(function () {
-//             if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+//             if ($(this).first().text().indexOf("-" + Currency) >= 0)
 //               $(this).addClass("text-right");
 //             }
 //           );
@@ -784,7 +783,7 @@ Template.agedpayablessummary.onRendered(() => {
 //       this.reportrecords.set([]);
 //       this.grandrecords.set(null);
 //     }
-    
+
 
 //     LoadingOverlay.hide();
 //   };

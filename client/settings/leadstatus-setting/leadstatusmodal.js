@@ -1,3 +1,8 @@
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './leadstatusmodal.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 Template.leadstatusmodal.onCreated(function () {
 
 });

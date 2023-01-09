@@ -114,7 +114,6 @@ Template.jobprofitabilityreport.onRendered(() => {
     getVS1Data('TJobProfitability').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getJobProfitabilityReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
-          console.log(data);
           await addVS1Data('TJobProfitability', JSON.stringify(data));
           templateObject.displayReportData(data);
         }).catch(function (err) {
@@ -156,7 +155,7 @@ Template.jobprofitabilityreport.onRendered(() => {
         data.tjobprofitability[i].TransactionNo || "",
         data.tjobprofitability[i].CostEx || "",
         data.tjobprofitability[i].IncomeEx || "",
-        data.tjobprofitability[i].Quotedex || "",               
+        data.tjobprofitability[i].Quotedex || "",
         data.tjobprofitability[i].DiffIncome_Cost || "",
         data.tjobprofitability[i].PercentDiffIncomebyCost || "",
         data.tjobprofitability[i].DiffIncome_Quote || "",
@@ -210,7 +209,6 @@ Template.jobprofitabilityreport.onRendered(() => {
         MakeNegative();
       }, 100);
     }
-    console.log(splashArrayReport);
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {

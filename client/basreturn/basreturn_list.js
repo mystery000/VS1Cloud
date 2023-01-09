@@ -242,7 +242,6 @@ Template.basreturnlist.onRendered(function() {
                         }
                     });
                 }).catch(function(err) {
-                    console.error(err);
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else {

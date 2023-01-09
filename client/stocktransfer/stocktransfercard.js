@@ -33,6 +33,9 @@ import {
     Random
 } from 'meteor/random';
 import 'jquery-editable-select';
+import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import "./stocktransfercard.html"
 const _ = require('lodash');
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

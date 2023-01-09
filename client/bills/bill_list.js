@@ -13,6 +13,11 @@ import LoadingOverlay from '../LoadingOverlay';
 import GlobalFunctions from '../GlobalFunctions';
 import TableHandler from '../js/Table/TableHandler';
 
+import { Template } from 'meteor/templating';
+import './bill_list.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.billlist.onCreated(function(){

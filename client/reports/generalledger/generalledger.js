@@ -1101,12 +1101,11 @@ Template.generalledger.events({
   //   //   .format("YYYY-MM-DD");
   //   let toDate = $("#dateTo").val().replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$2-$1");
   //   let fromDate = $("#dateFrom").val().replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$2-$1");
-  //   console.log(toDate, fromDate);
   //   //Session.setPersistent('showHeader',true);
   //   await clearData("TAccountRunningBalanceReport");
   //   window.open(
   //     "/balancetransactionlist?accountName=" +
-  //     accountName + 
+  //     accountName +
   //     "&toDate=" +
   //     toDate +
   //     "&fromDate=" +

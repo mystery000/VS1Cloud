@@ -1078,7 +1078,6 @@ Template.vs1login.onRendered(function () {
    };
 
     function getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard) {
-      console.log(userAccessOptions);
         let lineItemslevel = [];
         let lineItemObjlevel = {};
         let lineItemsAccesslevel = [];
