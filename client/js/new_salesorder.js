@@ -10952,6 +10952,7 @@ Template.new_salesorder.events({
                             html: htmlmailBody,
                             attachments: attachment
                         }, function(error, result) {
+                            console.log("chkEmailCopy", { error, result })
                             if (error && error.error === "error") {
                                 FlowRouter.go('/salesorderslist?success=true');
 
@@ -11015,6 +11016,7 @@ Template.new_salesorder.events({
                             html: htmlmailBody,
                             attachments: attachment
                         }, function(error, result) {
+                            console.log("chkEmailRep", { error, result })
                             if (error && error.error === "error") {
                                 FlowRouter.go('/salesorderslist?success=true');
                             } else {
@@ -11243,10 +11245,10 @@ Template.new_salesorder.events({
                     addVS1Data('TSalesOrderEx', JSON.stringify(dataUpdated)).then(function(dataReturn) {
                         saveFunc()
                     }).catch((error) => {
-                        saveFunc()
+                        // saveFunc()
                     })
                 }).catch(errroorrrr => {
-                    saveFunc()
+                    // saveFunc()
                 })
                 // salesService.saveSalesOrderEx(objDetails).then(function(objDetails) {
 

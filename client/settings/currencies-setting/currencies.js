@@ -11,10 +11,12 @@ import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import TableHandler from "../../js/Table/TableHandler";
 import XLSX from 'xlsx';
+import "./currencies.html";
+
 let sideBarService = new SideBarService();
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
-Template.departmentSettings.inheritsHooksFrom('non_transactional_list');
+// Template.departmentSettings.inheritsHooksFrom('non_transactional_list');
 
 Template.currenciessettings.onCreated(function () {
   const templateObject = Template.instance();
