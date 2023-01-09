@@ -1107,7 +1107,6 @@ Template.newsidenav.onRendered(function() {
 
     let isGreenTrack = localStorage.getItem('isGreenTrack')||false;
     let loggedUserEventFired = localStorage.getItem('LoggedUserEventFired')||false;
-    console.log(loggedUserEventFired)
     if (loggedUserEventFired === "true") {
         $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
         $('.headerprogressbar').addClass('headerprogressbarShow');

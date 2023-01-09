@@ -10952,7 +10952,6 @@ Template.new_salesorder.events({
                             html: htmlmailBody,
                             attachments: attachment
                         }, function(error, result) {
-                            console.log("chkEmailCopy", { error, result })
                             if (error && error.error === "error") {
                                 FlowRouter.go('/salesorderslist?success=true');
 
@@ -11016,7 +11015,6 @@ Template.new_salesorder.events({
                             html: htmlmailBody,
                             attachments: attachment
                         }, function(error, result) {
-                            console.log("chkEmailRep", { error, result })
                             if (error && error.error === "error") {
                                 FlowRouter.go('/salesorderslist?success=true');
                             } else {
@@ -11457,7 +11455,7 @@ Template.new_salesorder.events({
     } else {
         $('.colFixedAsset').addClass('hiddenColumn');
         $('.colFixedAsset').removeClass('showColumn');
-    } 
+    }
   },
   // display settings
 
