@@ -226,7 +226,6 @@ Template.recentTransactionTable.onRendered(function() {
                     }
                     $('.paginate_button.next:not(.disabled)', this.api().table().container())
                         .on('click', function() {
-                            console.log('spin');
                             $('.fullScreenSpin').css('display', 'inline-block');
                             let dataLenght = oSettings._iDisplayLength;
 
