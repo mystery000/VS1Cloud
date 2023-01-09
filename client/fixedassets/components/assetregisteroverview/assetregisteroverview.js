@@ -46,7 +46,7 @@ Template.assetregisteroverview.onRendered(function () {
   templateObject.init_reset_data();
   // set initial table rest_data
 
-  
+
   // custom field displaysettings
   templateObject.initCustomFieldDisplaySettings = function (listType) {
     let reset_data = templateObject.reset_data.get();
@@ -366,7 +366,6 @@ Template.assetregisteroverview.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     fixedAssetService.getTFixedAssetsList().then(function (data) {
-      console.log('Reload Data', data);
       addVS1Data("TFixedAssets", JSON.stringify(data))
         .then(function (datareturn) {
           Meteor._reload.reload();

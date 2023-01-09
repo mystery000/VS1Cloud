@@ -181,7 +181,9 @@ Template.vatreturntransactionlist.onRendered(function() {
             var transactionitem = FlowRouter.current().queryParams.transactionitem;
             if (vatreturnid) {
                 getVS1Data('TVATReturn').then(function(dataObject) {
-                    if (dataObject.length > 0) {
+                    let userdata = JSON.parse(dataObject[0].data) || [];
+                    userdata = userdata.tvatreturns || [];
+                    if (userdata.length > 0) {
                         let data = JSON.parse(dataObject[0].data);
                         for (let i = 0; i < data.tvatreturn.length; i++) {
                             if (vatreturnid == data.tvatreturn[i].fields.ID && transactionitem != "") {

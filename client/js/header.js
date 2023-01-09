@@ -1732,7 +1732,6 @@ Template.header.onRendered(function () {
         templateObject.getCompanyInfo();
         $(document).ready(function () {
             let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
-            console.log(checkGreenTrack);
             if (checkGreenTrack == true) {
                 document.title = 'GreenTrack';
                 $('head').append('<link rel="icon" type="image/png" sizes="16x16" href="icons/greentrackIcon.png">');

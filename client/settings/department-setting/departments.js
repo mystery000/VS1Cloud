@@ -4,6 +4,7 @@ import { SideBarService } from '../../js/sidebar-service';
 import { ContactService } from "../../contacts/contact-service";
 import {UtilityService} from "../../utility-service";
 import '../../lib/global/indexdbstorage.js';
+import './departments.html'
 import XLSX from 'xlsx';
 let sideBarService = new SideBarService();
 Template.departmentSettings.inheritsHooksFrom('non_transactional_list');

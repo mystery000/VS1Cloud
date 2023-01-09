@@ -419,7 +419,7 @@ Template.appointmentlist.onRendered(async function() {
                 }));
                 /* @Editor Vladyslav 15/12/2022
                     ** We use customer dropdown instead of the  bellow select options
-                    */    
+                    */
                 // for (var i = 0; i < clientList.length; i++) {
                 //     $('#customer').editableSelect('add', clientList[i].customername);
                 // }
@@ -2199,7 +2199,6 @@ Template.appointmentlist.onRendered(async function() {
                             $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
                         })
                         .catch(function(err) {
-                            console.error(err);
                         });
                 }
 

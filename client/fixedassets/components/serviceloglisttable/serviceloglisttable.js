@@ -93,7 +93,6 @@ Template.serviceloglisttable.onRendered(function () {
   // set initial table rest_data  //
   templateObject.getServiceLogList = function () {
     getVS1Data("getServiceLogList").then(function (dataObject) {
-      console.log("[servicelog list :]", dataObject);
       if (dataObject.length == 0) {
         serviceLogService.getServiceLogList().then(function (data) {
           setServiceLogList(data);
@@ -106,7 +105,6 @@ Template.serviceloglisttable.onRendered(function () {
       }
     }).catch(function (err) {
       serviceLogService.getServiceLogList().then(function (data) {
-        console.log("[servicelog list :]", data);
         setServiceLogList(data);
       }).catch(function (err) {
         $(".fullScreenSpin").css("display", "none");
@@ -119,7 +117,7 @@ Template.serviceloglisttable.onRendered(function () {
 
   function setServiceLogList(data) {
     addVS1Data('TServiceLogList', JSON.stringify(data));
-    
+
     const dataTableList = [];
 
     // for (const log of data.tserviceloglist) {
