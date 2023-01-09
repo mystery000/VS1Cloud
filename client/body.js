@@ -484,7 +484,20 @@ import './Help_Form/help_advisor.js';
 import './fixedassets/components/fixedassetlistpop/fixedassetlistpop.js';
 /* Arthlo */
 
-
+/* Andrew */
+import './settings/clienttype-setting/clienttype.js';
+import './settings/department-setting/departments.js';
+import './settings/term-setting/term.js';
+import './settings/UOM-Settings/uomsettings.js';
+import './settings/adp/adp.js';
+import './settings/mail-chimp/mail-chimp.js';
+import './settings/paychex/paychex.js';
+import './settings/receipt-claims/receipt-claims.js';
+import './settings/edi-sms-settings/edi-sms-settings.js';
+import './settings/true-erp/true-erp.js';
+import './settings/yoodle-developer/yoodle-developer.js';
+import './settings/edi-integrations/edi-integrations.js';
+/* Andrew */
 
 /* XiaoJang*/
 // import './overviews/payrolloverview.js';
