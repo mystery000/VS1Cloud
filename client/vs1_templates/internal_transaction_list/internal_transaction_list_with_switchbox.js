@@ -136,7 +136,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     function checkBoxClickByName() {
         let currentTableData = templateObject.transactiondatatablerecords.get();
         let targetRows = [];
-        var colnames = JSON.parse(localStorage.getItem("colnames_" + currenttablename.split("_")[1]));
+        var colnames = JSON.parse(localStorage.getItem("colnames_" + currenttablename.split("_")[1])) || [];
         colnames.forEach(itemName => {
             let index = currentTableData.findIndex(item => item[2] == itemName);
             if (index > -1) {
@@ -752,6 +752,22 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function(oSettings) {
+                    $('.fullScreenSpin').css('display', 'inline-block');
+                    let dataLenght = oSettings._iDisplayLength;
+                    let customerSearch = $('#' + currenttablename + '_filter input').val();
+
+                    let uniqueChars = [...new Set(splashArrayTaxCodesList)];
+                    templateObject.transactiondatatablerecords.set(uniqueChars);
+                    var datatable = $('#' + currenttablename).DataTable();
+                    datatable.clear();
+                    datatable.rows.add(uniqueChars);
+                    datatable.draw(false);
+                    setTimeout(function() {
+                        $('#' + currenttablename).dataTable().fnPageChange('first');
+                    }, 400);
+                    checkBoxClickByName();
+
+                    $('.fullScreenSpin').css('display', 'none');
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -968,6 +984,22 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function(oSettings) {
+                    $('.fullScreenSpin').css('display', 'inline-block');
+                    let dataLenght = oSettings._iDisplayLength;
+                    let customerSearch = $('#' + currenttablename + '_filter input').val();
+
+                    let uniqueChars = [...new Set(splashArrayaccountsList)];
+                    templateObject.transactiondatatablerecords.set(uniqueChars);
+                    var datatable = $('#' + currenttablename).DataTable();
+                    datatable.clear();
+                    datatable.rows.add(uniqueChars);
+                    datatable.draw(false);
+                    setTimeout(function() {
+                        $('#' + currenttablename).dataTable().fnPageChange('first');
+                    }, 400);
+                    checkBoxClickByName();
+
+                    $('.fullScreenSpin').css('display', 'none');
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
