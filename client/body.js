@@ -19,8 +19,9 @@ import './js/newsidenav.js';
 import './js/accesslevel-service.js';
 import './js/account_settings.js';
 import './product/product-service.js';
-import './utility-service';
+import './utility-service.js';
 //import './js/alertmessage.js';
+
 import './js/Apptimer.js';
 import './js/base-service.js';
 import './js/Base64.js';
