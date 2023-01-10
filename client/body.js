@@ -281,13 +281,12 @@ import './vs1_templates/transaction_temp/transaction_calculation.js';
 import './manufacture/bomList.js';
 import './fixedassets/fixedassets.js';
 import './settings/chart-accounts-setting/chart-accounts.js';
-import './settings/currencies-setting/currencies.js';
+import './settings/chart-accounts-setting/chart-account-settings-table.js';
 import './settings/edi-integrations/edi-integrations.js';
 import './settings/fixed-asset_edit-asset-type/fixed-asset_edit-asset-type.js';
 import './settings/fxupdate/fxUpdateSettings.js';
 import './settings/linktrueerp/linkTrueERP.js';
 import './settings/mailchimp-settings/mailchimpSettings.js';
-import './settings/organisation-setting/organisation_settings.js';
 import './shipping/shippinglist.js';
 import './stocktake/add-new-stock-adjust/stockadjustadd.js';
 import './timesheetdetail/timesheetdetail.js';
@@ -514,13 +513,15 @@ import './settings/receipt-claims/receipt-claims.js';
 import './settings/edi-sms-settings/edi-sms-settings.js';
 import './settings/true-erp/true-erp.js';
 import './settings/yoodle-developer/yoodle-developer.js';
-import './settings/edi-integrations/edi-integrations.js';
-import './settings/organisation-setting/organsation_settings.js';
+import './settings/organisation-setting/organisation_settings.js';
 import './settings/backup-settings/backuprestore.js';
-import './settings/chart-accounts-setting/chart-account-settings-table.js';
-import './settings/backup-settings/currencies-settings/_frequencyModal,js';
-import './settings/backup-settings/currencies-settings/currencies.js';
-
+import './settings/currencies-setting/_frequencyModal.js';
+import './settings/currencies-setting/currencies.js';
+import './vs1charts/monthlyprofitandloss/monthlyprofitandloss.js';
+import './vs1charts/resalescomparision/resalescomparision.js';
+import './vs1charts/expenses/expenseschart.js';
+import './vs1charts/top10Customers/dsm_top10Customers.js';
+import './vs1charts/resalescomparision/dsm_resalescomparision.js';
 /* Andrew */
 
 /* XiaoJang*/

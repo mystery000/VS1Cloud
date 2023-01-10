@@ -84,7 +84,7 @@ Template.new_workorder.onRendered(function(){
                 salesorderid: workorder.SalesOrderID,
                 lid: 'Edit Work Order ' + orderid,
                 customer: workorder.Customer || '',
-                orderTo: workorder.OrderTo || '',
+                invoiceToDesc: workorder.InvoiceToDesc || '',
                 ponumber: workorder.PONumber  || '',
                 saledate: workorder.SaleDate || "",
                 duedate: workorder.DueDate || "",
@@ -107,6 +107,7 @@ Template.new_workorder.onRendered(function(){
             let workorders = [];
             let tempArray = templateObject.workOrderRecords.get();
             if (tempArray.length > 0) {
+                console.log("orderxxxxxxxx", templateObject.salesOrderId.get());
                 workorders = templateObject.workOrderRecords.get().filter(order=>{
                     return order.SalesOrderID == templateObject.salesOrderId.get();
                 })
@@ -124,7 +125,7 @@ Template.new_workorder.onRendered(function(){
                                 salesorderid: data.fields.ID,
                                 lid: 'Edit Work Order' + ' ' + data.fields.ID + ' - ' + (workordersCount+1).toString(),
                                 customer: data.fields.CustomerName,
-                                orderTo: data.fields.InvoiceToDesc,
+                                invoiceToDesc: data.fields.InvoiceToDesc,
                                 ponumber: data.fields.CustPONumber,
                                 saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
                                 duedate: data.fields.DueDate ? moment(data.fields.DueDate).format('DD/MM/YYYY') : "",
@@ -132,6 +133,7 @@ Template.new_workorder.onRendered(function(){
                             }
                             record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                             templateObject.workorderrecord.set(record);
+                            console.log("templateObject.workorderrecord-111", record)
                             templateObject.showBOMModal.set(true)
                             let name = record.line.fields.ProductName;
                                 let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
@@ -153,7 +155,7 @@ Template.new_workorder.onRendered(function(){
                                     salesorderid: useData[d].fields.ID,
                                     lid: 'Edit Work Order' + ' ' + useData[d].fields.ID + ' - ' + (workordersCount+1).toString(),
                                     customer: useData[d].fields.CustomerName,
-                                    orderTo: useData[d].fields.InvoiceToDesc,
+                                    invoiceToDesc: useData[d].fields.InvoiceToDesc,
                                     ponumber: useData[d].fields.CustPONumber,
                                     saledate: useData[d].fields.SaleDate ? moment(useData[d].fields.SaleDate).format('DD/MM/YYYY') : "",
                                     duedate: useData[d].fields.DueDate ? moment(useData[d].fields.DueDate).format('DD/MM/YYYY') : "",
@@ -162,6 +164,7 @@ Template.new_workorder.onRendered(function(){
                                 record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
 
                                 templateObject.workorderrecord.set(record);
+                                console.log("templateObject.workorderrecord-111", record)
                                 templateObject.showBOMModal.set(true)
                                 let name = record.line.fields.ProductName;
                                 let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
@@ -184,7 +187,7 @@ Template.new_workorder.onRendered(function(){
                             salesorderid: data.fields.ID,
                             lid: 'Edit Work Order' + ' ' + data.fields.ID + ' - ' + (workordersCount+1).toString(),
                             customer: data.fields.CustomerName,
-                            orderTo: data.fields.InvoiceToDesc,
+                            invoiceToDesc: data.fields.InvoiceToDesc,
                             ponumber: data.fields.CustPONumber,
                             saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
                             duedate: data.fields.DueDate ? moment(data.fields.DueDate).format('DD/MM/YYYY') : "",
@@ -192,6 +195,7 @@ Template.new_workorder.onRendered(function(){
                         }
                         record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                         templateObject.workorderrecord.set(record);
+                        console.log("templateObject.workorderrecord-111", record)
                         templateObject.showBOMModal.set(true)
                         let name = record.line.fields.ProductName;
                         let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
@@ -253,7 +257,7 @@ Template.new_workorder.events({
                   for(let i = 0; i< lineItems.length; i ++ ) {
                     let isExisting = false;
                     workorderRecords.map(order => {
-                      if(order.Line.fields.ProductName == lineItems[i].fields.ProductName) {
+                      if(order.Line.fields.ProductName == lineItems[i].fields.ProductName && order.SalesOrderID == data.fields.ID) {
                           isExisting = true
                       }
                     })
@@ -299,7 +303,7 @@ Template.new_workorder.events({
                             let isExisting = false;
                             if(workorderRecords.length> 0) {
                                     for(let j = 0; j< workorderRecords.length; j ++) {
-                                        if(workorderRecords[j].Line.fields.ProductName == lineItems[i].fields.ProductName) {
+                                        if(workorderRecords[j].Line.fields.ProductName == lineItems[i].fields.ProductName && order.SalesOrderID == data.fields.ID) {
                                             isExisting = true
                                         }
                                     }
@@ -344,7 +348,7 @@ Template.new_workorder.events({
                for(let i = 0; i< lineItems.length; i ++ ) {
                 let isExisting = false;
                 workorderRecords.map(order => {
-                      if(order.Line.fields.ProductName == lineItems[i].fields.ProductName) {
+                      if(order.Line.fields.ProductName == lineItems[i].fields.ProductName && order.SalesOrderID == data.fields.ID) {
                       isExisting = true
                   }
                 })
@@ -352,7 +356,7 @@ Template.new_workorder.events({
                 if(isExisting == false) {
                     let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')):[]
                     let index = bomProducts.findIndex(product => {
-                        return product.fields.productName == lineItems[i].fields.ProductName;
+                        return product.fields.productName == lineItems[i].fields.ProductName; 
                     })
                     if(index > -1) {
                         templateObject.workOrderLineId.set(i);
@@ -691,7 +695,7 @@ Template.new_workorder.events({
                                 let subDetail = {
                                     ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
                                     Customer: $('#edtCustomerName').val() || '',
-                                    OrderTo: $('#txabillingAddress').val() || '',
+                                    InvoiceToDesc: $('#txabillingAddress').val() || '',
                                     PONumber: $('#ponumber').val()||'',
                                     SaleDate: $('#dtSODate').val() || '',
                                     DueDate: record.duedate,
@@ -794,7 +798,7 @@ Template.new_workorder.events({
             let objDetail = {
                 ID: record.id,
                 Customer: $('#edtCustomerName').val() || '',
-                OrderTo: $('#txabillingAddress').val() || '',
+                InvoiceToDesc: $('#txabillingAddress').val() || '',
                 PONumber: $('#ponumber').val()||'',
                 SaleDate: $('#dtSODate').val() || '',
                 DueDate: record.duedate,
