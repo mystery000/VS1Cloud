@@ -1566,14 +1566,8 @@ Template.appointments.onRendered(function() {
                 let title = document.createElement("p");
                 if (event.event.title) {
                     title.innerHTML = event.timeText + " " + event.event.title;
-                    title.setAttribute("data-toggle", "tooltip");
-                    title.setAttribute("title", event.timeText + ' ' + event.event.title);
                     title.style.backgroundColor = event.backgroundColor;
                     title.style.color = "#ffffff";
-                    title.style.overflow = "hidden";
-                    setTimeout(function() {
-                        $('[data-toggle="tooltip"]').tooltip({ html: true });
-                    }, 100);
                 } else {
                     title.innerHTML = event.timeText + " " + event.event.title;
                 }
@@ -2010,6 +2004,8 @@ Template.appointments.onRendered(function() {
                         });
 
                         if (getLeaveInfo.length > 0) {
+                            $('#removeLeaveRequestBtn').show();
+                            $('#edtEmpID').val(getLeaveInfo[0].EmployeeID);
                             $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
                             $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
                             $('#edtLeaveTypeofRequestID').val(getLeaveInfo[0].TypeOfRequest);
@@ -2390,21 +2386,18 @@ Template.appointments.onRendered(function() {
                 });
 
                 let title = document.createElement("p");
-                if (event.event.title) {
+                if (event.timeText != '') {
                     title.innerHTML = event.timeText + " " + event.event.title;
-                    title.setAttribute("data-toggle", "tooltip");
-                    title.setAttribute("title", event.timeText + ' ' + event.event.title);
                     title.style.backgroundColor = event.backgroundColor;
                     title.style.color = "#ffffff";
-                    title.style.overflow = "hidden";
-                    setTimeout(function() {
-                        $('[data-toggle="tooltip"]').tooltip({ html: true });
-                    }, 100)
                 } else {
                     var empid = event.event._def.publicId.split(':')[1];
-                    $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
+                    if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
+                        $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
 
-                    title.style.color = "#dddddd";
+                        title.style.color = "#dddddd";
+                    }
+                    
                 }
 
                 let arrayOfDomNodes = [title];
@@ -18824,19 +18817,14 @@ Template.appointments.events({
             cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.value) {
-                // FlowRouter.go("/employeescard?id=" + empID);
-                // localStorage.setItem("appt_historypage", "appointmentlist");
                 setTimeout(function() {
-                    // $('.payrollTab').tab('show');
-                    // $('a[href="#leave"]').tab('show');
-                    // $('#newLeaveRequestbtn').trigger('click');
-                    
+                    $("#edtEmpID").val(empID);
+                    $('#removeLeaveRequestBtn').hide();
                     $('#newLeaveRequestModal').modal('show');
                     $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
-                        // window.open("/appointments", "_self");
+                        window.open("/appointments", "_self");
                     });
                 }, 1000);
-                // $("#newLeaveRequestModal").modal("toggle");
             }
         });
     },
@@ -18888,7 +18876,6 @@ Template.appointments.events({
     },
     "click #addRow": (e, ui) => {
         let tokenid = Random.id();
-        // $(".lineProductName", rowData).val("");
         var rowData = `<tr class="dnd-moved" id="${tokenid}">
             <td class="thProductName">
                 <input class="es-input highlightSelect lineProductName" type="search">
