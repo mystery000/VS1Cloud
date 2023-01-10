@@ -2,7 +2,8 @@ import {VS1ChartService} from "../vs1charts-service";
 import 'jQuery.print/jQuery.print.js';
 import {UtilityService} from "../../utility-service";
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../../js/core-service';
+import './expenseschart.html'
+
 let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
