@@ -13,7 +13,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './agedpayables.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
- 
+
 
 let _ = require('lodash');
 
@@ -182,7 +182,6 @@ Template.agedpayables.onRendered(() => {
         MakeNegative();
       }, 100);
     }
-    console.log(splashArrayAgedPayablesReport);
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
@@ -412,7 +411,7 @@ Template.agedpayables.onRendered(() => {
 //     templateObject.initDate = () => {
 //       Datehandler.initOneMonth();
 //     };
-  
+
 //     templateObject.setDateAs = ( dateFrom = null ) => {
 //       templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
 //     };
@@ -437,7 +436,7 @@ Template.agedpayables.onRendered(() => {
 //             // }
 //             let allRecords = [];
 //             if (data.tapreport.length) {
-              
+
 //                 localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data) || '');
 //                 // localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data)||'');
 //                 let records = [];
@@ -458,7 +457,7 @@ Template.agedpayables.onRendered(() => {
 //                     recordObj.Id = data.tapreport[i].PurchaseOrderID;
 //                     recordObj.type = data.tapreport[i].Type;
 //                     recordObj.SupplierName = data.tapreport[i].Name;
-                    
+
 //                     // recordObj.dataArr = [
 //                     //     '',
 //                     //     data.tapreport[i].Type,
@@ -473,7 +472,7 @@ Template.agedpayables.onRendered(() => {
 //                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["90Days"]) || '-',
 //                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["120Days"]) || '-',
 
-//                     //   
+//                     //
 //                     // ];
 
 //                     recordObj.entries = data.tapreport[i];
@@ -514,9 +513,9 @@ Template.agedpayables.onRendered(() => {
 //                 }
 
 
-             
+
 //                 allRecords.forEach((record) => {
-                   
+
 //                     let amountduetotal = 0;
 //                     let Currenttotal = 0;
 //                     let lessTnMonth = 0;
@@ -549,7 +548,7 @@ Template.agedpayables.onRendered(() => {
 //                     current.push(record.total);
 
 //                 });
-              
+
 
 
 //                 // let iterator = 0;
@@ -572,12 +571,12 @@ Template.agedpayables.onRendered(() => {
 //                 //     }
 
 //                 //     // wont be used anymore
-//                 //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '', 
-//                 //     // utilityService.modifynegativeCurrencyFormat(amountduetotal), 
+//                 //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '',
+//                 //     // utilityService.modifynegativeCurrencyFormat(amountduetotal),
 //                 //     // utilityService.modifynegativeCurrencyFormat(Currenttotal),
-//                 //     //     utilityService.modifynegativeCurrencyFormat(oneMonth), 
-//                 //     //     utilityService.modifynegativeCurrencyFormat(twoMonth), 
-//                 //     //     utilityService.modifynegativeCurrencyFormat(threeMonth), 
+//                 //     //     utilityService.modifynegativeCurrencyFormat(oneMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(twoMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(threeMonth),
 //                 //     //     utilityService.modifynegativeCurrencyFormat(Older)];
 
 
@@ -672,9 +671,9 @@ Template.agedpayables.onRendered(() => {
 
 //                 templateObject.records.set(allRecords);
 //                 templateObject.grandrecords.set(grandValObj);
-               
+
 //                 if (templateObject.records.get()) {
-                    
+
 //                     setTimeout(function () {
 //                         $('td a').each(function () {
 //                             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -709,7 +708,7 @@ Template.agedpayables.onRendered(() => {
 
 //             }else{
 //                 templateObject.records.set(allRecords);
-//             } 
+//             }
 //             LoadingOverlay.hide();
 
 
@@ -731,7 +730,7 @@ Template.agedpayables.onRendered(() => {
 //             // }
 //             let allRecords = [];
 //             if (data.tapreport.length) {
-                
+
 //                 // localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data)||'');
 //                 let records = [];
 //                 let current = [];
@@ -751,7 +750,7 @@ Template.agedpayables.onRendered(() => {
 //                     recordObj.Id = data.tapreport[i].PurchaseOrderID;
 //                     recordObj.type = data.tapreport[i].Type;
 //                     recordObj.SupplierName = data.tapreport[i].Name;
-                    
+
 //                     // recordObj.dataArr = [
 //                     //     '',
 //                     //     data.tapreport[i].Type,
@@ -766,7 +765,7 @@ Template.agedpayables.onRendered(() => {
 //                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["90Days"]) || '-',
 //                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["120Days"]) || '-',
 
-//                     //   
+//                     //
 //                     // ];
 
 //                     recordObj.entries = data.tapreport[i];
@@ -807,9 +806,9 @@ Template.agedpayables.onRendered(() => {
 //                 }
 
 
-             
+
 //                 allRecords.forEach((record) => {
-                   
+
 //                     let amountduetotal = 0;
 //                     let Currenttotal = 0;
 //                     let lessTnMonth = 0;
@@ -842,7 +841,7 @@ Template.agedpayables.onRendered(() => {
 //                     current.push(record.total);
 
 //                 });
-              
+
 
 
 //                 // let iterator = 0;
@@ -865,12 +864,12 @@ Template.agedpayables.onRendered(() => {
 //                 //     }
 
 //                 //     // wont be used anymore
-//                 //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '', 
-//                 //     // utilityService.modifynegativeCurrencyFormat(amountduetotal), 
+//                 //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '',
+//                 //     // utilityService.modifynegativeCurrencyFormat(amountduetotal),
 //                 //     // utilityService.modifynegativeCurrencyFormat(Currenttotal),
-//                 //     //     utilityService.modifynegativeCurrencyFormat(oneMonth), 
-//                 //     //     utilityService.modifynegativeCurrencyFormat(twoMonth), 
-//                 //     //     utilityService.modifynegativeCurrencyFormat(threeMonth), 
+//                 //     //     utilityService.modifynegativeCurrencyFormat(oneMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(twoMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(threeMonth),
 //                 //     //     utilityService.modifynegativeCurrencyFormat(Older)];
 
 
@@ -965,9 +964,9 @@ Template.agedpayables.onRendered(() => {
 
 //                 templateObject.records.set(allRecords);
 //                 templateObject.grandrecords.set(grandValObj);
-               
+
 //                 if (templateObject.records.get()) {
-                    
+
 //                     setTimeout(function () {
 //                         $('td a').each(function () {
 //                             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -1002,7 +1001,7 @@ Template.agedpayables.onRendered(() => {
 
 //             }else{
 //                 templateObject.records.set(allRecords);
-//             } 
+//             }
 //             LoadingOverlay.hide();
 //     }
 //     };
@@ -1051,7 +1050,7 @@ Template.agedpayables.onRendered(() => {
 
 //     }
 //     // templateObject.getAllProductData();
-//     //templateObject.getDepartments();    
+//     //templateObject.getDepartments();
 //     templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
 //     LoadingOverlay.hide();
 // });

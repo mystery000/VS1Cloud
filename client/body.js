@@ -19,8 +19,9 @@ import './js/newsidenav.js';
 import './js/accesslevel-service.js';
 import './js/account_settings.js';
 import './product/product-service.js';
-import './utility-service';
+import './utility-service.js';
 //import './js/alertmessage.js';
+
 import './js/Apptimer.js';
 import './js/base-service.js';
 import './js/Base64.js';
@@ -89,7 +90,6 @@ import "./vs1_templates/transaction_temp/transaction_header/transaction_header.j
 import "./vs1_templates/transaction_temp/transaction_footer/index.js"
 
 import './settings/email-settings/emailsettings.js';
-import './settings/xe-currencies/xe-currencies.js';
 import './settings/payroll-settings/payrollrules.js';
 import './settings/payroll-settings/ratetypelistpop.js';
 import './settings/payroll-settings/grouptype.js';
@@ -280,18 +280,22 @@ import './vs1_templates/transaction_temp/transaction_print_modal.js';
 import './vs1_templates/transaction_temp/transaction_calculation.js';
 import './manufacture/bomList.js';
 import './fixedassets/fixedassets.js';
-// import './appointments/appointments.js';
-// import './appointments/appointment-service.js';
-// import './appointments/appointmenttimelist.js';
+import './settings/chart-accounts-setting/chart-accounts.js';
+import './settings/chart-accounts-setting/chart-account-settings-table.js';
+import './settings/edi-integrations/edi-integrations.js';
+import './settings/fixed-asset_edit-asset-type/fixed-asset_edit-asset-type.js';
+import './settings/fxupdate/fxUpdateSettings.js';
+import './settings/linktrueerp/linkTrueERP.js';
+import './settings/mailchimp-settings/mailchimpSettings.js';
+import './shipping/shippinglist.js';
+import './stocktake/add-new-stock-adjust/stockadjustadd.js';
+import './timesheetdetail/timesheetdetail.js';
+import './journalEntry/journalentry_list.js';
 /* Tinyiko */
 
 /* Rasheed */
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-// import { DataTable } from 'datatables.net';
-// // import 'datatables.net-bs';
-// import 'datatables.net-colreorder';
-// import 'datatables.net-fixedcolumns';
-// import 'datatables.net-select';
+import 'datatables.net-responsive-bs4';
 /* Rasheed */
 
 /* DevTop/Dev Pioneer */
@@ -416,6 +420,7 @@ import './contacts/assignLeaveTypePop.js';
 /*Vladyslav*/
 
 /* Roverto */
+import './Dashboard/appointments-widget/dsm-appointments-widget.js';
 import './crm/crm.js';
 import './crm/components/help-modal.html';
 import './crm/components/projectTasksModal/projectTasksModal.html';
@@ -487,6 +492,38 @@ import './purchase/purchase-service.js';
 import './Help_Form/help_advisor.js';
 import './fixedassets/components/fixedassetlistpop/fixedassetlistpop.js';
 /* Arthlo */
+
+/* Colton */
+import './appointments/appointments.js';
+import './appointments/appointmentlist.js';
+import './appointments/appointment-service.js';
+import './appointments/appointmenttimelist.js';
+import './overviews/Modal/newLeaveRequest.js';
+import './vs1_templates/calender/calender.js';
+/* Colton */
+
+/* Andrew */
+import './settings/clienttype-setting/clienttype.js';
+import './settings/department-setting/departments.js';
+import './settings/term-setting/term.js';
+import './settings/UOM-Settings/uomsettings.js';
+import './settings/adp/adp.js';
+import './settings/mail-chimp/mail-chimp.js';
+import './settings/paychex/paychex.js';
+import './settings/receipt-claims/receipt-claims.js';
+import './settings/edi-sms-settings/edi-sms-settings.js';
+import './settings/true-erp/true-erp.js';
+import './settings/yoodle-developer/yoodle-developer.js';
+import './settings/organisation-setting/organisation_settings.js';
+import './settings/backup-settings/backuprestore.js';
+import './settings/currencies-setting/_frequencyModal.js';
+import './settings/currencies-setting/currencies.js';
+import './vs1charts/monthlyprofitandloss/monthlyprofitandloss.js';
+import './vs1charts/resalescomparision/resalescomparision.js';
+import './vs1charts/expenses/expenseschart.js';
+import './vs1charts/top10Customers/dsm_top10Customers.js';
+import './vs1charts/resalescomparision/dsm_resalescomparision.js';
+/* Andrew */
 
 /* XiaoJang*/
 // import './overviews/payrolloverview.js';

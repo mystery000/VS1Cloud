@@ -180,6 +180,10 @@
                                                     width: 100%;
                                                 }
                                             }
+
+                                            input[type="checkbox"]{
+                                                margin: 0px!important
+                                            }
                                         </style>
 
                                         <div class="tab-pane active border rounded-0 tab-2" role="tabpanel" id="tab-1" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
@@ -288,11 +292,11 @@
                                                         <div class="col-12 col-md-6" style="text-align: left; align-items: center; display: flex; justify-content: left; line-height:20px;">Standard rate (only capital goods and/or services)</div>
                                                         <div class="col-12 col-md-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
                                                             <div style="float:left; padding-right:10px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                                <a role="button" data-toggle="modal" href="#taxCode1aoption" class="btn btn-primary" id="tax1a" autocomplete="off" style="min-width:56px">1A</a>
+                                                                <a role="button" data-toggle="modal" href="#taxCode1Aoption" class="btn btn-primary" id="tax1A" autocomplete="off" style="min-width:56px">1A</a>
                                                             </div>
                                                             <div class="col-12 col-md-10" style="align-items: center; display: flex;">
                                                                 <span style="float:left;">$&nbsp;</span>
-                                                                <input type="text" class="form-control transactionView" id="tax1acost" name="tax1acost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                                <input type="text" class="form-control transactionView" id="tax1Acost" name="tax1Acost" value="0" style="float:left; width:90%;" readonly="readonly">
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-md-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -301,7 +305,7 @@
                                                             </div>
                                                             <div class="col-12 col-md-10" style="align-items: center; display: flex;">
                                                                 <span style="float:left;">$&nbsp;</span>
-                                                                <input type="text" class="form-control transactionView" id="tax4acost" name="tax4acost" value="0" style="float:left; width:90%;">
+                                                                <input type="text" class="form-control transactionView" id="tax4Acost" name="tax4Acost" value="0" style="float:left; width:90%;">
                                                             </div>
                                                         </div>                                                        
                                                     </div>
@@ -321,11 +325,11 @@
                                                         <div class="col-12 col-md-6" style="text-align: left; align-items: center; display: flex; justify-content: left; line-height:20px;">Zero rate (only exported goods)</div>
                                                         <div class="col-12 col-md-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
                                                             <div style="float:left; padding-right:10px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                                <a role="button" data-toggle="modal" href="#taxCode2aoption" class="btn btn-primary" id="tax2a" autocomplete="off" style="min-width:56px">2A</a>
+                                                                <a role="button" data-toggle="modal" href="#taxCode2Aoption" class="btn btn-primary" id="tax2A" autocomplete="off" style="min-width:56px">2A</a>
                                                             </div>
                                                             <div class="col-12 col-md-10" style="align-items: center; display: flex;">
                                                                 <span style="float:left;">$&nbsp;</span>
-                                                                <input type="text" class="form-control transactionView" id="tax2acost" name="tax2acost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                                <input type="text" class="form-control transactionView" id="tax2Acost" name="tax2Acost" value="0" style="float:left; width:90%;" readonly="readonly">
                                                             </div>
                                                         </div>                                                        
                                                     </div>
@@ -550,11 +554,11 @@
                                                         <div class="col-12 col-md-6" style="text-align: left; align-items: center; display: flex; justify-content: left; line-height:20px;">Capital goods imported by you</div>
                                                         <div class="col-12 col-md-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
                                                             <div style="float:left; padding-right:10px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                                <a role="button" data-toggle="modal" href="#taxCode14aoption" class="btn btn-primary" id="tax14a" autocomplete="off" style="min-width:56px">14A</a>
+                                                                <a role="button" data-toggle="modal" href="#taxCode14Aoption" class="btn btn-primary" id="tax14A" autocomplete="off" style="min-width:56px">14A</a>
                                                             </div>
                                                             <div class="col-12 col-md-10" style="align-items: center; display: flex;">
                                                                 <span style="float:left;">$&nbsp;</span>
-                                                                <input type="text" class="form-control transactionView" id="tax14acost" name="tax14acost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                                <input type="text" class="form-control transactionView" id="tax14Acost" name="tax14Acost" value="0" style="float:left; width:90%;" readonly="readonly">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -574,11 +578,11 @@
                                                         <div class="col-12 col-md-6" style="text-align: left; align-items: center; display: flex; justify-content: left; line-height:20px;">Other goods imported by you (not capital goods)</div>
                                                         <div class="col-12 col-md-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
                                                             <div style="float:left; padding-right:10px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                                <a role="button" data-toggle="modal" href="#taxCode15aoption" class="btn btn-primary" id="tax15a" autocomplete="off" style="min-width:56px">15A</a>
+                                                                <a role="button" data-toggle="modal" href="#taxCode15Aoption" class="btn btn-primary" id="tax15A" autocomplete="off" style="min-width:56px">15A</a>
                                                             </div>
                                                             <div class="col-12 col-md-10" style="align-items: center; display: flex;">
                                                                 <span style="float:left;">$&nbsp;</span>
-                                                                <input type="text" class="form-control transactionView" id="tax15acost" name="tax15acost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                                <input type="text" class="form-control transactionView" id="tax15Acost" name="tax15Acost" value="0" style="float:left; width:90%;" readonly="readonly">
                                                             </div>
                                                         </div>                                                        
                                                     </div>
@@ -1269,7 +1273,7 @@
                                             1A
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <span id="prt_tax1acost" style="float:left; width:90%;border:none"></span>
+                                            <span id="prt_tax1Acost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1277,7 +1281,7 @@
                                             4A
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <span id="prt_tax4acost" style="float:left; width:90%;border:none"></span>
+                                            <span id="prt_tax4Acost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1299,7 +1303,7 @@
                                             2A
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <span id="prt_tax2acost" style="float:left; width:90%;border:none"></span>
+                                            <span id="prt_tax2Acost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>                                                        
                                 </div>
@@ -1357,7 +1361,7 @@
                                             8
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <span id="prt_tax8acost" style="float:left; width:90%;border:none"></span>
+                                            <span id="prt_tax8Acost" style="float:left; width:90%;border:none"></span>
                                         </div>
                                     </div>
                                     <div class="col-3" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">
@@ -1448,7 +1452,7 @@
                                             14A
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <span id="prt_tax14acost" style="float:left; width:90%;border: none;"></span>
+                                            <span id="prt_tax14Acost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1470,7 +1474,7 @@
                                             15A
                                         </div>
                                         <div class="col-10" style="align-items: center; display: flex;">
-                                            <span id="prt_tax15acost" style="float:left; width:90%;border: none;"></span>
+                                            <span id="prt_tax15Acost" style="float:left; width:90%;border: none;"></span>
                                         </div>
                                     </div>                                                        
                                 </div>

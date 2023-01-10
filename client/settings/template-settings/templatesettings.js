@@ -1601,9 +1601,9 @@ Template.templatesettings.onRendered(function () {
       var content = "";
       for (item_temp of item) {
         if (idx > left_idx)
-          content =
-            content + "<td style='text-align: right;'>" + item_temp + "</td>";
-        else content = content + "<td>" + item_temp + "</td>";
+          content = content + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+        else 
+          content = content + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         idx++;
       }
       tbl_content.append(content);
@@ -1724,9 +1724,9 @@ Template.templatesettings.onRendered(function () {
       var content = "";
       for (item_temp of item) {
         if (idx > left_idx)
-          content =
-            content + "<td style='text-align: right;'>" + item_temp + "</td>";
-        else content = content + "<td>" + item_temp + "</td>";
+          content = content + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+        else 
+          content = content + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         idx++;
       }
       tbl_content.append(content);
@@ -1835,9 +1835,9 @@ Template.templatesettings.onRendered(function () {
       var content = "";
       for (item_temp of item) {
         if (idx > left_idx)
-          content =
-            content + "<td style='text-align: right;'>" + item_temp + "</td>";
-        else content = content + "<td>" + item_temp + "</td>";
+          content = content + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+        else 
+          content = content + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         idx++;
       }
       tbl_content.append(content);
@@ -2269,7 +2269,7 @@ Template.templatesettings.onRendered(function () {
         duedate: "",
         paylink: "",
         supplier_type: "Customer",
-        supplier_name: "<p>Brand New <br> Company </p>",
+        supplier_name: "Brand New Company",
         supplier_addr: "JHB\nA1515\nAustralia",
         fields: {
           Date: ["15", "left"],
@@ -2318,7 +2318,7 @@ Template.templatesettings.onRendered(function () {
         duedate: "",
         paylink: "",
         supplier_type: "Customer",
-        supplier_name: "<p>Brand New <br> Company </p>",
+        supplier_name: "Brand New Company",
         supplier_addr: "JHB\nA1515\nAustralia",
         fields: {
           Date: ["15", "left"],
@@ -2367,7 +2367,7 @@ Template.templatesettings.onRendered(function () {
         duedate: "",
         paylink: "",
         supplier_type: "Customer",
-        supplier_name: "<p>Brand New <br> Company </p>",
+        supplier_name: "Brand New Company",
         supplier_addr: "JHB\nA1515\nAustralia",
         fields: {
           Date: ["15", "left"],

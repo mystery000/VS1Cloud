@@ -112,7 +112,6 @@ Template.supplierproductreport.onRendered(() => {
     getVS1Data('TSupplierProduct').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
-          console.log(data);
           await addVS1Data('TSupplierProduct', JSON.stringify(data));
           templateObject.displayReportData(data);
         }).catch(function (err) {
@@ -190,7 +189,6 @@ Template.supplierproductreport.onRendered(() => {
         MakeNegative();
       }, 100);
     }
-    console.log(splashArrayReport);
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
@@ -386,7 +384,7 @@ Template.supplierproductreport.onRendered(() => {
 // Template.supplierproductreport.onRendered(() => {
 //   const templateObject = Template.instance();
 //   LoadingOverlay.show();
-  
+
 //   templateObject.initDate = () => {
 //     Datehandler.initOneMonth();
 //   };
@@ -420,8 +418,8 @@ Template.supplierproductreport.onRendered(() => {
 //     await templateObject.getSupplierProductReportData();
 
 //     // await templateObject.loadReport(
-//     //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-//     //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+//     //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+//     //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
 //     //   ignoreDate
 //     // );
 //   };
@@ -447,7 +445,7 @@ Template.supplierproductreport.onRendered(() => {
 
 //     let reportSummary = data.tsupplierproduct.map(el => {
 //       let resultobj = {};
-//       Object.entries(el).map(([key, val]) => {      
+//       Object.entries(el).map(([key, val]) => {
 //           resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
 //           return resultobj;
 //       })
@@ -455,7 +453,7 @@ Template.supplierproductreport.onRendered(() => {
 //     })
 //     let reportData = [];
 //     if( reportSummary.length > 0 ){
-//       for (const item of reportSummary ) {   
+//       for (const item of reportSummary ) {
 //         let isExist = reportData.filter((subitem) => {
 //           if( subitem.Supplier_Name == item.Supplier_Name ){
 //               subitem.SubAccounts.push(item)
@@ -473,7 +471,7 @@ Template.supplierproductreport.onRendered(() => {
 //           });
 //         }
 //        LoadingOverlay.hide();
-//       }     
+//       }
 //     }
 //     let useData = reportData.filter((item) => {
 //       let TotalCostEx = 0;
@@ -488,7 +486,7 @@ Template.supplierproductreport.onRendered(() => {
 //       item.TotalCostInc = TotalCostInc;
 //       item.TotalTax = TotalTax;
 //       return item;
-//     });    
+//     });
 //     templateObject.records.set(useData);
 
 
@@ -508,7 +506,7 @@ Template.supplierproductreport.onRendered(() => {
 //         });
 //        LoadingOverlay.hide();
 //       }, 1000);
-//     }  
+//     }
 //   }
 
 //   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
@@ -517,7 +515,7 @@ Template.supplierproductreport.onRendered(() => {
 //     let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
 //       return await  await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
 //     }, {
-//       useIndexDb: true, 
+//       useIndexDb: true,
 //       useLocalStorage: false,
 //       validate: (cachedResponse) => {
 //         return false;
@@ -527,7 +525,7 @@ Template.supplierproductreport.onRendered(() => {
 
 //     let reportSummary = data.tsupplierproduct.map(el => {
 //       let resultobj = {};
-//       Object.entries(el).map(([key, val]) => {      
+//       Object.entries(el).map(([key, val]) => {
 //           resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
 //           return resultobj;
 //       })
@@ -535,7 +533,7 @@ Template.supplierproductreport.onRendered(() => {
 //     })
 //     let reportData = [];
 //     if( reportSummary.length > 0 ){
-//       for (const item of reportSummary ) {   
+//       for (const item of reportSummary ) {
 //         let isExist = reportData.filter((subitem) => {
 //           if( subitem.Supplier_Name == item.Supplier_Name ){
 //               subitem.SubAccounts.push(item)
@@ -553,7 +551,7 @@ Template.supplierproductreport.onRendered(() => {
 //           });
 //         }
 //        LoadingOverlay.hide();
-//       }     
+//       }
 //     }
 //     let useData = reportData.filter((item) => {
 //       let TotalCostEx = 0;
@@ -568,7 +566,7 @@ Template.supplierproductreport.onRendered(() => {
 //       item.TotalCostInc = TotalCostInc;
 //       item.TotalTax = TotalTax;
 //       return item;
-//     });    
+//     });
 //     templateObject.records.set(useData);
 
 
@@ -588,7 +586,7 @@ Template.supplierproductreport.onRendered(() => {
 //         });
 //        LoadingOverlay.hide();
 //       }, 1000);
-//     }  
+//     }
 //   }
 
 //   templateObject.initDate();
@@ -598,7 +596,7 @@ Template.supplierproductreport.onRendered(() => {
 //     false
 //   );
 //   templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) );
- 
+
 // });
 
 Template.supplierproductreport.events({
@@ -849,8 +847,8 @@ Template.supplierproductreport.events({
    */
    "change #dateTo, change #dateFrom": (e, templateObject) => {
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     );
   },
@@ -1054,4 +1052,3 @@ Template.registerHelper("notEquals", function (a, b) {
 Template.registerHelper("containsequals", function (a, b) {
   return a.indexOf(b) >= 0;
 });
-

@@ -382,7 +382,7 @@ Template.frmappointmentpop.onRendered(function() {
                             $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
                         })
                         .catch(function(err) {
-                            console.error(err);
+
                         });
                 }
 

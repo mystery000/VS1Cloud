@@ -41,7 +41,7 @@ Template.trialbalance.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-      { index: 1, label: 'ID', class:'colID', active: false, display: true, width: "50" },  
+      { index: 1, label: 'ID', class:'colID', active: false, display: true, width: "50" },
     { index: 2, label: 'Account', class:'colAccount', active: true, display: true, width: "150" },
     { index: 3, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "250" },
     { index: 4, label: 'Account Name Only', class:'colAccountNameOnly', active: false, display: true, width: "200" },
@@ -90,7 +90,6 @@ Template.trialbalance.onRendered(() => {
       } else {
         let data = JSON.parse(dataObject[0].data);
         templateObject.displayTrialBalanceData(data);
-        console.log(data);
       }
     }).catch(function (err) {
       reportService.getTrialBalanceDetailsData(dateFrom, dateTo, ignoreDate).then(async function (data) {

@@ -38,6 +38,7 @@
     "datatables.net-bs": "^1.10.20",
     "datatables.net-colreorder": "^1.4.1",
     "datatables.net-fixedcolumns": "^3.2.4",
+    "datatables.net-responsive-bs4": "^2.4.0",
     "datatables.net-select": "^1.2.5",
     "docusign-esign": "^5.20.0",
     "fibers": "^5.0.3",

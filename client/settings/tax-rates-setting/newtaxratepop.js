@@ -1,3 +1,5 @@
+import { Template } from 'meteor/templating';
+import './newtaxratepop.html';
 import {
     TaxRateService
 } from "../settings-service";
@@ -10,8 +12,6 @@ import {
 import '../../lib/global/indexdbstorage.js';
 
 import {Session} from 'meteor/session';
-import { Template } from 'meteor/templating';
-import './newtaxratepop.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
@@ -659,7 +659,7 @@ Template.newtaxratepop.events({
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         var url = FlowRouter.current().path;
-        
+
         let taxSelected = $('#taxSelected').val();
         let taxtID = $('#edtTaxID').val();
         let taxName = $('#edtTaxNamePop').val();
